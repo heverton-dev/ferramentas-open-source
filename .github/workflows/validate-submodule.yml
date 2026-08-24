@@ -1,0 +1,81 @@
+name: Validate Submodule
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Sintaxe (Python, JSON, frontmatter de skills)
+        run: python tests/test-syntax.py
+
+      - name: CLAUDE.md carrega sempre
+        run: grep -q "alwaysApply: true" .claude/CLAUDE.md
+
+      - name: Skills de economia presentes
+        run: |
+          for skill in caveman headroom lean-ctx rtk-memory pre-flight-check; do
+            test -f ".claude/skills/$skill/SKILL.md" || {
+              echo "skill ausente: $skill"; exit 1; }
+          done
+
+      - name: Padroes reutilizaveis presentes
+        run: |
+          for p in skill-template.md script-template.py command-template.md mcp-template.js; do
+            test -f "scripts/padroes/$p" || { echo "padrao ausente: $p"; exit 1; }
+          done
+
+      - name: Integracao
+        run: bash tests/test-integration.sh
+
+      - name: Links de portabilidade
+        run: bash tests/test-junctions.sh
+
+      - name: Shellcheck dos scripts sh
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck -S error scripts/setup-links.sh scripts/hooks/pre-commit \
+            tests/test-integration.sh tests/test-junctions.sh
+
+  smoke-consumidor:
+    # Prova de que o repositorio funciona como submodule de verdade: cria um
+    # projeto do zero, adiciona este repo como submodule, roda o setup e valida.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: fonte
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Montar projeto consumidor
+        run: |
+          mkdir -p consumidor && cd consumidor
+          git init -q
+          git config user.email ci@example.com
+          git config user.name CI
+          git -c protocol.file.allow=always submodule add -q ../fonte fabrica-universal
+          cp -r fabrica-universal/.claude .
+          mkdir -p scripts
+          cp -r fabrica-universal/scripts/* scripts/
+          bash scripts/setup-links.sh meu-projeto
+
+      - name: Validar projeto consumidor
+        run: |
+          cd consumidor
+          python scripts/validate.py --sem-json
+          bash fabrica-universal/tests/test-junctions.sh .

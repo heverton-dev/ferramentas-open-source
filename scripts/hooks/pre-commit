@@ -1,0 +1,82 @@
+#!/bin/sh
+# Hook pre-commit UNIVERSAL — mecaniza R15 (segredos) e R16 (nunca commitar vermelho).
+#
+# Fonte versionada: scripts/hooks/pre-commit
+# Copiado para .git/hooks/pre-commit por scripts/setup-links.ps1|.sh
+# (nao e link: .git/hooks nao aceita hardlink/junction de forma confiavel em todo SO).
+#
+# Principio: cada gate so roda se a ferramenta correspondente existir no projeto.
+# Em um projeto sem pytest, sem npm e sem code-review-graph, este hook e um no-op
+# rapido — mas o gate de segredos SEMPRE roda.
+
+# === GATE 1: SEGREDOS (R15) — sempre ativo ==================================
+# Bloqueia o commit se o diff staged contiver padrao de credencial.
+# POSIX sh nao tem array: a lista vai como argumentos do `for` (nao usar `while`
+# num pipe — o subshell nao propaga o `exit 1` para o hook).
+DIFF_STAGED=$(git diff --cached)
+
+for padrao in \
+    'sk-[a-zA-Z0-9_-]{20,}' \
+    'AKIA[0-9A-Z]{16}' \
+    '-----BEGIN [A-Z ]*PRIVATE KEY' \
+    'gh[pousr]_[a-zA-Z0-9]{36}' \
+    'github_pat_[a-zA-Z0-9_]{22,}' \
+    'xox[baprs]-[0-9a-zA-Z-]+' \
+    'AIza[0-9A-Za-z_-]{35}'
+do
+    if printf '%s' "$DIFF_STAGED" | grep -Eq "$padrao"; then
+        echo "[BLOQUEADO] possivel segredo no diff staged"
+        echo ""
+        echo "Padrao detectado: $padrao"
+        printf '%s' "$DIFF_STAGED" | grep -n -E "$padrao" | head -5
+        echo ""
+        echo "Se e falso positivo, revise manualmente ou use 'git commit --no-verify' (com cuidado)."
+        exit 1
+    fi
+done
+
+# === GATE 2: TESTES PYTHON (R16) — so se houver pytest e testes ==============
+if [ -d tests ] || [ -f pytest.ini ] || [ -f pyproject.toml ]; then
+    if command -v python >/dev/null 2>&1 && python -c "import pytest" >/dev/null 2>&1; then
+        if ls tests/test_*.py test_*.py >/dev/null 2>&1; then
+            python -m pytest -q
+            if [ $? -ne 0 ]; then
+                echo "[BLOQUEADO] suite de testes vermelha - corrija a causa antes de comitar (R16)"
+                exit 1
+            fi
+        fi
+    fi
+fi
+
+# === GATE 3: TESTES NODE (R16) — so se houver script "test" no package.json ==
+if [ -f package.json ] && command -v npm >/dev/null 2>&1; then
+    if grep -q '"test"[[:space:]]*:' package.json; then
+        npm test --silent
+        if [ $? -ne 0 ]; then
+            echo "[BLOQUEADO] suite de testes vermelha - corrija a causa antes de comitar (R16)"
+            exit 1
+        fi
+    fi
+fi
+
+# === GATE 4: SINTAXE PYTHON dos arquivos staged =============================
+ARQS_PY=$(git diff --cached --name-only --diff-filter=ACM | grep '\.py$' || true)
+if [ -n "$ARQS_PY" ] && command -v python >/dev/null 2>&1; then
+    for f in $ARQS_PY; do
+        [ -f "$f" ] || continue
+        python -m py_compile "$f" || {
+            echo "[BLOQUEADO] erro de sintaxe Python em: $f"
+            exit 1
+        }
+    done
+fi
+
+# === GATE 5: GRAFO DE CODIGO (opcional) =====================================
+# Regra 11 (CLAUDE.md): o painel do code-review-graph imprime unicode e quebra no
+# console cp1252 (UnicodeEncodeError). Forca UTF-8 — nao depende do terminal.
+if command -v code-review-graph >/dev/null 2>&1; then
+    PYTHONIOENCODING=utf-8 PYTHONUTF8=1 code-review-graph update || true
+    PYTHONIOENCODING=utf-8 PYTHONUTF8=1 code-review-graph detect-changes --brief || true
+fi
+
+exit 0
