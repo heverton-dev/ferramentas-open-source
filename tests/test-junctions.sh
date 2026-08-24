@@ -36,6 +36,10 @@ checar_arquivo() {
 
 # Pasta: junction (Windows) ou symlink (Unix). Em ambos os casos o conteudo
 # precisa ser visivel atraves do espelho.
+#
+# `find -L` e obrigatorio: sem ele, `find` NAO entra no link e reporta 0 itens.
+# No Git Bash uma junction do Windows aparece como symlink, entao o caso Windows
+# cai exatamente nessa armadilha — o teste acusaria "vazio" num link saudavel.
 checar_pasta() {
   local espelho="$1" fonte="$2"
   if [ ! -d "$espelho" ]; then
@@ -43,8 +47,8 @@ checar_pasta() {
     return
   fi
   local n_espelho n_fonte
-  n_espelho=$(find "$espelho" -maxdepth 1 -mindepth 1 2>/dev/null | wc -l)
-  n_fonte=$(find "$fonte" -maxdepth 1 -mindepth 1 2>/dev/null | wc -l)
+  n_espelho=$(find -L "$espelho" -maxdepth 1 -mindepth 1 2>/dev/null | wc -l)
+  n_fonte=$(find -L "$fonte" -maxdepth 1 -mindepth 1 2>/dev/null | wc -l)
   if [ "$n_espelho" -eq "$n_fonte" ]; then
     ok "$espelho/ -> $fonte/ ($n_fonte item(ns))"
   else

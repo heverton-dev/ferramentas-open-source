@@ -24,11 +24,13 @@ for padrao in \
     'xox[baprs]-[0-9a-zA-Z-]+' \
     'AIza[0-9A-Za-z_-]{35}'
 do
-    if printf '%s' "$DIFF_STAGED" | grep -Eq "$padrao"; then
+    # `--` e obrigatorio: o padrao de chave PEM comeca com '---' e sem ele o grep
+    # o interpreta como opcao, sai com erro e o gate passa batido — inerte.
+    if printf '%s' "$DIFF_STAGED" | grep -Eq -- "$padrao"; then
         echo "[BLOQUEADO] possivel segredo no diff staged"
         echo ""
         echo "Padrao detectado: $padrao"
-        printf '%s' "$DIFF_STAGED" | grep -n -E "$padrao" | head -5
+        printf '%s' "$DIFF_STAGED" | grep -n -E -- "$padrao" | head -5
         echo ""
         echo "Se e falso positivo, revise manualmente ou use 'git commit --no-verify' (com cuidado)."
         exit 1
