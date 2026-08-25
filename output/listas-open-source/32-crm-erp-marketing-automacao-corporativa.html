@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Substitutos Open-Source para HubSpot, RD Station, Salesforce & TOTVS — ERP, CRM & Automação Corporativa</title>
+<style>
+  /* Custom scrollbar estrita 4px */
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
+
+  :root {
+    --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
+    --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
+    --rule:#C7CEDB; --rule-soft:#DADFE8;
+    --accent:#1B4B68; --accent-soft:#DCEDF8;
+    --gold:#7A5410; --gold-soft:#EFE5CE;
+    --flag:#8E2436; --flag-soft:#F0D9DD;
+    --green:#1B5E3B; --green-soft:#D8EFE2;
+    --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+      --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+      --rule:#2A3142; --rule-soft:#222836;
+      --accent:#7ABCE6; --accent-soft:#162A38;
+      --gold:#D6A44E; --gold-soft:#332810;
+      --flag:#E0788C; --flag-soft:#3A1A21;
+      --green:#6BC48F; --green-soft:#122B1C;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+    --rule:#2A3142; --rule-soft:#222836;
+    --accent:#7ABCE6; --accent-soft:#162A38;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E0788C; --flag-soft:#3A1A21;
+    --green:#6BC48F; --green-soft:#122B1C;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
+
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
+
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:64ch; margin:0; }
+  .deck strong { color:var(--ink); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
+
+  section { display:flex; flex-direction:column; gap:22px; }
+  .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
+  .sec-head.flagged { border-top-color:var(--flag); }
+  .sec-head.warm { border-top-color:var(--gold); }
+  .sec-num { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .sec-head.flagged .sec-num { color:var(--flag); }
+  .sec-head.warm .sec-num { color:var(--gold); }
+  h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note strong { color:var(--ink); }
+
+  .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+  .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
+  .route.official { border-left:3px solid var(--accent); }
+  .route.gray { border-left:3px solid var(--green); }
+  .route h4 { font-family:var(--serif); font-size:21px; font-weight:600; margin:0; }
+  .route .tag { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; }
+  .route.official .tag { color:var(--accent); }
+  .route.gray .tag { color:var(--green); }
+  .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
+
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:860px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
+  tbody tr:last-child td { border-bottom:0; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; }
+  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; white-space:nowrap; }
+  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
+  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
+
+  .ledger { display:flex; flex-direction:column; gap:20px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
+  .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
+  .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
+  .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
+
+  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
+
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
+  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
+
+  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
+
+  .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
+  .reject p { margin:0; font-size:14.5px; color:var(--ink-2); }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+
+  footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">
+      <span>Camada 32 · Gestão Corporativa & CRM</span><span>·</span><span>Curadoria de Elite</span><span>·</span>
+      <b>10 Titãs Open-Source / Soberania Operacional</b>
+    </div>
+    <h1>Substitutos Open-Source para HubSpot, RD Station, Salesforce & TOTVS</h1>
+    <p class="deck">O compêndio definitivo de <strong>sistemas corporativos de missão crítica</strong>: substitua os maiores monopólios de ERP, CRM, automação de marketing e atendimento por motores abertos hiper-customizáveis, escaláveis a milhões de transações e sem taxas por assento.</p>
+    <div class="chips">
+      <div class="chip"><b>10</b> motores corporativos auditados</div>
+      <div class="chip"><b>0</b> taxas por assento ou comissões por contato</div>
+      <div class="chip"><b>Economia média:</b> &gt; R$ 120.000 a R$ 800.000 / ano</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 1 · A Equação da Soberania</span>
+      <h2>A extorsão dos monopólios de software corporativo</h2>
+      <p class="sec-note">Plataformas como Salesforce, HubSpot, RD Station e TOTVS penalizam o crescimento: a cada novo vendedor contratado, a cada 5.000 contatos adicionados na base e a cada módulo fiscal liberado, a mensalidade se multiplica exponencialmente.</p>
+    </div>
+
+    <div class="routes">
+      <div class="route official">
+        <span class="tag">O Custo Fechado</span>
+        <h4>O Custo Milionário das Licenças por Usuário</h4>
+        <p>Salesforce Enterprise ($ 165/user/mês), HubSpot Professional ($ 800 a $ 3.600/mês), RD Station Marketing + CRM ($ 1.500/mês) e TOTVS Protheus (dezenas de milhares de reais em implantação e manutenção mensal obrigatória). Empresas de médio porte gastam mais de R$ 300.000/ano em licenças.</p>
+      </div>
+
+      <div class="route gray">
+        <span class="tag">A Solução Aberta</span>
+        <h4>ERP & CRM Autônomos de Código Aberto</h4>
+        <p>ERPNext e Odoo cobrem 100% da esteira contábil, estoque e manufatura. Twenty CRM e EspoCRM entregam a flexibilidade de campos customizados do Salesforce sem licença por usuário. Mautic e Listmonk disparam milhões de automações sem cobrar por tamanho de base.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 2 · O Panorama Geral</span>
+      <h2>O inventário completo de titãs corporativos</h2>
+      <p class="sec-note">Tabela comparativa direta: motor aberto, o gigante corporativo proprietário substituído, economia média anual e licença de código aberto.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ferramenta Open-Source</th>
+            <th>Substitui o Titã Proprietário</th>
+            <th>Economia Declarada</th>
+            <th>Categoria</th>
+            <th>Licença</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- ERP & Gestao Global -->
+          <tr>
+            <td class="rank">01</td>
+            <td class="tool">ERPNext (Frappe)</td>
+            <td class="saas">TOTVS Protheus / SAP Business One ($ 20.000+/ano)</td>
+            <td class="econ">-$ 30.000 a $ 120.000 / ano</td>
+            <td class="cat">Complete Enterprise ERP & Operations</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">02</td>
+            <td class="tool">Odoo Community</td>
+            <td class="saas">TOTVS Datasul / NetSuite / HubSpot Suite ($ 15.000+/ano)</td>
+            <td class="econ">-$ 20.000 a $ 90.000 / ano</td>
+            <td class="cat">Modular Enterprise ERP & Commerce</td>
+            <td class="lic">LGPL-3.0</td>
+          </tr>
+          <!-- CRM & Vendas de Elite -->
+          <tr>
+            <td class="rank">03</td>
+            <td class="tool">Twenty CRM</td>
+            <td class="saas">Salesforce Sales Cloud ($ 165/user/mês) / HubSpot CRM</td>
+            <td class="econ">-$ 19.800 / ano (equipe de 10)</td>
+            <td class="cat">Next-Gen Open Source CRM & GraphQL</td>
+            <td class="lic">AGPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">04</td>
+            <td class="tool">EspoCRM</td>
+            <td class="saas">Salesforce Enterprise / Microsoft Dynamics ($ 180/user/mês)</td>
+            <td class="econ">-$ 21.600 a $ 60.000 / ano</td>
+            <td class="cat">B2B Sales CRM & BPMN Workflows</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <!-- Marketing & Automacao -->
+          <tr>
+            <td class="rank">05</td>
+            <td class="tool">Mautic</td>
+            <td class="saas">HubSpot Marketing Hub ($ 800-$ 3.600/mês) / RD Station</td>
+            <td class="econ">-$ 9.600 a $ 43.200 / ano</td>
+            <td class="cat">Marketing Automation & Lead Scoring</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">06</td>
+            <td class="tool">Listmonk</td>
+            <td class="saas">RD Station Email / Mailchimp ($ 350-$ 1.500/mês)</td>
+            <td class="econ">-$ 4.200 a $ 18.000 / ano</td>
+            <td class="cat">High-Throughput Campaign Engine</td>
+            <td class="lic">AGPL-3.0</td>
+          </tr>
+          <!-- Atendimento & Omnichannel -->
+          <tr>
+            <td class="rank">07</td>
+            <td class="tool">Chatwoot</td>
+            <td class="saas">Zendesk / Salesforce Service Cloud / RD Conversas ($ 49/user)</td>
+            <td class="econ">-$ 5.880 a $ 24.000 / ano</td>
+            <td class="cat">Omnichannel Support & WhatsApp Hub</td>
+            <td class="lic">MIT</td>
+          </tr>
+          <!-- Integracao & Workflows -->
+          <tr>
+            <td class="rank">08</td>
+            <td class="tool">Activepieces / n8n</td>
+            <td class="saas">HubSpot Workflows / Zapier Team ($ 299-$ 899/mês)</td>
+            <td class="econ">-$ 3.588 a $ 10.788 / ano</td>
+            <td class="cat">Enterprise Automation & Integration</td>
+            <td class="lic">MIT / Fair-code</td>
+          </tr>
+          <!-- Pipeline & Vendas Agil -->
+          <tr>
+            <td class="rank">09</td>
+            <td class="tool">Krayin CRM</td>
+            <td class="saas">Pipedrive / RD Station CRM ($ 29-$ 79/user/mês)</td>
+            <td class="econ">-$ 3.480 a $ 9.480 / ano</td>
+            <td class="cat">Laravel Modular CRM Engine</td>
+            <td class="lic">MIT</td>
+          </tr>
+          <!-- Automacao de Processos Industriais -->
+          <tr>
+            <td class="rank">10</td>
+            <td class="tool">Apache OFBiz / Moqui</td>
+            <td class="saas">SAP ERP / TOTVS Logística & Manufatura ($ 50.000+/ano)</td>
+            <td class="econ">-$ 50.000 a $ 200.000 / ano</td>
+            <td class="cat">Industrial Supply Chain & ERP Framework</td>
+            <td class="lic">Apache-2.0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 3 · O Inventário Técnico de Elite</span>
+      <h2>Aprofundamento de Engenharia & Quickstarts</h2>
+      <p class="sec-note">Auditoria minuciosa das capacidades técnicas, escalabilidade de banco de dados e comandos diretos de implantação.</p>
+    </div>
+
+    <div class="ledger">
+
+      <!-- 01 ERPNext -->
+      <div class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>ERPNext (Frappe Framework)</h3>
+            <span class="killer-badge">SUBSTITUI: TOTVS Protheus / SAP Business One</span>
+            <span class="econ-badge">ECONOMIA: -$ 30.000 a $ 120.000 / ano</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Complete Enterprise ERP & Operations Suite</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>O ERP de código aberto mais completo e moderno do mundo. Integra 100% da operação corporativa: contabilidade em partidas dobradas, faturamento, estoque multi-depósito, compras, manufatura (BOM), folha de pagamento/RH, CRM e Helpdesk.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Construído sobre o Frappe Framework (Python/MariaDB/Redis). Utiliza uma arquitetura orientada a metadados (DocTypes), permitindo criar campos, tabelas, automações e APIs RESTful instantâneas sem compilar código ou travar esquemas relacionais.</p>
+
+              <pre><code># Instalação automatizada via Easy Install / Docker
+git clone https://github.com/frappe/frappe_docker.git
+cd frappe_docker && docker compose -f pwd.yml up -d</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Acesse <code>http://localhost:8080</code> com o usuário Administrator.<br>2. Configure seu plano de contas, centros de custo e cadastre fornecedores e produtos.<br>3. Emita orçamentos, converta em pedidos de venda com baixa automática no estoque e gere faturas integradas à contabilidade em tempo real.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">2 GB a 4 GB RAM (Suporta 500+ usuários simultâneos)</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Elimina contratos leoninos de ERP tradicional. Permite estender qualquer tabela corporativa com scripts Python e hooks em minutos.</p>
+              </div>
+              <a class="repo" href="https://github.com/frappe/erpnext" target="_blank" rel="noopener">github.com/frappe/erpnext</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 Odoo Community -->
+      <div class="entry">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Odoo Community</h3>
+            <span class="killer-badge">SUBSTITUI: TOTVS Datasul / NetSuite / HubSpot Suite</span>
+            <span class="econ-badge">ECONOMIA: -$ 20.000 a $ 90.000 / ano</span>
+            <span class="lic-badge">LGPL-3.0</span>
+            <span class="kind">Modular Enterprise ERP & Commerce</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Plataforma modular gigantesca com milhares de aplicativos integrados cobrindo CRM, pipeline de vendas, faturamento, controle de almoxarifado, e-commerce, ponto de venda (PDV) e automações de marketing.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Backend em Python assíncrono com banco de dados PostgreSQL e ORM ultra-otimizado. O ecossistema baseado em módulos independentes permite plugar apenas os recursos necessários para a operação sem inchar a infraestrutura.</p>
+
+              <pre><code>docker run -d -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo -e POSTGRES_DB=postgres --name db postgres:15
+docker run -p 8069:8069 --name odoo --link db:db -t odoo:latest</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Abra <code>http://localhost:8069</code> e instale os módulos 'CRM' e 'Invoicing'.<br>2. Gerencie leads em formato Kanban e crie propostas comerciais em PDF com assinatura eletrônica.<br>3. Ao aprovar a venda, gere a fatura e controle o recebimento bancário com conciliação automática.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">1 GB a 2 GB RAM inicial</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> A maior comunidade de módulos abertos do planeta (OCA - Odoo Community Association), incluindo localização brasileira completa.</p>
+              </div>
+              <a class="repo" href="https://github.com/odoo/odoo" target="_blank" rel="noopener">github.com/odoo/odoo</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Twenty CRM -->
+      <div class="entry">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Twenty CRM</h3>
+            <span class="killer-badge">SUBSTITUI: Salesforce Sales Cloud / HubSpot CRM</span>
+            <span class="econ-badge">ECONOMIA: -$ 19.800 / ano (equipe de 10 vendedores)</span>
+            <span class="lic-badge">AGPL-3.0</span>
+            <span class="kind">Next-Gen Open Source CRM & GraphQL Engine</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>O CRM open-source moderno mais inovador do mercado. Projetado especificamente para ser a alternativa de código aberto definitiva ao Salesforce, com interface ultra-rápida, custom objects e suporte total a auto-hospedagem.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Stack 100% TypeScript (NestJS, React, PostgreSQL). Cada entidade criada na interface gera automaticamente esquemas de banco, resolvers GraphQL e endpoints REST documentados com suporte a sincronização bidirecional de e-mails.</p>
+
+              <pre><code>git clone https://github.com/twentyhq/twenty.git
+cd twenty/packages/twenty-docker
+docker compose up -d</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Acesse <code>http://localhost:3000</code>.<br>2. Crie objetos personalizados (ex: 'Contratos', 'Imóveis', 'Projetos') com campos customizados em segundos.<br>3. Conecte sua caixa de e-mails para rastrear automaticamente mensagens trocadas com leads e clientes.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~800 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> A mesma ergonomia moderna e poder de customização do Salesforce sem pagar $ 165 dólares por assento mensal.</p>
+              </div>
+              <a class="repo" href="https://github.com/twentyhq/twenty" target="_blank" rel="noopener">github.com/twentyhq/twenty</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 EspoCRM -->
+      <div class="entry">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>EspoCRM</h3>
+            <span class="killer-badge">SUBSTITUI: Salesforce Enterprise / Microsoft Dynamics</span>
+            <span class="econ-badge">ECONOMIA: -$ 21.600 a $ 60.000 / ano</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Enterprise B2B Sales CRM & BPMN Workflows</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>CRM corporativo de alta performance para vendas B2B complexas. Inclui modelagem visual de processos BPMN 2.0, integração com telefonia VoIP (Asterisk/Twilio), gerenciamento de contas, oportunidades e portais de autoatendimento para clientes.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Backend PHP moderno e altamente escalável sobre MySQL/MariaDB. Fornece um motor nativo de automação de processos (BPM) com suporte a diagramas de fluxo, gateways condicionais, temporizadores e triggers de banco de dados.</p>
+
+              <pre><code>docker run -d -p 8080:80 --name espocrm \
+  -e ESPOCRM_DATABASE_HOST=db-host \
+  -e ESPOCRM_DATABASE_NAME=espocrm \
+  -e ESPOCRM_DATABASE_USER=espocrm \
+  -e ESPOCRM_DATABASE_PASSWORD=senha espocrm/espocrm</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Desenhe seu processo de vendas no modelador BPMN integrado.<br>2. Automatize a distribuição de leads para os representantes comerciais conforme região ou porte da empresa.<br>3. Acompanhe relatórios em tempo real de forecast de vendas e conversão de funil.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~250 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Motor BPMN de nível industrial e controle granular de permissões por departamento sem pagar licenciamento enterprise.</p>
+              </div>
+              <a class="repo" href="https://github.com/espocrm/espocrm" target="_blank" rel="noopener">github.com/espocrm/espocrm</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 Mautic -->
+      <div class="entry">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Mautic</h3>
+            <span class="killer-badge">SUBSTITUI: HubSpot Marketing Hub / RD Station Marketing</span>
+            <span class="econ-badge">ECONOMIA: -$ 9.600 a $ 43.200 / ano</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Full Marketing Automation & Lead Scoring Suite</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>A mais poderosa plataforma de automação de marketing de código aberto. Oferece construtor visual de campanhas e jornadas do cliente, lead scoring comportamental, segmentação dinâmica de listas, landing pages, formulários e webhooks.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Desenvolvido sobre Symfony/PHP com MySQL. Rastreia o comportamento de visitantes em websites via scripts assíncronos leves, pontuando leads automaticamente e disparando fluxos de nutrição através de múltiplos canais (Email, SMS, Web Push).</p>
+
+              <pre><code>docker run -d -p 8000:80 --name mautic \
+  -e MAUTIC_DB_HOST=db-host -e MAUTIC_DB_USER=mautic \
+  -e MAUTIC_DB_PASSWORD=senha mautic/mautic:latest</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Adicione o pixel de rastreamento do Mautic nas suas páginas.<br>2. Crie uma automação: se o lead visitar a página de preços 3 vezes, adicione 50 pontos de score e notifique a equipe comercial.<br>3. Dispare sequências de e-mails segmentadas sem nenhuma cobrança por tamanho da base de contatos.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~300 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Tenha 1 milhão de leads na sua base sem que o custo da sua operação dobre de preço a cada mês como no HubSpot e RD Station.</p>
+              </div>
+              <a class="repo" href="https://github.com/mautic/mautic" target="_blank" rel="noopener">github.com/mautic/mautic</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 Listmonk -->
+      <div class="entry">
+        <div class="entry-rank">06</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Listmonk</h3>
+            <span class="killer-badge">SUBSTITUI: RD Station Email / Mailchimp / SendGrid</span>
+            <span class="econ-badge">ECONOMIA: -$ 4.200 a $ 18.000 / ano</span>
+            <span class="lic-badge">AGPL-3.0</span>
+            <span class="kind">High-Throughput Campaign & Newsletter Engine</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Gerenciador de newsletters e disparos transacionais em massa de altíssima velocidade. Capaz de enviar milhões de e-mails em minutos com consumo de memória quase nulo.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Binário único escrito em Go nativo acoplado ao PostgreSQL com consultas raw SQL ultrarrápidas. Dispara mensagens em paralelo via múltiplos pools SMTP (Amazon SES, Postmark, servidores próprios) com gerenciamento de opt-in duplo e relatórios de abertura/clique.</p>
+
+              <pre><code>docker run -d -p 9000:9000 --name listmonk \
+  -e LISTMONK_db__host=postgres-host \
+  listmonk/listmonk:latest</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Importe listas de contatos com atributos customizados em formato JSON.<br>2. Crie templates HTML com renderização rápida via Go templates.<br>3. Conecte ao Amazon SES ou servidor SMTP local e envie 500.000 e-mails pagando apenas o custo do tráfego (menos de $ 50 dólares).</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">< 50 MB RAM em carga máxima</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> A performance mais eficiente do mundo para envio de e-mails em massa sem bloqueios artificiais de contas por terceiros.</p>
+              </div>
+              <a class="repo" href="https://github.com/knadh/listmonk" target="_blank" rel="noopener">github.com/knadh/listmonk</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07 Chatwoot -->
+      <div class="entry">
+        <div class="entry-rank">07</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Chatwoot</h3>
+            <span class="killer-badge">SUBSTITUI: Zendesk / Salesforce Service Cloud / RD Conversas</span>
+            <span class="econ-badge">ECONOMIA: -$ 5.880 a $ 24.000 / ano</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Omnichannel Support & WhatsApp Team Inbox</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Central de atendimento e suporte omnichannel. Unifica conversas do WhatsApp (via API oficial ou Baileys/Evolution API), LiveChat de site, Instagram Direct, Telegram, Facebook Messenger e E-mail em uma única caixa de entrada colaborativa.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Backend em Ruby on Rails com WebSockets em tempo real (ActionCable), Redis e PostgreSQL. Suporta automações com agentes de IA (OpenAI/Ollama), macros de respostas rápidas e atribuição inteligente de tickets por equipe.</p>
+
+              <pre><code># Instalação rápida com script oficial ou Docker Compose
+git clone https://github.com/chatwoot/chatwoot.git
+cd chatwoot && docker compose up -d</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Conecte o número de WhatsApp da sua empresa e o widget de chat do site.<br>2. Crie departamentos (Comercial, Suporte, Financeiro) com roteamento automático.<br>3. Múltiplos atendentes respondem no mesmo número sem pagar licenças adicionais por atendente.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~500 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Atendimento omnichannel completo com histórico compartilhado de conversas sob licença permissiva MIT.</p>
+              </div>
+              <a class="repo" href="https://github.com/chatwoot/chatwoot" target="_blank" rel="noopener">github.com/chatwoot/chatwoot</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08 Activepieces / n8n -->
+      <div class="entry">
+        <div class="entry-rank">08</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Activepieces / n8n</h3>
+            <span class="killer-badge">SUBSTITUI: HubSpot Workflows / Zapier / Make Team</span>
+            <span class="econ-badge">ECONOMIA: -$ 3.588 a $ 10.788 / ano</span>
+            <span class="lic-badge">MIT (Activepieces) / Fair-code (n8n)</span>
+            <span class="kind">Enterprise Automation & Integration Engine</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Motores visuais de automação de processos de negócios e orquestração de APIs. Conectam sistemas ERP, CRMs, bancos de dados, mensageiros e modelos de IA através de pipelines orientados a eventos com execução ilimitada.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Executa grafos de execução com sandbox isolado em Node.js/TypeScript. Permite rodar código TypeScript/Python customizado em qualquer etapa do fluxo, com gerenciamento visual de webhooks, retentativas automáticas e controle de erros.</p>
+
+              <pre><code>docker run -d --name activepieces -p 8080:80 \
+  -v ~/.activepieces:/root/.activepieces \
+  activepieces/activepieces:latest</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Crie um trigger que escuta novos leads no Mautic ou formulário web.<br>2. Valide o CNPJ/CPF com uma API local e crie o cliente no ERPNext.<br>3. Notifique o vendedor no Chatwoot e dispare uma mensagem no WhatsApp sem custo por tarefa executada.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~200 MB a 400 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Execute dezenas de milhões de automações por mês no seu próprio servidor sem a taxação de centavos por 'task' do Zapier.</p>
+              </div>
+              <a class="repo" href="https://github.com/activepieces/activepieces" target="_blank" rel="noopener">github.com/activepieces/activepieces</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09 Krayin CRM -->
+      <div class="entry">
+        <div class="entry-rank">09</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Krayin CRM</h3>
+            <span class="killer-badge">SUBSTITUI: Pipedrive / RD Station CRM</span>
+            <span class="econ-badge">ECONOMIA: -$ 3.480 a $ 9.480 / ano</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Laravel Modular CRM Engine</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>CRM de vendas ágil, leve e visual construído sobre o ecossistema Laravel. Focado na experiência rápida do vendedor com funis Kanban, agendamento de atividades, cotações de produtos e múltiplos pipelines de vendas.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura limpa em PHP 8.2+ e Laravel com banco de dados MySQL. Possui suporte completo a extensões modulares, interface responsiva e API RESTful pronta para integração com landing pages e webhooks.</p>
+
+              <pre><code>git clone https://github.com/krayin/krayin-crm.git
+cd krayin-crm && composer install && php artisan krayin-crm:install</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Configure múltiplos pipelines (ex: 'Novos Negócios', 'Renovações', 'Parcerias').<br>2. Cadastre produtos com preços e emita propostas diretamente na tela do lead.<br>3. Mova os cards entre as etapas do funil com arrastar-e-soltar e acompanhe as taxas de fechamento.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~150 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> A ferramenta ideal para quem quer a simplicidade e foco em vendas do Pipedrive com a liberdade da licença MIT.</p>
+              </div>
+              <a class="repo" href="https://github.com/krayin/krayin-crm" target="_blank" rel="noopener">github.com/krayin/krayin-crm</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 Apache OFBiz / Moqui -->
+      <div class="entry">
+        <div class="entry-rank">10</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Apache OFBiz / Moqui Ecosystem</h3>
+            <span class="killer-badge">SUBSTITUI: SAP ERP / TOTVS Logística & Manufatura</span>
+            <span class="econ-badge">ECONOMIA: -$ 50.000 a $ 200.000 / ano</span>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Industrial Supply Chain & Enterprise Framework</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Framework e suíte corporativa de automação de processos para grandes indústrias, cadeias de suprimentos (Supply Chain), gestão avançada de armazéns (WMS) e planejamento de recursos de manufatura (MRP II).</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Desenvolvido em Java/Groovy com arquitetura orientada a serviços (SOA). Implementa padrões do Universal Business Data Model, garantindo total consistência contábil, rastreabilidade de lotes e conformidade regulatória rigorosa.</p>
+
+              <pre><code>git clone https://github.com/apache/ofbiz-framework.git
+cd ofbiz-framework && ./gradlew loadAll start</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Modele ordens de produção complexas com múltiplos níveis de matéria-prima (BOM).<br>2. Gerencie o picking e packing de produtos em galpões industriais com leitores de código de barras.<br>3. Execute a contabilidade de custos industriais com reconciliação contábil automatizada.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">2 GB a 8 GB RAM (JVM)</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> A robustez e confiabilidade necessárias para operações industriais de grande porte sob a governança da Apache Software Foundation.</p>
+              </div>
+              <a class="repo" href="https://github.com/apache/ofbiz-framework" target="_blank" rel="noopener">ofbiz.apache.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head flagged">
+      <span class="sec-num">Parte 4 · Critérios de Rejeição</span>
+      <h2>O que ficou de fora e por que foi descartado</h2>
+      <p class="sec-note">Auditoria de governança: sistemas corporativos com modelos de lock-in, armadilhas comerciais ou falsas promessas de código aberto.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="reject">
+        <h4>1. Salesforce, HubSpot & RD Station (Nuvens Fechadas)</h4>
+        <p><strong>Motivo da Rejeição:</strong> Preços que aumentam por usuário e tamanho da base, impossibilidade de auditar o código-fonte, bloqueio total em caso de rescisão contratual e risco de vazamento de segredos comerciais.</p>
+      </div>
+      <div class="reject">
+        <h4>2. TOTVS Protheus & Datasul (Monopólios Proprietários)</h4>
+        <p><strong>Motivo da Rejeição:</strong> Linguagens proprietárias ultrapassadas (ADVPL), custos abusivos de implantação/customização por hora de consultoria e contratos com multas pesadas de cancelamento.</p>
+      </div>
+      <div class="reject">
+        <h4>3. SugarCRM & vTiger (Versões Open Source Sucateadas)</h4>
+        <p><strong>Motivo da Rejeição:</strong> Empresas que abandonaram ou desatualizaram propositalmente seus repositórios abertos para forçar a migração de clientes para planos fechados em nuvem.</p>
+      </div>
+      <div class="reject">
+        <h4>4. CRMs com Código Não-Permissivo ou Bloqueio de Multi-Tenancy</h4>
+        <p><strong>Motivo da Rejeição:</strong> Plataformas que restringem o número de usuários na versão comunitária ou proíbem o uso comercial em ambientes corporativos.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas oficiais e viabilidade em produção corporativa soberana.</p>
+    <div class="srcs">
+      <span>Open Source Initiative (OSI)</span>
+      <span>Linux Foundation</span>
+      <span>Apache Software Foundation</span>
+      <span>Frappe & Odoo Community Association (OCA)</span>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

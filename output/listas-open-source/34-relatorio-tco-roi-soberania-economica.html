@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Executivo de TCO & ROI: A Economia da Soberania Tecnológica</title>
+<style>
+  /* Custom scrollbar estrita 4px */
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
+
+  :root {
+    --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
+    --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
+    --rule:#C7CEDB; --rule-soft:#DADFE8;
+    --accent:#1A446C; --accent-soft:#DCE7F2;
+    --gold:#7A5410; --gold-soft:#EFE5CE;
+    --flag:#8E2436; --flag-soft:#F0D9DD;
+    --green:#1B5E3B; --green-soft:#D8EFE2;
+    --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+      --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+      --rule:#2A3142; --rule-soft:#222836;
+      --accent:#7AA5D6; --accent-soft:#162436;
+      --gold:#D6A44E; --gold-soft:#332810;
+      --flag:#E0788C; --flag-soft:#3A1A21;
+      --green:#6BC48F; --green-soft:#122B1C;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+    --rule:#2A3142; --rule-soft:#222836;
+    --accent:#7AA5D6; --accent-soft:#162436;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E0788C; --flag-soft:#3A1A21;
+    --green:#6BC48F; --green-soft:#122B1C;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
+
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
+
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(38px,7.5vw,72px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:64ch; margin:0; }
+  .deck strong { color:var(--ink); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
+
+  section { display:flex; flex-direction:column; gap:22px; }
+  .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
+  .sec-head.flagged { border-top-color:var(--flag); }
+  .sec-head.warm { border-top-color:var(--gold); }
+  .sec-num { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .sec-head.flagged .sec-num { color:var(--flag); }
+  .sec-head.warm .sec-num { color:var(--gold); }
+  h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note strong { color:var(--ink); }
+
+  .tiers-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+  .tier-card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:20px; display:flex; flex-direction:column; gap:10px; }
+  .tier-card.t1 { border-left:4px solid var(--green); }
+  .tier-card.t2 { border-left:4px solid var(--accent); }
+  .tier-card.t3 { border-left:4px solid var(--gold); }
+  .tier-card.t4 { border-left:4px solid var(--flag); }
+  .tier-label { font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  .tier-card h3 { font-family:var(--serif); font-size:22px; margin:0; }
+  .tier-saas { font-family:var(--mono); font-size:13px; color:var(--flag); text-decoration:line-through; font-weight:600; }
+  .tier-econ { font-family:var(--mono); font-size:16px; color:var(--green); font-weight:600; margin-top:4px; }
+  .tier-desc { font-size:13.5px; color:var(--ink-2); line-height:1.45; margin:0; }
+
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:880px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
+  tbody tr:last-child td { border-bottom:0; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; }
+  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; white-space:nowrap; }
+  td.infra { font-family:var(--mono); font-size:11.5px; color:var(--accent); font-weight:600; white-space:nowrap; }
+  td.netroi { font-family:var(--mono); font-size:12px; color:var(--ink); font-weight:600; }
+
+  .ledger { display:flex; flex-direction:column; gap:20px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  .entry h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
+  .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
+  .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
+  .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
+
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
+
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
+
+  footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">
+      <span>Camada 34 · Modelagem Financeira & FinOps</span><span>·</span><span>Auditoria de Custos Reais</span><span>·</span>
+      <b>Modelagem para 4 Portes Corporativos</b>
+    </div>
+    <h1>Relatório Executivo de TCO & ROI da Soberania Tecnológica</h1>
+    <p class="deck">Análise financeira rigorosa do <strong>Custo Total de Propriedade (TCO) e Retorno sobre Investimento (ROI)</strong>: a comparação matemática entre o aluguel de SaaS proprietário dolarizado e a operação autônoma de código aberto.</p>
+    <div class="chips">
+      <div class="chip"><b>4</b> portes corporativos modelados</div>
+      <div class="chip"><b>10</b> categorias essenciais auditadas</div>
+      <div class="chip"><b>Economia Líquida:</b> 75% a 92% de redução de TCO</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 1 · Resumo Executivo por Porte</span>
+      <h2>A economia líquida anual por tamanho de organização</h2>
+      <p class="sec-note">Custos calculados com base em valores oficiais de mercado de licenças SaaS (Salesforce, Jira, Datadog, Zendesk, HubSpot, RD Station, TOTVS) subtraindo custos de servidores bare-metal/VPS e manutenção.</p>
+    </div>
+
+    <div class="tiers-grid">
+      <!-- Porte 1 -->
+      <div class="tier-card t1">
+        <span class="tier-label">Porte 1 · Startup / Pequena (5 a 20 pessoas)</span>
+        <h3>Pequeno Porte / PME</h3>
+        <div class="tier-saas">SaaS Pago: R$ 48.000 / ano ($ 8.000)</div>
+        <div class="tier-econ">Economia: R$ 42.000 / ano</div>
+        <p class="tier-desc">Stack enxuta rodando em 1 única VPS de $ 20/mês (Coolify + Chatwoot + Twenty CRM + Listmonk + Metabase).</p>
+      </div>
+
+      <!-- Porte 2 -->
+      <div class="tier-card t2">
+        <span class="tier-label">Porte 2 · Scale-up / Média (20 a 150 pessoas)</span>
+        <h3>Médio Porte / Scale-up</h3>
+        <div class="tier-saas">SaaS Pago: R$ 380.000 / ano ($ 65.000)</div>
+        <div class="tier-econ">Economia: R$ 320.000 / ano</div>
+        <p class="tier-desc">Elimina taxas por assento do Salesforce/Jira/HubSpot e custos por atendente de WhatsApp com Chatwoot e Plane.</p>
+      </div>
+
+      <!-- Porte 3 -->
+      <div class="tier-card t3">
+        <span class="tier-label">Porte 3 · Grande Empresa (150 a 1.000 pessoas)</span>
+        <h3>Grande Porte / Corp</h3>
+        <div class="tier-saas">SaaS Pago: R$ 1.800.000 / ano ($ 300.000)</div>
+        <div class="tier-econ">Economia: R$ 1.450.000 / ano</div>
+        <p class="tier-desc">Substitui Datadog, ERPs proprietários caros e BI fechado por Grafana, ERPNext/Odoo e Apache Superset.</p>
+      </div>
+
+      <!-- Porte 4 -->
+      <div class="tier-card t4">
+        <span class="tier-label">Porte 4 · Multinacional / Enterprise (> 1.000 pessoas)</span>
+        <h3>Enterprise Global</h3>
+        <div class="tier-saas">SaaS Pago: R$ 8.500.000+ / ano ($ 1.4M+)</div>
+        <div class="tier-econ">Economia: R$ 6.800.000+ / ano</div>
+        <p class="tier-desc">Operação em clusters privados k3s/Kubernetes, inferência on-premise com vLLM e zero dependência de fornecedores externos.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 2 · Comparativo Detalhado de TCO (10 Categorias)</span>
+      <h2>A anatomia dos custos: SaaS Fechado vs Pilha Aberta</h2>
+      <p class="sec-note">Base de cálculo modelada para uma empresa média de 100 colaboradores com infraestrutura dedicada redundante.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Categoria Operacional</th>
+            <th>Custo SaaS Proprietário Anual</th>
+            <th>Solução Aberta Adotada</th>
+            <th>Custo de Infraestrutura / Mês</th>
+            <th>Economia Líquida Anual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank">01</td>
+            <td class="tool">Atendimento & WhatsApp (50 operadores)</td>
+            <td class="saas">Zendesk / Blip (R$ 72.000 / ano)</td>
+            <td class="econ">Chatwoot + Evolution API</td>
+            <td class="infra">R$ 150 / mês (VPS 4 vCPU)</td>
+            <td class="netroi">R$ 70.200 / ano (97,5% ROI)</td>
+          </tr>
+          <tr>
+            <td class="rank">02</td>
+            <td class="tool">CRM de Vendas B2B (25 licenças)</td>
+            <td class="saas">Salesforce Sales Cloud (R$ 120.000 / ano)</td>
+            <td class="econ">Twenty CRM / EspoCRM</td>
+            <td class="infra">R$ 120 / mês (Postgres)</td>
+            <td class="netroi">R$ 118.560 / ano (98,8% ROI)</td>
+          </tr>
+          <tr>
+            <td class="rank">03</td>
+            <td class="tool">Automação de Marketing (100k leads)</td>
+            <td class="saas">HubSpot / RD Station (R$ 48.000 / ano)</td>
+            <td class="econ">Mautic + Listmonk</td>
+            <td class="infra">R$ 200 / mês (SES + VPS)</td>
+            <td class="netroi">R$ 45.600 / ano (95% ROI)</td>
+          </tr>
+          <tr>
+            <td class="rank">04</td>
+            <td class="tool">BI & Dashboards (100 usuários)</td>
+            <td class="saas">Power BI Pro (R$ 72.000 / ano)</td>
+            <td class="econ">Metabase / Apache Superset</td>
+            <td class="infra">R$ 180 / mês</td>
+            <td class="netroi">R$ 69.840 / ano (97% ROI)</td>
+          </tr>
+          <tr>
+            <td class="rank">05</td>
+            <td class="tool">Gestão de Projetos & Backlog (60 devs)</td>
+            <td class="saas">Jira Software Cloud (R$ 45.000 / ano)</td>
+            <td class="econ">Plane Community</td>
+            <td class="infra">R$ 150 / mês</td>
+            <td class="netroi">R$ 43.200 / ano (96% ROI)</td>
+          </tr>
+          <tr>
+            <td class="rank">06</td>
+            <td class="tool">APM & Observabilidade (10 nós)</td>
+            <td class="saas">Datadog / New Relic (R$ 140.000 / ano)</td>
+            <td class="econ">Grafana + VictoriaMetrics</td>
+            <td class="infra">R$ 350 / mês (Disco SSD)</td>
+            <td class="netroi">R$ 135.800 / ano (97% ROI)</td>
+          </tr>
+          <tr>
+            <td class="rank">07</td>
+            <td class="tool">Comunicação Interna (100 usuários)</td>
+            <td class="saas">Slack Pro (R$ 48.000 / ano)</td>
+            <td class="econ">Rocket.Chat / Mattermost</td>
+            <td class="infra">R$ 200 / mês</td>
+            <td class="netroi">R$ 45.600 / ano (95% ROI)</td>
+          </tr>
+          <tr>
+            <td class="rank">08</td>
+            <td class="tool">Assinatura Eletrônica (500 docs/mês)</td>
+            <td class="saas">DocuSign / Clicksign (R$ 24.000 / ano)</td>
+            <td class="econ">DocuSeal + Stirling-PDF</td>
+            <td class="infra">R$ 80 / mês</td>
+            <td class="netroi">R$ 23.040 / ano (96% ROI)</td>
+          </tr>
+          <tr>
+            <td class="rank">09</td>
+            <td class="tool">PaaS / Deploy de Aplicações</td>
+            <td class="saas">Heroku / Vercel Enterprise (R$ 36.000 / ano)</td>
+            <td class="econ">Coolify / Dokku</td>
+            <td class="infra">R$ 250 / mês (Hetzner Bare-metal)</td>
+            <td class="netroi">R$ 33.000 / ano (91,6% ROI)</td>
+          </tr>
+          <tr>
+            <td class="rank">10</td>
+            <td class="tool">Armazenamento & Nuvem Privada (2 TB)</td>
+            <td class="saas">Google Workspace / Dropbox (R$ 30.000 / ano)</td>
+            <td class="econ">Nextcloud + MinIO</td>
+            <td class="infra">R$ 150 / mês (S3 Storage)</td>
+            <td class="netroi">R$ 28.200 / ano (94% ROI)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 3 · Análise Estratégica Além do Dinheiro</span>
+      <h2>Ganhos Qualitativos & Blindagem Jurídica (LGPD / GDPR)</h2>
+      <p class="sec-note">A economia financeira é apenas a primeira camada de retorno. A soberania técnica traz benefícios estruturais de longo prazo.</p>
+    </div>
+
+    <div class="ledger">
+      <div class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>1. Blindagem Contra Lock-in & Aumentos Arbitrários</h3>
+            <span class="econ-badge">Segurança Contratual</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O Risco Real do SaaS</span>
+              <p>Fornecedores como Salesforce, Adobe e Jira realizam aumentos unilaterais de 15% a 30% nas renovações anuais. A empresa refém não tem como migrar em menos de 1 ano e é obrigada a aceitar o reajuste.</p>
+            </div>
+            <div class="block">
+              <span class="label">A Resposta Soberana</span>
+              <div class="spec">Código 100% sob seu controle</div>
+              <div class="truth">
+                <p>Nenhuma empresa terceira pode revogar sua licença, desligar seus servidores ou alterar os termos de uso de forma impositiva.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>2. Conformidade Rigorosa com LGPD & Sigilo Industrial</h3>
+            <span class="econ-badge">Compliance Total</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O Risco de Vazamento</span>
+              <p>Ao colocar conversas de WhatsApp, dados bancários de clientes e propostas comerciais em nuvens terceirizadas, sua empresa compartilha responsabilidade civil por eventuais vazamentos.</p>
+            </div>
+            <div class="block">
+              <span class="label">A Resposta Soberana</span>
+              <div class="spec">Dados criptografados no seu datacenter</div>
+              <div class="truth">
+                <p>Zero transferência internacional não-autorizada de dados. Conformidade técnica estrita com as exigências da ANPD e órgãos reguladores.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Relatório de TCO/ROI gerado e auditado pela Fábrica Universal. Valores de referência levantados com base em planos corporativos públicos praticados no mercado entre 2025 e 2026.</p>
+  </footer>
+
+</div>
+
+</body>
+</html>

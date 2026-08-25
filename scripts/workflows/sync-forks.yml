@@ -1,0 +1,24 @@
+name: Sync All Organization Forks
+
+on:
+  schedule:
+    # Roda diariamente às 04:00 UTC (01:00 BRT)
+    - cron: '0 4 * * *'
+  workflow_dispatch: # Permite disparar manualmente na aba Actions
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sincronizar todos os forks da organização
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_ORG_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Buscando forks da organização arsenal-open-source..."
+          gh repo list arsenal-open-source --fork --limit 500 --json nameWithOwner -q '.[].nameWithOwner' | while read -r repo; do
+            echo "Sincronizando: $repo"
+            gh repo sync "$repo" || echo "Falha ao sincronizar $repo (possível branch divergente)"
+          done

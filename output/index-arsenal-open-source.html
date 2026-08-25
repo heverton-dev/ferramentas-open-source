@@ -1,0 +1,2946 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal do Arsenal Open Source · Catálogo de Soberania Tecnológica</title>
+<style>
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+  :root {
+    --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
+    --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
+    --rule:#C7CEDB; --rule-soft:#DADFE8;
+    --accent:#1A446C; --accent-soft:#DCE7F2;
+    --gold:#7A5410; --gold-soft:#EFE5CE;
+    --green:#1B5E3B; --green-soft:#D8EFE2;
+    --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","SF Mono",Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+      --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+      --rule:#2A3142; --rule-soft:#222836;
+      --accent:#7AA5D6; --accent-soft:#162436;
+      --gold:#D6A44E; --gold-soft:#332810;
+      --green:#6BC48F; --green-soft:#122B1C;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.5; }
+  .wrap { max-width:1160px; margin:0 auto; padding:clamp(24px,4vw,56px) clamp(16px,3vw,36px) 80px; display:flex; flex-direction:column; gap:36px; }
+
+  header { display:flex; flex-direction:column; gap:16px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(36px,6vw,64px); line-height:.98; letter-spacing:-.02em; margin:0; }
+  .deck { font-family:var(--serif); font-size:clamp(16px,2vw,19px); line-height:1.45; color:var(--ink-2); max-width:68ch; margin:0; }
+  
+  .search-bar { display:flex; gap:12px; flex-wrap:wrap; background:var(--surface); padding:12px 16px; border:1px solid var(--rule); border-radius:4px; box-shadow:var(--shadow); }
+  .search-input { flex:1; min-width:260px; padding:10px 14px; border:1px solid var(--rule); border-radius:3px; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:14.5px; outline:none; }
+  .search-input:focus { border-color:var(--accent); }
+  .stats-badge { font-family:var(--mono); font-size:12px; align-self:center; color:var(--muted); white-space:nowrap; }
+  .stats-badge b { color:var(--accent); }
+
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:16px; }
+  .repo-card { background:var(--surface); border:1px solid var(--rule); border-radius:4px; padding:18px; display:flex; flex-direction:column; gap:10px; transition:border-color .15s, box-shadow .15s; }
+  .repo-card:hover { border-color:var(--accent); box-shadow:var(--shadow); }
+  .card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+  .card-badge { font-family:var(--mono); font-size:10px; letter-spacing:.05em; text-transform:uppercase; background:var(--accent-soft); color:var(--accent); padding:3px 7px; border-radius:2px; font-weight:600; }
+  .fork-link { font-family:var(--mono); font-size:11px; text-decoration:none; color:var(--accent); font-weight:600; }
+  .fork-link:hover { text-decoration:underline; }
+  .repo-title { font-family:var(--serif); font-size:21px; font-weight:600; margin:0; color:var(--ink); line-height:1.2; }
+  .repo-desc { font-size:13.5px; color:var(--ink-2); margin:0; line-height:1.45; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  .card-foot { margin-top:auto; padding-top:10px; border-top:1px dashed var(--rule-soft); display:flex; justify-content:space-between; align-items:baseline; font-size:11.5px; color:var(--muted); font-family:var(--mono); }
+  .upstream-link { color:var(--muted); text-decoration:none; }
+  .upstream-link:hover { color:var(--ink); text-decoration:underline; }
+
+  footer { border-top:1px solid var(--rule); padding-top:18px; font-size:13px; color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">
+      <span>Organização Oficial</span><span>·</span><span>GitHub: @arsenal-open-source</span><span>·</span>
+      <b>202 Tecnologias Sob Custódia</b>
+    </div>
+    <h1>Portal do Arsenal Open Source</h1>
+    <p class="deck">Índice visual interativo de todas as tecnologias de código aberto custodiadas, sincronizadas e preservadas contra descontinuidade e lock-in corporativo.</p>
+  </header>
+
+  <div class="search-bar">
+    <input type="text" id="filterInput" class="search-input" placeholder="Filtrar por nome, categoria ou descrição (ex: ERP, 3D, Ollama, CRM, ComfyUI)..." onkeyup="filtrarRepos()">
+    <div class="stats-badge" id="statsCount">Exibindo <b>202</b> de <b>202</b> projetos</div>
+  </div>
+
+  <div class="grid" id="reposGrid">
+    
+        <div class="repo-card" data-name=".github" data-desc="organization health and automated fork synchronization" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/.github" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">.github</h3>
+          <p class="repo-desc">Organization health and automated fork synchronization</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>.github</b></span>
+            <a href="https://github.com/.github" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ace-step-1.5" data-desc="the most powerful local music generation model that outperforms almost all commercial alternatives, supporting mac, amd, intel, and cuda devices." data-cat="troca livre">
+          <div class="card-head">
+            <span class="card-badge">Troca Livre</span>
+            <a href="https://github.com/arsenal-open-source/ACE-Step-1.5" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">ACE-Step-1.5</h3>
+          <p class="repo-desc">The most powerful local music generation model that outperforms almost all commercial alternatives, supporting Mac, AMD, Intel, and CUDA devices.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>ACE-Step-1.5</b></span>
+            <a href="https://github.com/ACE-Step-1.5" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="activepieces" data-desc="ai agents & mcps & ai workflow automation • (~400 mcp servers for ai agents) • ai automation / ai agent with mcps • ai workflows & ai agents • mcps for ai agents" data-cat="no-code / low-code & automação com ia">
+          <div class="card-head">
+            <span class="card-badge">No-Code / Low-Code & Automação com IA</span>
+            <a href="https://github.com/arsenal-open-source/activepieces" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">activepieces</h3>
+          <p class="repo-desc">AI Agents & MCPs & AI Workflow Automation • (~400 MCP servers for AI agents) • AI Automation / AI Agent with MCPs • AI Workflows & AI Agents • MCPs for AI Agents</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>activepieces</b></span>
+            <a href="https://github.com/activepieces" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="agent-skills" data-desc="production-grade engineering skills for ai coding agents." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/agent-skills" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">agent-skills</h3>
+          <p class="repo-desc">Production-grade engineering skills for AI coding agents.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>agent-skills</b></span>
+            <a href="https://github.com/agent-skills" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="agent-skills-hunter" data-desc="agent skills 终极集合地，一站式装载，“让每一寸上下文都发挥到极致”🚀 the ultimate collection of 400+ high-quality agent skills for claude ai — creative, technical & enterprise workflows  " data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/Agent-Skills-Hunter" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Agent-Skills-Hunter</h3>
+          <p class="repo-desc">Agent Skills 终极集合地，一站式装载，“让每一寸上下文都发挥到极致”🚀 The Ultimate Collection of 400+ High-Quality Agent Skills for Claude AI — Creative, Technical & Enterprise Workflows  </p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Agent-Skills-Hunter</b></span>
+            <a href="https://github.com/Agent-Skills-Hunter" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="aider" data-desc="aider is ai pair programming in your terminal" data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/aider" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">aider</h3>
+          <p class="repo-desc">aider is AI pair programming in your terminal</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>aider</b></span>
+            <a href="https://github.com/aider" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="akaunting" data-desc="online accounting software" data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/akaunting" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">akaunting</h3>
+          <p class="repo-desc">Online Accounting Software</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>akaunting</b></span>
+            <a href="https://github.com/akaunting" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="anarlog" data-desc="open source granola ai alternative" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/anarlog" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">anarlog</h3>
+          <p class="repo-desc">Open source Granola AI Alternative</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>anarlog</b></span>
+            <a href="https://github.com/anarlog" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="antigravity-awesome-skills" data-desc="the ultimate collection of 1000+ agentic skills for claude code/antigravity/cursor. battle-tested, high-performance skills for ai agents including official skills from anthropic and vercel." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/antigravity-awesome-skills" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">antigravity-awesome-skills</h3>
+          <p class="repo-desc">The Ultimate Collection of 1000+ Agentic Skills for Claude Code/Antigravity/Cursor. Battle-tested, high-performance skills for AI agents including official skills from Anthropic and Vercel.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>antigravity-awesome-skills</b></span>
+            <a href="https://github.com/antigravity-awesome-skills" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="antigravity-kit" data-desc="repositório de código aberto sob custódia e preservação soberana." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/antigravity-kit" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">antigravity-kit</h3>
+          <p class="repo-desc">Repositório de código aberto sob custódia e preservação soberana.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>antigravity-kit</b></span>
+            <a href="https://github.com/antigravity-kit" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="anything-llm" data-desc="stop renting your intelligence. own it with anythingllm. everything you need for a powerful local-first agent experience " data-cat="código autônomo">
+          <div class="card-head">
+            <span class="card-badge">Código Autônomo</span>
+            <a href="https://github.com/arsenal-open-source/anything-llm" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">anything-llm</h3>
+          <p class="repo-desc">Stop renting your intelligence. Own it with AnythingLLM. Everything you need for a powerful local-first agent experience </p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>anything-llm</b></span>
+            <a href="https://github.com/anything-llm" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ast-grep" data-desc="⚡a cli tool for code structural search, lint and rewriting. written in rust" data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/ast-grep" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">ast-grep</h3>
+          <p class="repo-desc">⚡A CLI tool for code structural search, lint and rewriting. Written in Rust</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>ast-grep</b></span>
+            <a href="https://github.com/ast-grep" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="asterisk" data-desc="the official asterisk project repository." data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/asterisk" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">asterisk</h3>
+          <p class="repo-desc">The official Asterisk Project repository.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>asterisk</b></span>
+            <a href="https://github.com/asterisk" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="astracampaign" data-desc="astra campaign é uma plataforma saas open-source para campanhas em massa no whatsapp. multi-tenant com isolamento por empresa, quotas, backup automático, integração com ia para personalização e suporte a múltiplos provedores, com arquitetura moderna e recursos enterprise." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/astracampaign" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">astracampaign</h3>
+          <p class="repo-desc">Astra Campaign é uma plataforma SaaS open-source para campanhas em massa no WhatsApp. Multi-tenant com isolamento por empresa, quotas, backup automático, integração com IA para personalização e suporte a múltiplos provedores, com arquitetura moderna e recursos enterprise.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>astracampaign</b></span>
+            <a href="https://github.com/astracampaign" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="axolotl" data-desc="go ahead and axolotl questions" data-cat="motores de inferência & fine-tuning lo">
+          <div class="card-head">
+            <span class="card-badge">Motores de Inferência & Fine-Tuning Lo</span>
+            <a href="https://github.com/arsenal-open-source/axolotl" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">axolotl</h3>
+          <p class="repo-desc">Go ahead and axolotl questions</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>axolotl</b></span>
+            <a href="https://github.com/axolotl" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="baileys" data-desc="socket-based ts/javascript api for whatsapp web" data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/Baileys" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Baileys</h3>
+          <p class="repo-desc">Socket-based TS/JavaScript API for WhatsApp Web</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Baileys</b></span>
+            <a href="https://github.com/Baileys" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="baserow" data-desc="build databases, automations, apps & agents with ai — no code.  open source platform available on cloud and self-hosted. gdpr, hipaa, soc 2 compliant. best airtable alternative." data-cat="titãs da soberania">
+          <div class="card-head">
+            <span class="card-badge">Titãs da Soberania</span>
+            <a href="https://github.com/arsenal-open-source/baserow" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">baserow</h3>
+          <p class="repo-desc">Build databases, automations, apps & agents with AI — no code.  Open source platform available on cloud and self-hosted. GDPR, HIPAA, SOC 2 compliant. Best Airtable alternative.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>baserow</b></span>
+            <a href="https://github.com/baserow" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="bookstack" data-desc="now managed on codeberg" data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/BookStack" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">BookStack</h3>
+          <p class="repo-desc">NOW MANAGED ON CODEBERG</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>BookStack</b></span>
+            <a href="https://github.com/BookStack" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="borg" data-desc="deduplicating archiver with compression and authenticated encryption." data-cat="chão de fábrica">
+          <div class="card-head">
+            <span class="card-badge">Chão de Fábrica</span>
+            <a href="https://github.com/arsenal-open-source/borg" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">borg</h3>
+          <p class="repo-desc">Deduplicating archiver with compression and authenticated encryption.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>borg</b></span>
+            <a href="https://github.com/borg" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="botpress" data-desc="the open-source hub to build & deploy gpt/llm agents ⚡️" data-cat="no-code / low-code & automação com ia">
+          <div class="card-head">
+            <span class="card-badge">No-Code / Low-Code & Automação com IA</span>
+            <a href="https://github.com/arsenal-open-source/botpress" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">botpress</h3>
+          <p class="repo-desc">The open-source hub to build & deploy GPT/LLM Agents ⚡️</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>botpress</b></span>
+            <a href="https://github.com/botpress" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="btcpayserver" data-desc="accept bitcoin payments. free, open-source & self-hosted, bitcoin payment processor. " data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/btcpayserver" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">btcpayserver</h3>
+          <p class="repo-desc">Accept Bitcoin payments. Free, open-source & self-hosted, Bitcoin payment processor. </p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>btcpayserver</b></span>
+            <a href="https://github.com/btcpayserver" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="btcpayserver-docker" data-desc="docker resources for hosting btcpayserver easily" data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/btcpayserver-docker" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">btcpayserver-docker</h3>
+          <p class="repo-desc">Docker resources for hosting BTCPayServer easily</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>btcpayserver-docker</b></span>
+            <a href="https://github.com/btcpayserver-docker" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="bulk-crap-uninstaller" data-desc="remove large amounts of unwanted applications quickly." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/Bulk-Crap-Uninstaller" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Bulk-Crap-Uninstaller</h3>
+          <p class="repo-desc">Remove large amounts of unwanted applications quickly.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Bulk-Crap-Uninstaller</b></span>
+            <a href="https://github.com/Bulk-Crap-Uninstaller" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="caddy" data-desc="fast and extensible multi-platform http/1-2-3 web server with automatic https" data-cat="chão de fábrica">
+          <div class="card-head">
+            <span class="card-badge">Chão de Fábrica</span>
+            <a href="https://github.com/arsenal-open-source/caddy" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">caddy</h3>
+          <p class="repo-desc">Fast and extensible multi-platform HTTP/1-2-3 web server with automatic HTTPS</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>caddy</b></span>
+            <a href="https://github.com/caddy" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="cal.diy" data-desc="scheduling infrastructure for absolutely everyone." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/cal.diy" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">cal.diy</h3>
+          <p class="repo-desc">Scheduling infrastructure for absolutely everyone.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>cal.diy</b></span>
+            <a href="https://github.com/cal.diy" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="calibre" data-desc="the official source code repository for the calibre ebook manager" data-cat="troca livre">
+          <div class="card-head">
+            <span class="card-badge">Troca Livre</span>
+            <a href="https://github.com/arsenal-open-source/calibre" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">calibre</h3>
+          <p class="repo-desc">The official source code repository for the calibre ebook manager</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>calibre</b></span>
+            <a href="https://github.com/calibre" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="calibre-1" data-desc="the official source code repository for the calibre ebook manager" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/calibre-1" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">calibre-1</h3>
+          <p class="repo-desc">The official source code repository for the calibre ebook manager</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>calibre-1</b></span>
+            <a href="https://github.com/calibre-1" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="canvas-lms" data-desc="the open lms by instructure, inc." data-cat="educação, lms & repetição espaçada">
+          <div class="card-head">
+            <span class="card-badge">Educação, LMS & Repetição Espaçada</span>
+            <a href="https://github.com/arsenal-open-source/canvas-lms" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">canvas-lms</h3>
+          <p class="repo-desc">The open LMS by Instructure, Inc.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>canvas-lms</b></span>
+            <a href="https://github.com/canvas-lms" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="caveman" data-desc="🪨 why use many token when few token do trick — claude code skill that cuts 65% of tokens by talking like caveman" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/caveman" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">caveman</h3>
+          <p class="repo-desc">🪨 why use many token when few token do trick — Claude Code skill that cuts 65% of tokens by talking like caveman</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>caveman</b></span>
+            <a href="https://github.com/caveman" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="chatterbox" data-desc="sota open-source tts" data-cat="troca livre">
+          <div class="card-head">
+            <span class="card-badge">Troca Livre</span>
+            <a href="https://github.com/arsenal-open-source/chatterbox" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">chatterbox</h3>
+          <p class="repo-desc">SoTA open-source TTS</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>chatterbox</b></span>
+            <a href="https://github.com/chatterbox" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="chatwoot" data-desc="open-source live-chat, email support, omni-channel desk. an alternative to intercom, zendesk, salesforce service cloud etc. 🔥💬" data-cat="no-code / low-code & automação com ia">
+          <div class="card-head">
+            <span class="card-badge">No-Code / Low-Code & Automação com IA</span>
+            <a href="https://github.com/arsenal-open-source/chatwoot" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">chatwoot</h3>
+          <p class="repo-desc">Open-source live-chat, email support, omni-channel desk. An alternative to Intercom, Zendesk, Salesforce Service Cloud etc. 🔥💬</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>chatwoot</b></span>
+            <a href="https://github.com/chatwoot" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="chef_convex" data-desc="crie apps fullstack gratuitamente" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/chef_convex" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">chef_convex</h3>
+          <p class="repo-desc">Crie apps FullStack gratuitamente</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>chef_convex</b></span>
+            <a href="https://github.com/chef_convex" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="chroma" data-desc="search infrastructure for ai" data-cat="código autônomo">
+          <div class="card-head">
+            <span class="card-badge">Código Autônomo</span>
+            <a href="https://github.com/arsenal-open-source/chroma" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">chroma</h3>
+          <p class="repo-desc">Search infrastructure for AI</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>chroma</b></span>
+            <a href="https://github.com/chroma" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="cline" data-desc="autonomous coding agent as an sdk, ide extension, or cli assistant." data-cat="troca livre">
+          <div class="card-head">
+            <span class="card-badge">Troca Livre</span>
+            <a href="https://github.com/arsenal-open-source/cline" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">cline</h3>
+          <p class="repo-desc">Autonomous coding agent as an SDK, IDE extension, or CLI assistant.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>cline</b></span>
+            <a href="https://github.com/cline" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="cogvideo" data-desc="text and image to video generation: cogvideox (2024) and cogvideo (iclr 2023)" data-cat="substitutos open-source para kairogen ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para KairoGen </span>
+            <a href="https://github.com/arsenal-open-source/CogVideo" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">CogVideo</h3>
+          <p class="repo-desc">text and image to video generation: CogVideoX (2024) and CogVideo (ICLR 2023)</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>CogVideo</b></span>
+            <a href="https://github.com/CogVideo" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="comfyui" data-desc="the most powerful and modular diffusion model gui, api and backend with a graph/nodes interface." data-cat="design, ui, mídia soberana & upcaling ">
+          <div class="card-head">
+            <span class="card-badge">Design, UI, Mídia Soberana & Upcaling </span>
+            <a href="https://github.com/arsenal-open-source/ComfyUI" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">ComfyUI</h3>
+          <p class="repo-desc">The most powerful and modular diffusion model GUI, api and backend with a graph/nodes interface.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>ComfyUI</b></span>
+            <a href="https://github.com/ComfyUI" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="continue" data-desc="open-source coding agent" data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/continue" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">continue</h3>
+          <p class="repo-desc">open-source coding agent</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>continue</b></span>
+            <a href="https://github.com/continue" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="coolify" data-desc="an open-source, self-hostable paas alternative to vercel, heroku & netlify that lets you easily deploy static sites, databases, full-stack applications and 280+ one-click services on your own servers." data-cat="devops, borda, monitoramento & utilitá">
+          <div class="card-head">
+            <span class="card-badge">DevOps, Borda, Monitoramento & Utilitá</span>
+            <a href="https://github.com/arsenal-open-source/coolify" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">coolify</h3>
+          <p class="repo-desc">An open-source, self-hostable PaaS alternative to Vercel, Heroku & Netlify that lets you easily deploy static sites, databases, full-stack applications and 280+ one-click services on your own servers.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>coolify</b></span>
+            <a href="https://github.com/coolify" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="crawlee" data-desc="crawlee—a web scraping and browser automation library for node.js to build reliable crawlers. in javascript and typescript. extract data for ai, llms, rag, or gpts. download html, pdf, jpg, png, and other files from websites. works with puppeteer, playwright, cheerio, jsdom, and raw http. both headful and headless mode. with proxy rotation." data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/crawlee" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">crawlee</h3>
+          <p class="repo-desc">Crawlee—A web scraping and browser automation library for Node.js to build reliable crawlers. In JavaScript and TypeScript. Extract data for AI, LLMs, RAG, or GPTs. Download HTML, PDF, JPG, PNG, and other files from websites. Works with Puppeteer, Playwright, Cheerio, JSDOM, and raw HTTP. Both headful and headless mode. With proxy rotation.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>crawlee</b></span>
+            <a href="https://github.com/crawlee" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="crewai" data-desc="framework for orchestrating role-playing, autonomous ai agents. by fostering collaborative intelligence, crewai empowers agents to work together seamlessly, tackling complex tasks." data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/crewAI" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">crewAI</h3>
+          <p class="repo-desc">Framework for orchestrating role-playing, autonomous AI agents. By fostering collaborative intelligence, CrewAI empowers agents to work together seamlessly, tackling complex tasks.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>crewAI</b></span>
+            <a href="https://github.com/crewAI" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="crystaldiskinfo" data-desc="crystaldiskinfo" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/CrystalDiskInfo" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">CrystalDiskInfo</h3>
+          <p class="repo-desc">CrystalDiskInfo</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>CrystalDiskInfo</b></span>
+            <a href="https://github.com/CrystalDiskInfo" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="deepseek-harness" data-desc="deepseek harness: everything is a plugin." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/deepseek-harness" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">deepseek-harness</h3>
+          <p class="repo-desc">DeepSeek Harness: Everything is a Plugin.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>deepseek-harness</b></span>
+            <a href="https://github.com/deepseek-harness" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="demucs" data-desc="code for the paper hybrid spectrogram and waveform source separation" data-cat="voz, visão & multimodalidade local">
+          <div class="card-head">
+            <span class="card-badge">Voz, Visão & Multimodalidade Local</span>
+            <a href="https://github.com/arsenal-open-source/demucs" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">demucs</h3>
+          <p class="repo-desc">Code for the paper Hybrid Spectrogram and Waveform Source Separation</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>demucs</b></span>
+            <a href="https://github.com/demucs" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="dify" data-desc="build agentic workflows, rag pipelines, with rich ai model and tool support on one collaborative workspace. deploy on cloud, vpc, or self-hosted, so teams move from prototype to production without rebuilding the stack." data-cat="no-code / low-code & automação com ia">
+          <div class="card-head">
+            <span class="card-badge">No-Code / Low-Code & Automação com IA</span>
+            <a href="https://github.com/arsenal-open-source/dify" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">dify</h3>
+          <p class="repo-desc">Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collaborative workspace. Deploy on cloud, VPC, or self-hosted, so teams move from prototype to production without rebuilding the stack.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>dify</b></span>
+            <a href="https://github.com/dify" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="discourse" data-desc="a platform for community discussion. free, open, simple." data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/discourse" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">discourse</h3>
+          <p class="repo-desc">A platform for community discussion. Free, open, simple.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>discourse</b></span>
+            <a href="https://github.com/discourse" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="discourse_docker" data-desc="a docker image for discourse" data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/discourse_docker" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">discourse_docker</h3>
+          <p class="repo-desc">A Docker image for Discourse</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>discourse_docker</b></span>
+            <a href="https://github.com/discourse_docker" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="divcapture" data-desc="a browser extension to capture divs and block elements with a premium visual finish in transparent png." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/DivCapture" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">DivCapture</h3>
+          <p class="repo-desc">A browser extension to capture divs and block elements with a premium visual finish in transparent PNG.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>DivCapture</b></span>
+            <a href="https://github.com/DivCapture" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="docker-jitsi-meet" data-desc="jitsi meet on docker" data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/docker-jitsi-meet" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">docker-jitsi-meet</h3>
+          <p class="repo-desc">Jitsi Meet on Docker</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>docker-jitsi-meet</b></span>
+            <a href="https://github.com/docker-jitsi-meet" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="docling" data-desc="get your documents ready for gen ai" data-cat="troca livre">
+          <div class="card-head">
+            <span class="card-badge">Troca Livre</span>
+            <a href="https://github.com/arsenal-open-source/docling" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">docling</h3>
+          <p class="repo-desc">Get your documents ready for gen AI</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>docling</b></span>
+            <a href="https://github.com/docling" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="docmost" data-desc="docmost is an open-source collaborative wiki and documentation software. it is an open-source alternative to confluence and notion." data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/docmost" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">docmost</h3>
+          <p class="repo-desc">Docmost is an open-source collaborative wiki and documentation software. It is an open-source alternative to Confluence and Notion.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>docmost</b></span>
+            <a href="https://github.com/docmost" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="dokku" data-desc="a docker-powered paas that helps you build and manage the lifecycle of applications" data-cat="chão de fábrica">
+          <div class="card-head">
+            <span class="card-badge">Chão de Fábrica</span>
+            <a href="https://github.com/arsenal-open-source/dokku" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">dokku</h3>
+          <p class="repo-desc">A docker-powered PaaS that helps you build and manage the lifecycle of applications</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>dokku</b></span>
+            <a href="https://github.com/dokku" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="dub" data-desc="the modern link attribution platform. loved by world-class marketing teams like framer, perplexity, superhuman, twilio, buffer and more." data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/dub" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">dub</h3>
+          <p class="repo-desc">The modern link attribution platform. Loved by world-class marketing teams like Framer, Perplexity, Superhuman, Twilio, Buffer and more.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>dub</b></span>
+            <a href="https://github.com/dub" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ebook-translator-calibre-plugin" data-desc="a calibre plugin to translate ebook into a specified language." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/Ebook-Translator-Calibre-Plugin" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Ebook-Translator-Calibre-Plugin</h3>
+          <p class="repo-desc">A Calibre plugin to translate ebook into a specified language.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Ebook-Translator-Calibre-Plugin</b></span>
+            <a href="https://github.com/Ebook-Translator-Calibre-Plugin" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="erpnext" data-desc="free and open source enterprise resource planning (erp)" data-cat="substitutos open-source para hubspot, ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para HubSpot, </span>
+            <a href="https://github.com/arsenal-open-source/erpnext" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">erpnext</h3>
+          <p class="repo-desc">Free and Open Source Enterprise Resource Planning (ERP)</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>erpnext</b></span>
+            <a href="https://github.com/erpnext" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="esm" data-desc="evolutionary scale modeling (esm): pretrained language models for proteins" data-cat="bioinformática, química & ia científic">
+          <div class="card-head">
+            <span class="card-badge">Bioinformática, Química & IA Científic</span>
+            <a href="https://github.com/arsenal-open-source/esm" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">esm</h3>
+          <p class="repo-desc">Evolutionary Scale Modeling (esm): Pretrained language models for proteins</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>esm</b></span>
+            <a href="https://github.com/esm" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="espocrm" data-desc="espocrm – open source crm application" data-cat="substitutos open-source para hubspot, ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para HubSpot, </span>
+            <a href="https://github.com/arsenal-open-source/espocrm" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">espocrm</h3>
+          <p class="repo-desc">EspoCRM – Open Source CRM Application</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>espocrm</b></span>
+            <a href="https://github.com/espocrm" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="evolution-api" data-desc="evolution api is an open-source whatsapp integration api" data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/evolution-api" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">evolution-api</h3>
+          <p class="repo-desc">Evolution API is an open-source WhatsApp integration API</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>evolution-api</b></span>
+            <a href="https://github.com/evolution-api" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="evolution-api-1" data-desc="evolution api is an open-source whatsapp integration api" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/evolution-api-1" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">evolution-api-1</h3>
+          <p class="repo-desc">Evolution API is an open-source WhatsApp integration API</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>evolution-api-1</b></span>
+            <a href="https://github.com/evolution-api-1" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="fable-method" data-desc="the fable workflow: how claude fable 5 worked, distilled into skills any model can run, with the eval that keeps it honest. think / act / prove." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/fable-method" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">fable-method</h3>
+          <p class="repo-desc">The Fable Workflow: how Claude Fable 5 worked, distilled into skills any model can run, with the eval that keeps it honest. Think / act / prove.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>fable-method</b></span>
+            <a href="https://github.com/fable-method" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="fabric" data-desc="fabric is an open-source framework for augmenting humans using ai. it provides a modular system for solving specific problems using a crowdsourced set of ai prompts that can be used anywhere." data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/Fabric" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Fabric</h3>
+          <p class="repo-desc">Fabric is an open-source framework for augmenting humans using AI. It provides a modular system for solving specific problems using a crowdsourced set of AI prompts that can be used anywhere.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Fabric</b></span>
+            <a href="https://github.com/Fabric" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="faster-whisper" data-desc="faster whisper transcription with ctranslate2" data-cat="voz, visão & multimodalidade local">
+          <div class="card-head">
+            <span class="card-badge">Voz, Visão & Multimodalidade Local</span>
+            <a href="https://github.com/arsenal-open-source/faster-whisper" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">faster-whisper</h3>
+          <p class="repo-desc">Faster Whisper transcription with CTranslate2</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>faster-whisper</b></span>
+            <a href="https://github.com/faster-whisper" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="flagsmith" data-desc="flagsmith is an open source feature flagging and remote config service. self-host or use our hosted version at https://app.flagsmith.com." data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/flagsmith" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">flagsmith</h3>
+          <p class="repo-desc">Flagsmith is an open source feature flagging and remote config service. Self-host or use our hosted version at https://app.flagsmith.com.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>flagsmith</b></span>
+            <a href="https://github.com/flagsmith" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="flowise" data-desc="build ai agents, visually" data-cat="no-code / low-code & automação com ia">
+          <div class="card-head">
+            <span class="card-badge">No-Code / Low-Code & Automação com IA</span>
+            <a href="https://github.com/arsenal-open-source/Flowise" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Flowise</h3>
+          <p class="repo-desc">Build AI Agents, Visually</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Flowise</b></span>
+            <a href="https://github.com/Flowise" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="formbricks" data-desc="open source qualtrics alternative" data-cat="titãs da soberania">
+          <div class="card-head">
+            <span class="card-badge">Titãs da Soberania</span>
+            <a href="https://github.com/arsenal-open-source/formbricks" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">formbricks</h3>
+          <p class="repo-desc">Open Source Qualtrics Alternative</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>formbricks</b></span>
+            <a href="https://github.com/formbricks" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="frappe_docker" data-desc="docker environment for developing, deploying, and running frappe applications (erpnext and custom apps) in production and development" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/frappe_docker" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">frappe_docker</h3>
+          <p class="repo-desc">Docker environment for developing, deploying, and running Frappe applications (ERPNext and custom apps) in production and development</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>frappe_docker</b></span>
+            <a href="https://github.com/frappe_docker" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="freertos" data-desc="'classic' freertos distribution.  started as git clone of freertos sourceforge svn repo.  submodules the kernel." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/FreeRTOS" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">FreeRTOS</h3>
+          <p class="repo-desc">'Classic' FreeRTOS distribution.  Started as Git clone of FreeRTOS SourceForge SVN repo.  Submodules the kernel.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>FreeRTOS</b></span>
+            <a href="https://github.com/FreeRTOS" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="freescout" data-desc="freescout — free self-hosted help desk & shared mailbox (zendesk / help scout alternative)" data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/freescout" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">freescout</h3>
+          <p class="repo-desc">FreeScout — Free self-hosted help desk & shared mailbox (Zendesk / Help Scout alternative)</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>freescout</b></span>
+            <a href="https://github.com/freescout" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="gatus" data-desc="automated developer-oriented status page with alerting and incident support" data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/gatus" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">gatus</h3>
+          <p class="repo-desc">Automated developer-oriented status page with alerting and incident support</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>gatus</b></span>
+            <a href="https://github.com/gatus" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="get-shit-done" data-desc="a light-weight and powerful meta-prompting, context engineering and spec-driven development system for claude code by tâches." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/get-shit-done" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">get-shit-done</h3>
+          <p class="repo-desc">A light-weight and powerful meta-prompting, context engineering and spec-driven development system for Claude Code by TÂCHES.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>get-shit-done</b></span>
+            <a href="https://github.com/get-shit-done" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ghost" data-desc="independent technology for modern publishing, memberships, subscriptions and newsletters." data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/Ghost" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Ghost</h3>
+          <p class="repo-desc">Independent technology for modern publishing, memberships, subscriptions and newsletters.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Ghost</b></span>
+            <a href="https://github.com/Ghost" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ghunt" data-desc="🕵️‍♂️ offensive google framework." data-cat="arquivamento digital, preservação & os">
+          <div class="card-head">
+            <span class="card-badge">Arquivamento Digital, Preservação & OS</span>
+            <a href="https://github.com/arsenal-open-source/GHunt" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">GHunt</h3>
+          <p class="repo-desc">🕵️‍♂️ Offensive Google framework.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>GHunt</b></span>
+            <a href="https://github.com/GHunt" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="gitingest" data-desc="replace 'hub' with 'ingest' in any github url to get a prompt-friendly extract of a codebase " data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/gitingest" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">gitingest</h3>
+          <p class="repo-desc">Replace 'hub' with 'ingest' in any GitHub URL to get a prompt-friendly extract of a codebase </p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>gitingest</b></span>
+            <a href="https://github.com/gitingest" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="glances" data-desc="glances an eye on your system. a top/htop alternative for gnu/linux, bsd, macos and windows operating systems." data-cat="chão de fábrica">
+          <div class="card-head">
+            <span class="card-badge">Chão de Fábrica</span>
+            <a href="https://github.com/arsenal-open-source/glances" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">glances</h3>
+          <p class="repo-desc">Glances an Eye on your system. A top/htop alternative for GNU/Linux, BSD, macOS and Windows operating systems.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>glances</b></span>
+            <a href="https://github.com/glances" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="grafana" data-desc="the open and composable observability and data visualization platform. visualize metrics, logs, and traces from multiple sources like prometheus, loki, elasticsearch, influxdb, postgres and many more. " data-cat="chão de fábrica">
+          <div class="card-head">
+            <span class="card-badge">Chão de Fábrica</span>
+            <a href="https://github.com/arsenal-open-source/grafana" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">grafana</h3>
+          <p class="repo-desc">The open and composable observability and data visualization platform. Visualize metrics, logs, and traces from multiple sources like Prometheus, Loki, Elasticsearch, InfluxDB, Postgres and many more. </p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>grafana</b></span>
+            <a href="https://github.com/grafana" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="grapesjs" data-desc="free and open source web builder framework. next generation tool for building templates without coding" data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/grapesjs" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">grapesjs</h3>
+          <p class="repo-desc">Free and Open source Web Builder Framework. Next generation tool for building templates without coding</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>grapesjs</b></span>
+            <a href="https://github.com/grapesjs" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="growthbook" data-desc="open source feature flags, experimentation, and product analytics" data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/growthbook" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">growthbook</h3>
+          <p class="repo-desc">Open Source Feature Flags, Experimentation, and Product Analytics</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>growthbook</b></span>
+            <a href="https://github.com/growthbook" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="guardrails" data-desc="nemo guardrails is an open-source toolkit for easily adding programmable guardrails to llm-based conversational systems." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/Guardrails" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Guardrails</h3>
+          <p class="repo-desc">NeMo Guardrails is an open-source toolkit for easily adding programmable guardrails to LLM-based conversational systems.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Guardrails</b></span>
+            <a href="https://github.com/Guardrails" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="hallmark" data-desc="anti-ai-slop design skill for claude code, cursor, and codex." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/hallmark" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">hallmark</h3>
+          <p class="repo-desc">Anti-AI-slop design skill for Claude Code, Cursor, and Codex.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>hallmark</b></span>
+            <a href="https://github.com/hallmark" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="headscale" data-desc="an open source, self-hosted implementation of the tailscale control server" data-cat="devops, borda, monitoramento & utilitá">
+          <div class="card-head">
+            <span class="card-badge">DevOps, Borda, Monitoramento & Utilitá</span>
+            <a href="https://github.com/arsenal-open-source/headscale" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">headscale</h3>
+          <p class="repo-desc">An open source, self-hosted implementation of the Tailscale control server</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>headscale</b></span>
+            <a href="https://github.com/headscale" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="hermes-agent" data-desc="the agent that grows with you" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/hermes-agent" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">hermes-agent</h3>
+          <p class="repo-desc">The agent that grows with you</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>hermes-agent</b></span>
+            <a href="https://github.com/hermes-agent" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="hoppscotch" data-desc="open-source api development ecosystem • https://hoppscotch.io • offline, on-prem & cloud • web, desktop & cli • open-source alternative to postman, insomnia" data-cat="titãs da soberania">
+          <div class="card-head">
+            <span class="card-badge">Titãs da Soberania</span>
+            <a href="https://github.com/arsenal-open-source/hoppscotch" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">hoppscotch</h3>
+          <p class="repo-desc">Open-Source API Development Ecosystem • https://hoppscotch.io • Offline, On-Prem & Cloud • Web, Desktop & CLI • Open-Source Alternative to Postman, Insomnia</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>hoppscotch</b></span>
+            <a href="https://github.com/hoppscotch" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="huashu-design" data-desc="huashu design · html-native design skill for claude code · claude code 里 html 原生的设计 skill · 高保真原型 / 幻灯片 / 动画 + 20 设计哲学 + 5 维评审 + mp4 导出 · agent-agnostic" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/huashu-design" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">huashu-design</h3>
+          <p class="repo-desc">Huashu Design · HTML-native design skill for Claude Code · Claude Code 里 HTML 原生的设计 skill · 高保真原型 / 幻灯片 / 动画 + 20 设计哲学 + 5 维评审 + MP4 导出 · Agent-agnostic</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>huashu-design</b></span>
+            <a href="https://github.com/huashu-design" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="hunyuan3d-2" data-desc="high-resolution 3d assets generation with large scale hunyuan3d diffusion models." data-cat="substitutos open-source para kairogen ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para KairoGen </span>
+            <a href="https://github.com/arsenal-open-source/Hunyuan3D-2" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Hunyuan3D-2</h3>
+          <p class="repo-desc">High-Resolution 3D Assets Generation with Large Scale Hunyuan3D Diffusion Models.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Hunyuan3D-2</b></span>
+            <a href="https://github.com/Hunyuan3D-2" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="hyperswitch" data-desc="open source, composable payments platform | pci compliant | saas and self-host options | enables connectivity to multiple payment, payout, fraud, vault and tokenization providers | uplifts authorization with intelligent routing and revenue recovery | reduce payment processing costs with cost observability | reduces payment ops with reconciliation" data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/hyperswitch" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">hyperswitch</h3>
+          <p class="repo-desc">Open source, composable payments platform | PCI compliant | SaaS and Self-host options | Enables connectivity to multiple payment, payout, fraud, vault and tokenization providers | Uplifts authorization with intelligent routing and revenue recovery | Reduce payment processing costs with cost observability | Reduces payment ops with reconciliation</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>hyperswitch</b></span>
+            <a href="https://github.com/hyperswitch" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="i-have-adhd" data-desc="a skill for your coding agent to stop it from burying the answer. adhd-friendly output." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/i-have-adhd" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">i-have-adhd</h3>
+          <p class="repo-desc">A skill for your coding agent to stop it from burying the answer. ADHD-friendly output.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>i-have-adhd</b></span>
+            <a href="https://github.com/i-have-adhd" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="immich" data-desc="high performance self-hosted photo and video management solution." data-cat="titãs da soberania">
+          <div class="card-head">
+            <span class="card-badge">Titãs da Soberania</span>
+            <a href="https://github.com/arsenal-open-source/immich" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">immich</h3>
+          <p class="repo-desc">High performance self-hosted photo and video management solution.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>immich</b></span>
+            <a href="https://github.com/immich" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="impeccable" data-desc="the design language that makes your ai harness better at design." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/impeccable" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">impeccable</h3>
+          <p class="repo-desc">The design language that makes your AI harness better at design.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>impeccable</b></span>
+            <a href="https://github.com/impeccable" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="instantmesh" data-desc="instantmesh: efficient 3d mesh generation from a single image with sparse-view large reconstruction models" data-cat="substitutos open-source para kairogen ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para KairoGen </span>
+            <a href="https://github.com/arsenal-open-source/InstantMesh" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">InstantMesh</h3>
+          <p class="repo-desc">InstantMesh: Efficient 3D Mesh Generation from a Single Image with Sparse-view Large Reconstruction Models</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>InstantMesh</b></span>
+            <a href="https://github.com/InstantMesh" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="jan" data-desc="jan is an open source alternative to chatgpt that runs 100% offline on your computer." data-cat="código autônomo">
+          <div class="card-head">
+            <span class="card-badge">Código Autônomo</span>
+            <a href="https://github.com/arsenal-open-source/jan" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">jan</h3>
+          <p class="repo-desc">Jan is an open source alternative to ChatGPT that runs 100% offline on your computer.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>jan</b></span>
+            <a href="https://github.com/jan" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="jitsi-meet" data-desc="jitsi meet - secure, simple and scalable video conferences that you use as a standalone app or embed in your web application." data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/jitsi-meet" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">jitsi-meet</h3>
+          <p class="repo-desc">Jitsi Meet - Secure, Simple and Scalable Video Conferences that you use as a standalone app or embed in your web application.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>jitsi-meet</b></span>
+            <a href="https://github.com/jitsi-meet" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="jitsu" data-desc="jitsu is an open-source segment alternative. fully-scriptable data ingestion engine for modern data teams. set-up a real-time data pipeline in minutes, not days" data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/jitsu" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">jitsu</h3>
+          <p class="repo-desc">Jitsu is an open-source Segment alternative. Fully-scriptable data ingestion engine for modern data teams. Set-up a real-time data pipeline in minutes, not days</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>jitsu</b></span>
+            <a href="https://github.com/jitsu" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="juce" data-desc="juce is an open-source cross-platform c++ application framework for desktop and mobile applications, including vst, vst3, au, auv3, lv2 and aax audio plug-ins." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/JUCE" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">JUCE</h3>
+          <p class="repo-desc">JUCE is an open-source cross-platform C++ application framework for desktop and mobile applications, including VST, VST3, AU, AUv3, LV2 and AAX audio plug-ins.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>JUCE</b></span>
+            <a href="https://github.com/JUCE" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="just" data-desc="🤖 just a command runner" data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/just" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">just</h3>
+          <p class="repo-desc">🤖 Just a command runner</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>just</b></span>
+            <a href="https://github.com/just" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="k3s" data-desc="lightweight kubernetes" data-cat="chão de fábrica">
+          <div class="card-head">
+            <span class="card-badge">Chão de Fábrica</span>
+            <a href="https://github.com/arsenal-open-source/k3s" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">k3s</h3>
+          <p class="repo-desc">Lightweight Kubernetes</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>k3s</b></span>
+            <a href="https://github.com/k3s" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="killbill" data-desc="open-source subscription billing & payments platform" data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/killbill" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">killbill</h3>
+          <p class="repo-desc">Open-Source Subscription Billing & Payments Platform</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>killbill</b></span>
+            <a href="https://github.com/killbill" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="kokoro" data-desc="https://hf.co/hexgrad/kokoro-82m" data-cat="design, ui, mídia soberana & upcaling ">
+          <div class="card-head">
+            <span class="card-badge">Design, UI, Mídia Soberana & Upcaling </span>
+            <a href="https://github.com/arsenal-open-source/kokoro" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">kokoro</h3>
+          <p class="repo-desc">https://hf.co/hexgrad/Kokoro-82M</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>kokoro</b></span>
+            <a href="https://github.com/kokoro" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="lago" data-desc="open source metering and usage based billing api ⭐️ consumption tracking, subscription management, pricing iterations, payment orchestration & revenue analytics" data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/lago" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">lago</h3>
+          <p class="repo-desc">Open Source Metering and Usage Based Billing API ⭐️ Consumption tracking, Subscription management, Pricing iterations, Payment orchestration & Revenue analytics</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>lago</b></span>
+            <a href="https://github.com/lago" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="langfuse" data-desc="🪢 open source ai engineering platform: llm evals, observability, metrics, prompt management, playground, datasets. integrates with opentelemetry, langchain, openai sdk, litellm, and more. 🍊yc w23 " data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/langfuse" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">langfuse</h3>
+          <p class="repo-desc">🪢 Open source AI engineering platform: LLM evals, observability, metrics, prompt management, playground, datasets. Integrates with OpenTelemetry, LangChain, OpenAI SDK, LiteLLM, and more. 🍊YC W23 </p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>langfuse</b></span>
+            <a href="https://github.com/langfuse" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="lazygit" data-desc="simple terminal ui for git commands" data-cat="harnesses de ide & terminal do engenhe">
+          <div class="card-head">
+            <span class="card-badge">Harnesses de IDE & Terminal do Engenhe</span>
+            <a href="https://github.com/arsenal-open-source/lazygit" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">lazygit</h3>
+          <p class="repo-desc">simple terminal UI for git commands</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>lazygit</b></span>
+            <a href="https://github.com/lazygit" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="librechat" data-desc="enhanced chatgpt clone: features agents, mcp, skills, deepseek, anthropic, aws, openai, responses api, azure, groq, o1, gpt-5, mistral, openrouter, vertex ai, gemini, artifacts, ai model switching, message search, code interpreter, langchain, dall-e-3, openapi actions, functions, secure multi-user auth, presets, open-source for self-hosting. active" data-cat="código autônomo">
+          <div class="card-head">
+            <span class="card-badge">Código Autônomo</span>
+            <a href="https://github.com/arsenal-open-source/LibreChat" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">LibreChat</h3>
+          <p class="repo-desc">Enhanced ChatGPT Clone: Features Agents, MCP, Skills, DeepSeek, Anthropic, AWS, OpenAI, Responses API, Azure, Groq, o1, GPT-5, Mistral, OpenRouter, Vertex AI, Gemini, Artifacts, AI model switching, message search, Code Interpreter, langchain, DALL-E-3, OpenAPI Actions, Functions, Secure Multi-User Auth, Presets, open-source for self-hosting. Active</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>LibreChat</b></span>
+            <a href="https://github.com/LibreChat" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="listmonk" data-desc="high performance, self-hosted, newsletter and mailing list manager with a modern dashboard. single binary app." data-cat="substitutos open-source para hubspot, ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para HubSpot, </span>
+            <a href="https://github.com/arsenal-open-source/listmonk" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">listmonk</h3>
+          <p class="repo-desc">High performance, self-hosted, newsletter and mailing list manager with a modern dashboard. Single binary app.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>listmonk</b></span>
+            <a href="https://github.com/listmonk" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="litellm" data-desc="the fastest, litest ai gateway. rust core with python sdk. call 100+ llm apis in openai (or native) format with cost tracking, guardrails, load balancing, and logging [bedrock, azure, openai, anthropic, openai, vertexai, vllm, nvidia nim]" data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/litellm" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">litellm</h3>
+          <p class="repo-desc">The fastest, litest AI Gateway. Rust core with Python SDK. Call 100+ LLM APIs in OpenAI (or native) format with cost tracking, guardrails, load balancing, and logging [Bedrock, Azure, OpenAI, Anthropic, OpenAI, VertexAI, vLLM, Nvidia NIM]</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>litellm</b></span>
+            <a href="https://github.com/litellm" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="llama.cpp" data-desc="llm inference in c/c++" data-cat="motores de inferência & fine-tuning lo">
+          <div class="card-head">
+            <span class="card-badge">Motores de Inferência & Fine-Tuning Lo</span>
+            <a href="https://github.com/arsenal-open-source/llama.cpp" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">llama.cpp</h3>
+          <p class="repo-desc">LLM inference in C/C++</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>llama.cpp</b></span>
+            <a href="https://github.com/llama.cpp" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="llama.cpp-1" data-desc="llm inference in c/c++" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/llama.cpp-1" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">llama.cpp-1</h3>
+          <p class="repo-desc">LLM inference in C/C++</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>llama.cpp-1</b></span>
+            <a href="https://github.com/llama.cpp-1" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="localai" data-desc="localai is the open-source ai engine. run any model - llms, vision, voice, image, video - on any hardware. no gpu required." data-cat="código autônomo">
+          <div class="card-head">
+            <span class="card-badge">Código Autônomo</span>
+            <a href="https://github.com/arsenal-open-source/LocalAI" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">LocalAI</h3>
+          <p class="repo-desc">LocalAI is the open-source AI engine. Run any model - LLMs, vision, voice, image, video - on any hardware. No GPU required.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>LocalAI</b></span>
+            <a href="https://github.com/LocalAI" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="localsend" data-desc="an open-source cross-platform alternative to airdrop" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/localsend" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">localsend</h3>
+          <p class="repo-desc">An open-source cross-platform alternative to AirDrop</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>localsend</b></span>
+            <a href="https://github.com/localsend" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ltx-2" data-desc="official python inference and lora trainer package for the ltx-2 audio–video generative model." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/LTX-2" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">LTX-2</h3>
+          <p class="repo-desc">Official Python inference and LoRA trainer package for the LTX-2 audio–video generative model.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>LTX-2</b></span>
+            <a href="https://github.com/LTX-2" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="matomo" data-desc="empowering people ethically 🚀 — matomo is hiring! join us → https://matomo.org/jobs matomo is the leading open-source alternative to google analytics, giving you complete control and built-in privacy. easily collect, visualise, and analyse data from websites & apps. star us on github ⭐️  – pull requests welcome! " data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/matomo" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">matomo</h3>
+          <p class="repo-desc">Empowering People Ethically 🚀 — Matomo is hiring! Join us → https://matomo.org/jobs Matomo is the leading open-source alternative to Google Analytics, giving you complete control and built-in privacy. Easily collect, visualise, and analyse data from websites & apps. Star us on GitHub ⭐️  – Pull Requests welcome! </p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>matomo</b></span>
+            <a href="https://github.com/matomo" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="mautic" data-desc="mautic: open source marketing automation software." data-cat="substitutos open-source para hubspot, ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para HubSpot, </span>
+            <a href="https://github.com/arsenal-open-source/mautic" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">mautic</h3>
+          <p class="repo-desc">Mautic: Open Source Marketing Automation Software.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>mautic</b></span>
+            <a href="https://github.com/mautic" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="medusa" data-desc="the world's most flexible commerce platform for agents and developers" data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/medusa" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">medusa</h3>
+          <p class="repo-desc">The world's most flexible commerce platform for agents and developers</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>medusa</b></span>
+            <a href="https://github.com/medusa" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="metabase" data-desc="the easy-to-use open source business intelligence and embedded analytics tool that lets everyone work with data :bar_chart:" data-cat="titãs da soberania">
+          <div class="card-head">
+            <span class="card-badge">Titãs da Soberania</span>
+            <a href="https://github.com/arsenal-open-source/metabase" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">metabase</h3>
+          <p class="repo-desc">The easy-to-use open source Business Intelligence and Embedded Analytics tool that lets everyone work with data :bar_chart:</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>metabase</b></span>
+            <a href="https://github.com/metabase" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="minio" data-desc="minio is a high-performance, s3 compatible object store, open sourced under gnu agplv3 license." data-cat="troca livre">
+          <div class="card-head">
+            <span class="card-badge">Troca Livre</span>
+            <a href="https://github.com/arsenal-open-source/minio" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">minio</h3>
+          <p class="repo-desc">MinIO is a high-performance, S3 compatible object store, open sourced under GNU AGPLv3 license.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>minio</b></span>
+            <a href="https://github.com/minio" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="mira-animator" data-desc="agentes e templates para criação de slides animados com d3.js em html" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/mira-animator" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">mira-animator</h3>
+          <p class="repo-desc">Agentes e templates para criação de slides animados com D3.js em HTML</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>mira-animator</b></span>
+            <a href="https://github.com/mira-animator" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="n8n" data-desc="fair-code workflow automation platform with native ai capabilities. combine visual building with custom code, self-host or cloud, 400+ integrations." data-cat="no-code / low-code & automação com ia">
+          <div class="card-head">
+            <span class="card-badge">No-Code / Low-Code & Automação com IA</span>
+            <a href="https://github.com/arsenal-open-source/n8n" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">n8n</h3>
+          <p class="repo-desc">Fair-code workflow automation platform with native AI capabilities. Combine visual building with custom code, self-host or cloud, 400+ integrations.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>n8n</b></span>
+            <a href="https://github.com/n8n" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="nerfstudio" data-desc="a collaboration friendly studio for nerfs" data-cat="substitutos open-source para kairogen ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para KairoGen </span>
+            <a href="https://github.com/arsenal-open-source/nerfstudio" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">nerfstudio</h3>
+          <p class="repo-desc">A collaboration friendly studio for NeRFs</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>nerfstudio</b></span>
+            <a href="https://github.com/nerfstudio" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="netdata" data-desc="the fastest path to ai-powered full stack observability, even for lean teams." data-cat="chão de fábrica">
+          <div class="card-head">
+            <span class="card-badge">Chão de Fábrica</span>
+            <a href="https://github.com/arsenal-open-source/netdata" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">netdata</h3>
+          <p class="repo-desc">The fastest path to AI-powered full stack observability, even for lean teams.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>netdata</b></span>
+            <a href="https://github.com/netdata" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="node-media-server" data-desc="a node.js implementation of rtmp/http-flv media server" data-cat="streaming, live broadcasting & mídia p">
+          <div class="card-head">
+            <span class="card-badge">Streaming, Live Broadcasting & Mídia P</span>
+            <a href="https://github.com/arsenal-open-source/Node-Media-Server" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Node-Media-Server</h3>
+          <p class="repo-desc">A Node.js implementation of RTMP/HTTP-FLV Media Server</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Node-Media-Server</b></span>
+            <a href="https://github.com/Node-Media-Server" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="note-gen" data-desc="capture first. organize later. a local-first markdown app that turns scattered records into clear notes with ai." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/note-gen" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">note-gen</h3>
+          <p class="repo-desc">Capture first. Organize later. A local-first Markdown app that turns scattered records into clear notes with AI.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>note-gen</b></span>
+            <a href="https://github.com/note-gen" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="novu" data-desc="the open-source communication infrastructure for agents and products" data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/novu" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">novu</h3>
+          <p class="repo-desc">The open-source communication infrastructure for agents and products</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>novu</b></span>
+            <a href="https://github.com/novu" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ntfy" data-desc="send push notifications to your phone or desktop using put/post" data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/ntfy" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">ntfy</h3>
+          <p class="repo-desc">Send push notifications to your phone or desktop using PUT/POST</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>ntfy</b></span>
+            <a href="https://github.com/ntfy" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="odoo" data-desc="odoo. open source apps to grow your business." data-cat="substitutos open-source para hubspot, ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para HubSpot, </span>
+            <a href="https://github.com/arsenal-open-source/odoo" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">odoo</h3>
+          <p class="repo-desc">Odoo. Open Source Apps To Grow Your Business.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>odoo</b></span>
+            <a href="https://github.com/odoo" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ofbiz-framework" data-desc="apache ofbiz is an open source product for the automation of enterprise processes. it includes framework components and business applications for erp, crm, e-business/e-commerce, supply chain management and manufacturing resource planning. ofbiz provides a foundation and starting point for reliable, secure and scalable enterprise solutions." data-cat="substitutos open-source para hubspot, ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para HubSpot, </span>
+            <a href="https://github.com/arsenal-open-source/ofbiz-framework" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">ofbiz-framework</h3>
+          <p class="repo-desc">Apache OFBiz is an open source product for the automation of enterprise processes. It includes framework components and business applications for ERP, CRM, E-Business/E-Commerce, Supply Chain Management and Manufacturing Resource Planning. OFBiz provides a foundation and starting point for reliable, secure and scalable enterprise solutions.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>ofbiz-framework</b></span>
+            <a href="https://github.com/ofbiz-framework" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ogam" data-desc="the swiss army knife of offline ai. chat, see, speak, and generate images on your phone or mac — gguf llms, vision, whisper speech-to-text, stable diffusion, tool calling, and local-network servers. runs on your cpu, gpu, or npu. no account, no api key, zero data leaves your device." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/OGAM" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">OGAM</h3>
+          <p class="repo-desc">The Swiss Army Knife of Offline AI. Chat, see, speak, and generate images on your phone or Mac — GGUF LLMs, vision, Whisper speech-to-text, Stable Diffusion, tool calling, and local-network servers. Runs on your CPU, GPU, or NPU. No account, no API key, zero data leaves your device.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>OGAM</b></span>
+            <a href="https://github.com/OGAM" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="oh-my-opencode-slim" data-desc="lean, fine tuned opencode multi agent suite · mix any models · auto delegate tasks" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/oh-my-opencode-slim" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">oh-my-opencode-slim</h3>
+          <p class="repo-desc">Lean, fine tuned Opencode multi agent suite · Mix any models · Auto delegate tasks</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>oh-my-opencode-slim</b></span>
+            <a href="https://github.com/oh-my-opencode-slim" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="oh-my-pi" data-desc="⌥  ai coding agent for the terminal — hash-anchored edits, optimized tool harness, lsp, python, browser, subagents, and more" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/oh-my-pi" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">oh-my-pi</h3>
+          <p class="repo-desc">⌥  AI Coding agent for the terminal — hash-anchored edits, optimized tool harness, LSP, Python, browser, subagents, and more</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>oh-my-pi</b></span>
+            <a href="https://github.com/oh-my-pi" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ollama" data-desc="get up and running with kimi-k2.6, glm-5.2, minimax, deepseek, gpt-oss, qwen, gemma and other models." data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/ollama" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">ollama</h3>
+          <p class="repo-desc">Get up and running with Kimi-K2.6, GLM-5.2, MiniMax, DeepSeek, gpt-oss, Qwen, Gemma and other models.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>ollama</b></span>
+            <a href="https://github.com/ollama" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="omnigent" data-desc="omnigent is an open-source ai agent framework and meta-harness: orchestrate claude code, codex, cursor, pi, and custom agents — swap harnesses without rewriting, enforce policies and sandboxing, and collaborate in real time from any device." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/omnigent" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">omnigent</h3>
+          <p class="repo-desc">Omnigent is an open-source AI agent framework and meta-harness: orchestrate Claude Code, Codex, Cursor, Pi, and custom agents — swap harnesses without rewriting, enforce policies and sandboxing, and collaborate in real time from any device.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>omnigent</b></span>
+            <a href="https://github.com/omnigent" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="omniroute" data-desc="never stop coding. free ai gateway: one endpoint, 160+ providers, rtk+caveman stacked compression up to ~95% eligible context savings, smart auto-fallback, mcp/a2a, multimodal apis, desktop/pwa." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/OmniRoute" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">OmniRoute</h3>
+          <p class="repo-desc">Never stop coding. Free AI gateway: one endpoint, 160+ providers, RTK+Caveman stacked compression up to ~95% eligible context savings, smart auto-fallback, MCP/A2A, multimodal APIs, Desktop/PWA.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>OmniRoute</b></span>
+            <a href="https://github.com/OmniRoute" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="onnxruntime" data-desc="onnx runtime: cross-platform, high performance ml inferencing and training accelerator" data-cat="edge ai, iot & dispositivos embarcados">
+          <div class="card-head">
+            <span class="card-badge">Edge AI, IoT & Dispositivos Embarcados</span>
+            <a href="https://github.com/arsenal-open-source/onnxruntime" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">onnxruntime</h3>
+          <p class="repo-desc">ONNX Runtime: cross-platform, high performance ML inferencing and training accelerator</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>onnxruntime</b></span>
+            <a href="https://github.com/onnxruntime" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="open-code-review" data-desc="fast, efficient, battle-tested at alibaba's scale. hybrid architecture code review tool: deterministic pipelines + llm agent, precise line-level comments, built-in multi-language ruleset (npe, thread-safety, xss, sql injection), openai & anthropic compatible." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/open-code-review" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">open-code-review</h3>
+          <p class="repo-desc">Fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI & Anthropic compatible.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>open-code-review</b></span>
+            <a href="https://github.com/open-code-review" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="open-generative-ai" data-desc="open-source alternative to ai video platforms — free ai image & video generation studio with 200+ models (flux, midjourney, kling, sora, veo). no content filters. self-hosted, mit licensed." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/Open-Generative-AI" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Open-Generative-AI</h3>
+          <p class="repo-desc">Open-source alternative to AI video platforms — Free AI image & video generation studio with 200+ models (Flux, Midjourney, Kling, Sora, Veo). No content filters. Self-hosted, MIT licensed.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Open-Generative-AI</b></span>
+            <a href="https://github.com/Open-Generative-AI" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="open-webui" data-desc="user-friendly ai interface (supports ollama, openai api, ...)" data-cat="substitutos open-source para kairogen ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para KairoGen </span>
+            <a href="https://github.com/arsenal-open-source/open-webui" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">open-webui</h3>
+          <p class="repo-desc">User-friendly AI Interface (Supports Ollama, OpenAI API, ...)</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>open-webui</b></span>
+            <a href="https://github.com/open-webui" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="openclaw" data-desc="your own personal ai assistant. any os. any platform. the lobster way. 🦞 " data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/openclaw" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">openclaw</h3>
+          <p class="repo-desc">Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 </p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>openclaw</b></span>
+            <a href="https://github.com/openclaw" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="openhands" data-desc="🙌 openhands: ai-driven development" data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/OpenHands" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">OpenHands</h3>
+          <p class="repo-desc">🙌 OpenHands: AI-Driven Development</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>OpenHands</b></span>
+            <a href="https://github.com/OpenHands" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="openinterpreter" data-desc="a coding agent for open models like kimi k3" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/openinterpreter" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">openinterpreter</h3>
+          <p class="repo-desc">A coding agent for open models like Kimi K3</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>openinterpreter</b></span>
+            <a href="https://github.com/openinterpreter" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="opensquad" data-desc="repositório de código aberto sob custódia e preservação soberana." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/opensquad" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">opensquad</h3>
+          <p class="repo-desc">Repositório de código aberto sob custódia e preservação soberana.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>opensquad</b></span>
+            <a href="https://github.com/opensquad" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="opentofu" data-desc="opentofu lets you declaratively manage your cloud infrastructure." data-cat="chão de fábrica">
+          <div class="card-head">
+            <span class="card-badge">Chão de Fábrica</span>
+            <a href="https://github.com/arsenal-open-source/opentofu" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">opentofu</h3>
+          <p class="repo-desc">OpenTofu lets you declaratively manage your cloud infrastructure.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>opentofu</b></span>
+            <a href="https://github.com/opentofu" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="orca" data-desc="orca is the ade for working with a fleet of parallel agents. run any coding agent with your own subscription. available on desktop, mobile and vps." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/orca" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">orca</h3>
+          <p class="repo-desc">Orca is the ADE for working with a fleet of parallel agents. Run any coding agent with your own subscription. Available on desktop, mobile and VPS.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>orca</b></span>
+            <a href="https://github.com/orca" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="orcaslicer" data-desc="g-code generator for 3d printers (bambu, prusa, voron, vzbot, ratrig, creality, etc.)" data-cat="cad, fabricação digital & eletrônica (">
+          <div class="card-head">
+            <span class="card-badge">CAD, Fabricação Digital & Eletrônica (</span>
+            <a href="https://github.com/arsenal-open-source/OrcaSlicer" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">OrcaSlicer</h3>
+          <p class="repo-desc">G-code generator for 3D printers (Bambu, Prusa, Voron, VzBot, RatRig, Creality, etc.)</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>OrcaSlicer</b></span>
+            <a href="https://github.com/OrcaSlicer" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="osticket" data-desc="the osticket open source ticketing system official project repository, for versions 1.8 and later" data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/osTicket" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">osTicket</h3>
+          <p class="repo-desc">The osTicket open source ticketing system official project repository, for versions 1.8 and later</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>osTicket</b></span>
+            <a href="https://github.com/osTicket" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="outlines" data-desc="structured outputs" data-cat="peso e watt">
+          <div class="card-head">
+            <span class="card-badge">Peso e Watt</span>
+            <a href="https://github.com/arsenal-open-source/outlines" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">outlines</h3>
+          <p class="repo-desc">Structured Outputs</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>outlines</b></span>
+            <a href="https://github.com/outlines" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="paddleocr" data-desc="turn any pdf or image document into structured data for your ai. a powerful, lightweight ocr toolkit that bridges the gap between images/pdfs and llms. supports 100+ languages." data-cat="voz, visão & multimodalidade local">
+          <div class="card-head">
+            <span class="card-badge">Voz, Visão & Multimodalidade Local</span>
+            <a href="https://github.com/arsenal-open-source/PaddleOCR" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">PaddleOCR</h3>
+          <p class="repo-desc">Turn any PDF or image document into structured data for your AI. A powerful, lightweight OCR toolkit that bridges the gap between images/PDFs and LLMs. Supports 100+ languages.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>PaddleOCR</b></span>
+            <a href="https://github.com/PaddleOCR" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="paperclip" data-desc="open-source orchestration for zero-human companies" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/paperclip" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">paperclip</h3>
+          <p class="repo-desc">Open-source orchestration for zero-human companies</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>paperclip</b></span>
+            <a href="https://github.com/paperclip" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="paperless-ngx" data-desc="a community-supported supercharged document management system: scan, index and archive all your documents" data-cat="titãs da soberania">
+          <div class="card-head">
+            <span class="card-badge">Titãs da Soberania</span>
+            <a href="https://github.com/arsenal-open-source/paperless-ngx" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">paperless-ngx</h3>
+          <p class="repo-desc">A community-supported supercharged document management system: scan, index and archive all your documents</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>paperless-ngx</b></span>
+            <a href="https://github.com/paperless-ngx" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="penpot" data-desc="penpot: the open-source design platform for product teams that need scalable collaboration." data-cat="titãs da soberania">
+          <div class="card-head">
+            <span class="card-badge">Titãs da Soberania</span>
+            <a href="https://github.com/arsenal-open-source/penpot" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">penpot</h3>
+          <p class="repo-desc">Penpot: The open-source design platform for Product teams that need scalable collaboration.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>penpot</b></span>
+            <a href="https://github.com/penpot" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="plane" data-desc="🔥🔥🔥 open-source jira, linear, monday, and clickup alternative. plane is a modern project management platform to manage tasks, sprints, docs, and triage." data-cat="titãs da soberania">
+          <div class="card-head">
+            <span class="card-badge">Titãs da Soberania</span>
+            <a href="https://github.com/arsenal-open-source/plane" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">plane</h3>
+          <p class="repo-desc">🔥🔥🔥 Open-source Jira, Linear, Monday, and ClickUp alternative. Plane is a modern project management platform to manage tasks, sprints, docs, and triage.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>plane</b></span>
+            <a href="https://github.com/plane" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="playwright-mcp" data-desc="playwright mcp server" data-cat="troca livre">
+          <div class="card-head">
+            <span class="card-badge">Troca Livre</span>
+            <a href="https://github.com/arsenal-open-source/playwright-mcp" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">playwright-mcp</h3>
+          <p class="repo-desc">Playwright MCP server</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>playwright-mcp</b></span>
+            <a href="https://github.com/playwright-mcp" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="portillomail" data-desc="sistema de gerenciamento e envio de emailmarketing - open source" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/PortilloMail" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">PortilloMail</h3>
+          <p class="repo-desc">Sistema de Gerenciamento e Envio de EmailMarketing - Open Source</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>PortilloMail</b></span>
+            <a href="https://github.com/PortilloMail" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="posthog" data-desc=":hedgehog: posthog is the leading platform for building self-driving products. our developer tools – ai observability, analytics, session replay, flags, experiments, error tracking, logs, and more – capture all the context agents need to diagnose problems, uncover opportunities, and ship fixes. steer it all from slack, web, desktop, or the mcp." data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/posthog" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">posthog</h3>
+          <p class="repo-desc">:hedgehog: PostHog is the leading platform for building self-driving products. Our developer tools – AI observability, analytics, session replay, flags, experiments, error tracking, logs, and more – capture all the context agents need to diagnose problems, uncover opportunities, and ship fixes. Steer it all from Slack, web, desktop, or the MCP.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>posthog</b></span>
+            <a href="https://github.com/posthog" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="postiz-app" data-desc="📨 the ultimate agentic social media scheduling tool 🤖" data-cat="troca livre">
+          <div class="card-head">
+            <span class="card-badge">Troca Livre</span>
+            <a href="https://github.com/arsenal-open-source/postiz-app" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">postiz-app</h3>
+          <p class="repo-desc">📨 The ultimate agentic social media scheduling tool 🤖</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>postiz-app</b></span>
+            <a href="https://github.com/postiz-app" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="postiz-app-1" data-desc="📨 the ultimate agentic social media scheduling tool 🤖" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/postiz-app-1" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">postiz-app-1</h3>
+          <p class="repo-desc">📨 The ultimate agentic social media scheduling tool 🤖</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>postiz-app-1</b></span>
+            <a href="https://github.com/postiz-app-1" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="prompts_sandeco" data-desc="repositório de código aberto sob custódia e preservação soberana." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/prompts_sandeco" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">prompts_sandeco</h3>
+          <p class="repo-desc">Repositório de código aberto sob custódia e preservação soberana.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>prompts_sandeco</b></span>
+            <a href="https://github.com/prompts_sandeco" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="puck" data-desc="the visual editor for react." data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/puck" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">puck</h3>
+          <p class="repo-desc">The visual editor for React.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>puck</b></span>
+            <a href="https://github.com/puck" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="pybrcode" data-desc="the pybrcode is a python3 library that was built to help people to generate pix qrcodes (brcodes) using easy-to-understand and well documented functions." data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/pybrcode" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">pybrcode</h3>
+          <p class="repo-desc">The pybrcode is a python3 library that was built to help people to generate Pix QRCodes (BRCodes) using easy-to-understand and well documented functions.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>pybrcode</b></span>
+            <a href="https://github.com/pybrcode" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="pynfe" data-desc="projeto de biblioteca para fazer interface com o webservice de nota fiscal eletrônica para python, disponível sob lgpl." data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/PyNFe" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">PyNFe</h3>
+          <p class="repo-desc">Projeto de biblioteca para fazer interface com o webservice de Nota Fiscal eletrônica para Python, disponível sob LGPL.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>PyNFe</b></span>
+            <a href="https://github.com/PyNFe" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ragas" data-desc="supercharge your llm application evaluations 🚀" data-cat="peso e watt">
+          <div class="card-head">
+            <span class="card-badge">Peso e Watt</span>
+            <a href="https://github.com/arsenal-open-source/ragas" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">ragas</h3>
+          <p class="repo-desc">Supercharge Your LLM Application Evaluations 🚀</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>ragas</b></span>
+            <a href="https://github.com/ragas" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ragatouille" data-desc="easily use and train state of the art late-interaction retrieval methods (colbert) in any rag pipeline. designed for modularity and ease-of-use, backed by research." data-cat="rag cirúrgico, bancos vetoriais & apps">
+          <div class="card-head">
+            <span class="card-badge">RAG Cirúrgico, Bancos Vetoriais & Apps</span>
+            <a href="https://github.com/arsenal-open-source/RAGatouille" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">RAGatouille</h3>
+          <p class="repo-desc">Easily use and train state of the art late-interaction retrieval methods (ColBERT) in any RAG pipeline. Designed for modularity and ease-of-use, backed by research.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>RAGatouille</b></span>
+            <a href="https://github.com/RAGatouille" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="rasa" data-desc="💬   open source machine learning framework to automate text- and voice-based conversations: nlu, dialogue management, connect to slack, facebook, and more - create chatbots and voice assistants" data-cat="no-code / low-code & automação com ia">
+          <div class="card-head">
+            <span class="card-badge">No-Code / Low-Code & Automação com IA</span>
+            <a href="https://github.com/arsenal-open-source/rasa" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">rasa</h3>
+          <p class="repo-desc">💬   Open source machine learning framework to automate text- and voice-based conversations: NLU, dialogue management, connect to Slack, Facebook, and more - Create chatbots and voice assistants</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>rasa</b></span>
+            <a href="https://github.com/rasa" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="redash" data-desc="make your company data driven. connect to any data source, easily visualize, dashboard and share your data." data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/redash" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">redash</h3>
+          <p class="repo-desc">Make Your Company Data Driven. Connect to any data source, easily visualize, dashboard and share your data.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>redash</b></span>
+            <a href="https://github.com/redash" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="remotion" data-desc="🎥      make videos programmatically with react" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/remotion" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">remotion</h3>
+          <p class="repo-desc">🎥      Make videos programmatically with React</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>remotion</b></span>
+            <a href="https://github.com/remotion" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="repomix" data-desc="📦 repomix is a powerful tool that packs your entire repository into a single, ai-friendly file. perfect for when you need to feed your codebase to large language models (llms) or other ai tools like claude, chatgpt, deepseek, perplexity, gemini, gemma, llama, grok, and more." data-cat="economia extrema de tokens, contexto &">
+          <div class="card-head">
+            <span class="card-badge">Economia Extrema de Tokens, Contexto &</span>
+            <a href="https://github.com/arsenal-open-source/repomix" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">repomix</h3>
+          <p class="repo-desc">📦 Repomix is a powerful tool that packs your entire repository into a single, AI-friendly file. Perfect for when you need to feed your codebase to Large Language Models (LLMs) or other AI tools like Claude, ChatGPT, DeepSeek, Perplexity, Gemini, Gemma, Llama, Grok, and more.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>repomix</b></span>
+            <a href="https://github.com/repomix" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="reversa" data-desc="transform legacy systems into executable specifications for ai coding agents" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/reversa" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">reversa</h3>
+          <p class="repo-desc">Transform legacy systems into executable specifications for AI coding agents</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>reversa</b></span>
+            <a href="https://github.com/reversa" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="rocket.chat" data-desc="the secure commsos™ for mission-critical operations" data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/Rocket.Chat" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Rocket.Chat</h3>
+          <p class="repo-desc">The Secure CommsOS™ for mission-critical operations</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Rocket.Chat</b></span>
+            <a href="https://github.com/Rocket.Chat" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="roo-code" data-desc="roo code gives you a whole dev team of ai agents in your code editor." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/Roo-Code" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Roo-Code</h3>
+          <p class="repo-desc">Roo Code gives you a whole dev team of AI agents in your code editor.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Roo-Code</b></span>
+            <a href="https://github.com/Roo-Code" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="server" data-desc="☁️ nextcloud server, a safe home for all your data" data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/server" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">server</h3>
+          <p class="repo-desc">☁️ Nextcloud server, a safe home for all your data</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>server</b></span>
+            <a href="https://github.com/server" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="servers" data-desc="model context protocol servers" data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/servers" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">servers</h3>
+          <p class="repo-desc">Model Context Protocol Servers</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>servers</b></span>
+            <a href="https://github.com/servers" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="singlefile" data-desc="web extension for saving a faithful copy of a complete web page in a single html file" data-cat="arquivamento digital, preservação & os">
+          <div class="card-head">
+            <span class="card-badge">Arquivamento Digital, Preservação & OS</span>
+            <a href="https://github.com/arsenal-open-source/SingleFile" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">SingleFile</h3>
+          <p class="repo-desc">Web Extension for saving a faithful copy of a complete web page in a single HTML file</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>SingleFile</b></span>
+            <a href="https://github.com/SingleFile" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="skill_creator" data-desc="public repository for agent skills" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/skill_creator" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">skill_creator</h3>
+          <p class="repo-desc">Public repository for Agent Skills</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>skill_creator</b></span>
+            <a href="https://github.com/skill_creator" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="solidinvoice" data-desc="simple and elegant invoicing solution." data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/SolidInvoice" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">SolidInvoice</h3>
+          <p class="repo-desc">Simple and elegant invoicing solution.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>SolidInvoice</b></span>
+            <a href="https://github.com/SolidInvoice" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="sourcetrail" data-desc="sourcetrail - free and open-source interactive source explorer" data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/Sourcetrail" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Sourcetrail</h3>
+          <p class="repo-desc">Sourcetrail - free and open-source interactive source explorer</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Sourcetrail</b></span>
+            <a href="https://github.com/Sourcetrail" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="spec-kit" data-desc="💫 toolkit to help you get started with spec-driven development" data-cat="arquitetura agêntica, spec-driven deve">
+          <div class="card-head">
+            <span class="card-badge">Arquitetura Agêntica, Spec-Driven Deve</span>
+            <a href="https://github.com/arsenal-open-source/spec-kit" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">spec-kit</h3>
+          <p class="repo-desc">💫 Toolkit to help you get started with Spec-Driven Development</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>spec-kit</b></span>
+            <a href="https://github.com/spec-kit" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="stirling-pdf" data-desc="#1 pdf application on github that lets you edit pdfs on any device anywhere" data-cat="design, ui, mídia soberana & upcaling ">
+          <div class="card-head">
+            <span class="card-badge">Design, UI, Mídia Soberana & Upcaling </span>
+            <a href="https://github.com/arsenal-open-source/Stirling-PDF" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Stirling-PDF</h3>
+          <p class="repo-desc">#1 PDF Application on GitHub that lets you edit PDFs on any device anywhere</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Stirling-PDF</b></span>
+            <a href="https://github.com/Stirling-PDF" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="stream-event-hub-core" data-desc="backend engine for aggregating twitch, youtube, and livepix stream events." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/stream-event-hub-core" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">stream-event-hub-core</h3>
+          <p class="repo-desc">Backend engine for aggregating Twitch, YouTube, and LivePix stream events.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>stream-event-hub-core</b></span>
+            <a href="https://github.com/stream-event-hub-core" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="superpowers" data-desc="an agentic skills framework & software development methodology that works." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/superpowers" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">superpowers</h3>
+          <p class="repo-desc">An agentic skills framework & software development methodology that works.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>superpowers</b></span>
+            <a href="https://github.com/superpowers" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="superset" data-desc="apache superset is a data visualization and data exploration platform" data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/superset" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">superset</h3>
+          <p class="repo-desc">Apache Superset is a Data Visualization and Data Exploration Platform</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>superset</b></span>
+            <a href="https://github.com/superset" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="sylius" data-desc="headless open-source ecommerce platform on top of php/symfony/api platform" data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/Sylius" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Sylius</h3>
+          <p class="repo-desc">Headless open-source eCommerce platform on top of PHP/Symfony/API Platform</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Sylius</b></span>
+            <a href="https://github.com/Sylius" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="synapse" data-desc="synapse: matrix homeserver written in python/twisted + rust" data-cat="linha direta">
+          <div class="card-head">
+            <span class="card-badge">Linha Direta</span>
+            <a href="https://github.com/arsenal-open-source/synapse" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">synapse</h3>
+          <p class="repo-desc">Synapse: Matrix homeserver written in Python/Twisted + Rust</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>synapse</b></span>
+            <a href="https://github.com/synapse" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="tabby" data-desc="self-hosted ai coding assistant" data-cat="harnesses de ide & terminal do engenhe">
+          <div class="card-head">
+            <span class="card-badge">Harnesses de IDE & Terminal do Engenhe</span>
+            <a href="https://github.com/arsenal-open-source/tabby" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">tabby</h3>
+          <p class="repo-desc">Self-hosted AI coding assistant</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>tabby</b></span>
+            <a href="https://github.com/tabby" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="theharvester" data-desc="e-mails, subdomains and names harvester - osint " data-cat="arquivamento digital, preservação & os">
+          <div class="card-head">
+            <span class="card-badge">Arquivamento Digital, Preservação & OS</span>
+            <a href="https://github.com/arsenal-open-source/theHarvester" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">theHarvester</h3>
+          <p class="repo-desc">E-mails, subdomains and names Harvester - OSINT </p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>theHarvester</b></span>
+            <a href="https://github.com/theHarvester" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="trellis" data-desc="official repo for paper "structured 3d latents for scalable and versatile 3d generation" (cvpr'25 spotlight)." data-cat="substitutos open-source para kairogen ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para KairoGen </span>
+            <a href="https://github.com/arsenal-open-source/TRELLIS" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">TRELLIS</h3>
+          <p class="repo-desc">Official repo for paper "Structured 3D Latents for Scalable and Versatile 3D Generation" (CVPR'25 Spotlight).</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>TRELLIS</b></span>
+            <a href="https://github.com/TRELLIS" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="trellis.2" data-desc="native and compact structured latents for 3d generation" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/TRELLIS.2" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">TRELLIS.2</h3>
+          <p class="repo-desc">Native and Compact Structured Latents for 3D Generation</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>TRELLIS.2</b></span>
+            <a href="https://github.com/TRELLIS.2" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="triposr" data-desc="triposr: fast 3d object reconstruction from a single image" data-cat="substitutos open-source para kairogen ">
+          <div class="card-head">
+            <span class="card-badge">Substitutos Open-Source para KairoGen </span>
+            <a href="https://github.com/arsenal-open-source/TripoSR" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">TripoSR</h3>
+          <p class="repo-desc">TripoSR: Fast 3D Object Reconstruction from a Single Image</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>TripoSR</b></span>
+            <a href="https://github.com/TripoSR" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="tutor" data-desc="the docker-based open edx distribution designed for peace of mind" data-cat="caixa aberto">
+          <div class="card-head">
+            <span class="card-badge">Caixa Aberto</span>
+            <a href="https://github.com/arsenal-open-source/tutor" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">tutor</h3>
+          <p class="repo-desc">The Docker-based Open edX distribution designed for peace of mind</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>tutor</b></span>
+            <a href="https://github.com/tutor" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="txtai" data-desc="💡 all-in-one ai framework for semantic search, llm orchestration and language model workflows" data-cat="código autônomo">
+          <div class="card-head">
+            <span class="card-badge">Código Autônomo</span>
+            <a href="https://github.com/arsenal-open-source/txtai" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">txtai</h3>
+          <p class="repo-desc">💡 All-in-one AI framework for semantic search, LLM orchestration and language model workflows</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>txtai</b></span>
+            <a href="https://github.com/txtai" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="typebot.io" data-desc="💬 typebot is a powerful chatbot builder that you can self-host." data-cat="no-code / low-code & automação com ia">
+          <div class="card-head">
+            <span class="card-badge">No-Code / Low-Code & Automação com IA</span>
+            <a href="https://github.com/arsenal-open-source/typebot.io" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">typebot.io</h3>
+          <p class="repo-desc">💬 Typebot is a powerful chatbot builder that you can self-host.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>typebot.io</b></span>
+            <a href="https://github.com/typebot.io" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="ui-ux-pro-max-skill" data-desc="an ai skill that provide design intelligence for building professional ui/ux multiple platforms" data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/ui-ux-pro-max-skill" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">ui-ux-pro-max-skill</h3>
+          <p class="repo-desc">An AI SKILL that provide design intelligence for building professional UI/UX multiple platforms</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>ui-ux-pro-max-skill</b></span>
+            <a href="https://github.com/ui-ux-pro-max-skill" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="unleash" data-desc="open-source feature management platform" data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/unleash" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">unleash</h3>
+          <p class="repo-desc">Open-source feature management platform</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>unleash</b></span>
+            <a href="https://github.com/unleash" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="unlighthouse" data-desc="run google lighthouse on your entire site." data-cat="alcance próprio">
+          <div class="card-head">
+            <span class="card-badge">Alcance Próprio</span>
+            <a href="https://github.com/arsenal-open-source/unlighthouse" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">unlighthouse</h3>
+          <p class="repo-desc">Run Google Lighthouse on your entire site.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>unlighthouse</b></span>
+            <a href="https://github.com/unlighthouse" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="unstructured" data-desc="convert documents to structured data effortlessly. unstructured is open-source etl solution for transforming complex documents into clean, structured formats for language models.  visit our website to learn more about our enterprise grade platform product for production grade workflows, partitioning, enrichments, chunking and embedding." data-cat="arsenal do engenheiro de ia">
+          <div class="card-head">
+            <span class="card-badge">Arsenal do Engenheiro de IA</span>
+            <a href="https://github.com/arsenal-open-source/unstructured" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">unstructured</h3>
+          <p class="repo-desc">Convert documents to structured data effortlessly. Unstructured is open-source ETL solution for transforming complex documents into clean, structured formats for language models.  Visit our website to learn more about our enterprise grade Platform product for production grade workflows, partitioning, enrichments, chunking and embedding.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>unstructured</b></span>
+            <a href="https://github.com/unstructured" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="upscayl" data-desc="🆙 upscayl - #1 free and open source ai image upscaler for linux, macos and windows." data-cat="design, ui, mídia soberana & upcaling ">
+          <div class="card-head">
+            <span class="card-badge">Design, UI, Mídia Soberana & Upcaling </span>
+            <a href="https://github.com/arsenal-open-source/upscayl" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">upscayl</h3>
+          <p class="repo-desc">🆙 Upscayl - #1 Free and Open Source AI Image Upscaler for Linux, MacOS and Windows.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>upscayl</b></span>
+            <a href="https://github.com/upscayl" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="uptime-kuma" data-desc="a fancy self-hosted monitoring tool" data-cat="devops, borda, monitoramento & utilitá">
+          <div class="card-head">
+            <span class="card-badge">DevOps, Borda, Monitoramento & Utilitá</span>
+            <a href="https://github.com/arsenal-open-source/uptime-kuma" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">uptime-kuma</h3>
+          <p class="repo-desc">A fancy self-hosted monitoring tool</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>uptime-kuma</b></span>
+            <a href="https://github.com/uptime-kuma" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="vaultwarden" data-desc="unofficial bitwarden compatible server written in rust, formerly known as bitwarden_rs" data-cat="titãs da soberania">
+          <div class="card-head">
+            <span class="card-badge">Titãs da Soberania</span>
+            <a href="https://github.com/arsenal-open-source/vaultwarden" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">vaultwarden</h3>
+          <p class="repo-desc">Unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>vaultwarden</b></span>
+            <a href="https://github.com/vaultwarden" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="victoriametrics" data-desc="victoriametrics: fast, cost-effective monitoring solution and time series database" data-cat="chão de fábrica">
+          <div class="card-head">
+            <span class="card-badge">Chão de Fábrica</span>
+            <a href="https://github.com/arsenal-open-source/VictoriaMetrics" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">VictoriaMetrics</h3>
+          <p class="repo-desc">VictoriaMetrics: fast, cost-effective monitoring solution and time series database</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>VictoriaMetrics</b></span>
+            <a href="https://github.com/VictoriaMetrics" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="voicebox" data-desc="the open-source ai voice studio. clone, dictate, create." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/voicebox" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">voicebox</h3>
+          <p class="repo-desc">The open-source AI voice studio. Clone, dictate, create.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>voicebox</b></span>
+            <a href="https://github.com/voicebox" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="wan2gp" data-desc="a fast ai video generator for the gpu poor. supports wan 2.1/2.2, ltx-2, qwen image, hunyuan video, ltx  video and flux." data-cat="arsenal de soberania">
+          <div class="card-head">
+            <span class="card-badge">Arsenal de Soberania</span>
+            <a href="https://github.com/arsenal-open-source/Wan2GP" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">Wan2GP</h3>
+          <p class="repo-desc">A fast AI Video Generator for the GPU Poor. Supports Wan 2.1/2.2, LTX-2, Qwen Image, Hunyuan Video, LTX  Video and Flux.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>Wan2GP</b></span>
+            <a href="https://github.com/Wan2GP" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="wasmtime" data-desc="a lightweight webassembly runtime that is fast, secure, and standards-compliant" data-cat="compiladores, webassembly & runtimes n">
+          <div class="card-head">
+            <span class="card-badge">Compiladores, WebAssembly & Runtimes N</span>
+            <a href="https://github.com/arsenal-open-source/wasmtime" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">wasmtime</h3>
+          <p class="repo-desc">A lightweight WebAssembly runtime that is fast, secure, and standards-compliant</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>wasmtime</b></span>
+            <a href="https://github.com/wasmtime" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="watchtower" data-desc="a process for automating docker container base image updates. " data-cat="chão de fábrica">
+          <div class="card-head">
+            <span class="card-badge">Chão de Fábrica</span>
+            <a href="https://github.com/arsenal-open-source/watchtower" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">watchtower</h3>
+          <p class="repo-desc">A process for automating Docker container base image updates. </p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>watchtower</b></span>
+            <a href="https://github.com/watchtower" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="waybackpy" data-desc="wayback machine api interface & a command-line tool" data-cat="arquivamento digital, preservação & os">
+          <div class="card-head">
+            <span class="card-badge">Arquivamento Digital, Preservação & OS</span>
+            <a href="https://github.com/arsenal-open-source/waybackpy" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">waybackpy</h3>
+          <p class="repo-desc">Wayback Machine API interface & a command-line tool</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>waybackpy</b></span>
+            <a href="https://github.com/waybackpy" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="whisper.cpp" data-desc="port of openai's whisper model in c/c++" data-cat="voz, visão & multimodalidade local">
+          <div class="card-head">
+            <span class="card-badge">Voz, Visão & Multimodalidade Local</span>
+            <a href="https://github.com/arsenal-open-source/whisper.cpp" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">whisper.cpp</h3>
+          <p class="repo-desc">Port of OpenAI's Whisper model in C/C++</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>whisper.cpp</b></span>
+            <a href="https://github.com/whisper.cpp" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="whisperlive" data-desc="a nearly-live implementation of openai's whisper." data-cat="acessibilidade, ergonomia & controle p">
+          <div class="card-head">
+            <span class="card-badge">Acessibilidade, Ergonomia & Controle p</span>
+            <a href="https://github.com/arsenal-open-source/WhisperLive" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">WhisperLive</h3>
+          <p class="repo-desc">A nearly-live implementation of OpenAI's Whisper.</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>WhisperLive</b></span>
+            <a href="https://github.com/WhisperLive" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="yolov10" data-desc="yolov10: real-time end-to-end object detection [neurips 2024] " data-cat="voz, visão & multimodalidade local">
+          <div class="card-head">
+            <span class="card-badge">Voz, Visão & Multimodalidade Local</span>
+            <a href="https://github.com/arsenal-open-source/yolov10" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">yolov10</h3>
+          <p class="repo-desc">YOLOv10: Real-Time End-to-End Object Detection [NeurIPS 2024] </p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>yolov10</b></span>
+            <a href="https://github.com/yolov10" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+
+        <div class="repo-card" data-name="z3" data-desc="the z3 theorem prover" data-cat="verificação formal & zero bugs matemát">
+          <div class="card-head">
+            <span class="card-badge">Verificação Formal & Zero Bugs Matemát</span>
+            <a href="https://github.com/arsenal-open-source/z3" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+          </div>
+          <h3 class="repo-title">z3</h3>
+          <p class="repo-desc">The Z3 Theorem Prover</p>
+          <div class="card-foot">
+            <span class="upstream">Origem: <b>z3</b></span>
+            <a href="https://github.com/z3" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+          </div>
+        </div>
+        
+  </div>
+
+  <footer>
+    <span>Arsenal Open Source · Todos os forks sincronizados automaticamente via GitHub Actions.</span>
+    <a href="https://github.com/arsenal-open-source" target="_blank" style="color:var(--accent);font-family:var(--mono);text-decoration:none;font-weight:600;">github.com/arsenal-open-source ↗</a>
+  </footer>
+</div>
+
+<script>
+function filtrarRepos() {
+  const query = document.getElementById('filterInput').value.toLowerCase().trim();
+  const cards = document.querySelectorAll('.repo-card');
+  let visibleCount = 0;
+
+  cards.forEach(card => {
+    const name = card.getAttribute('data-name') || '';
+    const desc = card.getAttribute('data-desc') || '';
+    const cat = card.getAttribute('data-cat') || '';
+
+    if (name.includes(query) || desc.includes(query) || cat.includes(query)) {
+      card.style.display = 'flex';
+      visibleCount++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  document.getElementById('statsCount').innerHTML = `Exibindo <b>${visibleCount}</b> de <b>${cards.length}</b> projetos`;
+}
+</script>
+
+</body>
+</html>
