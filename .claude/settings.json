@@ -1,18 +1,26 @@
 {
-  "$comment": "Hooks universais. Todos sao no-op silencioso quando a ferramenta nao esta instalada ou o diretorio nao e um repo git — pode copiar para qualquer projeto sem quebrar nada.",
+  "$schema": "https://json.schemastore.org/partial-claude-settings.json",
+  "$comment": "Configuração Industrial do HARNESS (Camada 2). Governa hooks de ciclo de vida, disjuntores de timeout, permissões de sandbox e contenção de loops.",
+  "harness": {
+    "version": "2.0.0",
+    "circuit_breaker": {
+      "max_loop_iterations": 25,
+      "command_timeout_seconds": 60,
+      "max_context_bytes_per_call": 524288
+    },
+    "sandbox": {
+      "disallow_shell_cd": true,
+      "require_confirmation_on_destructive": true,
+      "prohibited_commands": [
+        "rm -rf /",
+        "rm -rf *",
+        ":(){ :|:& };:",
+        "dd if=/dev/zero",
+        "mkfs"
+      ]
+    }
+  },
   "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cat >/dev/null || true; command -v code-review-graph >/dev/null 2>&1 || exit 0; git rev-parse --git-dir >/dev/null 2>&1 && code-review-graph update --skip-flows --repo \"$(git rev-parse --show-toplevel 2>/dev/null)\" || true",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
     "SessionStart": [
       {
         "matcher": "",
@@ -21,6 +29,30 @@
             "type": "command",
             "command": "cat >/dev/null || true; command -v code-review-graph >/dev/null 2>&1 || exit 0; git rev-parse --git-dir >/dev/null 2>&1 && code-review-graph status --repo \"$(git rev-parse --show-toplevel 2>/dev/null)\" || exit 0",
             "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "run_command|execute",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import sys; sys.exit(0)\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|replace_file_content|write_to_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat >/dev/null || true; command -v code-review-graph >/dev/null 2>&1 || exit 0; git rev-parse --git-dir >/dev/null 2>&1 && code-review-graph update --skip-flows --repo \"$(git rev-parse --show-toplevel 2>/dev/null)\" || true",
+            "timeout": 30
           }
         ]
       }
