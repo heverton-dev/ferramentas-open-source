@@ -1,9 +1,10 @@
 # 🎛️ Camada 1: TELA (Prompt & Context Engineering)
 
 > **Papel no Estúdio:** O Mixer.  
-> **Status:** 95% Implementado (Estado da Arte).  
+> **Status:** 100% CONCLUÍDO & BLINDADO ✅  
 > **Unidade de Trabalho:** Mensagens, Prompts de Sistema, Context Window, Regras e Skills.  
-> **Localização:** `4-camadas/01-CAMADA-TELA.md`
+> **Localização:** `4-camadas/01-CAMADA-TELA.md`  
+> **Auditor Mecânico:** `scripts/auditar_camada_tela.py` (Exit 0)
 
 ---
 
@@ -14,7 +15,7 @@ Se a TELA estiver mal configurada, o modelo gastará rios de dinheiro com conver
 
 ---
 
-## 2. O Que Já Foi Implementado (O Como Se Faz)
+## 2. As 4 Blindagens Implementadas para Atingir 100%
 
 ### 2.1 A Constituição Mestre (`.claude/CLAUDE.md`)
 * **Fonte Única:** Todas as regras residem exclusivamente em `.claude/CLAUDE.md`.
@@ -32,23 +33,36 @@ Se a TELA estiver mal configurada, o modelo gastará rios de dinheiro com conver
   * **R17:** Etapas opcionais nunca travam o fluxo.
   * **R18:** Higiene contínua, zero arquivos temporários e paridade estrita de espelhos.
 
-### 2.2 As 5 Skills de Economia Severa de Tokens (Seção 0)
+### 2.2 As 5 Skills Fundamentais de Economia Severa (Seção 0)
 1. **`caveman`:** Reduz até 90% do raciocínio interno (`<thought>`) via pensamento telegráfico de homem das cavernas.
 2. **`headroom`:** Corta logs gigantes de terminal mantendo apenas 3 linhas no topo e 4 no final.
 3. **`lean-ctx`:** Força o uso de `grep` antes da leitura de arquivos, evitando ler arquivos inteiros.
 4. **`rtk-memory`:** Congela o arquivo de governança para obter até 90% de desconto em *Prompt Caching*, jogando aprendizados para `RTK-SCRATCHPAD.md`.
 5. **`pre-flight-check`:** Checklist de 3 perguntas antes de iniciar refatorações.
 
+### 2.3 Vocabulário Controlado & Lista de Termos Proibidos
+* Banimento absoluto de clichês de IA (*"como uma IA"*, *"espero ter ajudado"*, *"com certeza"*, *"certamente"*).
+* Respostas 100% técnicas, densas e diretas ao ponto.
+
+### 2.4 Memória Persistente Externa (`RTK-SCRATCHPAD.md`)
+* Mantém o prefixo de cache imutável e salva decisões/aprendizados em disco. A TELA lê apenas os últimos 5 aprendizados sob demanda.
+
+### 2.5 Gate Mecânico da TELA (`scripts/auditar_camada_tela.py`)
+* Validador determinístico que garante que a TELA não estoure o orçamento de cache (<2.500 palavras) e cumpra todas as regras.
+
 ---
 
-## 3. Como Replicar Esta Camada em Qualquer Projeto
+## 3. Como Replicar a Camada 1 em Qualquer Projeto Novo
 
 ```bash
-# 1. Copiar a pasta de governança
+# 1. Copiar a pasta de governança e memória
 cp -r fabrica-universal/.claude/ .
+cp fabrica-universal/RTK-SCRATCHPAD.md .
 
-# 2. Personalizar os blocos [CUSTOMIZAR] em .claude/CLAUDE.md
-# (Trocar o nome do projeto e definir o squad)
+# 2. Copiar o auditor da TELA
+cp fabrica-universal/scripts/auditar_camada_tela.py scripts/
 
-# 3. Manter intactas a Seção 0 (Economia) e as regras R1 a R18
+# 3. Validar a Camada 1
+python scripts/auditar_camada_tela.py
+# -> Saída: Exit 0 (Aprovado)
 ```

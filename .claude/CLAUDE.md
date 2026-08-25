@@ -3,12 +3,9 @@ description: Governanca universal, squad e fluxo do projeto — orquestrador par
 alwaysApply: true
 ---
 
-# <SEU-PROJETO> — Orquestrador Central
+# Arsenal Open Source · Fábrica Universal — Orquestrador Central
 
-> **Este arquivo e um TEMPLATE UNIVERSAL.** Troque `<SEU-PROJETO>` e os blocos
-> marcados `[CUSTOMIZAR]` pelo seu dominio. **MANTENHA** a Secao 0 (Economia),
-> as regras R1–R17 e a Secao 6 (Portabilidade) — sao a parte universal.
->
+> **Governança Mestre e Arquitetura Agêntica.**
 > Hardlink de `CLAUDE.md`, `.cursor/rules/projeto.mdc`, `.windsurfrules`,
 > `.clinerules`, `.github/copilot-instructions.md`. Edite apenas este arquivo.
 > Junctions: `agentic/` aponta para `.claude/` (portabilidade multi-IDE);
@@ -41,6 +38,12 @@ alwaysApply: true
     `sys.stdout.reconfigure(encoding="utf-8")` — sem isso quebra em cp1252.
 12. **Skills de economia disponiveis:** `caveman`, `headroom`, `lean-ctx`,
     `rtk-memory`, `pre-flight-check` (em `.claude/skills/`).
+13. **Vocabulário Controlado & Termos Proibidos:** Banidos clichês de IA
+    ("como uma IA", "espero ter ajudado", "com certeza", "certamente", "olá").
+    Respostas 100% técnicas, densas e diretas ao ponto.
+14. **Orçamento de Cache da TELA:** O prompt mestre é mantido estável e abaixo
+    de 2.500 palavras para maximizar o desconto de 90% de Prompt Caching. Aprendizados
+    novos são salvos externamente em `RTK-SCRATCHPAD.md`.
 
 ## 1. Regras Globais
 
