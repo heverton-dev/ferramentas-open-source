@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>O Livro da Fábrica Universal · Tratado de Arquitetura Agêntica</title>
+<style>
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+  :root {
+    --paper: #ECEEF2;
+    --surface: #F8F9FC;
+    --surface-2: #DFE3EB;
+    --ink: #151A26;
+    --ink-2: #3B4457;
+    --muted: #68738A;
+    --rule: #C7CEDB;
+    --rule-soft: #DADFE8;
+    --accent: #1A446C;
+    --accent-soft: #DCE7F2;
+    --gold: #7A5410;
+    --gold-soft: #EFE5CE;
+    --flag: #8E2436;
+    --flag-soft: #F0D9DD;
+    --green: #1B5E3B;
+    --green-soft: #D8EFE2;
+    --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0E1118;
+      --surface: #161A24;
+      --surface-2: #1F2531;
+      --ink: #E3E7F0;
+      --ink-2: #B3BCCC;
+      --muted: #8391A8;
+      --rule: #2A3142;
+      --rule-soft: #222836;
+      --accent: #7AA5D6;
+      --accent-soft: #162436;
+      --gold: #D6A44E;
+      --gold-soft: #332810;
+      --flag: #E0788C;
+      --flag-soft: #3A1A21;
+      --green: #6BC48F;
+      --green-soft: #122B1C;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 40px) 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  /* HEADER LIVRO */
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    border-bottom: 2px solid var(--rule);
+    padding-bottom: 32px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    align-items: center;
+  }
+
+  .badge-gold {
+    background: var(--gold);
+    color: #FFF;
+    padding: 3px 9px;
+    border-radius: 2px;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(38px, 6.5vw, 62px);
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    margin: 0;
+    text-align: justify;
+    text-justify: inter-word;
+    color: var(--ink);
+  }
+
+  .deck {
+    font-family: var(--serif);
+    font-size: clamp(18px, 2.2vw, 22px);
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin: 0;
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
+  /* SUMÁRIO */
+  .toc-box {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent);
+    border-radius: 4px;
+    padding: 24px 28px;
+    box-shadow: var(--shadow);
+  }
+
+  .toc-box h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    margin: 0 0 12px;
+    color: var(--ink);
+  }
+
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px 20px;
+  }
+
+  .toc-item a {
+    color: var(--accent);
+    font-size: 14.5px;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .toc-item a:hover {
+    text-decoration: underline;
+  }
+
+  /* CAPÍTULOS */
+  .chapter {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: clamp(24px, 4vw, 40px);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .chap-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(26px, 4vw, 34px);
+    margin: 0;
+    color: var(--ink);
+    line-height: 1.15;
+    border-bottom: 1px solid var(--rule-soft);
+    padding-bottom: 10px;
+  }
+
+  h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    margin: 16px 0 6px;
+    color: var(--ink);
+  }
+
+  p, li {
+    font-size: 15.5px;
+    color: var(--ink-2);
+    line-height: 1.65;
+  }
+
+  /* BOXES DE DESTAQUE */
+  .box-quote {
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 3px;
+    padding: 16px 20px;
+    margin: 8px 0;
+    font-size: 14.5px;
+  }
+
+  .box-quote.gold { border-left: 4px solid var(--gold); }
+  .box-quote.green { border-left: 4px solid var(--green); }
+  .box-quote.flag { border-left: 4px solid var(--flag); }
+
+  /* CODE */
+  pre {
+    background: #0B0F19;
+    color: #E2E8F0;
+    padding: 18px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.5;
+    margin: 10px 0;
+  }
+
+  code {
+    font-family: var(--mono);
+    font-size: 13.5px;
+    background: var(--surface-2);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+
+  pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+  }
+
+  /* TABELAS */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 12px 0;
+  }
+
+  th {
+    background: var(--surface-2);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+    text-align: left;
+  }
+
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink-2);
+  }
+
+  tr:hover td {
+    background: var(--surface-2);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  
+  <header>
+    <div class="eyebrow">
+      <span class="badge-gold">Tratado Técnico &amp; Didático</span>
+      <span>Fábrica Universal</span>
+      <span>·</span>
+      <span>Versão 2.0 (Padrão Diamante)</span>
+    </div>
+
+    <h1>O Livro da Fábrica Universal</h1>
+    <p class="deck">O manual definitivo de arquitetura agêntica, economia severa de tokens, governança mecânica determinística e engenharia de software com Inteligência Artificial para desenvolvedores iniciantes, engenheiros seniores e líderes de tecnologia.</p>
+  </header>
+
+  <!-- SUMÁRIO -->
+  <div class="toc-box">
+    <h3>📑 Sumário do Livro</h3>
+    <div class="toc-grid">
+      <div class="toc-item"><a href="#prefacio">Prefácio: Por Que Existe?</a></div>
+      <div class="toc-item"><a href="#glossario">Glossário do Iniciante</a></div>
+      <div class="toc-item"><a href="#cap1">Capítulo 1: Economia de Tokens</a></div>
+      <div class="toc-item"><a href="#cap2">Capítulo 2: As 18 Leis Sagradas</a></div>
+      <div class="toc-item"><a href="#cap3">Capítulo 3: Usina de Scripts</a></div>
+      <div class="toc-item"><a href="#cap4">Capítulo 4: Portabilidade Multi-IDE</a></div>
+      <div class="toc-item"><a href="#cap5">Capítulo 5: Padrão Visual Diamante</a></div>
+      <div class="toc-item"><a href="#cap6">Capítulo 6: Manual de Montagem</a></div>
+    </div>
+  </div>
+
+  <!-- PREFÁCIO -->
+  <div class="chapter" id="prefacio">
+    <span class="chap-num">Abertura</span>
+    <h2>Prefácio: Por Que a Fábrica Universal Existe?</h2>
+    <p>Imagine que você contratou um assistente muito inteligente para ajudá-lo a construir uma casa. Porém, esse assistente tem três características perigosas:</p>
+    <ul>
+      <li><strong>Ele cobra por cada palavra que lê e pensa:</strong> Se ele pensar de forma prolixa e longa, sua conta bancária é esvaziada em minutos.</li>
+      <li><strong>Ele é esquecido:</strong> Conforme o dia passa e a conversa fica longa, ele começa a esquecer o que combinou no início da manhã.</li>
+      <li><strong>Ele sofre de excesso de confiança (alucinação):</strong> Às vezes, ele afirma com certeza absoluta que executou uma tarefa perfeitamente, mas na verdade o código nem compila.</li>
+    </ul>
+    <p>A <strong>Fábrica Universal</strong> nasceu para resolver exatamente esses três problemas no desenvolvimento de software com Inteligência Artificial (chamado de <strong>AIDD</strong> ou <em>AI-Driven Development</em>). Ela cria uma <strong>esteira industrial com trilhos de aço</strong> que reduz custos em até 90% e garante qualidade mecânica à prova de falhas.</p>
+  </div>
+
+  <!-- GLOSSÁRIO -->
+  <div class="chapter" id="glossario">
+    <span class="chap-num">Fundamentos</span>
+    <h2>O Dicionário do Iniciante (Glossário Descomplicado)</h2>
+    <p>Para que qualquer leitor compreenda todos os conceitos, aqui estão as definições dos termos essenciais:</p>
+    
+    <div class="box-quote gold">
+      <strong>Token:</strong> O combustível e a moeda de cobrança da IA. Um token é aproximadamente 4 letras de uma palavra. Você paga por cada token enviado e por cada token recebido.
+    </div>
+
+    <div class="box-quote green">
+      <strong>Contexto (Context Window):</strong> A "memória de curto prazo" da IA. Tudo o que ela consegue enxergar de uma vez só durante a conversa.
+    </div>
+
+    <div class="box-quote">
+      <strong>CoT (Chain of Thought):</strong> O rascunho mental onde a IA raciocina em silêncio antes de dar a resposta final.
+    </div>
+
+    <div class="box-quote">
+      <strong>Hook do Git (Pre-Commit):</strong> Um "segurança digital" no computador que inspeciona o código antes de salvar. Se houver falha, ele bloqueia o salvamento na hora.
+    </div>
+
+    <div class="box-quote">
+      <strong>Exit Code (0 ou 1):</strong> A linguagem binária do sistema operacional. <code>Exit 0</code> = Sucesso/Aprovado. <code>Exit 1</code> = Erro/Reprovado.
+    </div>
+  </div>
+
+  <!-- CAPÍTULO 1 -->
+  <div class="chapter" id="cap1">
+    <span class="chap-num">Capítulo 1</span>
+    <h2>O Motor de Economia Severa de Tokens</h2>
+    <p>Como a Fábrica Universal economiza de 50% a 90% de custos em qualquer modelo de IA:</p>
+
+    <h3>1. Caveman Thinking (Pensamento Telegráfico)</h3>
+    <p>Força a IA a raciocinar em estilo telegráfico no seu bloco interno <code>&lt;thought&gt;</code>, cortando palavras vazias e mantendo a resposta final impecável.</p>
+    <pre><code>// Pensamento Tradicional (~250 tokens):
+"O usuário gostaria de verificar se existem erros no arquivo de configuração..."
+
+// Pensamento Caveman (~25 tokens - Economia de 90%):
+"usr quer ver config. linha 42. ler 10 linhas. achar bug. corrigir."</code></pre>
+
+    <h3>2. Headroom (Compressão de Logs)</h3>
+    <p>Se um log de terminal tiver mais de 7 linhas, entrega apenas as 3 primeiras linhas e as 4 últimas, evitando estourar a memória da IA com saídas gigantescas.</p>
+
+    <h3>3. Lean-CTX (Leitura Cirúrgica)</h3>
+    <p>Proíbe ler arquivos inteiros de 2.000 linhas. Usa <code>grep_search</code> para localizar a linha exata e lê apenas um bloco de 20 a 40 linhas ao redor.</p>
+  </div>
+
+  <!-- CAPÍTULO 2 -->
+  <div class="chapter" id="cap2">
+    <span class="chap-num">Capítulo 2</span>
+    <h2>As 18 Leis Sagradas da Governança (R1 a R18)</h2>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Regra</th>
+          <th>Nome</th>
+          <th>Objetivo Prático</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><b>R1</b></td><td>Idioma Único (PT-BR)</td><td>Comunicação e código em português claro e estrito.</td></tr>
+        <tr><td><b>R2</b></td><td>Silenciamento</td><td>Sem saudações vazias; markdown limpo e direto.</td></tr>
+        <tr><td><b>R3/R4</b></td><td>Autonomia &amp; Auto-Correção</td><td>Resolução autônoma de falhas antes de entregar ao usuário.</td></tr>
+        <tr><td><b>R5</b></td><td>Padrão Diamante</td><td>4 seções verticais, 3 passos em mini-cards e busca em tempo real.</td></tr>
+        <tr><td><b>R8/R9</b></td><td>Determinismo &amp; Gates</td><td>Se um script resolve, não gaste IA. Gates retornam exit 0/1.</td></tr>
+        <tr><td><b>R15/R16</b></td><td>Segurança &amp; Suíte Verde</td><td>Zero segredos expostos; nunca commitar testes vermelhos.</td></tr>
+        <tr><td><b>R18</b></td><td>Higiene &amp; Zero Entulho</td><td>Zero lixo temporário e paridade estrita de hash entre espelhos.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CAPÍTULO 3 -->
+  <div class="chapter" id="cap3">
+    <span class="chap-num">Capítulo 3</span>
+    <h2>A Usina de Scripts Determinísticos (`scripts/`)</h2>
+    <p>A pasta de scripts que transforma regras abstratas em garantias mecânicas:</p>
+    <ul>
+      <li><code>scripts/hooks/pre-commit</code>: O fiscal que roda 6 gates de auditoria antes de cada salvamento.</li>
+      <li><code>scripts/auditar_higiene_repo.py</code>: Valida se não há scripts temporários ou espelhos dessincronizados.</li>
+      <li><code>scripts/limpar_entulho.py</code>: Auto-faxina que remove arquivos órfãos e ressincroniza o projeto em 1 comando.</li>
+      <li><code>scripts/auditar_r5_dossie.py</code>: Fiscal que garante que todas as 49 listas cumpram o padrão Diamante.</li>
+    </ul>
+  </div>
+
+  <!-- CAPÍTULO 4 -->
+  <div class="chapter" id="cap4">
+    <span class="chap-num">Capítulo 4</span>
+    <h2>Portabilidade Multi-IDE: Uma Fonte, Todos os Ambientes</h2>
+    <p>A governança vive exclusivamente em <code>.claude/CLAUDE.md</code>. O script <code>setup-links</code> cria Hardlinks diretos para que Cursor, Windsurf, Cline, VS Code e Copilot leiam exatamente a mesma regra no disco físico sem duplicação.</p>
+  </div>
+
+  <!-- CAPÍTULO 6 -->
+  <div class="chapter" id="cap6">
+    <span class="chap-num">Capítulo 6</span>
+    <h2>Manual Prático de Implementação</h2>
+    <p>Como iniciar um projeto novo ou salvar um projeto antigo em 5 minutos:</p>
+    <pre><code># 1. Iniciar repositório Git
+mkdir meu-projeto && cd meu-projeto && git init
+
+# 2. Adicionar o submódulo da Fábrica Universal
+git submodule add https://github.com/Heverton-web/fabrica-universal.git fabrica-universal
+git submodule update --init --recursive
+
+# 3. Copiar governança e scripts
+cp -r fabrica-universal/.claude .
+mkdir -p scripts && cp -r fabrica-universal/scripts/* scripts/
+
+# 4. Criar links e instalar o hook de proteção
+powershell .\scripts\setup-links.ps1 meu-projeto   # Linux: bash scripts/setup-links.sh meu-projeto</code></pre>
+  </div>
+
+  <footer>
+    <span>O Livro da Fábrica Universal · Versão 2.0 (Padrão Diamante).</span>
+    <span>Soberania Tecnológica &amp; Engenharia com IA.</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
