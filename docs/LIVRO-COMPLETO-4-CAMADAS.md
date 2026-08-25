@@ -2,6 +2,7 @@
 ## Guia Definitivo de Arquitetura, Soberania e Engenharia de Software com Inteligência Artificial
 
 > **Autor:** Fábrica Universal  
+> **Status:** 100% Concluído, Validado & Purificado ✅  
 > **Público-Alvo:** Desenvolvedores iniciantes, engenheiros seniores, arquitetos de software e líderes de tecnologia que não são da área de programação.  
 > **Objetivo:** Ensinar os princípios fundamentais, a física computacional e a engenharia prática para governar agentes de IA em qualquer projeto de software (novo ou legado) com custo quase zero e 100% de previsibilidade industrial.
 
@@ -12,34 +13,38 @@
 1. [Prefácio: A Crise do Desenvolvimento com IA](#prefácio-a-crise-do-desenvolvimento-com-ia)
 2. [O Dicionário do Iniciante (Glossário Descomplicado)](#o-dicionário-do-iniciante-glossário-descomplicado)
 3. [Capítulo 0: O Contexto Real de Origem (O Campo de Batalha)](#capítulo-0-o-contexto-real-de-origem-o-campo-de-batalha)
-   - 0.1 O Projeto Arsenal Open Source
-   - 0.2 As 4 Dores Reais Enfrentadas
-   - 0.3 Matriz de Transposição para Outros Projetos (SaaS, Consultorias, Pipelines de Dados)
+   - 0.1 O Projeto Arsenal Open Source (49 Camadas & >680 Ferramentas)
+   - 0.2 As 4 Dores Reais Enfrentadas na Prática
+   - 0.3 Matriz de Transposição para Outros Domínios (SaaS, Consultorias, Pipelines de Dados)
 4. [Capítulo 1: Camada 1 — TELA (Prompt & Context Engineering)](#capítulo-1-camada-1--tela-prompt--context-engineering)
    - 1.1 Os 3 Princípios Universais e Imutáveis da TELA
-   - 1.2 A Constituição Mestre: As 18 Regras Sagradas (R1 a R18)
+   - 1.2 A Constituição Mestre: As 18 Regras Sagradas Purificadas (R1 a R18)
    - 1.3 O Motor de Economia Severa de Tokens (As 5 Skills Fundamentais)
-   - 1.4 Vocabulário Controlado e Orçamento de Cache
-   - 1.5 Como Implementar e Replicar a Camada 1
+   - 1.4 Vocabulário Controlado e Orçamento de Cache (<2.500 palavras)
+   - 1.5 O Registro das 5 Seções Obrigatórias da TELA
+   - 1.6 Como Implementar e Replicar a Camada 1 Passo a Passo
 5. [Capítulo 2: Camada 2 — HARNESS (Harness & Loop Engineering)](#capítulo-2-camada-2--harness-harness--loop-engineering)
    - 2.1 Os 3 Princípios Universais e Imutáveis do HARNESS
-   - 2.2 Configuração Industrial: Circuit Breakers e Sandbox
-   - 2.3 O Guarda-Costas do Git: Pre-Commit com 6 Gates de Inspeção
-   - 2.4 A Mágica dos Hardlinks na Portabilidade Multi-IDE
-   - 2.5 Como Implementar e Replicar a Camada 2
+   - 2.2 Configuração Industrial de `settings.json`: Circuit Breakers e Sandbox
+   - 2.3 O Guarda-Costas do Git: Pre-Commit com 6 Gates Mecânicos de Inspeção
+   - 2.4 A Mágica dos Hardlinks na Portabilidade Multi-IDE Absoluta
+   - 2.5 O Registro das 5 Seções Obrigatórias do HARNESS
+   - 2.6 Como Implementar e Replicar a Camada 2 Passo a Passo
 6. [Capítulo 3: Camada 3 — LLM (Model Layer & Semantic Routing)](#capítulo-3-camada-3--llm-model-layer--semantic-routing)
    - 3.1 Os 3 Princípios Universais e Imutáveis do LLM
-   - 3.2 O Roteamento por Pareto: A Matriz de 3 Tiers de Modelos
+   - 3.2 O Roteamento Semântico por Pareto: A Matriz de 3 Tiers de Modelos
    - 3.3 Contratos Tipados Estritos: Structured Outputs via JSON Schema
-   - 3.4 Registro Declarativo de Tipos e Custos (`tipos.py`)
-   - 3.5 Como Implementar e Replicar a Camada 3
+   - 3.4 Registro Declarativo de Tipos e Custos Associados (`tipos.py`)
+   - 3.5 O Registro das 5 Seções Obrigatórias do LLM
+   - 3.6 Como Implementar e Replicar a Camada 3 Passo a Passo
 7. [Capítulo 4: Camada 4 — TOOLS (MCP Servers & Determinismo Mecânico)](#capítulo-4-camada-4--tools-mcp-servers--determinismo-mecânico)
    - 4.1 Os 3 Princípios Universais e Imutáveis de TOOLS
-   - 4.2 O Banco de Dados de Estado Persistente SQLite R11
+   - 4.2 O Banco de Dados Relacional SQLite de Estado Persistente (Regra R11)
    - 4.3 Servidores MCP e a Usina de Scripts Determinísticos
-   - 4.4 Como Implementar e Replicar a Camada 4
-8. [Capítulo 5: O Super-Auditor e a Validação Matemática das 4 Camadas](#capítulo-5-o-super-auditor-e-a-validação-matemática-das-4-camadas)
-9. [Capítulo 6: O Manual de Montagem Universal (Passo a Passo)](#capítulo-6-o-manual-de-montagem-universal-passo-a-passo)
+   - 4.4 O Registro das 5 Seções Obrigatórias de TOOLS
+   - 4.5 Como Implementar e Replicar a Camada 4 Passo a Passo
+8. [Capítulo 5: O Super-Auditor Holístico e a Validação Matemática das 4 Camadas](#capítulo-5-o-super-auditor-holístico-e-a-validação-matemática-das-4-camadas)
+9. [Capítulo 6: O Manual de Montagem Universal (Projetos Novos & Legados)](#capítulo-6-o-manual-de-montagem-universal-projetos-novos--legados)
 
 ---
 
@@ -83,12 +88,12 @@ Esta arquitetura não nasceu em um laboratório teórico. Ela foi forjada no cam
 O objetivo deste projeto era auditar, custodiar o código-fonte e produzir **49 compêndios técnicos especializados** no **Padrão Dossiê Executivo (Padrão Diamante)**, cobrindo mais de **680 motores de código aberto** (bancos de dados, SOC/SIEM, Lakehouses, IA de Borda, etc.) e sincronizando os forks automaticamente no GitHub.
 
 ## 0.2 As 4 Dores Reais Enfrentadas
-* Processar mais de 680 ferramentas gastaria dezenas de milhares de reais se a IA pensasse de forma prolixa.
-* Ao gerar arquivos HTML de mais de 100 KB, o modelo de IA esquecia ferramentas e omitia fichas técnicas.
-* A IA frequentemente alucinava que havia validado o código.
-* Desenvolvedores precisavam alternar entre Claude Code, Cursor e VS Code sem perder regras.
+* **Custo Exponencial:** Processar mais de 680 ferramentas gastaria dezenas de milhares de reais se a IA pensasse de forma prolixa.
+* **Degradação de Atenção:** Ao gerar arquivos HTML de mais de 100 KB, o modelo de IA esquecia ferramentas e omitia fichas técnicas.
+* **Falso Positivo de Validação:** A IA frequentemente alucinava que havia validado o código.
+* **Fragmentação de Ferramental:** Desenvolvedores precisavam alternar entre Claude Code, Cursor e VS Code sem perder regras.
 
-## 0.3 Matriz de Transposição para Outros Projetos
+## 0.3 Matriz de Transposição para Outros Domínios
 O modelo das 4 Camadas é universal. Veja como aplicá-lo em qualquer área:
 
 ```mermaid
@@ -117,57 +122,50 @@ graph TD
 
 # Capítulo 1: Camada 1 — TELA (Prompt & Context Engineering)
 
-> **Papel no Estúdio:** O Mixer (O que a IA vê, o que ela sabe e como ela raciocina).
+> **Papel no Estúdio:** O Mixer (O que a IA vê, o que ela sabe e como ela raciocina).  
+> **Auditor Mecânico:** `scripts/auditar_camada_tela.py` (`exit 0`).
 
 ## 1.1 Os 3 Princípios Universais e Imutáveis da TELA
 
 1. **Princípio da Invariância de Prefixo (*KV-Cache Invariance*):**  
    Se o arquivo mestre de governança (`CLAUDE.md`) permanecer 100% estático, o hardware dos provedores de LLM reutiliza os cálculos anteriores, gerando **90% de desconto financeiro** em todas as mensagens.
-2. **Princípio da Densidade de Shannon (*Zero Entropia Prolixa*):**  
+2. **Princípio da Densidade Informacional de Shannon (*Zero Entropia Prolixa*):**  
    Ruído degrada sinal. Eliminar saudações e conversas vazias reduz a taxa de alucinação a zero.
-3. **Princípio da Localidade de Contexto (*Context Locality*):**  
+3. **Princípio da Localidade Espacial de Contexto (*Context Locality*):**  
    Buscar trechos cirúrgicos via `grep` evita o fenômeno *Lost in the Middle* (esquecimento no meio de arquivos gigantes).
 
 ## 1.2 A Constituição Mestre: As 18 Regras Sagradas Purificadas (R1 a R18)
 
 | Regra | Nome | O Que Faz na Prática |
 | :--- | :--- | :--- |
-| **R1** | **Idioma Único (PT-BR)** | Comunicação, documentação e código em português estrito. |
-| **R2** | **Silenciamento de Prosa** | Sem preâmbulos vazios ("Com certeza!"). Markdown limpo e executivo. |
-| **R3/R4** | **Autonomia & Auto-Correção** | A esteira resolve desvios e corrige erros antes de entregar ao operador. |
-| **R5** | **Padrão Diamante** | Dossiê visual com Hero Stats, busca interativa, 4 seções verticais nos cards e 3 passos em mini-cards. |
-| **R6** | **Modelo Livre** | `model: inherit` — o projeto não fica refém de uma LLM específica. |
-| **R7** | **Conteúdo Intocável** | Compêndios e catálogos finais nunca são resumidos ou truncados. |
-| **R8/R9** | **Determinismo & Gates** | Se um script resolve, não gaste LLM. Gates retornam `exit 0` ou `exit 1`. |
-| **R10/R11**| **Idempotência & Estado em Disco**| Scripts podem rodar 1.000 vezes sem quebrar; estado vive em SQLite (`estado_esteira.db`). |
-| **R12** | **Registro Declarativo Único** | 1 entrada em `scripts/tipos.py` por novo tipo de documento. |
-| **R13** | **Padronização Numérica** | Compêndios numerados sequencialmente (`01` a `49`) com slugs limpos. |
-| **R14** | **Caminhos Curtos** | Nomes respeitam o limite de 260 caracteres do Windows (MAX_PATH). |
+| **R1** | **Idioma Único (PT-BR)** | Todo o pensamento, documentação, comentários de código e conversas em Português do Brasil estrito. |
+| **R2** | **Silenciamento de Prosa** | Sem introduções vazias ("Com certeza!"). Markdown limpo, técnico e executivo. |
+| **R3/R4** | **Autonomia & Auto-Correção** | A esteira resolve desvios e corrige falhas internamente antes de entregar ao operador. |
+| **R5** | **Padrão Dossiê Diamante** | Dossiê visual com Hero Stats, busca interativa, 4 seções verticais nos cards e 3 passos em mini-cards. |
+| **R6** | **Modelo Livre** | `model: inherit` — o projeto não fica amarrado a um LLM específico. |
+| **R7** | **Conteúdo de Entrega Intocável** | Compêndios, dossiês e dados finais nunca são resumidos ou truncados sem pedido explícito. |
+| **R8/R9** | **Determinismo & Gates** | Se um script resolve, não gaste LLM. Gates mecânicos retornam `exit 0` ou `exit 1`. |
+| **R10/R11**| **Idempotência & Estado em Disco**| Scripts podem rodar 1.000 vezes sem corromper; estado vive em SQLite (`estado_esteira.db`). |
+| **R12** | **Registro Declarativo Único** | Adicionar um novo tipo custa 1 entrada em `scripts/tipos.py`. |
+| **R13** | **Padronização Numérica** | Compêndios numerados sequencialmente (`01` a `50`) com slugs limpos. |
+| **R14** | **Caminhos Curtos** | Nomes de pasta/arquivo respeitam o limite de 260 caracteres do Windows (MAX_PATH). |
 | **R15/R16**| **Segredos & Testes Verdes** | Git bloqueia chaves de API e proíbe commits com testes quebrados. |
-| **R17** | **Integridade de Repositórios** | Toda ferramenta catalogada DEVE possuir licença OSI, SaaS substituído e URL de repositório válida. |
+| **R17** | **Integridade de Repositórios** | Toda ferramenta catalogada DEVE possuir licença OSI, SaaS substituído e URL GitHub válida. |
 | **R18** | **Higiene & Paridade Estrita** | Zero arquivos temporários (`temp_*`, `.bak`); espelhos com mesmo hash MD5. |
 
 ## 1.3 As 5 Skills Fundamentais de Economia Severa
 1. **`caveman`:** Raciocínio telegráfico no bloco interno `<thought>` ("usr quer X. ler Y. corrigir Z."). Economiza até 90% do processamento mental da IA.
 2. **`headroom`:** Corta logs gigantes de terminal mantendo 3 linhas no topo e 4 no fim.
-3. **`lean-ctx`:** Força o uso de `grep` antes de abrir arquivos.
-4. **`rtk-memory`:** Joga aprendizados em `RTK-SCRATCHPAD.md` e mantém o prompt mestre congelado.
+3. **`lean-ctx`:** Força o uso de `grep` antes de abrir arquivos grandes.
+4. **`rtk-memory`:** Grava aprendizados em `RTK-SCRATCHPAD.md` e mantém o prompt mestre congelado.
 5. **`pre-flight-check`:** Checklist de 3 perguntas antes de refatorar código.
-
-## 1.4 Como Replicar a Camada 1
-```bash
-cp -r fabrica-universal/.claude/ .
-cp fabrica-universal/RTK-SCRATCHPAD.md .
-cp fabrica-universal/scripts/auditar_camada_tela.py scripts/
-python scripts/auditar_camada_tela.py
-# -> Saída: Exit 0 (100% Aprovado)
-```
 
 ---
 
 # Capítulo 2: Camada 2 — HARNESS (Harness & Loop Engineering)
 
-> **Papel no Estúdio:** O Sistema de Segurança, Cabos e Disjuntores.
+> **Papel no Estúdio:** O Sistema de Segurança, Cabos e Disjuntores.  
+> **Auditor Mecânico:** `scripts/auditar_camada_harness.py` (`exit 0`).
 
 ## 2.1 Os 3 Princípios Universais e Imutáveis do HARNESS
 
@@ -178,23 +176,7 @@ python scripts/auditar_camada_tela.py
 3. **Princípio do Ponto Único de Verdade (*Hardlinks no Sistema de Arquivos*):**  
    A governança vive em `.claude/CLAUDE.md` e é linkada no disco rígido para todas as outras IDEs.
 
-## 2.2 Configuração Industrial de `.claude/settings.json`
-```json
-{
-  "harness": {
-    "circuit_breaker": {
-      "max_loop_iterations": 25,
-      "command_timeout_seconds": 60
-    },
-    "sandbox": {
-      "disallow_shell_cd": true,
-      "require_confirmation_on_destructive": true
-    }
-  }
-}
-```
-
-## 2.3 O Pre-Commit com 6 Gates de Proteção
+## 2.2 O Pre-Commit com 6 Gates de Proteção
 O script `.git/hooks/pre-commit` inspeciona cada tentativa de gravação no Git:
 * **Gate 1:** Varredura de chaves de API e segredos privados (R15).
 * **Gate 2:** Execução da suíte de testes Python (`pytest`) (R16).
@@ -203,22 +185,12 @@ O script `.git/hooks/pre-commit` inspeciona cada tentativa de gravação no Git:
 * **Gate 5:** Atualização do grafo de dependências do projeto.
 * **Gate 6:** Auditoria criptográfica de higiene e paridade de hash MD5 (R18).
 
-## 2.4 Como Replicar a Camada 2
-```bash
-cp fabrica-universal/.claude/settings.json .claude/
-cp fabrica-universal/scripts/hooks/pre-commit scripts/hooks/
-cp fabrica-universal/scripts/setup-links.* scripts/
-cp fabrica-universal/scripts/auditar_camada_harness.py scripts/
-powershell .\scripts\setup-links.ps1 meu-projeto   # Linux: bash scripts/setup-links.sh meu-projeto
-python scripts/auditar_camada_harness.py
-# -> Saída: Exit 0 (100% Aprovado)
-```
-
 ---
 
 # Capítulo 3: Camada 3 — LLM (Model Layer & Semantic Routing)
 
-> **Papel no Estúdio:** O Músico, o Instrumento e a Cognição Probabilística.
+> **Papel no Estúdio:** O Músico, o Instrumento e a Cognição Probabilística.  
+> **Auditor Mecânico:** `scripts/auditar_camada_llm.py` (`exit 0`).
 
 ## 3.1 Os 3 Princípios Universais e Imutáveis do LLM
 
@@ -234,25 +206,12 @@ python scripts/auditar_camada_harness.py
 * **Tier 2 (Código & Testes - 10x Custo):** *Claude 3.7 Sonnet / GPT-4o / Gemini Pro* (Código-fonte, refatorações, dossiês).
 * **Tier 3 (Raciocínio Pesado - 30x Custo):** *Sonnet Thinking / Pro Thinking / o3-mini* (Decisões de arquitetura e bugs complexos).
 
-## 3.3 Contratos JSON Schema em `scripts/schemas/`
-Garantem que os dados de ferramentas (`schema_ferramenta.json`) e relatórios de encerramento (`schema_relatorio.json`) contenham tipos estritos antes de serem aceitos pelo sistema.
-
-## 3.4 Como Replicar a Camada 3
-```bash
-mkdir -p scripts/schemas
-cp fabrica-universal/scripts/roteador_llm.py scripts/
-cp fabrica-universal/scripts/tipos.py scripts/
-cp fabrica-universal/scripts/schemas/* scripts/schemas/
-cp fabrica-universal/scripts/auditar_camada_llm.py scripts/
-python scripts/auditar_camada_llm.py
-# -> Saída: Exit 0 (100% Aprovado)
-```
-
 ---
 
 # Capítulo 4: Camada 4 — TOOLS (MCP Servers & Determinismo Mecânico)
 
-> **Papel no Estúdio:** Os Pedais de Efeitos, Instrumentos e Processadores de Precisão.
+> **Papel no Estúdio:** Os Pedais de Efeitos, Instrumentos e Processadores de Precisão.  
+> **Auditor Mecânico:** `scripts/auditar_camada_tools.py` (`exit 0`).
 
 ## 4.1 Os 3 Princípios Universais e Imutáveis de TOOLS
 
@@ -269,21 +228,9 @@ Módulo Python (`scripts/estado_esteira.py`) que armazena em tabelas relacionais
 * Registro de todas as auditorias e gates aprovados/reprovados;
 * Catálogo de ferramentas preservadas.
 
-## 4.3 Como Replicar a Camada 4
-```bash
-cp fabrica-universal/.mcp.json .
-cp fabrica-universal/scripts/estado_esteira.py scripts/
-cp fabrica-universal/scripts/auditar_higiene_repo.py scripts/
-cp fabrica-universal/scripts/limpar_entulho.py scripts/
-cp fabrica-universal/scripts/auditar_camada_tools.py scripts/
-python scripts/estado_esteira.py
-python scripts/auditar_camada_tools.py
-# -> Saída: Exit 0 (100% Aprovado)
-```
-
 ---
 
-# Capítulo 5: O Super-Auditor e a Validação Matemática das 4 Camadas
+# Capítulo 5: O Super-Auditor Holístico e a Validação Matemática das 4 Camadas
 
 Para garantir que todas as 4 camadas estão operando em harmonia matemática, a Fábrica Universal disponibiliza o **Super-Auditor Geral** (`scripts/auditar_todas_camadas.py`).
 
@@ -292,7 +239,7 @@ Ele encadeia os 4 gates mecânicos e emite o certificado oficial:
 python scripts/auditar_todas_camadas.py
 ```
 
-### Saída Esperada do Terminal:
+### Saída do Terminal:
 ```text
 ================================================================================
  📊 QUADRO FINAL DE CONFORMIDADE DAS 4 CAMADAS:
@@ -364,4 +311,4 @@ Você agora possui o controle total sobre:
 3. Como a cognição probabilística é roteada por custo e tipada por schemas (**LLM**);
 4. Como ferramentas determinísticas garantem verdade matemática (**TOOLS**).
 
-*Fim do Tratado das 4 Camadas da Fábrica Agêntica · Versão 2.0 (Padrão Diamante).*
+*Fim do Tratado das 4 Camadas da Fábrica Agêntica · Versão 2.0 Purificada (Padrão Diamante).*
