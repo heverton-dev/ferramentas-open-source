@@ -33,9 +33,10 @@ def auditar_todas_as_listas():
         nome_arquivo = Path(f).name
         conteudo = Path(f).read_text(encoding="utf-8")
 
-        # Contar cards pelo padrão de card-header ou rank
-        cards = re.findall(r'<div class="card-rank">(\d+)</div>', conteudo)
-        qtd = len(cards)
+        # Contar itens pela tabela e cards ricos
+        ranks_tabela = re.findall(r'<td class="rank">(\d+)</td>', conteudo)
+        cards = re.findall(r'<div class="card" id="card-', conteudo)
+        qtd = max(len(ranks_tabela), len(cards))
         total_itens_global += qtd
 
         if qtd < 20:
