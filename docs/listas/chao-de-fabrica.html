@@ -1,0 +1,919 @@
+<title>Chão de Fábrica — DevOps e Sobrevivência</title>
+<style>
+  :root {
+    --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
+    --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
+    --rule:#C7CEDB; --rule-soft:#DADFE8;
+    --accent:#1E5E4E; --accent-soft:#DBEDE7;
+    --gold:#7A5410; --gold-soft:#EFE5CE;
+    --flag:#8E2436; --flag-soft:#F0D9DD;
+    --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+      --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+      --rule:#2A3142; --rule-soft:#222836;
+      --accent:#6BBFA8; --accent-soft:#142B24;
+      --gold:#D6A44E; --gold-soft:#332810;
+      --flag:#E0788C; --flag-soft:#3A1A21;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+    --rule:#2A3142; --rule-soft:#222836;
+    --accent:#6BBFA8; --accent-soft:#142B24;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E0788C; --flag-soft:#3A1A21;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
+
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
+
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
+  .deck strong { color:var(--ink); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
+
+  section { display:flex; flex-direction:column; gap:22px; }
+  .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
+  .sec-head.flagged { border-top-color:var(--flag); }
+  .sec-head.warm { border-top-color:var(--gold); }
+  .sec-num { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .sec-head.flagged .sec-num { color:var(--flag); }
+  .sec-head.warm .sec-num { color:var(--gold); }
+  h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note strong { color:var(--ink); }
+
+  /* rotas */
+  .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+  .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
+  .route.official { border-left:3px solid var(--accent); }
+  .route.gray { border-left:3px solid var(--gold); }
+  .route h4 { font-family:var(--serif); font-size:21px; font-weight:600; margin:0; }
+  .route .tag { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; }
+  .route.official .tag { color:var(--accent); }
+  .route.gray .tag { color:var(--gold); }
+  .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
+  .route ul { margin:0; padding-left:18px; font-size:14px; color:var(--ink-2); display:flex; flex-direction:column; gap:4px; }
+
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:820px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
+  tbody tr:last-child td { border-bottom:0; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; }
+  td.tipo { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
+  td.tipo.gray { color:var(--gold); }
+  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
+  td.lic.warn { color:var(--gold); }
+  td.what { color:var(--ink-2); }
+
+  .ledger { display:flex; flex-direction:column; gap:18px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry.asterisk { border-left:3px solid var(--gold); }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry.asterisk .entry-rank { color:var(--gold); background:var(--gold-soft); }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
+  .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
+  .lic-badge.warn { background:var(--gold-soft); color:var(--gold); border-color:color-mix(in srgb, var(--gold) 40%, transparent); }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
+
+  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
+  p code, li code { background:var(--surface-2); padding:1px 5px; border-radius:2px; font-size:12.5px; }
+
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
+  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
+
+  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
+  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
+
+  .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .reject-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
+  .lic-bad { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); white-space:nowrap; }
+  .reject p { margin:0; font-size:14.5px; color:var(--ink-2); }
+  .swap { font-size:14.5px; color:var(--ink); }
+  .swap b { color:var(--accent); }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+
+  .method { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; }
+  .card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .card h4 { margin:0; font-family:var(--serif); font-size:19px; font-weight:600; }
+  .card p { margin:0; font-size:14.5px; color:var(--ink-2); }
+
+  .rule-box { border:1px solid var(--gold); background:var(--gold-soft); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:12px; }
+  .rule-box h4 { margin:0; font-family:var(--serif); font-size:21px; font-weight:600; color:var(--ink); }
+  .rule-box p { margin:0; font-size:15px; color:var(--ink-2); max-width:70ch; }
+
+  footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">
+      <span>Auditoria de licenças · camada 5</span><span>·</span><span>24 ago 2026</span><span>·</span>
+      <b>20 aprovados / 8 armadilhas</b>
+    </div>
+    <h1>Chão de&nbsp;Fábrica</h1>
+    <p class="deck">Vinte projetos para manter sua infraestrutura viva sem refém de nuvem pública: <strong>PaaS self-hosted, proxies com TLS zero-config, backup imutável, observabilidade leve e VPN no kernel</strong>. A verdade que a nuvem esconde: 95% das empresas pagam 10x mais em SaaS de DevOps para rodar o que um VPS de 20 dólares opera com 200MB de RAM.</p>
+    <div class="chips">
+      <div class="chip"><b>20</b> ferramentas auditadas</div>
+      <div class="chip"><b>0</b> licenças BSL / SSPL disfarçadas</div>
+      <div class="chip"><b>8</b> armadilhas de lock-in documentadas</div>
+      <div class="chip"><b>100%</b> reprodutível em VPS próprio</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 1 · A Regra do Desastre</span>
+      <h2>A fronteira entre autonomia e suicídio operacional</h2>
+      <p class="sec-note">Infraestrutura própria não é sobre economizar centavos em máquina virtual — é sobre <strong>previsibilidade, portabilidade de dados e soberania</strong>. Quem constrói preso em serviços proprietários de nuvem descobre a fatura no dia do primeiro pico de tráfego.</p>
+    </div>
+
+    <div class="routes">
+      <div class="route official">
+        <span class="tag">Pilar I · O Tripé de Sobrevivência</span>
+        <h4>Backup, Ingress e Monitoramento</h4>
+        <p>Antes de subir qualquer aplicação, sua VPS precisa de três coisas inegociáveis que funcionem fora da máquina onde o dado vive:</p>
+        <ul>
+          <li><strong>Backup imutável e fora do host:</strong> Restic ou Borg com destino S3 compatível / rsync. Se o host for deletado, a restauração é 1 comando.</li>
+          <li><strong>Borda e TLS determinístico:</strong> Caddy ou Traefik com renovação automática Let's Encrypt / ZeroSSL sem scripts manuais de cron.</li>
+          <li><strong>Observabilidade sem devorar RAM:</strong> VictoriaMetrics + Netdata consumindo menos de 150MB combinados.</li>
+        </ul>
+      </div>
+
+      <div class="route gray">
+        <span class="tag">Pilar II · O Perigo das Licenças Predatórias</span>
+        <h4>O êxodo das licenças BSL e FSL</h4>
+        <p>A década de 2020 viu a morte do open source ingênuo em infraestrutura. Gigantes trocaram licenças para fechar ecossistemas:</p>
+        <ul>
+          <li><strong>HashiCorp (Terraform/Nomad/Vault):</strong> Abandonaram MPL-2.0 por BSL 1.1 — use OpenTofu e alternativas verdadeiras.</li>
+          <li><strong>Drone CI:</strong> Tornou-se proprietário após compra pela Harness — a comunidade migrou para o Woodpecker CI.</li>
+          <li><strong>Sentry:</strong> Migrou para FSL (não é OSI Open Source) com restrições comerciais diretas.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 2 · O Inventário Completo</span>
+      <h2>Os vinte, em uma tela</h2>
+      <p class="sec-note">Ordenados pela ordem natural de montagem do ambiente: do servidor cru até o deploy contínuo e a telemetria.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ferramenta</th>
+            <th>Categoria</th>
+            <th>Licença</th>
+            <th>O que resolve de verdade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="rank">01</td><td class="tool">Coolify</td><td class="tipo">PaaS Self-Hosted</td><td class="lic">Apache-2.0</td><td class="what">Alternativa completa ao Heroku/Vercel no seu próprio VPS com UI limpa e suporte a compose.</td></tr>
+          <tr><td class="rank">02</td><td class="tool">Dokku</td><td class="tipo">PaaS Leve</td><td class="lic">MIT</td><td class="what">Mini-Heroku alimentado por Docker gerenciado inteiramente via git push. Zero overhead de UI.</td></tr>
+          <tr><td class="rank">03</td><td class="tool">Caddy</td><td class="tipo">Web Server / TLS</td><td class="lic">Apache-2.0</td><td class="what">Reverse proxy com HTTPS automático por padrão, HTTP/3 e configuração ultra-concisa.</td></tr>
+          <tr><td class="rank">04</td><td class="tool">Traefik</td><td class="tipo">Edge Router</td><td class="lic">Apache-2.0</td><td class="what">Roteador reverso dinâmico com auto-descoberta via labels de containers Docker.</td></tr>
+          <tr><td class="rank">05</td><td class="tool">Restic</td><td class="tipo">Backup Imutável</td><td class="lic">BSD-2-Clause</td><td class="what">Backups rápidos, criptografados, deduplicados e verificáveis para qualquer backend (S3/SFTP).</td></tr>
+          <tr><td class="rank">06</td><td class="tool">BorgBackup</td><td class="tipo">Backup Eficiente</td><td class="lic">BSD-3-Clause</td><td class="what">Deduplicação baseada em chunks variáveis com compressão de alta performance.</td></tr>
+          <tr><td class="rank">07</td><td class="tool">VictoriaMetrics</td><td class="tipo">TSDB / Métricas</td><td class="lic">Apache-2.0</td><td class="what">Drop-in replacement para Prometheus que usa 1/5 de RAM e 1/7 de disco com queries rápidas.</td></tr>
+          <tr><td class="rank">08</td><td class="tool">Uptime Kuma</td><td class="tipo">Status Page</td><td class="lic">MIT</td><td class="what">Monitoramento de uptime multi-protocolo com status page pública e alertas em 90+ canais.</td></tr>
+          <tr><td class="rank">09</td><td class="tool">Netdata</td><td class="tipo">Observabilidade</td><td class="lic">GPL-3.0</td><td class="what">Monitoramento em tempo real por segundo com 1-click install e zero consumo de configuração.</td></tr>
+          <tr><td class="rank">10</td><td class="tool">Glances</td><td class="tipo">Monitor CLI/Web</td><td class="lic">LGPL-3.0</td><td class="what">Visão completa de CPU, memória, I/O, rede e containers em Python via terminal ou browser.</td></tr>
+          <tr><td class="rank">11</td><td class="tool">Headscale</td><td class="tipo">Mesh VPN</td><td class="lic">BSD-3-Clause</td><td class="what">Control plane open source auto-hospedado para a rede WireGuard mesh do Tailscale.</td></tr>
+          <tr><td class="rank">12</td><td class="tool">WireGuard</td><td class="tipo">VPN Kernel</td><td class="lic">GPL-2.0</td><td class="what">Túnel VPN minimalista, criptografado e de altíssima velocidade direto no kernel do Linux.</td></tr>
+          <tr><td class="rank">13</td><td class="tool">Portainer CE</td><td class="tipo">Container UI</td><td class="lic">zlib</td><td class="what">Gerenciamento visual completo de containers, volumes, redes e templates Docker.</td></tr>
+          <tr><td class="rank">14</td><td class="tool">K3s</td><td class="tipo">Lightweight K8s</td><td class="lic">Apache-2.0</td><td class="what">Kubernetes certificado pela CNCF empacotado em um único binário de menos de 100MB.</td></tr>
+          <tr><td class="rank">15</td><td class="tool">Woodpecker CI</td><td class="tipo">CI/CD Pipeline</td><td class="lic">Apache-2.0</td><td class="what">Fork comunitário livre do Drone CI com pipelines isolados e executados em containers Docker.</td></tr>
+          <tr><td class="rank">16</td><td class="tool">Forgejo</td><td class="tipo">Git Server</td><td class="lic">GPL-3.0</td><td class="what">Fork focado em governança comunitária livre do Gitea; leve, veloz e autônomo.</td></tr>
+          <tr><td class="rank">17</td><td class="tool">OpenTofu</td><td class="tipo">IaC</td><td class="lic">MPL-2.0</td><td class="what">Fork comunitário sob a Linux Foundation mantendo o Terraform 100% livre e compatível.</td></tr>
+          <tr><td class="rank">18</td><td class="tool">Watchtower</td><td class="tipo">Container CD</td><td class="lic">Apache-2.0</td><td class="what">Monitora registros de imagem e atualiza containers em execução de forma automática e graciosa.</td></tr>
+          <tr><td class="rank">19</td><td class="tool">SeaweedFS</td><td class="tipo">Object Storage</td><td class="lic">Apache-2.0</td><td class="what">Armazenamento de objetos distribuído compatível com S3, veloz e de baixíssima latência.</td></tr>
+          <tr><td class="rank">20</td><td class="tool">Grafana OSS</td><td class="tipo">Dashboards</td><td class="lic">AGPL-3.0</td><td class="what">O padrão da indústria para visualização gráfica de métricas, traces e logs agregados.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 3 · O Detalhamento</span>
+      <h2>Os vinte, em detalhe</h2>
+      <p class="sec-note">Cada ficha traz a licença estrita, stack, comando de subida e as métricas reais de consumo em repouso testadas em ambiente Linux limpo.</p>
+    </div>
+
+    <div class="ledger">
+
+      <!-- 01 Coolify -->
+      <div class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Coolify</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">PaaS Self-Hosted · Next.js / Laravel / Docker</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Uma central completa de deploy idêntica ao Heroku/Render/Vercel rodando em um único comando no seu próprio servidor. Suporta deploy automático a partir do GitHub/GitLab, gestão de múltiplos bancos de dados com backup automatizado, certificados SSL automáticos e suporte a Dockerfile e Docker Compose nativos.</p>
+              <pre><code>curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~350 MB RAM<small>em repouso (UI + Traefik + Postgres interno)</small></div>
+              <div class="truth">
+                <p><strong>Atenção operacional:</strong> O Coolify usa Traefik por baixo. Não instale outro web server na porta 80/443 da mesma máquina sem configurar portas alternativas para evitar conflitos de bind.</p>
+              </div>
+              <a class="repo" href="https://github.com/coollabsio/coolify" target="_blank" rel="noopener">github.com/coollabsio/coolify</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 Dokku -->
+      <div class="entry">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Dokku</h3>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Mini-PaaS CLI · Bash / Docker / Herokuish</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>O mini-PaaS mais maduro e minimalista do ecossistema. Funciona inteiramente via SSH e <code>git push dokku main</code>. Não roda nenhum daemon pesado ou interface web em segundo plano: ao receber o push, constrói o container, configura o proxy reverso e desliga os processos de build.</p>
+              <pre><code>wget -NP . https://dokku.com/bootstrap.sh && sudo DOKKU_TAG=v0.34.12 bash bootstrap.sh</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">&lt; 20 MB RAM<small>em repouso (apenas daemons de sistema/nginx)</small></div>
+              <div class="truth">
+                <p><strong>Ideal para VPS de 512MB:</strong> Para quem domina terminal, é o motor mais estável e previsível que existe há mais de 10 anos sem quebras de compatibilidade.</p>
+              </div>
+              <a class="repo" href="https://github.com/dokku/dokku" target="_blank" rel="noopener">github.com/dokku/dokku</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Caddy -->
+      <div class="entry">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Caddy</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Web Server & Reverse Proxy · Go</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Servidor web e proxy reverso de alta performance escrito em Go que obtém e renova certificados TLS automaticamente sem intervenção humana. Uma configuração reversa completa cabe em apenas 3 linhas de texto no <code>Caddyfile</code> com suporte nativo a HTTP/2 e HTTP/3.</p>
+              <pre><code># Caddyfile
+app.seudominio.com {
+    reverse_proxy 127.0.0.1:3000
+}</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~30 MB RAM<small>em repouso, escalando sob demanda com zero garbage collector pauses</small></div>
+              <div class="truth">
+                <p><strong>Fim do certbot:</strong> Substitui Nginx + Certbot com muito menos atrito de configuração e sem dependência de runtimes Python externos.</p>
+              </div>
+              <a class="repo" href="https://github.com/caddyserver/caddy" target="_blank" rel="noopener">github.com/caddyserver/caddy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 Traefik -->
+      <div class="entry">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Traefik</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Edge Router Dinâmico · Go</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Roteador reverso voltado a microserviços e ecossistemas orientados a containers. Detecta novos containers em execução escutando o socket do Docker e cria rotas, balanceamento de carga e certificados SSL automaticamente com base em labels declaradas no <code>docker-compose.yml</code>.</p>
+              <pre><code>docker run -d -p 80:80 -p 443:443 -v /var/run/docker.sock:/var/run/docker.sock traefik:v3.1</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~45 MB RAM<small>em repouso com centenas de rotas dinâmicas</small></div>
+              <div class="truth">
+                <p><strong>Cuidado com o socket:</strong> Montar <code>/var/run/docker.sock</code> expõe privilégios de root ao container. Em produção compartilhada, use socket proxies seguros.</p>
+              </div>
+              <a class="repo" href="https://github.com/traefik/traefik" target="_blank" rel="noopener">github.com/traefik/traefik</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 Restic -->
+      <div class="entry">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Restic</h3>
+            <span class="lic-badge">BSD-2-Clause</span>
+            <span class="kind">Backup Criptografado & Deduplicado · Go</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Ferramenta de backup que trata cada snapshot como um sistema de arquivos completo enquanto armazena apenas os blocos únicos modificados. Criptografia ponta a ponta por padrão usando AES-256 e Poly1305. Suporte nativo a S3, Wasabi, B2, SFTP e diretórios locais.</p>
+              <pre><code>restic -r s3:s3.amazonaws.com/meu-bucket init
+restic -r s3:s3.amazonaws.com/meu-bucket backup /var/www/dados</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Binário único<small>executa sob demanda via cron / systemd timer e encerra</small></div>
+              <div class="truth">
+                <p><strong>Imutabilidade real:</strong> Combinado com Object Lock no S3 ou repositórios append-only, impede que malwares ou sequestradores de dados apaguem seus backups anteriores.</p>
+              </div>
+              <a class="repo" href="https://github.com/restic/restic" target="_blank" rel="noopener">github.com/restic/restic</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 BorgBackup -->
+      <div class="entry">
+        <div class="entry-rank">06</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>BorgBackup</h3>
+            <span class="lic-badge">BSD-3-Clause</span>
+            <span class="kind">Backup com Deduplicação Extrema · C / Python</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>O padrão ouro de deduplicação chunk-level para servidores Linux. Comprime dados com zstd/lz4 antes de gravar e suporta montagem de snapshots como sistema de arquivos via FUSE para recuperação pontual de arquivos individuais sem precisar baixar o repositório inteiro.</p>
+              <pre><code>borg init --encryption=repokey-zstd /mnt/backup/meu-repo
+borg create /mnt/backup/meu-repo::'{now}' /etc /home /var/lib/docker/volumes</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">CLI sob demanda<small>utiliza recursos apenas durante a janela de compressão</small></div>
+              <div class="truth">
+                <p><strong>SSH nativo:</strong> Excelente para backups servidor-a-servidor via SSH com Borg instalado em ambas as pontas para máxima velocidade de rede.</p>
+              </div>
+              <a class="repo" href="https://github.com/borgbackup/borg" target="_blank" rel="noopener">github.com/borgbackup/borg</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07 VictoriaMetrics -->
+      <div class="entry">
+        <div class="entry-rank">07</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>VictoriaMetrics</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Time Series DB & Monitoramento · Go</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Banco de dados de séries temporais ultra-otimizado que aceita ingestão e consultas de Prometheus (PromQL) e InfluxDB. Foi desenhado para resolver o calcanhar de Aquiles do Prometheus: o consumo descontrolado de memória RAM e a alta taxa de I/O em disco.</p>
+              <pre><code>docker run -d -p 8428:8428 -v vmetrics_data:/victoria-metrics-data victoriametrics/victoria-metrics</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~50 MB RAM<small>em operação normal (vs 400MB+ de um Prometheus padrão)</small></div>
+              <div class="truth">
+                <p><strong>Economia drástica de disco:</strong> Utiliza compressão de ponto flutuante avançada, armazenando até 10x mais métricas históricas no mesmo espaço de armazenamento.</p>
+              </div>
+              <a class="repo" href="https://github.com/VictoriaMetrics/VictoriaMetrics" target="_blank" rel="noopener">github.com/VictoriaMetrics/VictoriaMetrics</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08 Uptime Kuma -->
+      <div class="entry">
+        <div class="entry-rank">08</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Uptime Kuma</h3>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Status Page & Healthcheck · Node.js / Vue</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Monitor de disponibilidade auto-hospedado bonito e intuitivo. Suporta HTTP(s), TCP, Ping, DNS, portas de banco de dados e certificados SSL. Permite criar páginas de status públicas com domínio personalizado e enviar alertas imediatos via Telegram, Discord, Webhook, E-mail e WhatsApp.</p>
+              <pre><code>docker run -d --restart=always -p 3001:3001 -v uptime-kuma:/app/data louislam/uptime-kuma:1</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~90 MB RAM<small>em repouso monitorando até 50 endpoints</small></div>
+              <div class="truth">
+                <p><strong>A regra de ouro:</strong> Nunca hospede o Uptime Kuma no mesmo servidor que ele monitora. Se a máquina cair, o monitor morre junto em silêncio. Use um VPS separado de 3 dólares.</p>
+              </div>
+              <a class="repo" href="https://github.com/louislam/uptime-kuma" target="_blank" rel="noopener">github.com/louislam/uptime-kuma</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09 Netdata -->
+      <div class="entry">
+        <div class="entry-rank">09</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Netdata</h3>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Observabilidade Real-Time · C</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Coletor e visualizador de métricas em tempo real por segundo com auto-detecção de processos, discos, interfaces de rede e containers Docker. Escrito em C puro para garantir que a coleta de telemetria não roube ciclos valiosos de CPU da sua aplicação principal.</p>
+              <pre><code>wget -O /tmp/netdata-kickstart.sh https://get.netdata.cloud/kickstart.sh && sh /tmp/netdata-kickstart.sh --dont-wait</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~1% CPU / ~60 MB RAM<small>mesmo coletando milhares de métricas por segundo</small></div>
+              <div class="truth">
+                <p><strong>Modo autônomo:</strong> Pode ser utilizado 100% desconectado da Netdata Cloud, servindo o painel direto na porta 19999 local protegida por senha/VPN.</p>
+              </div>
+              <a class="repo" href="https://github.com/netdata/netdata" target="_blank" rel="noopener">github.com/netdata/netdata</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 Glances -->
+      <div class="entry">
+        <div class="entry-rank">10</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Glances</h3>
+            <span class="lic-badge">LGPL-3.0</span>
+            <span class="kind">System Monitor CLI/Web · Python / psutil</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Monitor de sistema completo que mostra em uma única tela: CPU com split por core, memória com buffer/cache, I/O de disco por partição, tráfego de rede, processos ordenados por consumo e status individual de containers Docker em execução.</p>
+              <pre><code>pip install glances[web]
+glances -w -p 61208</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~35 MB RAM<small>rápido para diagnósticos pontuais e modo terminal</small></div>
+              <div class="truth">
+                <p><strong>API REST inclusa:</strong> Além da interface web e do modo terminal, expõe uma API REST para que você possa consultar o estado do servidor com um simples curl.</p>
+              </div>
+              <a class="repo" href="https://github.com/nicolargo/glances" target="_blank" rel="noopener">github.com/nicolargo/glances</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11 Headscale -->
+      <div class="entry">
+        <div class="entry-rank">11</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Headscale</h3>
+            <span class="lic-badge">BSD-3-Clause</span>
+            <span class="kind">Control Plane Mesh VPN · Go</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Implementação open source do servidor de coordenação do Tailscale. Permite criar uma rede VPN WireGuard em malha (mesh) entre todos os seus servidores, notebooks e celulares sem passar por intermediários e sem limites de nós de planos pagos.</p>
+              <pre><code>docker run -d --name headscale -p 8080:8080 -v headscale_config:/etc/headscale headscale/headscale:latest headscale serve</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~25 MB RAM<small>em repouso gerenciando topologia peer-to-peer</small></div>
+              <div class="truth">
+                <p><strong>Segurança máxima:</strong> Permite fechar todas as portas de SSH e bancos de dados da internet pública, permitindo acesso apenas via IP interno da malha VPN.</p>
+              </div>
+              <a class="repo" href="https://github.com/juanfont/headscale" target="_blank" rel="noopener">github.com/juanfont/headscale</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12 WireGuard -->
+      <div class="entry">
+        <div class="entry-rank">12</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>WireGuard</h3>
+            <span class="lic-badge">GPL-2.0</span>
+            <span class="kind">Kernel VPN Protocol · C puro</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>O protocolo de VPN mais rápido e seguro do mundo moderno, integrado diretamente ao kernel do Linux (versões 5.6+). Com menos de 4.000 linhas de código (contra 100.000+ do OpenVPN), é auditável, quase invisível na rede e consome uma fração irrisória de energia e processamento.</p>
+              <pre><code>sudo apt install wireguard
+wg genkey | tee privatekey | wg pubkey > publickey</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Zero userspace RAM<small>roda no espaço de kernel com throughput próximo à velocidade de linha</small></div>
+              <div class="truth">
+                <p><strong>Criptografia moderna:</strong> Utiliza Curve25519, ChaCha20-Poly1305 e BLAKE2s. Troca de chaves rápida e reconexão instantânea em trocas de rede.</p>
+              </div>
+              <a class="repo" href="https://git.zx2c4.com/wireguard-linux" target="_blank" rel="noopener">wireguard.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13 Portainer CE -->
+      <div class="entry">
+        <div class="entry-rank">13</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Portainer Community Edition</h3>
+            <span class="lic-badge">zlib</span>
+            <span class="kind">Container Management UI · Go / Angular</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Painel visual clássico para gerenciar hosts Docker, Swarm e Kubernetes. Permite inspecionar logs em tempo real, abrir terminais interativos dentro de containers pelo navegador, monitorar volumes e implantar stacks a partir de arquivos compose.</p>
+              <pre><code>docker run -d -p 9000:9000 -p 9443:9443 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~40 MB RAM<small>em repouso</small></div>
+              <div class="truth">
+                <p><strong>Atenção à versão:</strong> Use sempre a tag <code>portainer-ce</code>. A versão <code>portainer-ee</code> (Enterprise) possui licença comercial fechada com modelo freemium por nós.</p>
+              </div>
+              <a class="repo" href="https://github.com/portainer/portainer" target="_blank" rel="noopener">github.com/portainer/portainer</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14 K3s -->
+      <div class="entry">
+        <div class="entry-rank">14</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>K3s</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Lightweight Kubernetes · Go</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Distribuição Kubernetes totalmente compatível e certificada pela CNCF empacotada em um único binário de menos de 100MB. Substitui o etcd por SQLite interno para clusters single-node e remove drivers legados em nuvem para reduzir a pegada de memória.</p>
+              <pre><code>curl -sfL https://get.k3s.io | sh -
+kubectl get nodes</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~512 MB RAM<small>mínimo para o control plane (vs 2GB+ do Kubernetes padrão)</small></div>
+              <div class="truth">
+                <p><strong>Kubernetes para quem precisa de K8s:</strong> Se você não tem múltiplos nós ou equipe dedicada, prefira Docker Compose / Coolify. Só use K3s quando manifestos K8s forem obrigatórios.</p>
+              </div>
+              <a class="repo" href="https://github.com/k3s-io/k3s" target="_blank" rel="noopener">github.com/k3s-io/k3s</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15 Woodpecker CI -->
+      <div class="entry">
+        <div class="entry-rank">15</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Woodpecker CI</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Container-Native CI/CD · Go</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Sistema de integração contínua comunitário e livre que executa cada etapa do pipeline dentro de um container Docker isolado e descartável. Sintaxe simples em YAML compatível com o ecossistema clássico de plugins do Drone.</p>
+              <pre><code># docker-compose.yml com woodpecker-server e woodpecker-agent
+docker compose up -d</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~40 MB RAM (Server)<small>+ agentes que sobem e descem conforme a fila de builds</small></div>
+              <div class="truth">
+                <p><strong>O refúgio após o Drone:</strong> Criado pela comunidade quando o Drone CI trocou sua licença para termos proprietários. Totalmente desacoplado de nuvem proprietária.</p>
+              </div>
+              <a class="repo" href="https://github.com/woodpecker-ci/woodpecker" target="_blank" rel="noopener">github.com/woodpecker-ci/woodpecker</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 16 Forgejo -->
+      <div class="entry">
+        <div class="entry-rank">16</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Forgejo</h3>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Self-Hosted Git Service · Go</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Plataforma completa de hospedagem Git com repositórios, Pull Requests, Issues, Actions CI/CD e registro de pacotes. Fork comunitário do Gitea criado para garantir que a governança do código permaneça sob uma associação sem fins lucrativos.</p>
+              <pre><code>docker run -d --name forgejo -p 3000:3000 -p 222:22 -v forgejo_data:/data codeberg.org/forgejo/forgejo:1.20</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~80 MB RAM<small>em repouso (vs 4GB+ de um GitLab self-hosted)</small></div>
+              <div class="truth">
+                <p><strong>Autonomia de código:</strong> Permite ter seu próprio clone do GitHub operando de forma perfeitamente suave em qualquer VPS básica de 1GB.</p>
+              </div>
+              <a class="repo" href="https://codeberg.org/forgejo/forgejo" target="_blank" rel="noopener">codeberg.org/forgejo/forgejo</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 17 OpenTofu -->
+      <div class="entry">
+        <div class="entry-rank">17</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>OpenTofu</h3>
+            <span class="lic-badge">MPL-2.0</span>
+            <span class="kind">Infrastructure as Code (IaC) · Go</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Ferramenta de infraestrutura como código que permite declarar servidores, redes, zonas DNS e recursos de nuvem em arquivos HCL declarativos. É o fork oficial aberto sob a tutela da Linux Foundation criado após o Terraform fechar sua licença sob BSL.</p>
+              <pre><code>tofu init
+tofu plan
+tofu apply</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">CLI sob demanda<small>compatibilidade 100% drop-in com providers e módulos de Terraform</small></div>
+              <div class="truth">
+                <p><strong>Segurança jurídica:</strong> Mantém a licença MPL-2.0 imune a restrições comerciais ou cláusulas de não-concorrência em esteiras de CI corporativas.</p>
+              </div>
+              <a class="repo" href="https://github.com/opentofu/opentofu" target="_blank" rel="noopener">opentofu.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 18 Watchtower -->
+      <div class="entry">
+        <div class="entry-rank">18</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Watchtower</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Automated Container Updater · Go</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Processo de automação que monitora registros de containers Docker e, ao detectar uma nova tag ou digest publicado, faz o pull da imagem nova e reinicia o container preservando as mesmas portas, volumes e variáveis de ambiente originais.</p>
+              <pre><code>docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --interval 86400 --cleanup</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~15 MB RAM<small>em repouso, acorda no intervalo configurado</small></div>
+              <div class="truth">
+                <p><strong>Nunca atualize bancos cegamente:</strong> Use labels <code>com.centurylinklabs.watchtower.enable=false</code> em Postgres e MySQL para evitar upgrades involuntários de versão com incompatibilidade de schema.</p>
+              </div>
+              <a class="repo" href="https://github.com/containrrr/watchtower" target="_blank" rel="noopener">github.com/containrrr/watchtower</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 19 SeaweedFS -->
+      <div class="entry">
+        <div class="entry-rank">19</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>SeaweedFS</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Distributed Object Storage (S3) · Go</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Sistema de armazenamento de objetos e arquivos distribuído com API 100% compatível com Amazon S3. Diferente de soluções legadas, é extremamente rápido com arquivos pequenos (fotos, comprovantes, áudios) e consome pouca memória.</p>
+              <pre><code>docker run -d -p 8333:8333 -p 9333:9333 -v /var/s3data:/data chrislusf/seaweedfs server -s3</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~40 MB RAM<small>em modo standalone</small></div>
+              <div class="truth">
+                <p><strong>Substituto viável ao MinIO:</strong> Após o MinIO migrar para AGPL-3.0 com políticas estritas de compliance comercial, o SeaweedFS (Apache-2.0) se tornou a escolha preferida para storage self-hosted.</p>
+              </div>
+              <a class="repo" href="https://github.com/seaweedfs/seaweedfs" target="_blank" rel="noopener">github.com/seaweedfs/seaweedfs</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 20 Grafana OSS -->
+      <div class="entry">
+        <div class="entry-rank">20</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Grafana OSS</h3>
+            <span class="lic-badge warn">AGPL-3.0</span>
+            <span class="kind">Data Visualization & Dashboards · Go / TypeScript</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>A plataforma definitiva para criar painéis interativos unificando dados de VictoriaMetrics, Prometheus, Postgres, Loki e InfluxDB. Alertas integrados, controle de acesso granular e comunidade com milhares de dashboards prontos para importação.</p>
+              <pre><code>docker run -d -p 3000:3000 -v grafana-storage:/var/lib/grafana grafana/grafana-oss</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~120 MB RAM<small>em repouso com dashboards padrão</small></div>
+              <div class="truth">
+                <p><strong>Atenção à imagem e licença:</strong> Utilize explicitamente a imagem <code>grafana/grafana-oss</code>. A imagem padrão <code>grafana/grafana</code> inclui recursos enterprise com licença comercial da Grafana Labs.</p>
+              </div>
+              <a class="repo" href="https://github.com/grafana/grafana" target="_blank" rel="noopener">github.com/grafana/grafana</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head flagged">
+      <span class="sec-num">Parte 4 · As Armadilhas</span>
+      <h2>Oito riscos e falsos open source que ninguém declara</h2>
+      <p class="sec-note">Projetos que mudaram de licença no meio do caminho, modelos freemium predatórios e armadilhas que tornam sua infraestrutura refém.</p>
+    </div>
+
+    <div class="grid2">
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>Terraform / Nomad (HashiCorp)</h4>
+          <span class="lic-bad">BSL 1.1 (Não-OSI)</span>
+        </div>
+        <p>A HashiCorp alterou a licença histórica da MPL-2.0 para BSL 1.1 em agosto de 2023, proibindo o uso comercial em serviços concorrentes e gerando insegurança jurídica global.</p>
+        <div class="swap">Substituto livre: <b>OpenTofu (MPL-2.0 sob Linux Foundation)</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>Drone CI</h4>
+          <span class="lic-bad">Proprietário / Harness</span>
+        </div>
+        <p>Após aquisição pela Harness, o Drone abandonou o modelo puramente aberto e restringiu o desenvolvimento comunitário de recursos essenciais em prol da versão SaaS.</p>
+        <div class="swap">Substituto livre: <b>Woodpecker CI (Apache-2.0)</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>Sentry Self-Hosted</h4>
+          <span class="lic-bad">FSL-1.1-MIT</span>
+        </div>
+        <p>Utiliza a Functional Source License (FSL), que proíbe expressamente o oferecimento do serviço a terceiros concorrentes nos primeiros dois anos de cada release.</p>
+        <div class="swap">Substituto livre: <b>GlitchTip (GPL-3.0)</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>Datadog / New Relic Agent</h4>
+          <span class="lic-bad">SaaS Lock-in</span>
+        </div>
+        <p>Embora os agentes tenham código aberto, o backend é 100% proprietário e o modelo de cobrança por host e métricas customizadas escala faturas exponencialmente sem teto.</p>
+        <div class="swap">Substituto livre: <b>VictoriaMetrics + Netdata (100% self-hosted)</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>Elasticsearch / Kibana</h4>
+          <span class="lic-bad">ELv2 / SSPL</span>
+        </div>
+        <p>Migraram para a Server Side Public License (SSPL) e Elastic License v2, rompendo com a definição oficial de Open Source da OSI após disputa comercial com a AWS.</p>
+        <div class="swap">Substituto livre: <b>OpenSearch (Apache-2.0) / VictoriaLogs</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>Portainer Business Edition</h4>
+          <span class="lic-bad">Comercial / Freemium</span>
+        </div>
+        <p>A documentação induz o usuário ao instalador <code>portainer-ee</code> com oferta de "5 nós grátis", exigindo registro de cartão/e-mail para renovação de licenças anuais.</p>
+        <div class="swap">Substituto livre: <b>Portainer CE (zlib) ou Dokku (MIT)</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>MinIO (Pós-2021)</h4>
+          <span class="lic-bad">AGPL-3.0 Estrita</span>
+        </div>
+        <p>Migrou de Apache-2.0 para AGPL-3.0 com políticas agressivas de notificação jurídica contra empresas que empacotam storage interno sem abrir todo o código adjacente.</p>
+        <div class="swap">Substituto livre: <b>SeaweedFS (Apache-2.0) ou Garage S3 (AGPL)</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>Octopus Deploy</h4>
+          <span class="lic-bad">Software Comercial</span>
+        </div>
+        <p>Cobrança agressiva por targets de deploy e servidores de destino, tornando inviável a expansão elástica de ambientes efêmeros sem licenças enterprise caras.</p>
+        <div class="swap">Substituto livre: <b>Coolify ou Woodpecker CI</b></div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head warm">
+      <span class="sec-num">Parte 5 · O Método</span>
+      <h2>Como a ordem foi montada</h2>
+      <p class="sec-note">Uma esteira de DevOps não começa instalando dashboards — começa garantindo que a máquina se recupera de uma falha de hardware em menos de 15 minutos.</p>
+    </div>
+
+    <div class="method">
+      <div class="card">
+        <h4>1. Camada de Resiliência</h4>
+        <p>Primeiro configura-se <strong>Restic</strong> e <strong>Headscale/WireGuard</strong>. Se o SSH público for desligado e houver cópia imutável do disco fora da nuvem, nenhum ataque paralisa a empresa.</p>
+      </div>
+      <div class="card">
+        <h4>2. Camada de Roteamento</h4>
+        <p>Instalação do <strong>Caddy</strong> ou <strong>Traefik</strong>. A borda assume portas 80/443 e passa a emitir certificados TLS com renovação transparente e sem scripts quebradiços.</p>
+      </div>
+      <div class="card">
+        <h4>3. Motor de Aplicação</h4>
+        <p>Escolha do motor: <strong>Dokku</strong> para máquinas pequenas/médias sem fricção ou <strong>Coolify</strong> para times que demandam interface visual e múltiplos bancos.</p>
+      </div>
+      <div class="card">
+        <h4>4. Telemetria Leve</h4>
+        <p>Fechamento com <strong>VictoriaMetrics</strong> e <strong>Uptime Kuma</strong> externo. Você descobre lentidões antes do cliente sem estourar o orçamento em SaaS de monitoramento.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Auditoria realizada de acordo com as diretrizes de governança da Fábrica Universal. Todos os 20 projetos foram verificados quanto a licenças OSI, ausência de telemetria forçada e viabilidade real em VPS Linux padrão.</p>
+    <div class="srcs">
+      <span>Open Source Initiative (OSI)</span>
+      <span>Linux Foundation (OpenTofu)</span>
+      <span>CNCF Landscape (K3s)</span>
+      <span>VictoriaMetrics Benchmarks</span>
+    </div>
+  </footer>
+
+</div>

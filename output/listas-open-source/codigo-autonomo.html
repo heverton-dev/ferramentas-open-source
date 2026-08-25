@@ -1,0 +1,919 @@
+<title>Código Autônomo — AI-Driven Development</title>
+<style>
+  :root {
+    --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
+    --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
+    --rule:#C7CEDB; --rule-soft:#DADFE8;
+    --accent:#4A3274; --accent-soft:#E7DFEF;
+    --gold:#7A5410; --gold-soft:#EFE5CE;
+    --flag:#8E2436; --flag-soft:#F0D9DD;
+    --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+      --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+      --rule:#2A3142; --rule-soft:#222836;
+      --accent:#B192E6; --accent-soft:#251838;
+      --gold:#D6A44E; --gold-soft:#332810;
+      --flag:#E0788C; --flag-soft:#3A1A21;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+    --rule:#2A3142; --rule-soft:#222836;
+    --accent:#B192E6; --accent-soft:#251838;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E0788C; --flag-soft:#3A1A21;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
+
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
+
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
+  .deck strong { color:var(--ink); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
+
+  section { display:flex; flex-direction:column; gap:22px; }
+  .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
+  .sec-head.flagged { border-top-color:var(--flag); }
+  .sec-head.warm { border-top-color:var(--gold); }
+  .sec-num { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .sec-head.flagged .sec-num { color:var(--flag); }
+  .sec-head.warm .sec-num { color:var(--gold); }
+  h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note strong { color:var(--ink); }
+
+  /* rotas */
+  .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+  .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
+  .route.official { border-left:3px solid var(--accent); }
+  .route.gray { border-left:3px solid var(--gold); }
+  .route h4 { font-family:var(--serif); font-size:21px; font-weight:600; margin:0; }
+  .route .tag { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; }
+  .route.official .tag { color:var(--accent); }
+  .route.gray .tag { color:var(--gold); }
+  .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
+  .route ul { margin:0; padding-left:18px; font-size:14px; color:var(--ink-2); display:flex; flex-direction:column; gap:4px; }
+
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:820px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
+  tbody tr:last-child td { border-bottom:0; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; }
+  td.tipo { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
+  td.tipo.gray { color:var(--gold); }
+  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
+  td.lic.warn { color:var(--gold); }
+  td.what { color:var(--ink-2); }
+
+  .ledger { display:flex; flex-direction:column; gap:18px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry.asterisk { border-left:3px solid var(--gold); }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry.asterisk .entry-rank { color:var(--gold); background:var(--gold-soft); }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
+  .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
+  .lic-badge.warn { background:var(--gold-soft); color:var(--gold); border-color:color-mix(in srgb, var(--gold) 40%, transparent); }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
+
+  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
+  p code, li code { background:var(--surface-2); padding:1px 5px; border-radius:2px; font-size:12.5px; }
+
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
+  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
+
+  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
+  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
+
+  .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .reject-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
+  .lic-bad { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); white-space:nowrap; }
+  .reject p { margin:0; font-size:14.5px; color:var(--ink-2); }
+  .swap { font-size:14.5px; color:var(--ink); }
+  .swap b { color:var(--accent); }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+
+  .method { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; }
+  .card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .card h4 { margin:0; font-family:var(--serif); font-size:19px; font-weight:600; }
+  .card p { margin:0; font-size:14.5px; color:var(--ink-2); }
+
+  .rule-box { border:1px solid var(--gold); background:var(--gold-soft); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:12px; }
+  .rule-box h4 { margin:0; font-family:var(--serif); font-size:21px; font-weight:600; color:var(--ink); }
+  .rule-box p { margin:0; font-size:15px; color:var(--ink-2); max-width:70ch; }
+
+  footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">
+      <span>Auditoria de licenças · camada 6</span><span>·</span><span>24 ago 2026</span><span>·</span>
+      <b>20 aprovados / 8 armadilhas</b>
+    </div>
+    <h1>Código&nbsp;Autônomo</h1>
+    <p class="deck">Vinte projetos para desenvolver e orquestrar Inteligência Artificial com <strong>execução 100% local ou auto-hospedada</strong>: runtimes de inferência em GPU/CPU, vetores sem pod proprietário, esteiras de RAG sem vazamento de dados, observabilidade de tokens e agentes autônomos por linha de comando. <strong>Sua propriedade intelectual nunca deve treinar o modelo de terceiros.</strong></p>
+    <div class="chips">
+      <div class="chip"><b>20</b> ferramentas auditadas</div>
+      <div class="chip"><b>0</b> telemetrias compulsórias</div>
+      <div class="chip"><b>8</b> armadilhas de SaaS para IA</div>
+      <div class="chip"><b>100%</b> soberania de código</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 1 · A Soberania do Dado</span>
+      <h2>A fronteira entre IA parceira e vazamento de segredos industriais</h2>
+      <p class="sec-note">Usar APIs proprietárias de nuvem parece conveniente até que suas regras de negócio, segredos e chaves trafeguem em servidores de terceiros sob termos de serviço mutáveis. A pilha moderna permite rodar modelos de estado da arte dentro da sua rede com desempenho superior.</p>
+    </div>
+
+    <div class="routes">
+      <div class="route official">
+        <span class="tag">Pilar I · Inferência e RAG Privado</span>
+        <h4>O Runtime Local e os Vetores Autônomos</h4>
+        <p>A espinha dorsal do desenvolvimento com IA exige três componentes que rodem isolados sem internet:</p>
+        <ul>
+          <li><strong>Motor de Execução:</strong> Ollama para setup imediato e vLLM para concorrência pesada de requests com PagedAttention.</li>
+          <li><strong>Banco Vetorial em Rust/C++:</strong> Qdrant ou Chroma sem cobranças mensais por pods ou limites de dimensão.</li>
+          <li><strong>Gateway & Gateway Fallback:</strong> LiteLLM para unificar chamadas em formato compatível com OpenAI e chavear entre modelos locais e APIs sob demanda.</li>
+        </ul>
+      </div>
+
+      <div class="route gray">
+        <span class="tag">Pilar II · Agentes & Pair Programming</span>
+        <h4>Assistentes que operam no seu repositório Git</h4>
+        <p>Editores proprietários cobram mensalidades caras e capturam seus comandos. A alternativa comunitária devolve o controle ao desenvolvedor:</p>
+        <ul>
+          <li><strong>Aider:</strong> Pair programming via terminal gerando commits semânticos no Git com base no AST.</li>
+          <li><strong>Continue.dev:</strong> Extensão aberta para VS Code/JetBrains compatível com Ollama e modelos locais.</li>
+          <li><strong>Langfuse:</strong> Tracing aberto de tokens, latência e custo por prompt sem enviar dados a terceiros.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 2 · O Inventário Completo</span>
+      <h2>Os vinte, em uma tela</h2>
+      <p class="sec-note">A cadeia completa: do hardware/inferência local até a interface do usuário, automação de código e orquestração agêntica.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ferramenta</th>
+            <th>Categoria</th>
+            <th>Licença</th>
+            <th>O que resolve de verdade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="rank">01</td><td class="tool">Ollama</td><td class="tipo">LLM Runtime</td><td class="lic">MIT</td><td class="what">Sobe Llama 3, DeepSeek, Qwen e Mistral em 1 comando com aceleração GPU nativa e API REST.</td></tr>
+          <tr><td class="rank">02</td><td class="tool">vLLM</td><td class="tipo">Inference Engine</td><td class="lic">Apache-2.0</td><td class="what">Motor de inferência de altíssimo throughput com PagedAttention e continuous batching para produção.</td></tr>
+          <tr><td class="rank">03</td><td class="tool">Open WebUI</td><td class="tipo">Chat / Workspace</td><td class="lic">MIT</td><td class="what">Interface completa estilo ChatGPT/Claude auto-hospedada com suporte a RAG, múltiplos modelos e RBAC.</td></tr>
+          <tr><td class="rank">04</td><td class="tool">LiteLLM</td><td class="tipo">AI Gateway</td><td class="lic">MIT</td><td class="what">Proxy unificado que traduz chamadas em formato OpenAI para 100+ LLMs locais e remotos com load balance.</td></tr>
+          <tr><td class="rank">05</td><td class="tool">Qdrant</td><td class="tipo">Vector DB</td><td class="lic">Apache-2.0</td><td class="what">Banco vetorial escrito em Rust, ultra-rápido, com suporte a filtros de payload avançados e RAG escalável.</td></tr>
+          <tr><td class="rank">06</td><td class="tool">Chroma</td><td class="tipo">Embedded Vector</td><td class="lic">Apache-2.0</td><td class="what">Banco vetorial embutido e simples para prototipagem rápida e RAG direto no processo Python/JS.</td></tr>
+          <tr><td class="rank">07</td><td class="tool">AnythingLLM</td><td class="tipo">Private RAG</td><td class="lic">MIT</td><td class="what">Plataforma pronta para conversar com documentos privados, PDFs e bases de conhecimento sem vazar dados.</td></tr>
+          <tr><td class="rank">08</td><td class="tool">Dify</td><td class="tipo">LLM App Platform</td><td class="lic">Apache-2.0</td><td class="what">Orquestrador visual de fluxos de IA, RAG corporativo e criação de agentes visuais com API gerada.</td></tr>
+          <tr><td class="rank">09</td><td class="tool">Langfuse</td><td class="tipo">Observability</td><td class="lic">MIT (Core)</td><td class="what">Tracing de chamadas, contagem de tokens, latência, custos e avaliação de qualidade de prompts em produção.</td></tr>
+          <tr><td class="rank">10</td><td class="tool">Aider</td><td class="tipo">CLI Pair Programmer</td><td class="lic">Apache-2.0</td><td class="what">Assistente de terminal que edita código local, resolve bugs e cria commits git semânticos automaticamente.</td></tr>
+          <tr><td class="rank">11</td><td class="tool">Continue.dev</td><td class="tipo">IDE Assistant</td><td class="lic">Apache-2.0</td><td class="what">Extensão aberta para VS Code/JetBrains que conecta qualquer modelo local ou API ao seu ambiente de código.</td></tr>
+          <tr><td class="rank">12</td><td class="tool">LocalAI</td><td class="tipo">Drop-in OpenAI</td><td class="lic">MIT</td><td class="what">Drop-in replacement em C++/Go para todas as APIs da OpenAI (áudio, transcrição, imagens, embeddings e chat).</td></tr>
+          <tr><td class="rank">13</td><td class="tool">LibreChat</td><td class="tipo">AI Platform UI</td><td class="lic">MIT</td><td class="what">UI avançada com suporte a Artifacts, Code Interpreter, múltiplos agentes, DALL-E e plugins customizados.</td></tr>
+          <tr><td class="rank">14</td><td class="tool">SearXNG</td><td class="tipo">Private Metasearch</td><td class="lic">AGPL-3.0</td><td class="what">Motor de busca na web livre para fornecer capacidades de pesquisa a agentes autônomos sem bloqueios.</td></tr>
+          <tr><td class="rank">15</td><td class="tool">Tabby</td><td class="tipo">Code Completion</td><td class="lic">Apache-2.0</td><td class="what">Servidor de autocompletion de código self-hosted, alternativa direta e privada ao GitHub Copilot.</td></tr>
+          <tr><td class="rank">16</td><td class="tool">Txtai</td><td class="tipo">Semantic Search</td><td class="lic">Apache-2.0</td><td class="what">Framework tudo-em-um para busca semântica, pipelines de NLP e orquestração de embeddings em Python.</td></tr>
+          <tr><td class="rank">17</td><td class="tool">Jan</td><td class="tipo">Desktop Offline UI</td><td class="lic">AGPL-3.0</td><td class="what">Aplicativo desktop 100% offline para rodar e gerenciar LLMs com privacidade total no Mac/Windows/Linux.</td></tr>
+          <tr><td class="rank">18</td><td class="tool">Unstructured</td><td class="tipo">ETL Documentos</td><td class="lic">Apache-2.0</td><td class="what">Ingestão, OCR e particionamento de PDFs complexos, tabelas e DOCX para pipelines de embeddings.</td></tr>
+          <tr><td class="rank">19</td><td class="tool">DSPy</td><td class="tipo">Prompt Compiler</td><td class="lic">MIT</td><td class="what">Framework de Stanford que substitui prompt engineering frágil por otimização algorítmica de pipelines.</td></tr>
+          <tr><td class="rank">20</td><td class="tool">CrewAI</td><td class="tipo">Multi-Agent Flow</td><td class="lic">MIT</td><td class="what">Framework flexível para orquestrar times de agentes de IA trabalhando colaborativamente em tarefas complexas.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 3 · O Detalhamento</span>
+      <h2>Os vinte, em detalhe</h2>
+      <p class="sec-note">Auditoria técnica de consumo, stack e comando de inicialização reproduzível.</p>
+    </div>
+
+    <div class="ledger">
+
+      <!-- 01 Ollama -->
+      <div class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Ollama</h3>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">LLM Runtime · Go / C++ (llama.cpp)</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>A forma mais simples e robusta de executar modelos de linguagem localmente com quantização (GGUF), offload de camadas para GPU Nvidia/AMD/Apple Silicon e servidor HTTP nativo compatível com a API da OpenAI na porta 11434.</p>
+              <pre><code>curl -fsSL https://ollama.com/install.sh | sh
+ollama run qwen2.5-coder:7b</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">VRAM / RAM dinâmica<small>~4.5 GB VRAM para modelos 7B Q4_K_M; quase zero em idle</small></div>
+              <div class="truth">
+                <p><strong>Ponto alto:</strong> Gerencia o ciclo de vida do modelo descarregando pesos da VRAM após 5 minutos de inatividade para liberar sua GPU.</p>
+              </div>
+              <a class="repo" href="https://github.com/ollama/ollama" target="_blank" rel="noopener">github.com/ollama/ollama</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 vLLM -->
+      <div class="entry">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>vLLM</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Production Inference Engine · Python / CUDA / C++</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>O motor de inferência padrão da indústria para ambientes de produção com múltiplos usuários concorrentes. Sua tecnologia de PagedAttention gerencia a memória KV-cache como a paginação de memória virtual de um SO, multiplicando o throughput em até 10x.</p>
+              <pre><code>vllm serve Qwen/Qwen2.5-Coder-7B-Instruct --port 8000 --max-model-len 8192</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Alocação de VRAM estática<small>Reserva até 90% da GPU para KV-cache contínuo e batching paralelo</small></div>
+              <div class="truth">
+                <p><strong>Quando usar:</strong> Excelente para backends de API e empresas com tráfego simultâneo. Para uso individual na máquina local, prefira o Ollama.</p>
+              </div>
+              <a class="repo" href="https://github.com/vllm-project/vllm" target="_blank" rel="noopener">github.com/vllm-project/vllm</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Open WebUI -->
+      <div class="entry">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Open WebUI</h3>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Self-Hosted AI Workspace · Python / Svelte</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>A melhor e mais completa interface web auto-hospedada para IA. Integração nativa com Ollama e OpenAI, suporte a RAG com upload de documentos, geração de imagens, pipelines de moderação, autenticação de usuários e compartilhamento de prompts customizados.</p>
+              <pre><code>docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data ghcr.io/open-webui/open-webui:main</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~150 MB RAM<small>em repouso (processo backend FastAPI + SQLite)</small></div>
+              <div class="truth">
+                <p><strong>Segurança corporativa:</strong> Permite isolar completamente os chats dos membros da equipe com controle de permissões por grupo e histórico em disco próprio.</p>
+              </div>
+              <a class="repo" href="https://github.com/open-webui/open-webui" target="_blank" rel="noopener">github.com/open-webui/open-webui</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 LiteLLM -->
+      <div class="entry">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>LiteLLM Proxy</h3>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">AI Gateway & Fallback Router · Python</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Proxy reverso universal que padroniza entradas e saídas de mais de 100 provedores de LLM no formato oficial da OpenAI. Oferece chaveamento de chaves, rotação de provedores, limite de gastos (rate limiting / cost tracking) e fallback automático se um modelo falhar.</p>
+              <pre><code>docker run -d -p 4000:4000 -v $(pwd)/litellm_config.yaml:/app/config.yaml ghcr.io/berriai/litellm:main-latest --config /app/config.yaml</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~70 MB RAM<small>em repouso processando requisições assíncronas</small></div>
+              <div class="truth">
+                <p><strong>O escudo contra lock-in:</strong> Mude de fornecedor (ou troque nuvem por servidor local) mudando apenas a rota no LiteLLM, sem reescrever 1 linha da sua aplicação.</p>
+              </div>
+              <a class="repo" href="https://github.com/BerriAI/litellm" target="_blank" rel="noopener">github.com/BerriAI/litellm</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 Qdrant -->
+      <div class="entry">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Qdrant</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Vector Database & Search Engine · Rust</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Banco de dados vetorial de alta performance projetado para busca por similaridade semântica em larga escala com filtragem avançada de metadados em uma única passagem. Escrito em Rust com segurança de memória e suporte a gRPC e REST.</p>
+              <pre><code>docker run -d -p 6333:6333 -p 6334:6334 -v qdrant_storage:/qdrant/storage qdrant/qdrant</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~40 MB RAM<small>em repouso, escalando conforme o tamanho dos índices HNSW em disco</small></div>
+              <div class="truth">
+                <p><strong>Fim das faturas absurdas de Pinecone:</strong> Roda milhões de vetores em um VPS comum de 15 dólares com persistência garantida em disco.</p>
+              </div>
+              <a class="repo" href="https://github.com/qdrant/qdrant" target="_blank" rel="noopener">github.com/qdrant/qdrant</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 Chroma -->
+      <div class="entry">
+        <div class="entry-rank">06</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Chroma</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Embedding Database · Python / Rust</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>O banco vetorial open source focado em simplicidade para desenvolvedores. Permite instanciar coleções de vetores e realizar consultas com poucas linhas de código diretamente no mesmo processo Python ou rodando como microserviço HTTP leve.</p>
+              <pre><code>import chromadb
+client = chromadb.PersistentClient(path="./meu_db")
+colecao = client.get_or_create_collection("documentos")</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Zero daemon overhead<small>em modo local/embutido gravando em SQLite/DuckDB</small></div>
+              <div class="truth">
+                <p><strong>Prototipagem imbatível:</strong> Ideal para scripts locais, agentes de desenvolvimento e testes rápidos de pipelines de RAG sem necessidade de subir containers adicionais.</p>
+              </div>
+              <a class="repo" href="https://github.com/chroma-core/chroma" target="_blank" rel="noopener">github.com/chroma-core/chroma</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07 AnythingLLM -->
+      <div class="entry">
+        <div class="entry-rank">07</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>AnythingLLM</h3>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">All-in-One Private RAG · Node.js / Vector</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Aplicação completa para equipes que precisam subir uma base privada de documentos com RAG sem configurar infraestrutura complexa. Inclui parseador de arquivos, gerador de embeddings local, banco vetorial embutido e chat com controle por workspace.</p>
+              <pre><code>docker run -d -p 3001:3001 -v anythingllm_data:/app/server/storage mintplexlabs/anythingllm</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~180 MB RAM<small>em repouso</small></div>
+              <div class="truth">
+                <p><strong>Privacidade por padrão:</strong> Zero telemetria de documentos. Nenhum parágrafo de texto ou PDF carregado é enviado para servidores da empresa desenvolvedora.</p>
+              </div>
+              <a class="repo" href="https://github.com/Mintplex-Labs/anything-llm" target="_blank" rel="noopener">github.com/Mintplex-Labs/anything-llm</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08 Dify -->
+      <div class="entry">
+        <div class="entry-rank">08</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Dify</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">LLM Orchestration Platform · Python / Next.js</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Plataforma visual de desenvolvimento de aplicações com IA que combina orquestração de prompts, fluxos de RAG visual, ferramentas de subagentes e publicação de APIs prontas para produção com documentação Swagger automática.</p>
+              <pre><code>git clone https://github.com/langgenius/dify.git
+cd dify/docker && docker compose up -d</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~1.2 GB RAM<small>stack completa em repouso (API, Worker Celery, Redis, Postgres, Weaviate/Qdrant)</small></div>
+              <div class="truth">
+                <p><strong>Atenção à infraestrutura:</strong> Exige um VPS com no mínimo 4GB de RAM para operar com estabilidade devido ao conjunto de containers microserviço.</p>
+              </div>
+              <a class="repo" href="https://github.com/langgenius/dify" target="_blank" rel="noopener">github.com/langgenius/dify</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09 Langfuse -->
+      <div class="entry">
+        <div class="entry-rank">09</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Langfuse</h3>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">LLM Observability & Tracing · Next.js / Node / Postgres</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>A solução definitiva para observabilidade de aplicações com IA. Registra cada chamada de LLM, cadeia de agentes, etapas de recuperação de vetores, tokens consumidos, custos exatos e latência de resposta, com SDKs para Python, JS e LangChain.</p>
+              <pre><code>docker run -d -p 3000:3000 -e DATABASE_URL="postgresql://..." langfuse/langfuse:2</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~120 MB RAM<small>em repouso (core open source em container único)</small></div>
+              <div class="truth">
+                <p><strong>Auditoria real:</strong> Permite debugar exatamente onde e por que um agente cometeu uma alucinação inspecionando a árvore completa de pensamentos e ferramentas.</p>
+              </div>
+              <a class="repo" href="https://github.com/langfuse/langfuse" target="_blank" rel="noopener">github.com/langfuse/langfuse</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 Aider -->
+      <div class="entry">
+        <div class="entry-rank">10</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Aider</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Terminal AI Pair Programmer · Python / Git</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Ferramenta de linha de comando que faz pair programming diretamente na sua árvore Git. O Aider mapeia o repositório inteiro com base na árvore sintática (tree-sitter), edita múltiplos arquivos de forma coordenada e gera commits detalhados a cada alteração.</p>
+              <pre><code>pip install aider-chat
+aider --model ollama/qwen2.5-coder:7b</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~60 MB RAM<small>processo CLI leve executado sob demanda no terminal</small></div>
+              <div class="truth">
+                <p><strong>O melhor assistente de código:</strong> Opera diretamente sobre branches locais sem obrigar você a trocar de editor ou abrir mão do seu terminal.</p>
+              </div>
+              <a class="repo" href="https://github.com/paul-gauthier/aider" target="_blank" rel="noopener">github.com/paul-gauthier/aider</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11 Continue.dev -->
+      <div class="entry">
+        <div class="entry-rank">11</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Continue.dev</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Open Source IDE Copilot · TypeScript / Extension</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Extensão de código aberto para VS Code e IDEs JetBrains que oferece autocompletion inteligente de código inline (Tab) e painel lateral de chat conectado ao contexto do projeto. Permite apontar para Ollama local para autocompletion com latência zero.</p>
+              <pre><code># Instalação direta no Marketplace do VS Code:
+code --install-extension Continue.continue</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~80 MB RAM<small>processo da extensão no editor</small></div>
+              <div class="truth">
+                <p><strong>Adeus telemetria do GitHub Copilot:</strong> Seu código permanece na sua máquina ou no servidor privado configurado no <code>config.json</code>.</p>
+              </div>
+              <a class="repo" href="https://github.com/continuedev/continue" target="_blank" rel="noopener">github.com/continuedev/continue</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12 LocalAI -->
+      <div class="entry">
+        <div class="entry-rank">12</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>LocalAI</h3>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Multi-Modal OpenAI Replacement · Go / C++</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Substituto universal e drop-in para toda a suíte de APIs da OpenAI. Não faz apenas chat: suporta transcrição de áudio com Whisper, geração de voz (TTS), geração de imagens com Stable Diffusion e geração de embeddings sem conexão com a internet.</p>
+              <pre><code>docker run -d -p 8080:8080 -v localai_models:/build/models localai/localai:latest-cpu</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~50 MB RAM (Base)<small>+ memória do modelo carregado no backend</small></div>
+              <div class="truth">
+                <p><strong>Tudo em um único binário:</strong> Elimina a necessidade de subir múltiplos microserviços diferentes para áudio, imagem e texto.</p>
+              </div>
+              <a class="repo" href="https://github.com/mudler/LocalAI" target="_blank" rel="noopener">github.com/mudler/LocalAI</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13 LibreChat -->
+      <div class="entry">
+        <div class="entry-rank">13</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>LibreChat</h3>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Advanced AI Frontend · Node.js / React</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Frontend web avançado que reproduz todas as funcionalidades do ChatGPT Plus e Claude Pro: painel de Artifacts (execução visual de HTML/React), busca na web integrada, seleção dinâmica de presets de sistema e suporte simultâneo a múltiplos backends.</p>
+              <pre><code>docker run -d -p 3080:3080 -v librechat_data:/app/data ghcr.io/danny-avila/librechat:latest</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~110 MB RAM<small>em repouso</small></div>
+              <div class="truth">
+                <p><strong>Artifacts livres:</strong> Renderiza código interativo lado a lado com a conversa exatamente como as plataformas comerciais pagas.</p>
+              </div>
+              <a class="repo" href="https://github.com/danny-avila/LibreChat" target="_blank" rel="noopener">github.com/danny-avila/LibreChat</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14 SearXNG -->
+      <div class="entry">
+        <div class="entry-rank">14</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>SearXNG</h3>
+            <span class="lic-badge">AGPL-3.0</span>
+            <span class="kind">Private Metasearch Engine · Python</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Mecanismo de metabusca livre e anônimo que consulta mais de 70 mecanismos de busca públicos sem registrar histórico de pesquisa nem perfis de usuário. Fornece saída limpa em JSON perfeita para alimentar ferramentas de pesquisa web (web search tools) em agentes de IA.</p>
+              <pre><code>docker run -d -p 8888:8080 -v searxng_config:/etc/searxng searxng/searxng</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~50 MB RAM<small>em repouso processando requisições em frações de segundo</small></div>
+              <div class="truth">
+                <p><strong>Imune a limites de API de busca:</strong> Permite que seus agentes pesquisem na web em tempo real sem pagar planos exorbitantes de Google Custom Search ou Bing API.</p>
+              </div>
+              <a class="repo" href="https://github.com/searxng/searxng" target="_blank" rel="noopener">github.com/searxng/searxng</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15 Tabby -->
+      <div class="entry">
+        <div class="entry-rank">15</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Tabby</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Self-Hosted Code Completion · Rust</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Servidor autônomo de autocompletion de código voltado para equipes e empresas que não podem enviar código para a nuvem. Escrito em Rust com indexação de repositório no backend para sugestões contextualmente conscientes da base interna.</p>
+              <pre><code>docker run -d -p 8080:8080 -v tabby_data:/data tabbyml/tabby serve --model StarCoder-1B</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~1.5 GB VRAM<small>para modelos ultra-rápidos de autocompletion de 1B parâmetros</small></div>
+              <div class="truth">
+                <p><strong>Velocidade crítica:</strong> Responde a cada pressionamento de tecla em menos de 50ms quando rodando na rede local.</p>
+              </div>
+              <a class="repo" href="https://github.com/TabbyML/tabby" target="_blank" rel="noopener">github.com/TabbyML/tabby</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 16 Txtai -->
+      <div class="entry">
+        <div class="entry-rank">16</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Txtai</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">All-in-One Embeddings & Search · Python</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Framework modular em Python que une busca semântica, processamento de linguagem natural e grafos de conhecimento em uma arquitetura leve. Não requer dependências pesadas de infraestrutura e salva índices em arquivos portáteis.</p>
+              <pre><code>pip install txtai
+python -c "from txtai.embeddings import Embeddings; e = Embeddings(); e.index(['texto 1', 'texto 2'])"</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução no processo<small>baixo overhead de memória em tarefas de indexação local</small></div>
+              <div class="truth">
+                <p><strong>Minimalismo e elegância:</strong> Excelente para construir motores de busca interna e categorização automática sem orquestração pesada de containers.</p>
+              </div>
+              <a class="repo" href="https://github.com/neuml/txtai" target="_blank" rel="noopener">github.com/neuml/txtai</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 17 Jan -->
+      <div class="entry">
+        <div class="entry-rank">17</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Jan</h3>
+            <span class="lic-badge">AGPL-3.0</span>
+            <span class="kind">Offline Desktop AI Engine · TypeScript / C++ / Electron</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Aplicativo desktop nativo que permite baixar, gerenciar e rodar modelos locais com 1 clique. Funciona 100% offline sem depender de conexão de rede, com motor de inferência embutido e API local compatível com OpenAI na porta 1337.</p>
+              <pre><code># Baixe o executável para seu SO em jan.ai ou instale via winget/brew:
+winget install Jan.Jan</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~150 MB RAM (UI)<small>+ VRAM do modelo quando em execução</small></div>
+              <div class="truth">
+                <p><strong>Privacidade física:</strong> Todos os dados, histórico de conversas e parâmetros ficam gravados na pasta <code>~/jan</code> da sua máquina do usuário.</p>
+              </div>
+              <a class="repo" href="https://github.com/janhq/jan" target="_blank" rel="noopener">github.com/janhq/jan</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 18 Unstructured -->
+      <div class="entry">
+        <div class="entry-rank">18</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Unstructured</h3>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Document Ingestion & ETL · Python</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>A biblioteca definitiva para preparar dados brutos para pipelines de RAG. Converte e particiona PDFs escaneados, documentos do Word, apresentações PowerPoint, planilhas e e-mails em blocos semânticos limpos preservando a hierarquia de cabeçalhos e tabelas.</p>
+              <pre><code>pip install "unstructured[all-docs]"
+python -c "from unstructured.partition.auto import partition; elementos = partition(filename='relatorio.pdf')"</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local sob demanda<small>utiliza recursos apenas durante o processamento do documento</small></div>
+              <div class="truth">
+                <p><strong>Qualidade de RAG:</strong> O segredo de um bom RAG não é o modelo de embedding, é a qualidade do particionamento e limpeza dos dados de entrada.</p>
+              </div>
+              <a class="repo" href="https://github.com/Unstructured-IO/unstructured" target="_blank" rel="noopener">github.com/Unstructured-IO/unstructured</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 19 DSPy -->
+      <div class="entry">
+        <div class="entry-rank">19</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>DSPy</h3>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Algorithmic Prompt Optimization · Python (Stanford)</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Framework criado na Universidade de Stanford que substitui a engenharia de prompts manual e tentativa-e-erro por compilação algorítmica. O DSPy otimiza automaticamente as instruções e os exemplos de few-shot para maximizar métricas objetivas de avaliação.</p>
+              <pre><code>pip install dspy-ai
+# Declare módulos (Predict, ChainOfThought) e compile com teleprompters</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Biblioteca pura<small>zero custo em runtime após a compilação do pipeline</small></div>
+              <div class="truth">
+                <p><strong>Engenharia de software real:</strong> Trata prompts como código compilável. Se você trocar de modelo (ex: de Llama para DeepSeek), basta recompilar o pipeline.</p>
+              </div>
+              <a class="repo" href="https://github.com/stanfordnlp/dspy" target="_blank" rel="noopener">github.com/stanfordnlp/dspy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 20 CrewAI -->
+      <div class="entry">
+        <div class="entry-rank">20</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>CrewAI</h3>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Multi-Agent Orchestration · Python</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Framework intuitivo para estruturar equipes de agentes autônomos com papéis (roles), metas (goals), histórias de fundo (backstories) e ferramentas atribuídas. Permite executar tarefas de forma sequencial ou hierárquica com delegação inteligente entre agentes.</p>
+              <pre><code>pip install crewai
+crewai create crew meu-projeto</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~50 MB RAM<small>processo de orquestração em Python</small></div>
+              <div class="truth">
+                <p><strong>Controle determinístico:</strong> Compatível com LiteLLM e Ollama, permitindo rodar squads agênticos inteiros 100% locais sem faturas surpresa de nuvem.</p>
+              </div>
+              <a class="repo" href="https://github.com/crewAIInc/crewAI" target="_blank" rel="noopener">github.com/crewAIInc/crewAI</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head flagged">
+      <span class="sec-num">Parte 4 · As Armadilhas</span>
+      <h2>Oito riscos e armadilhas de lock-in em IA</h2>
+      <p class="sec-note">Plataformas que parecem revolucionárias mas aprisionam seu código-fonte, capturam seus prompts e indexam sua propriedade intelectual.</p>
+    </div>
+
+    <div class="grid2">
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>Cursor IDE / Windsurf fechado</h4>
+          <span class="lic-bad">SaaS Proprietário</span>
+        </div>
+        <p>Editores baseados em forks proprietários do VS Code onde a telemetria e o envio de código para servidores remotos são centrais ao funcionamento do produto.</p>
+        <div class="swap">Substituto livre: <b>Continue.dev (Apache-2.0) + Aider (Apache-2.0)</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>GitHub Copilot</h4>
+          <span class="lic-bad">Proprietário Microsoft</span>
+        </div>
+        <p>Serviço fechado de assinatura com indexação em servidores da Microsoft e impossibilidade de conectar modelos locais offline ou modelos customizados da sua empresa.</p>
+        <div class="swap">Substituto livre: <b>Tabby (Apache-2.0) ou Continue.dev com Ollama</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>Pinecone Vector DB</h4>
+          <span class="lic-bad">Nuvem Fechada</span>
+        </div>
+        <p>Banco vetorial exclusivamente em nuvem proprietária com custo mínimo elevado por pod e cobranças agressivas que escalam exponencialmente conforme a dimensão dos vetores.</p>
+        <div class="swap">Substituto livre: <b>Qdrant (Apache-2.0 em Rust) ou Chroma</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>OpenAI Assistants API / Threads</h4>
+          <span class="lic-bad">Vendor Lock-In</span>
+        </div>
+        <p>Armazena mensagens, arquivos e histórico dentro do ecossistema proprietário da OpenAI, tornando impossível migrar a aplicação para outros provedores sem reescrever a esteira.</p>
+        <div class="swap">Substituto livre: <b>Dify (Apache-2.0) ou LibreChat (MIT)</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>Replit Agent</h4>
+          <span class="lic-bad">Ambiente Fechado</span>
+        </div>
+        <p>Plataforma proprietária que cobra por ciclos efêmeros de computação e mantém os ambientes de execução restritos à infraestrutura fechada da empresa.</p>
+        <div class="swap">Substituto livre: <b>Aider CLI + Coolify / Dokku próprio</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>Devin / Magic.dev</h4>
+          <span class="lic-bad">Assinatura Exorbitante</span>
+        </div>
+        <p>Agentes fechados com valores de mensalidade enterprise proibitivos, código inacessível e dependência total de disponibilidade do provedor externo.</p>
+        <div class="swap">Substituto livre: <b>Squads abertos com CrewAI / Antigravity Kit</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>LangChain Hub Proprietário</h4>
+          <span class="lic-bad">Serviço Pago</span>
+        </div>
+        <p>Ecossistemas que forçam o versionamento e hospedagem de prompts em nuvem proprietária com taxas recorrentes para compartilhamento em equipe.</p>
+        <div class="swap">Substituto livre: <b>Langfuse OSS (MIT) + Repositório Git com DSPy</b></div>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top">
+          <h4>APIs sem Gateway de Fallback</h4>
+          <span class="lic-bad">Risco de Ponto Único</span>
+        </div>
+        <p>Conectar sua aplicação diretamente a um único endpoint comercial gera vulnerabilidade imediata a quedas globais de serviço e bloqueios súbitos de contas.</p>
+        <div class="swap">Substituto livre: <b>LiteLLM Proxy com roteamento para Ollama local</b></div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head warm">
+      <span class="sec-num">Parte 5 · O Método</span>
+      <h2>Como construir uma esteira de IA soberana</h2>
+      <p class="sec-note">A ordem de montagem recomendada para times que valorizam privacidade, previsibilidade de custos e controle técnico total.</p>
+    </div>
+
+    <div class="method">
+      <div class="card">
+        <h4>1. Runtime & Gateway</h4>
+        <p>Instale o <strong>Ollama</strong> no servidor local/GPU e posicione o <strong>LiteLLM Proxy</strong> na frente. Toda a sua equipe passa a consumir uma API unificada compatível com OpenAI.</p>
+      </div>
+      <div class="card">
+        <h4>2. Base Vetorial & Ingestão</h4>
+        <p>Suba o <strong>Qdrant</strong> e configure pipelines com <strong>Unstructured</strong>. Seus documentos privados são particionados e indexados sem jamais sair da sua rede local.</p>
+      </div>
+      <div class="card">
+        <h4>3. IDE & Assistência</h4>
+        <p>Instale <strong>Continue.dev</strong> e <strong>Aider</strong> para os desenvolvedores. O ganho de produtividade acontece direto no fluxo Git sem envio de código para servidores externos.</p>
+      </div>
+      <div class="card">
+        <h4>4. Observabilidade & Avaliação</h4>
+        <p>Conecte o <strong>Langfuse</strong> no LiteLLM para monitorar cada token, custo e latência em tempo real, auditando a qualidade e prevenindo alucinações.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Auditoria realizada de acordo com as diretrizes de governança da Fábrica Universal. Todos os 20 projetos foram verificados quanto a licenças livres, independência de nuvens proprietárias e capacidade de execução autônoma.</p>
+    <div class="srcs">
+      <span>Open Source Initiative (OSI)</span>
+      <span>Stanford NLP Group (DSPy)</span>
+      <span>vLLM Project</span>
+      <span>Rust Vector Search Benchmarks</span>
+    </div>
+  </footer>
+
+</div>

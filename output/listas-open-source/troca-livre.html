@@ -1,0 +1,847 @@
+<title>Troca Livre</title>
+<style>
+  /* ---- tokens: light (bare :root = paleta completa) ---- */
+  :root {
+    --paper:      #ECEFE9;
+    --surface:    #F8FAF6;
+    --surface-2:  #E2E7DD;
+    --ink:        #16211C;
+    --ink-2:      #3D4B44;
+    --muted:      #6B7A72;
+    --rule:       #CBD4C7;
+    --rule-soft:  #DCE2D7;
+    --accent:     #0F5647;
+    --accent-soft:#D9E9E0;
+    --gold:       #7E5410;
+    --gold-soft:  #EFE4CC;
+    --flag:       #94371D;
+    --flag-soft:  #F0DBD3;
+    --shadow:     0 1px 0 rgba(22,33,28,.05), 0 8px 24px -18px rgba(22,33,28,.4);
+
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#0F1412; --surface:#161D19; --surface-2:#1E2723;
+      --ink:#E4EAE3; --ink-2:#B6C2BA; --muted:#85978D;
+      --rule:#2A342E; --rule-soft:#222B26;
+      --accent:#58C4A4; --accent-soft:#123029;
+      --gold:#D8A752; --gold-soft:#32270F;
+      --flag:#E67F5F; --flag-soft:#382017;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#0F1412; --surface:#161D19; --surface-2:#1E2723;
+    --ink:#E4EAE3; --ink-2:#B6C2BA; --muted:#85978D;
+    --rule:#2A342E; --rule-soft:#222B26;
+    --accent:#58C4A4; --accent-soft:#123029;
+    --gold:#D8A752; --gold-soft:#32270F;
+    --flag:#E67F5F; --flag-soft:#382017;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-size: 16px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1060px; margin: 0 auto;
+    padding: clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px;
+    display: flex; flex-direction: column; gap: clamp(40px,6vw,72px);
+  }
+
+  header { display: flex; flex-direction: column; gap: 20px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--muted);
+    display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline;
+  }
+  .eyebrow b { color: var(--accent); font-weight: 600; }
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(40px,8vw,74px); line-height: .98;
+    letter-spacing: -.02em; margin: 0; text-wrap: balance;
+  }
+  .deck {
+    font-family: var(--serif); font-size: clamp(17px,2.2vw,21px);
+    line-height: 1.5; color: var(--ink-2); max-width: 62ch; margin: 0;
+  }
+  .deck strong { color: var(--ink); font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: .04em;
+    padding: 5px 10px; border: 1px solid var(--rule); border-radius: 2px;
+    background: var(--surface); color: var(--ink-2); white-space: nowrap;
+  }
+  .chip b { color: var(--ink); font-weight: 600; }
+
+  section { display: flex; flex-direction: column; gap: 22px; }
+  .sec-head { display: flex; flex-direction: column; gap: 8px; border-top: 2px solid var(--ink); padding-top: 14px; }
+  .sec-head.flagged { border-top-color: var(--flag); }
+  .sec-head.warm { border-top-color: var(--gold); }
+  .sec-num { font-family: var(--mono); font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .sec-head.flagged .sec-num { color: var(--flag); }
+  .sec-head.warm .sec-num { color: var(--gold); }
+  h2 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(26px,4vw,36px); line-height: 1.1;
+    letter-spacing: -.015em; margin: 0; text-wrap: balance;
+  }
+  .sec-note { margin: 0; color: var(--ink-2); max-width: 68ch; font-size: 15.5px; }
+  .sec-note strong { color: var(--ink); }
+
+  /* estante */
+  .shelf { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 14px; }
+  .shelf-item {
+    background: var(--surface); border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent); border-radius: 3px;
+    padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .shelf-item.warnish { border-left-color: var(--gold); }
+  .shelf-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
+  .shelf-item h4 { font-family: var(--serif); font-size: 19px; font-weight: 600; margin: 0; }
+  .shelf-item p { margin: 0; font-size: 14px; color: var(--ink-2); }
+  .verdict { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  .verdict.warn { color: var(--gold); }
+
+  /* tabela */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+  thead th {
+    text-align: left; font-family: var(--mono); font-weight: 600;
+    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); padding: 11px 14px; border-bottom: 1px solid var(--rule); white-space: nowrap;
+  }
+  tbody td { padding: 10px 14px; border-bottom: 1px solid var(--rule-soft); vertical-align: baseline; }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.rank { font-family: var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; width: 1%; }
+  td.tool { font-weight: 600; white-space: nowrap; }
+  td.save { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--gold); white-space: nowrap; }
+  td.lic  { font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+  td.repl { color: var(--ink-2); }
+
+  /* fichas */
+  .ledger { display: flex; flex-direction: column; gap: 18px; }
+  .entry {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+    box-shadow: var(--shadow); display: grid; grid-template-columns: 64px 1fr;
+  }
+  .entry-rank {
+    font-family: var(--mono); font-size: 22px; font-variant-numeric: tabular-nums;
+    color: var(--accent); background: var(--accent-soft);
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px;
+  }
+  .entry-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .entry-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+  h3 { font-family: var(--serif); font-weight: 600; font-size: 25px; line-height: 1.15; margin: 0; letter-spacing: -.01em; }
+  .lic-badge {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap;
+  }
+  .kind { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+  .cols { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr); gap: 20px 28px; }
+  @media (max-width: 720px) { .cols { grid-template-columns: 1fr; } }
+
+  .block { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .label { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .block p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--ink-2); }
+  .block p strong { color: var(--ink); font-weight: 600; }
+
+  pre { margin: 0; padding: 10px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; }
+  code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); line-height: 1.5; }
+  p code, li code { background: var(--surface-2); padding: 1px 5px; border-radius: 2px; font-size: 12.5px; }
+
+  .money { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 19px; color: var(--gold); line-height: 1.25; }
+  .money small { display: block; font-family: var(--sans); font-size: 13px; color: var(--muted); margin-top: 3px; letter-spacing: 0; }
+  .truth { border-left: 2px solid var(--gold); padding-left: 12px; }
+  .truth p { font-size: 14px; }
+
+  a { color: var(--accent); text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--accent); }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+  .repo { font-family: var(--mono); font-size: 12.5px; word-break: break-all; }
+
+  /* reprovados */
+  .reject {
+    border: 1px solid var(--rule); border-left: 3px solid var(--flag);
+    background: var(--surface); border-radius: 3px; padding: 16px 18px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .reject-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+  .reject h4 { font-family: var(--serif); font-size: 20px; font-weight: 600; margin: 0; }
+  .lic-bad {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag);
+    border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); white-space: nowrap;
+  }
+  .reject p { margin: 0; font-size: 14.5px; color: var(--ink-2); }
+  .swap { font-size: 14.5px; color: var(--ink); }
+  .swap b { color: var(--accent); }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 14px; }
+
+  .method { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 18px; }
+  .card { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
+  .card h4 { margin: 0; font-family: var(--serif); font-size: 19px; font-weight: 600; }
+  .card p { margin: 0; font-size: 14.5px; color: var(--ink-2); }
+
+  .rule-box { border: 1px solid var(--gold); background: var(--gold-soft); border-radius: 3px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+  .rule-box h4 { margin: 0; font-family: var(--serif); font-size: 21px; font-weight: 600; color: var(--ink); }
+  .rule-box p { margin: 0; font-size: 15px; color: var(--ink-2); max-width: 70ch; }
+
+  footer { border-top: 1px solid var(--rule); padding-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+  footer p { margin: 0; font-size: 13.5px; color: var(--muted); max-width: 72ch; }
+  .srcs { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">
+      <span>Auditoria de licenças</span><span>·</span><span>24 ago 2026</span><span>·</span>
+      <b>20 aprovados / 8 reprovados</b>
+    </div>
+    <h1>Troca&nbsp;Livre</h1>
+    <p class="deck">Vinte projetos que substituem ferramenta paga de verdade, na prateleira de quem opera sozinho: voz, imagem, transcrição, RAG, marketing e agentes. Cada licença conferida na fonte. <strong>E o campo minado aqui não é o código — é o peso do modelo:</strong> XTTS, F5-TTS, FLUX.1-dev e MusicGen são "open source" que proíbem uso comercial.</p>
+    <div class="chips">
+      <span class="chip">Critério: <b>licença OSI</b> — no código <b>e</b> no peso</span>
+      <span class="chip">Ordem: <b>economia ÷ esforço</b></span>
+      <span class="chip">Preços em <b>USD/ano</b></span>
+      <span class="chip">Todo valor é <b>faixa</b>, não promessa</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head warm">
+      <span class="sec-num">Sua estante · conferida</span>
+      <h2>O que você já usa passa no teste — com uma ressalva</h2>
+      <p class="sec-note">Os três aplicativos são open source legítimo. Mas o Voicebox é um <strong>estúdio</strong>, não um modelo: quem decide se você pode vender o audiolivro é o motor de TTS carregado dentro dele — e dois dos motores mais populares proíbem uso comercial.</p>
+    </div>
+    <div class="shelf">
+      <div class="shelf-item">
+        <div class="shelf-top"><h4>AnythingLLM</h4><span class="verdict">MIT · limpo</span></div>
+        <p>Substitui NotebookLM. Licença permissiva sem cláusula nenhuma — pode usar, modificar e embutir em produto comercial.</p>
+      </div>
+      <div class="shelf-item">
+        <div class="shelf-top"><h4>NoteGen</h4><span class="verdict">GPL-3.0 · limpo</span></div>
+        <p>Substitui Notion. Local-first em Markdown, sincroniza por GitHub, S3 ou WebDAV. GPL só obriga se você <em>distribuir</em> uma versão modificada.</p>
+      </div>
+      <div class="shelf-item warnish">
+        <div class="shelf-top"><h4>Voicebox</h4><span class="verdict warn">Depende do motor</span></div>
+        <p>O estúdio é livre e roda 5 motores. Se o seu estiver em <b>XTTS-v2</b> (CPML) ou <b>F5-TTS</b> (CC-BY-NC), o áudio gerado <em>não</em> pode ser vendido. Troque por <b>Chatterbox</b> (MIT) ou <b>Qwen3-TTS</b> (Apache-2.0) — item nº 1 da lista.</p>
+      </div>
+      <div class="shelf-item">
+        <div class="shelf-top"><h4>Code Review Graph + Impeccable</h4><span class="verdict">Skills · no lugar certo</span></div>
+        <p>Grafo de código antes das ferramentas de leitura é exatamente a regra 9 do seu CLAUDE.md. Falta pouco: <b>Context7</b> e <b>Playwright MCP</b> (itens 9 e 10) fecham esse conjunto.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Índice · do melhor para o pior</span>
+      <h2>Os vinte, em uma tela</h2>
+      <p class="sec-note">A ordem pesa três coisas: quanto dinheiro sai da conta, quanto trabalho entra no lugar, e quão limpa é a licença — do código e do peso. Ferramenta que economiza muito mas exige virar SRE cai algumas posições.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>#</th><th>Ferramenta</th><th>Substitui</th><th>Economia/ano</th><th>Licença</th></tr></thead>
+        <tbody>
+          <tr><td class="rank">01</td><td class="tool">Chatterbox TTS</td><td class="repl">ElevenLabs</td><td class="save">$264–3.960</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">02</td><td class="tool">faster-whisper + WhisperX</td><td class="repl">Otter.ai, Rev, Descript</td><td class="save">$150–1.200</td><td class="lic">MIT / BSD</td></tr>
+          <tr><td class="rank">03</td><td class="tool">Docling</td><td class="repl">LlamaParse, Adobe Extract, Mathpix</td><td class="save">$500–3.000</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">04</td><td class="tool">ComfyUI + FLUX.1 [schnell]</td><td class="repl">Midjourney, Firefly, DALL·E</td><td class="save">$96–1.200</td><td class="lic">GPL-3.0 + Apache-2.0</td></tr>
+          <tr><td class="rank">05</td><td class="tool">Crawl4AI</td><td class="repl">Firecrawl, Apify, ScrapingBee</td><td class="save">$588–7.188</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">06</td><td class="tool">Postiz</td><td class="repl">Buffer, Hootsuite</td><td class="save">$276–2.988</td><td class="lic">AGPL-3.0</td></tr>
+          <tr><td class="rank">07</td><td class="tool">Listmonk</td><td class="repl">Mailchimp, ConvertKit, Brevo</td><td class="save">$600–3.000</td><td class="lic">AGPL-3.0</td></tr>
+          <tr><td class="rank">08</td><td class="tool">SearXNG</td><td class="repl">Serper, Tavily, Perplexity Pro</td><td class="save">$240–1.200</td><td class="lic">AGPL-3.0</td></tr>
+          <tr><td class="rank">09</td><td class="tool">Playwright MCP</td><td class="repl">Browserbase, BrowserStack</td><td class="save">$1.188–6.000</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">10</td><td class="tool">Context7 MCP</td><td class="repl">Retrabalho por doc desatualizada</td><td class="save">indireta</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">11</td><td class="tool">Calibre</td><td class="repl">Vellum, Atticus, Kindle Create</td><td class="save">$147–199</td><td class="lic">GPL-3.0</td></tr>
+          <tr><td class="rank">12</td><td class="tool">Stirling PDF</td><td class="repl">Adobe Acrobat Pro, Smallpdf</td><td class="save">$240 /usuário</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">13</td><td class="tool">Cline + Aider</td><td class="repl">Cursor Pro, GitHub Copilot</td><td class="save">$120–240 /dev</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">14</td><td class="tool">Umami</td><td class="repl">GA4, Mixpanel, Fathom</td><td class="save">$1.100–10.000</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">15</td><td class="tool">ACE-Step 1.5</td><td class="repl">Suno, Udio</td><td class="save">$120–360</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">16</td><td class="tool">Formbricks</td><td class="repl">Typeform</td><td class="save">$300–996</td><td class="lic">AGPL-3.0</td></tr>
+          <tr><td class="rank">17</td><td class="tool">Twenty</td><td class="repl">HubSpot, Salesforce</td><td class="save">$1.080–1.980 /assento</td><td class="lic">AGPL-3.0</td></tr>
+          <tr><td class="rank">18</td><td class="tool">Ollama + Qwen3</td><td class="repl">API paga em tarefa barata</td><td class="save">variável</td><td class="lic">MIT + Apache-2.0</td></tr>
+          <tr><td class="rank">19</td><td class="tool">Vaultwarden</td><td class="repl">1Password, Bitwarden Premium</td><td class="save">$60–500</td><td class="lic">AGPL-3.0</td></tr>
+          <tr><td class="rank">20</td><td class="tool">Coolify</td><td class="repl">Vercel Pro, Heroku, Railway</td><td class="save">$1.200–3.000</td><td class="lic">Apache-2.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Fichas · o que faz, como usar, o que custa de verdade</span>
+      <h2>As vinte trocas</h2>
+    </div>
+    <div class="ledger">
+
+      <article class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Chatterbox TTS</h3><span class="lic-badge">MIT</span><span class="kind">Voz</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Clona voz a partir de poucos segundos de áudio, com controle de emoção e latência abaixo de 200 ms. Em teste cego do próprio fabricante, <strong>65,3% preferiram a voz dele contra 24,5% da ElevenLabs</strong>. 350M de parâmetros — roda em GPU de jogo.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>pip install chatterbox-tts
+# ou plugue como motor dentro do seu Voicebox</code></pre>
+              <a class="repo" href="https://github.com/resemble-ai/chatterbox">github.com/resemble-ai/chatterbox</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>ElevenLabs</strong> ($22–330/mês)</p>
+              <div class="money">$264–3.960<small>Creator $22/mês; Scale $330/mês</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>É o item nº 1 porque resolve licença <em>e</em> dinheiro de uma vez. Se você narra audiolivro, o MIT aqui é a diferença entre poder vender e não poder. Alternativa igualmente limpa: <b>Qwen3-TTS</b> (Apache-2.0) ou <b>Kokoro</b> (Apache-2.0, sem clonagem, 82M).</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>faster-whisper + WhisperX</h3><span class="lic-badge">MIT / BSD</span><span class="kind">Transcrição</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Transcreve áudio e vídeo com qualidade Whisper, até 4× mais rápido e com menos VRAM. O WhisperX acrescenta alinhamento palavra a palavra e separação de quem fala — o que gera legenda decente e ata de reunião de verdade.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>pip install faster-whisper
+whisperx audio.mp3 --model large-v3 --diarize --language pt</code></pre>
+              <a class="repo" href="https://github.com/SYSTRAN/faster-whisper">github.com/SYSTRAN/faster-whisper</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Otter.ai, Rev, Descript</strong></p>
+              <div class="money">$150–1.200<small>Otter $8–20/usuário/mês; Rev cobra $0,25 por minuto</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Roda em CPU se você tiver paciência; em GPU é instantâneo. Português é bem servido no <code>large-v3</code>. Único trabalho de verdade: normalizar nome próprio e jargão do seu nicho.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Docling</h3><span class="lic-badge">MIT</span><span class="kind">Documentos</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Converte PDF, DOCX, PPTX e imagem em Markdown estruturado — preservando tabela, hierarquia de título e fórmula. É o pré-processador que decide se o seu RAG vai responder certo ou citar tabela embaralhada. Governança da Linux Foundation.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>pip install docling
+docling documento.pdf --to md</code></pre>
+              <a class="repo" href="https://github.com/docling-project/docling">github.com/docling-project/docling</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>LlamaParse, Adobe PDF Extract, Mathpix</strong></p>
+              <div class="money">$500–3.000<small>LlamaParse cobra por página; Mathpix $5–20/mês</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Entre os três grandes parsers, é o único MIT — MinerU e Marker têm licença mais restritiva. Perde um pouco em PDF nativo (83,3 do MinerU contra 50,3 do Docling em um benchmark), então teste no <em>seu</em> corpus antes de padronizar.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>ComfyUI + FLUX.1 [schnell]</h3><span class="lic-badge">GPL-3.0 + Apache-2.0</span><span class="kind">Imagem</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>ComfyUI é o editor de fluxo nodal para geração de imagem: você monta o pipeline (prompt, ControlNet, upscale, inpaint) e reexecuta em lote. Com FLUX.1 [schnell] gera em poucos passos; com <strong>Qwen-Image</strong> acerta texto legível dentro da arte — que é o que quebra capa de livro.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>git clone https://github.com/comfyanonymous/ComfyUI
+# baixe FLUX.1-schnell (Apache-2.0) em models/unet/</code></pre>
+              <a class="repo" href="https://github.com/comfyanonymous/ComfyUI">github.com/comfyanonymous/ComfyUI</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Midjourney, Adobe Firefly, DALL·E</strong></p>
+              <div class="money">$96–1.200<small>Midjourney $8–96/mês no plano anual</small></div>
+              <div class="truth"><span class="label">Custo real</span><p><strong>Leia esta linha duas vezes:</strong> FLUX.1 <b>[dev]</b> é não-comercial. Só <b>[schnell]</b> e <b>FLUX.2 Klein</b> são Apache-2.0. Quase todo tutorial de ComfyUI ensina com o [dev] sem avisar — e capa de livro à venda é uso comercial.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Crawl4AI</h3><span class="lic-badge">Apache-2.0</span><span class="kind">Coleta</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Rastreador feito para alimentar LLM: entrega Markdown limpo, já sem menu, rodapé e banner de cookie. Roda sobre Playwright, então dá conta de página que só monta em JavaScript, e tem extração guiada por schema.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>pip install -U crawl4ai &amp;&amp; crawl4ai-setup
+crwl https://exemplo.com/artigo -o markdown</code></pre>
+              <a class="repo" href="https://github.com/unclecode/crawl4ai">github.com/unclecode/crawl4ai</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Firecrawl pago, Apify, ScrapingBee</strong></p>
+              <div class="money">$588–7.188<small>ScrapingBee $49–599/mês; Firecrawl a partir de $16/mês</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>O software é grátis; o IP é seu. Para volume alto você ainda paga proxy, e aí parte da economia volta. O Firecrawl também é open source (AGPL-3.0) — a diferença é que o Crawl4AI é Apache, mais folgado para embutir em produto.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">06</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Postiz</h3><span class="lic-badge">AGPL-3.0</span><span class="kind">Social</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Agenda e publica em mais de 14 canais — LinkedIn, Instagram, X, YouTube, TikTok, Threads, Pinterest, Mastodon, Bluesky — com calendário, fila por canal, IA para variação de copy e API para disparar do seu próprio fluxo.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>docker run -d -p 5000:5000 -v ./postiz:/config \
+  ghcr.io/gitroomhq/postiz-app:latest</code></pre>
+              <a class="repo" href="https://github.com/gitroomhq/postiz-app">github.com/gitroomhq/postiz-app</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Buffer, Hootsuite</strong></p>
+              <div class="money">$276–2.988<small>Hootsuite $99–249/mês; a nuvem do próprio Postiz custa $23–79/mês</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>O trabalho não é subir o Postiz — é conseguir e renovar o token de API de cada rede. Instagram e TikTok são os chatos. Reserve uma tarde.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">07</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Listmonk</h3><span class="lic-badge">AGPL-3.0</span><span class="kind">E-mail</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Newsletter e e-mail transacional em massa a partir de um binário Go mais Postgres. Segmenta por consulta SQL — recurso que nos concorrentes só existe no plano caro. Aguenta milhões de contatos em hardware modesto.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>curl -fsSL https://listmonk.app/install.sh | sh</code></pre>
+              <a class="repo" href="https://github.com/knadh/listmonk">github.com/knadh/listmonk</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Mailchimp, ConvertKit, Brevo</strong></p>
+              <div class="money">$600–3.000<small>Mailchimp cobra por contato: a conta sobe com a lista, não com o uso</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>O software é grátis; a <em>entregabilidade</em> não. Você continua precisando de relay com reputação (SES, Postmark) e de SPF, DKIM e DMARC configurados. É aí que mora o trabalho — e é por isso que o Mailchimp cobra.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">08</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>SearXNG</h3><span class="lic-badge">AGPL-3.0</span><span class="kind">Busca</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Metabuscador self-hosted que consulta mais de 70 fontes e devolve resultado agregado em JSON — sem rastrear, sem cota e sem chave de API. Vira a camada de busca dos seus agentes por uma URL local.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>docker run -d -p 8080:8080 searxng/searxng
+# habilite o formato json em settings.yml</code></pre>
+              <a class="repo" href="https://github.com/searxng/searxng">github.com/searxng/searxng</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Serper, Tavily, SerpAPI, Perplexity Pro</strong></p>
+              <div class="money">$240–1.200<small>API de busca para agente costuma sair $50/mês; Perplexity Pro $20/mês</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Instância pública sua toma bloqueio de motor com o tempo — use só para você, com rate limit. É o item da lista com a maior chance de exigir manutenção mensal chata.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">09</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Playwright MCP</h3><span class="lic-badge">Apache-2.0</span><span class="kind">MCP</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Dá ao agente um navegador de verdade. Ele lê a página pela <em>árvore de acessibilidade</em>, não por screenshot — então clica, preenche formulário, extrai tabela e roda teste E2E de forma determinística, sem depender de visão computacional. Da Microsoft, 30k+ estrelas.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>claude mcp add playwright -- npx -y @playwright/mcp@latest</code></pre>
+              <a class="repo" href="https://github.com/microsoft/playwright-mcp">github.com/microsoft/playwright-mcp</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Browserbase, BrowserStack</strong></p>
+              <div class="money">$1.188–6.000<small>Browser como serviço cobra por sessão ou por minuto</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Zero, roda local. Complementa seu Code Review Graph: o grafo responde "onde está o código", o Playwright responde "o que a página realmente faz".</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">10</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Context7 MCP</h3><span class="lic-badge">MIT</span><span class="kind">MCP</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Injeta no contexto do agente a documentação <em>atual e versionada</em> da biblioteca em uso. Mata a falha mais cara do dia a dia com LLM: código plausível escrito contra uma API que mudou. É o MCP mais instalado do ecossistema.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>claude mcp add context7 -- npx -y @upstash/context7-mcp</code></pre>
+              <a class="repo" href="https://github.com/upstash/context7">github.com/upstash/context7</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Retrabalho por documentação desatualizada</strong></p>
+              <div class="money">indireta<small>Não corta assinatura — corta ciclo de correção, que é onde o token some</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Zero. Para você, casa direto com a Seção 0 do seu CLAUDE.md: menos ida e volta é menos token, e o ganho aparece na conta da API, não na de assinatura.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">11</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Calibre</h3><span class="lic-badge">GPL-3.0</span><span class="kind">Publicação</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Converte entre EPUB, MOBI, AZW3, PDF e DOCX, edita EPUB direto, corrige metadado e capa em lote e valida o arquivo antes de subir para loja. O <code>ebook-convert</code> na linha de comando entra em pipeline sem GUI.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>ebook-convert livro.md livro.epub --authors "Nome" --cover capa.png</code></pre>
+              <a class="repo" href="https://github.com/kovidgoyal/calibre">github.com/kovidgoyal/calibre</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Vellum ($199), Atticus ($147), Kindle Create</strong></p>
+              <div class="money">$147–199<small>Licença única, mas o Vellum só existe para macOS</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Interface envelhecida e a conversão automática sai feia se o Markdown de origem for bagunçado. Para você a combinação certa é Typst para o PDF e Calibre só para o EPUB — cada um no que é bom.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">12</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Stirling PDF</h3><span class="lic-badge">MIT</span><span class="kind">Documentos</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Mais de 50 ferramentas de PDF numa interface web: juntar, dividir, girar, comprimir, OCR, assinar, marca d'água, converter de/para Office e imagem. Sem banco de dados — o arquivo é processado e apagado.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>docker run -d -p 8080:8080 stirlingtools/stirling-pdf:latest</code></pre>
+              <a class="repo" href="https://github.com/Stirling-Tools/Stirling-PDF">github.com/Stirling-Tools/Stirling-PDF</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Adobe Acrobat Pro, Smallpdf, iLovePDF</strong></p>
+              <div class="money">$240 /usuário<small>Acrobat Pro $19,99/mês no plano anual</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Nenhum, e resolve um problema que o preço não mede: original de livro e documento fiscal deixam de subir para servidor de terceiro.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">13</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Cline + Aider</h3><span class="lic-badge">Apache-2.0</span><span class="kind">Agente de código</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Cline é agente de código dentro do VS Code; Aider faz o mesmo no terminal, com commit automático por alteração. Nos dois, o modelo é escolha sua — troca-se de provedor sem trocar de ferramenta.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>python -m pip install aider-install &amp;&amp; aider --model sonnet</code></pre>
+              <a class="repo" href="https://github.com/cline/cline">github.com/cline/cline</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Cursor Pro ($20/mês), GitHub Copilot Pro ($10/mês)</strong></p>
+              <div class="money">$120–240 /dev<small>Só a mensalidade — a inferência você passa a pagar</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Honestidade aqui: uso pesado de modelo de fronteira custa $200–500/mês em API e pode ficar <em>mais caro</em> que a assinatura. O ganho real é não ficar preso a um provedor — não a economia.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">14</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Umami</h3><span class="lic-badge">MIT</span><span class="kind">Analytics</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Analytics de site sem cookie e sem dado pessoal, com script de cerca de 1 KB (o do GA4 passa de 45 KB). Metas, funil, campanha UTM e painel que cabe numa tela.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>docker run -d -p 3000:3000 ghcr.io/umami-software/umami:postgresql-latest</code></pre>
+              <a class="repo" href="https://github.com/umami-software/umami">github.com/umami-software/umami</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>GA4, Mixpanel, Amplitude, Fathom</strong></p>
+              <div class="money">$1.100–10.000<small>Produto de analytics escala com evento — a conta cresce sozinha</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Baixo, e resolve LGPD de graça: sem cookie e sem dado pessoal, cai a necessidade de banner de consentimento para analytics. O Plausible CE (AGPL) é o irmão mais completo.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">15</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>ACE-Step 1.5</h3><span class="lic-badge">MIT</span><span class="kind">Música</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Gera música completa local em menos de 10 segundos numa RTX 3090. Lançado em jan/2026 pela ACE Studio com a StepFun; supera o Suno v5 no benchmark SongEval. <strong>Treinado só com música licenciada e livre de royalties</strong> — o que importa mais que a nota.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>git clone https://github.com/ace-step/ACE-Step-1.5
+pip install -r requirements.txt &amp;&amp; python app.py</code></pre>
+              <a class="repo" href="https://github.com/ace-step/ACE-Step-1.5">github.com/ace-step/ACE-Step-1.5</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Suno, Udio</strong></p>
+              <div class="money">$120–360<small>Suno $10–30/mês</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>A economia é pequena; o valor está no risco evitado. Suno e Udio foram processados pelas grandes gravadoras em 2025 — trilha de vídeo gerada lá carrega uma dúvida jurídica que o ACE-Step não tem.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">16</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Formbricks</h3><span class="lic-badge">AGPL-3.0</span><span class="kind">Formulários</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Formulário e pesquisa com lógica condicional, pesquisa embutida no produto (in-app), disparo por comportamento e painel de resultado. O núcleo AGPL é completo — não é isca.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>docker run -d -p 3000:3000 ghcr.io/formbricks/formbricks:latest</code></pre>
+              <a class="repo" href="https://github.com/formbricks/formbricks">github.com/formbricks/formbricks</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Typeform</strong> ($25–83/mês)</p>
+              <div class="money">$300–996<small>E sem teto de respostas por mês</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>SSO (SAML/OIDC) e RBAC avançado vivem no diretório <code>/ee</code> e exigem chave paga. Para operação de uma pessoa só, irrelevante.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">17</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Twenty</h3><span class="lic-badge">AGPL-3.0</span><span class="kind">CRM</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>CRM com objetos e campos customizáveis, visão kanban e tabela, integração de e-mail e calendário, e API GraphQL para tudo. 44 mil estrelas — é o open source de CRM que finalmente pegou.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>bash &lt;(curl -sL https://raw.githubusercontent.com/twentyhq/twenty/main/packages/twenty-docker/scripts/install.sh)</code></pre>
+              <a class="repo" href="https://github.com/twentyhq/twenty">github.com/twentyhq/twenty</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>HubSpot ($90/assento), Salesforce ($25–165/assento)</strong></p>
+              <div class="money">$1.080–1.980 /assento<small>A nuvem do próprio Twenty custa $9/usuário/mês</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Ainda é mais novo que os concorrentes: automação de marketing e relatório avançado não chegam perto do HubSpot. Como agenda de relacionamento e funil, cumpre.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">18</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Ollama + Qwen3</h3><span class="lic-badge">MIT + Apache-2.0</span><span class="kind">LLM local</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Roda modelo local com um comando e expõe API compatível com o formato da OpenAI — a maior parte das bibliotecas funciona só trocando a URL base. O Qwen3 é Apache-2.0, então a saída é sua sem asterisco.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>ollama run qwen3
+ollama serve            # API em http://localhost:11434</code></pre>
+              <a class="repo" href="https://github.com/ollama/ollama">github.com/ollama/ollama</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>API paga em tarefa de baixo valor</strong></p>
+              <div class="money">variável<small>Alto em volume de classificação, extração e resumo</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Precisa de VRAM, e modelo local <em>não</em> empata com modelo de fronteira em raciocínio. Use como roteador: o barato resolve local, o difícil sobe para a API. Vender isso como "substitui o ChatGPT" seria mentira.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">19</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Vaultwarden</h3><span class="lic-badge">AGPL-3.0</span><span class="kind">Senhas</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Servidor Bitwarden reescrito em Rust, leve o bastante para um Raspberry Pi. Libera os recursos Premium — TOTP, anexo, relatório de vazamento, compartilhamento — sem assinatura, usando os apps e extensões oficiais do Bitwarden.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>docker run -d --name vw -v ./vw-data:/data \
+  -p 8080:80 vaultwarden/server:latest</code></pre>
+              <a class="repo" href="https://github.com/dani-garcia/vaultwarden">github.com/dani-garcia/vaultwarden</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>1Password Families, Bitwarden Premium</strong></p>
+              <div class="money">$60–500<small>1Password Families $59,88/ano</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Quinze minutos — a melhor razão esforço/retorno da lista. Exige HTTPS e backup do volume: se o cofre sumir, sumiu. Está em 19º só porque a economia é pequena, não porque seja ruim.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">20</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Coolify</h3><span class="lic-badge">Apache-2.0</span><span class="kind">Deploy</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Painel de deploy self-hosted em qualquer VPS: <em>git push</em> vira aplicação no ar, com SSL automático, bancos, backups e preview de branch. Uma máquina roda dezenas de apps — inclusive metade desta lista.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash</code></pre>
+              <a class="repo" href="https://github.com/coollabsio/coolify">github.com/coollabsio/coolify</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Vercel Pro, Heroku, Netlify Pro, Railway</strong></p>
+              <div class="money">$1.200–3.000<small>Time de 5 no Vercel Pro custa $1.200/ano antes de banda</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Economiza muito e mesmo assim fecha a lista: você assume o papel de SRE — atualização, backup e madrugada de incidente passam a ser seus. Adote por último, quando já tiver serviços demais para hospedar à mão.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head flagged">
+      <span class="sec-num">Reprovados · parecem open source, não são</span>
+      <h2>Os oito que caíram no teste</h2>
+      <p class="sec-note">Todos aparecem em listas de "alternativas open source" publicadas este ano. Os quatro primeiros são o caso mais perigoso: <strong>o código é livre, o peso do modelo não é</strong> — e é o peso que decide se você pode vender o que gerou.</p>
+    </div>
+    <div class="grid2">
+
+      <div class="reject">
+        <div class="reject-top"><h4>FLUX.1 [dev]</h4><span class="lic-bad">Peso não-comercial</span></div>
+        <p>O modelo de imagem local mais recomendado da internet — e proibido em uso comercial. Quase todo tutorial de ComfyUI ensina com ele sem avisar. Capa de livro à venda é uso comercial.</p>
+        <p class="swap">Troca: <b>FLUX.1 [schnell]</b> ou <b>FLUX.2 Klein</b> (Apache-2.0), <b>Qwen-Image</b>, <b>SDXL</b></p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>XTTS-v2 e F5-TTS</h4><span class="lic-bad">CPML / CC-BY-NC 4.0</span></div>
+        <p>Os dois motores de clonagem de voz mais populares em estúdio local. O XTTS exige contato com a Coqui para uso comercial; o F5-TTS é explicitamente não-comercial. Audiolivro vendido com eles é problema.</p>
+        <p class="swap">Troca: <b>Chatterbox</b> (MIT), <b>Qwen3-TTS</b> ou <b>Kokoro</b> (Apache-2.0)</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>MusicGen e Wav2Lip</h4><span class="lic-bad">CC-BY-NC / pesquisa</span></div>
+        <p>Os pesos do MusicGen são CC-BY-NC 4.0. O Wav2Lip, referência em sincronia labial, é liberado só para pesquisa. Ambos aparecem em tutorial de "conteúdo com IA" como se fossem livres.</p>
+        <p class="swap">Troca: <b>ACE-Step 1.5</b> (MIT) para música; <b>Stable Audio Open</b> abaixo de US$ 1M de receita</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>Open WebUI</h4><span class="lic-bad">BSD-3 + cláusula de marca</span></div>
+        <p>A partir da v0.6.6 (abr/2025) você não pode remover a marca "Open WebUI" em deploy com mais de 50 usuários em 30 dias. É permissiva, mas cláusula de branding nunca foi considerada open source.</p>
+        <p class="swap">Troca: a v0.6.5 é BSD-3 puro; ou <b>LibreChat</b> (MIT)</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>n8n</h4><span class="lic-bad">Sustainable Use License</span></div>
+        <p>Fair-code, não OSI. Foi Apache-2.0 até 2020. Automatizar o próprio negócio é liberado; oferecer n8n como serviço a cliente, não. Se você vende automação, leia a licença antes.</p>
+        <p class="swap">Troca: <b>Activepieces</b> (MIT no core) ou <b>Windmill</b> (AGPL-3.0)</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>Cal.com</h4><span class="lic-bad">Fechado em 15/04/2026</span></div>
+        <p>Fechou o código de produção em repositório privado. O repo público virou <b>Cal.diy</b>, MIT e enxuto: sem Teams, sem Workflows, sem Routing Forms. A última linha AGPL (v4.x) ainda roda, mas não recebe mais atualização aberta.</p>
+        <p class="swap">Troca: <b>Cal.diy</b> se o uso for individual; senão, a v4.x congelada</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>NocoDB</h4><span class="lic-bad">Sustainable Use License</span></div>
+        <p>Saiu da AGPL-3.0 em 29/01/2026, a partir da v0.301.0. Uso interno segue liberado; revender ou oferecer como serviço pago, não.</p>
+        <p class="swap">Troca: <b>Baserow</b> (MIT no core) ou <b>Teable</b></p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>Sentry e MinIO</h4><span class="lic-bad">FSL / console mutilado</span></div>
+        <p>O Sentry self-host é FSL — vira Apache-2.0 só depois de dois anos. O MinIO removeu cerca de 110 mil linhas do console community em jun/2025: gestão de usuário e política agora só no AIStor pago.</p>
+        <p class="swap">Troca: <b>GlitchTip</b> (AGPL, compatível com os SDKs do Sentry); <b>Garage</b> ou <b>SeaweedFS</b></p>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Método</span>
+      <h2>Como a ordem foi montada</h2>
+    </div>
+    <div class="method">
+      <div class="card">
+        <h4>Licença conferida na fonte</h4>
+        <p>Cada item foi verificado no repositório ou no anúncio oficial, não em lista de terceiros. Quatro projetos mudaram de licença entre 2025 e 2026 — e é exatamente isso que as listas prontas erram.</p>
+      </div>
+      <div class="card">
+        <h4>Código e peso contam separado</h4>
+        <p>Em ferramenta de IA, a licença do repositório não é a que decide. ComfyUI é GPL e livre; o modelo que você carrega dentro dele pode ser não-comercial. As duas foram checadas.</p>
+      </div>
+      <div class="card">
+        <h4>Esforço pesa contra</h4>
+        <p>Por isso o Coolify, que economiza mais que quase todo o resto, fecha a lista — e o Chatterbox, que instala com um <code>pip</code> e resolve um problema jurídico, abre.</p>
+      </div>
+      <div class="card">
+        <h4>Não some as economias</h4>
+        <p>A soma da coluna não é o seu ganho: você não vai adotar os vinte, e cada adoção traz VPS, backup e manutenção junto. Trate como cardápio, não como total.</p>
+      </div>
+    </div>
+
+    <div class="rule-box">
+      <h4>Se for adotar três esta semana</h4>
+      <p><b>Chatterbox</b> (nº 1) resolve licença e conta de ElevenLabs no mesmo movimento — e é o único item da lista que pode estar te expondo hoje, dentro do Voicebox. <b>Docling</b> (nº 3) melhora a qualidade do seu RAG antes de qualquer troca de modelo. <b>Context7</b> (nº 10) é um comando e devolve token em toda sessão. Os três somam menos de uma hora de instalação. O resto pode esperar.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>Verificado em 24 de agosto de 2026.</strong> Licença de software e de peso de modelo mudam sem aviso e sem alarde — cinco itens citados aqui mudaram nos últimos dezoito meses. Confira o <code>LICENSE</code> do repositório <em>e</em> o card do modelo no Hugging Face antes de apostar o negócio em qualquer um deles.</p>
+    <div class="srcs">
+      <a href="https://github.com/resemble-ai/chatterbox">Chatterbox</a>
+      <a href="https://cal.com/blog/cal-diy-open-source-to-closed-source">Cal.com → Cal.diy</a>
+      <a href="https://docs.n8n.io/sustainable-use-license/">Licença n8n</a>
+      <a href="https://docs.openwebui.com/license/">Licença Open WebUI</a>
+      <a href="https://github.com/ace-step/ACE-Step-1.5">ACE-Step 1.5</a>
+      <a href="https://github.com/docling-project/docling">Docling</a>
+      <a href="https://github.com/minio/minio/issues/21584">Console MinIO</a>
+      <a href="https://fsl.software/">FSL (Sentry)</a>
+    </div>
+  </footer>
+
+</div>

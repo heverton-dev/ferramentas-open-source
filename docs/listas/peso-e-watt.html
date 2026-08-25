@@ -1,0 +1,781 @@
+<title>Peso e Watt</title>
+<style>
+  :root {
+    --paper:#EDEFF2; --surface:#F9FAFC; --surface-2:#E1E5EC;
+    --ink:#161B24; --ink-2:#3C4553; --muted:#69748A;
+    --rule:#C8CEDA; --rule-soft:#DBE0E9;
+    --accent:#1F4E8C; --accent-soft:#DCE5F3;
+    --gold:#7A5410; --gold-soft:#EFE5CE;
+    --flag:#8E3050; --flag-soft:#F1DAE1;
+    --shadow: 0 1px 0 rgba(22,27,36,.05), 0 8px 24px -18px rgba(22,27,36,.45);
+
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#0E1116; --surface:#151A22; --surface-2:#1D242E;
+      --ink:#E3E8F0; --ink-2:#B2BCCB; --muted:#828F A5; --muted:#828FA5;
+      --rule:#28303C; --rule-soft:#202730;
+      --accent:#7FA8E0; --accent-soft:#152742;
+      --gold:#D6A44E; --gold-soft:#332810;
+      --flag:#E08099; --flag-soft:#3A1B26;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#0E1116; --surface:#151A22; --surface-2:#1D242E;
+    --ink:#E3E8F0; --ink-2:#B2BCCB; --muted:#828FA5;
+    --rule:#28303C; --rule-soft:#202730;
+    --accent:#7FA8E0; --accent-soft:#152742;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E08099; --flag-soft:#3A1B26;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap {
+    max-width:1060px; margin:0 auto;
+    padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px;
+    display:flex; flex-direction:column; gap:clamp(40px,6vw,72px);
+  }
+
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow {
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--muted);
+    display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline;
+  }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 {
+    font-family:var(--serif); font-weight:600;
+    font-size:clamp(40px,8vw,74px); line-height:.98;
+    letter-spacing:-.02em; margin:0; text-wrap:balance;
+  }
+  .deck {
+    font-family:var(--serif); font-size:clamp(17px,2.2vw,21px);
+    line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0;
+  }
+  .deck strong { color:var(--ink); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip {
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.04em;
+    padding:5px 10px; border:1px solid var(--rule); border-radius:2px;
+    background:var(--surface); color:var(--ink-2); white-space:nowrap;
+  }
+  .chip b { color:var(--ink); font-weight:600; }
+
+  section { display:flex; flex-direction:column; gap:22px; }
+  .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
+  .sec-head.flagged { border-top-color:var(--flag); }
+  .sec-num { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .sec-head.flagged .sec-num { color:var(--flag); }
+  h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note strong { color:var(--ink); }
+
+  /* camadas */
+  .layers { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; }
+  .layer { background:var(--surface); border:1px solid var(--rule); border-left:3px solid var(--accent); border-radius:3px; padding:14px 16px; display:flex; flex-direction:column; gap:6px; }
+  .layer h4 { font-family:var(--serif); font-size:19px; font-weight:600; margin:0; }
+  .layer p { margin:0; font-size:14px; color:var(--ink-2); }
+  .layer .tagline { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); }
+
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:780px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
+  tbody tr:last-child td { border-bottom:0; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; white-space:nowrap; }
+  td.cam { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
+  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
+  td.lic.warn { color:var(--gold); }
+  td.what { color:var(--ink-2); }
+
+  .ledger { display:flex; flex-direction:column; gap:18px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry.asterisk { border-left:3px solid var(--gold); }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry.asterisk .entry-rank { color:var(--gold); background:var(--gold-soft); }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
+  .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
+  .lic-badge.warn { background:var(--gold-soft); color:var(--gold); border-color:color-mix(in srgb, var(--gold) 40%, transparent); }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
+
+  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
+  p code, li code { background:var(--surface-2); padding:1px 5px; border-radius:2px; font-size:12.5px; }
+
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--gold); line-height:1.3; }
+  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
+
+  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
+  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
+
+  .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .reject-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
+  .lic-bad { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); white-space:nowrap; }
+  .reject p { margin:0; font-size:14.5px; color:var(--ink-2); }
+  .swap { font-size:14.5px; color:var(--ink); }
+  .swap b { color:var(--accent); }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+
+  .method { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; }
+  .card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .card h4 { margin:0; font-family:var(--serif); font-size:19px; font-weight:600; }
+  .card p { margin:0; font-size:14.5px; color:var(--ink-2); }
+
+  .rule-box { border:1px solid var(--gold); background:var(--gold-soft); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:8px; }
+  .rule-box h4 { margin:0; font-family:var(--serif); font-size:21px; font-weight:600; color:var(--ink); }
+  .rule-box p { margin:0; font-size:15px; color:var(--ink-2); max-width:70ch; }
+
+  footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">
+      <span>Auditoria de licenças · camada 2</span><span>·</span><span>24 ago 2026</span><span>·</span>
+      <b>20 verificados / 8 armadilhas</b>
+    </div>
+    <h1>Peso&nbsp;e&nbsp;Watt</h1>
+    <p class="deck">A lista anterior era o que você <em>instala</em>. Esta é o que roda por dentro: <strong>pesos de modelo, inferência grátis e o encanamento que corta a conta.</strong> Aqui a licença do repositório não vale nada — o que decide se você pode vender o resultado é a licença do <em>peso</em>, e ela quase nunca é a mesma.</p>
+    <div class="chips">
+      <span class="chip">Conferido no <b>model card</b> e no <b>LICENSE</b></span>
+      <span class="chip">Ordem: <b>o que muda sua conta mais cedo</b></span>
+      <span class="chip">Teto de receita = <b>limite</b>, não liberdade</span>
+      <span class="chip">Zero repetição da <b>lista 1</b></span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">O corte</span>
+      <h2>Três camadas, uma conta</h2>
+      <p class="sec-note">Cada item pertence a uma das três. A ordem da lista ignora a camada e segue uma pergunta só: <strong>o que reduz seu gasto ou aumenta sua qualidade mais rápido?</strong> Por isso o encanamento vem antes dos modelos — trocar de modelo sem medidor é chute.</p>
+    </div>
+    <div class="layers">
+      <div class="layer">
+        <span class="tagline">Peso</span>
+        <h4>O modelo em si</h4>
+        <p>Os arquivos que você carrega. É aqui que mora a armadilha jurídica: código Apache com peso não-comercial é o padrão da indústria em 2026.</p>
+      </div>
+      <div class="layer">
+        <span class="tagline">Watt</span>
+        <h4>Onde a inferência roda</h4>
+        <p>Cota grátis permanente de provedor que já existe. Não é teste de 14 dias — é limite diário renovável, sem cartão em alguns casos.</p>
+      </div>
+      <div class="layer">
+        <span class="tagline">Encanamento</span>
+        <h4>O que liga tudo</h4>
+        <p>Roteador, medidor, servidor, saída estruturada e avaliação. É a camada mais ignorada e a que mais devolve dinheiro.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Índice · do melhor para o pior</span>
+      <h2>Os vinte, em uma tela</h2>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>#</th><th>Recurso</th><th>Camada</th><th>Para quê</th><th>Licença</th></tr></thead>
+        <tbody>
+          <tr><td class="rank">01</td><td class="tool">LiteLLM</td><td class="cam">Encanamento</td><td class="what">Um formato para 100+ provedores, com custo por chamada</td><td class="lic">MIT (core)</td></tr>
+          <tr><td class="rank">02</td><td class="tool">Langfuse</td><td class="cam">Encanamento</td><td class="what">Trace, custo por rodada, versão de prompt, avaliação</td><td class="lic">MIT (core)</td></tr>
+          <tr><td class="rank">03</td><td class="tool">Groq</td><td class="cam">Watt</td><td class="what">700+ tokens/s de graça — o mais rápido do mercado</td><td class="lic">cota grátis</td></tr>
+          <tr><td class="rank">04</td><td class="tool">DeepSeek-V4-Flash</td><td class="cam">Peso</td><td class="what">304B, agente e código, esforço de raciocínio ajustável</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">05</td><td class="tool">Qwen3.8-27B</td><td class="cam">Peso</td><td class="what">Multimodal, 262K nativo → 1M, cabe em GPU de 24 GB</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">06</td><td class="tool">Cerebras</td><td class="cam">Watt</td><td class="what">1M tokens/dia sem cartão de crédito</td><td class="lic">cota grátis</td></tr>
+          <tr><td class="rank">07</td><td class="tool">Google AI Studio</td><td class="cam">Watt</td><td class="what">1.500 req/dia, 1M de contexto, multimodal</td><td class="lic">cota grátis</td></tr>
+          <tr><td class="rank">08</td><td class="tool">Qwen3-Embedding + BGE-reranker</td><td class="cam">Peso</td><td class="what">Nº 1 do MTEB multilíngue + reranking</td><td class="lic">Apache-2.0 / MIT</td></tr>
+          <tr><td class="rank">09</td><td class="tool">Outlines</td><td class="cam">Encanamento</td><td class="what">JSON garantido durante a geração, não depois</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">10</td><td class="tool">DSPy</td><td class="cam">Encanamento</td><td class="what">Prompt vira programa otimizável por métrica</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">11</td><td class="tool">Ragas</td><td class="cam">Encanamento</td><td class="what">Transforma "melhorou?" em número — vira gate</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">12</td><td class="tool">llama.cpp</td><td class="cam">Encanamento</td><td class="what">GGUF em CPU, Mac ou GPU modesta</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">13</td><td class="tool">SGLang</td><td class="cam">Encanamento</td><td class="what">Cache de prefixo compartilhado entre chamadas</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">14</td><td class="tool">vLLM</td><td class="cam">Encanamento</td><td class="what">Serving de alto throughput com PagedAttention</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">15</td><td class="tool">Qdrant</td><td class="cam">Encanamento</td><td class="what">Banco vetorial em Rust com filtro por payload</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">16</td><td class="tool">OpenRouter</td><td class="cam">Watt</td><td class="what">Uma chave, dezenas de modelos, vários com <code>:free</code></td><td class="lic">cota grátis</td></tr>
+          <tr><td class="rank">17</td><td class="tool">Unsloth</td><td class="cam">Encanamento</td><td class="what">Fine-tune 2× mais rápido em GPU de consumidor</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">18</td><td class="tool">Wan 2.2</td><td class="cam">Peso</td><td class="what">Vídeo 480p/720p — o único de verdade Apache</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">19</td><td class="tool">LTX-2.5</td><td class="cam">Peso</td><td class="what">Melhor vídeo aberto — teto de US$ 10M</td><td class="lic warn">Community</td></tr>
+          <tr><td class="rank">20</td><td class="tool">MiniMax-Music3</td><td class="cam">Peso</td><td class="what">Música de até 5 min — exige exibir a marca</td><td class="lic warn">Community</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Fichas</span>
+      <h2>Os vinte, em detalhe</h2>
+    </div>
+    <div class="ledger">
+
+      <article class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>LiteLLM</h3><span class="lic-badge">MIT (core)</span><span class="kind">Encanamento</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Fala com mais de 100 provedores no formato da OpenAI. Roteamento por regra, fallback automático quando um provedor cai, retry, orçamento por chave e <strong>custo calculado por chamada</strong>. Trocar de modelo vira trocar uma string.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>pip install "litellm[proxy]"
+litellm --config config.yaml    # vira endpoint OpenAI local</code></pre>
+              <a class="repo" href="https://github.com/BerriAI/litellm">github.com/BerriAI/litellm</a>
+            </div>
+            <div class="block">
+              <span class="label">Por que abre a lista</span>
+              <p><strong>É o que torna a regra 8 do seu CLAUDE.md executável.</strong> "Determinismo primeiro, tarefa barata em modelo barato" só sai do papel quando existe um roteador que faz isso sem você reescrever o código.</p>
+              <div class="truth"><span class="label">Custo real</span><p>SSO grátis até 5 usuários; RBAC granular e SSO corporativo são pagos. Para operação solo, o MIT cobre tudo.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Langfuse</h3><span class="lic-badge">MIT (core)</span><span class="kind">Encanamento</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Observabilidade de LLM: trace de cada execução com custo e latência por passo, versionamento de prompt, dataset de regressão, avaliação com LLM como juiz e playground.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>git clone https://github.com/langfuse/langfuse
+docker compose up -d      # painel em :3000</code></pre>
+              <a class="repo" href="https://github.com/langfuse/langfuse">github.com/langfuse/langfuse</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>LangSmith, Helicone pago</strong> — e a planilha onde você tenta adivinhar o gasto</p>
+              <div class="spec">MIT cobre o produto<small>Só SCIM, log de auditoria e política de retenção são comerciais — SSO comum é MIT</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Você não corta o que não enxerga. Sua skill <code>calcular-gastos-sessao</code> vira um painel com histórico em vez de um cálculo por sessão.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Groq</h3><span class="lic-badge">Cota grátis permanente</span><span class="kind">Watt</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Inferência em LPU, hardware próprio. Passa de <strong>700 tokens por segundo</strong> — mais rápido que qualquer API paga em 2026. A cota gratuita não é teste: renova todo dia.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code># endpoint compatível com OpenAI
+base_url="https://api.groq.com/openai/v1"</code></pre>
+              <a class="repo" href="https://console.groq.com">console.groq.com</a>
+            </div>
+            <div class="block">
+              <span class="label">Limite gratuito</span>
+              <div class="spec">30 req/min · 1.000/dia<small>~100 mil tokens por dia, renovando</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>A cota é pequena para gerar livro, e enorme para o resto do seu pipeline: classificar fonte, extrair metadado, validar estrutura, rotear tarefa. Mande o barato para cá e a conta da API cai sem tocar na qualidade do texto final.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>DeepSeek-V4-Flash-0731</h3><span class="lic-badge">MIT</span><span class="kind">Peso</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>304 bilhões de parâmetros sob licença <strong>MIT</strong> — sem teto de usuário, sem cláusula de concorrente, sem proibição de treinar em cima. Forte em agente e código, com <strong>três níveis de esforço de raciocínio</strong> (<code>low</code>, <code>high</code>, <code>max</code>) e contexto na casa dos milhões de tokens.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code># pesos abertos: sirva por vLLM/SGLang ou use um provedor
+# o nível de esforço é o botão de custo mais direto que existe</code></pre>
+              <a class="repo" href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731">huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731</a>
+            </div>
+            <div class="block">
+              <span class="label">Verificado no card</span>
+              <div class="spec">MIT · 304B · BF16<small>Decodificação especulativa embutida; versões quantizadas disponíveis</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>304B não roda na sua máquina — mas MIT é o que permite que <em>qualquer</em> provedor sirva barato, e é isso que derruba o preço. O nível de esforço ajustável é o análogo direto da sua Seção 0: gaste raciocínio onde importa.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Qwen3.8-27B</h3><span class="lic-badge">Apache-2.0</span><span class="kind">Peso</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>27B multimodal — entende <strong>texto, imagem e vídeo</strong> — com <strong>262.144 tokens de contexto nativo, extensível a 1 milhão</strong>. Controle de "thinking" ligado por padrão. Roda em vLLM e SGLang.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>vllm serve Qwen/Qwen3.8-27B
+# ou GGUF quantizado via llama.cpp em GPU de 24 GB</code></pre>
+              <a class="repo" href="https://huggingface.co/Qwen/Qwen3.8-27B">huggingface.co/Qwen/Qwen3.8-27B</a>
+            </div>
+            <div class="block">
+              <span class="label">Verificado no card</span>
+              <div class="spec">Apache-2.0 · 27B · 262K→1M<small>Texto + imagem + vídeo no mesmo modelo</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>O melhor equilíbrio local hoje: cabe em GPU de consumidor quantizado, e Apache-2.0 significa que a saída é sua sem asterisco. É o que eu colocaria por baixo do seu AnythingLLM.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">06</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Cerebras</h3><span class="lic-badge">Cota grátis permanente</span><span class="kind">Watt</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Inferência em wafer-scale. É o maior volume diário gratuito do mercado — e <strong>não pede cartão de crédito</strong>, o que na prática significa que você pode testar hoje sem decisão nenhuma.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>base_url="https://api.cerebras.ai/v1"   # formato OpenAI</code></pre>
+              <a class="repo" href="https://cloud.cerebras.ai">cloud.cerebras.ai</a>
+            </div>
+            <div class="block">
+              <span class="label">Limite gratuito</span>
+              <div class="spec">1M tokens/dia<small>Sem cartão de crédito</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Um milhão de tokens por dia é volume de produção para tarefa de apoio. Combine com o Groq no LiteLLM como fallback: quando um estoura a cota, o outro assume, e você não paga nada nos dois.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">07</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Google AI Studio</h3><span class="lic-badge">Cota grátis permanente</span><span class="kind">Watt</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Acesso gratuito ao Gemini Flash com <strong>1 milhão de tokens de contexto</strong> e entrada multimodal. É a única cota grátis da lista que aguenta jogar um livro inteiro no contexto de uma vez.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>pip install google-genai   # chave em aistudio.google.com</code></pre>
+              <a class="repo" href="https://aistudio.google.com">aistudio.google.com</a>
+            </div>
+            <div class="block">
+              <span class="label">Limite gratuito</span>
+              <div class="spec">1.500 req/dia · 1M ctx<small>Multimodal: PDF, imagem e áudio na entrada</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Dado enviado no plano gratuito costuma poder ser usado para melhoria do produto — leia os termos antes de mandar manuscrito de cliente. Para material seu, sem problema.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">08</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Qwen3-Embedding + BGE-reranker-v2-m3</h3><span class="lic-badge">Apache-2.0 / MIT</span><span class="kind">Peso</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>O Qwen3-Embedding 8B chegou ao <strong>topo do MTEB multilíngue</strong> no lançamento, com mais de 100 idiomas — inclui português de verdade, não como sobra. O reranker do BAAI reordena os candidatos antes de entregar ao modelo, e é o ganho de qualidade mais barato que existe em RAG.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>pip install sentence-transformers
+# embed com Qwen3-Embedding, depois rerank o top-50 → top-5</code></pre>
+              <a class="repo" href="https://huggingface.co/Qwen/Qwen3-Embedding-8B">huggingface.co/Qwen/Qwen3-Embedding-8B</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>text-embedding-3 da OpenAI, Cohere Rerank</strong> (cobrado por chamada, para sempre)</p>
+              <div class="truth"><span class="label">Custo real</span><p>Trocar de modelo de embedding obriga a <strong>reindexar tudo</strong>. Escolha uma vez e escolha certo — é a decisão mais cara de reverter desta lista inteira.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">09</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Outlines</h3><span class="lic-badge">Apache-2.0</span><span class="kind">Encanamento</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Garante a estrutura <strong>durante</strong> a geração, restringindo os tokens possíveis — em vez de gerar torto e tentar consertar depois. JSON schema, tipo Python, classificação, expressão regular. O mesmo código roda em vLLM, Ollama, llama.cpp, Transformers, OpenAI e Gemini.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>pip install outlines
+# defina o schema; a saída não tem como sair diferente</code></pre>
+              <a class="repo" href="https://github.com/dottxt-ai/outlines">github.com/dottxt-ai/outlines</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Loop de retry e parser defensivo</strong></p>
+              <div class="truth"><span class="label">Custo real</span><p>Cada retry por JSON quebrado é uma geração paga jogada fora — e nas suas regras de gate, cada script espera JSON válido. Isso deixa de ser esperança e vira garantia.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">10</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>DSPy</h3><span class="lic-badge">MIT</span><span class="kind">Encanamento</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Você escreve Python modular em vez de caprichar no prompt; o framework <strong>otimiza automaticamente prompt e pesos</strong> contra a métrica que você definir. Do Stanford NLP.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>pip install dspy
+# declare a assinatura, defina a métrica, deixe otimizar</code></pre>
+              <a class="repo" href="https://github.com/stanfordnlp/dspy">github.com/stanfordnlp/dspy</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Rodada infinita de tentativa e erro em prompt</strong></p>
+              <div class="truth"><span class="label">Custo real</span><p>Curva de aprendizado de verdade, e a otimização em si gasta tokens. Só compensa em pipeline que roda muitas vezes com métrica clara — que é exatamente o caso de uma fábrica com gates.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">11</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Ragas</h3><span class="lic-badge">Apache-2.0</span><span class="kind">Encanamento</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Avalia RAG com métrica em vez de impressão: fidelidade da resposta à fonte, relevância, precisão e cobertura do contexto recuperado. Roda sobre um conjunto de perguntas seu.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>pip install ragas
+# vire um gate: exit 0 se fidelidade >= 0.85</code></pre>
+              <a class="repo" href="https://github.com/explodinggradients/ragas">github.com/explodinggradients/ragas</a>
+            </div>
+            <div class="block">
+              <span class="label">Encaixe direto</span>
+              <p>Transforma <strong>"melhorou?"</strong> em número</p>
+              <div class="truth"><span class="label">Custo real</span><p>Cabe como <code>validar-rag.py</code> na sua estrutura de gates, com <code>exit 0/1</code>. Sem isso, toda troca de embedding ou de chunking é fé — e sua própria regra diz que promessa em prosa não é gate.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">12</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>llama.cpp</h3><span class="lic-badge">MIT</span><span class="kind">Encanamento</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Inferência em C/C++ com formato GGUF: roda em CPU, em Mac com Metal, em GPU modesta. É o motor que está por baixo do Ollama — usar direto dá controle de quantização, de cache de prompt e de camadas na GPU.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>llama-server -m modelo.gguf -c 32768 --port 8080</code></pre>
+              <a class="repo" href="https://github.com/ggml-org/llama.cpp">github.com/ggml-org/llama.cpp</a>
+            </div>
+            <div class="block">
+              <span class="label">Para quê</span>
+              <p><strong>Rodar modelo onde não tem GPU boa</strong></p>
+              <div class="truth"><span class="label">Custo real</span><p>Quantização agressiva degrada mais em português do que em inglês — teste no seu texto antes de descer abaixo de Q4. O ganho de memória cobra em qualidade.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">13</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>SGLang</h3><span class="lic-badge">Apache-2.0</span><span class="kind">Encanamento</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Servidor de inferência com RadixAttention: <strong>reaproveita o prefixo compartilhado entre chamadas</strong> em vez de reprocessar. Em carga de agente — onde toda chamada começa com o mesmo bloco de governança — isso é o ganho estrutural.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>python -m sglang.launch_server --model Qwen/Qwen3.8-27B</code></pre>
+              <a class="repo" href="https://github.com/sgl-project/sglang">github.com/sgl-project/sglang</a>
+            </div>
+            <div class="block">
+              <span class="label">Por que importa para você</span>
+              <p><strong>Seu CLAUDE.md já é um prefixo estável</strong></p>
+              <div class="truth"><span class="label">Custo real</span><p>Você tirou o RTK-SCRATCHPAD do CLAUDE.md justamente para manter o prefixo estável para cache. O SGLang é o servidor que transforma essa decisão de arquitetura em economia medida, quando o modelo é seu.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">14</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>vLLM</h3><span class="lic-badge">Apache-2.0</span><span class="kind">Encanamento</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Serving de alto throughput com PagedAttention e batching contínuo. Mais de 2.000 contribuidores — é o padrão de fato para servir modelo aberto em produção.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>vllm serve Qwen/Qwen3.8-27B --max-model-len 262144</code></pre>
+              <a class="repo" href="https://github.com/vllm-project/vllm">github.com/vllm-project/vllm</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Pagar por token quando você tem GPU parada</strong></p>
+              <div class="truth"><span class="label">Custo real</span><p>Só compensa com volume constante e GPU dedicada. Para uso esporádico, a cota grátis dos itens 3, 6 e 7 sai melhor que qualquer GPU alugada.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">15</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Qdrant</h3><span class="lic-badge">Apache-2.0</span><span class="kind">Encanamento</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Banco vetorial em Rust: filtro por payload junto da busca vetorial, quantização para caber na memória, busca híbrida com texto. Apache-2.0 sem versão mutilada.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>docker run -d -p 6333:6333 qdrant/qdrant</code></pre>
+              <a class="repo" href="https://github.com/qdrant/qdrant">github.com/qdrant/qdrant</a>
+            </div>
+            <div class="block">
+              <span class="label">Substitui</span>
+              <p><strong>Pinecone, Weaviate Cloud</strong></p>
+              <div class="truth"><span class="label">Custo real</span><p>Conselho impopular: <strong>abaixo de ~100 mil vetores, <code>pgvector</code> no Postgres que você já tem resolve</strong> e é um serviço a menos para manter. Migre quando doer, não antes.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">16</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>OpenRouter</h3><span class="lic-badge">Cota grátis</span><span class="kind">Watt</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Uma chave para dezenas de modelos de vários provedores, com alguns permanentemente gratuitos (sufixo <code>:free</code>). Serve para comparar modelo lado a lado sem abrir conta em cada fornecedor.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>base_url="https://openrouter.ai/api/v1"
+model="qwen/qwen3-8b:free"</code></pre>
+              <a class="repo" href="https://openrouter.ai/models?q=free">openrouter.ai/models?q=free</a>
+            </div>
+            <div class="block">
+              <span class="label">Limite gratuito</span>
+              <div class="spec">20 req/min · 50/dia<small>Sobe para 1.000/dia depois de comprar US$ 10 em crédito</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Ir direto ao Groq ou Cerebras dá a cota cheia daquele provedor. O OpenRouter ganha em variedade, não em volume — use para escolher, depois vá direto.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">17</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Unsloth</h3><span class="lic-badge">Apache-2.0</span><span class="kind">Encanamento</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Fine-tuning com kernels otimizados: cerca de <strong>2× mais rápido e com bem menos VRAM</strong>, o que coloca LoRA e QLoRA ao alcance de GPU de consumidor. Publica também os GGUF quantizados que aparecem no topo do Hugging Face.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>pip install unsloth
+# notebook pronto roda em GPU grátis do Colab</code></pre>
+              <a class="repo" href="https://github.com/unslothai/unsloth">github.com/unslothai/unsloth</a>
+            </div>
+            <div class="block">
+              <span class="label">Para quê</span>
+              <p><strong>Ensinar voz e formato próprios a um modelo aberto</strong></p>
+              <div class="truth"><span class="label">Custo real</span><p>Fine-tune quase nunca é a resposta. Antes dele: prompt melhor, RAG melhor, exemplos no contexto. Só treine quando você já tiver métrica provando que o resto não resolve — e lembre que <strong>o fine-tune herda a licença do modelo-pai</strong>.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">18</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Wan 2.2</h3><span class="lic-badge">Apache-2.0</span><span class="kind">Peso</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Geração de vídeo texto-para-vídeo e imagem-para-vídeo, 480p e 720p, clipes de 5 segundos. Do Tongyi Lab da Alibaba. O card diz o que importa: <em>"não reivindicamos direito sobre o conteúdo gerado"</em>.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>python generate.py --task t2v-A14B --size 1280*720 \
+  --offload_model True --convert_model_dtype   # p/ RTX 4090</code></pre>
+              <a class="repo" href="https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B">huggingface.co/Wan-AI/Wan2.2-T2V-A14B</a>
+            </div>
+            <div class="block">
+              <span class="label">Verificado no card</span>
+              <div class="spec">Apache-2.0 · sem teto<small>Único vídeo da lista sem limite de receita</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>Pesado: A100 80 GB no caminho fácil, RTX 4090 só com offload. E <strong>atenção: Wan 2.5 e 2.6 nunca tiveram pesos públicos</strong> — são produto de API, mesmo sendo chamados de open source em todo lugar.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry asterisk">
+        <div class="entry-rank">19</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>LTX-2.5</h3><span class="lic-badge warn">LTX-2 Community License</span><span class="kind">Peso · com asterisco</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Da Lightricks, é hoje a melhor qualidade de vídeo com pesos disponíveis, forte em imagem-para-vídeo. Tem versões destiladas mais leves e opções de fp8 e offload para VRAM baixa.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code># frames devem satisfazer num_frames % 8 == 1
+# largura e altura divisíveis por 32</code></pre>
+              <a class="repo" href="https://huggingface.co/Lightricks/LTX-2.5">huggingface.co/Lightricks/LTX-2.5</a>
+            </div>
+            <div class="block">
+              <span class="label">O asterisco</span>
+              <div class="spec">Grátis até US$ 10M/ano<small>Acima disso, exige acordo comercial pago</small></div>
+              <div class="truth"><span class="label">Custo real</span><p><strong>Não é OSI.</strong> Na prática você está muito abaixo do teto e pode usar comercialmente hoje — mas isso é permissão, não liberdade: transferir fine-tune pode exigir licença, e o limite é de outra empresa, não seu.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry asterisk">
+        <div class="entry-rank">20</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>MiniMax-Music3</h3><span class="lic-badge warn">MiniMax Community License</span><span class="kind">Peso · com asterisco</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que faz</span>
+              <p>Música completa de <strong>até cinco minutos</strong> com vocal expressivo e controle de gênero, timbre, estilo, harmonia e backing vocal. Aceita letra com marcação de seção. Saída em 32 kHz estéreo.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code># letra com [Verse]/[Chorus] + descrição de estilo</code></pre>
+              <a class="repo" href="https://huggingface.co/MiniMaxAI/MiniMax-Music3">huggingface.co/MiniMaxAI/MiniMax-Music3</a>
+            </div>
+            <div class="block">
+              <span class="label">O asterisco</span>
+              <div class="spec">Marca obrigatória<small>Exibir "MiniMax-Music3" com destaque no produto comercial; autorização escrita acima de US$ 20M/ano</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>O badge no card parece Creative Commons — <strong>não é</strong>: é licença comunitária própria. Se colocar a marca de outra empresa na sua campanha incomodar, o <b>ACE-Step 1.5</b> é MIT puro e não pede nada em troca.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head flagged">
+      <span class="sec-num">Armadilhas · a licença do peso</span>
+      <h2>Oito jeitos de perder o direito sobre o que você gerou</h2>
+      <p class="sec-note">Nesta camada, o repositório é quase sempre Apache ou MIT — e isso não diz nada. <strong>O peso tem licença própria</strong>, e é ela que decide se o audiolivro, a capa ou a trilha da sua campanha podem ser vendidos.</p>
+    </div>
+    <div class="grid2">
+
+      <div class="reject">
+        <div class="reject-top"><h4>Llama (todas as versões)</h4><span class="lic-bad">Community License</span></div>
+        <p>Teto de 700 milhões de usuários mensais, restrição que bloqueia classes inteiras de produto, proibição de usar Llama para treinar outro modelo e exclusão de multimodal para desenvolvedor da UE. A OSI concluiu em fev/2025 que falha na definição de open source em vários pontos.</p>
+        <p class="swap">Troca: <b>Qwen3.8</b> (Apache-2.0), <b>DeepSeek-V4</b> (MIT), <b>Gemma 4</b> (agora Apache-2.0)</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>Gemma 3 e anteriores</h4><span class="lic-bad">Gemma Terms of Use</span></div>
+        <p>Fonte disponível, não open source: política de uso proibido com recortes amplos e o direito expresso da Google de <em>restringir remotamente</em> o uso. A boa notícia é que o <b>Gemma 4 passou para Apache-2.0</b> — confira a versão antes de assumir qualquer coisa.</p>
+        <p class="swap">Troca: <b>Gemma 4</b>, ou Qwen3.8 / DeepSeek-V4</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>Command R+</h4><span class="lic-bad">CC-BY-NC 4.0</span></div>
+        <p>Não-comercial, ponto. Aparece em tutorial de RAG e de tool-use como se fosse alternativa livre — e é justamente em RAG corporativo que ele costuma ser testado.</p>
+        <p class="swap">Troca: <b>Qwen3.8-27B</b> ou <b>DeepSeek-V4-Flash</b></p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>Wan 2.5 e 2.6</h4><span class="lic-bad">Sem pesos públicos</span></div>
+        <p>Vendidos como open source em artigo, vídeo e comparativo — mas os pesos nunca foram publicados. São produto de API. Só a <b>2.2</b> (e a 2.7) têm pesos Apache-2.0 no Hugging Face.</p>
+        <p class="swap">Troca: <b>Wan 2.2</b> (item 18) se você precisa dos pesos</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>Mistral</h4><span class="lic-bad">Apache-2.0 ou MRL</span></div>
+        <p>A mesma marca publica modelo Apache-2.0 e modelo sob Mistral Research License, que é só pesquisa. Saber que "Mistral é aberto" não te diz nada — a licença muda por checkpoint.</p>
+        <p class="swap">Troca: confira o card de <em>cada</em> modelo, não a reputação da empresa</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>Teto de receita disfarçado de liberdade</h4><span class="lic-bad">LTX, MiniMax, Stable Audio</span></div>
+        <p>US$ 10M aqui, US$ 20M ali, marca obrigatória acolá. Você provavelmente cabe dentro do limite — mas está operando com permissão revogável de outra empresa, não com direito. Planeje sabendo disso.</p>
+        <p class="swap">Troca: <b>Wan 2.2</b> e <b>ACE-Step 1.5</b> não têm teto nenhum</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>O fine-tune herda o pai</h4><span class="lic-bad">Erro conceitual</span></div>
+        <p>Treinar em cima de um modelo restrito não limpa a licença: o resultado continua carregando as cláusulas do original. Muita gente monta produto sobre um LoRA de Llama achando que o peso passou a ser dela.</p>
+        <p class="swap">Regra: comece de um pai <b>Apache-2.0 ou MIT</b> se o destino for comercial</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>"Open source" que é só endpoint</h4><span class="lic-bad">Categoria inteira</span></div>
+        <p>Um padrão de 2026: a empresa publica o código de inferência, chama o projeto de open source e nunca solta o peso. Tecnicamente há um repositório aberto; na prática você tem um cliente de API.</p>
+        <p class="swap">Teste: se não existe arquivo de peso para baixar, <b>não é aberto</b></p>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Método</span>
+      <h2>Como a ordem foi montada</h2>
+    </div>
+    <div class="method">
+      <div class="card">
+        <h4>Model card e LICENSE, não blog</h4>
+        <p>Cada licença foi lida na fonte. Três artigos de "melhores modelos 2026" que apareceram na pesquisa erraram versão ou licença — inclusive chamando de Apache-2.0 modelo que tem teto de receita.</p>
+      </div>
+      <div class="card">
+        <h4>Encanamento antes de peso</h4>
+        <p>Trocar de modelo sem medidor é chute caro. Os dois primeiros itens existem para que você saiba, em número, se a troca do item 4 valeu.</p>
+      </div>
+      <div class="card">
+        <h4>Cota grátis não é teste</h4>
+        <p>Os três provedores da camada Watt têm limite diário renovável e permanente, não trial. Somados no LiteLLM com fallback, cobrem boa parte de um pipeline de apoio por US$ 0.</p>
+      </div>
+      <div class="card">
+        <h4>Limite de outra empresa não é liberdade</h4>
+        <p>Os itens 19 e 20 estão na lista porque são úteis e você cabe no teto. Estão marcados em outra cor porque teto é permissão, e permissão muda.</p>
+      </div>
+    </div>
+
+    <div class="rule-box">
+      <h4>A ordem de adoção que eu seguiria</h4>
+      <p><b>Semana 1:</b> LiteLLM e Langfuse. Nada mais. Uma semana só medindo, sem trocar nada — você precisa da linha de base antes de mexer. <b>Semana 2:</b> ligue Groq e Cerebras como destino das tarefas baratas do pipeline (classificar, extrair, validar) e compare o gráfico com a semana 1. <b>Semana 3:</b> Outlines nos pontos onde hoje existe retry por JSON quebrado. Só depois disso mexa em modelo — com número na mão, e não porque uma lista disse.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>Verificado em 24 de agosto de 2026</strong>, no model card e no arquivo LICENSE de cada peso. Nesta camada as coisas mudam mais rápido que na de aplicativos: modelo é relançado a cada poucas semanas e a licença acompanha. Confira o card antes de colocar qualquer peso em produção — inclusive os desta lista.</p>
+    <div class="srcs">
+      <a href="https://huggingface.co/Qwen/Qwen3.8-27B">Qwen3.8-27B</a>
+      <a href="https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731">DeepSeek-V4-Flash</a>
+      <a href="https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B">Wan 2.2</a>
+      <a href="https://huggingface.co/Lightricks/LTX-2.5">LTX-2.5</a>
+      <a href="https://huggingface.co/MiniMaxAI/MiniMax-Music3">MiniMax-Music3</a>
+      <a href="https://github.com/stanfordnlp/dspy">DSPy</a>
+      <a href="https://github.com/dottxt-ai/outlines">Outlines</a>
+      <a href="https://openrouter.ai/blog/tutorials/free-llm-apis-compared/">Cotas grátis</a>
+    </div>
+  </footer>
+
+</div>

@@ -1,0 +1,728 @@
+<title>Fonte Limpa</title>
+<style>
+  :root {
+    --paper:#EEEDF1; --surface:#F9F9FB; --surface-2:#E3E2E9;
+    --ink:#1B1823; --ink-2:#433E52; --muted:#6E6880;
+    --rule:#CCC9D5; --rule-soft:#DEDCE5;
+    --accent:#5B3E8C; --accent-soft:#E4DDF0;
+    --gold:#7A5410; --gold-soft:#EFE5CE;
+    --flag:#94371D; --flag-soft:#F0DBD3;
+    --shadow: 0 1px 0 rgba(27,24,35,.05), 0 8px 24px -18px rgba(27,24,35,.45);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#121016; --surface:#1A1722; --surface-2:#231F2D;
+      --ink:#E7E4EE; --ink-2:#BAB4C8; --muted:#8A8399;
+      --rule:#302B3C; --rule-soft:#262231;
+      --accent:#AA8CDD; --accent-soft:#251C3A;
+      --gold:#D6A44E; --gold-soft:#332810;
+      --flag:#E07F5F; --flag-soft:#382017;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#121016; --surface:#1A1722; --surface-2:#231F2D;
+    --ink:#E7E4EE; --ink-2:#BAB4C8; --muted:#8A8399;
+    --rule:#302B3C; --rule-soft:#262231;
+    --accent:#AA8CDD; --accent-soft:#251C3A;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E07F5F; --flag-soft:#382017;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
+
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
+
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
+  .deck strong { color:var(--ink); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
+
+  section { display:flex; flex-direction:column; gap:22px; }
+  .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
+  .sec-head.flagged { border-top-color:var(--flag); }
+  .sec-num { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .sec-head.flagged .sec-num { color:var(--flag); }
+  h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note strong { color:var(--ink); }
+
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:800px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
+  tbody tr:last-child td { border-bottom:0; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; }
+  td.tipo { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
+  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
+  td.lic.warn { color:var(--gold); }
+  td.what { color:var(--ink-2); }
+
+  .ledger { display:flex; flex-direction:column; gap:18px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry.asterisk { border-left:3px solid var(--gold); }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry.asterisk .entry-rank { color:var(--gold); background:var(--gold-soft); }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
+  .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
+  .lic-badge.warn { background:var(--gold-soft); color:var(--gold); border-color:color-mix(in srgb, var(--gold) 40%, transparent); }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
+
+  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
+  p code, li code { background:var(--surface-2); padding:1px 5px; border-radius:2px; font-size:12.5px; }
+
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--gold); line-height:1.3; }
+  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
+
+  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
+  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
+
+  .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .reject-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
+  .lic-bad { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); white-space:nowrap; }
+  .reject p { margin:0; font-size:14.5px; color:var(--ink-2); }
+  .swap { font-size:14.5px; color:var(--ink); }
+  .swap b { color:var(--accent); }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+
+  .method { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; }
+  .card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .card h4 { margin:0; font-family:var(--serif); font-size:19px; font-weight:600; }
+  .card p { margin:0; font-size:14.5px; color:var(--ink-2); }
+
+  .rule-box { border:1px solid var(--gold); background:var(--gold-soft); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:12px; }
+  .rule-box h4 { margin:0; font-family:var(--serif); font-size:21px; font-weight:600; color:var(--ink); }
+  .rule-box p { margin:0; font-size:15px; color:var(--ink-2); max-width:70ch; }
+
+  footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">
+      <span>Auditoria de licenças · camada 3</span><span>·</span><span>24 ago 2026</span><span>·</span>
+      <b>20 fontes / 8 armadilhas</b>
+    </div>
+    <h1>Fonte&nbsp;Limpa</h1>
+    <p class="deck">As duas listas anteriores eram sobre <em>ferramenta</em>. Esta é sobre <strong>matéria-prima</strong>: o texto que você cita, a imagem da capa, a fonte tipográfica, o dado que sustenta o argumento. Numa obra que você <em>vende</em>, cada insumo carrega uma licença — e é aqui que o erro não custa assinatura, custa notificação.</p>
+    <div class="chips">
+      <span class="chip">Conferido nos <b>termos de cada fonte</b></span>
+      <span class="chip">Critério: pode entrar em <b>obra vendida</b></span>
+      <span class="chip">Domínio público é <b>territorial</b></span>
+      <span class="chip">Ordem: <b>confiabilidade × utilidade</b></span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">O corte</span>
+      <h2>Uma pergunta só</h2>
+      <p class="sec-note">Não é "posso baixar de graça?" — é <strong>"posso vender um livro que contém isto?"</strong>. São coisas diferentes, e quase toda lista de "recursos grátis" responde a primeira fingindo responder a segunda. Fonte com asterisco (amarela) é usável, mas tem condição que você precisa cumprir ou verificar antes.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>#</th><th>Fonte</th><th>Tipo</th><th>Para quê</th><th>Licença</th></tr></thead>
+        <tbody>
+          <tr><td class="rank">01</td><td class="tool">OpenAlex</td><td class="tipo">Acadêmico</td><td class="what">260M+ trabalhos, citações e autores — sem chave</td><td class="lic">CC0</td></tr>
+          <tr><td class="rank">02</td><td class="tool">Crossref</td><td class="tipo">Acadêmico</td><td class="what">DOI e referências oficiais do registro</td><td class="lic">Metadados abertos</td></tr>
+          <tr><td class="rank">03</td><td class="tool">Unpaywall + DOAJ + CORE</td><td class="tipo">Acadêmico</td><td class="what">Descobre se o DOI tem texto completo legal</td><td class="lic">Aberto</td></tr>
+          <tr><td class="rank">04</td><td class="tool">SciELO</td><td class="tipo">Acadêmico</td><td class="what">Ciência ibero-americana em português</td><td class="lic">CC-BY (maioria)</td></tr>
+          <tr><td class="rank">05</td><td class="tool">PMC Open Access Subset</td><td class="tipo">Acadêmico</td><td class="what">O recorte do PubMed que permite reuso</td><td class="lic">CC / reuso</td></tr>
+          <tr><td class="rank">06</td><td class="tool">Standard Ebooks</td><td class="tipo">Texto</td><td class="what">Clássicos com edição limpa e capa incluída</td><td class="lic">CC0</td></tr>
+          <tr><td class="rank">07</td><td class="tool">Google Fonts</td><td class="tipo">Tipografia</td><td class="what">Embutir em PDF e EPUB à venda</td><td class="lic">OFL / Apache-2.0</td></tr>
+          <tr><td class="rank">08</td><td class="tool">Lucide · Heroicons · Phosphor · Tabler</td><td class="tipo">Ícones</td><td class="what">Ícone sem cláusula de atribuição</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">09</td><td class="tool">Openverse</td><td class="tipo">Imagem</td><td class="what">300M+ imagens com filtro por licença</td><td class="lic">CC / PD (por arquivo)</td></tr>
+          <tr><td class="rank">10</td><td class="tool">Smithsonian · Met · Rijksmuseum</td><td class="tipo">Imagem</td><td class="what">Arte e imagem histórica em CC0 real</td><td class="lic">CC0</td></tr>
+          <tr><td class="rank">11</td><td class="tool">Wikimedia Commons</td><td class="tipo">Imagem</td><td class="what">100M+ arquivos — licença por arquivo</td><td class="lic">CC / PD (por arquivo)</td></tr>
+          <tr><td class="rank">12</td><td class="tool">IBGE · API SIDRA</td><td class="tipo">Dado</td><td class="what">Estatística oficial brasileira</td><td class="lic">Domínio público</td></tr>
+          <tr><td class="rank">13</td><td class="tool">dados.gov.br</td><td class="tipo">Dado</td><td class="what">Dados abertos do governo federal</td><td class="lic">Aberto</td></tr>
+          <tr><td class="rank">14</td><td class="tool">Our World in Data</td><td class="tipo">Dado</td><td class="what">Série global pronta para gráfico</td><td class="lic">CC-BY</td></tr>
+          <tr><td class="rank">15</td><td class="tool">World Bank Open Data</td><td class="tipo">Dado</td><td class="what">Indicador econômico por país e ano</td><td class="lic">CC-BY 4.0</td></tr>
+          <tr><td class="rank">16</td><td class="tool">Musopen</td><td class="tipo">Áudio</td><td class="what">Clássica em domínio público, com partitura</td><td class="lic">PD / CC</td></tr>
+          <tr><td class="rank">17</td><td class="tool">unDraw</td><td class="tipo">Ilustração</td><td class="what">Ilustração vetorial de estilo único</td><td class="lic warn">Própria · proíbe IA</td></tr>
+          <tr><td class="rank">18</td><td class="tool">Unsplash · Pexels · Pixabay</td><td class="tipo">Imagem</td><td class="what">Foto de banco, sem atribuição</td><td class="lic warn">Própria · zero garantia</td></tr>
+          <tr><td class="rank">19</td><td class="tool">Freesound</td><td class="tipo">Áudio</td><td class="what">Efeito sonoro e ambiência</td><td class="lic warn">Misto · filtrar</td></tr>
+          <tr><td class="rank">20</td><td class="tool">Project Gutenberg</td><td class="tipo">Texto</td><td class="what">77 mil obras — com duas ressalvas sérias</td><td class="lic warn">PD só nos EUA</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Fichas</span>
+      <h2>As vinte fontes</h2>
+    </div>
+    <div class="ledger">
+
+      <article class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>OpenAlex</h3><span class="lic-badge">CC0</span><span class="kind">Acadêmico</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Catálogo aberto do conhecimento científico: centenas de milhões de trabalhos com autor, instituição, conceito, citações e referências. Sucessor do Microsoft Academic Graph. <strong>API pública sem chave</strong>, com dump completo para baixar.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>curl "https://api.openalex.org/works?search=letramento+digital&per-page=50"
+# educado: adicione &mailto=voce@dominio.com e ganhe fila prioritária</code></pre>
+              <a class="repo" href="https://openalex.org">openalex.org</a>
+            </div>
+            <div class="block">
+              <span class="label">Por que abre a lista</span>
+              <p><strong>CC0 é o topo da pirâmide:</strong> domínio público dedicado. Você pode redistribuir, transformar e vender sem atribuição nem condição.</p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>CC0 vale para os <em>metadados</em> do OpenAlex — não para o texto integral dos artigos, que segue a licença de cada editora. Use para mapear literatura e montar bibliografia; para o conteúdo, vá pelo item 3.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Crossref</h3><span class="lic-badge">Metadados abertos</span><span class="kind">Acadêmico</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>O registro oficial de DOI: quem emitiu, título, autores, data, periódico e lista de referências. É a fonte de verdade quando você precisa provar que uma citação existe.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>curl "https://api.crossref.org/works/10.1590/exemplo"
+# 404 aqui = DOI inventado. Gate de referência resolvido.</code></pre>
+              <a class="repo" href="https://www.crossref.org/documentation/retrieve-metadata/rest-api/">crossref.org — REST API</a>
+            </div>
+            <div class="block">
+              <span class="label">Encaixe direto</span>
+              <p>É o motor do seu <code>validar-referencias.py</code></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>Modelo de linguagem alucina DOI com formato perfeito e destino inexistente. Um <code>HEAD</code> no Crossref transforma "a referência parece boa" em <code>exit 0/1</code> — que é exatamente a diferença entre gate e intenção.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Unpaywall + DOAJ + CORE</h3><span class="lic-badge">Aberto</span><span class="kind">Acadêmico</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Três serviços que respondem à pergunta que importa: <strong>existe uma versão legal e gratuita deste artigo?</strong> O Unpaywall aponta o PDF aberto a partir do DOI; o DOAJ lista periódicos de acesso aberto revisados; o CORE agrega milhões de textos completos de repositórios.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>curl "https://api.unpaywall.org/v2/10.1590/exemplo?email=voce@dominio.com"
+# is_oa: true → best_oa_location traz a licença junto</code></pre>
+              <a class="repo" href="https://unpaywall.org">unpaywall.org · doaj.org · core.ac.uk</a>
+            </div>
+            <div class="block">
+              <span class="label">Por que importa</span>
+              <p><strong>Resolve o "li o resumo e citei"</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>O Unpaywall devolve o campo de licença da versão aberta. É aí que você descobre se pode <em>citar longamente</em> ou apenas referenciar — e é a única forma barata de saber isso em escala.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>SciELO</h3><span class="lic-badge">CC-BY na maioria</span><span class="kind">Acadêmico</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Biblioteca eletrônica de periódicos científicos da América Latina, Caribe, Espanha e Portugal. É <strong>a maior base de ciência revisada por pares em português</strong> — e a que dá lastro nacional a um livro escrito em PT-BR.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>https://search.scielo.org/?q=seu+tema&lang=pt&output=xml</code></pre>
+              <a class="repo" href="https://scielo.org">scielo.org</a>
+            </div>
+            <div class="block">
+              <span class="label">Por que importa</span>
+              <p><strong>Fonte classe A que fala a língua do seu leitor</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>"Maioria CC-BY" não é "toda". A licença aparece na página do artigo — se for <code>CC-BY-NC</code>, você cita e referencia, mas não reproduz trecho longo num livro à venda.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>PMC Open Access Subset</h3><span class="lic-badge">CC / reuso explícito</span><span class="kind">Acadêmico</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>O recorte do PubMed Central cujos artigos foram <strong>explicitamente licenciados para reuso</strong> — distinto do PMC geral, que é de leitura livre mas não de reaproveitamento. Vem com pacote para download em massa.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code># o subset traz a licença de cada artigo no manifesto
+https://ftp.ncbi.nlm.nih.gov/pub/pmc/oa_bulk/</code></pre>
+              <a class="repo" href="https://pmc.ncbi.nlm.nih.gov/tools/openftlist/">pmc.ncbi.nlm.nih.gov — OA Subset</a>
+            </div>
+            <div class="block">
+              <span class="label">A distinção que ninguém faz</span>
+              <p><strong>Ler de graça ≠ poder reusar</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>Esse par — "acesso aberto" e "licença aberta" — é a confusão mais comum em pesquisa acadêmica. O PMC separa os dois de forma explícita, e por isso é a base mais segura para minerar conteúdo, não só citação.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">06</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Standard Ebooks</h3><span class="lic-badge">CC0</span><span class="kind">Texto</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Clássicos de domínio público reeditados à mão: tipografia corrigida, semântica moderna, capa desenhada. E o diferencial jurídico: <strong>o projeto dedica ao domínio público via CC0 o arquivo inteiro — texto, capa e marcação</strong>.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code># EPUB, AZW3 e o repositório em texto puro
+https://standardebooks.org/ebooks</code></pre>
+              <a class="repo" href="https://standardebooks.org">standardebooks.org</a>
+            </div>
+            <div class="block">
+              <span class="label">Melhor que o Gutenberg porque</span>
+              <p><strong>A edição também é livre, não só a obra</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>Trabalha sobre obras em domínio público <em>nos EUA</em> — em geral publicadas antes de 1931. A ressalva territorial do item 20 vale aqui também: confira o autor contra a regra brasileira de vida + 70 anos.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">07</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Google Fonts</h3><span class="lic-badge">OFL / Apache-2.0</span><span class="kind">Tipografia</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Mais de 1.500 famílias sob SIL Open Font License ou Apache-2.0. As duas permitem uso comercial, modificação e — o que importa para você — <strong>embutir a fonte no PDF e no EPUB que você vende</strong>.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>pip install fonttools    # baixe o TTF e instale local
+# no Typst: #set text(font: "EB Garamond")</code></pre>
+              <a class="repo" href="https://fonts.google.com">fonts.google.com</a>
+            </div>
+            <div class="block">
+              <span class="label">Por que está alto na lista</span>
+              <p><strong>Tipografia é o insumo mais fácil de errar</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>Baixe da fonte oficial. Galerias de "fontes grátis" misturam OFL com licenças <em>free for personal use</em> — e a segunda torna ilegal o livro que você imprimiu. A OFL exige só uma coisa: não vender a fonte sozinha.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">08</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Lucide · Heroicons · Phosphor · Tabler</h3><span class="lic-badge">MIT</span><span class="kind">Ícones</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Quatro bibliotecas de ícone SVG sob MIT — sem atribuição, sem condição, sem asterisco. Lucide é o fork mantido do Feather; Phosphor tem seis pesos; Tabler passa de 5 mil ícones.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>npm i lucide       # ou baixe o SVG solto e embuta no Typst</code></pre>
+              <a class="repo" href="https://lucide.dev">lucide.dev · heroicons.com · phosphoricons.com · tabler.io/icons</a>
+            </div>
+            <div class="block">
+              <span class="label">Por que essas quatro</span>
+              <p><strong>Font Awesome Free é CC BY 4.0, não MIT</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>Os ícones SVG/JS do Font Awesome Free exigem atribuição — a maior parte das pessoas trata como se fosse MIT e não credita. Estas quatro removem o problema em vez de administrá-lo.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">09</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Openverse</h3><span class="lic-badge">CC / PD · por arquivo</span><span class="kind">Imagem</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Buscador da WordPress Foundation que agrega mais de 300 milhões de imagens e áudios de dezenas de bases, <strong>com filtro por licença e por "uso comercial permitido"</strong>. É o jeito certo de procurar mídia livre: filtrando antes, não conferindo depois.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>https://openverse.org/search?q=biblioteca&license_type=commercial
+# a API devolve a licença e a atribuição já formatada</code></pre>
+              <a class="repo" href="https://openverse.org">openverse.org</a>
+            </div>
+            <div class="block">
+              <span class="label">Por que é o melhor ponto de partida</span>
+              <p><strong>Filtra por direito, não por preço</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>Ele reporta a licença declarada pela base de origem — se o uploader mentiu lá, o erro se propaga. Para capa de livro que vai imprimir, prefira as bases do item 10, onde a instituição é a dona.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">10</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Smithsonian · Met · Rijksmuseum</h3><span class="lic-badge">CC0</span><span class="kind">Imagem</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Três acervos de museu que liberaram imagem em alta resolução sob <strong>CC0</strong>: o Smithsonian abriu milhões de itens, o Metropolitan liberou o domínio público do acervo com API, o Rijksmuseum publica obras em resolução de impressão.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>curl "https://collectionapi.metmuseum.org/public/collection/v1/search?q=botany"
+# isPublicDomain: true → uso livre, inclusive comercial</code></pre>
+              <a class="repo" href="https://www.si.edu/openaccess">si.edu/openaccess · metmuseum.org · rijksmuseum.nl</a>
+            </div>
+            <div class="block">
+              <span class="label">Por que é a fonte mais segura</span>
+              <p><strong>A instituição é a detentora — não um uploader anônimo</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>Para capa de livro impresso, esta é a origem que eu usaria. Resolução alta, procedência documentada e CC0 declarado por quem tem direito de declarar — os três problemas de banco de imagem resolvidos de uma vez.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">11</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Wikimedia Commons</h3><span class="lic-badge">CC / PD · por arquivo</span><span class="kind">Imagem</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Mais de 100 milhões de arquivos de mídia livre: foto, mapa, diagrama, gravura, áudio. Cada arquivo traz a licença e o texto de atribuição exigido na própria página.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=extmetadata
+# extmetadata traz LicenseShortName e Attribution</code></pre>
+              <a class="repo" href="https://commons.wikimedia.org">commons.wikimedia.org</a>
+            </div>
+            <div class="block">
+              <span class="label">Cuidado central</span>
+              <p><strong>Licença por arquivo, nunca por site</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>Convivem CC0, CC-BY, CC-BY-SA e domínio público no mesmo acervo. <code>CC-BY-SA</code> numa imagem exige atribuição, mas <em>não</em> contamina o livro inteiro — diferente do texto da Wikipédia, que é outro caso (ver armadilhas).</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">12</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>IBGE · API SIDRA</h3><span class="lic-badge">Domínio público</span><span class="kind">Dado</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>O sistema de recuperação automática do IBGE: Censo, PNAD, IPCA, PIB municipal, projeção populacional — tudo por API, em domínio público. É o número que ninguém contesta num livro brasileiro.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>curl "https://apisidra.ibge.gov.br/values/t/1737/n1/all/v/63/p/last%2012"
+# tabela/nível/variável/período — série do IPCA em uma linha</code></pre>
+              <a class="repo" href="https://apisidra.ibge.gov.br">apisidra.ibge.gov.br</a>
+            </div>
+            <div class="block">
+              <span class="label">Encaixe direto</span>
+              <p><strong>Alimenta o seu gate de métricas</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>Sua regra exige métrica com valor, unidade e citação por capítulo. O SIDRA entrega os três — e com fonte oficial, o revisor não tem o que contestar.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">13</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>dados.gov.br</h3><span class="lic-badge">Aberto</span><span class="kind">Dado</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Portal central de dados abertos do governo federal: educação, saúde, orçamento, transporte, meio ambiente. Catálogo em CKAN, com API para listar e baixar conjunto.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>curl "https://dados.gov.br/api/publico/conjuntos-dados?nomeConjuntoDados=educacao"</code></pre>
+              <a class="repo" href="https://dados.gov.br">dados.gov.br</a>
+            </div>
+            <div class="block">
+              <span class="label">Para quê</span>
+              <p><strong>Argumento com dado nacional, não estrangeiro traduzido</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>A qualidade varia muito por órgão: alguns conjuntos estão desatualizados ou em CSV mal formado. Confira a data da última atualização antes de citar — e prefira o INEP e o DATASUS direto quando o tema for educação ou saúde.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">14</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Our World in Data</h3><span class="lic-badge">CC-BY</span><span class="kind">Dado</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Séries longas e curadas sobre população, energia, saúde, educação, tecnologia e economia — com a limpeza já feita e a fonte primária citada. Baixa em CSV direto do gráfico.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code># todo gráfico tem um .csv equivalente
+https://ourworldindata.org/grapher/SEU-GRAFICO.csv</code></pre>
+              <a class="repo" href="https://ourworldindata.org">ourworldindata.org</a>
+            </div>
+            <div class="block">
+              <span class="label">Condição</span>
+              <p><strong>CC-BY: atribuição obrigatória</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>Creditar é barato — uma linha na legenda do gráfico resolve. Mas é <em>obrigatório</em>, e a atribuição precisa apontar tanto o OWID quanto a fonte primária que eles citam.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">15</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>World Bank Open Data</h3><span class="lic-badge">CC-BY 4.0</span><span class="kind">Dado</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Mais de mil indicadores por país e por ano — PIB, escolaridade, acesso à internet, expectativa de vida — com API pública e série histórica longa. Bom para comparar o Brasil com o mundo.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code>curl "https://api.worldbank.org/v2/country/BR/indicator/IT.NET.USER.ZS?format=json"</code></pre>
+              <a class="repo" href="https://data.worldbank.org">data.worldbank.org</a>
+            </div>
+            <div class="block">
+              <span class="label">Condição</span>
+              <p><strong>CC-BY 4.0: atribuição obrigatória</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>Parte do catálogo vem de terceiros com termo próprio, e essa parte não é CC-BY. A página de cada indicador declara a origem — confira quando o dado for central ao seu argumento.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="entry-rank">16</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Musopen</h3><span class="lic-badge">PD / CC</span><span class="kind">Áudio</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Gravações de música clássica em domínio público ou CC, mais partituras. Serve de trilha para vídeo de campanha e audiolivro sem o risco jurídico de música gerada por serviço processado por gravadora.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code># filtre por "Public Domain" antes de baixar
+https://musopen.org/music/</code></pre>
+              <a class="repo" href="https://musopen.org">musopen.org</a>
+            </div>
+            <div class="block">
+              <span class="label">A distinção que pega gente</span>
+              <p><strong>A obra e a gravação têm direitos separados</strong></p>
+              <div class="truth"><span class="label">Detalhe importante</span><p>Beethoven está em domínio público; a <em>gravação</em> de uma orquestra em 1998, não. O Musepen resolve isso encomendando gravações e liberando — mas confirme o selo de cada faixa, porque nem todas são PD.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry asterisk">
+        <div class="entry-rank">17</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>unDraw</h3><span class="lic-badge warn">Licença própria · proíbe IA</span><span class="kind">Ilustração · com asterisco</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Ilustração vetorial de estilo consistente, com cor de destaque configurável na hora do download. Uso comercial livre, sem atribuição e sem pedir permissão — é a coleção mais prática que existe para lead magnet e deck.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code># escolha a cor de destaque antes de baixar o SVG
+https://undraw.co/illustrations</code></pre>
+              <a class="repo" href="https://undraw.co/license">undraw.co/license</a>
+            </div>
+            <div class="block">
+              <span class="label">O asterisco</span>
+              <div class="spec">Proíbe treinar IA<small>E proíbe redistribuir em pacote ou criar integração</small></div>
+              <div class="truth"><span class="label">Custo real</span><p><strong>A licença veda usar os assets para treinar, fazer fine-tune ou desenvolver modelo de aprendizado de máquina.</strong> Numa fábrica agêntica isso é fácil de violar sem perceber — basta jogar a pasta de ilustrações num pipeline de treino. Usar na peça final: liberado. Alimentar modelo: não.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry asterisk">
+        <div class="entry-rank">18</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Unsplash · Pexels · Pixabay</h3><span class="lic-badge warn">Licença própria · zero garantia</span><span class="kind">Imagem · com asterisco</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Os três maiores bancos de foto gratuita. Todos permitem uso comercial sem atribuição, sob licença própria — <strong>não são Creative Commons</strong>, embora quase todo mundo os trate como se fossem.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code># todos têm API; guarde o ID e a URL da foto junto do arquivo</code></pre>
+              <a class="repo" href="https://unsplash.com/license">unsplash.com/license · pexels.com/license · pixabay.com/service/license</a>
+            </div>
+            <div class="block">
+              <span class="label">O asterisco</span>
+              <div class="spec">Indenização zero<small>Sem release de modelo nem de propriedade</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>A licença te dá permissão da <em>plataforma</em>, não garantia de que o uploader tinha direito — nem autorização da pessoa fotografada ou do dono do prédio. Se der problema, você responde sozinho. Para capa de livro impresso, o item 10 é a escolha adulta.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry asterisk">
+        <div class="entry-rank">19</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Freesound</h3><span class="lic-badge warn">Misto · filtrar sempre</span><span class="kind">Áudio · com asterisco</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>Base colaborativa com centenas de milhares de sons: efeito, ambiência, ruído, gravação de campo. Ótimo para vinheta, transição e fundo de vídeo curto.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code># filtre por licença ANTES de ouvir, não depois
+https://freesound.org/search/?f=license:"Creative+Commons+0"</code></pre>
+              <a class="repo" href="https://freesound.org">freesound.org</a>
+            </div>
+            <div class="block">
+              <span class="label">O asterisco</span>
+              <div class="spec">CC0 · CC-BY · CC-BY-NC<small>Os três convivem no mesmo resultado de busca</small></div>
+              <div class="truth"><span class="label">Custo real</span><p>O <code>CC-BY-NC</code> no meio da lista é a armadilha: som não-comercial num vídeo que vende curso é infração. Filtre por CC0 e o problema desaparece — você perde variedade e ganha sono.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="entry asterisk">
+        <div class="entry-rank">20</div>
+        <div class="entry-body">
+          <div class="entry-top"><h3>Project Gutenberg</h3><span class="lic-badge warn">PD só nos EUA · marca registrada</span><span class="kind">Texto · com asterisco</span></div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que é</span>
+              <p>O acervo digital mais antigo da internet: mais de 77 mil obras em texto puro, EPUB e HTML. Fonte incontornável para clássico, tradução antiga e obra de referência.</p>
+              <span class="label" style="margin-top:8px">Como usar</span>
+              <pre><code># catálogo completo em CSV/RDF para minerar
+https://www.gutenberg.org/cache/epub/feeds/</code></pre>
+              <a class="repo" href="https://www.gutenberg.org/policy/permission.html">gutenberg.org — termos de uso</a>
+            </div>
+            <div class="block">
+              <span class="label">Os dois asteriscos</span>
+              <div class="spec">Territorial + marca<small>PD nos EUA ≠ PD no Brasil; e o nome é marca registrada</small></div>
+              <div class="truth"><span class="label">Custo real</span><p><strong>Fica em último não por ser ruim, mas por ser o mais perigoso para uma editora brasileira.</strong> Os próprios termos avisam: as regras valem só nos EUA, e fora de lá você precisa de orientação própria. Além disso, usar comercialmente o nome "Project Gutenberg" exige royalty — a obra é livre, a marca não. São duas camadas jurídicas diferentes no mesmo download.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head flagged">
+      <span class="sec-num">Armadilhas · insumo</span>
+      <h2>Oito jeitos de contaminar uma obra que você vende</h2>
+      <p class="sec-note">Diferente das listas anteriores, aqui a consequência não é ficar preso a um fornecedor. É <strong>notificação extrajudicial com o seu nome na capa</strong> — e num catálogo de infoproduto, a retirada de um título derruba a campanha inteira que aponta para ele.</p>
+    </div>
+    <div class="grid2">
+
+      <div class="reject">
+        <div class="reject-top"><h4>arXiv (licença padrão)</h4><span class="lic-bad">Não redistribuível</span></div>
+        <p>A licença padrão do arXiv é uma <em>perpetual non-exclusive license</em> que autoriza o arXiv a distribuir e <strong>limita explicitamente o reuso por terceiros</strong>. Só os artigos que o autor marcou como CC podem ser reaproveitados. Uma base inteira que parece aberta e não é.</p>
+        <p class="swap">Regra: no arXiv você <b>cita</b>; para reusar texto, vá pelo <b>PMC OA Subset</b> ou pelo <b>Unpaywall</b></p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>Texto da Wikipédia</h4><span class="lic-bad">CC-BY-SA · contamina</span></div>
+        <p>Share-alike: copiar trecho substancial para dentro do seu livro pode obrigar a licenciar a obra derivada sob CC-BY-SA — ou seja, abrir mão de vendê-la fechada. Citar entre aspas com fonte é outra coisa e continua permitido.</p>
+        <p class="swap">Regra: <b>parafraseie e cite a fonte primária</b> que a Wikipédia usou, não a Wikipédia</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>unDraw em pipeline de treino</h4><span class="lic-bad">Proibição explícita de IA</span></div>
+        <p>A licença veda usar os assets para treinar ou ajustar modelo de aprendizado de máquina. Quem tem uma pasta de ilustrações e um pipeline agêntico viola isso sem má-fé nenhuma — basta a pasta entrar no lugar errado.</p>
+        <p class="swap">Regra: separe fisicamente <b>assets de entrega</b> de <b>dados de treino</b></p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>Font Awesome Free</h4><span class="lic-bad">CC BY 4.0</span></div>
+        <p>Os ícones SVG e JS exigem atribuição — não são MIT, apesar de o repositório inteiro ser tratado assim. A parte MIT cobre o código; a parte visual, que é a que você usa, não.</p>
+        <p class="swap">Troca: <b>Lucide, Heroicons, Phosphor ou Tabler</b> (item 8), todos MIT</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>"Domínio público" sem país</h4><span class="lic-bad">Erro territorial</span></div>
+        <p>Domínio público é definido por jurisdição. Os EUA usam data de publicação para obra antiga; o <strong>Brasil usa vida do autor + 70 anos</strong> (Lei 9.610/98). Obra livre no Gutenberg pode estar protegida aqui — e é aqui que você vende.</p>
+        <p class="swap">Regra: cheque a <b>data de morte do autor</b>, não a data de publicação</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>CC-BY-NC em qualquer insumo</h4><span class="lic-bad">Não-comercial</span></div>
+        <p>Livro à venda, curso pago, lead magnet que capta para funil de venda — tudo é uso comercial. Vale igual para foto, som, dataset, fonte tipográfica e peso de modelo. É a mesma cláusula que reprovou XTTS e MusicGen na lista 2.</p>
+        <p class="swap">Regra: <b>NC é veto</b>, não "cuidado". Filtre antes de baixar</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>Banco grátis sem release</h4><span class="lic-bad">Indenização zero</span></div>
+        <p>Unsplash, Pexels e Pixabay dão permissão de plataforma, não garantia de cadeia de direitos. Faltam autorização de uso de imagem da pessoa fotografada e de propriedade. Rosto reconhecível em capa de livro é o cenário clássico de dor de cabeça.</p>
+        <p class="swap">Regra: rosto e marca reconhecíveis → use <b>acervo de museu</b> (item 10) ou gere a imagem</p>
+      </div>
+
+      <div class="reject">
+        <div class="reject-top"><h4>Marca ≠ direito autoral</h4><span class="lic-bad">Duas camadas</span></div>
+        <p>A obra do Gutenberg é livre; o nome "Project Gutenberg" é marca registrada e usá-lo comercialmente exige royalty. O mesmo padrão aparece em museu, universidade e órgão público: o conteúdo abre, o nome e o brasão não.</p>
+        <p class="swap">Regra: use o <b>conteúdo</b>, credite em texto corrido, <b>não use o logotipo</b></p>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Método</span>
+      <h2>Como a ordem foi montada</h2>
+    </div>
+    <div class="method">
+      <div class="card">
+        <h4>Termos lidos na fonte</h4>
+        <p>Cada licença foi conferida na página oficial da própria base. As duas descobertas que mudaram a lista — a cláusula de IA do unDraw e a ressalva territorial do Gutenberg — só aparecem no texto dos termos, nunca nos artigos que indicam essas fontes.</p>
+      </div>
+      <div class="card">
+        <h4>Quem declara importa</h4>
+        <p>Museu que digitalizou o próprio acervo tem direito de dizer que é CC0. Plataforma que recebe upload de terceiro, não — ela repassa uma declaração que não pode verificar. Por isso o item 10 está acima do 18.</p>
+      </div>
+      <div class="card">
+        <h4>Acesso aberto ≠ licença aberta</h4>
+        <p>É a confusão mais cara da pesquisa acadêmica. Poder ler não é poder reproduzir. Os itens 3 e 5 existem justamente para separar as duas coisas de forma automática.</p>
+      </div>
+      <div class="card">
+        <h4>Asterisco não é reprovação</h4>
+        <p>Os itens 17 a 20 são úteis e você provavelmente vai usar os quatro. Estão marcados porque exigem uma decisão consciente sua — e porque a condição não aparece na hora do download.</p>
+      </div>
+    </div>
+
+    <div class="rule-box">
+      <h4>A única prática que resolve isso de verdade</h4>
+      <p><strong>Grave a licença junto com o insumo, no momento em que baixa.</strong> Seis meses depois, ninguém lembra de onde veio a foto da página 47 — e é justamente aí que chega a notificação. Um <code>creditos.json</code> ao lado de cada obra, com origem, licença, URL e data, resolve o problema para sempre.</p>
+      <p>Na sua estrutura isso vira um gate de dez linhas: <code>validar-licencas.py</code> reprova a compilação se existir arquivo em <code>assets/</code> sem entrada correspondente no <code>creditos.json</code>, ou com licença na lista de veto (<code>*-NC</code>, <code>free for personal use</code>, licença ausente). <code>exit 0/1</code>, encadeado no <code>auditar-obra.py --estrito</code> junto com os outros. Promessa em prosa não é gate — a regra é sua.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>Verificado em 24 de agosto de 2026</strong>, nos termos publicados por cada fonte. Isto é levantamento técnico de licenças, não parecer jurídico — para obra de tiragem grande ou uso de imagem com pessoa identificável, vale a consulta a um advogado de propriedade intelectual. A regra territorial brasileira citada é a Lei 9.610/98.</p>
+    <div class="srcs">
+      <a href="https://openalex.org">OpenAlex</a>
+      <a href="https://unpaywall.org">Unpaywall</a>
+      <a href="https://standardebooks.org/about/standard-ebooks-and-the-public-domain">Standard Ebooks · PD</a>
+      <a href="https://undraw.co/license">Licença unDraw</a>
+      <a href="https://fontawesome.com/license/free">Licença Font Awesome Free</a>
+      <a href="https://www.gutenberg.org/policy/permission.html">Termos do Gutenberg</a>
+      <a href="https://info.arxiv.org/help/license/index.html">Licenças do arXiv</a>
+      <a href="https://unsplash.com/license">Licença Unsplash</a>
+    </div>
+  </footer>
+
+</div>
