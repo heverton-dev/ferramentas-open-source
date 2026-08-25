@@ -1,19 +1,19 @@
 <title>Código Autônomo — AI-Driven Development</title>
 <style>
-  /* Custom scrollbar */
-  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
 
   :root {
     --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
     --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
     --rule:#C7CEDB; --rule-soft:#DADFE8;
-    --accent:#4A3274; --accent-soft:#E7DFEF;
+    --accent:#7A3E1D; --accent-soft:#F5EBE4;
     --gold:#7A5410; --gold-soft:#EFE5CE;
     --flag:#8E2436; --flag-soft:#F0D9DD;
+    --green:#1B5E3B; --green-soft:#D8EFE2;
     --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
     --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
@@ -24,35 +24,41 @@
       --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
       --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
       --rule:#2A3142; --rule-soft:#222836;
-      --accent:#B192E6; --accent-soft:#251838;
+      --accent:#E89568; --accent-soft:#331D12;
       --gold:#D6A44E; --gold-soft:#332810;
       --flag:#E0788C; --flag-soft:#3A1A21;
+      --green:#6BC48F; --green-soft:#122B1C;
       --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
     }
   }
-  :root[data-theme="dark"] {
-    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
-    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
-    --rule:#2A3142; --rule-soft:#222836;
-    --accent:#B192E6; --accent-soft:#251838;
-    --gold:#D6A44E; --gold-soft:#332810;
-    --flag:#E0788C; --flag-soft:#3A1A21;
-    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
-  }
 
-  * { box-sizing:border-box; }
   body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
   .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
 
-  header { display:flex; flex-direction:column; gap:20px; }
-  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
-  .eyebrow b { color:var(--accent); font-weight:600; }
-  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
-  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
+  /* HEADER EXECUTIVO */
+  header { display:flex; flex-direction:column; gap:24px; padding-bottom:12px; border-bottom:1px solid var(--rule); }
+  .header-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; color:var(--muted); text-decoration:none; padding:4px 8px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); transition:all .15s ease; }
+  .back-link:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-soft); text-decoration:none; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
+  .layer-badge { background:var(--accent); color:var(--paper); padding:3px 8px; border-radius:2px; font-weight:700; font-size:10.5px; letter-spacing:.08em; }
+
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(38px,7.5vw,68px); line-height:1.02; letter-spacing:-.025em; margin:0; color:var(--ink); text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.55; color:var(--ink-2); max-width:100%; margin:0; }
   .deck strong { color:var(--ink); font-weight:600; }
-  .chips { display:flex; flex-wrap:wrap; gap:8px; }
-  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
-  .chip b { color:var(--ink); font-weight:600; }
+
+  /* HERO STATS BAR */
+  .hero-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:4px; }
+  .stat-card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:12px 16px; display:flex; flex-direction:column; gap:4px; box-shadow:var(--shadow); }
+  .stat-card .stat-val { font-family:var(--mono); font-size:20px; font-weight:700; color:var(--accent); line-height:1.1; }
+  .stat-card .stat-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .stat-card.good .stat-val { color:var(--green); }
+  
+  /* QUICK JUMP ANCHORS */
+  .header-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:2px; }
+  .jump-btn { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; padding:6px 12px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); color:var(--ink-2); text-decoration:none; transition:all .15s ease; }
+  .jump-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); text-decoration:none; }
+  .jump-btn.primary { background:var(--accent-soft); border-color:color-mix(in srgb, var(--accent) 40%, transparent); color:var(--accent); font-weight:600; }
 
   section { display:flex; flex-direction:column; gap:22px; }
   .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
@@ -62,112 +68,157 @@
   .sec-head.flagged .sec-num { color:var(--flag); }
   .sec-head.warm .sec-num { color:var(--gold); }
   h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
-  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
-  .sec-note strong { color:var(--ink); }
+  .sec-note { margin:0; color:var(--ink-2); max-width:100%; font-size:15.5px; }
 
-  /* rotas */
   .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
   .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
   .route.official { border-left:3px solid var(--accent); }
-  .route.gray { border-left:3px solid var(--gold); }
+  .route.gray { border-left:3px solid var(--green); }
   .route h4 { font-family:var(--serif); font-size:21px; font-weight:600; margin:0; }
   .route .tag { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; }
   .route.official .tag { color:var(--accent); }
-  .route.gray .tag { color:var(--gold); }
+  .route.gray .tag { color:var(--green); }
   .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
-  .route ul { margin:0; padding-left:18px; font-size:14px; color:var(--ink-2); display:flex; flex-direction:column; gap:4px; }
 
-  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
-  table { border-collapse:collapse; width:100%; min-width:820px; font-size:14px; }
-  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
-  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
+  /* TABELA FLUIDA SEM SCROLL */
+  .tablewrap { border:1px solid var(--rule); border-radius:3px; background:var(--surface); width:100%; overflow:hidden; }
+  table { border-collapse:collapse; width:100%; font-size:13.5px; table-layout:auto; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding:10px 12px; border-bottom:1px solid var(--rule); }
+  tbody td { padding:10px 12px; border-bottom:1px solid var(--rule-soft); vertical-align:middle; }
   tbody tr:last-child td { border-bottom:0; }
-  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
-  td.tool { font-weight:600; }
-  td.tipo { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
-  td.tipo.gray { color:var(--gold); }
-  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
-  td.lic.warn { color:var(--gold); }
-  td.what { color:var(--ink-2); }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:36px; text-align:center; }
+  td.tool { font-weight:600; color:var(--ink); font-size:14px; }
+  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; line-height:1.35; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; line-height:1.35; }
+  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); line-height:1.35; font-weight:600; }
+  td.lic { font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.35; }
 
-  .ledger { display:flex; flex-direction:column; gap:18px; }
-  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
-  .entry.asterisk { border-left:3px solid var(--gold); }
-  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
-  .entry.asterisk .entry-rank { color:var(--gold); background:var(--gold-soft); }
-  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
-  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
-  .entry-top h3 { width:100%; margin:0 0 4px 0; }
-  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
+  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO */
+  .ledger { display:flex; flex-direction:column; gap:28px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; transition:border-color .15s ease; }
+  .entry:hover { border-color:var(--accent); }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:20px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  
+  .entry-body { padding:20px 24px 22px; display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+  /* CABEÇALHO PADRONIZADO */
+  .entry-top { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; }
+  .entry-top h3 { width:100%; margin:0 0 4px 0; font-family:var(--serif); font-weight:600; font-size:26px; line-height:1.15; letter-spacing:-.01em; color:var(--ink); }
+
+  .senior-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; font-weight:700; }
+  .senior-badge.green { background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+  .senior-badge.gold { background:var(--gold-soft); color:var(--gold); border:1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
+  .senior-badge.flag { background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); }
+
+  .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
+  .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
   .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
-  .lic-badge.warn { background:var(--gold-soft); color:var(--gold); border-color:color-mix(in srgb, var(--gold) 40%, transparent); }
-  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; }
 
-  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px;  padding-top:14px; border-top:1px dashed var(--rule-soft);}
-  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
-  .block { display:flex; flex-direction:column; gap:6px; min-width:0; }
-  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
-  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
-  .block p strong { color:var(--ink); font-weight:600; }
+  /* SEÇÕES VERTICAIS DO CARD (LARGURA TOTAL) */
+  .entry-section { display:flex; flex-direction:column; gap:8px; width:100%; padding-top:14px; border-top:1px dashed var(--rule-soft); }
+  .entry-section .label { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+  .entry-section p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .entry-section p strong { color:var(--ink); font-weight:600; }
 
-  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
-  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
-  p code, li code { background:var(--surface-2); padding:1px 5px; border-radius:2px; font-size:12.5px; }
+  /* ANÁLISE ECONÔMICA GRID */
+  .econ-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:4px; }
+  .econ-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .econ-card.highlight { border-left:3px solid var(--green); background:color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left:3px solid var(--flag); background:color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .econ-val { font-size:14px; line-height:1.45; color:var(--ink); }
+  .econ-val strong { color:var(--ink); font-weight:600; }
 
-  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
-  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
-  .truth { border-left:2px solid var(--gold); padding-left:12px; }
-  .truth p { font-size:14px; }
+  /* REQUISITOS DE INFRAESTRUTURA GRID */
+  .infra-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:4px; }
+  .infra-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .infra-card.verdict { border-left:3px solid var(--gold); background:color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column:span 2; }
+  @media (max-width:760px) { .infra-card.verdict { grid-column:span 1; } }
+  .infra-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .infra-val { font-family:var(--mono); font-size:13.5px; font-weight:600; color:var(--accent); line-height:1.4; }
+  .infra-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
 
-  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
-  a:hover { text-decoration-color:var(--accent); }
-  a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
-  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
+  /* CODE BOX FULL-WIDTH */
+  .code-box { position:relative; display:flex; flex-direction:column; width:100%; margin-top:4px; }
+  pre { margin:0; padding:12px 52px 12px 14px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:13px; color:var(--ink); line-height:1.5; }
+  .copy-btn { position:absolute; top:8px; right:8px; background:var(--surface); border:1px solid var(--rule); color:var(--muted); border-radius:2px; padding:4px 8px; font-family:var(--mono); font-size:10.5px; cursor:pointer; transition:all .15s ease; }
+  .copy-btn:hover { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
+
+  /* BOTÃO REPOSITÓRIO GITHUB */
+  .repo-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--mono); font-size:12px; padding:8px 12px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink); text-decoration:none; transition:all .15s ease; }
+  .repo-btn:hover { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); text-decoration:none; }
+  .repo-btn svg { width:14px; height:14px; fill:currentColor; }
+
+  /* STEPS GRID (COMO USAR NO DIA A DIA) */
+  .steps-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin-top:2px; }
+  .step-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .step-head { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
+  .step-badge { background:var(--accent); color:var(--paper); border-radius:2px; padding:1px 6px; font-size:10px; font-weight:700; }
+  .step-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
+  .step-card code { font-family:var(--mono); font-size:12px; background:var(--surface); padding:1px 5px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
 
   .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
-  .reject-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
   .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
-  .lic-bad { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); white-space:nowrap; }
   .reject p { margin:0; font-size:14.5px; color:var(--ink-2); }
-  .swap { font-size:14.5px; color:var(--ink); }
-  .swap b { color:var(--accent); }
   .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
 
-  .method { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; }
-  .card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
-  .card h4 { margin:0; font-family:var(--serif); font-size:19px; font-weight:600; }
-  .card p { margin:0; font-size:14.5px; color:var(--ink-2); }
-
-  .rule-box { border:1px solid var(--gold); background:var(--gold-soft); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:12px; }
-  .rule-box h4 { margin:0; font-family:var(--serif); font-size:21px; font-weight:600; color:var(--ink); }
-  .rule-box p { margin:0; font-size:15px; color:var(--ink-2); max-width:70ch; }
-
   footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
-  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
-  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
-
-  .how-to-use { display:flex; flex-direction:column; gap:8px; padding-top:14px; border-top:1px dashed var(--rule-soft); width:100%; }
-  .how-to-use .label { color:var(--accent); font-weight:600; font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
-  .how-to-use p { margin:0; font-size:14.5px; line-height:1.55; color:var(--ink-2); }
-  .how-to-use p strong { color:var(--ink); font-weight:600; }
-  .how-to-use code { font-family:var(--mono); font-size:12.5px; background:var(--surface-2); padding:2px 6px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:100%; }
 
 </style>
 
 <div class="wrap">
 
-  <header>
-    <div class="eyebrow">
-      <span>Auditoria de licenças · camada 6</span><span>·</span><span>24 ago 2026</span><span>·</span>
-      <b>20 aprovados / 8 armadilhas</b>
+    <header>
+    <div class="header-top">
+      <a href="index.html" class="back-link">
+        <span>←</span>
+        <span>Voltar ao Hub Central</span>
+      </a>
+      <div class="eyebrow">
+        <span class="layer-badge">Compêndio de Elite</span>
+        <span>Engenharia &amp; Autonomia Técnica</span>
+        <span>·</span>
+        <span>Curadoria Soberana</span>
+      </div>
     </div>
+
     <h1>Código&nbsp;Autônomo</h1>
+    
     <p class="deck">Vinte projetos para desenvolver e orquestrar Inteligência Artificial com <strong>execução 100% local ou auto-hospedada</strong>: runtimes de inferência em GPU/CPU, vetores sem pod proprietário, esteiras de RAG sem vazamento de dados, observabilidade de tokens e agentes autônomos por linha de comando. <strong>Sua propriedade intelectual nunca deve treinar o modelo de terceiros.</strong></p>
-    <div class="chips">
-      <div class="chip"><b>20</b> ferramentas auditadas</div>
-      <div class="chip"><b>0</b> telemetrias compulsórias</div>
-      <div class="chip"><b>8</b> armadilhas de SaaS para IA</div>
-      <div class="chip"><b>100%</b> soberania de código</div>
+
+    <!-- HERO STATS BAR -->
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-val">20</div>
+        <div class="stat-lbl">Tecnologias Auditadas</div>
+      </div>
+      <div class="stat-card good">
+        <div class="stat-val">100%</div>
+        <div class="stat-lbl">Soberania &amp; Zero Lock-in</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">OSI Standard</div>
+        <div class="stat-lbl">Licenças de Código Aberto</div>
+      </div>
+      <div class="stat-card good">
+        <div class="stat-val">-$ 30k a $ 150k</div>
+        <div class="stat-lbl">Economia TCO Anual Estimada</div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="header-actions">
+      <a href="#tabela" class="jump-btn">
+        <span>📊</span>
+        <span>Matriz Comparativa</span>
+      </a>
+      <a href="#fichas" class="jump-btn primary">
+        <span>⚡</span>
+        <span>Fichas Técnicas &amp; Passo a Passo</span>
+      </a>
     </div>
   </header>
 
@@ -203,8 +254,8 @@
     </div>
   </section>
 
-  <section>
-    <div class="sec-head">
+  <section id="tabela">
+<div class="sec-head">
       <span class="sec-num">Parte 2 · O Inventário Completo</span>
       <h2>Os vinte, em uma tela</h2>
       <p class="sec-note">A cadeia completa: do hardware/inferência local até a interface do usuário, automação de código e orquestração agêntica.</p>
@@ -247,8 +298,8 @@
     </div>
   </section>
 
-  <section>
-    <div class="sec-head">
+  <section id="fichas">
+<div class="sec-head">
       <span class="sec-num">Parte 3 · O Detalhamento</span>
       <h2>Os vinte, em detalhe</h2>
       <p class="sec-note">Auditoria técnica de consumo, stack e comando de inicialização reproduzível.</p>
@@ -257,635 +308,1755 @@
     <div class="ledger">
 
       <!-- 01 Ollama -->
+            <!-- 01. Ollama -->
       <div class="entry">
         <div class="entry-rank">01</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Ollama</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">LLM Runtime · Go / C++ (llama.cpp)</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>A forma mais simples e robusta de executar modelos de linguagem localmente com quantização (GGUF), offload de camadas para GPU Nvidia/AMD/Apple Silicon e servidor HTTP nativo compatível com a API da OpenAI na porta 11434.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>curl -fsSL https://ollama.com/install.sh | sh
 ollama run qwen2.5-coder:7b</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">VRAM / RAM dinâmica<small>~4.5 GB VRAM para modelos 7B Q4_K_M; quase zero em idle</small></div>
-              <div class="truth">
-                <p><strong>Ponto alto:</strong> Gerencia o ciclo de vida do modelo descarregando pesos da VRAM após 5 minutos de inatividade para liberar sua GPU.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/ollama/ollama" target="_blank" rel="noopener">github.com/ollama/ollama</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">VRAM / RAM dinâmica<small>~4.5 GB VRAM para modelos 7B Q4_K_M; quase zero em idle</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>LLM Runtime · Go / C++ (llama.cpp)</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Ponto alto:</strong> Gerencia o ciclo de vida do modelo descarregando pesos da VRAM após 5 minutos de inatividade para liberar sua GPU.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/ollama/ollama" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/ollama/ollama ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 02 vLLM -->
+            <!-- 02. vLLM -->
       <div class="entry">
         <div class="entry-rank">02</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>vLLM</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Production Inference Engine · Python / CUDA / C++</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>O motor de inferência padrão da indústria para ambientes de produção com múltiplos usuários concorrentes. Sua tecnologia de PagedAttention gerencia a memória KV-cache como a paginação de memória virtual de um SO, multiplicando o throughput em até 10x.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>vllm serve Qwen/Qwen2.5-Coder-7B-Instruct --port 8000 --max-model-len 8192</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Alocação de VRAM estática<small>Reserva até 90% da GPU para KV-cache contínuo e batching paralelo</small></div>
-              <div class="truth">
-                <p><strong>Quando usar:</strong> Excelente para backends de API e empresas com tráfego simultâneo. Para uso individual na máquina local, prefira o Ollama.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/vllm-project/vllm" target="_blank" rel="noopener">github.com/vllm-project/vllm</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Alocação de VRAM estática<small>Reserva até 90% da GPU para KV-cache contínuo e batching paralelo</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Production Inference Engine · Python / CUDA / C++</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Quando usar:</strong> Excelente para backends de API e empresas com tráfego simultâneo. Para uso individual na máquina local, prefira o Ollama.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/vllm-project/vllm" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/vllm-project/vllm ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 03 Open WebUI -->
+            <!-- 03. Open WebUI -->
       <div class="entry">
         <div class="entry-rank">03</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Open WebUI</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">Self-Hosted AI Workspace · Python / Svelte</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>A melhor e mais completa interface web auto-hospedada para IA. Integração nativa com Ollama e OpenAI, suporte a RAG com upload de documentos, geração de imagens, pipelines de moderação, autenticação de usuários e compartilhamento de prompts customizados.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data ghcr.io/open-webui/open-webui:main</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~150 MB RAM<small>em repouso (processo backend FastAPI + SQLite)</small></div>
-              <div class="truth">
-                <p><strong>Segurança corporativa:</strong> Permite isolar completamente os chats dos membros da equipe com controle de permissões por grupo e histórico em disco próprio.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/open-webui/open-webui" target="_blank" rel="noopener">github.com/open-webui/open-webui</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~150 MB RAM<small>em repouso (processo backend FastAPI + SQLite)</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Self-Hosted AI Workspace · Python / Svelte</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Segurança corporativa:</strong> Permite isolar completamente os chats dos membros da equipe com controle de permissões por grupo e histórico em disco próprio.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/open-webui/open-webui" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/open-webui/open-webui ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 04 LiteLLM -->
+            <!-- 04. LiteLLM Proxy -->
       <div class="entry">
         <div class="entry-rank">04</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>LiteLLM Proxy</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">AI Gateway & Fallback Router · Python</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Proxy reverso universal que padroniza entradas e saídas de mais de 100 provedores de LLM no formato oficial da OpenAI. Oferece chaveamento de chaves, rotação de provedores, limite de gastos (rate limiting / cost tracking) e fallback automático se um modelo falhar.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 4000:4000 -v $(pwd)/litellm_config.yaml:/app/config.yaml ghcr.io/berriai/litellm:main-latest --config /app/config.yaml</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~70 MB RAM<small>em repouso processando requisições assíncronas</small></div>
-              <div class="truth">
-                <p><strong>O escudo contra lock-in:</strong> Mude de fornecedor (ou troque nuvem por servidor local) mudando apenas a rota no LiteLLM, sem reescrever 1 linha da sua aplicação.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/BerriAI/litellm" target="_blank" rel="noopener">github.com/BerriAI/litellm</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~70 MB RAM<small>em repouso processando requisições assíncronas</small> · 1 vCPU · 512 MB a 1 GB RAM · Container Docker</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>AI Gateway & Fallback Router · Python</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>O escudo contra lock-in:</strong> Mude de fornecedor (ou troque nuvem por servidor local) mudando apenas a rota no LiteLLM, sem reescrever 1 linha da sua aplicação.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/BerriAI/litellm" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/BerriAI/litellm ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 05 Qdrant -->
+            <!-- 05. Qdrant -->
       <div class="entry">
         <div class="entry-rank">05</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Qdrant</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Vector Database & Search Engine · Rust</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Banco de dados vetorial de alta performance projetado para busca por similaridade semântica em larga escala com filtragem avançada de metadados em uma única passagem. Escrito em Rust com segurança de memória e suporte a gRPC e REST.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 6333:6333 -p 6334:6334 -v qdrant_storage:/qdrant/storage qdrant/qdrant</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~40 MB RAM<small>em repouso, escalando conforme o tamanho dos índices HNSW em disco</small></div>
-              <div class="truth">
-                <p><strong>Fim das faturas absurdas de Pinecone:</strong> Roda milhões de vetores em um VPS comum de 15 dólares com persistência garantida em disco.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/qdrant/qdrant" target="_blank" rel="noopener">github.com/qdrant/qdrant</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~40 MB RAM<small>em repouso, escalando conforme o tamanho dos índices HNSW em disco</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Vector Database & Search Engine · Rust</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Fim das faturas absurdas de Pinecone:</strong> Roda milhões de vetores em um VPS comum de 15 dólares com persistência garantida em disco.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/qdrant/qdrant" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/qdrant/qdrant ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 06 Chroma -->
+            <!-- 06. Chroma -->
       <div class="entry">
         <div class="entry-rank">06</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Chroma</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Embedding Database · Python / Rust</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>O banco vetorial open source focado em simplicidade para desenvolvedores. Permite instanciar coleções de vetores e realizar consultas com poucas linhas de código diretamente no mesmo processo Python ou rodando como microserviço HTTP leve.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>import chromadb
 client = chromadb.PersistentClient(path="./meu_db")
 colecao = client.get_or_create_collection("documentos")</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Zero daemon overhead<small>em modo local/embutido gravando em SQLite/DuckDB</small></div>
-              <div class="truth">
-                <p><strong>Prototipagem imbatível:</strong> Ideal para scripts locais, agentes de desenvolvimento e testes rápidos de pipelines de RAG sem necessidade de subir containers adicionais.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/chroma-core/chroma" target="_blank" rel="noopener">github.com/chroma-core/chroma</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Zero daemon overhead<small>em modo local/embutido gravando em SQLite/DuckDB</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Embedding Database · Python / Rust</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Prototipagem imbatível:</strong> Ideal para scripts locais, agentes de desenvolvimento e testes rápidos de pipelines de RAG sem necessidade de subir containers adicionais.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/chroma-core/chroma" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/chroma-core/chroma ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 07 AnythingLLM -->
+            <!-- 07. AnythingLLM -->
       <div class="entry">
         <div class="entry-rank">07</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>AnythingLLM</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">All-in-One Private RAG · Node.js / Vector</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Aplicação completa para equipes que precisam subir uma base privada de documentos com RAG sem configurar infraestrutura complexa. Inclui parseador de arquivos, gerador de embeddings local, banco vetorial embutido e chat com controle por workspace.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 3001:3001 -v anythingllm_data:/app/server/storage mintplexlabs/anythingllm</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~180 MB RAM<small>em repouso</small></div>
-              <div class="truth">
-                <p><strong>Privacidade por padrão:</strong> Zero telemetria de documentos. Nenhum parágrafo de texto ou PDF carregado é enviado para servidores da empresa desenvolvedora.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/Mintplex-Labs/anything-llm" target="_blank" rel="noopener">github.com/Mintplex-Labs/anything-llm</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~180 MB RAM<small>em repouso</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>All-in-One Private RAG · Node.js / Vector</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Privacidade por padrão:</strong> Zero telemetria de documentos. Nenhum parágrafo de texto ou PDF carregado é enviado para servidores da empresa desenvolvedora.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/Mintplex-Labs/anything-llm" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/Mintplex-Labs/anything-llm ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 08 Dify -->
+            <!-- 08. Dify -->
       <div class="entry">
         <div class="entry-rank">08</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Dify</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">LLM Orchestration Platform · Python / Next.js</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Plataforma visual de desenvolvimento de aplicações com IA que combina orquestração de prompts, fluxos de RAG visual, ferramentas de subagentes e publicação de APIs prontas para produção com documentação Swagger automática.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>git clone https://github.com/langgenius/dify.git
 cd dify/docker && docker compose up -d</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~1.2 GB RAM<small>stack completa em repouso (API, Worker Celery, Redis, Postgres, Weaviate/Qdrant)</small></div>
-              <div class="truth">
-                <p><strong>Atenção à infraestrutura:</strong> Exige um VPS com no mínimo 4GB de RAM para operar com estabilidade devido ao conjunto de containers microserviço.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/langgenius/dify" target="_blank" rel="noopener">github.com/langgenius/dify</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~1.2 GB RAM<small>stack completa em repouso (API, Worker Celery, Redis, Postgres, Weaviate/Qdrant)</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>LLM Orchestration Platform · Python / Next.js</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Atenção à infraestrutura:</strong> Exige um VPS com no mínimo 4GB de RAM para operar com estabilidade devido ao conjunto de containers microserviço.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/langgenius/dify" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/langgenius/dify ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 09 Langfuse -->
+            <!-- 09. Langfuse -->
       <div class="entry">
         <div class="entry-rank">09</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Langfuse</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">LLM Observability & Tracing · Next.js / Node / Postgres</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>A solução definitiva para observabilidade de aplicações com IA. Registra cada chamada de LLM, cadeia de agentes, etapas de recuperação de vetores, tokens consumidos, custos exatos e latência de resposta, com SDKs para Python, JS e LangChain.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 3000:3000 -e DATABASE_URL="postgresql://..." langfuse/langfuse:2</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~120 MB RAM<small>em repouso (core open source em container único)</small></div>
-              <div class="truth">
-                <p><strong>Auditoria real:</strong> Permite debugar exatamente onde e por que um agente cometeu uma alucinação inspecionando a árvore completa de pensamentos e ferramentas.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/langfuse/langfuse" target="_blank" rel="noopener">github.com/langfuse/langfuse</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~120 MB RAM<small>em repouso (core open source em container único)</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>LLM Observability & Tracing · Next.js / Node / Postgres</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Auditoria real:</strong> Permite debugar exatamente onde e por que um agente cometeu uma alucinação inspecionando a árvore completa de pensamentos e ferramentas.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/langfuse/langfuse" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/langfuse/langfuse ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 10 Aider -->
+            <!-- 10. Aider -->
       <div class="entry">
         <div class="entry-rank">10</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Aider</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Terminal AI Pair Programmer · Python / Git</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Ferramenta de linha de comando que faz pair programming diretamente na sua árvore Git. O Aider mapeia o repositório inteiro com base na árvore sintática (tree-sitter), edita múltiplos arquivos de forma coordenada e gera commits detalhados a cada alteração.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>pip install aider-chat
 aider --model ollama/qwen2.5-coder:7b</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~60 MB RAM<small>processo CLI leve executado sob demanda no terminal</small></div>
-              <div class="truth">
-                <p><strong>O melhor assistente de código:</strong> Opera diretamente sobre branches locais sem obrigar você a trocar de editor ou abrir mão do seu terminal.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/paul-gauthier/aider" target="_blank" rel="noopener">github.com/paul-gauthier/aider</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~60 MB RAM<small>processo CLI leve executado sob demanda no terminal</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Terminal AI Pair Programmer · Python / Git</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>O melhor assistente de código:</strong> Opera diretamente sobre branches locais sem obrigar você a trocar de editor ou abrir mão do seu terminal.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/paul-gauthier/aider" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/paul-gauthier/aider ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 11 Continue.dev -->
+            <!-- 11. Continue.dev -->
       <div class="entry">
         <div class="entry-rank">11</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Continue.dev</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Open Source IDE Copilot · TypeScript / Extension</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Extensão de código aberto para VS Code e IDEs JetBrains que oferece autocompletion inteligente de código inline (Tab) e painel lateral de chat conectado ao contexto do projeto. Permite apontar para Ollama local para autocompletion com latência zero.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code># Instalação direta no Marketplace do VS Code:
 code --install-extension Continue.continue</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~80 MB RAM<small>processo da extensão no editor</small></div>
-              <div class="truth">
-                <p><strong>Adeus telemetria do GitHub Copilot:</strong> Seu código permanece na sua máquina ou no servidor privado configurado no <code>config.json</code>.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/continuedev/continue" target="_blank" rel="noopener">github.com/continuedev/continue</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~80 MB RAM<small>processo da extensão no editor</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Open Source IDE Copilot · TypeScript / Extension</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Adeus telemetria do GitHub Copilot:</strong> Seu código permanece na sua máquina ou no servidor privado configurado no <code>config.json</code>.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/continuedev/continue" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/continuedev/continue ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 12 LocalAI -->
+            <!-- 12. LocalAI -->
       <div class="entry">
         <div class="entry-rank">12</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>LocalAI</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">Multi-Modal OpenAI Replacement · Go / C++</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Substituto universal e drop-in para toda a suíte de APIs da OpenAI. Não faz apenas chat: suporta transcrição de áudio com Whisper, geração de voz (TTS), geração de imagens com Stable Diffusion e geração de embeddings sem conexão com a internet.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 8080:8080 -v localai_models:/build/models localai/localai:latest-cpu</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~50 MB RAM (Base)<small>+ memória do modelo carregado no backend</small></div>
-              <div class="truth">
-                <p><strong>Tudo em um único binário:</strong> Elimina a necessidade de subir múltiplos microserviços diferentes para áudio, imagem e texto.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/mudler/LocalAI" target="_blank" rel="noopener">github.com/mudler/LocalAI</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~50 MB RAM (Base)<small>+ memória do modelo carregado no backend</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Multi-Modal OpenAI Replacement · Go / C++</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Tudo em um único binário:</strong> Elimina a necessidade de subir múltiplos microserviços diferentes para áudio, imagem e texto.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/mudler/LocalAI" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/mudler/LocalAI ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 13 LibreChat -->
+            <!-- 13. LibreChat -->
       <div class="entry">
         <div class="entry-rank">13</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>LibreChat</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">Advanced AI Frontend · Node.js / React</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Frontend web avançado que reproduz todas as funcionalidades do ChatGPT Plus e Claude Pro: painel de Artifacts (execução visual de HTML/React), busca na web integrada, seleção dinâmica de presets de sistema e suporte simultâneo a múltiplos backends.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 3080:3080 -v librechat_data:/app/data ghcr.io/danny-avila/librechat:latest</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~110 MB RAM<small>em repouso</small></div>
-              <div class="truth">
-                <p><strong>Artifacts livres:</strong> Renderiza código interativo lado a lado com a conversa exatamente como as plataformas comerciais pagas.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/danny-avila/LibreChat" target="_blank" rel="noopener">github.com/danny-avila/LibreChat</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~110 MB RAM<small>em repouso</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Advanced AI Frontend · Node.js / React</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Artifacts livres:</strong> Renderiza código interativo lado a lado com a conversa exatamente como as plataformas comerciais pagas.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/danny-avila/LibreChat" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/danny-avila/LibreChat ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 14 SearXNG -->
+            <!-- 14. SearXNG -->
       <div class="entry">
         <div class="entry-rank">14</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>SearXNG</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">AGPL-3.0</span>
             <span class="kind">Private Metasearch Engine · Python</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Mecanismo de metabusca livre e anônimo que consulta mais de 70 mecanismos de busca públicos sem registrar histórico de pesquisa nem perfis de usuário. Fornece saída limpa em JSON perfeita para alimentar ferramentas de pesquisa web (web search tools) em agentes de IA.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 8888:8080 -v searxng_config:/etc/searxng searxng/searxng</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~50 MB RAM<small>em repouso processando requisições em frações de segundo</small></div>
-              <div class="truth">
-                <p><strong>Imune a limites de API de busca:</strong> Permite que seus agentes pesquisem na web em tempo real sem pagar planos exorbitantes de Google Custom Search ou Bing API.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/searxng/searxng" target="_blank" rel="noopener">github.com/searxng/searxng</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~50 MB RAM<small>em repouso processando requisições em frações de segundo</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Private Metasearch Engine · Python</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Imune a limites de API de busca:</strong> Permite que seus agentes pesquisem na web em tempo real sem pagar planos exorbitantes de Google Custom Search ou Bing API.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/searxng/searxng" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/searxng/searxng ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 15 Tabby -->
+            <!-- 15. Tabby -->
       <div class="entry">
         <div class="entry-rank">15</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Tabby</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Self-Hosted Code Completion · Rust</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Servidor autônomo de autocompletion de código voltado para equipes e empresas que não podem enviar código para a nuvem. Escrito em Rust com indexação de repositório no backend para sugestões contextualmente conscientes da base interna.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 8080:8080 -v tabby_data:/data tabbyml/tabby serve --model StarCoder-1B</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~1.5 GB VRAM<small>para modelos ultra-rápidos de autocompletion de 1B parâmetros</small></div>
-              <div class="truth">
-                <p><strong>Velocidade crítica:</strong> Responde a cada pressionamento de tecla em menos de 50ms quando rodando na rede local.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/TabbyML/tabby" target="_blank" rel="noopener">github.com/TabbyML/tabby</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~1.5 GB VRAM<small>para modelos ultra-rápidos de autocompletion de 1B parâmetros</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Self-Hosted Code Completion · Rust</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Velocidade crítica:</strong> Responde a cada pressionamento de tecla em menos de 50ms quando rodando na rede local.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/TabbyML/tabby" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/TabbyML/tabby ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 16 Txtai -->
+            <!-- 16. Txtai -->
       <div class="entry">
         <div class="entry-rank">16</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Txtai</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">All-in-One Embeddings & Search · Python</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Framework modular em Python que une busca semântica, processamento de linguagem natural e grafos de conhecimento em uma arquitetura leve. Não requer dependências pesadas de infraestrutura e salva índices em arquivos portáteis.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>pip install txtai
 python -c "from txtai.embeddings import Embeddings; e = Embeddings(); e.index(['texto 1', 'texto 2'])"</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução no processo<small>baixo overhead de memória em tarefas de indexação local</small></div>
-              <div class="truth">
-                <p><strong>Minimalismo e elegância:</strong> Excelente para construir motores de busca interna e categorização automática sem orquestração pesada de containers.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/neuml/txtai" target="_blank" rel="noopener">github.com/neuml/txtai</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Execução no processo<small>baixo overhead de memória em tarefas de indexação local</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>All-in-One Embeddings & Search · Python</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Minimalismo e elegância:</strong> Excelente para construir motores de busca interna e categorização automática sem orquestração pesada de containers.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/neuml/txtai" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/neuml/txtai ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 17 Jan -->
+            <!-- 17. Jan -->
       <div class="entry">
         <div class="entry-rank">17</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Jan</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">AGPL-3.0</span>
             <span class="kind">Offline Desktop AI Engine · TypeScript / C++ / Electron</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Aplicativo desktop nativo que permite baixar, gerenciar e rodar modelos locais com 1 clique. Funciona 100% offline sem depender de conexão de rede, com motor de inferência embutido e API local compatível com OpenAI na porta 1337.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code># Baixe o executável para seu SO em jan.ai ou instale via winget/brew:
 winget install Jan.Jan</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~150 MB RAM (UI)<small>+ VRAM do modelo quando em execução</small></div>
-              <div class="truth">
-                <p><strong>Privacidade física:</strong> Todos os dados, histórico de conversas e parâmetros ficam gravados na pasta <code>~/jan</code> da sua máquina do usuário.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/janhq/jan" target="_blank" rel="noopener">github.com/janhq/jan</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~150 MB RAM (UI)<small>+ VRAM do modelo quando em execução</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Offline Desktop AI Engine · TypeScript / C++ / Electron</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Privacidade física:</strong> Todos os dados, histórico de conversas e parâmetros ficam gravados na pasta <code>~/jan</code> da sua máquina do usuário.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/janhq/jan" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/janhq/jan ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 18 Unstructured -->
+            <!-- 18. Unstructured -->
       <div class="entry">
         <div class="entry-rank">18</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Unstructured</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Document Ingestion & ETL · Python</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>A biblioteca definitiva para preparar dados brutos para pipelines de RAG. Converte e particiona PDFs escaneados, documentos do Word, apresentações PowerPoint, planilhas e e-mails em blocos semânticos limpos preservando a hierarquia de cabeçalhos e tabelas.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>pip install "unstructured[all-docs]"
 python -c "from unstructured.partition.auto import partition; elementos = partition(filename='relatorio.pdf')"</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local sob demanda<small>utiliza recursos apenas durante o processamento do documento</small></div>
-              <div class="truth">
-                <p><strong>Qualidade de RAG:</strong> O segredo de um bom RAG não é o modelo de embedding, é a qualidade do particionamento e limpeza dos dados de entrada.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/Unstructured-IO/unstructured" target="_blank" rel="noopener">github.com/Unstructured-IO/unstructured</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Execução local sob demanda<small>utiliza recursos apenas durante o processamento do documento</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Document Ingestion & ETL · Python</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Qualidade de RAG:</strong> O segredo de um bom RAG não é o modelo de embedding, é a qualidade do particionamento e limpeza dos dados de entrada.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/Unstructured-IO/unstructured" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/Unstructured-IO/unstructured ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 19 DSPy -->
+            <!-- 19. DSPy -->
       <div class="entry">
         <div class="entry-rank">19</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>DSPy</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">Algorithmic Prompt Optimization · Python (Stanford)</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Framework criado na Universidade de Stanford que substitui a engenharia de prompts manual e tentativa-e-erro por compilação algorítmica. O DSPy otimiza automaticamente as instruções e os exemplos de few-shot para maximizar métricas objetivas de avaliação.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>pip install dspy-ai
 # Declare módulos (Predict, ChainOfThought) e compile com teleprompters</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Biblioteca pura<small>zero custo em runtime após a compilação do pipeline</small></div>
-              <div class="truth">
-                <p><strong>Engenharia de software real:</strong> Trata prompts como código compilável. Se você trocar de modelo (ex: de Llama para DeepSeek), basta recompilar o pipeline.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/stanfordnlp/dspy" target="_blank" rel="noopener">github.com/stanfordnlp/dspy</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Biblioteca pura<small>zero custo em runtime após a compilação do pipeline</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Algorithmic Prompt Optimization · Python (Stanford)</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Engenharia de software real:</strong> Trata prompts como código compilável. Se você trocar de modelo (ex: de Llama para DeepSeek), basta recompilar o pipeline.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/stanfordnlp/dspy" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/stanfordnlp/dspy ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 20 CrewAI -->
+            <!-- 20. CrewAI -->
       <div class="entry">
         <div class="entry-rank">20</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>CrewAI</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">Multi-Agent Orchestration · Python</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Framework intuitivo para estruturar equipes de agentes autônomos com papéis (roles), metas (goals), histórias de fundo (backstories) e ferramentas atribuídas. Permite executar tarefas de forma sequencial ou hierárquica com delegação inteligente entre agentes.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>pip install crewai
 crewai create crew meu-projeto</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~50 MB RAM<small>processo de orquestração em Python</small></div>
-              <div class="truth">
-                <p><strong>Controle determinístico:</strong> Compatível com LiteLLM e Ollama, permitindo rodar squads agênticos inteiros 100% locais sem faturas surpresa de nuvem.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/crewAIInc/crewAI" target="_blank" rel="noopener">github.com/crewAIInc/crewAI</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~50 MB RAM<small>processo de orquestração em Python</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Multi-Agent Orchestration · Python</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Controle determinístico:</strong> Compatível com LiteLLM e Ollama, permitindo rodar squads agênticos inteiros 100% locais sem faturas surpresa de nuvem.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/crewAIInc/crewAI" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/crewAIInc/crewAI ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div></div>
   </section>

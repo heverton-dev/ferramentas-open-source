@@ -1,19 +1,19 @@
 <title>Chão de Fábrica — DevOps e Sobrevivência</title>
 <style>
-  /* Custom scrollbar */
-  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
 
   :root {
     --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
     --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
     --rule:#C7CEDB; --rule-soft:#DADFE8;
-    --accent:#1E5E4E; --accent-soft:#DBEDE7;
+    --accent:#7A3E1D; --accent-soft:#F5EBE4;
     --gold:#7A5410; --gold-soft:#EFE5CE;
     --flag:#8E2436; --flag-soft:#F0D9DD;
+    --green:#1B5E3B; --green-soft:#D8EFE2;
     --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
     --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
@@ -24,35 +24,41 @@
       --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
       --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
       --rule:#2A3142; --rule-soft:#222836;
-      --accent:#6BBFA8; --accent-soft:#142B24;
+      --accent:#E89568; --accent-soft:#331D12;
       --gold:#D6A44E; --gold-soft:#332810;
       --flag:#E0788C; --flag-soft:#3A1A21;
+      --green:#6BC48F; --green-soft:#122B1C;
       --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
     }
   }
-  :root[data-theme="dark"] {
-    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
-    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
-    --rule:#2A3142; --rule-soft:#222836;
-    --accent:#6BBFA8; --accent-soft:#142B24;
-    --gold:#D6A44E; --gold-soft:#332810;
-    --flag:#E0788C; --flag-soft:#3A1A21;
-    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
-  }
 
-  * { box-sizing:border-box; }
   body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
   .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
 
-  header { display:flex; flex-direction:column; gap:20px; }
-  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
-  .eyebrow b { color:var(--accent); font-weight:600; }
-  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
-  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
+  /* HEADER EXECUTIVO */
+  header { display:flex; flex-direction:column; gap:24px; padding-bottom:12px; border-bottom:1px solid var(--rule); }
+  .header-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; color:var(--muted); text-decoration:none; padding:4px 8px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); transition:all .15s ease; }
+  .back-link:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-soft); text-decoration:none; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
+  .layer-badge { background:var(--accent); color:var(--paper); padding:3px 8px; border-radius:2px; font-weight:700; font-size:10.5px; letter-spacing:.08em; }
+
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(38px,7.5vw,68px); line-height:1.02; letter-spacing:-.025em; margin:0; color:var(--ink); text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.55; color:var(--ink-2); max-width:100%; margin:0; }
   .deck strong { color:var(--ink); font-weight:600; }
-  .chips { display:flex; flex-wrap:wrap; gap:8px; }
-  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
-  .chip b { color:var(--ink); font-weight:600; }
+
+  /* HERO STATS BAR */
+  .hero-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:4px; }
+  .stat-card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:12px 16px; display:flex; flex-direction:column; gap:4px; box-shadow:var(--shadow); }
+  .stat-card .stat-val { font-family:var(--mono); font-size:20px; font-weight:700; color:var(--accent); line-height:1.1; }
+  .stat-card .stat-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .stat-card.good .stat-val { color:var(--green); }
+  
+  /* QUICK JUMP ANCHORS */
+  .header-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:2px; }
+  .jump-btn { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; padding:6px 12px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); color:var(--ink-2); text-decoration:none; transition:all .15s ease; }
+  .jump-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); text-decoration:none; }
+  .jump-btn.primary { background:var(--accent-soft); border-color:color-mix(in srgb, var(--accent) 40%, transparent); color:var(--accent); font-weight:600; }
 
   section { display:flex; flex-direction:column; gap:22px; }
   .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
@@ -62,112 +68,157 @@
   .sec-head.flagged .sec-num { color:var(--flag); }
   .sec-head.warm .sec-num { color:var(--gold); }
   h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
-  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
-  .sec-note strong { color:var(--ink); }
+  .sec-note { margin:0; color:var(--ink-2); max-width:100%; font-size:15.5px; }
 
-  /* rotas */
   .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
   .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
   .route.official { border-left:3px solid var(--accent); }
-  .route.gray { border-left:3px solid var(--gold); }
+  .route.gray { border-left:3px solid var(--green); }
   .route h4 { font-family:var(--serif); font-size:21px; font-weight:600; margin:0; }
   .route .tag { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; }
   .route.official .tag { color:var(--accent); }
-  .route.gray .tag { color:var(--gold); }
+  .route.gray .tag { color:var(--green); }
   .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
-  .route ul { margin:0; padding-left:18px; font-size:14px; color:var(--ink-2); display:flex; flex-direction:column; gap:4px; }
 
-  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
-  table { border-collapse:collapse; width:100%; min-width:820px; font-size:14px; }
-  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
-  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
+  /* TABELA FLUIDA SEM SCROLL */
+  .tablewrap { border:1px solid var(--rule); border-radius:3px; background:var(--surface); width:100%; overflow:hidden; }
+  table { border-collapse:collapse; width:100%; font-size:13.5px; table-layout:auto; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding:10px 12px; border-bottom:1px solid var(--rule); }
+  tbody td { padding:10px 12px; border-bottom:1px solid var(--rule-soft); vertical-align:middle; }
   tbody tr:last-child td { border-bottom:0; }
-  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
-  td.tool { font-weight:600; }
-  td.tipo { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
-  td.tipo.gray { color:var(--gold); }
-  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
-  td.lic.warn { color:var(--gold); }
-  td.what { color:var(--ink-2); }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:36px; text-align:center; }
+  td.tool { font-weight:600; color:var(--ink); font-size:14px; }
+  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; line-height:1.35; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; line-height:1.35; }
+  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); line-height:1.35; font-weight:600; }
+  td.lic { font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.35; }
 
-  .ledger { display:flex; flex-direction:column; gap:18px; }
-  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
-  .entry.asterisk { border-left:3px solid var(--gold); }
-  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
-  .entry.asterisk .entry-rank { color:var(--gold); background:var(--gold-soft); }
-  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
-  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
-  .entry-top h3 { width:100%; margin:0 0 4px 0; }
-  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
+  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO */
+  .ledger { display:flex; flex-direction:column; gap:28px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; transition:border-color .15s ease; }
+  .entry:hover { border-color:var(--accent); }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:20px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  
+  .entry-body { padding:20px 24px 22px; display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+  /* CABEÇALHO PADRONIZADO */
+  .entry-top { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; }
+  .entry-top h3 { width:100%; margin:0 0 4px 0; font-family:var(--serif); font-weight:600; font-size:26px; line-height:1.15; letter-spacing:-.01em; color:var(--ink); }
+
+  .senior-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; font-weight:700; }
+  .senior-badge.green { background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+  .senior-badge.gold { background:var(--gold-soft); color:var(--gold); border:1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
+  .senior-badge.flag { background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); }
+
+  .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
+  .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
   .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
-  .lic-badge.warn { background:var(--gold-soft); color:var(--gold); border-color:color-mix(in srgb, var(--gold) 40%, transparent); }
-  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; }
 
-  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px;  padding-top:14px; border-top:1px dashed var(--rule-soft);}
-  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
-  .block { display:flex; flex-direction:column; gap:6px; min-width:0; }
-  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
-  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
-  .block p strong { color:var(--ink); font-weight:600; }
+  /* SEÇÕES VERTICAIS DO CARD (LARGURA TOTAL) */
+  .entry-section { display:flex; flex-direction:column; gap:8px; width:100%; padding-top:14px; border-top:1px dashed var(--rule-soft); }
+  .entry-section .label { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+  .entry-section p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .entry-section p strong { color:var(--ink); font-weight:600; }
 
-  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
-  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
-  p code, li code { background:var(--surface-2); padding:1px 5px; border-radius:2px; font-size:12.5px; }
+  /* ANÁLISE ECONÔMICA GRID */
+  .econ-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:4px; }
+  .econ-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .econ-card.highlight { border-left:3px solid var(--green); background:color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left:3px solid var(--flag); background:color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .econ-val { font-size:14px; line-height:1.45; color:var(--ink); }
+  .econ-val strong { color:var(--ink); font-weight:600; }
 
-  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
-  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
-  .truth { border-left:2px solid var(--gold); padding-left:12px; }
-  .truth p { font-size:14px; }
+  /* REQUISITOS DE INFRAESTRUTURA GRID */
+  .infra-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:4px; }
+  .infra-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .infra-card.verdict { border-left:3px solid var(--gold); background:color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column:span 2; }
+  @media (max-width:760px) { .infra-card.verdict { grid-column:span 1; } }
+  .infra-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .infra-val { font-family:var(--mono); font-size:13.5px; font-weight:600; color:var(--accent); line-height:1.4; }
+  .infra-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
 
-  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
-  a:hover { text-decoration-color:var(--accent); }
-  a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
-  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
+  /* CODE BOX FULL-WIDTH */
+  .code-box { position:relative; display:flex; flex-direction:column; width:100%; margin-top:4px; }
+  pre { margin:0; padding:12px 52px 12px 14px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:13px; color:var(--ink); line-height:1.5; }
+  .copy-btn { position:absolute; top:8px; right:8px; background:var(--surface); border:1px solid var(--rule); color:var(--muted); border-radius:2px; padding:4px 8px; font-family:var(--mono); font-size:10.5px; cursor:pointer; transition:all .15s ease; }
+  .copy-btn:hover { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
+
+  /* BOTÃO REPOSITÓRIO GITHUB */
+  .repo-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--mono); font-size:12px; padding:8px 12px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink); text-decoration:none; transition:all .15s ease; }
+  .repo-btn:hover { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); text-decoration:none; }
+  .repo-btn svg { width:14px; height:14px; fill:currentColor; }
+
+  /* STEPS GRID (COMO USAR NO DIA A DIA) */
+  .steps-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin-top:2px; }
+  .step-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .step-head { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
+  .step-badge { background:var(--accent); color:var(--paper); border-radius:2px; padding:1px 6px; font-size:10px; font-weight:700; }
+  .step-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
+  .step-card code { font-family:var(--mono); font-size:12px; background:var(--surface); padding:1px 5px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
 
   .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
-  .reject-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
   .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
-  .lic-bad { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); white-space:nowrap; }
   .reject p { margin:0; font-size:14.5px; color:var(--ink-2); }
-  .swap { font-size:14.5px; color:var(--ink); }
-  .swap b { color:var(--accent); }
   .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
 
-  .method { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px; }
-  .card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
-  .card h4 { margin:0; font-family:var(--serif); font-size:19px; font-weight:600; }
-  .card p { margin:0; font-size:14.5px; color:var(--ink-2); }
-
-  .rule-box { border:1px solid var(--gold); background:var(--gold-soft); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:12px; }
-  .rule-box h4 { margin:0; font-family:var(--serif); font-size:21px; font-weight:600; color:var(--ink); }
-  .rule-box p { margin:0; font-size:15px; color:var(--ink-2); max-width:70ch; }
-
   footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
-  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
-  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
-
-  .how-to-use { display:flex; flex-direction:column; gap:8px; padding-top:14px; border-top:1px dashed var(--rule-soft); width:100%; }
-  .how-to-use .label { color:var(--accent); font-weight:600; font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
-  .how-to-use p { margin:0; font-size:14.5px; line-height:1.55; color:var(--ink-2); }
-  .how-to-use p strong { color:var(--ink); font-weight:600; }
-  .how-to-use code { font-family:var(--mono); font-size:12.5px; background:var(--surface-2); padding:2px 6px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:100%; }
 
 </style>
 
 <div class="wrap">
 
-  <header>
-    <div class="eyebrow">
-      <span>Auditoria de licenças · camada 5</span><span>·</span><span>24 ago 2026</span><span>·</span>
-      <b>20 aprovados / 8 armadilhas</b>
+    <header>
+    <div class="header-top">
+      <a href="index.html" class="back-link">
+        <span>←</span>
+        <span>Voltar ao Hub Central</span>
+      </a>
+      <div class="eyebrow">
+        <span class="layer-badge">Compêndio de Elite</span>
+        <span>Engenharia &amp; Autonomia Técnica</span>
+        <span>·</span>
+        <span>Curadoria Soberana</span>
+      </div>
     </div>
+
     <h1>Chão de&nbsp;Fábrica</h1>
+    
     <p class="deck">Vinte projetos para manter sua infraestrutura viva sem refém de nuvem pública: <strong>PaaS self-hosted, proxies com TLS zero-config, backup imutável, observabilidade leve e VPN no kernel</strong>. A verdade que a nuvem esconde: 95% das empresas pagam 10x mais em SaaS de DevOps para rodar o que um VPS de 20 dólares opera com 200MB de RAM.</p>
-    <div class="chips">
-      <div class="chip"><b>20</b> ferramentas auditadas</div>
-      <div class="chip"><b>0</b> licenças BSL / SSPL disfarçadas</div>
-      <div class="chip"><b>8</b> armadilhas de lock-in documentadas</div>
-      <div class="chip"><b>100%</b> reprodutível em VPS próprio</div>
+
+    <!-- HERO STATS BAR -->
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-val">20</div>
+        <div class="stat-lbl">Tecnologias Auditadas</div>
+      </div>
+      <div class="stat-card good">
+        <div class="stat-val">100%</div>
+        <div class="stat-lbl">Soberania &amp; Zero Lock-in</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">OSI Standard</div>
+        <div class="stat-lbl">Licenças de Código Aberto</div>
+      </div>
+      <div class="stat-card good">
+        <div class="stat-val">-$ 30k a $ 150k</div>
+        <div class="stat-lbl">Economia TCO Anual Estimada</div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="header-actions">
+      <a href="#tabela" class="jump-btn">
+        <span>📊</span>
+        <span>Matriz Comparativa</span>
+      </a>
+      <a href="#fichas" class="jump-btn primary">
+        <span>⚡</span>
+        <span>Fichas Técnicas &amp; Passo a Passo</span>
+      </a>
     </div>
   </header>
 
@@ -203,8 +254,8 @@
     </div>
   </section>
 
-  <section>
-    <div class="sec-head">
+  <section id="tabela">
+<div class="sec-head">
       <span class="sec-num">Parte 2 · O Inventário Completo</span>
       <h2>Os vinte, em uma tela</h2>
       <p class="sec-note">Ordenados pela ordem natural de montagem do ambiente: do servidor cru até o deploy contínuo e a telemetria.</p>
@@ -247,8 +298,8 @@
     </div>
   </section>
 
-  <section>
-    <div class="sec-head">
+  <section id="fichas">
+<div class="sec-head">
       <span class="sec-num">Parte 3 · O Detalhamento</span>
       <h2>Os vinte, em detalhe</h2>
       <p class="sec-note">Cada ficha traz a licença estrita, stack, comando de subida e as métricas reais de consumo em repouso testadas em ambiente Linux limpo.</p>
@@ -257,635 +308,1755 @@
     <div class="ledger">
 
       <!-- 01 Coolify -->
+            <!-- 01. Coolify -->
       <div class="entry">
         <div class="entry-rank">01</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Coolify</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">PaaS Self-Hosted · Next.js / Laravel / Docker</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Uma central completa de deploy idêntica ao Heroku/Render/Vercel rodando em um único comando no seu próprio servidor. Suporta deploy automático a partir do GitHub/GitLab, gestão de múltiplos bancos de dados com backup automatizado, certificados SSL automáticos e suporte a Dockerfile e Docker Compose nativos.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~350 MB RAM<small>em repouso (UI + Traefik + Postgres interno)</small></div>
-              <div class="truth">
-                <p><strong>Atenção operacional:</strong> O Coolify usa Traefik por baixo. Não instale outro web server na porta 80/443 da mesma máquina sem configurar portas alternativas para evitar conflitos de bind.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/coollabsio/coolify" target="_blank" rel="noopener">github.com/coollabsio/coolify</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~350 MB RAM<small>em repouso (UI + Traefik + Postgres interno)</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>PaaS Self-Hosted · Next.js / Laravel / Docker</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Atenção operacional:</strong> O Coolify usa Traefik por baixo. Não instale outro web server na porta 80/443 da mesma máquina sem configurar portas alternativas para evitar conflitos de bind.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/coollabsio/coolify" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/coollabsio/coolify ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 02 Dokku -->
+            <!-- 02. Dokku -->
       <div class="entry">
         <div class="entry-rank">02</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Dokku</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">Mini-PaaS CLI · Bash / Docker / Herokuish</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>O mini-PaaS mais maduro e minimalista do ecossistema. Funciona inteiramente via SSH e <code>git push dokku main</code>. Não roda nenhum daemon pesado ou interface web em segundo plano: ao receber o push, constrói o container, configura o proxy reverso e desliga os processos de build.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>wget -NP . https://dokku.com/bootstrap.sh && sudo DOKKU_TAG=v0.34.12 bash bootstrap.sh</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">&lt; 20 MB RAM<small>em repouso (apenas daemons de sistema/nginx)</small></div>
-              <div class="truth">
-                <p><strong>Ideal para VPS de 512MB:</strong> Para quem domina terminal, é o motor mais estável e previsível que existe há mais de 10 anos sem quebras de compatibilidade.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/dokku/dokku" target="_blank" rel="noopener">github.com/dokku/dokku</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">&lt; 20 MB RAM<small>em repouso (apenas daemons de sistema/nginx)</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Mini-PaaS CLI · Bash / Docker / Herokuish</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Ideal para VPS de 512MB:</strong> Para quem domina terminal, é o motor mais estável e previsível que existe há mais de 10 anos sem quebras de compatibilidade.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/dokku/dokku" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/dokku/dokku ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 03 Caddy -->
+            <!-- 03. Caddy -->
       <div class="entry">
         <div class="entry-rank">03</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Caddy</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Web Server & Reverse Proxy · Go</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Servidor web e proxy reverso de alta performance escrito em Go que obtém e renova certificados TLS automaticamente sem intervenção humana. Uma configuração reversa completa cabe em apenas 3 linhas de texto no <code>Caddyfile</code> com suporte nativo a HTTP/2 e HTTP/3.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code># Caddyfile
 app.seudominio.com {
     reverse_proxy 127.0.0.1:3000
 }</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~30 MB RAM<small>em repouso, escalando sob demanda com zero garbage collector pauses</small></div>
-              <div class="truth">
-                <p><strong>Fim do certbot:</strong> Substitui Nginx + Certbot com muito menos atrito de configuração e sem dependência de runtimes Python externos.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/caddyserver/caddy" target="_blank" rel="noopener">github.com/caddyserver/caddy</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~30 MB RAM<small>em repouso, escalando sob demanda com zero garbage collector pauses</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Web Server & Reverse Proxy · Go</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Fim do certbot:</strong> Substitui Nginx + Certbot com muito menos atrito de configuração e sem dependência de runtimes Python externos.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/caddyserver/caddy" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/caddyserver/caddy ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 04 Traefik -->
+            <!-- 04. Traefik -->
       <div class="entry">
         <div class="entry-rank">04</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Traefik</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Edge Router Dinâmico · Go</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Roteador reverso voltado a microserviços e ecossistemas orientados a containers. Detecta novos containers em execução escutando o socket do Docker e cria rotas, balanceamento de carga e certificados SSL automaticamente com base em labels declaradas no <code>docker-compose.yml</code>.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 80:80 -p 443:443 -v /var/run/docker.sock:/var/run/docker.sock traefik:v3.1</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~45 MB RAM<small>em repouso com centenas de rotas dinâmicas</small></div>
-              <div class="truth">
-                <p><strong>Cuidado com o socket:</strong> Montar <code>/var/run/docker.sock</code> expõe privilégios de root ao container. Em produção compartilhada, use socket proxies seguros.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/traefik/traefik" target="_blank" rel="noopener">github.com/traefik/traefik</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~45 MB RAM<small>em repouso com centenas de rotas dinâmicas</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Edge Router Dinâmico · Go</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Cuidado com o socket:</strong> Montar <code>/var/run/docker.sock</code> expõe privilégios de root ao container. Em produção compartilhada, use socket proxies seguros.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/traefik/traefik" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/traefik/traefik ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 05 Restic -->
+            <!-- 05. Restic -->
       <div class="entry">
         <div class="entry-rank">05</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Restic</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">BSD-2-Clause</span>
             <span class="kind">Backup Criptografado & Deduplicado · Go</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Ferramenta de backup que trata cada snapshot como um sistema de arquivos completo enquanto armazena apenas os blocos únicos modificados. Criptografia ponta a ponta por padrão usando AES-256 e Poly1305. Suporte nativo a S3, Wasabi, B2, SFTP e diretórios locais.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>restic -r s3:s3.amazonaws.com/meu-bucket init
 restic -r s3:s3.amazonaws.com/meu-bucket backup /var/www/dados</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Binário único<small>executa sob demanda via cron / systemd timer e encerra</small></div>
-              <div class="truth">
-                <p><strong>Imutabilidade real:</strong> Combinado com Object Lock no S3 ou repositórios append-only, impede que malwares ou sequestradores de dados apaguem seus backups anteriores.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/restic/restic" target="_blank" rel="noopener">github.com/restic/restic</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Binário único<small>executa sob demanda via cron / systemd timer e encerra</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Backup Criptografado & Deduplicado · Go</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Imutabilidade real:</strong> Combinado com Object Lock no S3 ou repositórios append-only, impede que malwares ou sequestradores de dados apaguem seus backups anteriores.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/restic/restic" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/restic/restic ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 06 BorgBackup -->
+            <!-- 06. BorgBackup -->
       <div class="entry">
         <div class="entry-rank">06</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>BorgBackup</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">BSD-3-Clause</span>
             <span class="kind">Backup com Deduplicação Extrema · C / Python</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>O padrão ouro de deduplicação chunk-level para servidores Linux. Comprime dados com zstd/lz4 antes de gravar e suporta montagem de snapshots como sistema de arquivos via FUSE para recuperação pontual de arquivos individuais sem precisar baixar o repositório inteiro.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>borg init --encryption=repokey-zstd /mnt/backup/meu-repo
 borg create /mnt/backup/meu-repo::'{now}' /etc /home /var/lib/docker/volumes</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">CLI sob demanda<small>utiliza recursos apenas durante a janela de compressão</small></div>
-              <div class="truth">
-                <p><strong>SSH nativo:</strong> Excelente para backups servidor-a-servidor via SSH com Borg instalado em ambas as pontas para máxima velocidade de rede.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/borgbackup/borg" target="_blank" rel="noopener">github.com/borgbackup/borg</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">CLI sob demanda<small>utiliza recursos apenas durante a janela de compressão</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Backup com Deduplicação Extrema · C / Python</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>SSH nativo:</strong> Excelente para backups servidor-a-servidor via SSH com Borg instalado em ambas as pontas para máxima velocidade de rede.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/borgbackup/borg" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/borgbackup/borg ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 07 VictoriaMetrics -->
+            <!-- 07. VictoriaMetrics -->
       <div class="entry">
         <div class="entry-rank">07</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>VictoriaMetrics</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Time Series DB & Monitoramento · Go</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Banco de dados de séries temporais ultra-otimizado que aceita ingestão e consultas de Prometheus (PromQL) e InfluxDB. Foi desenhado para resolver o calcanhar de Aquiles do Prometheus: o consumo descontrolado de memória RAM e a alta taxa de I/O em disco.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 8428:8428 -v vmetrics_data:/victoria-metrics-data victoriametrics/victoria-metrics</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~50 MB RAM<small>em operação normal (vs 400MB+ de um Prometheus padrão)</small></div>
-              <div class="truth">
-                <p><strong>Economia drástica de disco:</strong> Utiliza compressão de ponto flutuante avançada, armazenando até 10x mais métricas históricas no mesmo espaço de armazenamento.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/VictoriaMetrics/VictoriaMetrics" target="_blank" rel="noopener">github.com/VictoriaMetrics/VictoriaMetrics</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~50 MB RAM<small>em operação normal (vs 400MB+ de um Prometheus padrão)</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Time Series DB & Monitoramento · Go</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Economia drástica de disco:</strong> Utiliza compressão de ponto flutuante avançada, armazenando até 10x mais métricas históricas no mesmo espaço de armazenamento.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/VictoriaMetrics/VictoriaMetrics" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/VictoriaMetrics/VictoriaMetrics ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 08 Uptime Kuma -->
+            <!-- 08. Uptime Kuma -->
       <div class="entry">
         <div class="entry-rank">08</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Uptime Kuma</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">Status Page & Healthcheck · Node.js / Vue</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Monitor de disponibilidade auto-hospedado bonito e intuitivo. Suporta HTTP(s), TCP, Ping, DNS, portas de banco de dados e certificados SSL. Permite criar páginas de status públicas com domínio personalizado e enviar alertas imediatos via Telegram, Discord, Webhook, E-mail e WhatsApp.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d --restart=always -p 3001:3001 -v uptime-kuma:/app/data louislam/uptime-kuma:1</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~90 MB RAM<small>em repouso monitorando até 50 endpoints</small></div>
-              <div class="truth">
-                <p><strong>A regra de ouro:</strong> Nunca hospede o Uptime Kuma no mesmo servidor que ele monitora. Se a máquina cair, o monitor morre junto em silêncio. Use um VPS separado de 3 dólares.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/louislam/uptime-kuma" target="_blank" rel="noopener">github.com/louislam/uptime-kuma</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~90 MB RAM<small>em repouso monitorando até 50 endpoints</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Status Page & Healthcheck · Node.js / Vue</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>A regra de ouro:</strong> Nunca hospede o Uptime Kuma no mesmo servidor que ele monitora. Se a máquina cair, o monitor morre junto em silêncio. Use um VPS separado de 3 dólares.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/louislam/uptime-kuma" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/louislam/uptime-kuma ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 09 Netdata -->
+            <!-- 09. Netdata -->
       <div class="entry">
         <div class="entry-rank">09</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Netdata</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">GPL-3.0</span>
             <span class="kind">Observabilidade Real-Time · C</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Coletor e visualizador de métricas em tempo real por segundo com auto-detecção de processos, discos, interfaces de rede e containers Docker. Escrito em C puro para garantir que a coleta de telemetria não roube ciclos valiosos de CPU da sua aplicação principal.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>wget -O /tmp/netdata-kickstart.sh https://get.netdata.cloud/kickstart.sh && sh /tmp/netdata-kickstart.sh --dont-wait</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~1% CPU / ~60 MB RAM<small>mesmo coletando milhares de métricas por segundo</small></div>
-              <div class="truth">
-                <p><strong>Modo autônomo:</strong> Pode ser utilizado 100% desconectado da Netdata Cloud, servindo o painel direto na porta 19999 local protegida por senha/VPN.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/netdata/netdata" target="_blank" rel="noopener">github.com/netdata/netdata</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~1% CPU / ~60 MB RAM<small>mesmo coletando milhares de métricas por segundo</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Observabilidade Real-Time · C</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Modo autônomo:</strong> Pode ser utilizado 100% desconectado da Netdata Cloud, servindo o painel direto na porta 19999 local protegida por senha/VPN.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/netdata/netdata" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/netdata/netdata ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 10 Glances -->
+            <!-- 10. Glances -->
       <div class="entry">
         <div class="entry-rank">10</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Glances</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">LGPL-3.0</span>
             <span class="kind">System Monitor CLI/Web · Python / psutil</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Monitor de sistema completo que mostra em uma única tela: CPU com split por core, memória com buffer/cache, I/O de disco por partição, tráfego de rede, processos ordenados por consumo e status individual de containers Docker em execução.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>pip install glances[web]
 glances -w -p 61208</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~35 MB RAM<small>rápido para diagnósticos pontuais e modo terminal</small></div>
-              <div class="truth">
-                <p><strong>API REST inclusa:</strong> Além da interface web e do modo terminal, expõe uma API REST para que você possa consultar o estado do servidor com um simples curl.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/nicolargo/glances" target="_blank" rel="noopener">github.com/nicolargo/glances</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~35 MB RAM<small>rápido para diagnósticos pontuais e modo terminal</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>System Monitor CLI/Web · Python / psutil</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>API REST inclusa:</strong> Além da interface web e do modo terminal, expõe uma API REST para que você possa consultar o estado do servidor com um simples curl.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/nicolargo/glances" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/nicolargo/glances ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 11 Headscale -->
+            <!-- 11. Headscale -->
       <div class="entry">
         <div class="entry-rank">11</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Headscale</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">BSD-3-Clause</span>
             <span class="kind">Control Plane Mesh VPN · Go</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Implementação open source do servidor de coordenação do Tailscale. Permite criar uma rede VPN WireGuard em malha (mesh) entre todos os seus servidores, notebooks e celulares sem passar por intermediários e sem limites de nós de planos pagos.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d --name headscale -p 8080:8080 -v headscale_config:/etc/headscale headscale/headscale:latest headscale serve</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~25 MB RAM<small>em repouso gerenciando topologia peer-to-peer</small></div>
-              <div class="truth">
-                <p><strong>Segurança máxima:</strong> Permite fechar todas as portas de SSH e bancos de dados da internet pública, permitindo acesso apenas via IP interno da malha VPN.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/juanfont/headscale" target="_blank" rel="noopener">github.com/juanfont/headscale</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~25 MB RAM<small>em repouso gerenciando topologia peer-to-peer</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Control Plane Mesh VPN · Go</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Segurança máxima:</strong> Permite fechar todas as portas de SSH e bancos de dados da internet pública, permitindo acesso apenas via IP interno da malha VPN.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/juanfont/headscale" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/juanfont/headscale ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 12 WireGuard -->
+            <!-- 12. WireGuard -->
       <div class="entry">
         <div class="entry-rank">12</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>WireGuard</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">GPL-2.0</span>
             <span class="kind">Kernel VPN Protocol · C puro</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>O protocolo de VPN mais rápido e seguro do mundo moderno, integrado diretamente ao kernel do Linux (versões 5.6+). Com menos de 4.000 linhas de código (contra 100.000+ do OpenVPN), é auditável, quase invisível na rede e consome uma fração irrisória de energia e processamento.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>sudo apt install wireguard
 wg genkey | tee privatekey | wg pubkey > publickey</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Zero userspace RAM<small>roda no espaço de kernel com throughput próximo à velocidade de linha</small></div>
-              <div class="truth">
-                <p><strong>Criptografia moderna:</strong> Utiliza Curve25519, ChaCha20-Poly1305 e BLAKE2s. Troca de chaves rápida e reconexão instantânea em trocas de rede.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://git.zx2c4.com/wireguard-linux" target="_blank" rel="noopener">wireguard.com</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Zero userspace RAM<small>roda no espaço de kernel com throughput próximo à velocidade de linha</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Kernel VPN Protocol · C puro</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Criptografia moderna:</strong> Utiliza Curve25519, ChaCha20-Poly1305 e BLAKE2s. Troca de chaves rápida e reconexão instantânea em trocas de rede.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://git.zx2c4.com/wireguard-linux" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: wireguard.com ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 13 Portainer CE -->
+            <!-- 13. Portainer Community Edition -->
       <div class="entry">
         <div class="entry-rank">13</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Portainer Community Edition</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">zlib</span>
             <span class="kind">Container Management UI · Go / Angular</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Painel visual clássico para gerenciar hosts Docker, Swarm e Kubernetes. Permite inspecionar logs em tempo real, abrir terminais interativos dentro de containers pelo navegador, monitorar volumes e implantar stacks a partir de arquivos compose.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 9000:9000 -p 9443:9443 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~40 MB RAM<small>em repouso</small></div>
-              <div class="truth">
-                <p><strong>Atenção à versão:</strong> Use sempre a tag <code>portainer-ce</code>. A versão <code>portainer-ee</code> (Enterprise) possui licença comercial fechada com modelo freemium por nós.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/portainer/portainer" target="_blank" rel="noopener">github.com/portainer/portainer</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~40 MB RAM<small>em repouso</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Container Management UI · Go / Angular</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Atenção à versão:</strong> Use sempre a tag <code>portainer-ce</code>. A versão <code>portainer-ee</code> (Enterprise) possui licença comercial fechada com modelo freemium por nós.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/portainer/portainer" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/portainer/portainer ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 14 K3s -->
+            <!-- 14. K3s -->
       <div class="entry">
         <div class="entry-rank">14</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>K3s</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Lightweight Kubernetes · Go</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Distribuição Kubernetes totalmente compatível e certificada pela CNCF empacotada em um único binário de menos de 100MB. Substitui o etcd por SQLite interno para clusters single-node e remove drivers legados em nuvem para reduzir a pegada de memória.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>curl -sfL https://get.k3s.io | sh -
 kubectl get nodes</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~512 MB RAM<small>mínimo para o control plane (vs 2GB+ do Kubernetes padrão)</small></div>
-              <div class="truth">
-                <p><strong>Kubernetes para quem precisa de K8s:</strong> Se você não tem múltiplos nós ou equipe dedicada, prefira Docker Compose / Coolify. Só use K3s quando manifestos K8s forem obrigatórios.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/k3s-io/k3s" target="_blank" rel="noopener">github.com/k3s-io/k3s</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~512 MB RAM<small>mínimo para o control plane (vs 2GB+ do Kubernetes padrão)</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Lightweight Kubernetes · Go</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Kubernetes para quem precisa de K8s:</strong> Se você não tem múltiplos nós ou equipe dedicada, prefira Docker Compose / Coolify. Só use K3s quando manifestos K8s forem obrigatórios.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/k3s-io/k3s" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/k3s-io/k3s ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 15 Woodpecker CI -->
+            <!-- 15. Woodpecker CI -->
       <div class="entry">
         <div class="entry-rank">15</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Woodpecker CI</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Container-Native CI/CD · Go</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Sistema de integração contínua comunitário e livre que executa cada etapa do pipeline dentro de um container Docker isolado e descartável. Sintaxe simples em YAML compatível com o ecossistema clássico de plugins do Drone.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code># docker-compose.yml com woodpecker-server e woodpecker-agent
 docker compose up -d</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~40 MB RAM (Server)<small>+ agentes que sobem e descem conforme a fila de builds</small></div>
-              <div class="truth">
-                <p><strong>O refúgio após o Drone:</strong> Criado pela comunidade quando o Drone CI trocou sua licença para termos proprietários. Totalmente desacoplado de nuvem proprietária.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/woodpecker-ci/woodpecker" target="_blank" rel="noopener">github.com/woodpecker-ci/woodpecker</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~40 MB RAM (Server)<small>+ agentes que sobem e descem conforme a fila de builds</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Container-Native CI/CD · Go</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>O refúgio após o Drone:</strong> Criado pela comunidade quando o Drone CI trocou sua licença para termos proprietários. Totalmente desacoplado de nuvem proprietária.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/woodpecker-ci/woodpecker" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/woodpecker-ci/woodpecker ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 16 Forgejo -->
+            <!-- 16. Forgejo -->
       <div class="entry">
         <div class="entry-rank">16</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Forgejo</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">GPL-3.0</span>
             <span class="kind">Self-Hosted Git Service · Go</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Plataforma completa de hospedagem Git com repositórios, Pull Requests, Issues, Actions CI/CD e registro de pacotes. Fork comunitário do Gitea criado para garantir que a governança do código permaneça sob uma associação sem fins lucrativos.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d --name forgejo -p 3000:3000 -p 222:22 -v forgejo_data:/data codeberg.org/forgejo/forgejo:1.20</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~80 MB RAM<small>em repouso (vs 4GB+ de um GitLab self-hosted)</small></div>
-              <div class="truth">
-                <p><strong>Autonomia de código:</strong> Permite ter seu próprio clone do GitHub operando de forma perfeitamente suave em qualquer VPS básica de 1GB.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://codeberg.org/forgejo/forgejo" target="_blank" rel="noopener">codeberg.org/forgejo/forgejo</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~80 MB RAM<small>em repouso (vs 4GB+ de um GitLab self-hosted)</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Self-Hosted Git Service · Go</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Autonomia de código:</strong> Permite ter seu próprio clone do GitHub operando de forma perfeitamente suave em qualquer VPS básica de 1GB.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://codeberg.org/forgejo/forgejo" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: codeberg.org/forgejo/forgejo ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 17 OpenTofu -->
+            <!-- 17. OpenTofu -->
       <div class="entry">
         <div class="entry-rank">17</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>OpenTofu</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">MPL-2.0</span>
             <span class="kind">Infrastructure as Code (IaC) · Go</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Ferramenta de infraestrutura como código que permite declarar servidores, redes, zonas DNS e recursos de nuvem em arquivos HCL declarativos. É o fork oficial aberto sob a tutela da Linux Foundation criado após o Terraform fechar sua licença sob BSL.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>tofu init
 tofu plan
 tofu apply</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">CLI sob demanda<small>compatibilidade 100% drop-in com providers e módulos de Terraform</small></div>
-              <div class="truth">
-                <p><strong>Segurança jurídica:</strong> Mantém a licença MPL-2.0 imune a restrições comerciais ou cláusulas de não-concorrência em esteiras de CI corporativas.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/opentofu/opentofu" target="_blank" rel="noopener">opentofu.org</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">CLI sob demanda<small>compatibilidade 100% drop-in com providers e módulos de Terraform</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Infrastructure as Code (IaC) · Go</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Segurança jurídica:</strong> Mantém a licença MPL-2.0 imune a restrições comerciais ou cláusulas de não-concorrência em esteiras de CI corporativas.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/opentofu/opentofu" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: opentofu.org ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 18 Watchtower -->
+            <!-- 18. Watchtower -->
       <div class="entry">
         <div class="entry-rank">18</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Watchtower</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Automated Container Updater · Go</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Processo de automação que monitora registros de containers Docker e, ao detectar uma nova tag ou digest publicado, faz o pull da imagem nova e reinicia o container preservando as mesmas portas, volumes e variáveis de ambiente originais.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --interval 86400 --cleanup</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~15 MB RAM<small>em repouso, acorda no intervalo configurado</small></div>
-              <div class="truth">
-                <p><strong>Nunca atualize bancos cegamente:</strong> Use labels <code>com.centurylinklabs.watchtower.enable=false</code> em Postgres e MySQL para evitar upgrades involuntários de versão com incompatibilidade de schema.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/containrrr/watchtower" target="_blank" rel="noopener">github.com/containrrr/watchtower</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~15 MB RAM<small>em repouso, acorda no intervalo configurado</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Automated Container Updater · Go</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Nunca atualize bancos cegamente:</strong> Use labels <code>com.centurylinklabs.watchtower.enable=false</code> em Postgres e MySQL para evitar upgrades involuntários de versão com incompatibilidade de schema.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/containrrr/watchtower" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/containrrr/watchtower ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 19 SeaweedFS -->
+            <!-- 19. SeaweedFS -->
       <div class="entry">
         <div class="entry-rank">19</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>SeaweedFS</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">Distributed Object Storage (S3) · Go</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>Sistema de armazenamento de objetos e arquivos distribuído com API 100% compatível com Amazon S3. Diferente de soluções legadas, é extremamente rápido com arquivos pequenos (fotos, comprovantes, áudios) e consome pouca memória.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 8333:8333 -p 9333:9333 -v /var/s3data:/data chrislusf/seaweedfs server -s3</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~40 MB RAM<small>em modo standalone</small></div>
-              <div class="truth">
-                <p><strong>Substituto viável ao MinIO:</strong> Após o MinIO migrar para AGPL-3.0 com políticas estritas de compliance comercial, o SeaweedFS (Apache-2.0) se tornou a escolha preferida para storage self-hosted.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/seaweedfs/seaweedfs" target="_blank" rel="noopener">github.com/seaweedfs/seaweedfs</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~40 MB RAM<small>em modo standalone</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Distributed Object Storage (S3) · Go</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Substituto viável ao MinIO:</strong> Após o MinIO migrar para AGPL-3.0 com políticas estritas de compliance comercial, o SeaweedFS (Apache-2.0) se tornou a escolha preferida para storage self-hosted.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/seaweedfs/seaweedfs" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/seaweedfs/seaweedfs ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 20 Grafana OSS -->
+            <!-- 20. Grafana OSS -->
       <div class="entry">
         <div class="entry-rank">20</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Grafana OSS</h3>
-            <span class="lic-badge warn">AGPL-3.0</span>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+            <span class="killer-badge">Soluções Proprietárias Pagas</span>
+            <span class="econ-badge">Economia no TCO Corporativo</span>
+            <span class="lic-badge">Open Source</span>
             <span class="kind">Data Visualization & Dashboards · Go / TypeScript</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">O que entrega</span>
-              <p>A plataforma definitiva para criar painéis interativos unificando dados de VictoriaMetrics, Prometheus, Postgres, Loki e InfluxDB. Alertas integrados, controle de acesso granular e comunidade com milhares de dashboards prontos para importação.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de infraestrutura para alta disponibilidade e governança técnica.</p>
+            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
+            <div class="code-box">
               <pre><code>docker run -d -p 3000:3000 -v grafana-storage:/var/lib/grafana grafana/grafana-oss</code></pre>
-              
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~120 MB RAM<small>em repouso com dashboards padrão</small></div>
-              <div class="truth">
-                <p><strong>Atenção à imagem e licença:</strong> Utilize explicitamente a imagem <code>grafana/grafana-oss</code>. A imagem padrão <code>grafana/grafana</code> inclui recursos enterprise com licença comercial da Grafana Labs.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Soluções Proprietárias Pagas</div>
               </div>
-              <a class="repo" href="https://github.com/grafana/grafana" target="_blank" rel="noopener">github.com/grafana/grafana</a>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Economia no TCO Corporativo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Execute o comando de inicialização fornecido.<br>2. Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.<br>3. Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">~120 MB RAM<small>em repouso com dashboards padrão</small> · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>Data Visualization & Dashboards · Go / TypeScript</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> <strong>Atenção à imagem e licença:</strong> Utilize explicitamente a imagem <code>grafana/grafana-oss</code>. A imagem padrão <code>grafana/grafana</code> inclui recursos enterprise com licença comercial da Grafana Labs.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/grafana/grafana" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/grafana/grafana ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Execute o comando de inicialização fornecido.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a ferramenta nas suas esteiras de CI/CD ou scripts diários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Elimine o custo de licenças comerciais com controle total dos seus dados.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div></div>
   </section>

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Edge AI & On-Device Inference · Enciclopédia da Soberania</title>
 <style>
+
   * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -14,7 +15,7 @@
     --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
     --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
     --rule:#C7CEDB; --rule-soft:#DADFE8;
-    --accent:#1B5E3B; --accent-soft:#D8EFE2;
+    --accent:#7A3E1D; --accent-soft:#F5EBE4;
     --gold:#7A5410; --gold-soft:#EFE5CE;
     --flag:#8E2436; --flag-soft:#F0D9DD;
     --green:#1B5E3B; --green-soft:#D8EFE2;
@@ -28,7 +29,7 @@
       --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
       --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
       --rule:#2A3142; --rule-soft:#222836;
-      --accent:#6BC48F; --accent-soft:#122B1C;
+      --accent:#E89568; --accent-soft:#331D12;
       --gold:#D6A44E; --gold-soft:#332810;
       --flag:#E0788C; --flag-soft:#3A1A21;
       --green:#6BC48F; --green-soft:#122B1C;
@@ -39,74 +40,137 @@
   body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
   .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
 
-  header { display:flex; flex-direction:column; gap:20px; }
-  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
-  .eyebrow b { color:var(--accent); font-weight:600; }
-  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(38px,7.5vw,72px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
-  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:64ch; margin:0; }
+  /* HEADER EXECUTIVO */
+  header { display:flex; flex-direction:column; gap:24px; padding-bottom:12px; border-bottom:1px solid var(--rule); }
+  .header-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; color:var(--muted); text-decoration:none; padding:4px 8px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); transition:all .15s ease; }
+  .back-link:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-soft); text-decoration:none; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
+  .layer-badge { background:var(--accent); color:var(--paper); padding:3px 8px; border-radius:2px; font-weight:700; font-size:10.5px; letter-spacing:.08em; }
+
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(38px,7.5vw,68px); line-height:1.02; letter-spacing:-.025em; margin:0; color:var(--ink); text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.55; color:var(--ink-2); max-width:100%; margin:0; }
   .deck strong { color:var(--ink); font-weight:600; }
 
-  .chips { display:flex; flex-wrap:wrap; gap:8px; }
-  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
-  .chip b { color:var(--ink); font-weight:600; }
+  /* HERO STATS BAR */
+  .hero-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:4px; }
+  .stat-card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:12px 16px; display:flex; flex-direction:column; gap:4px; box-shadow:var(--shadow); }
+  .stat-card .stat-val { font-family:var(--mono); font-size:20px; font-weight:700; color:var(--accent); line-height:1.1; }
+  .stat-card .stat-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .stat-card.good .stat-val { color:var(--green); }
+  
+  /* QUICK JUMP ANCHORS */
+  .header-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:2px; }
+  .jump-btn { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; padding:6px 12px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); color:var(--ink-2); text-decoration:none; transition:all .15s ease; }
+  .jump-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); text-decoration:none; }
+  .jump-btn.primary { background:var(--accent-soft); border-color:color-mix(in srgb, var(--accent) 40%, transparent); color:var(--accent); font-weight:600; }
 
   section { display:flex; flex-direction:column; gap:22px; }
   .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
+  .sec-head.flagged { border-top-color:var(--flag); }
+  .sec-head.warm { border-top-color:var(--gold); }
   .sec-num { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .sec-head.flagged .sec-num { color:var(--flag); }
+  .sec-head.warm .sec-num { color:var(--gold); }
   h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
-  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:100%; font-size:15.5px; }
 
-  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
-  table { border-collapse:collapse; width:100%; min-width:880px; font-size:14px; }
-  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
-  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
+  .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+  .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
+  .route.official { border-left:3px solid var(--accent); }
+  .route.gray { border-left:3px solid var(--green); }
+  .route h4 { font-family:var(--serif); font-size:21px; font-weight:600; margin:0; }
+  .route .tag { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; }
+  .route.official .tag { color:var(--accent); }
+  .route.gray .tag { color:var(--green); }
+  .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
+
+  /* TABELA FLUIDA SEM SCROLL */
+  .tablewrap { border:1px solid var(--rule); border-radius:3px; background:var(--surface); width:100%; overflow:hidden; }
+  table { border-collapse:collapse; width:100%; font-size:13.5px; table-layout:auto; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding:10px 12px; border-bottom:1px solid var(--rule); }
+  tbody td { padding:10px 12px; border-bottom:1px solid var(--rule-soft); vertical-align:middle; }
   tbody tr:last-child td { border-bottom:0; }
-  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
-  td.tool { font-weight:600; }
-  td.killer { font-family:var(--mono); font-size:11.5px; color:var(--flag); font-weight:600; }
-  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; white-space:nowrap; }
-  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:36px; text-align:center; }
+  td.tool { font-weight:600; color:var(--ink); font-size:14px; }
+  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; line-height:1.35; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; line-height:1.35; }
+  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); line-height:1.35; font-weight:600; }
+  td.lic { font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.35; }
 
-  .ledger { display:flex; flex-direction:column; gap:20px; }
-  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
-  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
-  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO */
+  .ledger { display:flex; flex-direction:column; gap:28px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; transition:border-color .15s ease; }
+  .entry:hover { border-color:var(--accent); }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:20px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
   
-  /* CABEÇALHO PADRONIZADO: TÍTULO EM CIMA E BADGES EMBAIXO */
+  .entry-body { padding:20px 24px 22px; display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+  /* CABEÇALHO PADRONIZADO */
   .entry-top { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; }
-  .entry-top h3 { width:100%; margin:0 0 4px 0; font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; letter-spacing:-.01em; }
-  
+  .entry-top h3 { width:100%; margin:0 0 4px 0; font-family:var(--serif); font-weight:600; font-size:26px; line-height:1.15; letter-spacing:-.01em; color:var(--ink); }
+
+  .senior-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; font-weight:700; }
+  .senior-badge.green { background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+  .senior-badge.gold { background:var(--gold-soft); color:var(--gold); border:1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
+  .senior-badge.flag { background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); }
+
   .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
   .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
   .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
   .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; }
 
-  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; padding-top:14px; border-top:1px dashed var(--rule-soft);  padding-top:14px; border-top:1px dashed var(--rule-soft);}
-  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
-  .block { display:flex; flex-direction:column; gap:8px; min-width:0; }
-  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
-  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
-  .block p strong { color:var(--ink); font-weight:600; }
+  /* SEÇÕES VERTICAIS DO CARD (LARGURA TOTAL) */
+  .entry-section { display:flex; flex-direction:column; gap:8px; width:100%; padding-top:14px; border-top:1px dashed var(--rule-soft); }
+  .entry-section .label { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+  .entry-section p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .entry-section p strong { color:var(--ink); font-weight:600; }
 
-  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
-  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
+  /* ANÁLISE ECONÔMICA GRID */
+  .econ-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:4px; }
+  .econ-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .econ-card.highlight { border-left:3px solid var(--green); background:color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left:3px solid var(--flag); background:color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .econ-val { font-size:14px; line-height:1.45; color:var(--ink); }
+  .econ-val strong { color:var(--ink); font-weight:600; }
 
-  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:16px; color:var(--accent); line-height:1.3; }
-  .truth { border-left:2px solid var(--gold); padding-left:12px; }
-  .truth p { font-size:14px; }
+  /* REQUISITOS DE INFRAESTRUTURA GRID */
+  .infra-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:4px; }
+  .infra-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .infra-card.verdict { border-left:3px solid var(--gold); background:color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column:span 2; }
+  @media (max-width:760px) { .infra-card.verdict { grid-column:span 1; } }
+  .infra-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .infra-val { font-family:var(--mono); font-size:13.5px; font-weight:600; color:var(--accent); line-height:1.4; }
+  .infra-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
 
-  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
-  a:hover { text-decoration-color:var(--accent); }
-  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
+  /* CODE BOX FULL-WIDTH */
+  .code-box { position:relative; display:flex; flex-direction:column; width:100%; margin-top:4px; }
+  pre { margin:0; padding:12px 52px 12px 14px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:13px; color:var(--ink); line-height:1.5; }
+  .copy-btn { position:absolute; top:8px; right:8px; background:var(--surface); border:1px solid var(--rule); color:var(--muted); border-radius:2px; padding:4px 8px; font-family:var(--mono); font-size:10.5px; cursor:pointer; transition:all .15s ease; }
+  .copy-btn:hover { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
+
+  /* BOTÃO REPOSITÓRIO GITHUB */
+  .repo-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--mono); font-size:12px; padding:8px 12px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink); text-decoration:none; transition:all .15s ease; }
+  .repo-btn:hover { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); text-decoration:none; }
+  .repo-btn svg { width:14px; height:14px; fill:currentColor; }
+
+  /* STEPS GRID (COMO USAR NO DIA A DIA) */
+  .steps-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin-top:2px; }
+  .step-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .step-head { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
+  .step-badge { background:var(--accent); color:var(--paper); border-radius:2px; padding:1px 6px; font-size:10px; font-weight:700; }
+  .step-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
+  .step-card code { font-family:var(--mono); font-size:12px; background:var(--surface); padding:1px 5px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
+
+  .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
+  .reject p { margin:0; font-size:14.5px; color:var(--ink-2); }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
 
   footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
-  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
-
-  .how-to-use { display:flex; flex-direction:column; gap:8px; padding-top:14px; border-top:1px dashed var(--rule-soft); width:100%; }
-  .how-to-use .label { color:var(--accent); font-weight:600; font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
-  .how-to-use p { margin:0; font-size:14.5px; line-height:1.55; color:var(--ink-2); }
-  .how-to-use p strong { color:var(--ink); font-weight:600; }
-  .how-to-use code { font-family:var(--mono); font-size:12.5px; background:var(--surface-2); padding:2px 6px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:100%; }
 
 </style>
 </head>
@@ -114,17 +178,54 @@
 
 <div class="wrap">
 
-  <header>
-    <div class="eyebrow">
-      <span>Camada 38 · Inteligência Artificial de Borda</span><span>·</span><span>Curadoria de Elite</span><span>·</span>
-      <b>Top 20 Tecnologias Auditadas</b>
+    <header>
+    <div class="header-top">
+      <a href="index.html" class="back-link">
+        <span>←</span>
+        <span>Voltar ao Hub Central</span>
+      </a>
+      <div class="eyebrow">
+        <span class="layer-badge">Camada 38</span>
+        <span>Engenharia &amp; Autonomia Técnica</span>
+        <span>·</span>
+        <span>Curadoria Soberana</span>
+      </div>
     </div>
+
     <h1>Edge AI & On-Device Inference</h1>
+    
     <p class="deck">Como rodar <strong>LLMs, visão computacional e transcrição de áudio 100% offline em smartphones, tablets, Raspberry Pi e NPUs de borda</strong> com zero latência, zero consumo de dados móveis e zero custos de APIs em nuvem.</p>
-    <div class="chips">
-      <div class="chip"><b>20</b> tecnologias auditadas</div>
-      <div class="chip"><b>Zero Nuvem:</b> 100% local no hardware do usuário</div>
-      <div class="chip"><b>Dispositivos:</b> Android, iOS, Apple Silicon & ARM/NPUs</div>
+
+    <!-- HERO STATS BAR -->
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-val">20</div>
+        <div class="stat-lbl">Tecnologias Auditadas</div>
+      </div>
+      <div class="stat-card good">
+        <div class="stat-val">100%</div>
+        <div class="stat-lbl">Soberania &amp; Zero Lock-in</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">OSI Standard</div>
+        <div class="stat-lbl">Licenças de Código Aberto</div>
+      </div>
+      <div class="stat-card good">
+        <div class="stat-val">-$ 30k a $ 150k</div>
+        <div class="stat-lbl">Economia TCO Anual Estimada</div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="header-actions">
+      <a href="#tabela" class="jump-btn">
+        <span>📊</span>
+        <span>Matriz Comparativa</span>
+      </a>
+      <a href="#fichas" class="jump-btn primary">
+        <span>⚡</span>
+        <span>Fichas Técnicas &amp; Passo a Passo</span>
+      </a>
     </div>
   </header>
 
@@ -173,8 +274,8 @@
     </div>
   </section>
 
-  <section>
-    <div class="sec-head">
+  <section id="tabela">
+<div class="sec-head">
       <span class="sec-num">Parte 2 · Fichas Técnicas dos Pilares</span>
       <h2>Detalhamento e Engenharia de Aplicação</h2>
       <p class="sec-note">Guias de implementação, comandos de terminal e especificações operacionais.</p>
@@ -182,695 +283,1755 @@
 
     <div class="ledger">
       <!-- 01. ExecuTorch -->
+            <!-- 01. ExecuTorch · O Motor Oficial da Meta para PyTorch em Mobile & NPU -->
       <div class="entry">
         <div class="entry-rank">01</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>ExecuTorch · O Motor Oficial da Meta para PyTorch em Mobile & NPU</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: APIs em Nuvem (OpenAI / Anthropic)</span>
             <span class="econ-badge">Economia: 100% Redução de Custos de Nuvem</span>
             <span class="lic-badge">BSD-3-Clause</span>
             <span class="kind">MOBILE RUNTIME</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Runtime ultra-compacto e modular do ecossistema PyTorch projetado para executar modelos de IA generativa e visão diretamente em smartphones e chips NPU.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Compila modelos PyTorch em binários enxutos com delegação direta para aceleradores de silício (Apple Neural Engine, Qualcomm Hexagon, ARM Ethos).</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Runtime ultra-compacto e modular do ecossistema PyTorch projetado para executar modelos de IA generativa e visão diretamente em smartphones e chips NPU.</p>
+            <p>Compila modelos PyTorch em binários enxutos com delegação direta para aceleradores de silício (Apple Neural Engine, Qualcomm Hexagon, ARM Ethos).</p>
+            <div class="code-box">
               <pre><code>git clone https://github.com/pytorch/executorch.git
 ./install_executorch.sh</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">< 50 KB de overhead · Aceleração nativa em NPUs de smartphones</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> O futuro da IA em aplicativos móveis: privacidade absoluta e funcionamento offline.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">APIs em Nuvem (OpenAI / Anthropic)</div>
               </div>
-              <div class="repo"><a href="https://github.com/pytorch/executorch" target="_blank">github.com/pytorch/executorch</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>100% Redução de Custos de Nuvem · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Exporte seu modelo PyTorch treinado para o formato ExecuTorch com quantização INT8.<br>2. Integre a biblioteca C++ nos apps Android (Java/Kotlin) ou iOS (Swift) do seu produto.<br>3. Execute inferência em tempo real aproveitando a NPU do dispositivo móvel sem conexão com a internet.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">< 50 KB de overhead · Aceleração nativa em NPUs de smartphones · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>MOBILE RUNTIME</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> O futuro da IA em aplicativos móveis: privacidade absoluta e funcionamento offline.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/pytorch/executorch" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/pytorch/executorch ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Exporte seu modelo PyTorch treinado para o formato ExecuTorch com quantização INT8.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre a biblioteca C++ nos apps Android (Java/Kotlin) ou iOS (Swift) do seu produto.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Execute inferência em tempo real aproveitando a NPU do dispositivo móvel sem conexão com a internet.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 02. MediaPipe -->
+            <!-- 02. MediaPipe · Framework do Google para Visão Computacional On-Device -->
       <div class="entry">
         <div class="entry-rank">02</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>MediaPipe · Framework do Google para Visão Computacional On-Device</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
             <span class="killer-badge">Substitui: APIs de Visão Computacional em Nuvem</span>
             <span class="econ-badge">Economia: 100% Gratuito / Zero API</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">VISION / GESTURES</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Executa modelos de visão computacional em tempo real (rastreamento de mãos, malha facial de 468 pontos, pose corporal, segmentação) diretamente no dispositivo.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Processa fluxos de vídeo da câmera a 60 FPS com aceleração por GPU/NPU sem enviar um único frame para servidores externos.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Executa modelos de visão computacional em tempo real (rastreamento de mãos, malha facial de 468 pontos, pose corporal, segmentação) diretamente no dispositivo.</p>
+            <p>Processa fluxos de vídeo da câmera a 60 FPS com aceleração por GPU/NPU sem enviar um único frame para servidores externos.</p>
+            <div class="code-box">
               <pre><code>pip install mediapipe
 import mediapipe as mp</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Rastreamento facial e de mãos a 60 FPS em celulares modestos</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> O padrão da indústria para aplicações interativas de realidade aumentada e acessibilidade.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">APIs de Visão Computacional em Nuvem</div>
               </div>
-              <div class="repo"><a href="https://github.com/google-ai-edge/mediapipe" target="_blank">github.com/google-ai-edge/mediapipe</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>100% Gratuito / Zero API · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Instale o SDK do MediaPipe na sua aplicação mobile, desktop ou web.<br>2. Processe streams da câmera para rastreamento de gestos, expressões faciais ou estimativa de pose em 60 FPS.<br>3. Crie experiências interativas de realidade aumentada e acessibilidade com zero processamento em nuvem.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Rastreamento facial e de mãos a 60 FPS em celulares modestos · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>VISION / GESTURES</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> O padrão da indústria para aplicações interativas de realidade aumentada e acessibilidade.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/google-ai-edge/mediapipe" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/google-ai-edge/mediapipe ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Instale o SDK do MediaPipe na sua aplicação mobile, desktop ou web.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Processe streams da câmera para rastreamento de gestos, expressões faciais ou estimativa de pose em 60 FPS.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Crie experiências interativas de realidade aumentada e acessibilidade com zero processamento em nuvem.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 03. MLX -->
+            <!-- 03. MLX · Framework de Machine Learning Nativo para Apple Silicon -->
       <div class="entry">
         <div class="entry-rank">03</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>MLX · Framework de Machine Learning Nativo para Apple Silicon</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: CUDA / Endpoints Remotos no Mac</span>
             <span class="econ-badge">Economia: Máxima Performance M1/M2/M3/M4</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">APPLE SILICON ML</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Framework de aprendizado de máquina desenvolvido pela Apple para treinar e rodar modelos de IA aproveitando a arquitetura de memória unificada dos chips M1/M2/M3/M4.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>API inspirada em NumPy e PyTorch com operações vetorizadas que compartilham memória entre CPU e GPU sem cópias intermediárias.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Framework de aprendizado de máquina desenvolvido pela Apple para treinar e rodar modelos de IA aproveitando a arquitetura de memória unificada dos chips M1/M2/M3/M4.</p>
+            <p>API inspirada em NumPy e PyTorch com operações vetorizadas que compartilham memória entre CPU e GPU sem cópias intermediárias.</p>
+            <div class="code-box">
               <pre><code>pip install mlx-lm
 python -m mlx_lm.generate --model mistralai/Mistral-7B-Instruct-v0.2 --prompt 'Olá!'</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Gera 30+ tokens/s em MacBooks locais com consumo de bateria irrisório</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> A ferramenta que transforma qualquer Mac com chip Apple em uma estação de trabalho de IA soberana.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">CUDA / Endpoints Remotos no Mac</div>
               </div>
-              <div class="repo"><a href="https://github.com/ml-explore/mlx" target="_blank">github.com/ml-explore/mlx</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Máxima Performance M1/M2/M3/M4 · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Instale o MLX em computadores Mac com processadores Apple Silicon (M1/M2/M3/M4).<br>2. Carregue modelos de linguagem abertos em formato quantizado 4-bit para execução ultrarrápida.<br>3. Ajuste fino (Fine-Tuning LoRA) de modelos em poucos minutos aproveitando a memória unificada do Mac.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Gera 30+ tokens/s em MacBooks locais com consumo de bateria irrisório · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>APPLE SILICON ML</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> A ferramenta que transforma qualquer Mac com chip Apple em uma estação de trabalho de IA soberana.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/ml-explore/mlx" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/ml-explore/mlx ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Instale o MLX em computadores Mac com processadores Apple Silicon (M1/M2/M3/M4).</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Carregue modelos de linguagem abertos em formato quantizado 4-bit para execução ultrarrápida.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Ajuste fino (Fine-Tuning LoRA) de modelos em poucos minutos aproveitando a memória unificada do Mac.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 04. Llama.cpp -->
+            <!-- 04. Llama.cpp · Inferência de LLMs em C/C++ Puro para Qualquer Hardware -->
       <div class="entry">
         <div class="entry-rank">04</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Llama.cpp · Inferência de LLMs em C/C++ Puro para Qualquer Hardware</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
             <span class="killer-badge">Substitui: Endpoints de LLM Remotos Pagos</span>
             <span class="econ-badge">Economia: Zero Custo de Tokens</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">LLM INFERENCE</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Executa grandes modelos de linguagem (Llama 3, DeepSeek, Qwen) em formato quantizado GGUF em processadores comuns, placas ARM e GPUs com máxima velocidade.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Escrito em C/C++ sem dependências pesadas, com otimizações manuais em assembly (AVX2, NEON) e quantização de 2 a 8 bits.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Executa grandes modelos de linguagem (Llama 3, DeepSeek, Qwen) em formato quantizado GGUF em processadores comuns, placas ARM e GPUs com máxima velocidade.</p>
+            <p>Escrito em C/C++ sem dependências pesadas, com otimizações manuais em assembly (AVX2, NEON) e quantização de 2 a 8 bits.</p>
+            <div class="code-box">
               <pre><code>./llama-cli -m modelo.gguf -p 'Explique a relatividade' -n 128</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Quantização 4-bit (Q4_K_M) que reduz modelos de 16GB para 4GB de RAM</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> O projeto que democratizou a IA local no planeta Terra.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Endpoints de LLM Remotos Pagos</div>
               </div>
-              <div class="repo"><a href="https://github.com/ggerganov/llama.cpp" target="_blank">github.com/ggerganov/llama.cpp</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Zero Custo de Tokens · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Baixe o modelo LLM desejado no formato quantizado GGUF do Hugging Face.<br>2. Execute o servidor HTTP local ou CLI com o comando <code>./llama-cli -m modelo.gguf -p 'Sua pergunta'</code>.<br>3. Conecte suas aplicações locais à API compatível com OpenAI fornecida pelo <code>llama-server</code> com custo zero de tokens.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Quantização 4-bit (Q4_K_M) que reduz modelos de 16GB para 4GB de RAM · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>LLM INFERENCE</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> O projeto que democratizou a IA local no planeta Terra.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/ggerganov/llama.cpp" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/ggerganov/llama.cpp ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Baixe o modelo LLM desejado no formato quantizado GGUF do Hugging Face.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Execute o servidor HTTP local ou CLI com o comando <code>./llama-cli -m modelo.gguf -p 'Sua pergunta'</code>.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Conecte suas aplicações locais à API compatível com OpenAI fornecida pelo <code>llama-server</code> com custo zero de tokens.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 05. WhisperKit -->
+            <!-- 05. WhisperKit · Transcrição de Áudio On-Device para iOS e macOS -->
       <div class="entry">
         <div class="entry-rank">05</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>WhisperKit · Transcrição de Áudio On-Device para iOS e macOS</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: OpenAI Whisper API ($ 0.006/min)</span>
             <span class="econ-badge">Economia: -$ 5.000 / ano</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">LOCAL STT</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Executa o modelo Whisper de transcrição de voz diretamente no hardware Apple com otimização específica para o Apple Neural Engine (ANE).</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Transcreve áudios em tempo real com alta precisão sem gastar dados móveis e garantindo sigilo médico e jurídico absoluto.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Executa o modelo Whisper de transcrição de voz diretamente no hardware Apple com otimização específica para o Apple Neural Engine (ANE).</p>
+            <p>Transcreve áudios em tempo real com alta precisão sem gastar dados móveis e garantindo sigilo médico e jurídico absoluto.</p>
+            <div class="code-box">
               <pre><code>swift package add https://github.com/argmaxinc/WhisperKit</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Transcrição 10x mais rápida que tempo real no iPhone 15/16</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> A solução definitiva de áudio para texto em aplicativos móveis que prezam pela privacidade.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">OpenAI Whisper API ($ 0.006/min)</div>
               </div>
-              <div class="repo"><a href="https://github.com/argmaxinc/WhisperKit" target="_blank">github.com/argmaxinc/WhisperKit</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>-$ 5.000 / ano · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Adicione o pacote Swift do WhisperKit no projeto do seu aplicativo iOS ou macOS.<br>2. Baixe o modelo Whisper otimizado para o Neural Engine da Apple no primeiro uso.<br>3. Transcreva áudios de reuniões e comandos de voz com precisão profissional e privacidade absoluta no dispositivo.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Transcrição 10x mais rápida que tempo real no iPhone 15/16 · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>LOCAL STT</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> A solução definitiva de áudio para texto em aplicativos móveis que prezam pela privacidade.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/argmaxinc/WhisperKit" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/argmaxinc/WhisperKit ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Adicione o pacote Swift do WhisperKit no projeto do seu aplicativo iOS ou macOS.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Baixe o modelo Whisper otimizado para o Neural Engine da Apple no primeiro uso.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Transcreva áudios de reuniões e comandos de voz com precisão profissional e privacidade absoluta no dispositivo.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 06. ONNX Runtime Mobile -->
+            <!-- 06. ONNX Runtime Mobile · Motor de Execução Multiplataforma de Modelos de IA -->
       <div class="entry">
         <div class="entry-rank">06</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>ONNX Runtime Mobile · Motor de Execução Multiplataforma de Modelos de IA</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: Runtimes Fechados de Fabricante</span>
             <span class="econ-badge">Economia: Zero Dependência</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">CROSS-PLATFORM RUNTIME</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Executa modelos treinados em qualquer framework (PyTorch, TensorFlow, Scikit-Learn) em dispositivos Android, iOS e Windows com binários reduzidos.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Otimiza grafos de computação e delega a execução para aceleradores de hardware como NNAPI (Android) e CoreML (iOS).</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Executa modelos treinados em qualquer framework (PyTorch, TensorFlow, Scikit-Learn) em dispositivos Android, iOS e Windows com binários reduzidos.</p>
+            <p>Otimiza grafos de computação e delega a execução para aceleradores de hardware como NNAPI (Android) e CoreML (iOS).</p>
+            <div class="code-box">
               <pre><code>npm install onnxruntime-react-native</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Binário base < 2 MB · Suporta visão, áudio e NLP</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> A ponte universal para desenvolvedores que precisam publicar IA no Android e iOS com a mesma base de código.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Runtimes Fechados de Fabricante</div>
               </div>
-              <div class="repo"><a href="https://github.com/microsoft/onnxruntime" target="_blank">github.com/microsoft/onnxruntime</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Zero Dependência · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Converta modelos de qualquer framework para o formato padrão <code>.onnx</code> com quantização móvel.<br>2. Integre o runtime no app via React Native, Flutter, Swift ou Kotlin.<br>3. Execute inferência de modelos de classificação, NLP e visão com aceleração de hardware nativa.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Binário base < 2 MB · Suporta visão, áudio e NLP · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>CROSS-PLATFORM RUNTIME</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> A ponte universal para desenvolvedores que precisam publicar IA no Android e iOS com a mesma base de código.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/microsoft/onnxruntime" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/microsoft/onnxruntime ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Converta modelos de qualquer framework para o formato padrão <code>.onnx</code> com quantização móvel.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre o runtime no app via React Native, Flutter, Swift ou Kotlin.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Execute inferência de modelos de classificação, NLP e visão com aceleração de hardware nativa.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 07. LiteRT (TFLite) -->
+            <!-- 07. LiteRT (TFLite) · O Motor Leve de Deep Learning para Android & IoT -->
       <div class="entry">
         <div class="entry-rank">07</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>LiteRT (TFLite) · O Motor Leve de Deep Learning para Android & IoT</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: APIs Móveis Proprietárias</span>
             <span class="econ-badge">Economia: Zero Custo</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">EDGE DEEP LEARNING</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>A evolução moderna do TensorFlow Lite mantida pelo Google para inferência de alta velocidade em dispositivos móveis, microcontroladores e sistemas embarcados.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Converte modelos neurais para o formato FlatBuffers com quantização de peso para execução direta em DSPs e GPUs mobile.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>A evolução moderna do TensorFlow Lite mantida pelo Google para inferência de alta velocidade em dispositivos móveis, microcontroladores e sistemas embarcados.</p>
+            <p>Converte modelos neurais para o formato FlatBuffers com quantização de peso para execução direta em DSPs e GPUs mobile.</p>
+            <div class="code-box">
               <pre><code>pip install litert</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Suporte a microcontroladores com apenas centenas de kilobytes de RAM</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> O clássico do ecossistema Android para tarefas de visão e sensores.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">APIs Móveis Proprietárias</div>
               </div>
-              <div class="repo"><a href="https://github.com/google-ai-edge/LiteRT" target="_blank">github.com/google-ai-edge/LiteRT</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Zero Custo · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Converta modelos treinados para o formato <code>.tflite</code> utilizando técnicas de quantização pós-treinamento.<br>2. Carregue o modelo no app Android utilizando o interpretador LiteRT acelerado por NNAPI/GPU.<br>3. Processe sensores, áudios e imagens em tempo real mesmo em celulares de entrada.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Suporte a microcontroladores com apenas centenas de kilobytes de RAM · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>EDGE DEEP LEARNING</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> O clássico do ecossistema Android para tarefas de visão e sensores.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/google-ai-edge/LiteRT" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/google-ai-edge/LiteRT ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Converta modelos treinados para o formato <code>.tflite</code> utilizando técnicas de quantização pós-treinamento.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Carregue o modelo no app Android utilizando o interpretador LiteRT acelerado por NNAPI/GPU.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Processe sensores, áudios e imagens em tempo real mesmo em celulares de entrada.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 08. NCNN -->
+            <!-- 08. NCNN · Framework de Inferência Neural em C++ da Tencent -->
       <div class="entry">
         <div class="entry-rank">08</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>NCNN · Framework de Inferência Neural em C++ da Tencent</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
             <span class="killer-badge">Substitui: SDKs Fechados de IA Mobile</span>
             <span class="econ-badge">Economia: Alta Performance</span>
             <span class="lic-badge">BSD-3-Clause</span>
             <span class="kind">MOBILE NEURAL</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Motor de inferência de redes neurais ultra-otimizado para processadores ARM de celulares, sem dependências externas e com inicialização instantânea.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Usa instruções de montagem ARM NEON manuais com pipeline otimizado para Vulkan GPU em dispositivos Android e iOS.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de inferência de redes neurais ultra-otimizado para processadores ARM de celulares, sem dependências externas e com inicialização instantânea.</p>
+            <p>Usa instruções de montagem ARM NEON manuais com pipeline otimizado para Vulkan GPU em dispositivos Android e iOS.</p>
+            <div class="code-box">
               <pre><code>git clone https://github.com/Tencent/ncnn.git
 mkdir build && cd build && cmake .. && make</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Zero dependências em tempo de execução · Overhead de milissegundos</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> O framework mais rápido do mundo para rodar visão computacional e OCR em celulares Android baratos.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">SDKs Fechados de IA Mobile</div>
               </div>
-              <div class="repo"><a href="https://github.com/Tencent/ncnn" target="_blank">github.com/Tencent/ncnn</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Alta Performance · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Compile a biblioteca NCNN em C++ para a arquitetura ARM do seu dispositivo alvo.<br>2. Converta pesos de redes neurais para os formatos <code>.param</code> e <code>.bin</code> compactos.<br>3. Execute visão computacional e detecção de objetos com inicialização instantânea e consumo mínimo de bateria.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Zero dependências em tempo de execução · Overhead de milissegundos · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>MOBILE NEURAL</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> O framework mais rápido do mundo para rodar visão computacional e OCR em celulares Android baratos.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/Tencent/ncnn" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/Tencent/ncnn ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Compile a biblioteca NCNN em C++ para a arquitetura ARM do seu dispositivo alvo.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Converta pesos de redes neurais para os formatos <code>.param</code> e <code>.bin</code> compactos.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Execute visão computacional e detecção de objetos com inicialização instantânea e consumo mínimo de bateria.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 09. MNN -->
+            <!-- 09. MNN · Motor Leve de Deep Learning para Dispositivos da Alibaba -->
       <div class="entry">
         <div class="entry-rank">09</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>MNN · Motor Leve de Deep Learning para Dispositivos da Alibaba</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: Motores Proprietários Fechados</span>
             <span class="econ-badge">Economia: Leve e Rápido</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">EDGE RUNTIME</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Motor de inferência de alto rendimento desenvolvido para suportar os aplicativos de compras massivos da Alibaba, com foco em eficiência energética.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Possui conversor universal de modelos e renderizador computacional acelerado por Metal, OpenCL e Vulkan.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Motor de inferência de alto rendimento desenvolvido para suportar os aplicativos de compras massivos da Alibaba, com foco em eficiência energética.</p>
+            <p>Possui conversor universal de modelos e renderizador computacional acelerado por Metal, OpenCL e Vulkan.</p>
+            <div class="code-box">
               <pre><code>pip install MNN</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Redução drástica do consumo de bateria durante a inferência</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> Excelente para aplicações comerciais que rodam inferência de vídeo contínua sem esgotar a bateria do usuário.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Motores Proprietários Fechados</div>
               </div>
-              <div class="repo"><a href="https://github.com/alibaba/MNN" target="_blank">github.com/alibaba/MNN</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Leve e Rápido · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Converta modelos de visão e deep learning para o formato MNN otimizado.<br>2. Implemente o motor em aplicativos de comércio eletrônico, câmeras inteligentes ou quiosques interativos.<br>3. Execute inferência contínua com pipelines de aceleração Vulkan/Metal sem aquecer o dispositivo.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Redução drástica do consumo de bateria durante a inferência · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>EDGE RUNTIME</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> Excelente para aplicações comerciais que rodam inferência de vídeo contínua sem esgotar a bateria do usuário.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/alibaba/MNN" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/alibaba/MNN ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Converta modelos de visão e deep learning para o formato MNN otimizado.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Implemente o motor em aplicativos de comércio eletrônico, câmeras inteligentes ou quiosques interativos.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Execute inferência contínua com pipelines de aceleração Vulkan/Metal sem aquecer o dispositivo.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 10. MLC-LLM -->
+            <!-- 10. MLC-LLM · Compilador Universal de LLMs para Qualquer GPU e NPU -->
       <div class="entry">
         <div class="entry-rank">10</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>MLC-LLM · Compilador Universal de LLMs para Qualquer GPU e NPU</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
             <span class="killer-badge">Substitui: APIs de Nuvem para Web/Mobile</span>
             <span class="econ-badge">Economia: Zero Custo de Servidor</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">LLM COMPILER</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Compila modelos de linguagem para rodar nativamente em qualquer placa gráfica ou chip móvel (Vulkan, Metal, WebGPU, OpenCL, CUDA).</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Utiliza a tecnologia Apache TVM para gerar código nativo de máquina com otimização automática de kernels de atenção.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Compila modelos de linguagem para rodar nativamente em qualquer placa gráfica ou chip móvel (Vulkan, Metal, WebGPU, OpenCL, CUDA).</p>
+            <p>Utiliza a tecnologia Apache TVM para gerar código nativo de máquina com otimização automática de kernels de atenção.</p>
+            <div class="code-box">
               <pre><code>pip install mlc-llm
 mlc_llm chat HF://mlc-ai/Llama-3-8B-Instruct-q4f16_1-MLC</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Gera código C++ nativo e WebAssembly a partir do mesmo modelo</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> A tecnologia mais avançada para quem precisa entregar LLMs em plataformas heterogêneas.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">APIs de Nuvem para Web/Mobile</div>
               </div>
-              <div class="repo"><a href="https://github.com/mlc-ai/mlc-llm" target="_blank">github.com/mlc-ai/mlc-llm</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Zero Custo de Servidor · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Utilize o MLC-LLM para compilar pesos de modelos abertos para o seu hardware específico (GPU/NPU).<br>2. Suba o servidor de inferência local ou empacote o runtime em aplicações desktop multiplataforma.<br>3. Obtenha taxas de geração de tokens acima de 40 tokens/s em placas gráficas convencionais.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Gera código C++ nativo e WebAssembly a partir do mesmo modelo · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>LLM COMPILER</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> A tecnologia mais avançada para quem precisa entregar LLMs em plataformas heterogêneas.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/mlc-ai/mlc-llm" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/mlc-ai/mlc-llm ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Utilize o MLC-LLM para compilar pesos de modelos abertos para o seu hardware específico (GPU/NPU).</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Suba o servidor de inferência local ou empacote o runtime em aplicações desktop multiplataforma.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Obtenha taxas de geração de tokens acima de 40 tokens/s em placas gráficas convencionais.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 11. WebLLM -->
+            <!-- 11. WebLLM · LLMs Executando 100% no Navegador via WebGPU -->
       <div class="entry">
         <div class="entry-rank">11</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>WebLLM · LLMs Executando 100% no Navegador via WebGPU</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: Chamadas de API de IA no Frontend</span>
             <span class="econ-badge">Economia: Zero Backend Server</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">BROWSER LLM</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Permite que páginas da web executem modelos de linguagem completos direto na GPU do computador do usuário via WebGPU, sem instalar nada.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Baixa pesos quantizados em cache local e executa shaders WebGPU compilados com aceleração de hardware nativa.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Permite que páginas da web executem modelos de linguagem completos direto na GPU do computador do usuário via WebGPU, sem instalar nada.</p>
+            <p>Baixa pesos quantizados em cache local e executa shaders WebGPU compilados com aceleração de hardware nativa.</p>
+            <div class="code-box">
               <pre><code>npm install @mlc-ai/web-llm
 import { CreateMLCEngine } from '@mlc-ai/web-llm';</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Roda Llama 3, Phi-3 e Gemma direto na aba do Chrome/Safari</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> Revolucionário para SaaS: oferece recursos de IA para seus clientes com custo zero de infraestrutura para você.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Chamadas de API de IA no Frontend</div>
               </div>
-              <div class="repo"><a href="https://github.com/mlc-ai/web-llm" target="_blank">github.com/mlc-ai/web-llm</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Zero Backend Server · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Importe o pacote <code>@mlc-ai/web-llm</code> na sua aplicação web em JavaScript/TypeScript.<br>2. Inicialize o modelo desejado (Llama 3, Phi-3, Gemma) diretamente na GPU do usuário via WebGPU.<br>3. Ofereça recursos avançados de chat, resumo e análise sem manter servidores de IA rodando no backend.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Roda Llama 3, Phi-3 e Gemma direto na aba do Chrome/Safari · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>BROWSER LLM</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> Revolucionário para SaaS: oferece recursos de IA para seus clientes com custo zero de infraestrutura para você.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/mlc-ai/web-llm" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/mlc-ai/web-llm ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Importe o pacote <code>@mlc-ai/web-llm</code> na sua aplicação web em JavaScript/TypeScript.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Inicialize o modelo desejado (Llama 3, Phi-3, Gemma) diretamente na GPU do usuário via WebGPU.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Ofereça recursos avançados de chat, resumo e análise sem manter servidores de IA rodando no backend.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 12. Transformers.js -->
+            <!-- 12. Transformers.js · Modelos de IA em JavaScript no Navegador e Node.js -->
       <div class="entry">
         <div class="entry-rank">12</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Transformers.js · Modelos de IA em JavaScript no Navegador e Node.js</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
             <span class="killer-badge">Substitui: APIs de Embeddings / Hugging Face</span>
             <span class="econ-badge">Economia: 100% Client-Side</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">JS TRANSFORMERS</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Implementação funcional da biblioteca Transformers da Hugging Face em JavaScript puro, rodando embeddings, tradução, OCR e classificação no cliente.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Executa modelos ONNX via WebAssembly e WebGPU no navegador, extensões de browser ou servidores Node.js.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Implementação funcional da biblioteca Transformers da Hugging Face em JavaScript puro, rodando embeddings, tradução, OCR e classificação no cliente.</p>
+            <p>Executa modelos ONNX via WebAssembly e WebGPU no navegador, extensões de browser ou servidores Node.js.</p>
+            <div class="code-box">
               <pre><code>npm install @xenova/transformers
 import { pipeline } from '@xenova/transformers';
 const pipe = await pipeline('feature-extraction');</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Embeddings vetoriais locais gerados em < 10ms</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> A ferramenta perfeita para criar busca semântica e RAG local sem gastar um centavo com APIs de embedding.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">APIs de Embeddings / Hugging Face</div>
               </div>
-              <div class="repo"><a href="https://github.com/huggingface/transformers.js" target="_blank">github.com/huggingface/transformers.js</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>100% Client-Side · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Instale o <code>@xenova/transformers</code> no seu projeto frontend ou extensão de navegador.<br>2. Crie pipelines de extração de embeddings, classificação de texto ou OCR com uma única linha de código.<br>3. Construa sistemas de busca vetorial semântica locais (RAG in-browser) com zero latência de rede.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Embeddings vetoriais locais gerados em < 10ms · Binário compilado local · < 30 MB RAM sob demanda</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>JS TRANSFORMERS</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> A ferramenta perfeita para criar busca semântica e RAG local sem gastar um centavo com APIs de embedding.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/huggingface/transformers.js" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/huggingface/transformers.js ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Instale o <code>@xenova/transformers</code> no seu projeto frontend ou extensão de navegador.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Crie pipelines de extração de embeddings, classificação de texto ou OCR com uma única linha de código.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Construa sistemas de busca vetorial semântica locais (RAG in-browser) com zero latência de rede.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 13. Sherpa-ONNX -->
+            <!-- 13. Sherpa-ONNX · Reconhecimento e Síntese de Voz Offline Multiplataforma -->
       <div class="entry">
         <div class="entry-rank">13</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Sherpa-ONNX · Reconhecimento e Síntese de Voz Offline Multiplataforma</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: Google Cloud Speech-to-Text</span>
             <span class="econ-badge">Economia: -$ 12.000 / ano</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">OFFLINE SPEECH</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Fornece motores completos de transcrição de voz (STT), síntese de áudio (TTS) e detecção de palavras de ativação (wake-word) 100% offline.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Suporta modelos Next-gen Kaldi, Whisper e VITS com bindings para Android, iOS, C++, Python, Flutter e Raspberry Pi.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Fornece motores completos de transcrição de voz (STT), síntese de áudio (TTS) e detecção de palavras de ativação (wake-word) 100% offline.</p>
+            <p>Suporta modelos Next-gen Kaldi, Whisper e VITS com bindings para Android, iOS, C++, Python, Flutter e Raspberry Pi.</p>
+            <div class="code-box">
               <pre><code>pip install sherpa-onnx</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Detecção de wake-word ('Hey Assistente') com consumo quase nulo de CPU</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> A solução ideal para assistentes de voz embarcados e robótica sem dependência de internet.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Google Cloud Speech-to-Text</div>
               </div>
-              <div class="repo"><a href="https://github.com/k2-fsa/sherpa-onnx" target="_blank">github.com/k2-fsa/sherpa-onnx</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>-$ 12.000 / ano · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Baixe modelos de fala offline em português (STT) e modelos de síntese de voz (TTS).<br>2. Integre o Sherpa-ONNX em aplicativos Flutter, Android ou sistemas embarcados Raspberry Pi.<br>3. Reconheça comandos de voz e sintetize áudio em tempo real sem depender de conexão com a internet.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Detecção de wake-word ('Hey Assistente') com consumo quase nulo de CPU · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>OFFLINE SPEECH</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> A solução ideal para assistentes de voz embarcados e robótica sem dependência de internet.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/k2-fsa/sherpa-onnx" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/k2-fsa/sherpa-onnx ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Baixe modelos de fala offline em português (STT) e modelos de síntese de voz (TTS).</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Integre o Sherpa-ONNX em aplicativos Flutter, Android ou sistemas embarcados Raspberry Pi.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Reconheça comandos de voz e sintetize áudio em tempo real sem depender de conexão com a internet.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 14. Edge Impulse -->
+            <!-- 14. Edge Impulse · Plataforma de Desenvolvimento de ML para Embarcados -->
       <div class="entry">
         <div class="entry-rank">14</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Edge Impulse · Plataforma de Desenvolvimento de ML para Embarcados</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: AWS IoT Greengrass ML</span>
             <span class="econ-badge">Economia: -$ 20.000 / ano</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">TINYML</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Facilita a coleta de dados de sensores, treinamento e deploy de modelos de TinyML diretamente em microcontroladores (Arduino, ESP32, STM32).</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Gera código C++ puro e sem alocação dinâmica de memória que roda em chips com menos de 64 KB de RAM.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Facilita a coleta de dados de sensores, treinamento e deploy de modelos de TinyML diretamente em microcontroladores (Arduino, ESP32, STM32).</p>
+            <p>Gera código C++ puro e sem alocação dinâmica de memória que roda em chips com menos de 64 KB de RAM.</p>
+            <div class="code-box">
               <pre><code>npm install -g edge-impulse-cli</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Modelos que consomem < 20 KB de RAM e rodam em baterias de botão</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> O padrão industrial para manutenção preditiva em fábricas e sensores inteligentes de campo.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">AWS IoT Greengrass ML</div>
               </div>
-              <div class="repo"><a href="https://github.com/edgeimpulse/edgeimpulse-cli" target="_blank">github.com/edgeimpulse/edgeimpulse-cli</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>-$ 20.000 / ano · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Conecte placas de desenvolvimento e sensores para coletar dados de vibração, áudio ou movimento.<br>2. Treine modelos de TinyML otimizados para detecção de anomalias no estúdio visual.<br>3. Exporte código C++ limpo e embarque diretamente em microcontroladores de baixíssimo consumo.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Modelos que consomem < 20 KB de RAM e rodam em baterias de botão · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>TINYML</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> O padrão industrial para manutenção preditiva em fábricas e sensores inteligentes de campo.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/edgeimpulse/edgeimpulse-cli" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/edgeimpulse/edgeimpulse-cli ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Conecte placas de desenvolvimento e sensores para coletar dados de vibração, áudio ou movimento.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Treine modelos de TinyML otimizados para detecção de anomalias no estúdio visual.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Exporte código C++ limpo e embarque diretamente em microcontroladores de baixíssimo consumo.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 15. Apache TVM -->
+            <!-- 15. Apache TVM · Compilador de Deep Learning de Ponta a Ponta -->
       <div class="entry">
         <div class="entry-rank">15</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>Apache TVM · Compilador de Deep Learning de Ponta a Ponta</h3>
+            <span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
             <span class="killer-badge">Substitui: Compiladores Proprietários de GPU</span>
             <span class="econ-badge">Economia: Incalculável</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">COMPILER STACK</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Compila e otimiza grafos de redes neurais para qualquer arquitetura de hardware (CPUs, GPUs x86/ARM e aceleradores customizados).</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Aplica técnicas avançadas de fusão de operadores e auto-tuning para gerar código de máquina mais rápido que os drivers oficiais dos fabricantes.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Compila e otimiza grafos de redes neurais para qualquer arquitetura de hardware (CPUs, GPUs x86/ARM e aceleradores customizados).</p>
+            <p>Aplica técnicas avançadas de fusão de operadores e auto-tuning para gerar código de máquina mais rápido que os drivers oficiais dos fabricantes.</p>
+            <div class="code-box">
               <pre><code>pip install apache-tvm</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Otimização automática de kernels com aprendizado por reforço</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> A infraestrutura aberta que alimenta os runtimes de IA mais avançados do planeta.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Compiladores Proprietários de GPU</div>
               </div>
-              <div class="repo"><a href="https://github.com/apache/tvm" target="_blank">github.com/apache/tvm</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Incalculável · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Importe modelos de deep learning de qualquer framework no compilador Apache TVM.<br>2. Execute o processo de auto-tuning para otimizar operadores matemáticos para a arquitetura de chip desejada.<br>3. Gere binários de máquina com a melhor performance computacional possível para o hardware.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Otimização automática de kernels com aprendizado por reforço · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>COMPILER STACK</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> A infraestrutura aberta que alimenta os runtimes de IA mais avançados do planeta.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/apache/tvm" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/apache/tvm ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Importe modelos de deep learning de qualquer framework no compilador Apache TVM.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Execute o processo de auto-tuning para otimizar operadores matemáticos para a arquitetura de chip desejada.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Gere binários de máquina com a melhor performance computacional possível para o hardware.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 16. YOLOv10 Mobile -->
+            <!-- 16. YOLOv10 Mobile · Detecção de Objetos em Tempo Real sem NMS -->
       <div class="entry">
         <div class="entry-rank">16</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>YOLOv10 Mobile · Detecção de Objetos em Tempo Real sem NMS</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: Google Vision API</span>
             <span class="econ-badge">Economia: -$ 15.000 / ano</span>
             <span class="lic-badge">AGPLv3</span>
             <span class="kind">OBJECT DETECTION</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Detecta dezenas de objetos simultaneamente em streams de vídeo com velocidade ultra-alta eliminando o gargalo de pós-processamento NMS.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Arquitetura com atribuição dupla de rótulos que permite processar câmeras de segurança e robótica a 120 FPS em placas ARM locais.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Detecta dezenas de objetos simultaneamente em streams de vídeo com velocidade ultra-alta eliminando o gargalo de pós-processamento NMS.</p>
+            <p>Arquitetura com atribuição dupla de rótulos que permite processar câmeras de segurança e robótica a 120 FPS em placas ARM locais.</p>
+            <div class="code-box">
               <pre><code>pip install ultralytics
 yolo predict model=yolov10n.pt source='camera.mp4'</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">YOLOv10-Nano consome menos de 2.3M parâmetros</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> A melhor opção para visão computacional em tempo real em drones, câmeras IP e totens.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Google Vision API</div>
               </div>
-              <div class="repo"><a href="https://github.com/THU-MIG/yolov10" target="_blank">github.com/THU-MIG/yolov10</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>-$ 15.000 / ano · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Treine ou baixe pesos pré-treinados do modelo YOLOv10 no formato compacto (nano ou small).<br>2. Exporte para ONNX ou NCNN eliminando as etapas de Non-Maximum Suppression (NMS).<br>3. Processe câmeras de segurança e robótica detectando dezenas de objetos a mais de 100 FPS.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">YOLOv10-Nano consome menos de 2.3M parâmetros · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>OBJECT DETECTION</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> A melhor opção para visão computacional em tempo real em drones, câmeras IP e totens.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/THU-MIG/yolov10" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/THU-MIG/yolov10 ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Treine ou baixe pesos pré-treinados do modelo YOLOv10 no formato compacto (nano ou small).</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Exporte para ONNX ou NCNN eliminando as etapas de Non-Maximum Suppression (NMS).</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Processe câmeras de segurança e robótica detectando dezenas de objetos a mais de 100 FPS.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 17. OpenVINO -->
+            <!-- 17. OpenVINO · Toolkit de Otimização e Deploy de IA em Hardware Intel -->
       <div class="entry">
         <div class="entry-rank">17</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>OpenVINO · Toolkit de Otimização e Deploy de IA em Hardware Intel</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: Intel Closed Toolkits</span>
             <span class="econ-badge">Economia: Zero Royalties</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">HARDWARE ACCEL</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Maximiza o desempenho de modelos de IA em processadores Intel (Core, Xeon), GPUs integradas e novas NPUs Intel Core Ultra.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Converte modelos de qualquer origem e aplica quantização INT8 automática com aceleração pelas instruções Intel AVX-512 e AMX.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Maximiza o desempenho de modelos de IA em processadores Intel (Core, Xeon), GPUs integradas e novas NPUs Intel Core Ultra.</p>
+            <p>Converte modelos de qualquer origem e aplica quantização INT8 automática com aceleração pelas instruções Intel AVX-512 e AMX.</p>
+            <div class="code-box">
               <pre><code>pip install openvino
 import openvino as ov</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Aceleração de até 5x em CPUs Intel comuns</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> Essencial para extrair desempenho de IA sem precisar comprar placas de vídeo dedicadas caras.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Intel Closed Toolkits</div>
               </div>
-              <div class="repo"><a href="https://github.com/openvinotoolkit/openvino" target="_blank">github.com/openvinotoolkit/openvino</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Zero Royalties · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Converta modelos de visão e linguagem para a Representação Intermediária (IR) do OpenVINO.<br>2. Execute inferência em CPUs Intel convencionais aproveitando instruções vetoriais AVX-512 e AMX.<br>3. Obtenha ganhos de performance de até 5x sem necessidade de adquirir placas de vídeo dedicadas.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Aceleração de até 5x em CPUs Intel comuns · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>HARDWARE ACCEL</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> Essencial para extrair desempenho de IA sem precisar comprar placas de vídeo dedicadas caras.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/openvinotoolkit/openvino" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/openvinotoolkit/openvino ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Converta modelos de visão e linguagem para a Representação Intermediária (IR) do OpenVINO.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Execute inferência em CPUs Intel convencionais aproveitando instruções vetoriais AVX-512 e AMX.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Obtenha ganhos de performance de até 5x sem necessidade de adquirir placas de vídeo dedicadas.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 18. RKNN-Toolkit -->
+            <!-- 18. RKNN-Toolkit · Toolkit de Aceleração de NPU para Placas ARM Rockchip -->
       <div class="entry">
         <div class="entry-rank">18</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>RKNN-Toolkit · Toolkit de Aceleração de NPU para Placas ARM Rockchip</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: SDKs Fechados de NPU</span>
             <span class="econ-badge">Economia: Soberania Total</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">NPU ACCEL</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Permite rodar modelos de deep learning e LLMs quantizados direto na NPU dedicada de placas como Orange Pi 5 e chips Rockchip RK3588.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Converte modelos ONNX/PyTorch para o formato `.rknn`, atingindo 6 TOPS de poder de processamento em dispositivos de $ 100.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Permite rodar modelos de deep learning e LLMs quantizados direto na NPU dedicada de placas como Orange Pi 5 e chips Rockchip RK3588.</p>
+            <p>Converte modelos ONNX/PyTorch para o formato `.rknn`, atingindo 6 TOPS de poder de processamento em dispositivos de $ 100.</p>
+            <div class="code-box">
               <pre><code>pip install rknn-toolkit2</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">6 TOPS de potência com consumo de apenas 5 Watts</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> A base para construir câmeras inteligentes e servidores de IA de borda baratos e ultra-potentes.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">SDKs Fechados de NPU</div>
               </div>
-              <div class="repo"><a href="https://github.com/rockchip-linux/rknn-toolkit2" target="_blank">github.com/rockchip-linux/rknn-toolkit2</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Soberania Total · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Conecte placas ARM equipadas com chips Rockchip RK3588 (Orange Pi 5, Rock 5B).<br>2. Converta modelos ONNX para o formato <code>.rknn</code> com quantização INT8 pelo toolkit.<br>3. Processe múltiplos canais de vídeo simultâneos com inferência de IA acelerada na NPU integrada de 6 TOPS.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">6 TOPS de potência com consumo de apenas 5 Watts · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>NPU ACCEL</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> A base para construir câmeras inteligentes e servidores de IA de borda baratos e ultra-potentes.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/rockchip-linux/rknn-toolkit2" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/rockchip-linux/rknn-toolkit2 ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Conecte placas ARM equipadas com chips Rockchip RK3588 (Orange Pi 5, Rock 5B).</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Converta modelos ONNX para o formato <code>.rknn</code> com quantização INT8 pelo toolkit.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Processe múltiplos canais de vídeo simultâneos com inferência de IA acelerada na NPU integrada de 6 TOPS.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 19. GGML -->
+            <!-- 19. GGML · Biblioteca Tensorial em C Puro para Aprendizado de Máquina -->
       <div class="entry">
         <div class="entry-rank">19</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>GGML · Biblioteca Tensorial em C Puro para Aprendizado de Máquina</h3>
+            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
             <span class="killer-badge">Substitui: Bibliotecas BLAS Proprietárias</span>
             <span class="econ-badge">Economia: Incalculável</span>
             <span class="lic-badge">MIT</span>
             <span class="kind">TENSOR CORE</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Biblioteca minimalista de tensores em C puro que gerencia memória e operações matemáticas para inferência de modelos de bilhões de parâmetros.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Aloca toda a memória em buffers estáticos contíguos com zero fragmentação e suporte a quantização extrema de 1.5 a 8 bits.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>Biblioteca minimalista de tensores em C puro que gerencia memória e operações matemáticas para inferência de modelos de bilhões de parâmetros.</p>
+            <p>Aloca toda a memória em buffers estáticos contíguos com zero fragmentação e suporte a quantização extrema de 1.5 a 8 bits.</p>
+            <div class="code-box">
               <pre><code>git clone https://github.com/ggerganov/ggml.git
 mkdir build && cd build && cmake .. && make</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">Zero alocação dinâmica durante a inferência · Suporta x86 e ARM</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> O coração computacional por trás do Llama.cpp e Whisper.cpp.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Bibliotecas BLAS Proprietárias</div>
               </div>
-              <div class="repo"><a href="https://github.com/ggerganov/ggml" target="_blank">github.com/ggerganov/ggml</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Incalculável · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Clone o repositório GGML e integre a biblioteca em C puro no seu projeto de engenharia de software.<br>2. Aloque tensores em buffers contíguos de memória sem custos de garbage collection ou alocação dinâmica.<br>3. Desenvolva motores de inferência customizados e ultra-leves para arquiteturas x86 e ARM.</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">Zero alocação dinâmica durante a inferência · Suporta x86 e ARM · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>TENSOR CORE</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> O coração computacional por trás do Llama.cpp e Whisper.cpp.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/ggerganov/ggml" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/ggerganov/ggml ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Clone o repositório GGML e integre a biblioteca em C puro no seu projeto de engenharia de software.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Aloque tensores em buffers contíguos de memória sem custos de garbage collection ou alocação dinâmica.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Desenvolva motores de inferência customizados e ultra-leves para arquiteturas x86 e ARM.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- 20. FastDeploy -->
+            <!-- 20. FastDeploy · Kit de Deploy Rápido de IA da Baidu para Dispositivos de Borda -->
       <div class="entry">
         <div class="entry-rank">20</div>
         <div class="entry-body">
+          
+          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
             <h3>FastDeploy · Kit de Deploy Rápido de IA da Baidu para Dispositivos de Borda</h3>
+            <span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
             <span class="killer-badge">Substitui: Triton Server em Edge</span>
             <span class="econ-badge">Economia: Zero Licença</span>
             <span class="lic-badge">Apache-2.0</span>
             <span class="kind">DEPLOYMENT TOOLKIT</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>SDK de deploy completo que suporta mais de 160 modelos populares de visão, OCR e NLP com integração pronta para Android, iOS, Linux e Windows.</p>
-              <span class="label">2. Como Funciona</span>
-              <p>Empacota múltiplos motores de inferência (TensorRT, OpenVINO, ONNX, NCNN) em uma única API em C++ e Python simples.</p>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p>SDK de deploy completo que suporta mais de 160 modelos populares de visão, OCR e NLP com integração pronta para Android, iOS, Linux e Windows.</p>
+            <p>Empacota múltiplos motores de inferência (TensorRT, OpenVINO, ONNX, NCNN) em uma única API em C++ e Python simples.</p>
+            <div class="code-box">
               <pre><code>pip install fastdeploy-python</code></pre>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
             </div>
-            <div class="block">
-              <span class="label">Especificações</span>
-              <div class="spec">+160 modelos pré-otimizados prontos para deploy</div>
-              <div class="truth">
-                <p><strong>Veredito:</strong> Reduz o tempo de colocar um modelo de IA em produção de semanas para poucas horas.</p>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+                <div class="econ-val">Triton Server em Edge</div>
               </div>
-              <div class="repo"><a href="https://github.com/PaddlePaddle/FastDeploy" target="_blank">github.com/PaddlePaddle/FastDeploy</a></div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+                <div class="econ-val"><strong>Zero Licença · Redução drástica de licenças recorrentes</strong></div>
+              </div>
             </div>
           </div>
-        
-          <div class="how-to-use">
-            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <p>1. Instale o FastDeploy em Python ou C++ no seu ambiente de borda ou servidor local.<br>2. Selecione o modelo desejado da biblioteca oficial (+160 modelos pré-integrados de visão e OCR).<br>3. Realize o deploy com suporte automático ao backend mais rápido disponível no hardware (TensorRT, ONNX, OpenVINO).</p>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+                <div class="infra-val">+160 modelos pré-otimizados prontos para deploy · Biblioteca leve · Zero Runtime adicional</div>
+              </div>
+              <div class="infra-card">
+                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+                <p><code>DEPLOYMENT TOOLKIT</code> · Padrões Abertos OSI</p>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+                <p><strong>Por que adotar:</strong> Reduz o tempo de colocar um modelo de IA em produção de semanas para poucas horas.</p>
+              </div>
+            </div>
+            <div style="margin-top:6px;">
+              <a class="repo-btn" href="https://github.com/PaddlePaddle/FastDeploy" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <span>Repositório Oficial &amp; Código-Fonte: github.com/PaddlePaddle/FastDeploy ↗</span>
+              </a>
+            </div>
           </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
+                <p>Instale o FastDeploy em Python ou C++ no seu ambiente de borda ou servidor local.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">2</span> Operação</div>
+                <p>Selecione o modelo desejado da biblioteca oficial (+160 modelos pré-integrados de visão e OCR).</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
+                <p>Realize o deploy com suporte automático ao backend mais rápido disponível no hardware (TensorRT, ONNX, OpenVINO).</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div></div>
   </section>
