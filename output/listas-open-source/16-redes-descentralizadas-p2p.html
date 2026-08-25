@@ -5,17 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Redes Descentralizadas (P2P) & Privacidade — Compêndio de Soberania Tecnológica</title>
 <style>
-
-  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
+  /* Custom scrollbar estrita 4px */
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
 
   :root {
     --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
     --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
     --rule:#C7CEDB; --rule-soft:#DADFE8;
-    --accent:#7A3E1D; --accent-soft:#F5EBE4;
+    --accent:#1B5E3B; --accent-soft:#DCE7F2;
     --gold:#7A5410; --gold-soft:#EFE5CE;
     --flag:#8E2436; --flag-soft:#F0D9DD;
     --green:#1B5E3B; --green-soft:#D8EFE2;
@@ -29,41 +30,37 @@
       --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
       --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
       --rule:#2A3142; --rule-soft:#222836;
-      --accent:#E89568; --accent-soft:#331D12;
+      --accent:#6BC48F; --accent-soft:#162436;
       --gold:#D6A44E; --gold-soft:#332810;
       --flag:#E0788C; --flag-soft:#3A1A21;
       --green:#6BC48F; --green-soft:#122B1C;
       --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
     }
   }
+  :root[data-theme="dark"] {
+    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+    --rule:#2A3142; --rule-soft:#222836;
+    --accent:#6BC48F; --accent-soft:#162436;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E0788C; --flag-soft:#3A1A21;
+    --green:#6BC48F; --green-soft:#122B1C;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
 
+  * { box-sizing:border-box; }
   body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
   .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
 
-  /* HEADER EXECUTIVO */
-  header { display:flex; flex-direction:column; gap:24px; padding-bottom:12px; border-bottom:1px solid var(--rule); }
-  .header-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
-  .back-link { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; color:var(--muted); text-decoration:none; padding:4px 8px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); transition:all .15s ease; }
-  .back-link:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-soft); text-decoration:none; }
-  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
-  .layer-badge { background:var(--accent); color:var(--paper); padding:3px 8px; border-radius:2px; font-weight:700; font-size:10.5px; letter-spacing:.08em; }
-
-  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(38px,7.5vw,68px); line-height:1.05; letter-spacing:-.025em; margin:0; color:var(--ink); text-align:justify; text-justify:inter-word; }
-  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.55; color:var(--ink-2); max-width:100%; margin:0; text-align:justify; text-justify:inter-word; }
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
   .deck strong { color:var(--ink); font-weight:600; }
-
-  /* HERO STATS BAR */
-  .hero-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:4px; }
-  .stat-card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:12px 16px; display:flex; flex-direction:column; gap:4px; box-shadow:var(--shadow); }
-  .stat-card .stat-val { font-family:var(--mono); font-size:20px; font-weight:700; color:var(--accent); line-height:1.1; }
-  .stat-card .stat-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .stat-card.good .stat-val { color:var(--green); }
-  
-  /* QUICK JUMP ANCHORS */
-  .header-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:2px; }
-  .jump-btn { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; padding:6px 12px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); color:var(--ink-2); text-decoration:none; transition:all .15s ease; }
-  .jump-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); text-decoration:none; }
-  .jump-btn.primary { background:var(--accent-soft); border-color:color-mix(in srgb, var(--accent) 40%, transparent); color:var(--accent); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
 
   section { display:flex; flex-direction:column; gap:22px; }
   .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
@@ -73,7 +70,8 @@
   .sec-head.flagged .sec-num { color:var(--flag); }
   .sec-head.warm .sec-num { color:var(--gold); }
   h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
-  .sec-note { margin:0; color:var(--ink-2); max-width:100%; font-size:15.5px; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note strong { color:var(--ink); }
 
   .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
   .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
@@ -85,84 +83,47 @@
   .route.gray .tag { color:var(--green); }
   .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
 
-  /* TABELA FLUIDA SEM SCROLL */
-  .tablewrap { border:1px solid var(--rule); border-radius:3px; background:var(--surface); width:100%; overflow:hidden; }
-  table { border-collapse:collapse; width:100%; font-size:13.5px; table-layout:auto; }
-  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding:10px 12px; border-bottom:1px solid var(--rule); }
-  tbody td { padding:10px 12px; border-bottom:1px solid var(--rule-soft); vertical-align:middle; }
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:860px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
   tbody tr:last-child td { border-bottom:0; }
-  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:36px; text-align:center; }
-  td.tool { font-weight:600; color:var(--ink); font-size:14px; }
-  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; line-height:1.35; }
-  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; line-height:1.35; }
-  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); line-height:1.35; font-weight:600; }
-  td.lic { font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.35; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; }
+  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; white-space:nowrap; }
+  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
+  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
 
-  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO */
-  .ledger { display:flex; flex-direction:column; gap:28px; }
-  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; transition:border-color .15s ease; }
-  .entry:hover { border-color:var(--accent); }
-  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:20px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
-  
-  .entry-body { padding:20px 24px 22px; display:flex; flex-direction:column; gap:16px; min-width:0; }
-
-  /* CABEÇALHO PADRONIZADO */
-  .entry-top { display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; }
-  .entry-top h3 { width:100%; margin:0 0 4px 0; font-family:var(--serif); font-weight:600; font-size:26px; line-height:1.15; letter-spacing:-.01em; color:var(--ink); }
-
-  .senior-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; font-weight:700; }
-  .senior-badge.green { background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); }
-  .senior-badge.gold { background:var(--gold-soft); color:var(--gold); border:1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
-  .senior-badge.flag { background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); }
-
+  .ledger { display:flex; flex-direction:column; gap:20px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
   .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
   .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
   .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
-  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
 
-  /* SEÇÕES VERTICAIS DO CARD (LARGURA TOTAL) */
-  .entry-section { display:flex; flex-direction:column; gap:8px; width:100%; padding-top:14px; border-top:1px dashed var(--rule-soft); }
-  .entry-section .label { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
-  .entry-section p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
-  .entry-section p strong { color:var(--ink); font-weight:600; }
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
 
-  /* ANÁLISE ECONÔMICA GRID */
-  .econ-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:4px; }
-  .econ-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .econ-card.highlight { border-left:3px solid var(--green); background:color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
-  .econ-card.killer { border-left:3px solid var(--flag); background:color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
-  .econ-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .econ-val { font-size:14px; line-height:1.45; color:var(--ink); }
-  .econ-val strong { color:var(--ink); font-weight:600; }
+  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
 
-  /* REQUISITOS DE INFRAESTRUTURA GRID */
-  .infra-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:4px; }
-  .infra-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .infra-card.verdict { border-left:3px solid var(--gold); background:color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column:span 2; }
-  @media (max-width:760px) { .infra-card.verdict { grid-column:span 1; } }
-  .infra-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .infra-val { font-family:var(--mono); font-size:13.5px; font-weight:600; color:var(--accent); line-height:1.4; }
-  .infra-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
+  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
 
-  /* CODE BOX FULL-WIDTH */
-  .code-box { position:relative; display:flex; flex-direction:column; width:100%; margin-top:4px; }
-  pre { margin:0; padding:12px 52px 12px 14px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
-  code { font-family:var(--mono); font-size:13px; color:var(--ink); line-height:1.5; }
-  .copy-btn { position:absolute; top:8px; right:8px; background:var(--surface); border:1px solid var(--rule); color:var(--muted); border-radius:2px; padding:4px 8px; font-family:var(--mono); font-size:10.5px; cursor:pointer; transition:all .15s ease; }
-  .copy-btn:hover { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
-
-  /* BOTÃO REPOSITÓRIO GITHUB */
-  .repo-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--mono); font-size:12px; padding:8px 12px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink); text-decoration:none; transition:all .15s ease; }
-  .repo-btn:hover { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); text-decoration:none; }
-  .repo-btn svg { width:14px; height:14px; fill:currentColor; }
-
-  /* STEPS GRID (COMO USAR NO DIA A DIA) */
-  .steps-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin-top:2px; }
-  .step-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .step-head { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
-  .step-badge { background:var(--accent); color:var(--paper); border-radius:2px; padding:1px 6px; font-size:10px; font-weight:700; }
-  .step-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
-  .step-card code { font-family:var(--mono); font-size:12px; background:var(--surface); padding:1px 5px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
+  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
 
   .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
   .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
@@ -170,62 +131,25 @@
   .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
 
   footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
-  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:100%; }
-
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
 </style>
 </head>
 <body>
 
 <div class="wrap">
 
-    <header>
-    <div class="header-top">
-      <a href="index.html" class="back-link">
-        <span>←</span>
-        <span>Voltar ao Hub Central</span>
-      </a>
-      <div class="eyebrow">
-        <span class="layer-badge">Camada 16</span>
-        <span>Engenharia &amp; Autonomia Técnica</span>
-        <span>·</span>
-        <span>Curadoria Soberana</span>
-      </div>
+  <header>
+    <div class="eyebrow">
+      <span>Camada 16 · Redes Mesh sem Censura</span><span>·</span><span>Curadoria de Elite</span><span>·</span>
+      <b>8 Ferramentas / Soberania Total</b>
     </div>
-
     <h1>Redes Descentralizadas (P2P) & Privacidade</h1>
-    
     <p class="deck">Compêndio técnico completo de <strong>Redes Descentralizadas (P2P) & Privacidade</strong>: as ferramentas e arquiteturas de código aberto mais eficientes para eliminar dependência de fornecedores caros com máxima autonomia.</p>
-
-    <!-- HERO STATS BAR -->
-    <div class="hero-stats">
-      <div class="stat-card">
-        <div class="stat-val">8</div>
-        <div class="stat-lbl">Tecnologias Auditadas</div>
-      </div>
-      <div class="stat-card good">
-        <div class="stat-val">100%</div>
-        <div class="stat-lbl">Soberania &amp; Zero Lock-in</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val">OSI Standard</div>
-        <div class="stat-lbl">Licenças de Código Aberto</div>
-      </div>
-      <div class="stat-card good">
-        <div class="stat-val">-$ 30k a $ 150k</div>
-        <div class="stat-lbl">Economia TCO Anual Estimada</div>
-      </div>
-    </div>
-
-    <!-- QUICK ACTIONS -->
-    <div class="header-actions">
-      <a href="#tabela" class="jump-btn">
-        <span>📊</span>
-        <span>Matriz Comparativa</span>
-      </a>
-      <a href="#fichas" class="jump-btn primary">
-        <span>⚡</span>
-        <span>Fichas Técnicas &amp; Passo a Passo</span>
-      </a>
+    <div class="chips">
+      <div class="chip"><b>8</b> tecnologias auditadas</div>
+      <div class="chip"><b>0</b> taxas por assento ou cota oculta</div>
+      <div class="chip"><b>100%</b> soberania de dados</div>
     </div>
   </header>
 
@@ -251,8 +175,8 @@
     </div>
   </section>
 
-  <section id="tabela">
-<div class="sec-head">
+  <section>
+    <div class="sec-head">
       <span class="sec-num">Parte 2 · O Panorama Geral</span>
       <h2>O inventário completo da camada</h2>
       <p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
@@ -340,703 +264,318 @@
     </div>
   </section>
 
-  <section id="fichas">
-<div class="sec-head">
+  <section>
+    <div class="sec-head">
       <span class="sec-num">Parte 3 · O Detalhamento Técnico & Workflows Práticos</span>
       <h2>As fichas técnicas completas com Guia do Dia a Dia</h2>
       <p class="sec-note">O que faz, como funciona por baixo dos panos, comandos de execução e <strong>passo a passo detalhado para o seu fluxo diário</strong>.</p>
     </div>
 
     <div class="ledger">
-      <!-- Matrix / Dendrite -->
+      <!-- 01 Matrix / Dendrite -->
       <div class="entry">
         <div class="entry-rank">01</div>
         <div class="entry-body">
-          
-          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
-            <h3>Matrix / dendrite · Decentralized Chat Protocol</h3>
-            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-            <span class="killer-badge">Substitui: Slack / Microsoft Teams ($ 12/user)</span>
-            <span class="econ-badge">Economia: -$ 1.440 / ano (10 users)</span>
+            <h3>Matrix / Dendrite</h3>
+            <span class="killer-badge">SUBSTITUI: Slack / Microsoft Teams ($ 12/user)</span>
+            <span class="econ-badge">ECONOMIA: -$ 1.440 / ano (10 users)</span>
             <span class="lic-badge">Open-Source OSI</span>
             <span class="kind">Decentralized Chat Protocol</span>
           </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Protocolo federado de comunicação segura com criptografia ponta a ponta e chamadas VoIP.</p>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p>Protocolo federado de comunicação segura com criptografia ponta a ponta e chamadas VoIP.</p>
-            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
-            <div class="code-box">
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Opera através de arquitetura modular aberta compilada em código nativo ou container isolado, eliminando telemetria e permitindo integração via linha de comando (CLI), APIs REST ou bindings locais.</p>
+
               <pre><code>docker run -d -p 8008:8008 matrixdotorg/dendrite-monolith</code></pre>
-              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Inicie a ferramenta executando o comando oficial: <code>docker run -d -p 8008:8008 matrixdotorg/dendrite-monolith</code>.<br>2. Configure as opções no arquivo de configuração do seu projeto para substituir <strong>Slack / Microsoft Teams ($ 12/user)</strong>.<br>3. Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~80 MB RAM em Go</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://matrix.org" target="_blank" rel="noopener">matrix.org</a>
             </div>
           </div>
-
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-                <div class="econ-val">Slack / Microsoft Teams ($ 12/user)</div>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-                <div class="econ-val"><strong>-$ 1.440 / ano (10 users) · Redução drástica de licenças recorrentes</strong></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-                <div class="infra-val">~80 MB RAM em Go · Biblioteca leve · Zero Runtime adicional</div>
-              </div>
-              <div class="infra-card">
-                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-                <p><code>Decentralized Chat Protocol</code> · Padrões Abertos OSI</p>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-                <p><strong>Por que adotar:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
-              </div>
-            </div>
-            <div style="margin-top:6px;">
-              <a class="repo-btn" href="https://matrix.org" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                <span>Repositório Oficial &amp; Código-Fonte: matrix.org ↗</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
-                <p>Inicie a ferramenta executando o comando oficial: <code>docker run -d -p 8008:8008 matrixdotorg/dendrite-monolith</code>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">2</span> Operação</div>
-                <p>Configure as opções no arquivo de configuração do seu projeto para substituir <strong>Slack / Microsoft Teams ($ 12/user)</strong>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
-                <p>Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div><!-- Nostr Protocol -->
+      </div>
+
+      <!-- 02 Nostr Protocol -->
       <div class="entry">
         <div class="entry-rank">02</div>
         <div class="entry-body">
-          
-          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
-            <h3>Nostr protocol · Censorship-Resistant Protocol</h3>
-            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-            <span class="killer-badge">Substitui: Twitter / X API ($ 100/mês)</span>
-            <span class="econ-badge">Economia: Imunidade total a banimentos</span>
+            <h3>Nostr Protocol</h3>
+            <span class="killer-badge">SUBSTITUI: Twitter / X API ($ 100/mês)</span>
+            <span class="econ-badge">ECONOMIA: Imunidade total a banimentos</span>
             <span class="lic-badge">Open-Source OSI</span>
             <span class="kind">Censorship-Resistant Protocol</span>
           </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Protocolo aberto e minimalista para redes sociais e dados descentralizados baseado em chaves criptográficas e relays.</p>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p>Protocolo aberto e minimalista para redes sociais e dados descentralizados baseado em chaves criptográficas e relays.</p>
-            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
-            <div class="code-box">
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Opera através de arquitetura modular aberta compilada em código nativo ou container isolado, eliminando telemetria e permitindo integração via linha de comando (CLI), APIs REST ou bindings locais.</p>
+
               <pre><code>cargo install nostr-rs-relay</code></pre>
-              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Inicie a ferramenta executando o comando oficial: <code>cargo install nostr-rs-relay</code>.<br>2. Configure as opções no arquivo de configuração do seu projeto para substituir <strong>Twitter / X API ($ 100/mês)</strong>.<br>3. Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~25 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://nostr.com" target="_blank" rel="noopener">nostr.com</a>
             </div>
           </div>
-
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-                <div class="econ-val">Twitter / X API ($ 100/mês)</div>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-                <div class="econ-val"><strong>Imunidade total a banimentos · Redução drástica de licenças recorrentes</strong></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-                <div class="infra-val">~25 MB RAM · Biblioteca leve · Zero Runtime adicional</div>
-              </div>
-              <div class="infra-card">
-                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-                <p><code>Censorship-Resistant Protocol</code> · Padrões Abertos OSI</p>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-                <p><strong>Por que adotar:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
-              </div>
-            </div>
-            <div style="margin-top:6px;">
-              <a class="repo-btn" href="https://nostr.com" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                <span>Repositório Oficial &amp; Código-Fonte: nostr.com ↗</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
-                <p>Inicie a ferramenta executando o comando oficial: <code>cargo install nostr-rs-relay</code>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">2</span> Operação</div>
-                <p>Configure as opções no arquivo de configuração do seu projeto para substituir <strong>Twitter / X API ($ 100/mês)</strong>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
-                <p>Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div><!-- SimpleX Chat -->
+      </div>
+
+      <!-- 03 SimpleX Chat -->
       <div class="entry">
         <div class="entry-rank">03</div>
         <div class="entry-body">
-          
-          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
-            <h3>Simplex chat · Zero-Identifier Messaging</h3>
-            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-            <span class="killer-badge">Substitui: Telegram / WhatsApp corporativo</span>
-            <span class="econ-badge">Economia: Privacidade absoluta sem número de telefone</span>
+            <h3>SimpleX Chat</h3>
+            <span class="killer-badge">SUBSTITUI: Telegram / WhatsApp corporativo</span>
+            <span class="econ-badge">ECONOMIA: Privacidade absoluta sem número de telefone</span>
             <span class="lic-badge">Open-Source OSI</span>
             <span class="kind">Zero-Identifier Messaging</span>
           </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>A primeira rede de mensagens descentralizada sem identificadores de usuário ou metadados de conexão.</p>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p>A primeira rede de mensagens descentralizada sem identificadores de usuário ou metadados de conexão.</p>
-            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
-            <div class="code-box">
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Opera através de arquitetura modular aberta compilada em código nativo ou container isolado, eliminando telemetria e permitindo integração via linha de comando (CLI), APIs REST ou bindings locais.</p>
+
               <pre><code>simplex-chat</code></pre>
-              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Inicie a ferramenta executando o comando oficial: <code>simplex-chat</code>.<br>2. Configure as opções no arquivo de configuração do seu projeto para substituir <strong>Telegram / WhatsApp corporativo</strong>.<br>3. Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">< 30 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://simplex.chat" target="_blank" rel="noopener">simplex.chat</a>
             </div>
           </div>
-
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-                <div class="econ-val">Telegram / WhatsApp corporativo</div>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-                <div class="econ-val"><strong>Privacidade absoluta sem número de telefone · Redução drástica de licenças recorrentes</strong></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-                <div class="infra-val">< 30 MB RAM · Biblioteca leve · Zero Runtime adicional</div>
-              </div>
-              <div class="infra-card">
-                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-                <p><code>Zero-Identifier Messaging</code> · Padrões Abertos OSI</p>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-                <p><strong>Por que adotar:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
-              </div>
-            </div>
-            <div style="margin-top:6px;">
-              <a class="repo-btn" href="https://simplex.chat" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                <span>Repositório Oficial &amp; Código-Fonte: simplex.chat ↗</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
-                <p>Inicie a ferramenta executando o comando oficial: <code>simplex-chat</code>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">2</span> Operação</div>
-                <p>Configure as opções no arquivo de configuração do seu projeto para substituir <strong>Telegram / WhatsApp corporativo</strong>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
-                <p>Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div><!-- Yggdrasil Network -->
+      </div>
+
+      <!-- 04 Yggdrasil Network -->
       <div class="entry">
         <div class="entry-rank">04</div>
         <div class="entry-body">
-          
-          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
-            <h3>Yggdrasil network · Encrypted Mesh Routing</h3>
-            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-            <span class="killer-badge">Substitui: SD-WANs comerciais ($ 500/mês)</span>
-            <span class="econ-badge">Economia: -$ 6.000 / ano em infra de rede</span>
+            <h3>Yggdrasil Network</h3>
+            <span class="killer-badge">SUBSTITUI: SD-WANs comerciais ($ 500/mês)</span>
+            <span class="econ-badge">ECONOMIA: -$ 6.000 / ano em infra de rede</span>
             <span class="lic-badge">Open-Source OSI</span>
             <span class="kind">Encrypted Mesh Routing</span>
           </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Rede mesh criptografada de ponta a ponta que cria uma topologia global autoconfigurável em IPv6.</p>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p>Rede mesh criptografada de ponta a ponta que cria uma topologia global autoconfigurável em IPv6.</p>
-            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
-            <div class="code-box">
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Opera através de arquitetura modular aberta compilada em código nativo ou container isolado, eliminando telemetria e permitindo integração via linha de comando (CLI), APIs REST ou bindings locais.</p>
+
               <pre><code>yggdrasil -genconf</code></pre>
-              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Inicie a ferramenta executando o comando oficial: <code>yggdrasil -genconf</code>.<br>2. Configure as opções no arquivo de configuração do seu projeto para substituir <strong>SD-WANs comerciais ($ 500/mês)</strong>.<br>3. Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">< 15 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://yggdrasil-network.github.io" target="_blank" rel="noopener">yggdrasil-network.github.io</a>
             </div>
           </div>
-
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-                <div class="econ-val">SD-WANs comerciais ($ 500/mês)</div>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-                <div class="econ-val"><strong>-$ 6.000 / ano em infra de rede · Redução drástica de licenças recorrentes</strong></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-                <div class="infra-val">< 15 MB RAM · Biblioteca leve · Zero Runtime adicional</div>
-              </div>
-              <div class="infra-card">
-                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-                <p><code>Encrypted Mesh Routing</code> · Padrões Abertos OSI</p>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-                <p><strong>Por que adotar:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
-              </div>
-            </div>
-            <div style="margin-top:6px;">
-              <a class="repo-btn" href="https://yggdrasil-network.github.io" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                <span>Repositório Oficial &amp; Código-Fonte: yggdrasil-network.github.io ↗</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
-                <p>Inicie a ferramenta executando o comando oficial: <code>yggdrasil -genconf</code>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">2</span> Operação</div>
-                <p>Configure as opções no arquivo de configuração do seu projeto para substituir <strong>SD-WANs comerciais ($ 500/mês)</strong>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
-                <p>Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div><!-- IPFS / Helia (Kubo) -->
+      </div>
+
+      <!-- 05 IPFS / Helia (Kubo) -->
       <div class="entry">
         <div class="entry-rank">05</div>
         <div class="entry-body">
-          
-          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
-            <h3>Ipfs / helia (kubo) · InterPlanetary File System</h3>
-            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-            <span class="killer-badge">Substitui: CDNs centralizadas e vulneráveis a DMCA</span>
-            <span class="econ-badge">Economia: Distribuição P2P de arquivos</span>
+            <h3>IPFS / Helia (Kubo)</h3>
+            <span class="killer-badge">SUBSTITUI: CDNs centralizadas e vulneráveis a DMCA</span>
+            <span class="econ-badge">ECONOMIA: Distribuição P2P de arquivos</span>
             <span class="lic-badge">Open-Source OSI</span>
             <span class="kind">InterPlanetary File System</span>
           </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Sistema de arquivos ponto a ponto com endereçamento por conteúdo (CID) e alta resiliência.</p>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p>Sistema de arquivos ponto a ponto com endereçamento por conteúdo (CID) e alta resiliência.</p>
-            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
-            <div class="code-box">
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Opera através de arquitetura modular aberta compilada em código nativo ou container isolado, eliminando telemetria e permitindo integração via linha de comando (CLI), APIs REST ou bindings locais.</p>
+
               <pre><code>docker run -d -p 4001:4001 -p 8080:8080 ipfs/kubo</code></pre>
-              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Inicie a ferramenta executando o comando oficial: <code>docker run -d -p 4001:4001 -p 8080:8080 ipfs/kubo</code>.<br>2. Configure as opções no arquivo de configuração do seu projeto para substituir <strong>CDNs centralizadas e vulneráveis a DMCA</strong>.<br>3. Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~150 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://ipfs.tech" target="_blank" rel="noopener">ipfs.tech</a>
             </div>
           </div>
-
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-                <div class="econ-val">CDNs centralizadas e vulneráveis a DMCA</div>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-                <div class="econ-val"><strong>Distribuição P2P de arquivos · Redução drástica de licenças recorrentes</strong></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-                <div class="infra-val">~150 MB RAM · Biblioteca leve · Zero Runtime adicional</div>
-              </div>
-              <div class="infra-card">
-                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-                <p><code>InterPlanetary File System</code> · Padrões Abertos OSI</p>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-                <p><strong>Por que adotar:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
-              </div>
-            </div>
-            <div style="margin-top:6px;">
-              <a class="repo-btn" href="https://ipfs.tech" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                <span>Repositório Oficial &amp; Código-Fonte: ipfs.tech ↗</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
-                <p>Inicie a ferramenta executando o comando oficial: <code>docker run -d -p 4001:4001 -p 8080:8080 ipfs/kubo</code>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">2</span> Operação</div>
-                <p>Configure as opções no arquivo de configuração do seu projeto para substituir <strong>CDNs centralizadas e vulneráveis a DMCA</strong>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
-                <p>Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div><!-- Tor Project -->
+      </div>
+
+      <!-- 06 Tor Project -->
       <div class="entry">
         <div class="entry-rank">06</div>
         <div class="entry-body">
-          
-          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
-            <h3>Tor project · Onion Routing Network</h3>
-            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-            <span class="killer-badge">Substitui: VPNs comerciais com registro de logs</span>
-            <span class="econ-badge">Economia: Anonimato garantido</span>
+            <h3>Tor Project</h3>
+            <span class="killer-badge">SUBSTITUI: VPNs comerciais com registro de logs</span>
+            <span class="econ-badge">ECONOMIA: Anonimato garantido</span>
             <span class="lic-badge">Open-Source OSI</span>
             <span class="kind">Onion Routing Network</span>
           </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Rede aberta que protege contra análise de tráfego mascarando conexões através de múltiplos relays criptografados.</p>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p>Rede aberta que protege contra análise de tráfego mascarando conexões através de múltiplos relays criptografados.</p>
-            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
-            <div class="code-box">
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Opera através de arquitetura modular aberta compilada em código nativo ou container isolado, eliminando telemetria e permitindo integração via linha de comando (CLI), APIs REST ou bindings locais.</p>
+
               <pre><code>apt-get install tor</code></pre>
-              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Inicie a ferramenta executando o comando oficial: <code>apt-get install tor</code>.<br>2. Configure as opções no arquivo de configuração do seu projeto para substituir <strong>VPNs comerciais com registro de logs</strong>.<br>3. Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~40 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://torproject.org" target="_blank" rel="noopener">torproject.org</a>
             </div>
           </div>
-
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-                <div class="econ-val">VPNs comerciais com registro de logs</div>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-                <div class="econ-val"><strong>Anonimato garantido · Redução drástica de licenças recorrentes</strong></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-                <div class="infra-val">~40 MB RAM · Binário compilado local · < 30 MB RAM sob demanda</div>
-              </div>
-              <div class="infra-card">
-                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-                <p><code>Onion Routing Network</code> · Padrões Abertos OSI</p>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-                <p><strong>Por que adotar:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
-              </div>
-            </div>
-            <div style="margin-top:6px;">
-              <a class="repo-btn" href="https://torproject.org" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                <span>Repositório Oficial &amp; Código-Fonte: torproject.org ↗</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
-                <p>Inicie a ferramenta executando o comando oficial: <code>apt-get install tor</code>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">2</span> Operação</div>
-                <p>Configure as opções no arquivo de configuração do seu projeto para substituir <strong>VPNs comerciais com registro de logs</strong>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
-                <p>Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div><!-- I2P (Invisible Internet) -->
+      </div>
+
+      <!-- 07 I2P (Invisible Internet) -->
       <div class="entry">
         <div class="entry-rank">07</div>
         <div class="entry-body">
-          
-          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
-            <h3>I2p (invisible internet) · Anonymous P2P Network</h3>
-            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-            <span class="killer-badge">Substitui: Redes públicas vulneráveis a monitoramento</span>
-            <span class="econ-badge">Economia: Comunicação interna anônima</span>
+            <h3>I2P (Invisible Internet)</h3>
+            <span class="killer-badge">SUBSTITUI: Redes públicas vulneráveis a monitoramento</span>
+            <span class="econ-badge">ECONOMIA: Comunicação interna anônima</span>
             <span class="lic-badge">Open-Source OSI</span>
             <span class="kind">Anonymous P2P Network</span>
           </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Camada de rede anônima auto-organizada desenhada para comunicação ponto a ponto resistente a censura.</p>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p>Camada de rede anônima auto-organizada desenhada para comunicação ponto a ponto resistente a censura.</p>
-            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
-            <div class="code-box">
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Opera através de arquitetura modular aberta compilada em código nativo ou container isolado, eliminando telemetria e permitindo integração via linha de comando (CLI), APIs REST ou bindings locais.</p>
+
               <pre><code>docker run -d -p 7657:7657 geti2p/i2p</code></pre>
-              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Inicie a ferramenta executando o comando oficial: <code>docker run -d -p 7657:7657 geti2p/i2p</code>.<br>2. Configure as opções no arquivo de configuração do seu projeto para substituir <strong>Redes públicas vulneráveis a monitoramento</strong>.<br>3. Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~120 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://geti2p.net" target="_blank" rel="noopener">geti2p.net</a>
             </div>
           </div>
-
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-                <div class="econ-val">Redes públicas vulneráveis a monitoramento</div>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-                <div class="econ-val"><strong>Comunicação interna anônima · Redução drástica de licenças recorrentes</strong></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-                <div class="infra-val">~120 MB RAM · Biblioteca leve · Zero Runtime adicional</div>
-              </div>
-              <div class="infra-card">
-                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-                <p><code>Anonymous P2P Network</code> · Padrões Abertos OSI</p>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-                <p><strong>Por que adotar:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
-              </div>
-            </div>
-            <div style="margin-top:6px;">
-              <a class="repo-btn" href="https://geti2p.net" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                <span>Repositório Oficial &amp; Código-Fonte: geti2p.net ↗</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
-                <p>Inicie a ferramenta executando o comando oficial: <code>docker run -d -p 7657:7657 geti2p/i2p</code>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">2</span> Operação</div>
-                <p>Configure as opções no arquivo de configuração do seu projeto para substituir <strong>Redes públicas vulneráveis a monitoramento</strong>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
-                <p>Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div><!-- Session -->
+      </div>
+
+      <!-- 08 Session -->
       <div class="entry">
         <div class="entry-rank">08</div>
         <div class="entry-body">
-          
-          <!-- CABEÇALHO & BADGES -->
           <div class="entry-top">
-            <h3>Session · Private Messenger</h3>
-            <span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-            <span class="killer-badge">Substitui: Signal (que exige número de telefone)</span>
-            <span class="econ-badge">Economia: Metadados 100% ocultos</span>
+            <h3>Session</h3>
+            <span class="killer-badge">SUBSTITUI: Signal (que exige número de telefone)</span>
+            <span class="econ-badge">ECONOMIA: Metadados 100% ocultos</span>
             <span class="lic-badge">Open-Source OSI</span>
             <span class="kind">Private Messenger</span>
           </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Mensageiro que roteia mensagens através de uma rede descentralizada de nós (onion routing de mensagens).</p>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p>Mensageiro que roteia mensagens através de uma rede descentralizada de nós (onion routing de mensagens).</p>
-            <p>Processamento nativo integrado a pipelines e esteiras de automação.</p>
-            <div class="code-box">
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Opera através de arquitetura modular aberta compilada em código nativo ou container isolado, eliminando telemetria e permitindo integração via linha de comando (CLI), APIs REST ou bindings locais.</p>
+
               <pre><code>session-desktop</code></pre>
-              <button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=>this.textContent='Copiar',1500)">Copiar</button>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Inicie a ferramenta executando o comando oficial: <code>session-desktop</code>.<br>2. Configure as opções no arquivo de configuração do seu projeto para substituir <strong>Signal (que exige número de telefone)</strong>.<br>3. Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~70 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://getsession.org" target="_blank" rel="noopener">getsession.org</a>
             </div>
           </div>
-
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-                <div class="econ-val">Signal (que exige número de telefone)</div>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-                <div class="econ-val"><strong>Metadados 100% ocultos · Redução drástica de licenças recorrentes</strong></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-                <div class="infra-val">~70 MB RAM · Biblioteca leve · Zero Runtime adicional</div>
-              </div>
-              <div class="infra-card">
-                <span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-                <p><code>Private Messenger</code> · Padrões Abertos OSI</p>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-                <p><strong>Por que adotar:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
-              </div>
-            </div>
-            <div style="margin-top:6px;">
-              <a class="repo-btn" href="https://getsession.org" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                <span>Repositório Oficial &amp; Código-Fonte: getsession.org ↗</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">1</span> Configuração</div>
-                <p>Inicie a ferramenta executando o comando oficial: <code>session-desktop</code>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">2</span> Operação</div>
-                <p>Configure as opções no arquivo de configuração do seu projeto para substituir <strong>Signal (que exige número de telefone)</strong>.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">3</span> Resultado</div>
-                <p>Integre diretamente ao seu fluxo diário de desenvolvimento ou esteiras de CI/CD para obter soberania total e economia real.</p>
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div></div>
+      </div>
+    </div>
   </section>
 
   <section>

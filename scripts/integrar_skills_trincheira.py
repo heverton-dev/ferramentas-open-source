@@ -7,6 +7,7 @@ distribuídas com precisão técnica em cada uma das camadas e compêndios.
 """
 
 from pathlib import Path
+from expandir_lista_02 import LISTA_02_EXPANDIDA
 
 # Banco de dados exaustivo de ferramentas e skills enriquecidas
 CATALOGO_COMPLETO = [
@@ -112,108 +113,8 @@ CATALOGO_COMPLETO = [
             }
         ]
     },
-    # 02 - Arquitetura Agêntica, SDD & Skills de Engenharia
-    {
-        "slug": "02-arquitetura-agentica-spec-driven",
-        "title": "Arquitetura Agêntica, Spec-Driven Development & Skills de Design/Código",
-        "camada": "Camada 02 · Orquestração de Agentes & Skills",
-        "accent": "#1A446C", "accent_dark": "#7AA5D6", "accent_soft": "#DCE7F2", "accent_soft_dark": "#162436",
-        "deck": "Frameworks e <strong>skills agênticas para orquestrar squads com contratos estritos, qualidade visual (Impeccable), fidelidade de marca (Hallmark) e grafos de código</strong>.",
-        "pilar_1": "O Fim do Chatbot Monolítico",
-        "pilar_1_desc": "Pedir tudo em um único prompt gera alucinação e perda de foco. A engenharia moderna decompõe o projeto em papéis especializados com permissões restritas.",
-        "pilar_2": "Spec-Driven Development & Skills",
-        "pilar_2_desc": "Requisitos viram SPEC.md e testes unitários antes de qualquer código. Skills agênticas aplicam guardrails de design, conformidade e memória sem esforço.",
-        "itens": [
-            {
-                "rank": "01", "name": "Skill: impeccable", "cat": "Design & UI Guardrail Skill", "lic": "MIT / Design Skill",
-                "substitui": "Interfaces geradas por IA genéricas e feias", "econ": "Zero retrabalho de frontend e CSS",
-                "entrega": "Impõe regras matemáticas de design system: alinhamento estrito, tokens CSS, contraste WCAG AAA, hierarquia tipográfica e scrollbars customizadas.",
-                "mecanica": "Injeta guardrails de design na geração de código frontend: proíbe classes inline aleatórias, exige uso de variáveis CSS padronizadas, dark mode nativo e acabamento editorial refinado.",
-                "cmd": "# Regra: 'Artefatos visuais seguem padrao editorial unico validado por gate de design'",
-                "como_usar": "1. Ative a skill <code>impeccable</code> no seu agente de frontend.<br>2. Peça para gerar dashboards, landing pages ou componentes UI.<br>3. O agente emite código com acabamento profissional, proporção áurea, dark mode automático e scrollbar de 4px.",
-                "spec": "0 MB RAM / Guardrail de prompt",
-                "truth": "Elimina a aparência 'cara de template de IA' e gera interfaces prontas para produtos comerciais de alto nível.",
-                "repo": "github.com/topics/design-system-skills"
-            },
-            {
-                "rank": "02", "name": "Skill: code-review-graph", "cat": "Graph Navigation Skill", "lic": "MIT / Codebase Graph",
-                "substitui": "Exploração cega de arquivos pelo agente", "econ": "-75% de chamadas de exploração de código",
-                "entrega": "Mapeia as dependências, classes, funções e chamadas do repositório em um grafo antes de permitir alterações.",
-                "mecanica": "Lê o índice de símbolos gerado por AST e constrói a árvore de impacto: ao alterar a função A, consulta imediatamente quais módulos B, C e D serão afetados antes de escrever código.",
-                "cmd": "# Regra: 'Consultar code-review-graph antes de tools de leitura/busca'",
-                "como_usar": "1. O agente consulta o índice de grafo para saber onde a função é importada.<br>2. Identifica todos os pontos de quebra antes de editar o primeiro arquivo.<br>3. Aplica refatorações cirúrgicas com 0 erros de regressão.",
-                "spec": "Grafo local em SQLite / < 20 MB",
-                "truth": "Permite ao agente saber exatamente o efeito colateral de qualquer mudança sem precisar ler 50 arquivos.",
-                "repo": "github.com/code-review-graph"
-            },
-            {
-                "rank": "03", "name": "Skill: hallmark", "cat": "Brand & Editorial Fidelity", "lic": "MIT / Editorial Skill",
-                "substitui": "Textos com tom de voz inconsistente", "econ": "100% de conformidade editorial",
-                "entrega": "Audita e formata todo o conteúdo de saída de acordo com a voz de marca, rigor terminológico e regras de idioma estritas (PT-BR).",
-                "mecanica": "Valida os artefatos contra uma tabela de termos proibidos (buzzwords vazias, exageros de marketing) e força o uso de precisão técnica e linguagem direta.",
-                "cmd": "# Regra: 'Idioma único e estrito (PT-BR), sem preâmbulos, direto ao ponto'",
-                "como_usar": "1. Ative a skill <code>hallmark</code> em agentes de documentação e relatórios.<br>2. Ao gerar artigos, relatórios técnicos ou documentações de API, o texto sai limpo, sem enrolação e com terminologia consistente.<br>3. Economize tempo de revisão humana de texto.",
-                "spec": "0 MB RAM / Regra comportamental",
-                "truth": "Documentação com ruído e palavras vazias reduz a autoridade técnica do projeto. O Hallmark garante tom impecável.",
-                "repo": "github.com/topics/editorial-standards"
-            },
-            {
-                "rank": "04", "name": "Skill: mira-animator", "cat": "Declarative Motion Skill", "lic": "MIT / Motion Skill",
-                "substitui": "Animações pesadas em JavaScript", "econ": "60 FPS nativo e zero bibliotecas extras",
-                "entrega": "Gera keyframes e transições em CSS puro e Canvas acelerado por hardware com curvas de bezier naturais.",
-                "mecanica": "Aplica física de amortecimento (spring physics) e aceleração de GPU (<code>transform</code> e <code>opacity</code>) sem importar bibliotecas pesadas de 100KB como Framer Motion.",
-                "cmd": "# Regra: 'Animações fluidas via CSS transforms/opacity nativos com will-change'",
-                "como_usar": "1. Peça ao agente para criar microinterações para botões, modais e transições de página.<br>2. A skill gera CSS enxuto com aceleração por hardware.<br>3. Sua interface roda fluida a 120 FPS em celulares e desktops.",
-                "spec": "CSS nativo / 0 overhead JS",
-                "truth": "Animações feitas com CSS nativo e transforms não bloqueiam a thread principal do navegador.",
-                "repo": "github.com/topics/css-animation"
-            },
-            {
-                "rank": "05", "name": "Spec-Kit", "cat": "Spec-Driven Dev", "lic": "MIT",
-                "substitui": "Desenvolvimento desgovernado por IA", "econ": "Economiza semanas de retrabalho em código",
-                "entrega": "Framework formal do GitHub Next para criar especificações executáveis e validar contratos antes de programar.",
-                "mecanica": "Estrutura o fluxo em três estágios rígidos (SPEC -> PLAN -> TASKS). O agente é impedido de modificar arquivos de implementação até que os arquivos de contrato e a suíte de testes correspondente tenham sido validados.",
-                "cmd": "# SPEC.md -> PLAN.md -> TASKS.md -> EXECUÇÃO",
-                "como_usar": "1. Crie <code>SPEC.md</code> definindo critérios de aceite e assinaturas de API.<br>2. O agente gera <code>PLAN.md</code> e quebra em tarefas atômicas.<br>3. Implementa apenas após a aprovação do plano, testando cada função.",
-                "spec": "Documentação formal + testes",
-                "truth": "Garante que a IA nunca comece a gerar arquivos sem saber exatamente o critério de aceite.",
-                "repo": "github.com/github/spec-kit"
-            },
-            {
-                "rank": "06", "name": "Aider CLI", "cat": "Git Pair Programmer", "lic": "Apache-2.0",
-                "substitui": "Assinatura Cursor ($ 20/mês)", "econ": "-$ 240 / ano por desenvolvedor",
-                "entrega": "Assistente de linha de comando que opera no repositório Git, resolve issues e gera commits semânticos com árvore AST.",
-                "mecanica": "Constrói um mapa de repositório (repo map) compacto usando Tree-sitter, envia apenas as assinaturas relevantes no prompt e aplica diffs unificados diretamente nos arquivos com validação de linters e testes locais.",
-                "cmd": "pip install aider-chat && aider --model ollama/qwen2.5-coder:7b",
-                "como_usar": "1. No terminal do projeto, execute <code>aider src/main.py</code>.<br>2. Diga: 'Implemente autenticação JWT e adicione testes pytest'.<br>3. O Aider edita o código, roda os testes locais e faz o commit semântico no Git automaticamente.",
-                "spec": "~60 MB RAM",
-                "truth": "Líder mundial consistente no benchmark SWE-bench para resolução de problemas reais de engenharia de software.",
-                "repo": "aider.chat"
-            },
-            {
-                "rank": "07", "name": "OpenHands (OpenDevin)", "cat": "Autonomous Sandbox", "lic": "MIT",
-                "substitui": "Devin / Magic.dev ($ 500+/mês)", "econ": "-$ 6.000 / ano em ferramentas fechadas",
-                "entrega": "Plataforma de agentes autônomos executados em containers Docker isolados com capacidade de usar browser, terminal e editor.",
-                "mecanica": "Executa um runtime seguro com loop de evento autônomo (Thought -> Action -> Observation). O agente possui acesso a uma VM Linux containerizada onde instala pacotes, roda servidores e depura erros no terminal.",
-                "cmd": "docker run -it -p 3000:3000 ghcr.io/all-hands-ai/openhands:main",
-                "como_usar": "1. Acesse <code>http://localhost:3000</code> e conecte seu repositório Git.<br>2. Atribua uma issue de bug ou refatoração complexa.<br>3. Acompanhe o agente instalando dependências, rodando testes e abrindo o Pull Request.",
-                "spec": "Ambiente Docker isolado",
-                "truth": "O agente instala pacotes e roda testes sem colocar em risco o sistema operacional do desenvolvedor.",
-                "repo": "all-hands.dev"
-            },
-            {
-                "rank": "08", "name": "Instructor", "cat": "Structured Outputs", "lic": "MIT",
-                "substitui": "Tratamento manual de erros de JSON", "econ": "Economiza horas de debugging de parsing",
-                "entrega": "Biblioteca Python/TS que envelopa chamadas de LLM com validação estrita de modelos Pydantic e retentativas automáticas.",
-                "mecanica": "Envia o schema JSON via Function Calling/Tool Use e valida a resposta no Pydantic. Se ocorrer erro de validação de tipo, reenvia automaticamente apenas o erro de validação para o modelo com instrução de auto-correção.",
-                "cmd": "pip install instructor",
-                "como_usar": "1. Envolva seu cliente: <code>client = instructor.from_openai(OpenAI())</code>.<br>2. Defina o schema: <code>class Lead(BaseModel): nome: str, email: str</code>.<br>3. Chame a API com <code>response_model=Lead</code> e receba objetos Python tipados.",
-                "spec": "Zero runtime overhead",
-                "truth": "Se a saída não validar no Pydantic, o Instructor reenvia apenas o erro para a LLM corrigir o campo exato.",
-                "repo": "python.useinstructor.com"
-            }
-        ]
-    },
+    LISTA_02_EXPANDIDA,
+    # 03 - Design, Mídia & Ferramentas de Criação Visual
     # 03 - Design, Mídia & Ferramentas de Criação Visual
     {
         "slug": "03-design-ui-midia-soberana",
