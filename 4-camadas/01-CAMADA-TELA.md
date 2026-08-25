@@ -8,6 +8,24 @@
 
 ---
 
+## 🏛️ Os Princípios Universais & Imutáveis da Camada TELA
+
+Independente de qual modelo de IA, linguagem ou editor você use, a Camada 1 é governada por três leis físicas imutáveis da ciência da computação:
+
+### 1. Princípio da Invariância de Prefixo (*KV-Cache Invariance*)
+* **A Lei:** Modelos de linguagem utilizam mecanismos de atenção que armazenam chaves e valores (*KV-Cache*) do início do prompt. Se o prefixo do prompt permanecer **100% imutável**, o hardware reaproveita a computação anterior, reduzindo a latência em até 80% e o custo financeiro em até 90%.
+* **Aplicação Prática:** A governança (`CLAUDE.md`) é mantida estática e congelada. Qualquer informação volátil ou aprendizado temporário da sessão é extraído e gravado em arquivo separado (`RTK-SCRATCHPAD.md`), garantindo que o prefixo nunca seja quebrado.
+
+### 2. Princípio da Densidade Informacional de Shannon (*Zero Entropia Prolixa*)
+* **A Lei:** A Teoria da Informação de Claude Shannon prova que ruído e redundância degradam a fidelidade do sinal. No contexto de um LLM, palavras vazias ("como uma IA", "com certeza", "espero ajudar") ocupam espaço atencional precioso e aumentam a probabilidade de alucinação.
+* **Aplicação Prática:** O *Caveman Thinking* e o *Vocabulário Controlado* forçam a taxa máxima de densidade semântica por token. Apenas informação essencial transita no rascunho interno do modelo.
+
+### 3. Princípio da Localidade Espacial de Contexto (*Context Locality*)
+* **A Lei:** A capacidade de recuperação de fatos de um LLM degrada exponencialmente à medida que o tamanho da janela de contexto aumenta (*Lost in the Middle Phenomenon*). Quanto mais texto irrelevante for injetado, menor a precisão do modelo sobre o código crítico.
+* **Aplicação Prática:** O *Lean-CTX* e o *Headroom* proíbem despejos brutos de arquivos e logs. Localiza-se cirurgicamente o trecho via `grep` antes de qualquer leitura.
+
+---
+
 ## 1. O Que Foi Feito
 
 Nesta camada, estruturamos e blindamos todo o conjunto de instruções, prompts de sistema, vocabulário e contexto que alimenta os modelos de IA:
@@ -86,7 +104,7 @@ Um script Python determinístico que confere:
 
 ---
 
-## 5. Como Replicar o Que Foi Feito (Guia Passo a Passo)
+## 5. Como Replicar o Que Foi Feito (Guia Passo a Passo Universal)
 
 Para aplicar exatamente esta mesma Camada 1 em qualquer projeto novo ou legado:
 
@@ -116,4 +134,4 @@ Se o terminal exibir:
  ✅ CAMADA 1 (TELA) 100% APROVADA: Prompt Caching, Regras R1-R18, 5 Skills & Vocabulário!
 ================================================================================
 ```
-A sua Camada 1 está oficialmente **100% configurada, blindada e pronta para produção**.
+A sua Camada 1 está oficialmente **100% configurada, blindada e pronta para produção em qualquer ambiente**.

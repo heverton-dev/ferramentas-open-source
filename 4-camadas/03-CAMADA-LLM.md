@@ -8,14 +8,25 @@
 
 ---
 
-## 1. O Que É e Por Que Importa
+## 🏛️ Os Princípios Universais & Imutáveis da Camada LLM
 
-A **Camada LLM** cuida do motor cognitivo em si. Não adianta ter ótimas regras na TELA se usamos um modelo "canhão" caríssimo (ex: Claude 3.7 / GPT-4o) para tarefas mecânicas que um modelo ultrarrápido (ex: Flash / Haiku) faria por 1% do custo.
-Também não adianta pedir JSON se o modelo responder com texto livre e quebrar o script downstream.
+A **Camada LLM** é a geradora de hipóteses probabilísticas. Ela opera sob três princípios imutáveis de inteligência de máquina:
+
+### 1. Princípio do Roteamento por Pareto (*Capacidade vs Custo Exponencial*)
+* **A Lei:** O custo financeiro e a latência de modelos de raciocínio profundo (*Frontier/Reasoning Models*) crescem exponencialmente em relação a modelos rápidos (*Flash/Mini/Haiku*), enquanto 80% das tarefas de engenharia (como formatação, busca de padrões e checagens sintáticas) não demandam raciocínio complexo.
+* **Aplicação Prática:** A esteira divide o trabalho em **Tiers Semânticos**. Tarefas mecânicas rodam em modelos de baixo custo (Tier 1), reservando modelos pesados (Tier 3) estritamente para arquitetura crítica e refatoração profunda.
+
+### 2. Princípio do Contrato Tipado Estrito (*Type Safety via Schema Enforcement*)
+* **A Lei:** Modelos de linguagem geram texto probabilístico livre. Confiar em texto livre para acionar ferramentas ou alimentar bancos de dados resulta em falhas de interpretação (*JSON Parsing Errors*).
+* **Aplicação Prática:** Todo fluxo que alimenta ferramentas ou scripts determinísticos deve forçar **Structured Outputs** via *JSON Schema / Pydantic*, garantindo tipagem estrita no nível do payload de saída do modelo.
+
+### 3. Princípio da Contingência por Degradação Graciosa (*Fallback Resilience*)
+* **A Lei:** Qualquer provedor de API de nuvem está sujeito a indisponibilidades, picos de latência ou bloqueios de taxa (*Rate Limit 429*).
+* **Aplicação Prática:** A camada de LLM deve conter rotas de contingência automáticas para modelos alternativos (ex: Gemini Flash ➡️ Claude Haiku ➡️ Ollama Local) sem interromper a execução do fluxo.
 
 ---
 
-## 2. O Que Já Foi Feito (Onde Estamos Hoje - 15%)
+## 1. O Que Foi Feito (Onde Estamos Hoje - 15%)
 
 1. **Prompting de Compressão de Raciocínio (CoT):**
    * Redução de verbosidade interna via *Caveman Thinking*.
@@ -24,17 +35,22 @@ Também não adianta pedir JSON se o modelo responder com texto livre e quebrar 
 
 ---
 
+## 2. Por Que Foi Feito
+
+* **A Dor Resolvida (Faturas Astronômicas):** Sem roteamento semântico, gasta-se modelos topo de linha para ler arquivos ou rodar comandos simples.
+* **O Risco Mitigado (Falhas de Parsing):** Saídas não-estruturadas quebram scripts determinísticos downstream.
+
+---
+
 ## 3. O Que Será Feito para Chegar aos 100%
 
 1. **Matriz de Tiers de Modelos por Complexidade da Tarefa:**
-   * **Tier 1 (Rápido / Barato - Flash / Haiku / Mini):** Usado para leituras de arquivo, pesquisas de grep, conferência de sintaxe e listagem de diretórios.
-   * **Tier 2 (Equilibrado - Sonnet / GPT-4o):** Usado para geração de código, edição de fichas e escrita de testes.
-   * **Tier 3 (Raciocínio Pesado - Pro / Opus / Reasoning):** Usado exclusivamente para decisões de arquitetura e resolução de bugs complexos.
+   * **Tier 1 (Rápido / Barato):** Para buscas, grep, listagens e verificações.
+   * **Tier 2 (Equilibrado):** Para código, testes e documentação.
+   * **Tier 3 (Raciocínio Pesado):** Para decisões de arquitetura e resolução de bugs complexos.
 2. **Structured Outputs com Schema Rígido:**
-   * Definição de contratos JSON Schema para todas as ferramentas determinísticas que recebem dados do agente, eliminando 100% dos erros de parsing.
-3. **Políticas de Fallback Automático:**
-   * Se o modelo principal sofrer *Rate Limit* (HTTP 429) ou indisponibilidade, chavear automaticamente para o modelo de contingência sem derrubar o desenvolvedor.
-4. **Gate Mecânico da Camada 3 (`scripts/auditar_camada_llm.py`):**
+   * Definição de contratos JSON Schema para todas as ferramentas determinísticas.
+3. **Gate Mecânico da Camada 3 (`scripts/auditar_camada_llm.py`):**
    * Script Python que valida os contratos de schema JSON e a configuração de tiers.
 
 ---
@@ -47,6 +63,6 @@ Também não adianta pedir JSON se o modelo responder com texto livre e quebrar 
 
 ---
 
-## 5. Como Replicar o Que Foi Feito (Guia de Replicação)
+## 5. Como Replicar o Que Foi Feito (Guia Passo a Passo)
 
 *(Esta seção será preenchida com os comandos e códigos exatos assim que executarmos a implementação da Camada 3).*
