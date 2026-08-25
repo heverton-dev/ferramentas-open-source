@@ -84,6 +84,15 @@ alwaysApply: true
   etapa ja existir, o sistema SEMPRE oferece a escolha entre **Criar Nova**
   (versiona a existente) ou **Sobrescrever Existente**. Nunca decidir isso
   silenciosamente — a escolha e sempre do operador.
+- **R18 (Higiene Contínua, Zero Entulho & Sincronização Estrita):** regra inegociável
+  de pureza do repositório: (1) **Zero Arquivos Temporários:** nenhum script descartável
+  (ex.: `temp_*`, `fix_*_temp.py`, `migrar_*.py`, `.bak`, `.tmp`) pode permanecer
+  no repositório após o término da tarefa. (2) **Paridade Estrita de Espelhos:** qualquer
+  documento ou compêndio gerado/editado em `output/listas-open-source/` DEVE ter
+  paridade de hash e conteúdo idêntica em `docs/listas/` (mecanizado via `scripts/auditar_higiene_repo.py`).
+  (3) **Zero Duplicidade de Camadas:** toda ferramenta ou camada possui identificador
+  único, contínuo e sem sobreposições. O hook `pre-commit` bloqueia qualquer tentativa
+  de commitar com divergência de espelho ou lixo temporário (`exit 1`).
 
 ### Tipos de Artefato — registro declarativo `[CUSTOMIZAR]`
 
