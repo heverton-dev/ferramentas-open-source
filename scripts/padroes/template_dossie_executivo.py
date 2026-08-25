@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-TEMPLATE CANÔNICO DA FÁBRICA UNIVERSAL: DOSSIÊ EXECUTIVO
+TEMPLATE CANÔNICO DA FÁBRICA UNIVERSAL: DOSSIÊ EXECUTIVO (PADRÃO DIAMANTE)
 Padrão obrigatório e imutável para todas as 49 listas de tecnologias open source.
 
-ESTRUTURA CANÔNICA:
+ESTRUTURA CANÔNICA DIAMANTE:
 1. Header Executivo:
    - Breadcrumb com link rápido: [← Voltar ao Hub Central]
    - Badge de Camada: .layer-badge (ex: 'Camada 01', 'Camada 35')
@@ -13,16 +13,19 @@ ESTRUTURA CANÔNICA:
 
 2. Matriz Comparativa Fluida:
    - 100% de largura (sem scroll horizontal)
-   - Quebras em 2 linhas para Economia e Categoria
+   - Linhas com hover suave e badges nítidos
 
-3. Card Dossiê Executivo (div.entry):
+3. Barra de Busca Rápida Local (#fichas):
+   - Filtro client-side em tempo real sem latência
+
+4. Card Dossiê Executivo Diamante (div.entry):
    - .entry-rank: Número com fundo em destaque
    - .entry-body:
      - .entry-top: H3 (Nome · Subtítulo) + Badges (Senioridade, Substitui, Economia, Licença, Categoria)
      - .entry-section 1: O Que Faz & Como Funciona + Bloco de Código com botão Copiar
      - .entry-section 2: Análise Econômica & Substituição de Soluções Proprietárias (.econ-grid)
      - .entry-section 3: Requisitos de Infraestrutura, Ecossistema & Veredito (.infra-grid + botão GitHub)
-     - .entry-section 4: Como Usar no Dia a Dia (.steps-grid com 3 mini-cards)
+     - .entry-section 4: Como Usar no Dia a Dia (.steps-grid com 3 mini-cards visuais)
 """
 import sys
 
