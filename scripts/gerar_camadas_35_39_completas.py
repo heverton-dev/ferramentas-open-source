@@ -111,6 +111,12 @@ CSS_PADRAO = """  * { scrollbar-width: thin; scrollbar-color: var(--accent) tran
   a:hover { text-decoration-color:var(--accent); }
   .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
 
+  .how-to-use { display:flex; flex-direction:column; gap:8px; padding-top:14px; border-top:1px dashed var(--rule-soft); width:100%; }
+  .how-to-use .label { color:var(--accent); font-weight:600; font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
+  .how-to-use p { margin:0; font-size:14.5px; line-height:1.55; color:var(--ink-2); }
+  .how-to-use p strong { color:var(--ink); font-weight:600; }
+  .how-to-use code { font-family:var(--mono); font-size:12.5px; background:var(--surface-2); padding:2px 6px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
+
   footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
   footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }"""
 
@@ -129,6 +135,14 @@ def render_html(camada_num, eyebrow, titulo, deck, chips, cores, items):
     # Fichas
     entries_html = []
     for item in items:
+        como_usar_html = ""
+        if "como_usar" in item and item["como_usar"]:
+            como_usar_html = f"""
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>{item['como_usar']}</p>
+          </div>"""
+
         entries_html.append(f"""      <!-- {item['rank']:02d}. {item['nome']} -->
       <div class="entry">
         <div class="entry-rank">{item['rank']:02d}</div>
@@ -156,7 +170,7 @@ def render_html(camada_num, eyebrow, titulo, deck, chips, cores, items):
               </div>
               <div class="repo"><a href="{item['github']}" target="_blank">{item['github'].replace('https://', '')}</a></div>
             </div>
-          </div>
+          </div>{como_usar_html}
         </div>
       </div>""")
     ledger = "\n\n".join(entries_html)

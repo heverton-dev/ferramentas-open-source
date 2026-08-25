@@ -101,6 +101,13 @@
 
   footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
   footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+
+  .how-to-use { display:flex; flex-direction:column; gap:8px; padding-top:14px; border-top:1px dashed var(--rule-soft); width:100%; }
+  .how-to-use .label { color:var(--accent); font-weight:600; font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
+  .how-to-use p { margin:0; font-size:14.5px; line-height:1.55; color:var(--ink-2); }
+  .how-to-use p strong { color:var(--ink); font-weight:600; }
+  .how-to-use code { font-family:var(--mono); font-size:12.5px; background:var(--surface-2); padding:2px 6px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
+
 </style>
 </head>
 <body>
@@ -203,10 +210,13 @@ from pyiceberg.catalog import load_catalog</code></pre>
               <div class="repo"><a href="https://github.com/apache/iceberg" target="_blank">github.com/apache/iceberg</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Configure o Iceberg como formato padrão de tabela no catálogo de dados (ex: Nessie, AWS Glue ou REST Catalog).<br>2. Grave dados particionados em arquivos Parquet via DuckDB, Spark ou Flink com garantias transacionais ACID.<br>3. Execute consultas analíticas e utilize recursos de <code>time-travel</code> para auditoria e rollback de dados históricos.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 02. DuckDB -->
+      </div><!-- 02. DuckDB -->
       <div class="entry">
         <div class="entry-rank">02</div>
         <div class="entry-body">
@@ -235,10 +245,13 @@ duckdb.sql("SELECT * FROM 'dados/*.parquet' WHERE valor > 100").show()</code></p
               <div class="repo"><a href="https://github.com/duckdb/duckdb" target="_blank">github.com/duckdb/duckdb</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Importe o DuckDB em scripts Python ou instale o binário CLI no seu computador ou servidor.<br>2. Execute queries SQL diretamente sobre gigabytes de arquivos Parquet locais ou remotos em S3: <code>SELECT * FROM 's3://bucket/*.parquet'</code>.<br>3. Gere relatórios analíticos e agregações em menos de 1 segundo sem precisar provisionar um cluster de nuvem.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 03. Polars -->
+      </div><!-- 03. Polars -->
       <div class="entry">
         <div class="entry-rank">03</div>
         <div class="entry-body">
@@ -268,10 +281,13 @@ df = pl.scan_parquet('dados.parquet').filter(pl.col('status') == 'OK').collect()
               <div class="repo"><a href="https://github.com/pola-rs/polars" target="_blank">github.com/pola-rs/polars</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Substitua <code>import pandas as pd</code> por <code>import polars as pl</code> em seus pipelines de dados.<br>2. Utilize a API Lazy (<code>pl.scan_parquet()</code>) para permitir que o otimizador construa planos de execução eficientes.<br>3. Processe transformações pesadas utilizando todos os núcleos do processador com consumo de memória previsível.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 04. Airbyte -->
+      </div><!-- 04. Airbyte -->
       <div class="entry">
         <div class="entry-rank">04</div>
         <div class="entry-body">
@@ -299,10 +315,13 @@ df = pl.scan_parquet('dados.parquet').filter(pl.col('status') == 'OK').collect()
               <div class="repo"><a href="https://github.com/airbytehq/airbyte" target="_blank">github.com/airbytehq/airbyte</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Conecte suas fontes de dados (PostgreSQL, Hubspot, Google Ads, Stripe) no painel do Airbyte.<br>2. Configure o destino para o seu Data Lake (MinIO/S3) ou banco analítico com frequência de sincronização desejada.<br>3. Monitore as replicações incrementais via Change Data Capture (CDC) sem impacto na produção.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 05. Dagster -->
+      </div><!-- 05. Dagster -->
       <div class="entry">
         <div class="entry-rank">05</div>
         <div class="entry-body">
@@ -331,10 +350,13 @@ dagster dev</code></pre>
               <div class="repo"><a href="https://github.com/dagster-io/dagster" target="_blank">github.com/dagster-io/dagster</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Defina seus ativos de dados em código Python decorando funções com <code>@asset</code>.<br>2. Visualize o grafo completo de dependências e linhagem de dados no Dagster Webserver.<br>3. Agende execuções automáticas e materialize apenas os dados que sofreram alterações desde a última execução.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 06. dbt-core -->
+      </div><!-- 06. dbt-core -->
       <div class="entry">
         <div class="entry-rank">06</div>
         <div class="entry-body">
@@ -363,10 +385,13 @@ dbt init meu_projeto && dbt run</code></pre>
               <div class="repo"><a href="https://github.com/dbt-labs/dbt-core" target="_blank">github.com/dbt-labs/dbt-core</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Escreva suas transformações analíticas em modelos SQL organizados por camadas (staging, intermediate, marts).<br>2. Execute <code>dbt test</code> para validar chaves primárias, unicidade e regras de negócio antes de disponibilizar as tabelas.<br>3. Gere a documentação técnica e linhagem de dados do projeto automaticamente com <code>dbt docs generate</code>.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 07. ClickHouse -->
+      </div><!-- 07. ClickHouse -->
       <div class="entry">
         <div class="entry-rank">07</div>
         <div class="entry-body">
@@ -395,10 +420,13 @@ dbt init meu_projeto && dbt run</code></pre>
               <div class="repo"><a href="https://github.com/ClickHouse/ClickHouse" target="_blank">github.com/ClickHouse/ClickHouse</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Crie tabelas colunares com o motor <code>MergeTree</code> otimizado para séries temporais e telemetria.<br>2. Ingira milhões de eventos por segundo via Kafka, HTTP ou conectores nativos.<br>3. Conecte ferramentas de BI para rodar agregações sobre bilhões de linhas com tempo de resposta inferior a 50ms.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 08. Trino (Presto) -->
+      </div><!-- 08. Trino (Presto) -->
       <div class="entry">
         <div class="entry-rank">08</div>
         <div class="entry-body">
@@ -426,10 +454,13 @@ dbt init meu_projeto && dbt run</code></pre>
               <div class="repo"><a href="https://github.com/trinodb/trino" target="_blank">github.com/trinodb/trino</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Configure conectores do Trino para diferentes bases (PostgreSQL de produção, MongoDB e Data Lake Iceberg).<br>2. Escreva consultas SQL padronizadas fazendo JOIN entre tabelas de bancos distintos em uma única instrução.<br>3. Distribua o processamento analítico entre múltiplos nós workers com gerenciamento de filas de consulta.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 09. Mage.ai -->
+      </div><!-- 09. Mage.ai -->
       <div class="entry">
         <div class="entry-rank">09</div>
         <div class="entry-body">
@@ -457,10 +488,13 @@ dbt init meu_projeto && dbt run</code></pre>
               <div class="repo"><a href="https://github.com/mage-ai/mage-ai" target="_blank">github.com/mage-ai/mage-ai</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Crie novos pipelines de engenharia de dados em blocos visuais de Python e SQL no navegador.<br>2. Valide o output de cada etapa em tempo real diretamente na interface durante o desenvolvimento.<br>3. Implante o agendamento em produção com notificações automáticas em canais do Slack/Discord.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 10. Redpanda -->
+      </div><!-- 10. Redpanda -->
       <div class="entry">
         <div class="entry-rank">10</div>
         <div class="entry-body">
@@ -488,10 +522,13 @@ dbt init meu_projeto && dbt run</code></pre>
               <div class="repo"><a href="https://github.com/redpanda-data/redpanda" target="_blank">github.com/redpanda-data/redpanda</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Inicie o Redpanda via container único com consumo imediato da API padrão do Apache Kafka.<br>2. Publique e consuma streams de eventos em microsserviços sem se preocupar com gargalos de JVM ou ZooKeeper.<br>3. Armazene tópicos com retenção durável em discos NVMe locais ou faça offload transparente para MinIO/S3.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 11. Apache Kafka -->
+      </div><!-- 11. Apache Kafka -->
       <div class="entry">
         <div class="entry-rank">11</div>
         <div class="entry-body">
@@ -519,10 +556,13 @@ dbt init meu_projeto && dbt run</code></pre>
               <div class="repo"><a href="https://github.com/apache/kafka" target="_blank">github.com/apache/kafka</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Crie tópicos particionados para desacoplar a comunicação entre microsserviços da sua empresa.<br>2. Utilize produtores para registrar transações de negócio e consumidores em grupo para processamento distribuído.<br>3. Implemente Kafka Connect para ingestão contínua de bancos de dados relacionais.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 12. Great Expectations -->
+      </div><!-- 12. Great Expectations -->
       <div class="entry">
         <div class="entry-rank">12</div>
         <div class="entry-body">
@@ -551,10 +591,13 @@ great_expectations init</code></pre>
               <div class="repo"><a href="https://github.com/great-expectations/great_expectations" target="_blank">github.com/great-expectations/great_expectations</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Defina suítes de expectativas de dados (ex: <code>expect_column_values_to_not_be_null('cliente_id')</code>).<br>2. Integre a validação no início e no fim dos pipelines de ETL no Dagster ou Airflow.<br>3. Interrompa a execução e envie alertas caso a qualidade dos dados esteja fora dos padrões esperados.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 13. Feast -->
+      </div><!-- 13. Feast -->
       <div class="entry">
         <div class="entry-rank">13</div>
         <div class="entry-body">
@@ -583,10 +626,13 @@ feast init meu_projeto</code></pre>
               <div class="repo"><a href="https://github.com/feast-dev/feast" target="_blank">github.com/feast-dev/feast</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Registre as entidades e features de Machine Learning em arquivos declarativos no repositório de MLOps.<br>2. Extraia dados históricos consistentes para treinamento de modelos sem risco de vazamento temporal.<br>3. Disponibilize features online em milissegundos via Redis para os modelos de inferência em produção.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 14. MinIO -->
+      </div><!-- 14. MinIO -->
       <div class="entry">
         <div class="entry-rank">14</div>
         <div class="entry-body">
@@ -614,10 +660,13 @@ feast init meu_projeto</code></pre>
               <div class="repo"><a href="https://github.com/minio/minio" target="_blank">github.com/minio/minio</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Faça o deploy do MinIO em servidores com discos NVMe para atuar como o storage central do seu Data Lake.<br>2. Configure políticas de acesso e chaves de API compatíveis com AWS S3 para seus pipelines e ferramentas analíticas.<br>3. Ative versionamento e replicação síncrona entre datacenters para garantir resiliência e recuperação de desastres.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 15. Apache Spark -->
+      </div><!-- 15. Apache Spark -->
       <div class="entry">
         <div class="entry-rank">15</div>
         <div class="entry-body">
@@ -646,10 +695,13 @@ from pyspark.sql import SparkSession</code></pre>
               <div class="repo"><a href="https://github.com/apache/spark" target="_blank">github.com/apache/spark</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Submeta jobs de processamento distribuído em PySpark para transformar terabytes de logs ou imagens.<br>2. Utilize Spark Structured Streaming para ingestão e enriquecimento contínuo de streams de eventos.<br>3. Treine pipelines de Machine Learning em larga escala utilizando o módulo Spark MLlib.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 16. DataHub -->
+      </div><!-- 16. DataHub -->
       <div class="entry">
         <div class="entry-rank">16</div>
         <div class="entry-body">
@@ -678,10 +730,13 @@ datahub docker quickstart</code></pre>
               <div class="repo"><a href="https://github.com/datahub-project/datahub" target="_blank">github.com/datahub-project/datahub</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Configure os conectores de metadados do DataHub para varrer diariamente bancos, dbt e painéis de BI.<br>2. Busque tabelas e colunas por linguagem natural para entender onde estão os dados mais confiáveis da empresa.<br>3. Identifique o impacto de alterações em esquemas de tabelas antes de aplicar migrations em produção.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 17. Cube.js -->
+      </div><!-- 17. Cube.js -->
       <div class="entry">
         <div class="entry-rank">17</div>
         <div class="entry-body">
@@ -710,10 +765,13 @@ cubejs create meu_cube -d duckdb</code></pre>
               <div class="repo"><a href="https://github.com/cube-js/cube" target="_blank">github.com/cube-js/cube</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Modele as dimensões, medidas e agregações de negócio em esquemas semânticos padronizados.<br>2. Conecte diferentes aplicações frontend, chatbots ou painéis de BI através da API REST/GraphQL do Cube.<br>3. Aproveite o sistema de pré-agregação em memória para acelerar consultas analíticas recorrentes.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 18. Apache Arrow -->
+      </div><!-- 18. Apache Arrow -->
       <div class="entry">
         <div class="entry-rank">18</div>
         <div class="entry-body">
@@ -742,10 +800,13 @@ import pyarrow as pa</code></pre>
               <div class="repo"><a href="https://github.com/apache/arrow" target="_blank">github.com/apache/arrow</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Utilize Apache Arrow para transferir dados tabulares entre diferentes processos (ex: C++ para Python) sem custo de cópia.<br>2. Escreva extensões e algoritmos analíticos em memória aproveitando instruções SIMD do processador.<br>3. Integre sistemas analíticos heterogêneos mantendo alto rendimento computacional.</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 19. Apache Superset -->
+      </div><!-- 19. Apache Superset -->
       <div class="entry">
         <div class="entry-rank">19</div>
         <div class="entry-body">
@@ -773,10 +834,13 @@ import pyarrow as pa</code></pre>
               <div class="repo"><a href="https://github.com/apache/superset" target="_blank">github.com/apache/superset</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Conecte o Superset ao seu motor SQL (ClickHouse, Trino, DuckDB, PostgreSQL).<br>2. Construa gráficos interativos, filtros dinâmicos e painéis gerenciais no SQL Lab.<br>3. Compartilhe dashboards com a diretoria com controle de acesso granular por equipe e nível de linha (RLS).</p>
+          </div>
         </div>
-      </div>
-
-      <!-- 20. Metabase -->
+      </div><!-- 20. Metabase -->
       <div class="entry">
         <div class="entry-rank">20</div>
         <div class="entry-body">
@@ -804,9 +868,13 @@ import pyarrow as pa</code></pre>
               <div class="repo"><a href="https://github.com/metabase/metabase" target="_blank">github.com/metabase/metabase</a></div>
             </div>
           </div>
+        
+          <div class="how-to-use">
+            <span class="label">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+            <p>1. Conecte o Metabase ao banco de dados ou réplica analítica da empresa em menos de 5 minutos.<br>2. Permita que equipes de produto e marketing criem perguntas visuais e gráficos sem escrever SQL.<br>3. Configure alertas automáticos por e-mail ou Slack quando métricas de vendas ou retenção baterem metas.</p>
+          </div>
         </div>
-      </div>
-    </div>
+      </div></div>
   </section>
 
   <footer>
