@@ -1,203 +1,260 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arquivamento Digital, OSINT & Preservação Histórica — Compêndio de Soberania Tecnológica</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Camada 30 · Inteligência de Fontes Abertas & Arquivo · Dossiê Executivo</title>
 <style>
-  /* Custom scrollbar estrita 4px */
-  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
-  ::-webkit-scrollbar { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
-
   :root {
-    --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
-    --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
-    --rule:#C7CEDB; --rule-soft:#DADFE8;
-    --accent:#0052CC; --accent-soft:#DEEBFF;
-    --gold:#7A5410; --gold-soft:#EFE5CE;
-    --flag:#8E2436; --flag-soft:#F0D9DD;
-    --green:#1B5E3B; --green-soft:#D8EFE2;
-    --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
-    --mono:ui-monospace,"Cascadia Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    --paper: #F6F4EF;
+    --surface: #FFFFFF;
+    --surface-2: #FBF9F4;
+    --surface-dark: #0A0F1D;
+    --ink: #1B1E23;
+    --ink-2: #383D45;
+    --muted: #666E7A;
+    --rule: #D8D2C4;
+    --rule-soft: #EAE5D9;
+    --accent: #0052CC;
+    --accent-dark: #4C9AFF;
+    --accent-soft: #DEEBFF;
+    --accent-soft-dark: #14233D;
+    --green: #00875A;
+    --green-soft: #E3FCEF;
+    --gold: #FFAB00;
+    --gold-soft: #FFF0B3;
+    --flag: #DE350B;
+    --flag-soft: #FFEBE6;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
   }
+
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
-      --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
-      --rule:#2A3142; --rule-soft:#222836;
-      --accent:#4C9AFF; --accent-soft:#14233D;
-      --gold:#D6A44E; --gold-soft:#332810;
-      --flag:#E0788C; --flag-soft:#3A1A21;
-      --green:#6BC48F; --green-soft:#122B1C;
-      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    :root {
+      --paper: #0E121B;
+      --surface: #141924;
+      --surface-2: #1A2130;
+      --ink: #E6E8ED;
+      --ink-2: #B0B5C0;
+      --muted: #7E8695;
+      --rule: #262F40;
+      --rule-soft: #1E2533;
+      --accent: var(--accent-dark);
+      --accent-soft: var(--accent-soft-dark);
+      --green: #57D9A3;
+      --green-soft: #162B22;
+      --gold: #FFC400;
+      --gold-soft: #332600;
+      --flag: #FF7452;
+      --flag-soft: #361B15;
+      --shadow: 0 1px 3px rgba(0,0,0,0.25);
     }
   }
-  :root[data-theme="dark"] {
-    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
-    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
-    --rule:#2A3142; --rule-soft:#222836;
-    --accent:#4C9AFF; --accent-soft:#14233D;
-    --gold:#D6A44E; --gold-soft:#332810;
-    --flag:#E0788C; --flag-soft:#3A1A21;
-    --green:#6BC48F; --green-soft:#122B1C;
-    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    margin: 0; padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
   }
 
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
-  .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
 
-  header { display:flex; flex-direction:column; gap:20px; }
-  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
-  .eyebrow b { color:var(--accent); font-weight:600; }
-  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
-  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
-  .deck strong { color:var(--ink); font-weight:600; }
-  .chips { display:flex; flex-wrap:wrap; gap:8px; }
-  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
-  .chip b { color:var(--ink); font-weight:600; }
+  /* HEADER & HERO STATS */
+  header { margin-bottom: 32px; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .back-link:hover { color: var(--accent); }
+  .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
 
-  section { display:flex; flex-direction:column; gap:22px; }
-  .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
-  .sec-head.flagged { border-top-color:var(--flag); }
-  .sec-head.warm { border-top-color:var(--gold); }
-  .sec-num { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
-  .sec-head.flagged .sec-num { color:var(--flag); }
-  .sec-head.warm .sec-num { color:var(--gold); }
-  h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
-  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
-  .sec-note strong { color:var(--ink); }
+  .hero { margin: 20px 0 24px; }
+  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 42px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: justify; text-justify: inter-word; }
+  .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
 
-  .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
-  .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
-  .route.official { border-left:3px solid var(--accent); }
-  .route.gray { border-left:3px solid var(--green); }
-  .route h4 { font-family:var(--serif); font-size:21px; font-weight:600; margin:0; }
-  .route .tag { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; }
-  .route.official .tag { color:var(--accent); }
-  .route.gray .tag { color:var(--green); }
-  .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
+  .hero-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px; margin: 24px 0 32px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 12px 16px; box-shadow: var(--shadow);
+  }
+  .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
 
-  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
-  table { border-collapse:collapse; width:100%; min-width:860px; font-size:14px; }
-  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
-  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
-  tbody tr:last-child td { border-bottom:0; }
-  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
-  td.tool { font-weight:600; }
-  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; }
-  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; white-space:nowrap; }
-  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
-  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
+  /* PILARES */
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 24px 0; }
+  .route { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 20px; }
+  .route.red { border-left: 4px solid var(--flag); }
+  .route.green { border-left: 4px solid var(--green); }
+  .route .tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+  .route.red .tag { color: var(--flag); }
+  .route.green .tag { color: var(--green); }
+  .route h4 { font-family: var(--font-serif); font-size: 19px; margin: 6px 0 8px; color: var(--ink); }
+  .route p { margin: 0; font-size: 14px; color: var(--ink-2); }
 
-  .ledger { display:flex; flex-direction:column; gap:20px; }
-  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
-  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
-  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
-  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
-  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
-  .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
-  .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
-  .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
-  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  /* SEÇÕES */
+  .sec-head { margin: 36px 0 16px; }
+  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
+  h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
+  .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
 
-  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
-  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
-  .block { display:flex; flex-direction:column; gap:8px; min-width:0; }
-  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
-  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
-  .block p strong { color:var(--ink); font-weight:600; }
+  /* TABELA FLUIDA */
+  .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+  th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
+  tr:last-child td { border-bottom: none; }
+  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
+  td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
+  td.tool a:hover { color: var(--accent); }
+  td.saas { color: var(--flag); }
+  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
+  td.cat { font-size: 12px; color: var(--muted); }
+  td.lic { font-family: var(--mono); font-size: 11px; }
 
-  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
-  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
+  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO (LARGURA TOTAL) */
+  .ledger { display: flex; flex-direction: column; gap: 24px; }
+  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease; }
+  .entry:hover { border-color: var(--accent); }
+  .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
+  
+  .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 
-  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
-  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
-  .truth { border-left:2px solid var(--gold); padding-left:12px; }
-  .truth p { font-size:14px; }
+  .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
 
-  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
-  a:hover { text-decoration-color:var(--accent); }
-  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
+  .senior-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
+  .senior-badge.green { background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+  .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
+  .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
+  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+  .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
 
-  .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
-  .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
-  .reject p { margin:0; font-size:14.5px; color:var(--ink-2); }
-  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+  .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .entry-section p strong { color: var(--ink); font-weight: 600; }
 
-  footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
-  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
-  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
+  /* GRIDS */
+  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
+  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
+  .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
+  @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
+  .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
+  .infra-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+  .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
+  pre { margin: 0; padding: 10px 48px 10px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; }
+  code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); line-height: 1.45; }
+  .copy-btn { position: absolute; top: 6px; right: 6px; background: var(--surface); border: 1px solid var(--rule); color: var(--muted); border-radius: 2px; padding: 3px 6px; font-family: var(--mono); font-size: 10px; cursor: pointer; }
+  .copy-btn:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+  .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; }
+  .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .repo-btn svg { width: 13px; height: 13px; fill: currentColor; }
+
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 2px; }
+  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .step-head { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; }
+  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+  .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+  .step-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+
+  footer { border-top: 1px solid var(--rule); padding-top: 16px; margin-top: 40px; display: flex; flex-direction: column; gap: 8px; }
+  footer p { margin: 0; font-size: 13px; color: var(--muted); }
 </style>
+<script>
+function copyCode(btn) {
+  const code = btn.previousElementSibling.innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const originalText = btn.innerText;
+    btn.innerText = 'Copiado!';
+    btn.style.color = 'var(--green)';
+    setTimeout(() => {
+      btn.innerText = originalText;
+      btn.style.color = '';
+    }, 2000);
+  }).catch(() => {
+    btn.innerText = 'Erro';
+  });
+}
+</script>
 </head>
 <body>
-
 <div class="wrap">
-
-  <header>
-    <div class="eyebrow">
-      <span>Camada 30 · Inteligência de Fontes Abertas & Arquivo</span><span>·</span><span>Curadoria de Elite</span><span>·</span>
-      <b>20 Ferramentas / Soberania Total</b>
-    </div>
+<header>
+  <div class="header-top">
+    <a class="back-link" href="index.html">← Voltar ao Hub Central</a>
+    <span class="camada-pill">Camada 30</span>
+  </div>
+  <div class="hero">
     <h1>Arquivamento Digital, OSINT & Preservação Histórica</h1>
     <p class="deck">Ferramentas de preservação de páginas web, raspagem forense e inteligência de fontes abertas para <strong>investigação e preservação de dados</strong>.</p>
-    <div class="chips">
-      <div class="chip"><b>20</b> tecnologias auditadas</div>
-      <div class="chip"><b>0</b> taxas por assento ou cota oculta</div>
-      <div class="chip"><b>100%</b> soberania de dados</div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-card"><div class="num">20</div><div class="lbl">Tecnologias Auditadas</div></div>
+    <div class="stat-card"><div class="num">100%</div><div class="lbl">Open-Source & Soberano</div></div>
+    <div class="stat-card"><div class="num">Até 95%</div><div class="lbl">Economia de Custos</div></div>
+    <div class="stat-card"><div class="num">0 Lock-in</div><div class="lbl">Independência Total</div></div>
+  </div>
+</header>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">Parte 1 · Diagnóstico Estratégico</span>
+    <h2>A transição da dependência para a soberania</h2>
+  </div>
+  <div class="grid2">
+    <div class="route red">
+      <span class="tag">O Risco Proprietário</span>
+      <h4>Soberania Operacional</h4>
+      <p>Controle integral sobre o código, dados e arquitetura sem taxas por assento.</p>
     </div>
-  </header>
-
-  <section>
-    <div class="sec-head">
-      <span class="sec-num">Parte 1 · A Equação da Soberania</span>
-      <h2>A fronteira entre refém de nuvem e autonomia técnica</h2>
-      <p class="sec-note">Assinaturas recorrentes cobram pedágio pelo seu próprio crescimento. A engenharia moderna devolve a governança para o desenvolvedor.</p>
+    <div class="route green">
+      <span class="tag">A Solução Aberta</span>
+      <h4>Desempenho & Liberdade</h4>
+      <p>Ferramentas open-source nativas aceleradas por hardware sem telemetria invasiva.</p>
     </div>
+  </div>
+</section>
 
-    <div class="routes">
-      <div class="route official">
-        <span class="tag">O Custo Fechado</span>
-        <h4>Soberania Operacional</h4>
-        <p>Controle integral sobre o código, dados e arquitetura sem taxas por assento.</p>
-      </div>
-
-      <div class="route gray">
-        <span class="tag">A Solução Aberta</span>
-        <h4>Desempenho & Liberdade</h4>
-        <p>Ferramentas open-source nativas aceleradas por hardware sem telemetria invasiva.</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="sec-head">
-      <span class="sec-num">Parte 2 · O Panorama Geral</span>
-      <h2>O inventário completo da camada</h2>
-      <p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
-    </div>
-
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Ferramenta</th>
-            <th>Substitui o SaaS Pago</th>
-            <th>Economia Declarada</th>
-            <th>Categoria</th>
-            <th>Licença</th>
-          </tr>
-        </thead>
-        <tbody>
+<section>
+  <div class="sec-head">
+    <span class="sec-num">Parte 2 · O Panorama Geral</span>
+    <h2>O inventário completo da camada</h2>
+    <p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Ferramenta</th>
+          <th>Substitui o SaaS Pago</th>
+          <th>Economia Declarada</th>
+          <th>Categoria</th>
+          <th>Licença</th>
+        </tr>
+      </thead>
+      <tbody>
           <tr>
             <td class="rank">01</td>
-            <td class="tool">ArchiveBox Self-Hosted</td>
+            <td class="tool"><a href="#card-01">ArchiveBox Self-Hosted</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -205,7 +262,7 @@
           </tr>
           <tr>
             <td class="rank">02</td>
-            <td class="tool">SingleFile Web Archiver</td>
+            <td class="tool"><a href="#card-02">SingleFile Web Archiver</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -213,7 +270,7 @@
           </tr>
           <tr>
             <td class="rank">03</td>
-            <td class="tool">Wayback Machine Downloader</td>
+            <td class="tool"><a href="#card-03">Wayback Machine Downloader</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -221,7 +278,7 @@
           </tr>
           <tr>
             <td class="rank">04</td>
-            <td class="tool">SpiderFoot OSINT Automation</td>
+            <td class="tool"><a href="#card-04">SpiderFoot OSINT Automation</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -229,7 +286,7 @@
           </tr>
           <tr>
             <td class="rank">05</td>
-            <td class="tool">Maltego CE Core</td>
+            <td class="tool"><a href="#card-05">Maltego CE Core</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -237,7 +294,7 @@
           </tr>
           <tr>
             <td class="rank">06</td>
-            <td class="tool">theHarvester Email OSINT</td>
+            <td class="tool"><a href="#card-06">theHarvester Email OSINT</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -245,7 +302,7 @@
           </tr>
           <tr>
             <td class="rank">07</td>
-            <td class="tool">Sherlock Username Hunter</td>
+            <td class="tool"><a href="#card-07">Sherlock Username Hunter</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -253,7 +310,7 @@
           </tr>
           <tr>
             <td class="rank">08</td>
-            <td class="tool">Maigret Profile Investigator</td>
+            <td class="tool"><a href="#card-08">Maigret Profile Investigator</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -261,7 +318,7 @@
           </tr>
           <tr>
             <td class="rank">09</td>
-            <td class="tool">Photon Web OSINT</td>
+            <td class="tool"><a href="#card-09">Photon Web OSINT</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -269,7 +326,7 @@
           </tr>
           <tr>
             <td class="rank">10</td>
-            <td class="tool">PhoneInfoga Number Recon</td>
+            <td class="tool"><a href="#card-10">PhoneInfoga Number Recon</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -277,7 +334,7 @@
           </tr>
           <tr>
             <td class="rank">11</td>
-            <td class="tool">GHunt Google Account Recon</td>
+            <td class="tool"><a href="#card-11">GHunt Google Account Recon</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -285,7 +342,7 @@
           </tr>
           <tr>
             <td class="rank">12</td>
-            <td class="tool">Twint / Nitter Twitter Scraper</td>
+            <td class="tool"><a href="#card-12">Twint / Nitter Twitter Scraper</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -293,7 +350,7 @@
           </tr>
           <tr>
             <td class="rank">13</td>
-            <td class="tool">Hunchly Free Toolset</td>
+            <td class="tool"><a href="#card-13">Hunchly Free Toolset</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -301,7 +358,7 @@
           </tr>
           <tr>
             <td class="rank">14</td>
-            <td class="tool">Metagoofil Metadata Extractor</td>
+            <td class="tool"><a href="#card-14">Metagoofil Metadata Extractor</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -309,7 +366,7 @@
           </tr>
           <tr>
             <td class="rank">15</td>
-            <td class="tool">ExifTool Metadata Engine</td>
+            <td class="tool"><a href="#card-15">ExifTool Metadata Engine</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -317,7 +374,7 @@
           </tr>
           <tr>
             <td class="rank">16</td>
-            <td class="tool">Recon-ng OSINT Framework</td>
+            <td class="tool"><a href="#card-16">Recon-ng OSINT Framework</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -325,7 +382,7 @@
           </tr>
           <tr>
             <td class="rank">17</td>
-            <td class="tool">OSINT Framework Tools</td>
+            <td class="tool"><a href="#card-17">OSINT Framework Tools</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -333,7 +390,7 @@
           </tr>
           <tr>
             <td class="rank">18</td>
-            <td class="tool">Shodan CLI Community</td>
+            <td class="tool"><a href="#card-18">Shodan CLI Community</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -341,7 +398,7 @@
           </tr>
           <tr>
             <td class="rank">19</td>
-            <td class="tool">Certstream SSL Monitor</td>
+            <td class="tool"><a href="#card-19">Certstream SSL Monitor</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
@@ -349,824 +406,1630 @@
           </tr>
           <tr>
             <td class="rank">20</td>
-            <td class="tool">Web-Check Complete Domain Recon</td>
+            <td class="tool"><a href="#card-20">Web-Check Complete Domain Recon</a></td>
             <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
             <td class="econ">Economia de até 100% em licenças de software</td>
             <td class="cat">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</td>
             <td class="lic">MIT / GPL / Apache-2.0</td>
           </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+      </tbody>
+    </table>
+  </div>
+</section>
 
-  <section>
-    <div class="sec-head">
-      <span class="sec-num">Parte 3 · O Detalhamento Técnico & Workflows Práticos</span>
-      <h2>As fichas técnicas completas com Guia do Dia a Dia</h2>
-      <p class="sec-note">O que faz, como funciona por baixo dos panos, comandos de execução e <strong>passo a passo detalhado para o seu fluxo diário</strong>.</p>
-    </div>
-
-    <div class="ledger">
-      <!-- 01 ArchiveBox Self-Hosted -->
-      <div class="entry">
+<section>
+  <div class="sec-head">
+    <span class="sec-num">Parte 3 · Dossiê Técnico das Ferramentas</span>
+    <h2>Fichas técnicas individuais de arquitetura</h2>
+    <p class="sec-note">Análise profunda de cada tecnologia: o que faz, como funciona por baixo dos panos, como usar e veredito.</p>
+  </div>
+  <div class="ledger">
+      <article class="entry" id="card-01">
         <div class="entry-rank">01</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>ArchiveBox Self-Hosted</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar ArchiveBox Self-Hosted no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>ArchiveBox Self-Hosted</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>ArchiveBox Self-Hosted</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 02 SingleFile Web Archiver -->
-      <div class="entry">
+      <article class="entry" id="card-02">
         <div class="entry-rank">02</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>SingleFile Web Archiver</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar SingleFile Web Archiver no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>SingleFile Web Archiver</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>SingleFile Web Archiver</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 03 Wayback Machine Downloader -->
-      <div class="entry">
+      <article class="entry" id="card-03">
         <div class="entry-rank">03</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>Wayback Machine Downloader</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar Wayback Machine Downloader no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Wayback Machine Downloader</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>Wayback Machine Downloader</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 04 SpiderFoot OSINT Automation -->
-      <div class="entry">
+      <article class="entry" id="card-04">
         <div class="entry-rank">04</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>SpiderFoot OSINT Automation</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar SpiderFoot OSINT Automation no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>SpiderFoot OSINT Automation</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>SpiderFoot OSINT Automation</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 05 Maltego CE Core -->
-      <div class="entry">
+      <article class="entry" id="card-05">
         <div class="entry-rank">05</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>Maltego CE Core</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar Maltego CE Core no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Maltego CE Core</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>Maltego CE Core</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 06 theHarvester Email OSINT -->
-      <div class="entry">
+      <article class="entry" id="card-06">
         <div class="entry-rank">06</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>theHarvester Email OSINT</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar theHarvester Email OSINT no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>theHarvester Email OSINT</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>theHarvester Email OSINT</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 07 Sherlock Username Hunter -->
-      <div class="entry">
+      <article class="entry" id="card-07">
         <div class="entry-rank">07</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>Sherlock Username Hunter</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar Sherlock Username Hunter no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Sherlock Username Hunter</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>Sherlock Username Hunter</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 08 Maigret Profile Investigator -->
-      <div class="entry">
+      <article class="entry" id="card-08">
         <div class="entry-rank">08</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>Maigret Profile Investigator</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar Maigret Profile Investigator no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Maigret Profile Investigator</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>Maigret Profile Investigator</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 09 Photon Web OSINT -->
-      <div class="entry">
+      <article class="entry" id="card-09">
         <div class="entry-rank">09</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>Photon Web OSINT</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar Photon Web OSINT no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Photon Web OSINT</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>Photon Web OSINT</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 10 PhoneInfoga Number Recon -->
-      <div class="entry">
+      <article class="entry" id="card-10">
         <div class="entry-rank">10</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>PhoneInfoga Number Recon</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar PhoneInfoga Number Recon no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>PhoneInfoga Number Recon</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>PhoneInfoga Number Recon</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 11 GHunt Google Account Recon -->
-      <div class="entry">
+      <article class="entry" id="card-11">
         <div class="entry-rank">11</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>GHunt Google Account Recon</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar GHunt Google Account Recon no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>GHunt Google Account Recon</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>GHunt Google Account Recon</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 12 Twint / Nitter Twitter Scraper -->
-      <div class="entry">
+      <article class="entry" id="card-12">
         <div class="entry-rank">12</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>Twint / Nitter Twitter Scraper</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar Twint / Nitter Twitter Scraper no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Twint / Nitter Twitter Scraper</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>Twint / Nitter Twitter Scraper</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 13 Hunchly Free Toolset -->
-      <div class="entry">
+      <article class="entry" id="card-13">
         <div class="entry-rank">13</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>Hunchly Free Toolset</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar Hunchly Free Toolset no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Hunchly Free Toolset</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>Hunchly Free Toolset</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 14 Metagoofil Metadata Extractor -->
-      <div class="entry">
+      <article class="entry" id="card-14">
         <div class="entry-rank">14</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>Metagoofil Metadata Extractor</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar Metagoofil Metadata Extractor no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Metagoofil Metadata Extractor</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>Metagoofil Metadata Extractor</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 15 ExifTool Metadata Engine -->
-      <div class="entry">
+      <article class="entry" id="card-15">
         <div class="entry-rank">15</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>ExifTool Metadata Engine</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar ExifTool Metadata Engine no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>ExifTool Metadata Engine</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>ExifTool Metadata Engine</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 16 Recon-ng OSINT Framework -->
-      <div class="entry">
+      <article class="entry" id="card-16">
         <div class="entry-rank">16</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>Recon-ng OSINT Framework</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar Recon-ng OSINT Framework no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Recon-ng OSINT Framework</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>Recon-ng OSINT Framework</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 17 OSINT Framework Tools -->
-      <div class="entry">
+      <article class="entry" id="card-17">
         <div class="entry-rank">17</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>OSINT Framework Tools</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar OSINT Framework Tools no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>OSINT Framework Tools</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>OSINT Framework Tools</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 18 Shodan CLI Community -->
-      <div class="entry">
+      <article class="entry" id="card-18">
         <div class="entry-rank">18</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>Shodan CLI Community</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar Shodan CLI Community no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Shodan CLI Community</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>Shodan CLI Community</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 19 Certstream SSL Monitor -->
-      <div class="entry">
+      <article class="entry" id="card-19">
         <div class="entry-rank">19</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>Certstream SSL Monitor</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar Certstream SSL Monitor no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Certstream SSL Monitor</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>Certstream SSL Monitor</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
+      </article>
 
-      <!-- 20 Web-Check Complete Domain Recon -->
-      <div class="entry">
+      <article class="entry" id="card-20">
         <div class="entry-rank">20</div>
         <div class="entry-body">
           <div class="entry-top">
             <h3>Web-Check Complete Domain Recon</h3>
+            <span class="senior-badge green">OFICIAL & TESTADO</span>
             <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
-            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="econ-badge">Economia de até 100% em licenças de software</span>
             <span class="lic-badge">MIT / GPL / Apache-2.0</span>
             <span class="kind">Tecnologia Soberana Inteligência de Fontes Abertas & Arquivo</span>
           </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
 
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
-
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz & Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Solução open-source de alta performance para arquivamento digital, osint & preservação histórica, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+            <p><strong>Mecânica Interna & Arquitetura:</strong> Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+            <div class="code-box">
               <pre><code># Executar Web-Check Complete Domain Recon no ambiente local</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
 
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Web-Check Complete Domain Recon</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica & Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Soluções proprietárias fechadas com mensalidades recorrentes</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada & ROI</span>
+                <span class="econ-val"><strong>Economia de até 100% em licenças de software</strong></span>
               </div>
             </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local / Código aberto</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura & Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos & Hardware</span>
+                <span class="infra-val">Execução local / Código aberto</span>
               </div>
-              <a class="repo" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener">github.com/topics/30-arquivamento-digital-osint</a>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Padrão consolidado no ecossistema open-source mundial para arquivamento digital, osint & preservação histórica.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/topics/30-arquivamento-digital-osint" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/topics/30-arquivamento-digital-osint)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+              <p>Instale o pacote oficial de <code>Web-Check Complete Domain Recon</code>.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+              <p>Configure o arquivo de parâmetros locais.</p>
+            </div>
+            <div class="step-card">
+              <div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+              <p>Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </article>
+  </div>
+</section>
 
-  <section>
-    <div class="sec-head flagged">
-      <span class="sec-num">Parte 4 · A Regra de Ouro</span>
-      <h2>Como operar essa pilha com estabilidade</h2>
-      <p class="sec-note">Diretrizes para rodar ferramentas no seu próprio servidor com resiliência máxima e zero sobrecarga.</p>
-    </div>
-
-    <div class="grid2">
-      <div class="reject">
-        <h4>1. Isolamento em Containers Docker</h4>
-        <p>Nunca instale ferramentas diretamente no sistema host sem isolamento de rede e volumes mapeados em disco seguro.</p>
-      </div>
-      <div class="reject">
-        <h4>2. Proxy Reverso com Caddy / Traefik</h4>
-        <p>Aponte a borda de rede para proxies leves com renovação automática de certificados TLS sem scripts manuais.</p>
-      </div>
-      <div class="reject">
-        <h4>3. Backup Imutável com Restic / Borg</h4>
-        <p>Programe snapshots diários dos volumes para armazenamento S3 remoto compatível para restauração rápida em caso de desastre.</p>
-      </div>
-      <div class="reject">
-        <h4>4. Acesso Seguro via WireGuard / Headscale</h4>
-        <p>Mantenha painéis de administração e bancos de dados fora da internet pública, acessíveis apenas pela VPN mesh interna.</p>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas e viabilidade em produção.</p>
-    <div class="srcs">
-      <span>Open Source Initiative (OSI)</span>
-      <span>Linux Foundation</span>
-      <span>CNCF Landscape</span>
-    </div>
-  </footer>
-
+<footer>
+  <p><strong>Compêndio de Soberania Tecnológica Open-Source · Fábrica Universal</strong></p>
+  <p>Padrão Dossiê Executivo · Documentação auditada e livre de dependências proprietárias.</p>
+</footer>
 </div>
-
 </body>
 </html>
