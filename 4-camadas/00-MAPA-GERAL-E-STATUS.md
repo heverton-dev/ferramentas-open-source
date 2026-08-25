@@ -32,6 +32,7 @@ PROGRESSO GLOBAL    ███████████░░░░░░░░░
 
 ## 📂 Índice dos Cadernos de Engenharia na Raiz:
 
+* **[`00-CONTEXTO-DO-PROJETO.md`](00-CONTEXTO-DO-PROJETO.md):** O caso real de origem (Arsenal Open Source), por que foi feito assim e como transpor para SaaS, Consultorias e Pipelines de Dados.
 * **[`01-CAMADA-TELA.md`](01-CAMADA-TELA.md):** Manual exaustivo da Camada 1 (100% Concluído).
 * **[`02-CAMADA-HARNESS.md`](02-CAMADA-HARNESS.md):** Manual da Camada 2 (Em implementação).
 * **[`03-CAMADA-LLM.md`](03-CAMADA-LLM.md):** Manual da Camada 3 (Em planejamento).
