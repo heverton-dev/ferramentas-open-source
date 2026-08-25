@@ -36,9 +36,12 @@ def limpar_pastas_e_arquivos_temporarios():
             if item.startswith("temp_") and os.path.isdir(caminho):
                 shutil.rmtree(caminho, ignore_errors=True)
                 print(f"  -> Removida pasta temporária: {item}")
-            elif item.endswith(".bak") or item.endswith(".tmp"):
-                os.remove(caminho)
-                print(f"  -> Removido arquivo temporário: {item}")
+            elif item.endswith(".bak") or item.endswith(".tmp") or (item.startswith("repomix-") and item.endswith(".xml")):
+                try:
+                    os.remove(caminho)
+                    print(f"  -> Removido arquivo temporário: {item}")
+                except Exception:
+                    pass
 
 def ressincronizar_espelhos():
     print("[*] Ressincronizando espelhos (output/listas-open-source -> docs/listas)...")

@@ -72,10 +72,9 @@ seu-projeto/
 │   └── commands/             seus comandos
 ├── scripts/
 │   ├── setup-links.ps1/.sh   portabilidade
-│   ├── validate.py           validador de integração
-│   ├── pdf_typst.py          Markdown → PDF (Pandoc → Typst)
-│   ├── hooks/pre-commit      gate de segredos + suíte verde
-│   ├── padroes/              4 templates de padrão
+│   ├── auditar_todas_camadas.py  Super-auditor holístico das 4 camadas
+│   ├── hooks/pre-commit      gate de segredos + suíte verde (6 gates)
+│   ├── padroes/              moldes canônicos HTML/CSS (Padrão Diamante)
 │   └── <seus-scripts>.py
 ├── CLAUDE.md, AGENTS.md, agentic/, .agents/, .opencode/, .cursor/  ← GERADOS
 └── .git/hooks/pre-commit     ← copiado por setup-links
