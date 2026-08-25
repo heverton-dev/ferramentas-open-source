@@ -3,7 +3,8 @@
 > **Papel no Estúdio:** Os Pedais de Efeitos, Instrumentos e Processadores.  
 > **Status:** 45% Implementado ➡️ **Meta: 100%**.  
 > **Unidade de Trabalho:** Servidores MCP (Model Context Protocol), Banco de Estado SQLite (R11), APIs externas e Scripts Python com saída determinística.  
-> **Localização:** `4-camadas/04-CAMADA-TOOLS.md`
+> **Localização:** `4-camadas/04-CAMADA-TOOLS.md`  
+> **Auditor Mecânico:** `scripts/auditar_camada_tools.py` *(a ser criado)*
 
 ---
 
@@ -14,19 +15,20 @@ Quando a IA precisa fazer cálculos, validar regras de negócio ou consultar o h
 
 ---
 
-## 2. O Que Já Temos Implementado
+## 2. O Que Já Foi Feito (Onde Estamos Hoje - 45%)
 
 1. **Usina de Scripts Determinísticos em `scripts/`:**
    * `auditar_higiene_repo.py` (Gate R18 com conferência de hash MD5).
    * `limpar_entulho.py` (Auto-saneamento idempotente).
    * `auditar_r5_dossie.py` (Auditor de estrutura DOM dos dossiês).
+   * `auditar_camada_tela.py` (Auditor do prompt mestre e skills).
    * `setup-links.ps1` / `.sh` (Montador de portabilidade).
 2. **Declaração de MCPs em `.mcp.json`:**
    * Configuração de servidores MCP padrão.
 
 ---
 
-## 3. O Que Falta para Atingirmos 100% em TOOLS (Roadmap de Lapidação)
+## 3. O Que Será Feito para Chegar aos 100%
 
 1. **Servidor MCP de Estado da Esteira em SQLite (Regra R11):**
    * Criar um banco de dados local SQLite estruturado (`estado_esteira.db`) e um servidor MCP que exponha ferramentas como `get_task_status`, `log_token_usage` e `register_artefact`.
@@ -34,3 +36,19 @@ Quando a IA precisa fazer cálculos, validar regras de negócio ou consultar o h
    * Encapsular o `ast-grep` como uma tool nativa do agente para localizar estruturas sintáticas (funções, classes, imports) sem gastar contexto de leitura de texto puro.
 3. **Validador Estrutural de Artefatos:**
    * Uma tool tipada que verifica instantaneamente se um arquivo HTML ou JSON gerado obedece ao schema sem precisar invocar uma LLM para revisão.
+4. **Gate Mecânico da Camada 4 (`scripts/auditar_camada_tools.py`):**
+   * Script Python que testa se todos os servidores MCP e scripts determinísticos estão respondendo com `exit 0`.
+
+---
+
+## 4. Onde Será Feito
+
+* `.mcp.json` (Declaração de servidores MCP).
+* `scripts/` (Scripts determinísticos e servidores locais).
+* `scripts/auditar_camada_tools.py` (Gate mecânico).
+
+---
+
+## 5. Como Replicar o Que Foi Feito (Guia de Replicação)
+
+*(Esta seção será preenchida com os comandos e códigos exatos assim que executarmos a implementação da Camada 4).*

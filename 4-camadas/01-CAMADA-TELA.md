@@ -1,68 +1,119 @@
 # 🎛️ Camada 1: TELA (Prompt & Context Engineering)
 
-> **Papel no Estúdio:** O Mixer.  
+> **Papel no Estúdio:** O Mixer (Ajuste fino de tudo o que a IA vê e como ela pensa).  
 > **Status:** 100% CONCLUÍDO & BLINDADO ✅  
-> **Unidade de Trabalho:** Mensagens, Prompts de Sistema, Context Window, Regras e Skills.  
+> **Unidade de Trabalho:** Mensagens de entrada, Prompts de Sistema, Context Window, Regras de Governança e Skills de Economia.  
 > **Localização:** `4-camadas/01-CAMADA-TELA.md`  
-> **Auditor Mecânico:** `scripts/auditar_camada_tela.py` (Exit 0)
+> **Auditor Mecânico:** `scripts/auditar_camada_tela.py` (Retorno: `exit 0`)
 
 ---
 
-## 1. O Que É e Por Que Importa
+## 1. O Que Foi Feito
 
-A **Camada TELA** é a camada mais interna e de contato direto com o modelo. Ela define **o que a IA vê a cada iteração** e **como ela deve se comportar**.
-Se a TELA estiver mal configurada, o modelo gastará rios de dinheiro com conversas prolixas, esquecerá instruções no meio do caminho ou alucinará decisões.
-
----
-
-## 2. As 4 Blindagens Implementadas para Atingir 100%
-
-### 2.1 A Constituição Mestre (`.claude/CLAUDE.md`)
-* **Fonte Única:** Todas as regras residem exclusivamente em `.claude/CLAUDE.md`.
-* **As 18 Regras Universais (R1 a R18):**
-  * **R1:** Idioma estrito (PT-BR).
-  * **R2:** Silenciamento de preâmbulos e saudações.
-  * **R3/R4:** Autonomia e auto-correção interna antes da entrega.
-  * **R5:** Padrão Diamante / Dossiê Executivo (4 seções verticais, 3 passos em mini-cards, sem `div.cols`).
-  * **R6:** Modelo livre (`model: inherit`).
-  * **R7:** Fidelidade absoluta do conteúdo de entrega.
-  * **R8/R9:** Determinismo primeiro e gates mecânicos com retorno `exit 0/1`.
-  * **R10/R11:** Idempotência e estado em disco versionável.
-  * **R12/R13/R14:** Registro declarativo único, sem prefixo `_`, caminhos curtos (<260 chars).
-  * **R15/R16:** Bloqueio de segredos e proibição de commits com testes vermelhos.
-  * **R17:** Etapas opcionais nunca travam o fluxo.
-  * **R18:** Higiene contínua, zero arquivos temporários e paridade estrita de espelhos.
-
-### 2.2 As 5 Skills Fundamentais de Economia Severa (Seção 0)
-1. **`caveman`:** Reduz até 90% do raciocínio interno (`<thought>`) via pensamento telegráfico de homem das cavernas.
-2. **`headroom`:** Corta logs gigantes de terminal mantendo apenas 3 linhas no topo e 4 no final.
-3. **`lean-ctx`:** Força o uso de `grep` antes da leitura de arquivos, evitando ler arquivos inteiros.
-4. **`rtk-memory`:** Congela o arquivo de governança para obter até 90% de desconto em *Prompt Caching*, jogando aprendizados para `RTK-SCRATCHPAD.md`.
-5. **`pre-flight-check`:** Checklist de 3 perguntas antes de iniciar refatorações.
-
-### 2.3 Vocabulário Controlado & Lista de Termos Proibidos
-* Banimento absoluto de clichês de IA (*"como uma IA"*, *"espero ter ajudado"*, *"com certeza"*, *"certamente"*).
-* Respostas 100% técnicas, densas e diretas ao ponto.
-
-### 2.4 Memória Persistente Externa (`RTK-SCRATCHPAD.md`)
-* Mantém o prefixo de cache imutável e salva decisões/aprendizados em disco. A TELA lê apenas os últimos 5 aprendizados sob demanda.
-
-### 2.5 Gate Mecânico da TELA (`scripts/auditar_camada_tela.py`)
-* Validador determinístico que garante que a TELA não estoure o orçamento de cache (<2.500 palavras) e cumpra todas as regras.
+Nesta camada, estruturamos e blindamos todo o conjunto de instruções, prompts de sistema, vocabulário e contexto que alimenta os modelos de IA:
+1. **Constituição Mestre da Fábrica Universal:** Consolidação de 18 regras inegociáveis (R1 a R18) que governam o comportamento autônomo, idioma, qualidade e segurança.
+2. **As 5 Skills Fundamentais de Economia Severa:** Pacote de habilidades em Markdown que ensina o modelo a comprimir pensamento, podar logs e ler arquivos cirurgicamente.
+3. **Orçamento de Cache do Prompt Mestre (`Context Budget Limiter`):** Congelamento do tamanho do arquivo `.claude/CLAUDE.md` em menos de 2.500 palavras para maximizar o desconto de 90% de *Prompt Caching*.
+4. **Vocabulário Controlado & Termos Proibidos:** Banimento formal de clichês de IA e respostas prolixas.
+5. **Memória Persistente de Longo Prazo (`RTK-SCRATCHPAD.md`):** Arquivo de apoio na raiz que guarda aprendizados sem poluir o cache do prompt principal.
+6. **Gate Mecânico de Auditoria da TELA (`scripts/auditar_camada_tela.py`):** Script determinístico que valida o cumprimento de todos os itens acima antes de cada sessão.
 
 ---
 
-## 3. Como Replicar a Camada 1 em Qualquer Projeto Novo
+## 2. Por Que Foi Feito
 
+* **A Dor Resolvida (Custo & Esquecimento):** Sem essas regras na TELA, os modelos de IA gastam centenas de dólares por dia com raciocínios prolixos e esquecem regras críticas conforme a conversa avança.
+* **O Risco Mitigado (Alucinação & Prolixidade):** Sem um vocabulário controlado e sem as regras R1–R18, o agente assume posturas passivas ("como uma IA não posso fazer isso") ou quebra arquivos por alucinar requisitos.
+* **O Ganho Financeiro:** A combinação de *Caveman Thinking*, *Headroom*, *Lean-CTX* e *RTK-Memory* reduz as faturas de API de LLMs entre **50% e 90%**.
+
+---
+
+## 3. Onde Foi Feito
+
+Todos os artefatos desta camada estão organizados nos seguintes caminhos físicos:
+
+```
+seu-projeto/
+├── .claude/
+│   ├── CLAUDE.md                 ← A Constituição Mestre (Regras R1 a R18 + Seção 0 de Economia)
+│   └── skills/                   ← As 5 Skills Fundamentais de Economia
+│       ├── caveman/SKILL.md      ← Compressão de pensamento CoT (-90%)
+│       ├── headroom/SKILL.md     ← Compressão de logs de build (3 topo + 4 fim)
+│       ├── lean-ctx/SKILL.md     ← Leitura cirúrgica via grep (-85% leitura)
+│       ├── rtk-memory/SKILL.md   ← Protocolo de cache congelado
+│       └── pre-flight-check/     ← Checklist pré-voo antes de refatorar
+│
+├── RTK-SCRATCHPAD.md             ← Memória de aprendizados da sessão (na raiz)
+├── AGENTS.md                     ← Hardlink espelhado de CLAUDE.md
+└── scripts/
+    └── auditar_camada_tela.py    ← Gate Mecânico da Camada 1
+```
+
+---
+
+## 4. Como Foi Feito
+
+### 4.1 A Mecânica do *Caveman Thinking* (Seção 0 do `CLAUDE.md`)
+O arquivo instrui o modelo a raciocinar telegráfico no bloco interno `<thought>`:
+```text
+// Regra aplicada no prompt mestre:
+"Pensamento telegráfico (3-5 linhas), sem preâmbulos/saudações.
+Abreviar: 'verificar' -> 'ver', 'necessário' -> 'nec.', 'implementar' -> 'impl.'.
+Ir direto ao ponto: 'usr quer X. ver arquivo Y. corrigir Z.'."
+```
+
+### 4.2 A Mecânica do *Headroom* (Corte de Logs)
+Se a saída de um comando tiver mais de 7 linhas, o modelo é instruído a processar apenas:
+```
+[Linha 1 do log]
+[Linha 2 do log]
+[Linha 3 do log]
+... (conteúdo intermediário ignorado) ...
+[Linha N-3 do log]
+[Linha N-2 do log]
+[Linha N-1 do log]
+[Linha N do log]
+```
+
+### 4.3 O Código do Gate Mecânico (`scripts/auditar_camada_tela.py`)
+Um script Python determinístico que confere:
+1. Se o `CLAUDE.md` existe e tem menos de 3.000 palavras.
+2. Se todas as 18 regras (R1 a R18) estão presentes no texto.
+3. Se as 5 pastas de skills de economia contêm seus arquivos `SKILL.md` intactos.
+4. Se o `RTK-SCRATCHPAD.md` está na raiz.
+5. Se não restaram placeholders como `<SEU-PROJETO>`.
+*Retorno:* `sys.exit(0)` em caso de aprovação ou `sys.exit(1)` em caso de falha.
+
+---
+
+## 5. Como Replicar o Que Foi Feito (Guia Passo a Passo)
+
+Para aplicar exatamente esta mesma Camada 1 em qualquer projeto novo ou legado:
+
+### Passo 1: Copie a infraestrutura de TELA
 ```bash
-# 1. Copiar a pasta de governança e memória
+# Na raiz do seu projeto novo:
+mkdir -p .claude/skills scripts
 cp -r fabrica-universal/.claude/ .
 cp fabrica-universal/RTK-SCRATCHPAD.md .
-
-# 2. Copiar o auditor da TELA
 cp fabrica-universal/scripts/auditar_camada_tela.py scripts/
-
-# 3. Validar a Camada 1
-python scripts/auditar_camada_tela.py
-# -> Saída: Exit 0 (Aprovado)
 ```
+
+### Passo 2: Personalize o arquivo `.claude/CLAUDE.md`
+Abra `.claude/CLAUDE.md` e troque o nome do projeto no título. **Mantenha intactas** a Seção 0 (Economia) e as regras R1 a R18.
+
+### Passo 3: Execute a Auditoria Mecânica da TELA
+```bash
+python scripts/auditar_camada_tela.py
+```
+
+### Passo 4: Verifique a Saída
+Se o terminal exibir:
+```text
+================================================================================
+ 🎛️ GATE MECÂNICO DA CAMADA 1: AUDITORIA DA TELA (PROMPT & CONTEXT)
+================================================================================
+ ✅ CAMADA 1 (TELA) 100% APROVADA: Prompt Caching, Regras R1-R18, 5 Skills & Vocabulário!
+================================================================================
+```
+A sua Camada 1 está oficialmente **100% configurada, blindada e pronta para produção**.
