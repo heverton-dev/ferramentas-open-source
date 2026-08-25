@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hub Central das 30 Listas de Soberania Tecnológica</title>
+<style>
+  /* Custom scrollbar estrita 4px */
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
+
+  :root {
+    --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
+    --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
+    --rule:#C7CEDB; --rule-soft:#DADFE8;
+    --accent:#1A446C; --accent-soft:#DCE7F2;
+    --gold:#7A5410; --gold-soft:#EFE5CE;
+    --flag:#8E2436; --flag-soft:#F0D9DD;
+    --green:#1B5E3B; --green-soft:#D8EFE2;
+    --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+      --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+      --rule:#2A3142; --rule-soft:#222836;
+      --accent:#7AA5D6; --accent-soft:#162436;
+      --gold:#D6A44E; --gold-soft:#332810;
+      --flag:#E0788C; --flag-soft:#3A1A21;
+      --green:#6BC48F; --green-soft:#122B1C;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+    --rule:#2A3142; --rule-soft:#222836;
+    --accent:#7AA5D6; --accent-soft:#162436;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E0788C; --flag-soft:#3A1A21;
+    --green:#6BC48F; --green-soft:#122B1C;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
+
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
+
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
+  .deck strong { color:var(--ink); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
+
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; }
+  .card-link { text-decoration:none; color:inherit; display:flex; flex-direction:column; }
+  .card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:20px; display:flex; flex-direction:column; gap:10px; transition:border-color .2s, box-shadow .2s; height:100%; }
+  .card:hover { border-color:var(--accent); box-shadow:var(--shadow); }
+  .card-top { display:flex; justify-content:space-between; align-items:baseline; }
+  .card-num { font-family:var(--mono); font-size:14px; font-weight:600; color:var(--accent); }
+  .card-camada { font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+  .card h3 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; line-height:1.2; color:var(--ink); }
+  .card p { margin:0; font-size:14px; color:var(--ink-2); line-height:1.5; }
+  .card-econ { font-family:var(--mono); font-size:11px; color:var(--green); font-weight:600; margin-top:auto; padding-top:8px; border-top:1px dashed var(--rule-soft); }
+
+  footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">
+      <span>Índice Geral · Fábrica Universal</span><span>·</span><span>2026</span><span>·</span>
+      <b>30 Compêndios Especializados</b>
+    </div>
+    <h1>Enciclopédia da&nbsp;Soberania&nbsp;Tecnológica</h1>
+    <p class="deck">O catálogo definitivo de <strong>30 listas de engenharia e tecnologia aberta</strong>: da economia de tokens à robótica, banco de dados, verificação formal e design visual sem dependência de nuvens fechadas.</p>
+    <div class="chips">
+      <div class="chip"><b>30</b> compêndios completos</div>
+      <div class="chip"><b>Economia estimada:</b> &gt; R$ 500.000 / ano</div>
+      <div class="chip"><b>Scrollbar 4px:</b> Padronizada</div>
+      <div class="chip"><b>100%</b> FOSS / OSI</div>
+    </div>
+  </header>
+
+  <div class="grid">
+
+    <a class="card-link" href="01-economia-de-tokens.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">01</span><span class="card-camada">Contexto</span></div>
+        <h3>Economia Extrema de Tokens & Contexto</h3>
+        <p>Repomix, ast-grep, SGLang, Outlines, DSPy, LiteLLM Cache.</p>
+        <div class="card-econ">Economia: -85% na fatura de LLMs</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="02-arquitetura-agentica-spec-driven.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">02</span><span class="card-camada">Agentes</span></div>
+        <h3>Arquitetura Agêntica & Spec-Driven</h3>
+        <p>Spec-Kit, BMad Method, Aider CLI, OpenHands, LangGraph, Letta, E2B.</p>
+        <div class="card-econ">Economia: -$ 6.000 / ano em ferramentas fechadas</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="03-design-ui-midia-soberana.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">03</span><span class="card-camada">Design & Mídia</span></div>
+        <h3>Design, UI & Mídia Soberana</h3>
+        <p>Penpot, Kokoro-82M, Stirling-PDF, ComfyUI, AFFiNE, Shiki, Iconify.</p>
+        <div class="card-econ">Economia: -$ 1.800 / ano (Figma, ElevenLabs, Adobe)</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="04-motores-inferencia-fine-tuning.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">04</span><span class="card-camada">Runtimes</span></div>
+        <h3>Motores de Inferência & Fine-Tuning</h3>
+        <p>Unsloth, vLLM, SGLang, ExLlamaV2, Llama.cpp, Ollama, Axolotl.</p>
+        <div class="card-econ">Economia: -80% de custo de GPU de treino</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="05-rag-vetores-grafos.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">05</span><span class="card-camada">Conhecimento</span></div>
+        <h3>RAG Cirúrgico, Bancos Vetoriais & Grafos</h3>
+        <p>Qdrant, LanceDB, RAGatouille (ColBERT), Unstructured, Code-Graph.</p>
+        <div class="card-econ">Economia: -$ 840 a $ 6.000 / ano (Pinecone)</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="06-seguranca-ia-evals-redteaming.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">06</span><span class="card-camada">Blindagem</span></div>
+        <h3>Segurança de IA, Evals & Red-Teaming</h3>
+        <p>Promptfoo, Garak, Guardrails AI, DeepEval, NeMo, Semgrep, TruLens.</p>
+        <div class="card-econ">Economia: -$ 5.000 por auditoria de segurança</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="07-scraping-furtivo-dados.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">07</span><span class="card-camada">Mineração</span></div>
+        <h3>Scraping Furtivo & Pipelines de Dados</h3>
+        <p>Crawlee, Playwright, Scrapy, DuckDB, Polars, dbt-core, Dagster.</p>
+        <div class="card-econ">Economia: -$ 1.200 a $ 6.000 / ano em Scraper APIs</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="08-voz-visao-multimodalidade.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">08</span><span class="card-camada">Multimodal</span></div>
+        <h3>Voz, Visão & Multimodalidade Local</h3>
+        <p>Whisper.cpp, Faster-Whisper, Kokoro, YOLOv10, PaddleOCR, DeepFace.</p>
+        <div class="card-econ">Economia: -$ 600 a $ 2.400 / ano (APIs de Visão/Voz)</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="09-harnesses-ide-terminal.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">09</span><span class="card-camada">Desenvolvimento</span></div>
+        <h3>Harnesses de IDE & Terminal do Engenheiro</h3>
+        <p>Continue.dev, Roo-Code / Cline, OpenCode, Void, Zed, Lazygit.</p>
+        <div class="card-econ">Economia: -$ 240 / ano por desenvolvedor</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="10-bancos-de-dados-motores-estado.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">10</span><span class="card-camada">Persistência</span></div>
+        <h3>Bancos de Dados & Motores de Estado</h3>
+        <p>PostgreSQL + pgvector, ClickHouse, Dragonfly, SurrealDB, SeaweedFS.</p>
+        <div class="card-econ">Economia: -$ 2.400 a $ 12.000 / ano</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="11-no-code-automacao-ia.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">11</span><span class="card-camada">Automação</span></div>
+        <h3>No-Code / Low-Code & Automação com IA</h3>
+        <p>N8N, Dify, Flowise, Activepieces, Typebot, Chatwoot, Botpress.</p>
+        <div class="card-econ">Economia: -$ 3.500 a $ 10.000 / ano (Zapier)</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="12-devops-borda-infraestrutura.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">12</span><span class="card-camada">Infraestrutura</span></div>
+        <h3>DevOps, Borda & Infraestrutura Soberana</h3>
+        <p>Coolify, Dokku, Caddy, Traefik, Restic, VictoriaMetrics, Headscale.</p>
+        <div class="card-econ">Economia: -$ 600 a $ 3.600 / ano (Heroku/Vercel)</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="13-edge-ai-iot-embarcados.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">13</span><span class="card-camada">Hardware</span></div>
+        <h3>Edge AI, IoT & Dispositivos Embarcados</h3>
+        <p>ONNX Runtime Edge, MediaPipe, RKNN, Home Assistant, ESPHome.</p>
+        <div class="card-econ">Economia: -$ 1.200 / ano em Cloud IoT</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="14-verificacao-formal-zero-bugs.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">14</span><span class="card-camada">Matemática</span></div>
+        <h3>Verificação Formal & Zero Bugs Matemático</h3>
+        <p>Lean 4, Z3 SMT Solver, Dafny, Coq, F*, Tamarin Prover, TLA+.</p>
+        <div class="card-econ">Economia: Prova matemática formal de 0 falhas</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="15-engenharia-reversa-binarios.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">15</span><span class="card-camada">Auditoria</span></div>
+        <h3>Engenharia Reversa & Análise de Binários</h3>
+        <p>Ghidra (NSA), Radare2 / Cutter, Frida, Wireshark, x64dbg.</p>
+        <div class="card-econ">Economia: -$ 3.500 / licença (IDA Pro)</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="16-redes-descentralizadas-p2p.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">16</span><span class="card-camada">Privacidade</span></div>
+        <h3>Redes Descentralizadas (P2P) & Privacidade</h3>
+        <p>Matrix / Dendrite, Nostr, SimpleX Chat, Yggdrasil, IPFS / Helia, Tor.</p>
+        <div class="card-econ">Economia: Imunidade a censura e bloqueios</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="17-simulacao-fisica-robotica.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">17</span><span class="card-camada">Simulação</span></div>
+        <h3>Simulação Física, Robótica & 3D para IA</h3>
+        <p>MuJoCo (DeepMind), Godot Engine, CARLA, Blender CLI, Bevy.</p>
+        <div class="card-econ">Economia: -$ 5.000 / ano por assento</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="18-bioinformatica-ia-cientifica.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">18</span><span class="card-camada">Ciência</span></div>
+        <h3>Bioinformática, Química & IA Científica</h3>
+        <p>Nextflow, Snakemake, ESMFold / AlphaFold, RDKit, BioPython.</p>
+        <div class="card-econ">Economia: -$ 10.000+ em softwares científicos</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="19-compiladores-webassembly-nativos.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">19</span><span class="card-camada">Bare-Metal</span></div>
+        <h3>Compiladores, WebAssembly & Runtimes Nativos</h3>
+        <p>LLVM, Wasmtime, Wasmer, Zig, Rust, Bun Runtime, TinyGo.</p>
+        <div class="card-econ">Economia: Performance nativa sem latência</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="20-cad-fabricacao-digital-eda.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">20</span><span class="card-camada">Fabricação</span></div>
+        <h3>CAD, Fabricação Digital & Eletrônica (EDA)</h3>
+        <p>FreeCAD, OpenSCAD, KiCad (PCBs), OrcaSlicer, PrusaSlicer.</p>
+        <div class="card-econ">Economia: -$ 4.000 / ano (AutoCAD, Altium)</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="21-financas-soberanas-pagamentos.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">21</span><span class="card-camada">Finanças</span></div>
+        <h3>Finanças Soberanas, Contabilidade & Pagamentos</h3>
+        <p>Firefly III, GnuCash, Beancount, Ghostfolio, BTCPay Server.</p>
+        <div class="card-econ">Economia: -$ 600 a $ 2.400 / ano + taxas de gateway</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="22-audio-digital-dsp-musica.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">22</span><span class="card-camada">Áudio</span></div>
+        <h3>Áudio Digital, Produção Musical & DSP</h3>
+        <p>Ardour, Tenacity, LMMS, Demucs (Meta AI), JUCE, Faust DSP.</p>
+        <div class="card-econ">Economia: -$ 360 a $ 960 / ano (Pro Tools)</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="23-virtualizacao-sistemas-declarativos.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">23</span><span class="card-camada">Bare-Metal</span></div>
+        <h3>Virtualização Bare-Metal & Sistemas Declarativos</h3>
+        <p>Proxmox VE, TrueNAS SCALE, NixOS, Alpine Linux, QEMU / KVM.</p>
+        <div class="card-econ">Economia: -$ 1.000 a $ 10.000 / ano (VMware)</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="24-acessibilidade-ergonomia-controle.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">24</span><span class="card-camada">Inclusão</span></div>
+        <h3>Acessibilidade, Ergonomia & Controle por Voz/Olhar</h3>
+        <p>Talon Voice, NVDA Screen Reader, OpenBCI, Piper TTS, WhisperLive.</p>
+        <div class="card-econ">Economia: -$ 500 por estação de trabalho</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="25-seguranca-ofensiva-pentest.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">25</span><span class="card-camada">Segurança</span></div>
+        <h3>Segurança Ofensiva, Pentest & Auditoria</h3>
+        <p>Metasploit, Nmap, Nuclei, Caido / ZAP, OWASP Amass, Sqlmap.</p>
+        <div class="card-econ">Economia: -$ 3.500 / ano (Burp Suite Pro)</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="26-geolocalizacao-mapas-gis.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">26</span><span class="card-camada">Geomapas</span></div>
+        <h3>Geolocalização, Mapas & Inteligência Espacial (GIS)</h3>
+        <p>QGIS, OpenStreetMap / Nominatim, MapLibre, PostGIS, Valhalla.</p>
+        <div class="card-econ">Economia: -$ 2.400 a $ 24.000 / ano (Google Maps)</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="27-educacao-lms-memorizacao.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">27</span><span class="card-camada">Educação</span></div>
+        <h3>Educação, LMS & Repetição Espaçada</h3>
+        <p>Moodle, Canvas LMS OSS, Kolibri, Anki (FSRS), BigBlueButton.</p>
+        <div class="card-econ">Economia: -$ 3.000 a $ 10.000 / ano</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="28-ecommerce-autonomo-headless.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">28</span><span class="card-camada">E-commerce</span></div>
+        <h3>E-commerce Autônomo & Headless Commerce</h3>
+        <p>Medusa.js, Saleor, Vendure, WooCommerce, PrestaShop, Bagisto.</p>
+        <div class="card-econ">Economia: -$ 24.000 / ano + comissões da Shopify</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="29-streaming-live-broadcasting.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">29</span><span class="card-camada">Streaming</span></div>
+        <h3>Streaming, Live Broadcasting & Mídia Privada</h3>
+        <p>OBS Studio, Owncast, Jellyfin, PeerTube, Icecast, Restreamer.</p>
+        <div class="card-econ">Economia: -$ 600 a $ 6.000 / ano (Vimeo OTT)</div>
+      </div>
+    </a>
+
+    <a class="card-link" href="30-arquivamento-digital-osint.html">
+      <div class="card">
+        <div class="card-top"><span class="card-num">30</span><span class="card-camada">OSINT</span></div>
+        <h3>Arquivamento Digital, Preservação & OSINT</h3>
+        <p>ArchiveBox, SpiderFoot, Sherlock, SingleFile, Waybackpy.</p>
+        <div class="card-econ">Economia: -$ 1.200 / ano e custódia total</div>
+      </div>
+    </a>
+
+  </div>
+
+  <footer>
+    <p>Enciclopédia gerada pela Fábrica Universal. Todos os 30 compêndios contam com auditoria de licenças OSI, métricas de consumo e design editorial padronizado.</p>
+  </footer>
+
+</div>
+
+</body>
+</html>

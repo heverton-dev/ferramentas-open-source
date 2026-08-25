@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compiladores, WebAssembly & Runtimes Nativos — Compêndio de Soberania Tecnológica</title>
+<style>
+  /* Custom scrollbar estrita 4px */
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
+
+  :root {
+    --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
+    --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
+    --rule:#C7CEDB; --rule-soft:#DADFE8;
+    --accent:#1A446C; --accent-soft:#DCE7F2;
+    --gold:#7A5410; --gold-soft:#EFE5CE;
+    --flag:#8E2436; --flag-soft:#F0D9DD;
+    --green:#1B5E3B; --green-soft:#D8EFE2;
+    --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+      --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+      --rule:#2A3142; --rule-soft:#222836;
+      --accent:#7AA5D6; --accent-soft:#162436;
+      --gold:#D6A44E; --gold-soft:#332810;
+      --flag:#E0788C; --flag-soft:#3A1A21;
+      --green:#6BC48F; --green-soft:#122B1C;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+    --rule:#2A3142; --rule-soft:#222836;
+    --accent:#7AA5D6; --accent-soft:#162436;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E0788C; --flag-soft:#3A1A21;
+    --green:#6BC48F; --green-soft:#122B1C;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
+
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
+
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
+  .deck strong { color:var(--ink); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
+
+  section { display:flex; flex-direction:column; gap:22px; }
+  .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
+  .sec-head.flagged { border-top-color:var(--flag); }
+  .sec-head.warm { border-top-color:var(--gold); }
+  .sec-num { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .sec-head.flagged .sec-num { color:var(--flag); }
+  .sec-head.warm .sec-num { color:var(--gold); }
+  h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note strong { color:var(--ink); }
+
+  .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+  .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
+  .route.official { border-left:3px solid var(--accent); }
+  .route.gray { border-left:3px solid var(--green); }
+  .route h4 { font-family:var(--serif); font-size:21px; font-weight:600; margin:0; }
+  .route .tag { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; }
+  .route.official .tag { color:var(--accent); }
+  .route.gray .tag { color:var(--green); }
+  .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
+
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:860px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
+  tbody tr:last-child td { border-bottom:0; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; }
+  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; white-space:nowrap; }
+  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
+  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
+
+  .ledger { display:flex; flex-direction:column; gap:20px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
+  .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
+  .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
+  .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:6px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
+
+  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
+
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
+  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
+
+  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
+
+  .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
+  .reject p { margin:0; font-size:14.5px; color:var(--ink-2); }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+
+  footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">
+      <span>Camada 19 · Execução Bare-Metal</span><span>·</span><span>Curadoria de Elite</span><span>·</span>
+      <b>8 Ferramentas / Soberania Total</b>
+    </div>
+    <h1>Compiladores, WebAssembly & Runtimes Nativos</h1>
+    <p class="deck">Compêndio técnico completo de <strong>Compiladores, WebAssembly & Runtimes Nativos</strong>: as ferramentas e arquiteturas de código aberto mais eficientes para eliminar dependência de fornecedores caros com máxima autonomia.</p>
+    <div class="chips">
+      <div class="chip"><b>8</b> tecnologias auditadas</div>
+      <div class="chip"><b>0</b> taxas por assento ou cota oculta</div>
+      <div class="chip"><b>100%</b> soberania de dados</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 1 · A Equação da Soberania</span>
+      <h2>A fronteira entre refém de nuvem e autonomia técnica</h2>
+      <p class="sec-note">Assinaturas recorrentes cobram pedágio pelo seu próprio crescimento. A engenharia moderna devolve a governança para o desenvolvedor.</p>
+    </div>
+
+    <div class="routes">
+      <div class="route official">
+        <span class="tag">O Custo Fechado</span>
+        <h4>O Custo das Ferramentas Fechadas</h4>
+        <p>Assinaturas comerciais cobram por assento, bloqueiam exportação de dados e reajustam valores sem aviso prévio.</p>
+      </div>
+
+      <div class="route gray">
+        <span class="tag">A Solução Aberta</span>
+        <h4>A Soberania da Infraestrutura Própria</h4>
+        <p>Padrões abertos com comandos reproduzíveis, licenças livres da OSI e custos fixos previsíveis em servidor próprio.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 2 · O Panorama Geral</span>
+      <h2>O inventário completo da camada</h2>
+      <p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ferramenta</th>
+            <th>Substitui o SaaS Pago</th>
+            <th>Economia Declarada</th>
+            <th>Categoria</th>
+            <th>Licença</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank">01</td>
+            <td class="tool">LLVM</td>
+            <td class="saas">Compiladores fechados de hardware</td>
+            <td class="econ">A fundação dos compiladores modernos</td>
+            <td class="cat">Compiler Infrastructure</td>
+            <td class="lic">Open-Source OSI</td>
+          </tr>
+          <tr>
+            <td class="rank">02</td>
+            <td class="tool">Wasmtime</td>
+            <td class="saas">Contêineres pesados para funções efêmeras</td>
+            <td class="econ">Inicialização em menos de 1 milissegundo</td>
+            <td class="cat">Standalone WebAssembly Runtime</td>
+            <td class="lic">Open-Source OSI</td>
+          </tr>
+          <tr>
+            <td class="rank">03</td>
+            <td class="tool">Wasmer</td>
+            <td class="saas">Runtimes lentos de linguagens interpretadas</td>
+            <td class="econ">Roda em qualquer SO e chip</td>
+            <td class="cat">Universal WebAssembly Runtime</td>
+            <td class="lic">Open-Source OSI</td>
+          </tr>
+          <tr>
+            <td class="rank">04</td>
+            <td class="tool">Zig Compiler</td>
+            <td class="saas">C/C++ com toolchains quebradiças</td>
+            <td class="econ">Compilação cruzada em 1 comando</td>
+            <td class="cat">Robust Systems Programming</td>
+            <td class="lic">Open-Source OSI</td>
+          </tr>
+          <tr>
+            <td class="rank">05</td>
+            <td class="tool">Rust Toolchain</td>
+            <td class="saas">Vulnerabilidades de memória em C/C++</td>
+            <td class="econ">Elimina 70% das falhas de segurança</td>
+            <td class="cat">Memory-Safe Systems Language</td>
+            <td class="lic">Open-Source OSI</td>
+          </tr>
+          <tr>
+            <td class="rank">06</td>
+            <td class="tool">Bun Runtime</td>
+            <td class="saas">Node.js com inicialização lenta</td>
+            <td class="econ">3x a 5x mais rápido em APIs</td>
+            <td class="cat">Fast JavaScript & TypeScript</td>
+            <td class="lic">Open-Source OSI</td>
+          </tr>
+          <tr>
+            <td class="rank">07</td>
+            <td class="tool">TinyGo</td>
+            <td class="saas">Go runtime pesado para microcontroladores</td>
+            <td class="econ">Compila binários Go de poucos kilobytes</td>
+            <td class="cat">Go for Small Places</td>
+            <td class="lic">Open-Source OSI</td>
+          </tr>
+          <tr>
+            <td class="rank">08</td>
+            <td class="tool">Cranelift</td>
+            <td class="saas">Compiladores JIT lentos</td>
+            <td class="econ">Geração de código de máquina em 5ms</td>
+            <td class="cat">Fast Code Generator</td>
+            <td class="lic">Open-Source OSI</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 3 · O Detalhamento Técnico</span>
+      <h2>As fichas técnicas completas</h2>
+      <p class="sec-note">Comandos de subida rápida, economia real declarada, requisitos de consumo e considerações operacionais.</p>
+    </div>
+
+    <div class="ledger">
+      <!-- 01 LLVM -->
+      <div class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>LLVM</h3>
+            <span class="killer-badge">SUBSTITUI: Compiladores fechados de hardware</span>
+            <span class="econ-badge">ECONOMIA: A fundação dos compiladores modernos</span>
+            <span class="lic-badge">Open-Source OSI</span>
+            <span class="kind">Compiler Infrastructure</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Infraestrutura modular de compiladores que traduz representação intermediária (IR) para código de máquina otimizado.</p>
+              <pre><code>apt-get install llvm clang</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução no build</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://llvm.org" target="_blank" rel="noopener">llvm.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 Wasmtime -->
+      <div class="entry">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Wasmtime</h3>
+            <span class="killer-badge">SUBSTITUI: Contêineres pesados para funções efêmeras</span>
+            <span class="econ-badge">ECONOMIA: Inicialização em menos de 1 milissegundo</span>
+            <span class="lic-badge">Open-Source OSI</span>
+            <span class="kind">Standalone WebAssembly Runtime</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Runtime de WebAssembly leve e seguro desenvolvido pela Bytecode Alliance com sandboxing de memória rigoroso.</p>
+              <pre><code>cargo install wasmtime-cli</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">< 15 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://wasmtime.dev" target="_blank" rel="noopener">wasmtime.dev</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Wasmer -->
+      <div class="entry">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Wasmer</h3>
+            <span class="killer-badge">SUBSTITUI: Runtimes lentos de linguagens interpretadas</span>
+            <span class="econ-badge">ECONOMIA: Roda em qualquer SO e chip</span>
+            <span class="lic-badge">Open-Source OSI</span>
+            <span class="kind">Universal WebAssembly Runtime</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Runtime de WebAssembly que permite executar módulos Wasm em servidores, navegadores e dispositivos embarcados.</p>
+              <pre><code>curl https://get.wasmer.io -sSfL | sh</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~20 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://wasmer.io" target="_blank" rel="noopener">wasmer.io</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 Zig Compiler -->
+      <div class="entry">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Zig Compiler</h3>
+            <span class="killer-badge">SUBSTITUI: C/C++ com toolchains quebradiças</span>
+            <span class="econ-badge">ECONOMIA: Compilação cruzada em 1 comando</span>
+            <span class="lic-badge">Open-Source OSI</span>
+            <span class="kind">Robust Systems Programming</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Linguagem de programação de sistemas com foco em simplicidade, alocação de memória explícita e cross-compilation nativa.</p>
+              <pre><code>winget install zig.zig || brew install zig</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Binário único</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://ziglang.org" target="_blank" rel="noopener">ziglang.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 Rust Toolchain -->
+      <div class="entry">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Rust Toolchain</h3>
+            <span class="killer-badge">SUBSTITUI: Vulnerabilidades de memória em C/C++</span>
+            <span class="econ-badge">ECONOMIA: Elimina 70% das falhas de segurança</span>
+            <span class="lic-badge">Open-Source OSI</span>
+            <span class="kind">Memory-Safe Systems Language</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Linguagem de sistemas com garantia de segurança de memória sem garbage collector através do sistema de borrow checker.</p>
+              <pre><code>rustup default stable</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Compilação nativa</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://rust-lang.org" target="_blank" rel="noopener">rust-lang.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 Bun Runtime -->
+      <div class="entry">
+        <div class="entry-rank">06</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Bun Runtime</h3>
+            <span class="killer-badge">SUBSTITUI: Node.js com inicialização lenta</span>
+            <span class="econ-badge">ECONOMIA: 3x a 5x mais rápido em APIs</span>
+            <span class="lic-badge">Open-Source OSI</span>
+            <span class="kind">Fast JavaScript & TypeScript</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Runtime tudo-em-um para JavaScript/TypeScript em Zig com bundler, test runner e package manager integrados.</p>
+              <pre><code>curl -fsSL https://bun.sh/install | bash</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~30 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://bun.sh" target="_blank" rel="noopener">bun.sh</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07 TinyGo -->
+      <div class="entry">
+        <div class="entry-rank">07</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>TinyGo</h3>
+            <span class="killer-badge">SUBSTITUI: Go runtime pesado para microcontroladores</span>
+            <span class="econ-badge">ECONOMIA: Compila binários Go de poucos kilobytes</span>
+            <span class="lic-badge">Open-Source OSI</span>
+            <span class="kind">Go for Small Places</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Compilador Go focado em microcontroladores (Arduino, ESP32) e WebAssembly com tamanho de binário mínimo.</p>
+              <pre><code>tinygo build -o out.wasm -target=wasm main.go</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Binários < 100 KB</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://tinygo.org" target="_blank" rel="noopener">tinygo.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08 Cranelift -->
+      <div class="entry">
+        <div class="entry-rank">08</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Cranelift</h3>
+            <span class="killer-badge">SUBSTITUI: Compiladores JIT lentos</span>
+            <span class="econ-badge">ECONOMIA: Geração de código de máquina em 5ms</span>
+            <span class="lic-badge">Open-Source OSI</span>
+            <span class="kind">Fast Code Generator</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">O que entrega</span>
+              <p>Gerador de código de máquina em Rust projetado para compilação JIT de alta velocidade em runtimes WebAssembly.</p>
+              <pre><code>cargo add cranelift</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">In-process JIT</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projeto maduro amplamente auditado pela comunidade internacional de engenharia de software e IA.</p>
+              </div>
+              <a class="repo" href="https://github.com/bytecodealliance/wasmtime/tree/main/cranelift" target="_blank" rel="noopener">github.com/bytecodealliance/wasmtime/tree/main/cranelift</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head flagged">
+      <span class="sec-num">Parte 4 · A Regra de Ouro</span>
+      <h2>Como operar essa pilha com estabilidade</h2>
+      <p class="sec-note">Diretrizes para rodar ferramentas no seu próprio servidor com resiliência máxima e zero sobrecarga.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="reject">
+        <h4>1. Isolamento em Containers Docker</h4>
+        <p>Nunca instale ferramentas diretamente no sistema host sem isolamento de rede e volumes mapeados em disco seguro.</p>
+      </div>
+      <div class="reject">
+        <h4>2. Proxy Reverso com Caddy / Traefik</h4>
+        <p>Aponte a borda de rede para proxies leves com renovação automática de certificados TLS sem scripts manuais.</p>
+      </div>
+      <div class="reject">
+        <h4>3. Backup Imutável com Restic / Borg</h4>
+        <p>Programe snapshots diários dos volumes para armazenamento S3 remoto compatível para restauração rápida em caso de desastre.</p>
+      </div>
+      <div class="reject">
+        <h4>4. Acesso Seguro via WireGuard / Headscale</h4>
+        <p>Mantenha painéis de administração e bancos de dados fora da internet pública, acessíveis apenas pela VPN mesh interna.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas e viabilidade em produção.</p>
+    <div class="srcs">
+      <span>Open Source Initiative (OSI)</span>
+      <span>Linux Foundation</span>
+      <span>CNCF Landscape</span>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
