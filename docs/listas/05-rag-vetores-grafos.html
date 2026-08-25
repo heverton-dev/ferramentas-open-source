@@ -1,22 +1,21 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RAG Cirúrgico, Bancos Vetoriais & Apps de Conhecimento Local — Compêndio de Soberania Tecnológica</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RAG Cirúrgico, Bancos Vetoriais &amp; Apps de Conhecimento Local — Compêndio de Soberania Tecnológica</title>
 <style>
-  /* Custom scrollbar estrita 4px */
-  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
 
   :root {
     --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
     --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
     --rule:#C7CEDB; --rule-soft:#DADFE8;
-    --accent:#1E5E4E; --accent-soft:#DBEDE7;
+    --accent:#7A3E1D; --accent-soft:#F5EBE4;
     --gold:#7A5410; --gold-soft:#EFE5CE;
     --flag:#8E2436; --flag-soft:#F0D9DD;
     --green:#1B5E3B; --green-soft:#D8EFE2;
@@ -30,37 +29,41 @@
       --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
       --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
       --rule:#2A3142; --rule-soft:#222836;
-      --accent:#6BBFA8; --accent-soft:#142B24;
+      --accent:#E89568; --accent-soft:#331D12;
       --gold:#D6A44E; --gold-soft:#332810;
       --flag:#E0788C; --flag-soft:#3A1A21;
       --green:#6BC48F; --green-soft:#122B1C;
       --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
     }
   }
-  :root[data-theme="dark"] {
-    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
-    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
-    --rule:#2A3142; --rule-soft:#222836;
-    --accent:#6BBFA8; --accent-soft:#142B24;
-    --gold:#D6A44E; --gold-soft:#332810;
-    --flag:#E0788C; --flag-soft:#3A1A21;
-    --green:#6BC48F; --green-soft:#122B1C;
-    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
-  }
 
-  * { box-sizing:border-box; }
   body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
   .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
 
-  header { display:flex; flex-direction:column; gap:20px; }
-  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
-  .eyebrow b { color:var(--accent); font-weight:600; }
-  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
-  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
+  /* HEADER EXECUTIVO COM ALINHAMENTO JUSTIFICADO */
+  header { display:flex; flex-direction:column; gap:24px; padding-bottom:12px; border-bottom:1px solid var(--rule); }
+  .header-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; color:var(--muted); text-decoration:none; padding:4px 8px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); transition:all .15s ease; }
+  .back-link:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-soft); text-decoration:none; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
+  .layer-badge { background:var(--accent); color:var(--paper); padding:3px 8px; border-radius:2px; font-weight:700; font-size:10.5px; letter-spacing:.08em; }
+
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(36px,7vw,64px); line-height:1.08; letter-spacing:-.02em; margin:0; color:var(--ink); text-align:justify; text-justify:inter-word; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.55; color:var(--ink-2); max-width:100%; margin:0; text-align:justify; text-justify:inter-word; }
   .deck strong { color:var(--ink); font-weight:600; }
-  .chips { display:flex; flex-wrap:wrap; gap:8px; }
-  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
-  .chip b { color:var(--ink); font-weight:600; }
+
+  /* HERO STATS BAR */
+  .hero-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:4px; }
+  .stat-card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:12px 16px; display:flex; flex-direction:column; gap:4px; box-shadow:var(--shadow); }
+  .stat-card .stat-val { font-family:var(--mono); font-size:20px; font-weight:700; color:var(--accent); line-height:1.1; }
+  .stat-card .stat-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .stat-card.good .stat-val { color:var(--green); }
+  
+  /* QUICK JUMP ANCHORS */
+  .header-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:2px; }
+  .jump-btn { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; padding:6px 12px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); color:var(--ink-2); text-decoration:none; transition:all .15s ease; }
+  .jump-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); text-decoration:none; }
+  .jump-btn.primary { background:var(--accent-soft); border-color:color-mix(in srgb, var(--accent) 40%, transparent); color:var(--accent); font-weight:600; }
 
   section { display:flex; flex-direction:column; gap:22px; }
   .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
@@ -70,8 +73,7 @@
   .sec-head.flagged .sec-num { color:var(--flag); }
   .sec-head.warm .sec-num { color:var(--gold); }
   h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
-  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
-  .sec-note strong { color:var(--ink); }
+  .sec-note { margin:0; color:var(--ink-2); max-width:100%; font-size:15.5px; }
 
   .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
   .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
@@ -83,47 +85,84 @@
   .route.gray .tag { color:var(--green); }
   .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
 
-  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
-  table { border-collapse:collapse; width:100%; min-width:860px; font-size:14px; }
-  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
-  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
+  /* TABELA FLUIDA SEM SCROLL */
+  .tablewrap { border:1px solid var(--rule); border-radius:3px; background:var(--surface); width:100%; overflow:hidden; }
+  table { border-collapse:collapse; width:100%; font-size:13.5px; table-layout:auto; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding:10px 12px; border-bottom:1px solid var(--rule); }
+  tbody td { padding:10px 12px; border-bottom:1px solid var(--rule-soft); vertical-align:middle; }
   tbody tr:last-child td { border-bottom:0; }
-  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
-  td.tool { font-weight:600; }
-  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; }
-  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; white-space:nowrap; }
-  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
-  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:36px; text-align:center; }
+  td.tool { font-weight:600; color:var(--ink); font-size:14px; }
+  td.saas, td.killer { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; line-height:1.35; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; line-height:1.35; }
+  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); line-height:1.35; font-weight:600; }
+  td.lic { font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.35; }
 
-  .ledger { display:flex; flex-direction:column; gap:20px; }
-  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
-  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
-  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
-  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
-  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
+  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO (LARGURA TOTAL) */
+  .ledger { display:flex; flex-direction:column; gap:28px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; transition:border-color .15s ease; }
+  .entry:hover { border-color:var(--accent); }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:20px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  
+  .entry-body { padding:20px 24px 22px; display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+  /* CABEÇALHO PADRONIZADO COM BADGES */
+  .entry-top { display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; }
+  .entry-top h3 { width:100%; margin:0 0 4px 0; font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; letter-spacing:-.01em; color:var(--ink); }
+
+  .senior-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; font-weight:700; }
+  .senior-badge.green { background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+  .senior-badge.gold { background:var(--gold-soft); color:var(--gold); border:1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
+  .senior-badge.flag { background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); }
+
   .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
   .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
   .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
-  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; padding:3px 6px; border:1px solid var(--rule-soft); border-radius:2px; background:var(--surface-2); }
 
-  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
-  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
-  .block { display:flex; flex-direction:column; gap:8px; min-width:0; }
-  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
-  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
-  .block p strong { color:var(--ink); font-weight:600; }
+  /* SEÇÕES VERTICAIS DO CARD (LARGURA TOTAL) */
+  .entry-section { display:flex; flex-direction:column; gap:8px; width:100%; padding-top:14px; border-top:1px dashed var(--rule-soft); }
+  .entry-section .label { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+  .entry-section p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .entry-section p strong { color:var(--ink); font-weight:600; }
 
-  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
-  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
+  /* ANÁLISE ECONÔMICA GRID */
+  .econ-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:4px; }
+  .econ-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .econ-card.highlight { border-left:3px solid var(--green); background:color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left:3px solid var(--flag); background:color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .econ-val { font-size:14px; line-height:1.45; color:var(--ink); }
+  .econ-val strong { color:var(--ink); font-weight:600; }
 
-  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
-  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
-  .truth { border-left:2px solid var(--gold); padding-left:12px; }
-  .truth p { font-size:14px; }
+  /* REQUISITOS DE INFRAESTRUTURA GRID */
+  .infra-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:4px; }
+  .infra-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .infra-card.verdict { border-left:3px solid var(--gold); background:color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column:span 2; }
+  @media (max-width:760px) { .infra-card.verdict { grid-column:span 1; } }
+  .infra-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .infra-val { font-family:var(--mono); font-size:13.5px; font-weight:600; color:var(--accent); line-height:1.4; }
+  .infra-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
 
-  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
-  a:hover { text-decoration-color:var(--accent); }
-  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
+  /* CODE BOX FULL-WIDTH */
+  .code-box { position:relative; display:flex; flex-direction:column; width:100%; margin-top:4px; }
+  pre { margin:0; padding:12px 52px 12px 14px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:13px; color:var(--ink); line-height:1.5; }
+  .copy-btn { position:absolute; top:8px; right:8px; background:var(--surface); border:1px solid var(--rule); color:var(--muted); border-radius:2px; padding:4px 8px; font-family:var(--mono); font-size:10.5px; cursor:pointer; transition:all .15s ease; }
+  .copy-btn:hover { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
+
+  /* BOTÃO REPOSITÓRIO GITHUB */
+  .repo-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--mono); font-size:12px; padding:8px 12px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink); text-decoration:none; transition:all .15s ease; width:fit-content; }
+  .repo-btn:hover { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); text-decoration:none; }
+  .repo-btn svg { width:14px; height:14px; fill:currentColor; }
+
+  /* STEPS GRID (COMO USAR NO DIA A DIA) */
+  .steps-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin-top:2px; }
+  .step-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .step-head { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
+  .step-badge { background:var(--accent); color:var(--paper); border-radius:2px; padding:1px 6px; font-size:10px; font-weight:700; }
+  .step-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
+  .step-card code { font-family:var(--mono); font-size:12px; background:var(--surface); padding:1px 5px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
 
   .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
   .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
@@ -131,490 +170,781 @@
   .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
 
   footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
-  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
-  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:100%; }
 </style>
 </head>
 <body>
-
 <div class="wrap">
-
-  <header>
-    <div class="eyebrow">
-      <span>Camada 05 · Recuperação de Conhecimento & RAG</span><span>·</span><span>Curadoria de Elite</span><span>·</span>
-      <b>8 Ferramentas / Soberania Total</b>
-    </div>
-    <h1>RAG Cirúrgico, Bancos Vetoriais & Apps de Conhecimento Local</h1>
-    <p class="deck">A infraestrutura de conhecimento local: <strong>AnythingLLM desktop/server para documentos privados, NoteGen para notas com IA, Qdrant vetorial, Late Interaction (ColBERT)</strong> e grafos de código.</p>
-    <div class="chips">
-      <div class="chip"><b>8</b> tecnologias auditadas</div>
-      <div class="chip"><b>0</b> taxas por assento ou cota oculta</div>
-      <div class="chip"><b>100%</b> soberania de dados</div>
-    </div>
-  </header>
-
-  <section>
-    <div class="sec-head">
-      <span class="sec-num">Parte 1 · A Equação da Soberania</span>
-      <h2>A fronteira entre refém de nuvem e autonomia técnica</h2>
-      <p class="sec-note">Assinaturas recorrentes cobram pedágio pelo seu próprio crescimento. A engenharia moderna devolve a governança para o desenvolvedor.</p>
-    </div>
-
-    <div class="routes">
-      <div class="route official">
-        <span class="tag">O Custo Fechado</span>
-        <h4>O Fracasso do RAG Tradicional em Nuvem</h4>
-        <p>Subir PDFs sigilosos para provedores fechados vaza dados estratégicos e custa caro por consulta. O particionamento ingênuo quebra tabelas e números.</p>
-      </div>
-
-      <div class="route gray">
-        <span class="tag">A Solução Aberta</span>
-        <h4>A Soberania do Conhecimento Local</h4>
-        <p>AnythingLLM e NoteGen organizam bases locais com LanceDB e SQLite embutidos. Qdrant e ColBERT entregam precisão cirúrgica sem enviar nenhum byte para a internet.</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="sec-head">
-      <span class="sec-num">Parte 2 · O Panorama Geral</span>
-      <h2>O inventário completo da camada</h2>
-      <p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
-    </div>
-
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Ferramenta</th>
-            <th>Substitui o SaaS Pago</th>
-            <th>Economia Declarada</th>
-            <th>Categoria</th>
-            <th>Licença</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="rank">01</td>
-            <td class="tool">AnythingLLM</td>
-            <td class="saas">Chatbase / Dify Cloud / Pinecone ($ 99/mês)</td>
-            <td class="econ">-$ 1.188 / ano por organização</td>
-            <td class="cat">All-in-One Desktop/Server RAG</td>
-            <td class="lic">MIT</td>
-          </tr>
-          <tr>
-            <td class="rank">02</td>
-            <td class="tool">NoteGen / Analog Knowledge</td>
-            <td class="saas">Notion AI ($ 10/user/mês)</td>
-            <td class="econ">-$ 120 / ano por usuário</td>
-            <td class="cat">Local AI Note Manager</td>
-            <td class="lic">MIT</td>
-          </tr>
-          <tr>
-            <td class="rank">03</td>
-            <td class="tool">Qdrant</td>
-            <td class="saas">Pinecone ($ 70-$ 500/mês)</td>
-            <td class="econ">-$ 840 a $ 6.000 / ano</td>
-            <td class="cat">Vector Database</td>
-            <td class="lic">Apache-2.0</td>
-          </tr>
-          <tr>
-            <td class="rank">04</td>
-            <td class="tool">RAGatouille (ColBERT)</td>
-            <td class="saas">Embeddings vetoriais médios simples</td>
-            <td class="econ">Aumenta a precisão do RAG em 30%+</td>
-            <td class="cat">Late Interaction Retrieval</td>
-            <td class="lic">Apache-2.0</td>
-          </tr>
-          <tr>
-            <td class="rank">05</td>
-            <td class="tool">Unstructured</td>
-            <td class="saas">Parsers ingênuos de PDF</td>
-            <td class="econ">Elimina 90% das falhas de corte de texto</td>
-            <td class="cat">Document Ingestion ETL</td>
-            <td class="lic">Apache-2.0</td>
-          </tr>
-          <tr>
-            <td class="rank">06</td>
-            <td class="tool">FastEmbed</td>
-            <td class="saas">OpenAI Embeddings API ($ 0.10/1M tokens)</td>
-            <td class="econ">100% grátis e offline</td>
-            <td class="cat">Local Embeddings</td>
-            <td class="lic">Apache-2.0</td>
-          </tr>
-          <tr>
-            <td class="rank">07</td>
-            <td class="tool">DuckDB</td>
-            <td class="saas">Data Warehouses caros (Snowflake)</td>
-            <td class="econ">-$ 500+/mês em consultas analíticas</td>
-            <td class="cat">In-Process Analytical DB</td>
-            <td class="lic">MIT</td>
-          </tr>
-          <tr>
-            <td class="rank">08</td>
-            <td class="tool">LanceDB</td>
-            <td class="saas">Bancos vetoriais em nuvem</td>
-            <td class="econ">Zero custo de servidor gerenciado</td>
-            <td class="cat">Embedded Serverless Vector</td>
-            <td class="lic">Apache-2.0</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section>
-    <div class="sec-head">
-      <span class="sec-num">Parte 3 · O Detalhamento Técnico & Workflows Práticos</span>
-      <h2>As fichas técnicas completas com Guia do Dia a Dia</h2>
-      <p class="sec-note">O que faz, como funciona por baixo dos panos, comandos de execução e <strong>passo a passo detalhado para o seu fluxo diário</strong>.</p>
-    </div>
-
-    <div class="ledger">
-      <!-- 01 AnythingLLM -->
-      <div class="entry">
-        <div class="entry-rank">01</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>AnythingLLM</h3>
-            <span class="killer-badge">SUBSTITUI: Chatbase / Dify Cloud / Pinecone ($ 99/mês)</span>
-            <span class="econ-badge">ECONOMIA: -$ 1.188 / ano por organização</span>
-            <span class="lic-badge">MIT</span>
-            <span class="kind">All-in-One Desktop/Server RAG</span>
-          </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Aplicação completa de chat com documentos locais, suporte a múltiplos workspaces, permissões de usuários e banco LanceDB embutido.</p>
-
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Gerencia pipelines de ingestão de PDFs, planilhas, páginas web e repositórios. Conecta a qualquer LLM (Ollama local ou APIs comerciais) e faz busca vetorial embutida com zero configuração de infraestrutura.</p>
-
-              <pre><code>docker run -d -p 3001:3001 -v anythingllm_data:/app/server/storage mintplexlabs/anythingllm</code></pre>
-
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Abra o AnythingLLM no desktop ou servidor (porta 3001).<br>2. Crie um workspace chamado 'Contratos 2026' e arraste 50 arquivos PDF.<br>3. Converse com seus documentos: o AnythingLLM cita as páginas e parágrafos exatos com 100% de privacidade.</p>
-              </div>
-            </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~120 MB RAM / Banco LanceDB embutido</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> A forma mais rápida e segura de entregar RAG corporativo para equipes não-técnicas sem risco de vazamento de dados.</p>
-              </div>
-              <a class="repo" href="https://anythingllm.com" target="_blank" rel="noopener">anythingllm.com</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 02 NoteGen / Analog Knowledge -->
-      <div class="entry">
-        <div class="entry-rank">02</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>NoteGen / Analog Knowledge</h3>
-            <span class="killer-badge">SUBSTITUI: Notion AI ($ 10/user/mês)</span>
-            <span class="econ-badge">ECONOMIA: -$ 120 / ano por usuário</span>
-            <span class="lic-badge">MIT</span>
-            <span class="kind">Local AI Note Manager</span>
-          </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Gerenciador de notas e documentações estruturadas em Markdown puro com IA local para síntese, categorização e busca semântica.</p>
-
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Armazena arquivos Markdown em pastas locais no disco do usuário. Utiliza embeddings leves para conectar notas relacionadas e modelos Ollama para reescrever, resumir e expandir tópicos sem conexão com a internet.</p>
-
-              <pre><code>npm install -g notegen && notegen start</code></pre>
-
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Abra sua pasta de notas no NoteGen.<br>2. Use o atalho de IA para gerar atas de reunião estruturadas a partir de anotações soltas.<br>3. Suas notas continuam como arquivos <code>.md</code> abertos e versionáveis no Git para sempre.</p>
-              </div>
-            </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">< 40 MB RAM / Arquivos locais em disco</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Seus pensamentos e notas estratégicas não devem ficar trancados em bancos de dados proprietários na nuvem.</p>
-              </div>
-              <a class="repo" href="https://github.com/topics/pkm" target="_blank" rel="noopener">github.com/topics/pkm</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 03 Qdrant -->
-      <div class="entry">
-        <div class="entry-rank">03</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>Qdrant</h3>
-            <span class="killer-badge">SUBSTITUI: Pinecone ($ 70-$ 500/mês)</span>
-            <span class="econ-badge">ECONOMIA: -$ 840 a $ 6.000 / ano</span>
-            <span class="lic-badge">Apache-2.0</span>
-            <span class="kind">Vector Database</span>
-          </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Banco vetorial em Rust com suporte a busca híbrida (vetores densos + esparsos BM25) e filtragem avançada de metadados.</p>
-
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Implementa índices HNSW com filtragem de payload em tempo real. Permite cruzar filtros booleanos rígidos com busca vetorial de cosseno sem penalidade de performance.</p>
-
-              <pre><code>docker run -d -p 6333:6333 -v qdrant_data:/qdrant/storage qdrant/qdrant</code></pre>
-
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Suba o Qdrant via Docker na porta 6333.<br>2. Crie uma coleção com vetores densos e esparsos para busca híbrida.<br>3. Faça buscas com filtros de metadados combinando similaridade semântica e exata com latência de 3ms.</p>
-              </div>
-            </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">~40 MB RAM em repouso</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Roda milhões de vetores com latência de resposta de poucos milissegundos sem limites de pods.</p>
-              </div>
-              <a class="repo" href="https://qdrant.tech" target="_blank" rel="noopener">qdrant.tech</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 04 RAGatouille (ColBERT) -->
-      <div class="entry">
-        <div class="entry-rank">04</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>RAGatouille (ColBERT)</h3>
-            <span class="killer-badge">SUBSTITUI: Embeddings vetoriais médios simples</span>
-            <span class="econ-badge">ECONOMIA: Aumenta a precisão do RAG em 30%+</span>
-            <span class="lic-badge">Apache-2.0</span>
-            <span class="kind">Late Interaction Retrieval</span>
-          </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Implementa ColBERTv2 com facilidade em Python: compara cada token da pergunta com cada token dos documentos.</p>
-
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Gera múltiplos vetores de dimensão reduzida (1 por token) e utiliza o operador MaxSim para calcular a relevância token a token, capturando detalhes minuciosos que embeddings médios perdem.</p>
-
-              <pre><code>pip install ragatouille</code></pre>
-
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Indexe seus documentos: <code>RAG.index(collection=documentos, index_name='manual')</code>.<br>2. Consulte: <code>RAG.search('qual a cláusula de rescisão?')</code>.<br>3. Obtenha os trechos exatos com destaque de relevância por palavra.</p>
-              </div>
-            </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Indexação rápida em GPU/CPU</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Encontra a resposta exata em contratos jurídicos e tabelas financeiras onde embeddings convencionais falham.</p>
-              </div>
-              <a class="repo" href="https://github.com/bclavie/RAGatouille" target="_blank" rel="noopener">github.com/bclavie/RAGatouille</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 05 Unstructured -->
-      <div class="entry">
-        <div class="entry-rank">05</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>Unstructured</h3>
-            <span class="killer-badge">SUBSTITUI: Parsers ingênuos de PDF</span>
-            <span class="econ-badge">ECONOMIA: Elimina 90% das falhas de corte de texto</span>
-            <span class="lic-badge">Apache-2.0</span>
-            <span class="kind">Document Ingestion ETL</span>
-          </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Particiona PDFs, apresentações e planilhas preservando títulos, subtítulos, parágrafos e tabelas intactas.</p>
-
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Utiliza modelos de detecção de layout e heurísticas para classificar blocos de texto (Title, NarrativeText, Table, ListItem), gerando metadados ricos para cada pedaço (chunk).</p>
-
-              <pre><code>pip install "unstructured[all-docs]"</code></pre>
-
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Passe o arquivo bruto: <code>elements = partition(filename='relatorio.pdf')</code>.<br>2. O Unstructured extrai tabelas em HTML e parágrafos separadamente.<br>3. Envie os blocos estruturados diretamente para o banco vetorial.</p>
-              </div>
-            </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução sob demanda</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> A qualidade do seu RAG é determinada pela qualidade da ingestão. Sem particionamento estruturado, o RAG falha.</p>
-              </div>
-              <a class="repo" href="https://unstructured.io" target="_blank" rel="noopener">unstructured.io</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 06 FastEmbed -->
-      <div class="entry">
-        <div class="entry-rank">06</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>FastEmbed</h3>
-            <span class="killer-badge">SUBSTITUI: OpenAI Embeddings API ($ 0.10/1M tokens)</span>
-            <span class="econ-badge">ECONOMIA: 100% grátis e offline</span>
-            <span class="lic-badge">Apache-2.0</span>
-            <span class="kind">Local Embeddings</span>
-          </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Gera embeddings BGE e multilingual diretamente no processo Python em frações de milissegundo com ONNX Runtime.</p>
-
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Carrega modelos quantizados de embedding (BGE-small, MiniLM) diretamente em C++ via ONNX Runtime, sem carregar PyTorch ou CUDA pesado.</p>
-
-              <pre><code>pip install fastembed</code></pre>
-
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instancie: <code>model = TextEmbedding()</code>.<br>2. Converta textos em vetores: <code>embeddings = list(model.embed(textos))</code>.<br>3. Gere milhares de vetores por segundo sem bater em nenhuma API externa.</p>
-              </div>
-            </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">< 50 MB RAM por modelo</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Elimina a dependência de chamadas de rede para transformar textos em vetores.</p>
-              </div>
-              <a class="repo" href="https://github.com/qdrant/fastembed" target="_blank" rel="noopener">github.com/qdrant/fastembed</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 07 DuckDB -->
-      <div class="entry">
-        <div class="entry-rank">07</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>DuckDB</h3>
-            <span class="killer-badge">SUBSTITUI: Data Warehouses caros (Snowflake)</span>
-            <span class="econ-badge">ECONOMIA: -$ 500+/mês em consultas analíticas</span>
-            <span class="lic-badge">MIT</span>
-            <span class="kind">In-Process Analytical DB</span>
-          </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Banco analítico colunar executado no mesmo processo com suporte nativo a leitura de arquivos Parquet e vetores.</p>
-
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Motor OLAP colunar vetorizado em C++ que processa blocos de dados em registradores de CPU com suporte a multithreading automático e leitura direta de arquivos do disco.</p>
-
-              <pre><code>pip install duckdb</code></pre>
-
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Consulte arquivos locais com SQL puro: <code>SELECT * FROM 'logs/*.parquet' WHERE status = 500</code>.<br>2. Agregue milhões de linhas em milissegundos.<br>3. Exporte os resultados resumidos diretamente para alimentar a LLM.</p>
-              </div>
-            </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Execução local ultra-rápida</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Processa milhões de linhas de metadados e logs em milissegundos direto do disco local.</p>
-              </div>
-              <a class="repo" href="https://duckdb.org" target="_blank" rel="noopener">duckdb.org</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 08 LanceDB -->
-      <div class="entry">
-        <div class="entry-rank">08</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>LanceDB</h3>
-            <span class="killer-badge">SUBSTITUI: Bancos vetoriais em nuvem</span>
-            <span class="econ-badge">ECONOMIA: Zero custo de servidor gerenciado</span>
-            <span class="lic-badge">Apache-2.0</span>
-            <span class="kind">Embedded Serverless Vector</span>
-          </div>
-          <div class="cols">
-            <div class="block">
-              <span class="label">1. O Que Faz</span>
-              <p>Banco vetorial serverless embutido em Rust baseado no formato colunar Lance. Consulta direto do NVMe sem consumir RAM.</p>
-
-              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
-              <p style="font-size:14px;color:var(--ink-2);">Utiliza o formato colunar Lance otimizado para vetores e dados multimodais. Executa buscas ANN direto do SSD usando Zero-Copy, consumindo quase zero de RAM.</p>
-
-              <pre><code>pip install lancedb</code></pre>
-
-              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Conecte no Python: <code>db = lancedb.connect('./meu_lancedb')</code>.<br>2. Crie tabelas passando DataFrames com vetores.<br>3. Realize consultas diretamente do disco com latência ultrabaixa sem subir servidores.</p>
-              </div>
-            </div>
-            <div class="block">
-              <span class="label">Especificação & Realidade</span>
-              <div class="spec">Consumo de RAM quase zero</div>
-              <div class="truth">
-                <p><strong>Por que é ouro:</strong> Ideal para aplicações desktop, extensões e pipelines que precisam de busca vetorial rápida sem subir containers.</p>
-              </div>
-              <a class="repo" href="https://lancedb.com" target="_blank" rel="noopener">lancedb.com</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="sec-head flagged">
-      <span class="sec-num">Parte 4 · A Regra de Ouro</span>
-      <h2>Como operar essa pilha com estabilidade</h2>
-      <p class="sec-note">Diretrizes para rodar ferramentas no seu próprio servidor com resiliência máxima e zero sobrecarga.</p>
-    </div>
-
-    <div class="grid2">
-      <div class="reject">
-        <h4>1. Isolamento em Containers Docker</h4>
-        <p>Nunca instale ferramentas diretamente no sistema host sem isolamento de rede e volumes mapeados em disco seguro.</p>
-      </div>
-      <div class="reject">
-        <h4>2. Proxy Reverso com Caddy / Traefik</h4>
-        <p>Aponte a borda de rede para proxies leves com renovação automática de certificados TLS sem scripts manuais.</p>
-      </div>
-      <div class="reject">
-        <h4>3. Backup Imutável com Restic / Borg</h4>
-        <p>Programe snapshots diários dos volumes para armazenamento S3 remoto compatível para restauração rápida em caso de desastre.</p>
-      </div>
-      <div class="reject">
-        <h4>4. Acesso Seguro via WireGuard / Headscale</h4>
-        <p>Mantenha painéis de administração e bancos de dados fora da internet pública, acessíveis apenas pela VPN mesh interna.</p>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    <p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas e viabilidade em produção.</p>
-    <div class="srcs">
-      <span>Open Source Initiative (OSI)</span>
-      <span>Linux Foundation</span>
-      <span>CNCF Landscape</span>
-    </div>
-  </footer>
-
+<header>
+<div class="header-top">
+<a class="back-link" href="index.html">
+<span>←</span>
+<span>Voltar ao Hub Central</span>
+</a>
+<div class="eyebrow">
+<span class="layer-badge">Camada 05</span>
+<span>Engenharia &amp; Autonomia Técnica</span>
+<span>·</span>
+<span>Curadoria Soberana</span>
 </div>
-
+</div>
+<h1>RAG Cirúrgico, Bancos Vetoriais &amp; Apps de Conhecimento Local</h1>
+<p class="deck">A infraestrutura de conhecimento local: <strong>AnythingLLM desktop/server para documentos privados, NoteGen para notas com IA, Qdrant vetorial, Late Interaction (ColBERT)</strong> e grafos de código.</p>
+<!-- HERO STATS BAR -->
+<div class="hero-stats">
+<div class="stat-card">
+<div class="stat-val">8</div>
+<div class="stat-lbl">Tecnologias Auditadas</div>
+</div>
+<div class="stat-card good">
+<div class="stat-val">100%</div>
+<div class="stat-lbl">Soberania &amp; Zero Lock-in</div>
+</div>
+<div class="stat-card">
+<div class="stat-val">OSI Standard</div>
+<div class="stat-lbl">Licenças de Código Aberto</div>
+</div>
+<div class="stat-card good">
+<div class="stat-val">-$ 30k a $ 150k</div>
+<div class="stat-lbl">Economia TCO Anual Estimada</div>
+</div>
+</div>
+<!-- QUICK ACTIONS -->
+<div class="header-actions">
+<a class="jump-btn" href="#tabela">
+<span>📊</span>
+<span>Matriz Comparativa</span>
+</a>
+<a class="jump-btn primary" href="#fichas">
+<span>⚡</span>
+<span>Fichas Técnicas &amp; Passo a Passo</span>
+</a>
+</div>
+</header>
+<section>
+<div class="sec-head">
+<span class="sec-num">Parte 1 · A Equação da Soberania</span>
+<h2>A fronteira entre refém de nuvem e autonomia técnica</h2>
+<p class="sec-note">Assinaturas recorrentes cobram pedágio pelo seu próprio crescimento. A engenharia moderna devolve a governança para o desenvolvedor.</p>
+</div>
+<div class="routes">
+<div class="route official">
+<span class="tag">O Custo Fechado</span>
+<h4>O Fracasso do RAG Tradicional em Nuvem</h4>
+<p>Subir PDFs sigilosos para provedores fechados vaza dados estratégicos e custa caro por consulta. O particionamento ingênuo quebra tabelas e números.</p>
+</div>
+<div class="route gray">
+<span class="tag">A Solução Aberta</span>
+<h4>A Soberania do Conhecimento Local</h4>
+<p>AnythingLLM e NoteGen organizam bases locais com LanceDB e SQLite embutidos. Qdrant e ColBERT entregam precisão cirúrgica sem enviar nenhum byte para a internet.</p>
+</div>
+</div>
+</section>
+<section id="tabela">
+<div class="sec-head">
+<span class="sec-num">Parte 2 · O Panorama Geral</span>
+<h2>O inventário completo da camada</h2>
+<p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
+</div>
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Ferramenta</th>
+<th>Substitui o SaaS Pago</th>
+<th>Economia Declarada</th>
+<th>Categoria</th>
+<th>Licença</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="rank">01</td>
+<td class="tool">AnythingLLM</td>
+<td class="saas">Chatbase / Dify Cloud / Pinecone ($ 99/mês)</td>
+<td class="econ">-$ 1.188 / ano por organização</td>
+<td class="cat">All-in-One Desktop/Server RAG</td>
+<td class="lic">MIT</td>
+</tr>
+<tr>
+<td class="rank">02</td>
+<td class="tool">NoteGen / Analog Knowledge</td>
+<td class="saas">Notion AI ($ 10/user/mês)</td>
+<td class="econ">-$ 120 / ano por usuário</td>
+<td class="cat">Local AI Note Manager</td>
+<td class="lic">MIT</td>
+</tr>
+<tr>
+<td class="rank">03</td>
+<td class="tool">Qdrant</td>
+<td class="saas">Pinecone ($ 70-$ 500/mês)</td>
+<td class="econ">-$ 840 a $ 6.000 / ano</td>
+<td class="cat">Vector Database</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">04</td>
+<td class="tool">RAGatouille (ColBERT)</td>
+<td class="saas">Embeddings vetoriais médios simples</td>
+<td class="econ">Aumenta a precisão do RAG em 30%+</td>
+<td class="cat">Late Interaction Retrieval</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">05</td>
+<td class="tool">Unstructured</td>
+<td class="saas">Parsers ingênuos de PDF</td>
+<td class="econ">Elimina 90% das falhas de corte de texto</td>
+<td class="cat">Document Ingestion ETL</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">06</td>
+<td class="tool">FastEmbed</td>
+<td class="saas">OpenAI Embeddings API ($ 0.10/1M tokens)</td>
+<td class="econ">100% grátis e offline</td>
+<td class="cat">Local Embeddings</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">07</td>
+<td class="tool">DuckDB</td>
+<td class="saas">Data Warehouses caros (Snowflake)</td>
+<td class="econ">-$ 500+/mês em consultas analíticas</td>
+<td class="cat">In-Process Analytical DB</td>
+<td class="lic">MIT</td>
+</tr>
+<tr>
+<td class="rank">08</td>
+<td class="tool">LanceDB</td>
+<td class="saas">Bancos vetoriais em nuvem</td>
+<td class="econ">Zero custo de servidor gerenciado</td>
+<td class="cat">Embedded Serverless Vector</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="fichas">
+<div class="sec-head">
+<span class="sec-num">Parte 3 · O Detalhamento Técnico &amp; Workflows Práticos</span>
+<h2>As fichas técnicas completas com Guia do Dia a Dia</h2>
+<p class="sec-note">O que faz, como funciona por baixo dos panos, comandos de execução e <strong>passo a passo detalhado para o seu fluxo diário</strong>.</p>
+</div>
+<div class="ledger">
+<!-- 01 AnythingLLM -->
+<div class="entry">
+<div class="entry-rank">01</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>AnythingLLM · All-in-One Desktop/Server RAG</h3>
+<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+<span class="killer-badge">Substitui: Chatbase / Dify Cloud / Pinecone ($ 99/mês)</span>
+<span class="econ-badge">Economia: -$ 1.188 / ano por organização</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">All-in-One Desktop/Server RAG</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Aplicação completa de chat com documentos locais, suporte a múltiplos workspaces, permissões de usuários e banco LanceDB embutido.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>docker run -d -p 3001:3001 -v anythingllm_data:/app/server/storage mintplexlabs/anythingllm</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Chatbase / Dify Cloud / Pinecone ($ 99/mês)</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 1.188 / ano por organização · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">1 vCPU · 512 MB a 1 GB RAM · Container Docker</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>All-in-One Desktop/Server RAG</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://anythingllm.com" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: anythingllm.com ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Abra o AnythingLLM no desktop ou servidor (porta 3001).</p>
+</div>
+</div>
+</div>
+</div></div>
+<!-- 02 NoteGen / Analog Knowledge -->
+<div class="entry">
+<div class="entry-rank">02</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>NoteGen / Analog Knowledge · Local AI Note Manager</h3>
+<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+<span class="killer-badge">Substitui: Notion AI ($ 10/user/mês)</span>
+<span class="econ-badge">Economia: -$ 120 / ano por usuário</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">Local AI Note Manager</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Gerenciador de notas e documentações estruturadas em Markdown puro com IA local para síntese, categorização e busca semântica.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>npm install -g notegen &amp;&amp; notegen start</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Notion AI ($ 10/user/mês)</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 120 / ano por usuário · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Local AI Note Manager</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://github.com/topics/pkm" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: github.com/topics/pkm ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Abra sua pasta de notas no NoteGen.</p>
+</div>
+</div>
+</div>
+</div></div>
+<!-- 03 Qdrant -->
+<div class="entry">
+<div class="entry-rank">03</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>Qdrant · Vector Database</h3>
+<span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
+<span class="killer-badge">Substitui: Pinecone ($ 70-$ 500/mês)</span>
+<span class="econ-badge">Economia: -$ 840 a $ 6.000 / ano</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">Vector Database</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Banco vetorial em Rust com suporte a busca híbrida (vetores densos + esparsos BM25) e filtragem avançada de metadados.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>docker run -d -p 6333:6333 -v qdrant_data:/qdrant/storage qdrant/qdrant</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Pinecone ($ 70-$ 500/mês)</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 840 a $ 6.000 / ano · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Vector Database</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://qdrant.tech" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: qdrant.tech ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Suba o Qdrant via Docker na porta 6333.</p>
+</div>
+</div>
+</div>
+</div></div>
+<!-- 04 RAGatouille (ColBERT) -->
+<div class="entry">
+<div class="entry-rank">04</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>RAGatouille (ColBERT) · Late Interaction Retrieval</h3>
+<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+<span class="killer-badge">Substitui: Embeddings vetoriais médios simples</span>
+<span class="econ-badge">Economia: Aumenta a precisão do RAG em 30%+</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">Late Interaction Retrieval</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Implementa ColBERTv2 com facilidade em Python: compara cada token da pergunta com cada token dos documentos.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>pip install ragatouille</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Embeddings vetoriais médios simples</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>Aumenta a precisão do RAG em 30%+ · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Late Interaction Retrieval</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://github.com/bclavie/RAGatouille" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: github.com/bclavie/RAGatouille ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Indexe seus documentos: <code>RAG.index(collection=documentos, index_name='manual')</code>.</p>
+</div>
+</div>
+</div>
+</div></div>
+<!-- 05 Unstructured -->
+<div class="entry">
+<div class="entry-rank">05</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>Unstructured · Document Ingestion ETL</h3>
+<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+<span class="killer-badge">Substitui: Parsers ingênuos de PDF</span>
+<span class="econ-badge">Economia: Elimina 90% das falhas de corte de texto</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">Document Ingestion ETL</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Particiona PDFs, apresentações e planilhas preservando títulos, subtítulos, parágrafos e tabelas intactas.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>pip install "unstructured[all-docs]"</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Parsers ingênuos de PDF</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>Elimina 90% das falhas de corte de texto · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Document Ingestion ETL</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://unstructured.io" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: unstructured.io ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Passe o arquivo bruto: <code>elements = partition(filename='relatorio.pdf')</code>.</p>
+</div>
+</div>
+</div>
+</div></div>
+<!-- 06 FastEmbed -->
+<div class="entry">
+<div class="entry-rank">06</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>FastEmbed · Local Embeddings</h3>
+<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+<span class="killer-badge">Substitui: OpenAI Embeddings API ($ 0.10/1M tokens)</span>
+<span class="econ-badge">Economia: 100% grátis e offline</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">Local Embeddings</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Gera embeddings BGE e multilingual diretamente no processo Python em frações de milissegundo com ONNX Runtime.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>pip install fastembed</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">OpenAI Embeddings API ($ 0.10/1M tokens)</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>100% grátis e offline · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Local Embeddings</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://github.com/qdrant/fastembed" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: github.com/qdrant/fastembed ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Instancie: <code>model = TextEmbedding()</code>.</p>
+</div>
+</div>
+</div>
+</div></div>
+<!-- 07 DuckDB -->
+<div class="entry">
+<div class="entry-rank">07</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>DuckDB · In-Process Analytical DB</h3>
+<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+<span class="killer-badge">Substitui: Data Warehouses caros (Snowflake)</span>
+<span class="econ-badge">Economia: -$ 500+/mês em consultas analíticas</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">In-Process Analytical DB</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Banco analítico colunar executado no mesmo processo com suporte nativo a leitura de arquivos Parquet e vetores.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>pip install duckdb</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Data Warehouses caros (Snowflake)</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 500+/mês em consultas analíticas · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>In-Process Analytical DB</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://duckdb.org" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: duckdb.org ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Consulte arquivos locais com SQL puro: <code>SELECT * FROM 'logs/*.parquet' WHERE status = 500</code>.</p>
+</div>
+</div>
+</div>
+</div></div>
+<!-- 08 LanceDB -->
+<div class="entry">
+<div class="entry-rank">08</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>LanceDB · Embedded Serverless Vector</h3>
+<span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
+<span class="killer-badge">Substitui: Bancos vetoriais em nuvem</span>
+<span class="econ-badge">Economia: Zero custo de servidor gerenciado</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">Embedded Serverless Vector</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Banco vetorial serverless embutido em Rust baseado no formato colunar Lance. Consulta direto do NVMe sem consumir RAM.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>pip install lancedb</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Bancos vetoriais em nuvem</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>Zero custo de servidor gerenciado · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">1 vCPU · 512 MB a 1 GB RAM · Container Docker</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Embedded Serverless Vector</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://lancedb.com" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: lancedb.com ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Conecte no Python: <code>db = lancedb.connect('./meu_lancedb')</code>.</p>
+</div>
+</div>
+</div>
+</div></div>
+</div>
+</section>
+<section>
+<div class="sec-head flagged">
+<span class="sec-num">Parte 4 · A Regra de Ouro</span>
+<h2>Como operar essa pilha com estabilidade</h2>
+<p class="sec-note">Diretrizes para rodar ferramentas no seu próprio servidor com resiliência máxima e zero sobrecarga.</p>
+</div>
+<div class="grid2">
+<div class="reject">
+<h4>1. Isolamento em Containers Docker</h4>
+<p>Nunca instale ferramentas diretamente no sistema host sem isolamento de rede e volumes mapeados em disco seguro.</p>
+</div>
+<div class="reject">
+<h4>2. Proxy Reverso com Caddy / Traefik</h4>
+<p>Aponte a borda de rede para proxies leves com renovação automática de certificados TLS sem scripts manuais.</p>
+</div>
+<div class="reject">
+<h4>3. Backup Imutável com Restic / Borg</h4>
+<p>Programe snapshots diários dos volumes para armazenamento S3 remoto compatível para restauração rápida em caso de desastre.</p>
+</div>
+<div class="reject">
+<h4>4. Acesso Seguro via WireGuard / Headscale</h4>
+<p>Mantenha painéis de administração e bancos de dados fora da internet pública, acessíveis apenas pela VPN mesh interna.</p>
+</div>
+</div>
+</section>
+<footer>
+<p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas e viabilidade em produção.</p>
+<div class="srcs">
+<span>Open Source Initiative (OSI)</span>
+<span>Linux Foundation</span>
+<span>CNCF Landscape</span>
+</div>
+</footer>
+</div>
 </body>
 </html>

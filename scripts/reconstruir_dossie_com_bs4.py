@@ -244,7 +244,7 @@ def processar_arquivo_bs4(filename):
     h1_text = h1_tag.get_text().strip() if h1_tag else "Enciclopédia de Engenharia & Soberania"
     deck_text = deck_tag.decode_contents().strip() if deck_tag else "Curadoria de tecnologias abertas para substituição de SaaS e independência tecnológica."
 
-    total_tools = len(soup.find_all("div", class_="entry"))
+    total_tools = len(soup.find_all(["div", "article"], class_="entry"))
     if total_tools == 0:
         total_tools = 20
 
@@ -315,9 +315,10 @@ def processar_arquivo_bs4(filename):
             elif "Parte 3" in txt:
                 parent_sec['id'] = 'fichas'
 
-    # 4. Processar cada card <div class="entry">
-    entries = soup.find_all("div", class_="entry")
+    # 4. Processar cada card <div class="entry"> ou <article class="entry">
+    entries = soup.find_all(["div", "article"], class_="entry")
     for entry in entries:
+        entry.name = "div"  # Padronizar tag para div.entry
         rank_tag = entry.find("div", class_="entry-rank")
         rank = rank_tag.get_text().strip() if rank_tag else "01"
 
