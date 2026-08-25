@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FerramentaOpenSource",
+  "description": "Contrato estruturado estrito para extração e catalogação de ferramentas open source.",
+  "type": "object",
+  "properties": {
+    "rank": { "type": "integer", "minimum": 1, "maximum": 99 },
+    "nome": { "type": "string", "minLength": 2 },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "categoria": { "type": "string" },
+    "senioridade": { "type": "string", "enum": ["Júnior", "Pleno", "Sênior", "Arquiteto"] },
+    "saas_substituido": { "type": "string" },
+    "economia_anual_estimada_usd": { "type": "number", "minimum": 0 },
+    "licenca_osi": { "type": "string" },
+    "repositorio_github": { "type": "string", "format": "uri" },
+    "o_que_faz": { "type": "string", "minLength": 20 },
+    "como_funciona": { "type": "string", "minLength": 20 },
+    "comando_rapido": { "type": "string", "minLength": 5 },
+    "requisitos_infra": {
+      "type": "object",
+      "properties": {
+        "ram_minima": { "type": "string" },
+        "cpu_minima": { "type": "string" },
+        "storage": { "type": "string" }
+      },
+      "required": ["ram_minima", "cpu_minima"]
+    },
+    "passos_praticos": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "properties": {
+          "passo": { "type": "integer", "enum": [1, 2, 3] },
+          "titulo": { "type": "string" },
+          "descricao": { "type": "string" }
+        },
+        "required": ["passo", "titulo", "descricao"]
+      }
+    }
+  },
+  "required": [
+    "rank",
+    "nome",
+    "saas_substituido",
+    "licenca_osi",
+    "o_que_faz",
+    "comando_rapido",
+    "passos_praticos"
+  ],
+  "additionalProperties": false
+}
