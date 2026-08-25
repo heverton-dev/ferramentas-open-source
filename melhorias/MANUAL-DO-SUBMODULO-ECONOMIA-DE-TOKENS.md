@@ -1,22 +1,23 @@
-# 🚀 Token Economy Core
-### O Submódulo Universal para Reduzir até 95% do Gasto de Tokens com IA (Para Iniciantes & Veteranos)
+# 🌐 Token Economy Core
+### O Padrão Universal para Reduzir até 95% do Gasto de Tokens com IA (Para Iniciantes & Veteranos)
 
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Tokens Saved](https://img.shields.io/badge/Tokens%20Economy-Até%20--95.3%25-brightgreen.svg)](#-resultados-comprovados-em-testes-reais)
-[![Multi-IDE](https://img.shields.io/badge/Compatibilidade-Claude%20%7C%20Cursor%20%7C%20Antigravity%20%7C%20Aider-orange.svg)](#)
+[![Multi-OS](https://img.shields.io/badge/SO-Windows%20%7C%20macOS%20%7C%20Linux-blue.svg)](#)
+[![Multi-IDE](https://img.shields.io/badge/IDEs-Claude%20Code%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Cline%20%7C%20Antigravity%20%7C%20Copilot%20%7C%20Aider-orange.svg)](#)
 
 ---
 
 ## 🎯 O que é o Token Economy Core?
 
-Se você usa IA para programar (como **Claude Code, Cursor, Antigravity, Aider, OpenCode ou ChatGPT**), já deve ter notado que a cota de 5 horas acaba rápido ou a fatura de tokens sobe desnecessariamente.
+Se você usa IA para programar (em **qualquer IDE, Harness ou Modelo**), já deve ter notado que a cota de 5 horas acaba rápido ou a fatura de tokens sobe desnecessariamente.
 
 Isso acontece porque a IA costuma:
 1. **Ler arquivos gigantes inúteis** (como `package-lock.json`, `dist/` ou imagens).
 2. **Pensar de forma prolixa** (gastando centenas de tokens no raciocínio interno antes de responder).
 3. **Ler 300 linhas de logs de terminal** quando o erro real está em 3 linhas.
 
-O **Token Economy Core** é um submódulo plugável que resolve isso de forma **100% automática e não-destrutiva**: ele instala regras inteligentes, skills de disciplina e automação de empacotamento com **apenas 1 comando**.
+O **Token Economy Core** é um submódulo universal e plugável que resolve isso de forma **100% automática, não-destrutiva e agnóstica a SO**: ele instala regras inteligentes, skills de disciplina e automação de empacotamento com **apenas 1 comando universal em Python**.
 
 ---
 
@@ -35,72 +36,50 @@ Em nossa bateria de benchmark empírico em projetos reais, obtivemos os seguinte
 
 ---
 
-## 🛠️ Como Usar (Guia Passo a Passo para os 2 Cenários)
+## 🚀 Instalação Universal em 2 Passos (Qualquer SO e Qualquer IDE)
 
----
+O instalador é **100% multiplataforma (Windows, macOS e Linux)**.
 
-### 📂 CENÁRIO 1: Em um Projeto que JÁ EXISTE
+### Passo 1: Adicione o Submódulo na pasta do seu projeto
+Abra o terminal na pasta do seu projeto (existente ou novo) e execute:
 
-> **Sua dúvida:** *"Vou perder meus arquivos, quebrar minhas regras ou sobrescrever meu código?"*  
-> **Garantia de Segurança:** **NÃO.** O script é **não-destrutivo**: se você já tem uma pasta `.claude/skills/` ou um arquivo `repomix.config.json`, ele **preserva os seus arquivos intactos** e apenas adiciona o que falta.
-
-#### Passo 1: Abra o terminal dentro da pasta do seu projeto existente
-```bash
-cd /caminho/do/seu-projeto
-```
-
-#### Passo 2: Adicione o submódulo
 ```bash
 git submodule add https://github.com/Heverton-web/token-economy-core.git .token-economy
 ```
 
-#### Passo 3: Execute o instalador automático
-* **No Windows (PowerShell):**
-  ```powershell
-  powershell -ExecutionPolicy Bypass -File .token-economy/scripts/setup-links.ps1
-  ```
-* **No Linux / macOS (Terminal):**
-  ```bash
-  bash .token-economy/scripts/setup-links.sh
-  ```
+### Passo 2: Execute o Instalador Universal (Python)
+Em **qualquer sistema operacional (Windows, macOS ou Linux)**, execute:
 
-🎉 **Pronto!** O projeto agora tem filtros anti-lixo e skills de economia ativas sem quebrar nada do que você já tinha.
+```bash
+python .token-economy/install.py
+```
+
+*(Se preferir usar scripts de shell nativos: `powershell .token-economy/scripts/setup-links.ps1` no Windows ou `bash .token-economy/scripts/setup-links.sh` no Linux/Mac).*
 
 ---
+
+## 🛠️ Como Funciona nos 2 Cenários
+
+### 📂 CENÁRIO 1: Em um Projeto que JÁ EXISTE (100% Não-Destrutivo)
+* **Garantia de Segurança:** Se você já tem regras ou arquivos de configuração, o instalador **não sobrescreve**. Ele apenas conecta as skills e sincroniza os hooks de automação com segurança.
 
 ### 🆕 CENÁRIO 2: Em um Projeto NOVO (Começando do Zero)
-
-> **Seu objetivo:** *"Quero criar uma pasta vazia e começar com a blindagem total de tokens desde o primeiro minuto."*
-
-#### Passo 1: Crie a pasta e inicie o Git
-```bash
-mkdir meu-novo-projeto
-cd meu-novo-projeto
-git init
-```
-
-#### Passo 2: Adicione o submódulo
-```bash
-git submodule add https://github.com/Heverton-web/token-economy-core.git .token-economy
-```
-
-#### Passo 3: Execute o instalador
-* **No Windows (PowerShell):**
-  ```powershell
-  powershell -ExecutionPolicy Bypass -File .token-economy/scripts/setup-links.ps1
-  copy .token-economy\AGENTS-TEMPLATE.md AGENTS.md
-  ```
-* **No Linux / macOS (Terminal):**
-  ```bash
-  bash .token-economy/scripts/setup-links.sh
-  cp .token-economy/AGENTS-TEMPLATE.md AGENTS.md
-  ```
-
-🎉 **Pronto!** Seu novo projeto já nasce com governança de IA, filtros de lockfile e 5 skills de eficiência prontas para uso.
+* O instalador cria o `AGENTS.md` automaticamente na raiz e o sincroniza para **Cursor (`.cursor/rules/`), Windsurf (`.windsurfrules`), Cline (`.clinerules`), GitHub Copilot (`.github/copilot-instructions.md`) e Claude Code (`CLAUDE.md`)**.
 
 ---
 
-## 🧭 O que o Token Economy Core instala para você?
+## 🌐 Matriz de Universalidade
+
+| Categoria | Suporte Completo |
+|---|---|
+| **Sistemas Operacionais** | Windows 10/11, macOS (Intel/Apple Silicon), Linux (Ubuntu, Debian, Fedora, Arch). |
+| **IDEs & Editores** | VS Code, Cursor, Windsurf, JetBrains, Zed, Void, Neovim. |
+| **Harnesses & CLIs** | Claude Code, Antigravity, Aider, OpenCode, Codebuff, Cline, Roo-Code, GitHub Copilot CLI. |
+| **Modelos de IA** | Anthropic Claude, OpenAI GPT, Google Gemini, DeepSeek, Qwen, Meta Llama, Ollama Local. |
+
+---
+
+## 🧭 O que o Token Economy Core ativa para você?
 
 1. **`repomix.config.json`:** Filtra automaticamente `node_modules`, `dist/`, `.git/`, lockfiles e imagens.
 2. **Git Hook `post-commit` Assíncrono:** Toda vez que um commit é feito, o snapshot do projeto é atualizado em background em menos de 1 segundo sem travar o seu terminal.
@@ -114,8 +93,6 @@ git submodule add https://github.com/Heverton-web/token-economy-core.git .token-
 ---
 
 ## 📡 Como Acompanhar o Consumo no Dia a Dia (Telemetria)
-
-O módulo já vem com integração ao utilitário `ccusage`:
 
 ```bash
 # Auditar blocos de faturamento de 5h e taxa de cache
@@ -134,9 +111,6 @@ npx ccusage@latest daily
 
 ### A economia de tokens reduz a inteligência ou a qualidade do código?
 **Não.** O submódulo aplica a regra de **Compressão Assimétrica**: ele corta apenas o lixo (logs repetitivos, pensamentos prolixos e arquivos desnecessários). **O código final entregue para você nunca é resumido ou truncado.**
-
-### Funciona em quais editores e ferramentas?
-Funciona nativamente no **Antigravity, Claude Code, Cursor, Aider, OpenCode, VS Code e terminais Linux/Windows/Mac**.
 
 ---
 
