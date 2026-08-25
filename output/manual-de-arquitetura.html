@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Manual de Arquitetura · Fábrica Universal</title>
+<title>Manual de Arquitetura da Fábrica Universal · Padrão Diamante Purificado</title>
 <style>
   * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
   ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -61,32 +61,31 @@
     color: var(--ink);
     font-family: var(--sans);
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
   }
 
   .wrap {
-    max-width: 1080px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 40px) 96px;
+    padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 40px) 120px;
     display: flex;
     flex-direction: column;
     gap: 40px;
   }
 
-  /* HEADER */
   header {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    border-bottom: 1px solid var(--rule);
+    border-bottom: 2px solid var(--rule);
     padding-bottom: 24px;
   }
 
   .eyebrow {
     font-family: var(--mono);
-    font-size: 11.5px;
-    letter-spacing: .14em;
+    font-size: 12px;
+    letter-spacing: .15em;
     text-transform: uppercase;
     color: var(--muted);
     display: flex;
@@ -95,10 +94,10 @@
     align-items: center;
   }
 
-  .badge-core {
-    background: var(--accent);
-    color: var(--paper);
-    padding: 3px 8px;
+  .badge-gold {
+    background: var(--gold);
+    color: #FFF;
+    padding: 3px 9px;
     border-radius: 2px;
     font-weight: 700;
   }
@@ -106,17 +105,18 @@
   h1 {
     font-family: var(--serif);
     font-weight: 600;
-    font-size: clamp(36px, 6vw, 56px);
-    line-height: 1.05;
+    font-size: clamp(34px, 5.5vw, 52px);
+    line-height: 1.1;
     letter-spacing: -.02em;
     margin: 0;
     text-align: justify;
     text-justify: inter-word;
+    color: var(--ink);
   }
 
   .deck {
     font-family: var(--serif);
-    font-size: clamp(17px, 2vw, 20px);
+    font-size: clamp(18px, 2.2vw, 22px);
     line-height: 1.5;
     color: var(--ink-2);
     margin: 0;
@@ -124,48 +124,15 @@
     text-justify: inter-word;
   }
 
-  /* STATS BAR */
-  .stats-bar {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-    margin-top: 8px;
-  }
-
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 3px;
-    padding: 14px 18px;
-    box-shadow: var(--shadow);
-  }
-
-  .stat-val {
-    font-family: var(--mono);
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--accent);
-  }
-
-  .stat-lbl {
-    font-family: var(--mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--muted);
-    font-weight: 600;
-  }
-
-  /* SECTIONS */
-  .section {
+  .card-section {
     background: var(--surface);
     border: 1px solid var(--rule);
     border-radius: 4px;
-    padding: 28px 32px;
+    padding: clamp(20px, 3.5vw, 32px);
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 16px;
   }
 
   h2 {
@@ -173,71 +140,32 @@
     font-size: 26px;
     margin: 0;
     color: var(--ink);
-    border-bottom: 2px solid var(--accent-soft);
+    border-bottom: 1px solid var(--rule-soft);
     padding-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
   }
 
   p, li {
-    font-size: 15px;
+    font-size: 15.5px;
     color: var(--ink-2);
-    line-height: 1.6;
   }
 
-  /* CARDS GRID */
-  .grid2 {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 16px;
-  }
-
-  .card-box {
-    background: var(--paper);
-    border: 1px solid var(--rule-soft);
-    border-radius: 3px;
-    padding: 18px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .card-box.pro {
-    border-left: 4px solid var(--green);
-  }
-
-  .card-box.con {
-    border-left: 4px solid var(--flag);
-  }
-
-  .card-title {
-    font-family: var(--serif);
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--ink);
-    margin: 0;
-  }
-
-  /* CODE BOXES */
   pre {
     background: #0B0F19;
     color: #E2E8F0;
     padding: 16px;
-    border-radius: 3px;
+    border-radius: 4px;
     overflow-x: auto;
     font-family: var(--mono);
     font-size: 13.5px;
     line-height: 1.5;
-    margin: 0;
   }
 
   code {
     font-family: var(--mono);
     font-size: 13.5px;
     background: var(--surface-2);
-    padding: 2px 5px;
-    border-radius: 2px;
+    padding: 2px 6px;
+    border-radius: 3px;
     color: var(--accent);
   }
 
@@ -247,37 +175,13 @@
     color: inherit;
   }
 
-  /* TABLE */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-    text-align: left;
-  }
-
-  th {
-    background: var(--surface-2);
-    font-family: var(--mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  td {
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--rule-soft);
-    color: var(--ink-2);
-  }
-
-  /* FOOTER */
   footer {
     border-top: 1px solid var(--rule);
-    padding-top: 24px;
+    padding-top: 20px;
     display: flex;
     justify-content: space-between;
-    font-size: 13.5px;
+    align-items: center;
+    font-size: 13px;
     color: var(--muted);
   }
 </style>
@@ -285,133 +189,64 @@
 <body>
 
 <div class="wrap">
+
   <header>
     <div class="eyebrow">
-      <span class="badge-core">Arquitetura Soberana</span>
-      <span>Fábrica Universal</span>
+      <span class="badge-gold">Manual Oficial</span>
+      <span>Arsenal Open Source</span>
       <span>·</span>
-      <span>Guia Canônico de Engenharia</span>
+      <span>Versão 2.0 Purificada</span>
     </div>
 
     <h1>Manual de Arquitetura da Fábrica Universal</h1>
-    <p class="deck">Guia executivo e operacional da arquitetura agêntica: como transformar o desenvolvimento de software com IA em um processo industrial de alta densidade, custo ultra-baixo e governança mecânica à prova de alucinações.</p>
-
-    <div class="stats-bar">
-      <div class="stat-card">
-        <div class="stat-val">-50% a -90%</div>
-        <div class="stat-lbl">Economia de Tokens LLM</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val">100%</div>
-        <div class="stat-lbl">Portabilidade Multi-IDE</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val">Exit 0 / 1</div>
-        <div class="stat-lbl">Gates Mecânicos Estritos</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-val">Regra R18</div>
-        <div class="stat-lbl">Higiene &amp; Zero Entulho</div>
-      </div>
-    </div>
+    <p class="deck">Governança, arquitetura em 4 camadas e padrões industriais para o desenvolvimento de software assistido por Inteligência Artificial com custo reduzido e determinismo mecânico.</p>
   </header>
 
-  <!-- 1. FOCO PRINCIPAL -->
-  <div class="section">
+  <div class="card-section">
     <h2>🎯 1. Foco Principal da Arquitetura</h2>
-    <p>O propósito central desta arquitetura é estabelecer <strong>Soberania Tecnológica e Eficiência Industrial</strong> no ciclo de desenvolvimento assistido por IA (AIDD).</p>
-    <div class="grid2">
-      <div class="card-box">
-        <div class="card-title">1. Economia Severa de Tokens</div>
-        <p>Elimina o desperdício de contexto em raciocínios prolixos (*Caveman*), logs gigantes de terminal (*Headroom*) e leitura indiscriminada de arquivos (*Lean-CTX*).</p>
-      </div>
-      <div class="card-box">
-        <div class="card-title">2. Determinismo Mecânico</div>
-        <p>Substitui promessas em prosa por scripts Python determinísticos que rodam no <code>pre-commit</code> com retorno <code>exit 0/1</code>.</p>
-      </div>
-      <div class="card-box">
-        <div class="card-title">3. Fonte Única Multi-IDE</div>
-        <p>A governança vive exclusivamente em <code>.claude/</code> e é espelhada via links simbólicos para Cursor, Windsurf, OpenCode, VS Code e Cline.</p>
-      </div>
-      <div class="card-box">
-        <div class="card-title">4. Padrão Diamante R5</div>
-        <p>Artefatos e catálogos contam com design editorial justificado, 4 seções padronizadas e grids de 3 passos visuais acionáveis.</p>
-      </div>
-    </div>
+    <p>O foco principal é transformar o desenvolvimento de software assistido por IA em uma <strong>esteira industrial previsível, de custo ultra-baixo e soberana</strong> através de 4 pilares: Economia Severa de Tokens (-90%), Determinismo Mecânico sobre Alucinação (Gates Exit 0/1), Portabilidade Multi-IDE Absoluta (Hardlinks) e Higiene Contínua (Regra R18).</p>
   </div>
 
-  <!-- 2. ANATOMIA DO PROJETO -->
-  <div class="section">
-    <h2>🏗️ 2. Como o Projeto Está Estruturado</h2>
-    <p>O repositório é dividido em camadas de responsabilidade bem delimitadas:</p>
+  <div class="card-section">
+    <h2>🏗️ 2. Estrutura do Repositório</h2>
     <pre><code>seu-projeto/
 ├── .claude/                      ← [FONTE ÚNICA] Governança (CLAUDE.md), RTK.md, Skills e Subagentes
 ├── scripts/                      ← [USINA MECÂNICA] Hooks pre-commit, auditores R5/R18 e templates
-│   ├── hooks/pre-commit          ← Gate Git: bloqueia segredos, suíte vermelha e entulho
-│   ├── auditar_higiene_repo.py   ← Validador de paridade de hash entre espelhos
-│   └── limpar_entulho.py         ← Saneador automático com 1 comando
-├── output/ &amp; docs/               ← [ENTREGA &amp; ESPELHO] Listas técnicas em paridade estrita
-└── AGENTS.md, .cursor/, etc.     ← [GERADOS] Espelhos atualizados via setup-links</code></pre>
+│   ├── hooks/pre-commit          ← Gate Git: bloqueia segredos, testes vermelhos e entulho
+│   ├── auditar_higiene_repo.py   ← Validador de integridade e paridade de hash
+│   ├── auditar_todas_camadas.py  ← Super-Auditor Geral das 4 Camadas
+│   └── limpar_entulho.py         ← Saneador automático em 1 comando
+├── output/ &amp; docs/               ← [CAMADA DE ENTREGA] 49 Compêndios Técnicos no Padrão Diamante
+└── AGENTS.md, .cursor/, etc.     ← [ESPELHOS GERADOS] Atualizados automaticamente via setup-links</code></pre>
   </div>
 
-  <!-- 3. PRÓS E CONTRAS -->
-  <div class="section">
-    <h2>⚖️ 3. Prós e Contras Desta Arquitetura</h2>
-    <div class="grid2">
-      <div class="card-box pro">
-        <div class="card-title">🟢 Prós (Vantagens)</div>
-        <ul>
-          <li><strong>Economia Financeira:</strong> Queda de até 90% no custo com APIs de LLMs.</li>
-          <li><strong>Zero Alucinações de Qualidade:</strong> O pre-commit impede commit de código quebrado.</li>
-          <li><strong>Liberdade de Ferramentas:</strong> Troque de IDE ou modelo de IA sem perder nenhuma regra.</li>
-          <li><strong>Higiene Automatizada:</strong> A regra R18 não permite o acúmulo de arquivos temporários.</li>
-        </ul>
-      </div>
-      <div class="card-box con">
-        <div class="card-title">🔴 Contras (Trade-offs &amp; Cuidados)</div>
-        <ul>
-          <li><strong>Disciplina no Commit:</strong> Não é permitido "commitar rápido sem testar".</li>
-          <li><strong>Configuração de Links:</strong> No Windows, requer permissão de Administrador ou Modo Desenvolvedor.</li>
-          <li><strong>Edição na Fonte:</strong> Nunca editar arquivos gerados diretamente (editar sempre em <code>.claude/</code>).</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4. COMO USAR EM PROJETOS NOVOS OU EXISTENTES -->
-  <div class="section">
-    <h2>🚀 4. Como Gerar Novos Projetos ou Adequar Existentes</h2>
-    
-    <div class="card-box" style="border-left:4px solid var(--accent);">
-      <div class="card-title">📦 Projeto Novo em 5 Minutos</div>
-      <p>Crie um repositório limpo, adicione a Fábrica Universal como submodule e rode o gerador de links:</p>
-      <pre><code># 1. Iniciar repositório
+  <div class="card-section">
+    <h2>🚀 3. Como Aplicar em Projetos Novos ou Legados</h2>
+    <pre><code># 1. Iniciar repositório Git
 mkdir meu-projeto && cd meu-projeto && git init
 
-# 2. Adicionar submodule da Fábrica
+# 2. Adicionar o submódulo da Fábrica Universal
 git submodule add https://github.com/Heverton-web/fabrica-universal.git fabrica-universal
 git submodule update --init --recursive
 
 # 3. Copiar infraestrutura base
 cp -r fabrica-universal/.claude .
+cp fabrica-universal/RTK-SCRATCHPAD.md .
+cp fabrica-universal/.mcp.json .
 mkdir -p scripts && cp -r fabrica-universal/scripts/* scripts/
 
-# 4. Configurar links e hook pre-commit (Windows ou Linux/Mac)
-powershell .\scripts\setup-links.ps1 meu-projeto    # Linux: bash scripts/setup-links.sh meu-projeto</code></pre>
-    </div>
+# 4. Criar links e instalar o hook de proteção
+powershell .\scripts\setup-links.ps1 meu-projeto   # Linux: bash scripts/setup-links.sh meu-projeto
 
-    <div class="card-box" style="border-left:4px solid var(--gold); margin-top:12px;">
-      <div class="card-title">🔧 Adequando Projeto Legado Existente</div>
-      <p>Para projetos já em andamento, copie a pasta <code>.claude/skills/</code>, adicione a Seção 0 de Economia e as regras R1–R18 ao seu <code>CLAUDE.md</code> e ative o hook pre-commit:</p>
-      <pre><code>python scripts/limpar_entulho.py
-python scripts/auditar_higiene_repo.py</code></pre>
-    </div>
+# 5. Executar a Super-Auditoria
+python scripts/auditar_todas_camadas.py</code></pre>
   </div>
 
   <footer>
-    <span>Manual Canônico de Arquitetura · Fábrica Universal de Soberania Tecnológica.</span>
-    <span>Em conformidade com as regras R1 a R18.</span>
+    <span>Arsenal Open Source · Fábrica Universal.</span>
+    <span>Soberania Tecnológica &amp; Confiabilidade Industrial.</span>
   </footer>
+
 </div>
 
 </body>

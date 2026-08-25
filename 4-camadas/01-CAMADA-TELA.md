@@ -1,7 +1,7 @@
 # 🎛️ Camada 1: TELA (Prompt & Context Engineering)
 
 > **Papel no Estúdio:** O Mixer (Ajuste fino de tudo o que a IA vê e como ela pensa).  
-> **Status:** 100% CONCLUÍDO & BLINDADO ✅  
+> **Status:** 100% CONCLUÍDO & PURIFICADO ✅  
 > **Unidade de Trabalho:** Mensagens de entrada, Prompts de Sistema, Context Window, Regras de Governança e Skills de Economia.  
 > **Localização:** `4-camadas/01-CAMADA-TELA.md`  
 > **Auditor Mecânico:** `scripts/auditar_camada_tela.py` (Retorno: `exit 0`)
@@ -26,34 +26,43 @@ Independente de qual modelo de IA, linguagem ou editor você use, a Camada 1 é 
 
 ---
 
-## 1. O Que Foi Feito
+## 1. O Que Foi Feito (As 18 Regras Purificadas)
 
-Nesta camada, estruturamos e blindamos todo o conjunto de instruções, prompts de sistema, vocabulário e contexto que alimenta os modelos de IA:
-1. **Constituição Mestre da Fábrica Universal:** Consolidação de 18 regras inegociáveis (R1 a R18) que governam o comportamento autônomo, idioma, qualidade e segurança.
-2. **As 5 Skills Fundamentais de Economia Severa:** Pacote de habilidades em Markdown que ensina o modelo a comprimir pensamento, podar logs e ler arquivos cirurgicamente.
-3. **Orçamento de Cache do Prompt Mestre (`Context Budget Limiter`):** Congelamento do tamanho do arquivo `.claude/CLAUDE.md` em menos de 2.500 palavras para maximizar o desconto de 90% de *Prompt Caching*.
-4. **Vocabulário Controlado & Termos Proibidos:** Banimento formal de clichês de IA e respostas prolixas.
-5. **Memória Persistente de Longo Prazo (`RTK-SCRATCHPAD.md`):** Arquivo de apoio na raiz que guarda aprendizados sem poluir o cache do prompt principal.
-6. **Gate Mecânico de Auditoria da TELA (`scripts/auditar_camada_tela.py`):** Script determinístico que valida o cumprimento de todos os itens acima antes de cada sessão.
+Nesta camada, expurgamos qualquer regra residual de outros contextos e estruturamos a constituição oficial do **Arsenal Open Source**:
+
+| Regra | Nome | O Que Faz na Prática |
+| :--- | :--- | :--- |
+| **R1** | **Idioma Único (PT-BR)** | Comunicação, documentação e código em português estrito. |
+| **R2** | **Silenciamento de Prosa** | Sem preâmbulos vazios ("Com certeza!"). Markdown limpo e executivo. |
+| **R3/R4** | **Autonomia & Auto-Correção** | A esteira resolve desvios e corrige erros antes de entregar ao operador. |
+| **R5** | **Padrão Dossiê Diamante** | Dossiê visual com Hero Stats, busca interativa, 4 seções verticais nos cards e 3 passos em mini-cards. |
+| **R6** | **Modelo Livre** | `model: inherit` — o projeto não fica refém de uma LLM específica. |
+| **R7** | **Conteúdo de Entrega Intocável** | Compêndios e catálogos finais nunca são resumidos ou truncados. |
+| **R8/R9** | **Determinismo & Gates** | Se um script resolve, não gaste LLM. Gates retornam `exit 0` ou `exit 1`. |
+| **R10/R11**| **Idempotência & Estado em Disco**| Scripts podem rodar 1.000 vezes sem quebrar; estado vive em SQLite (`estado_esteira.db`). |
+| **R12** | **Registro Declarativo Único** | 1 entrada em `scripts/tipos.py` por novo tipo de documento. |
+| **R13** | **Padronização Numérica** | Compêndios numerados sequencialmente (`01` a `49`) com slugs limpos. |
+| **R14** | **Caminhos Curtos** | Nomes respeitam o limite de 260 caracteres do Windows (MAX_PATH). |
+| **R15/R16**| **Segredos & Testes Verdes** | Git bloqueia chaves de API e proíbe commits com testes quebrados. |
+| **R17** | **Integridade de Repositórios** | Toda ferramenta catalogada DEVE possuir licença OSI, SaaS substituído e URL de repositório válida. |
+| **R18** | **Higiene & Paridade Estrita** | Zero arquivos temporários (`temp_*`, `.bak`); espelhos com mesmo hash MD5. |
 
 ---
 
 ## 2. Por Que Foi Feito
 
-* **A Dor Resolvida (Custo & Esquecimento):** Sem essas regras na TELA, os modelos de IA gastam centenas de dólares por dia com raciocínios prolixos e esquecem regras críticas conforme a conversa avança.
-* **O Risco Mitigado (Alucinação & Prolixidade):** Sem um vocabulário controlado e sem as regras R1–R18, o agente assume posturas passivas ("como uma IA não posso fazer isso") ou quebra arquivos por alucinar requisitos.
-* **O Ganho Financeiro:** A combinação de *Caveman Thinking*, *Headroom*, *Lean-CTX* e *RTK-Memory* reduz as faturas de API de LLMs entre **50% e 90%**.
+* **A Dor Resolvida (Custo & Ruído de Regras Inúteis):** Regras de templates de outros domínios consumiam espaço no prompt e criavam instruções confusas. A purificação alinhou 100% da TELA à missão de custódia e compêndios open source.
+* **O Risco Mitigado (Alucinação & Prolixidade):** O vocabulário controlado e as regras limpas garantem foco executivo absoluto.
+* **O Ganho Financeiro:** A combinação de *Caveman Thinking*, *Headroom*, *Lean-CTX* e *RTK-Memory* reduz as faturas de LLMs entre **50% e 90%**.
 
 ---
 
 ## 3. Onde Foi Feito
 
-Todos os artefatos desta camada estão organizados nos seguintes caminhos físicos:
-
 ```
 seu-projeto/
 ├── .claude/
-│   ├── CLAUDE.md                 ← A Constituição Mestre (Regras R1 a R18 + Seção 0 de Economia)
+│   ├── CLAUDE.md                 ← A Constituição Mestre Purificada
 │   └── skills/                   ← As 5 Skills Fundamentais de Economia
 │       ├── caveman/SKILL.md      ← Compressão de pensamento CoT (-90%)
 │       ├── headroom/SKILL.md     ← Compressão de logs de build (3 topo + 4 fim)
@@ -72,66 +81,31 @@ seu-projeto/
 ## 4. Como Foi Feito
 
 ### 4.1 A Mecânica do *Caveman Thinking* (Seção 0 do `CLAUDE.md`)
-O arquivo instrui o modelo a raciocinar telegráfico no bloco interno `<thought>`:
 ```text
-// Regra aplicada no prompt mestre:
 "Pensamento telegráfico (3-5 linhas), sem preâmbulos/saudações.
 Abreviar: 'verificar' -> 'ver', 'necessário' -> 'nec.', 'implementar' -> 'impl.'.
 Ir direto ao ponto: 'usr quer X. ver arquivo Y. corrigir Z.'."
 ```
 
-### 4.2 A Mecânica do *Headroom* (Corte de Logs)
-Se a saída de um comando tiver mais de 7 linhas, o modelo é instruído a processar apenas:
-```
-[Linha 1 do log]
-[Linha 2 do log]
-[Linha 3 do log]
-... (conteúdo intermediário ignorado) ...
-[Linha N-3 do log]
-[Linha N-2 do log]
-[Linha N-1 do log]
-[Linha N do log]
-```
-
-### 4.3 O Código do Gate Mecânico (`scripts/auditar_camada_tela.py`)
-Um script Python determinístico que confere:
-1. Se o `CLAUDE.md` existe e tem menos de 3.000 palavras.
-2. Se todas as 18 regras (R1 a R18) estão presentes no texto.
-3. Se as 5 pastas de skills de economia contêm seus arquivos `SKILL.md` intactos.
-4. Se o `RTK-SCRATCHPAD.md` está na raiz.
-5. Se não restaram placeholders como `<SEU-PROJETO>`.
-*Retorno:* `sys.exit(0)` em caso de aprovação ou `sys.exit(1)` em caso de falha.
+### 4.2 O Código do Gate Mecânico (`scripts/auditar_camada_tela.py`)
+Script determinístico que valida:
+1. Se `CLAUDE.md` existe e está abaixo de 2.500 palavras para Prompt Caching.
+2. Se as 18 regras purificadas (R1 a R18) estão presentes.
+3. Se as 5 skills de economia estão intactas.
+4. Se o vocabulário controlado está ativo.
+*Retorno:* `sys.exit(0)` em caso de aprovação.
 
 ---
 
 ## 5. Como Replicar o Que Foi Feito (Guia Passo a Passo Universal)
 
-Para aplicar exatamente esta mesma Camada 1 em qualquer projeto novo ou legado:
-
-### Passo 1: Copie a infraestrutura de TELA
 ```bash
-# Na raiz do seu projeto novo:
-mkdir -p .claude/skills scripts
+# 1. Copiar a pasta de governança e memória
 cp -r fabrica-universal/.claude/ .
 cp fabrica-universal/RTK-SCRATCHPAD.md .
 cp fabrica-universal/scripts/auditar_camada_tela.py scripts/
-```
 
-### Passo 2: Personalize o arquivo `.claude/CLAUDE.md`
-Abra `.claude/CLAUDE.md` e troque o nome do projeto no título. **Mantenha intactas** a Seção 0 (Economia) e as regras R1 a R18.
-
-### Passo 3: Execute a Auditoria Mecânica da TELA
-```bash
+# 2. Executar a auditoria mecânica
 python scripts/auditar_camada_tela.py
+# -> Saída: Exit 0 (Aprovado)
 ```
-
-### Passo 4: Verifique a Saída
-Se o terminal exibir:
-```text
-================================================================================
- 🎛️ GATE MECÂNICO DA CAMADA 1: AUDITORIA DA TELA (PROMPT & CONTEXT)
-================================================================================
- ✅ CAMADA 1 (TELA) 100% APROVADA: Prompt Caching, Regras R1-R18, 5 Skills & Vocabulário!
-================================================================================
-```
-A sua Camada 1 está oficialmente **100% configurada, blindada e pronta para produção em qualquer ambiente**.

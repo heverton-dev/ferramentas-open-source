@@ -128,22 +128,24 @@ graph TD
 3. **Princípio da Localidade de Contexto (*Context Locality*):**  
    Buscar trechos cirúrgicos via `grep` evita o fenômeno *Lost in the Middle* (esquecimento no meio de arquivos gigantes).
 
-## 1.2 A Constituição Mestre: As 18 Regras Sagradas (R1 a R18)
+## 1.2 A Constituição Mestre: As 18 Regras Sagradas Purificadas (R1 a R18)
 
 | Regra | Nome | O Que Faz na Prática |
 | :--- | :--- | :--- |
-| **R1** | **Idioma Único (PT-BR)** | Comunicação, documentação e comentários em português estrito. |
-| **R2** | **Silenciamento de Prosa** | Sem preâmbulos vazios ("Com certeza!"). Markdown limpo. |
+| **R1** | **Idioma Único (PT-BR)** | Comunicação, documentação e código em português estrito. |
+| **R2** | **Silenciamento de Prosa** | Sem preâmbulos vazios ("Com certeza!"). Markdown limpo e executivo. |
 | **R3/R4** | **Autonomia & Auto-Correção** | A esteira resolve desvios e corrige erros antes de entregar ao operador. |
-| **R5** | **Padrão Diamante** | Dossiê visual com Hero Stats, 4 seções verticais nos cards e 3 passos em mini-cards. |
+| **R5** | **Padrão Diamante** | Dossiê visual com Hero Stats, busca interativa, 4 seções verticais nos cards e 3 passos em mini-cards. |
 | **R6** | **Modelo Livre** | `model: inherit` — o projeto não fica refém de uma LLM específica. |
-| **R7** | **Conteúdo Intocável** | Documentos de entrega final nunca são resumidos ou truncados. |
-| **R8/R9** | **Determinismo & Gates** | Se um script resolve, não gaste IA. Gates retornam `exit 0` ou `exit 1`. |
-| **R10/R11**| **Idempotência & Estado em Disco**| Scripts podem rodar 1.000 vezes sem quebrar; estado vive em SQLite. |
-| **R12-R14**| **Registro Único, Sem `_` e Caminhos Curtos**| 1 entrada em `tipos.py` por novo artefato; compatibilidade Windows (<260 chars). |
-| **R15/R16**| **Segredos & Testes Verdes**| Git bloqueia chaves de API e proíbe commits com testes quebrados. |
-| **R17** | **Etapas Opcionais** | Etapas opcionais nunca travam o fluxo de trabalho. |
-| **R18** | **Higiene & Paridade Estrita**| Zero arquivos temporários (`temp_*`, `.bak`); espelhos com mesmo hash MD5. |
+| **R7** | **Conteúdo Intocável** | Compêndios e catálogos finais nunca são resumidos ou truncados. |
+| **R8/R9** | **Determinismo & Gates** | Se um script resolve, não gaste LLM. Gates retornam `exit 0` ou `exit 1`. |
+| **R10/R11**| **Idempotência & Estado em Disco**| Scripts podem rodar 1.000 vezes sem quebrar; estado vive em SQLite (`estado_esteira.db`). |
+| **R12** | **Registro Declarativo Único** | 1 entrada em `scripts/tipos.py` por novo tipo de documento. |
+| **R13** | **Padronização Numérica** | Compêndios numerados sequencialmente (`01` a `49`) com slugs limpos. |
+| **R14** | **Caminhos Curtos** | Nomes respeitam o limite de 260 caracteres do Windows (MAX_PATH). |
+| **R15/R16**| **Segredos & Testes Verdes** | Git bloqueia chaves de API e proíbe commits com testes quebrados. |
+| **R17** | **Integridade de Repositórios** | Toda ferramenta catalogada DEVE possuir licença OSI, SaaS substituído e URL de repositório válida. |
+| **R18** | **Higiene & Paridade Estrita** | Zero arquivos temporários (`temp_*`, `.bak`); espelhos com mesmo hash MD5. |
 
 ## 1.3 As 5 Skills Fundamentais de Economia Severa
 1. **`caveman`:** Raciocínio telegráfico no bloco interno `<thought>` ("usr quer X. ler Y. corrigir Z."). Economiza até 90% do processamento mental da IA.
@@ -340,7 +342,7 @@ python scripts/auditar_todas_camadas.py
 ## 🔧 Caso 2: Blindando um Projeto Que Já Existe (Legado / Brownfield)
 
 1. Adicione a pasta de skills de economia (`.claude/skills/`).
-2. Adicione as 18 regras de governança e a Seção 0 no seu `CLAUDE.md`.
+2. Adicione as 18 regras de governança purificadas e a Seção 0 no seu `CLAUDE.md`.
 3. Copie o hook `scripts/hooks/pre-commit` para `.git/hooks/pre-commit`.
 4. Copie `scripts/roteador_llm.py` e `scripts/schemas/`.
 5. Inicialize o banco de estado (`python scripts/estado_esteira.py`).
