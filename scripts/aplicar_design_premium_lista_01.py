@@ -1,4 +1,26 @@
-<!DOCTYPE html>
+# -*- coding: utf-8 -*-
+"""
+Aplica o design visual premium refinado em 01-economia-de-tokens.html:
+1. Títulos padronizados: Nome · Finalidade
+2. Badges corrigidos com escape HTML (&lt;thought&gt;)
+3. Bloco 'Como Usar no Dia a Dia' com steps-grid (3 mini-cards visuais responsivos)
+4. Botão 'Copiar' interativo nos blocos <pre><code>
+5. Botão de repositório com ícone GitHub e seta ↗
+"""
+import os
+import sys
+
+def console_utf8():
+    if sys.platform == "win32":
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+
+console_utf8()
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FILEPATH = os.path.join(BASE_DIR, "output", "listas-open-source", "01-economia-de-tokens.html")
+
+HTML_CONTENT = """<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -743,3 +765,9 @@
 
 </body>
 </html>
+"""
+
+with open(FILEPATH, "w", encoding="utf-8") as f:
+    f.write(HTML_CONTENT)
+
+print("[✓] Arquivo 01-economia-de-tokens.html atualizado com design premium!")
