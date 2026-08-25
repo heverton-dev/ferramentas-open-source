@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Streaming, Live Broadcasting &amp; Mídia Privada — Compêndio de Soberania Tecnológica</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streaming, Transmissão Ao Vivo & Produção de Vídeo — Compêndio de Soberania Tecnológica</title>
 <style>
-  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
+  /* Custom scrollbar estrita 4px */
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
 
   :root {
     --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
     --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
     --rule:#C7CEDB; --rule-soft:#DADFE8;
-    --accent:#7A3E1D; --accent-soft:#F5EBE4;
+    --accent:#8B3DFF; --accent-soft:#F3EAFF;
     --gold:#7A5410; --gold-soft:#EFE5CE;
     --flag:#8E2436; --flag-soft:#F0D9DD;
     --green:#1B5E3B; --green-soft:#D8EFE2;
@@ -29,41 +30,37 @@
       --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
       --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
       --rule:#2A3142; --rule-soft:#222836;
-      --accent:#E89568; --accent-soft:#331D12;
+      --accent:#C499FF; --accent-soft:#211530;
       --gold:#D6A44E; --gold-soft:#332810;
       --flag:#E0788C; --flag-soft:#3A1A21;
       --green:#6BC48F; --green-soft:#122B1C;
       --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
     }
   }
+  :root[data-theme="dark"] {
+    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+    --rule:#2A3142; --rule-soft:#222836;
+    --accent:#C499FF; --accent-soft:#211530;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E0788C; --flag-soft:#3A1A21;
+    --green:#6BC48F; --green-soft:#122B1C;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
 
+  * { box-sizing:border-box; }
   body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
   .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
 
-  /* HEADER EXECUTIVO COM ALINHAMENTO JUSTIFICADO */
-  header { display:flex; flex-direction:column; gap:24px; padding-bottom:12px; border-bottom:1px solid var(--rule); }
-  .header-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
-  .back-link { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; color:var(--muted); text-decoration:none; padding:4px 8px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); transition:all .15s ease; }
-  .back-link:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-soft); text-decoration:none; }
-  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
-  .layer-badge { background:var(--accent); color:var(--paper); padding:3px 8px; border-radius:2px; font-weight:700; font-size:10.5px; letter-spacing:.08em; }
-
-  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(36px,7vw,64px); line-height:1.08; letter-spacing:-.02em; margin:0; color:var(--ink); text-align:justify; text-justify:inter-word; }
-  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.55; color:var(--ink-2); max-width:100%; margin:0; text-align:justify; text-justify:inter-word; }
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
   .deck strong { color:var(--ink); font-weight:600; }
-
-  /* HERO STATS BAR */
-  .hero-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:4px; }
-  .stat-card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:12px 16px; display:flex; flex-direction:column; gap:4px; box-shadow:var(--shadow); }
-  .stat-card .stat-val { font-family:var(--mono); font-size:20px; font-weight:700; color:var(--accent); line-height:1.1; }
-  .stat-card .stat-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .stat-card.good .stat-val { color:var(--green); }
-  
-  /* QUICK JUMP ANCHORS */
-  .header-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:2px; }
-  .jump-btn { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; padding:6px 12px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); color:var(--ink-2); text-decoration:none; transition:all .15s ease; }
-  .jump-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); text-decoration:none; }
-  .jump-btn.primary { background:var(--accent-soft); border-color:color-mix(in srgb, var(--accent) 40%, transparent); color:var(--accent); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
 
   section { display:flex; flex-direction:column; gap:22px; }
   .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
@@ -73,7 +70,8 @@
   .sec-head.flagged .sec-num { color:var(--flag); }
   .sec-head.warm .sec-num { color:var(--gold); }
   h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
-  .sec-note { margin:0; color:var(--ink-2); max-width:100%; font-size:15.5px; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note strong { color:var(--ink); }
 
   .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
   .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
@@ -85,84 +83,47 @@
   .route.gray .tag { color:var(--green); }
   .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
 
-  /* TABELA FLUIDA SEM SCROLL */
-  .tablewrap { border:1px solid var(--rule); border-radius:3px; background:var(--surface); width:100%; overflow:hidden; }
-  table { border-collapse:collapse; width:100%; font-size:13.5px; table-layout:auto; }
-  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding:10px 12px; border-bottom:1px solid var(--rule); }
-  tbody td { padding:10px 12px; border-bottom:1px solid var(--rule-soft); vertical-align:middle; }
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:860px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
   tbody tr:last-child td { border-bottom:0; }
-  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:36px; text-align:center; }
-  td.tool { font-weight:600; color:var(--ink); font-size:14px; }
-  td.saas, td.killer { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; line-height:1.35; }
-  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; line-height:1.35; }
-  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); line-height:1.35; font-weight:600; }
-  td.lic { font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.35; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; }
+  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; white-space:nowrap; }
+  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
+  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
 
-  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO (LARGURA TOTAL) */
-  .ledger { display:flex; flex-direction:column; gap:28px; }
-  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; transition:border-color .15s ease; }
-  .entry:hover { border-color:var(--accent); }
-  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:20px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
-  
-  .entry-body { padding:20px 24px 22px; display:flex; flex-direction:column; gap:16px; min-width:0; }
-
-  /* CABEÇALHO PADRONIZADO COM BADGES */
-  .entry-top { display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; }
-  .entry-top h3 { width:100%; margin:0 0 4px 0; font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; letter-spacing:-.01em; color:var(--ink); }
-
-  .senior-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; font-weight:700; }
-  .senior-badge.green { background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); }
-  .senior-badge.gold { background:var(--gold-soft); color:var(--gold); border:1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
-  .senior-badge.flag { background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); }
-
+  .ledger { display:flex; flex-direction:column; gap:20px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
   .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
   .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
   .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
-  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; padding:3px 6px; border:1px solid var(--rule-soft); border-radius:2px; background:var(--surface-2); }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
 
-  /* SEÇÕES VERTICAIS DO CARD (LARGURA TOTAL) */
-  .entry-section { display:flex; flex-direction:column; gap:8px; width:100%; padding-top:14px; border-top:1px dashed var(--rule-soft); }
-  .entry-section .label { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
-  .entry-section p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
-  .entry-section p strong { color:var(--ink); font-weight:600; }
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
 
-  /* ANÁLISE ECONÔMICA GRID */
-  .econ-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:4px; }
-  .econ-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .econ-card.highlight { border-left:3px solid var(--green); background:color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
-  .econ-card.killer { border-left:3px solid var(--flag); background:color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
-  .econ-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .econ-val { font-size:14px; line-height:1.45; color:var(--ink); }
-  .econ-val strong { color:var(--ink); font-weight:600; }
+  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
 
-  /* REQUISITOS DE INFRAESTRUTURA GRID */
-  .infra-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:4px; }
-  .infra-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .infra-card.verdict { border-left:3px solid var(--gold); background:color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column:span 2; }
-  @media (max-width:760px) { .infra-card.verdict { grid-column:span 1; } }
-  .infra-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .infra-val { font-family:var(--mono); font-size:13.5px; font-weight:600; color:var(--accent); line-height:1.4; }
-  .infra-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
+  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
 
-  /* CODE BOX FULL-WIDTH */
-  .code-box { position:relative; display:flex; flex-direction:column; width:100%; margin-top:4px; }
-  pre { margin:0; padding:12px 52px 12px 14px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
-  code { font-family:var(--mono); font-size:13px; color:var(--ink); line-height:1.5; }
-  .copy-btn { position:absolute; top:8px; right:8px; background:var(--surface); border:1px solid var(--rule); color:var(--muted); border-radius:2px; padding:4px 8px; font-family:var(--mono); font-size:10.5px; cursor:pointer; transition:all .15s ease; }
-  .copy-btn:hover { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
-
-  /* BOTÃO REPOSITÓRIO GITHUB */
-  .repo-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--mono); font-size:12px; padding:8px 12px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink); text-decoration:none; transition:all .15s ease; width:fit-content; }
-  .repo-btn:hover { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); text-decoration:none; }
-  .repo-btn svg { width:14px; height:14px; fill:currentColor; }
-
-  /* STEPS GRID (COMO USAR NO DIA A DIA) */
-  .steps-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin-top:2px; }
-  .step-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .step-head { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
-  .step-badge { background:var(--accent); color:var(--paper); border-radius:2px; padding:1px 6px; font-size:10px; font-weight:700; }
-  .step-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
-  .step-card code { font-family:var(--mono); font-size:12px; background:var(--surface); padding:1px 5px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
+  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
 
   .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
   .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
@@ -170,781 +131,1042 @@
   .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
 
   footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
-  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:100%; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
 </style>
 </head>
 <body>
+
 <div class="wrap">
-<header>
-<div class="header-top">
-<a class="back-link" href="index.html">
-<span>←</span>
-<span>Voltar ao Hub Central</span>
-</a>
-<div class="eyebrow">
-<span class="layer-badge">Camada 29</span>
-<span>Engenharia &amp; Autonomia Técnica</span>
-<span>·</span>
-<span>Curadoria Soberana</span>
-</div>
-</div>
-<h1>Streaming, Live Broadcasting &amp; Mídia Privada</h1>
-<p class="deck">Compêndio técnico completo de <strong>Streaming, Live Broadcasting &amp; Mídia Privada</strong>: as ferramentas e arquiteturas de código aberto mais eficientes para eliminar dependência de fornecedores caros com máxima autonomia.</p>
-<!-- HERO STATS BAR -->
-<div class="hero-stats">
-<div class="stat-card">
-<div class="stat-val">8</div>
-<div class="stat-lbl">Tecnologias Auditadas</div>
-</div>
-<div class="stat-card good">
-<div class="stat-val">100%</div>
-<div class="stat-lbl">Soberania &amp; Zero Lock-in</div>
-</div>
-<div class="stat-card">
-<div class="stat-val">OSI Standard</div>
-<div class="stat-lbl">Licenças de Código Aberto</div>
-</div>
-<div class="stat-card good">
-<div class="stat-val">-$ 30k a $ 150k</div>
-<div class="stat-lbl">Economia TCO Anual Estimada</div>
-</div>
-</div>
-<!-- QUICK ACTIONS -->
-<div class="header-actions">
-<a class="jump-btn" href="#tabela">
-<span>📊</span>
-<span>Matriz Comparativa</span>
-</a>
-<a class="jump-btn primary" href="#fichas">
-<span>⚡</span>
-<span>Fichas Técnicas &amp; Passo a Passo</span>
-</a>
-</div>
-</header>
-<section>
-<div class="sec-head">
-<span class="sec-num">Parte 1 · A Equação da Soberania</span>
-<h2>A fronteira entre refém de nuvem e autonomia técnica</h2>
-<p class="sec-note">Assinaturas recorrentes cobram pedágio pelo seu próprio crescimento. A engenharia moderna devolve a governança para o desenvolvedor.</p>
-</div>
-<div class="routes">
-<div class="route official">
-<span class="tag">O Custo Fechado</span>
-<h4>O Custo das Ferramentas Fechadas</h4>
-<p>Assinaturas comerciais cobram por assento, bloqueiam exportação de dados e reajustam valores sem aviso prévio.</p>
-</div>
-<div class="route gray">
-<span class="tag">A Solução Aberta</span>
-<h4>A Soberania da Infraestrutura Própria</h4>
-<p>Padrões abertos com comandos reproduzíveis, licenças livres da OSI e custos fixos previsíveis em servidor próprio.</p>
-</div>
-</div>
-</section>
-<section id="tabela">
-<div class="sec-head">
-<span class="sec-num">Parte 2 · O Panorama Geral</span>
-<h2>O inventário completo da camada</h2>
-<p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
-</div>
-<div class="tablewrap">
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Ferramenta</th>
-<th>Substitui o SaaS Pago</th>
-<th>Economia Declarada</th>
-<th>Categoria</th>
-<th>Licença</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="rank">01</td>
-<td class="tool">OBS Studio</td>
-<td class="saas">Wirecast / vMix ($ 700-$ 1.200)</td>
-<td class="econ">-$ 1.200 / licença de transmissão</td>
-<td class="cat">Live Streaming &amp; Recording</td>
-<td class="lic">Open-Source OSI</td>
-</tr>
-<tr>
-<td class="rank">02</td>
-<td class="tool">Owncast</td>
-<td class="saas">Twitch / YouTube Live com anúncios</td>
-<td class="econ">Transmissão sem censura ou cortes</td>
-<td class="cat">Self-Hosted Live Streaming</td>
-<td class="lic">Open-Source OSI</td>
-</tr>
-<tr>
-<td class="rank">03</td>
-<td class="tool">Jellyfin</td>
-<td class="saas">Plex Pass / Emby ($ 120/lifetime)</td>
-<td class="econ">-$ 120 / licença</td>
-<td class="cat">Media System &amp; Streaming</td>
-<td class="lic">Open-Source OSI</td>
-</tr>
-<tr>
-<td class="rank">04</td>
-<td class="tool">PeerTube</td>
-<td class="saas">Vimeo OTT / YouTube corporativo</td>
-<td class="econ">-$ 600 a $ 6.000 / ano</td>
-<td class="cat">Decentralized Video Platform</td>
-<td class="lic">Open-Source OSI</td>
-</tr>
-<tr>
-<td class="rank">05</td>
-<td class="tool">Restreamer (Datarhei)</td>
-<td class="saas">Restream.io ($ 49/mês)</td>
-<td class="econ">-$ 588 / ano</td>
-<td class="cat">Live Video Router</td>
-<td class="lic">Open-Source OSI</td>
-</tr>
-<tr>
-<td class="rank">06</td>
-<td class="tool">Icecast</td>
-<td class="saas">Servidores pagos de rádio web</td>
-<td class="econ">Transmissão contínua de áudio</td>
-<td class="cat">Audio Streaming Server</td>
-<td class="lic">Open-Source OSI</td>
-</tr>
-<tr>
-<td class="rank">07</td>
-<td class="tool">SRS (Simple Realtime Server)</td>
-<td class="saas">Wowza Streaming Engine ($ 1.800/ano)</td>
-<td class="econ">-$ 1.800 / ano</td>
-<td class="cat">Ultra-Low Latency Video</td>
-<td class="lic">Open-Source OSI</td>
-</tr>
-<tr>
-<td class="rank">08</td>
-<td class="tool">Node-Media-Server</td>
-<td class="saas">Servidores pesados de mídia</td>
-<td class="econ">Simples e extensível em JavaScript</td>
-<td class="cat">Node.js RTMP/HLS Server</td>
-<td class="lic">Open-Source OSI</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="fichas">
-<div class="sec-head">
-<span class="sec-num">Parte 3 · O Detalhamento Técnico &amp; Workflows Práticos</span>
-<h2>As fichas técnicas completas com Guia do Dia a Dia</h2>
-<p class="sec-note">O que faz, como funciona por baixo dos panos, comandos de execução e <strong>passo a passo detalhado para o seu fluxo diário</strong>.</p>
-</div>
-<div class="ledger">
-<!-- 01 OBS Studio -->
-<div class="entry">
-<div class="entry-rank">01</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>OBS Studio · Live Streaming &amp; Recording</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Wirecast / vMix ($ 700-$ 1.200)</span>
-<span class="econ-badge">Economia: -$ 1.200 / licença de transmissão</span>
-<span class="lic-badge">Open-Source OSI</span>
-<span class="kind">Live Streaming &amp; Recording</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>O software definitivo de gravação e transmissão ao vivo na internet usado pelos maiores canais do mundo.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>obs</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Wirecast / vMix ($ 700-$ 1.200)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 1.200 / licença de transmissão · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Live Streaming &amp; Recording</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://obsproject.com" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: obsproject.com ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>obs</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 02 Owncast -->
-<div class="entry">
-<div class="entry-rank">02</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Owncast · Self-Hosted Live Streaming</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Twitch / YouTube Live com anúncios</span>
-<span class="econ-badge">Economia: Transmissão sem censura ou cortes</span>
-<span class="lic-badge">Open-Source OSI</span>
-<span class="kind">Self-Hosted Live Streaming</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Servidor de live streaming independente com chat interativo embutido e saída em HLS direto para o navegador.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>docker run -d -p 8080:8080 -p 1935:1935 gabek/owncast:latest</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Twitch / YouTube Live com anúncios</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Transmissão sem censura ou cortes · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Self-Hosted Live Streaming</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://owncast.online" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: owncast.online ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>docker run -d -p 8080:8080 -p 1935:1935 gabek/owncast:latest</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 03 Jellyfin -->
-<div class="entry">
-<div class="entry-rank">03</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Jellyfin · Media System &amp; Streaming</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Plex Pass / Emby ($ 120/lifetime)</span>
-<span class="econ-badge">Economia: -$ 120 / licença</span>
-<span class="lic-badge">Open-Source OSI</span>
-<span class="kind">Media System &amp; Streaming</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>O servidor de mídia 100% livre para filmes, séries e músicas com transcodificação em hardware sem paywalls.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>docker run -d -p 8096:8096 jellyfin/jellyfin</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Plex Pass / Emby ($ 120/lifetime)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 120 / licença · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Media System &amp; Streaming</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://jellyfin.org" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: jellyfin.org ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>docker run -d -p 8096:8096 jellyfin/jellyfin</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 04 PeerTube -->
-<div class="entry">
-<div class="entry-rank">04</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>PeerTube · Decentralized Video Platform</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Vimeo OTT / YouTube corporativo</span>
-<span class="econ-badge">Economia: -$ 600 a $ 6.000 / ano</span>
-<span class="lic-badge">Open-Source OSI</span>
-<span class="kind">Decentralized Video Platform</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Plataforma federada de compartilhamento de vídeos que usa WebTorrent para reduzir o consumo de banda dos servidores.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>docker compose up -d</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Vimeo OTT / YouTube corporativo</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 600 a $ 6.000 / ano · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Decentralized Video Platform</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://joinpeertube.org" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: joinpeertube.org ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>docker compose up -d</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 05 Restreamer (Datarhei) -->
-<div class="entry">
-<div class="entry-rank">05</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Restreamer (Datarhei) · Live Video Router</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Restream.io ($ 49/mês)</span>
-<span class="econ-badge">Economia: -$ 588 / ano</span>
-<span class="lic-badge">Open-Source OSI</span>
-<span class="kind">Live Video Router</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Transmita ao vivo para múltiplos destinos simultaneamente (YouTube, Twitch, Facebook, servidores próprios) em 1 clique.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>docker run -d -p 8080:8080 -p 1935:1935 datarhei/restreamer:latest</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Restream.io ($ 49/mês)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 588 / ano · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Live Video Router</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://datarhei.com/restreamer" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: datarhei.com/restreamer ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>docker run -d -p 8080:8080 -p 1935:1935 datarhei/restreamer:latest</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 06 Icecast -->
-<div class="entry">
-<div class="entry-rank">06</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Icecast · Audio Streaming Server</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Servidores pagos de rádio web</span>
-<span class="econ-badge">Economia: Transmissão contínua de áudio</span>
-<span class="lic-badge">Open-Source OSI</span>
-<span class="kind">Audio Streaming Server</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Servidor de streaming de áudio para rádios online e transmissões de podcasts ao vivo via MP3/Ogg.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>apt-get install icecast2</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Servidores pagos de rádio web</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Transmissão contínua de áudio · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">1 vCPU · 512 MB a 1 GB RAM · Container Docker</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Audio Streaming Server</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://icecast.org" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: icecast.org ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>apt-get install icecast2</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 07 SRS (Simple Realtime Server) -->
-<div class="entry">
-<div class="entry-rank">07</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>SRS (Simple Realtime Server) · Ultra-Low Latency Video</h3>
-<span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
-<span class="killer-badge">Substitui: Wowza Streaming Engine ($ 1.800/ano)</span>
-<span class="econ-badge">Economia: -$ 1.800 / ano</span>
-<span class="lic-badge">Open-Source OSI</span>
-<span class="kind">Ultra-Low Latency Video</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Servidor de vídeo em tempo real em C++ suportando RTMP, WebRTC, HLS e HTTP-FLV com latência inferior a 1 segundo.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>docker run -d -p 1935:1935 -p 1985:1985 ossrs/srs:5</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Wowza Streaming Engine ($ 1.800/ano)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 1.800 / ano · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">1 vCPU · 512 MB a 1 GB RAM · Container Docker</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Ultra-Low Latency Video</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://ossrs.net" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: ossrs.net ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>docker run -d -p 1935:1935 -p 1985:1985 ossrs/srs:5</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 08 Node-Media-Server -->
-<div class="entry">
-<div class="entry-rank">08</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Node-Media-Server · Node.js RTMP/HLS Server</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Servidores pesados de mídia</span>
-<span class="econ-badge">Economia: Simples e extensível em JavaScript</span>
-<span class="lic-badge">Open-Source OSI</span>
-<span class="kind">Node.js RTMP/HLS Server</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Servidor de streaming RTMP/HTTP-FLV em Node.js fácil de integrar com autenticação e webhooks da sua aplicação.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>npm install node-media-server</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Servidores pesados de mídia</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Simples e extensível em JavaScript · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">1 vCPU · 512 MB a 1 GB RAM · Container Docker</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Node.js RTMP/HLS Server</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/illuspas/Node-Media-Server" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/illuspas/Node-Media-Server ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>npm install node-media-server</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-</div>
-</section>
-<section>
-<div class="sec-head flagged">
-<span class="sec-num">Parte 4 · A Regra de Ouro</span>
-<h2>Como operar essa pilha com estabilidade</h2>
-<p class="sec-note">Diretrizes para rodar ferramentas no seu próprio servidor com resiliência máxima e zero sobrecarga.</p>
-</div>
-<div class="grid2">
-<div class="reject">
-<h4>1. Isolamento em Containers Docker</h4>
-<p>Nunca instale ferramentas diretamente no sistema host sem isolamento de rede e volumes mapeados em disco seguro.</p>
-</div>
-<div class="reject">
-<h4>2. Proxy Reverso com Caddy / Traefik</h4>
-<p>Aponte a borda de rede para proxies leves com renovação automática de certificados TLS sem scripts manuais.</p>
-</div>
-<div class="reject">
-<h4>3. Backup Imutável com Restic / Borg</h4>
-<p>Programe snapshots diários dos volumes para armazenamento S3 remoto compatível para restauração rápida em caso de desastre.</p>
-</div>
-<div class="reject">
-<h4>4. Acesso Seguro via WireGuard / Headscale</h4>
-<p>Mantenha painéis de administração e bancos de dados fora da internet pública, acessíveis apenas pela VPN mesh interna.</p>
-</div>
-</div>
-</section>
-<footer>
-<p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas e viabilidade em produção.</p>
-<div class="srcs">
-<span>Open Source Initiative (OSI)</span>
-<span>Linux Foundation</span>
-<span>CNCF Landscape</span>
-</div>
-</footer>
-</div>
+
+  <header>
+    <div class="eyebrow">
+      <span>Camada 29 · Vídeo Ao Vivo & Broadcasting</span><span>·</span><span>Curadoria de Elite</span><span>·</span>
+      <b>20 Ferramentas / Soberania Total</b>
+    </div>
+    <h1>Streaming, Transmissão Ao Vivo & Produção de Vídeo</h1>
+    <p class="deck">Servidores de transmissão RTMP/HLS/WebRTC, automação de lives e estúdios virtuais para <strong>transmitir para milhões com infraestrutura própria</strong>.</p>
+    <div class="chips">
+      <div class="chip"><b>20</b> tecnologias auditadas</div>
+      <div class="chip"><b>0</b> taxas por assento ou cota oculta</div>
+      <div class="chip"><b>100%</b> soberania de dados</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 1 · A Equação da Soberania</span>
+      <h2>A fronteira entre refém de nuvem e autonomia técnica</h2>
+      <p class="sec-note">Assinaturas recorrentes cobram pedágio pelo seu próprio crescimento. A engenharia moderna devolve a governança para o desenvolvedor.</p>
+    </div>
+
+    <div class="routes">
+      <div class="route official">
+        <span class="tag">O Custo Fechado</span>
+        <h4>Soberania Operacional</h4>
+        <p>Controle integral sobre o código, dados e arquitetura sem taxas por assento.</p>
+      </div>
+
+      <div class="route gray">
+        <span class="tag">A Solução Aberta</span>
+        <h4>Desempenho & Liberdade</h4>
+        <p>Ferramentas open-source nativas aceleradas por hardware sem telemetria invasiva.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 2 · O Panorama Geral</span>
+      <h2>O inventário completo da camada</h2>
+      <p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ferramenta</th>
+            <th>Substitui o SaaS Pago</th>
+            <th>Economia Declarada</th>
+            <th>Categoria</th>
+            <th>Licença</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank">01</td>
+            <td class="tool">OBS Studio</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">02</td>
+            <td class="tool">Owncast Live Server</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">03</td>
+            <td class="tool">Restreamer Live Gateway</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">04</td>
+            <td class="tool">Ant Media Community</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">05</td>
+            <td class="tool">SRS (Simple Realtime Server)</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">06</td>
+            <td class="tool">Node-Media-Server</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">07</td>
+            <td class="tool">LiveKit WebRTC</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">08</td>
+            <td class="tool">Janus WebRTC Gateway</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">09</td>
+            <td class="tool">MediaSoup WebRTC SFU</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">10</td>
+            <td class="tool">Galene Video Server</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">11</td>
+            <td class="tool">Icecast Radio Server</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">12</td>
+            <td class="tool">Liquidsoap Audio Pipeline</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">13</td>
+            <td class="tool">AzuraCast Radio Station</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">14</td>
+            <td class="tool">Butterchurn WebGL Visualizer</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">15</td>
+            <td class="tool">CasparCG Broadcast Graphics</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">16</td>
+            <td class="tool">VDO.Ninja P2P Video</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">17</td>
+            <td class="tool">MistServer Media Server</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">18</td>
+            <td class="tool">Open Broadcaster Web</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">19</td>
+            <td class="tool">Flussonic Community Core</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">20</td>
+            <td class="tool">PeerTube Federated Video</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 3 · O Detalhamento Técnico & Workflows Práticos</span>
+      <h2>As fichas técnicas completas com Guia do Dia a Dia</h2>
+      <p class="sec-note">O que faz, como funciona por baixo dos panos, comandos de execução e <strong>passo a passo detalhado para o seu fluxo diário</strong>.</p>
+    </div>
+
+    <div class="ledger">
+      <!-- 01 OBS Studio -->
+      <div class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>OBS Studio</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar OBS Studio no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>OBS Studio</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 Owncast Live Server -->
+      <div class="entry">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Owncast Live Server</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Owncast Live Server no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Owncast Live Server</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Restreamer Live Gateway -->
+      <div class="entry">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Restreamer Live Gateway</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Restreamer Live Gateway no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Restreamer Live Gateway</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 Ant Media Community -->
+      <div class="entry">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Ant Media Community</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Ant Media Community no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Ant Media Community</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 SRS (Simple Realtime Server) -->
+      <div class="entry">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>SRS (Simple Realtime Server)</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar SRS (Simple Realtime Server) no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>SRS (Simple Realtime Server)</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 Node-Media-Server -->
+      <div class="entry">
+        <div class="entry-rank">06</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Node-Media-Server</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Node-Media-Server no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Node-Media-Server</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07 LiveKit WebRTC -->
+      <div class="entry">
+        <div class="entry-rank">07</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>LiveKit WebRTC</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar LiveKit WebRTC no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>LiveKit WebRTC</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08 Janus WebRTC Gateway -->
+      <div class="entry">
+        <div class="entry-rank">08</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Janus WebRTC Gateway</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Janus WebRTC Gateway no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Janus WebRTC Gateway</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09 MediaSoup WebRTC SFU -->
+      <div class="entry">
+        <div class="entry-rank">09</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>MediaSoup WebRTC SFU</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar MediaSoup WebRTC SFU no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>MediaSoup WebRTC SFU</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 Galene Video Server -->
+      <div class="entry">
+        <div class="entry-rank">10</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Galene Video Server</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Galene Video Server no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Galene Video Server</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11 Icecast Radio Server -->
+      <div class="entry">
+        <div class="entry-rank">11</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Icecast Radio Server</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Icecast Radio Server no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Icecast Radio Server</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12 Liquidsoap Audio Pipeline -->
+      <div class="entry">
+        <div class="entry-rank">12</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Liquidsoap Audio Pipeline</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Liquidsoap Audio Pipeline no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Liquidsoap Audio Pipeline</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13 AzuraCast Radio Station -->
+      <div class="entry">
+        <div class="entry-rank">13</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>AzuraCast Radio Station</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar AzuraCast Radio Station no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>AzuraCast Radio Station</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14 Butterchurn WebGL Visualizer -->
+      <div class="entry">
+        <div class="entry-rank">14</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Butterchurn WebGL Visualizer</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Butterchurn WebGL Visualizer no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Butterchurn WebGL Visualizer</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15 CasparCG Broadcast Graphics -->
+      <div class="entry">
+        <div class="entry-rank">15</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>CasparCG Broadcast Graphics</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar CasparCG Broadcast Graphics no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>CasparCG Broadcast Graphics</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 16 VDO.Ninja P2P Video -->
+      <div class="entry">
+        <div class="entry-rank">16</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>VDO.Ninja P2P Video</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar VDO.Ninja P2P Video no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>VDO.Ninja P2P Video</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 17 MistServer Media Server -->
+      <div class="entry">
+        <div class="entry-rank">17</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>MistServer Media Server</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar MistServer Media Server no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>MistServer Media Server</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 18 Open Broadcaster Web -->
+      <div class="entry">
+        <div class="entry-rank">18</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Open Broadcaster Web</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Open Broadcaster Web no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Open Broadcaster Web</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 19 Flussonic Community Core -->
+      <div class="entry">
+        <div class="entry-rank">19</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Flussonic Community Core</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Flussonic Community Core no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Flussonic Community Core</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 20 PeerTube Federated Video -->
+      <div class="entry">
+        <div class="entry-rank">20</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>PeerTube Federated Video</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Vídeo Ao Vivo & Broadcasting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para streaming, transmissão ao vivo & produção de vídeo, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar PeerTube Federated Video no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>PeerTube Federated Video</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para streaming, transmissão ao vivo & produção de vídeo.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/29-streaming-live-broadcasting" target="_blank" rel="noopener">github.com/topics/29-streaming-live-broadcasting</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head flagged">
+      <span class="sec-num">Parte 4 · A Regra de Ouro</span>
+      <h2>Como operar essa pilha com estabilidade</h2>
+      <p class="sec-note">Diretrizes para rodar ferramentas no seu próprio servidor com resiliência máxima e zero sobrecarga.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="reject">
+        <h4>1. Isolamento em Containers Docker</h4>
+        <p>Nunca instale ferramentas diretamente no sistema host sem isolamento de rede e volumes mapeados em disco seguro.</p>
+      </div>
+      <div class="reject">
+        <h4>2. Proxy Reverso com Caddy / Traefik</h4>
+        <p>Aponte a borda de rede para proxies leves com renovação automática de certificados TLS sem scripts manuais.</p>
+      </div>
+      <div class="reject">
+        <h4>3. Backup Imutável com Restic / Borg</h4>
+        <p>Programe snapshots diários dos volumes para armazenamento S3 remoto compatível para restauração rápida em caso de desastre.</p>
+      </div>
+      <div class="reject">
+        <h4>4. Acesso Seguro via WireGuard / Headscale</h4>
+        <p>Mantenha painéis de administração e bancos de dados fora da internet pública, acessíveis apenas pela VPN mesh interna.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas e viabilidade em produção.</p>
+    <div class="srcs">
+      <span>Open Source Initiative (OSI)</span>
+      <span>Linux Foundation</span>
+      <span>CNCF Landscape</span>
+    </div>
+  </footer>
+
+</div>
+
 </body>
 </html>

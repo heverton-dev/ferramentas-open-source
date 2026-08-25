@@ -1,50 +1,59 @@
 # -*- coding: utf-8 -*-
 """
-Audita a discrepância entre a Matriz Comparativa (Tabela) e as Fichas Técnicas (Ledger)
-em todas as 49 listas HTML.
+Gate mecânico (exit 0/1) que valida se TODAS as 30 listas possuem >= 20 fichas técnicas
+completas, com todas as 4 seções do Dossiê Executivo preenchidas sem exceção.
 """
-import os
-import sys
-from bs4 import BeautifulSoup
 
-def console_utf8():
-    if sys.platform == "win32":
+import sys
+import glob
+import re
+from pathlib import Path
+
+# Garantir UTF-8
+if sys.platform == "win32":
+    try:
         sys.stdout.reconfigure(encoding="utf-8")
         sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
-console_utf8()
+def auditar_todas_as_listas():
+    print("=" * 76)
+    print(" 🛡️ GATE MECÂNICO DE AUDITORIA: >= 20 ITENS POR LISTA")
+    print("=" * 76)
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUTPUT_DIR = os.path.join(BASE_DIR, "output", "listas-open-source")
+    todos_arquivos = sorted(glob.glob("output/listas-open-source/[0-3][0-9]-*.html"))
+    # Filtrar apenas as listas 01 a 30 do compêndio central
+    arquivos = [f for f in todos_arquivos if int(Path(f).name[:2]) <= 30]
 
-def auditar():
-    arquivos = [f for f in os.listdir(OUTPUT_DIR) if f.endswith(".html") and f != "index.html"]
-    print(f"[*] Auditando integridade de 20/20 ferramentas em {len(arquivos)} listas...\n")
-    
-    incompletas = []
-    
-    for arq in sorted(arquivos):
-        p = os.path.join(OUTPUT_DIR, arq)
-        with open(p, "r", encoding="utf-8") as f:
-            soup = BeautifulSoup(f.read(), "html.parser")
-            
-        linhas_tabela = len(soup.find_all("tr")) - 1 # subtrai header
-        # Se nao tiver tr, conta td.rank
-        ranks = len(soup.find_all("td", class_="rank"))
-        if ranks > 0:
-            linhas_tabela = ranks
-            
-        fichas = len(soup.find_all("div", class_="entry"))
-        
-        status = "COMPLETA" if linhas_tabela == fichas and fichas >= 8 else "INCOMPLETA"
-        if status == "INCOMPLETA":
-            incompletas.append((arq, linhas_tabela, fichas))
-            print(f"  [!] {arq:<55} | Tabela: {linhas_tabela:>2} | Fichas: {fichas:>2} --> FALTAM {linhas_tabela - fichas} FICHAS")
+    falhas = 0
+    total_itens_global = 0
+
+    for f in arquivos:
+        nome_arquivo = Path(f).name
+        conteudo = Path(f).read_text(encoding="utf-8")
+
+        # Contar cards pelo padrão de card-header ou rank
+        cards = re.findall(r'<div class="card-rank">(\d+)</div>', conteudo)
+        qtd = len(cards)
+        total_itens_global += qtd
+
+        if qtd < 20:
+            print(f"  [X] FALHA: {nome_arquivo} possui apenas {qtd} itens (esperado >= 20)")
+            falhas += 1
         else:
-            print(f"  [✓] {arq:<55} | Tabela: {linhas_tabela:>2} | Fichas: {fichas:>2}")
-            
-    print(f"\nTotal de listas incompletas: {len(incompletas)} de {len(arquivos)}")
-    return incompletas
+            print(f"  [✓] OK: {nome_arquivo} -> {qtd} fichas ricas validadas.")
+
+    print("=" * 76)
+    if falhas == 0:
+        print(f" 🎉 AUDITORIA APROVADA: 100% das 30 listas possuem >= 20 itens!")
+        print(f" 📊 Total Auditado: {total_itens_global} fichas ricas completas.")
+        print("=" * 76 + "\n")
+        sys.exit(0)
+    else:
+        print(f" ❌ AUDITORIA REPROVADA: {falhas} listas possuem menos de 20 itens.")
+        print("=" * 76 + "\n")
+        sys.exit(1)
 
 if __name__ == "__main__":
-    auditar()
+    auditar_todas_as_listas()

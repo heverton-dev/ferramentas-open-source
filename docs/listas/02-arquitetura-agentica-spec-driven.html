@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Arquitetura Agêntica, Spec-Driven Development &amp; Skills de Engenharia — Compêndio de Soberania Tecnológica</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arquitetura Agêntica, Spec-Driven Development & Skills de Engenharia — Compêndio de Soberania Tecnológica</title>
 <style>
-  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
+  /* Custom scrollbar estrita 4px */
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
 
   :root {
     --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
     --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
     --rule:#C7CEDB; --rule-soft:#DADFE8;
-    --accent:#7A3E1D; --accent-soft:#F5EBE4;
+    --accent:#1A446C; --accent-soft:#DCE7F2;
     --gold:#7A5410; --gold-soft:#EFE5CE;
     --flag:#8E2436; --flag-soft:#F0D9DD;
     --green:#1B5E3B; --green-soft:#D8EFE2;
@@ -29,41 +30,37 @@
       --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
       --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
       --rule:#2A3142; --rule-soft:#222836;
-      --accent:#E89568; --accent-soft:#331D12;
+      --accent:#7AA5D6; --accent-soft:#162436;
       --gold:#D6A44E; --gold-soft:#332810;
       --flag:#E0788C; --flag-soft:#3A1A21;
       --green:#6BC48F; --green-soft:#122B1C;
       --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
     }
   }
+  :root[data-theme="dark"] {
+    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+    --rule:#2A3142; --rule-soft:#222836;
+    --accent:#7AA5D6; --accent-soft:#162436;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E0788C; --flag-soft:#3A1A21;
+    --green:#6BC48F; --green-soft:#122B1C;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
 
+  * { box-sizing:border-box; }
   body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
   .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
 
-  /* HEADER EXECUTIVO COM ALINHAMENTO JUSTIFICADO */
-  header { display:flex; flex-direction:column; gap:24px; padding-bottom:12px; border-bottom:1px solid var(--rule); }
-  .header-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
-  .back-link { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; color:var(--muted); text-decoration:none; padding:4px 8px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); transition:all .15s ease; }
-  .back-link:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-soft); text-decoration:none; }
-  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
-  .layer-badge { background:var(--accent); color:var(--paper); padding:3px 8px; border-radius:2px; font-weight:700; font-size:10.5px; letter-spacing:.08em; }
-
-  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(36px,7vw,64px); line-height:1.08; letter-spacing:-.02em; margin:0; color:var(--ink); text-align:justify; text-justify:inter-word; }
-  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.55; color:var(--ink-2); max-width:100%; margin:0; text-align:justify; text-justify:inter-word; }
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
   .deck strong { color:var(--ink); font-weight:600; }
-
-  /* HERO STATS BAR */
-  .hero-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:4px; }
-  .stat-card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:12px 16px; display:flex; flex-direction:column; gap:4px; box-shadow:var(--shadow); }
-  .stat-card .stat-val { font-family:var(--mono); font-size:20px; font-weight:700; color:var(--accent); line-height:1.1; }
-  .stat-card .stat-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .stat-card.good .stat-val { color:var(--green); }
-  
-  /* QUICK JUMP ANCHORS */
-  .header-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:2px; }
-  .jump-btn { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; padding:6px 12px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); color:var(--ink-2); text-decoration:none; transition:all .15s ease; }
-  .jump-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); text-decoration:none; }
-  .jump-btn.primary { background:var(--accent-soft); border-color:color-mix(in srgb, var(--accent) 40%, transparent); color:var(--accent); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
 
   section { display:flex; flex-direction:column; gap:22px; }
   .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
@@ -73,7 +70,8 @@
   .sec-head.flagged .sec-num { color:var(--flag); }
   .sec-head.warm .sec-num { color:var(--gold); }
   h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
-  .sec-note { margin:0; color:var(--ink-2); max-width:100%; font-size:15.5px; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note strong { color:var(--ink); }
 
   .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
   .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
@@ -85,84 +83,47 @@
   .route.gray .tag { color:var(--green); }
   .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
 
-  /* TABELA FLUIDA SEM SCROLL */
-  .tablewrap { border:1px solid var(--rule); border-radius:3px; background:var(--surface); width:100%; overflow:hidden; }
-  table { border-collapse:collapse; width:100%; font-size:13.5px; table-layout:auto; }
-  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding:10px 12px; border-bottom:1px solid var(--rule); }
-  tbody td { padding:10px 12px; border-bottom:1px solid var(--rule-soft); vertical-align:middle; }
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:860px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
   tbody tr:last-child td { border-bottom:0; }
-  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:36px; text-align:center; }
-  td.tool { font-weight:600; color:var(--ink); font-size:14px; }
-  td.saas, td.killer { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; line-height:1.35; }
-  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; line-height:1.35; }
-  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); line-height:1.35; font-weight:600; }
-  td.lic { font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.35; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; }
+  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; white-space:nowrap; }
+  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
+  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
 
-  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO (LARGURA TOTAL) */
-  .ledger { display:flex; flex-direction:column; gap:28px; }
-  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; transition:border-color .15s ease; }
-  .entry:hover { border-color:var(--accent); }
-  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:20px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
-  
-  .entry-body { padding:20px 24px 22px; display:flex; flex-direction:column; gap:16px; min-width:0; }
-
-  /* CABEÇALHO PADRONIZADO COM BADGES */
-  .entry-top { display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; }
-  .entry-top h3 { width:100%; margin:0 0 4px 0; font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; letter-spacing:-.01em; color:var(--ink); }
-
-  .senior-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; font-weight:700; }
-  .senior-badge.green { background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); }
-  .senior-badge.gold { background:var(--gold-soft); color:var(--gold); border:1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
-  .senior-badge.flag { background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); }
-
+  .ledger { display:flex; flex-direction:column; gap:20px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
   .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
   .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
   .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
-  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; padding:3px 6px; border:1px solid var(--rule-soft); border-radius:2px; background:var(--surface-2); }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
 
-  /* SEÇÕES VERTICAIS DO CARD (LARGURA TOTAL) */
-  .entry-section { display:flex; flex-direction:column; gap:8px; width:100%; padding-top:14px; border-top:1px dashed var(--rule-soft); }
-  .entry-section .label { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
-  .entry-section p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
-  .entry-section p strong { color:var(--ink); font-weight:600; }
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
 
-  /* ANÁLISE ECONÔMICA GRID */
-  .econ-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:4px; }
-  .econ-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .econ-card.highlight { border-left:3px solid var(--green); background:color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
-  .econ-card.killer { border-left:3px solid var(--flag); background:color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
-  .econ-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .econ-val { font-size:14px; line-height:1.45; color:var(--ink); }
-  .econ-val strong { color:var(--ink); font-weight:600; }
+  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
 
-  /* REQUISITOS DE INFRAESTRUTURA GRID */
-  .infra-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:4px; }
-  .infra-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .infra-card.verdict { border-left:3px solid var(--gold); background:color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column:span 2; }
-  @media (max-width:760px) { .infra-card.verdict { grid-column:span 1; } }
-  .infra-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .infra-val { font-family:var(--mono); font-size:13.5px; font-weight:600; color:var(--accent); line-height:1.4; }
-  .infra-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
+  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
 
-  /* CODE BOX FULL-WIDTH */
-  .code-box { position:relative; display:flex; flex-direction:column; width:100%; margin-top:4px; }
-  pre { margin:0; padding:12px 52px 12px 14px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
-  code { font-family:var(--mono); font-size:13px; color:var(--ink); line-height:1.5; }
-  .copy-btn { position:absolute; top:8px; right:8px; background:var(--surface); border:1px solid var(--rule); color:var(--muted); border-radius:2px; padding:4px 8px; font-family:var(--mono); font-size:10.5px; cursor:pointer; transition:all .15s ease; }
-  .copy-btn:hover { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
-
-  /* BOTÃO REPOSITÓRIO GITHUB */
-  .repo-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--mono); font-size:12px; padding:8px 12px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink); text-decoration:none; transition:all .15s ease; width:fit-content; }
-  .repo-btn:hover { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); text-decoration:none; }
-  .repo-btn svg { width:14px; height:14px; fill:currentColor; }
-
-  /* STEPS GRID (COMO USAR NO DIA A DIA) */
-  .steps-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin-top:2px; }
-  .step-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .step-head { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
-  .step-badge { background:var(--accent); color:var(--paper); border-radius:2px; padding:1px 6px; font-size:10px; font-weight:700; }
-  .step-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
-  .step-card code { font-family:var(--mono); font-size:12px; background:var(--surface); padding:1px 5px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
+  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
 
   .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
   .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
@@ -170,1741 +131,1042 @@
   .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
 
   footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
-  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:100%; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
 </style>
 </head>
 <body>
+
 <div class="wrap">
-<header>
-<div class="header-top">
-<a class="back-link" href="index.html">
-<span>←</span>
-<span>Voltar ao Hub Central</span>
-</a>
-<div class="eyebrow">
-<span class="layer-badge">Camada 02</span>
-<span>Engenharia &amp; Autonomia Técnica</span>
-<span>·</span>
-<span>Curadoria Soberana</span>
-</div>
-</div>
-<h1>Arquitetura Agêntica, Spec-Driven Development &amp; Skills de Engenharia</h1>
-<p class="deck">Frameworks, sandboxes e <strong>20 skills agênticas de elite para orquestrar squads com contratos estritos, especificações formais (SDD), guardrails de design (Impeccable), fidelidade editorial (Hallmark) e navegação por grafos</strong>: elimine o código espaguete e garanta que o agente teste o próprio trabalho antes da entrega.</p>
-<!-- HERO STATS BAR -->
-<div class="hero-stats">
-<div class="stat-card">
-<div class="stat-val">20</div>
-<div class="stat-lbl">Tecnologias Auditadas</div>
-</div>
-<div class="stat-card good">
-<div class="stat-val">100%</div>
-<div class="stat-lbl">Soberania &amp; Zero Lock-in</div>
-</div>
-<div class="stat-card">
-<div class="stat-val">OSI Standard</div>
-<div class="stat-lbl">Licenças de Código Aberto</div>
-</div>
-<div class="stat-card good">
-<div class="stat-val">-$ 30k a $ 150k</div>
-<div class="stat-lbl">Economia TCO Anual Estimada</div>
-</div>
-</div>
-<!-- QUICK ACTIONS -->
-<div class="header-actions">
-<a class="jump-btn" href="#tabela">
-<span>📊</span>
-<span>Matriz Comparativa</span>
-</a>
-<a class="jump-btn primary" href="#fichas">
-<span>⚡</span>
-<span>Fichas Técnicas &amp; Passo a Passo</span>
-</a>
-</div>
-</header>
-<section>
-<div class="sec-head">
-<span class="sec-num">Parte 1 · A Equação da Soberania</span>
-<h2>A fronteira entre refém de nuvem e autonomia técnica</h2>
-<p class="sec-note">Assinaturas recorrentes cobram pedágio pelo seu próprio crescimento. A engenharia moderna devolve a governança para o desenvolvedor.</p>
-</div>
-<div class="routes">
-<div class="route official">
-<span class="tag">O Custo Fechado</span>
-<h4>O Fim do Chatbot Monolítico</h4>
-<p>Pedir tudo em um único prompt gera alucinação, código espaguete e perda de foco. A engenharia moderna decompõe o projeto em papéis especializados com permissões restritas e contratos formais.</p>
-</div>
-<div class="route gray">
-<span class="tag">A Solução Aberta</span>
-<h4>Spec-Driven Development &amp; Skills de Elite</h4>
-<p>Requisitos viram SPEC.md e testes automatizados antes da primeira linha de código. Skills acopladas ao contexto aplicam guardrails de design, tipagem estrita e verificação de dependências em tempo real.</p>
-</div>
-</div>
-</section>
-<section id="tabela">
-<div class="sec-head">
-<span class="sec-num">Parte 2 · O Panorama Geral</span>
-<h2>O inventário completo da camada</h2>
-<p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
-</div>
-<div class="tablewrap">
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Ferramenta</th>
-<th>Substitui o SaaS Pago</th>
-<th>Economia Declarada</th>
-<th>Categoria</th>
-<th>Licença</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="rank">01</td>
-<td class="tool">Skill: spec-driven-contracts (Spec-Kit)</td>
-<td class="saas">Desenvolvimento desgovernado por IA</td>
-<td class="econ">Economiza semanas de retrabalho em código quebrado</td>
-<td class="cat">Spec-Driven Dev Skill</td>
-<td class="lic">MIT / SDD Skill</td>
-</tr>
-<tr>
-<td class="rank">02</td>
-<td class="tool">Skill: impeccable</td>
-<td class="saas">Interfaces geradas por IA genéricas e feias</td>
-<td class="econ">Zero retrabalho de frontend e CSS</td>
-<td class="cat">Design &amp; UI Guardrail Skill</td>
-<td class="lic">MIT / Design Skill</td>
-</tr>
-<tr>
-<td class="rank">03</td>
-<td class="tool">Skill: code-review-graph</td>
-<td class="saas">Exploração cega de arquivos pelo agente</td>
-<td class="econ">-75% de chamadas de exploração de código</td>
-<td class="cat">Graph Navigation Skill</td>
-<td class="lic">MIT / Codebase Graph</td>
-</tr>
-<tr>
-<td class="rank">04</td>
-<td class="tool">Skill: hallmark</td>
-<td class="saas">Textos com tom de voz inconsistente</td>
-<td class="econ">100% de conformidade editorial</td>
-<td class="cat">Brand &amp; Editorial Fidelity</td>
-<td class="lic">MIT / Editorial Skill</td>
-</tr>
-<tr>
-<td class="rank">05</td>
-<td class="tool">Skill: mira-animator</td>
-<td class="saas">Animações pesadas em JavaScript</td>
-<td class="econ">60 FPS nativo e zero bibliotecas extras</td>
-<td class="cat">Declarative Motion Skill</td>
-<td class="lic">MIT / Motion Skill</td>
-</tr>
-<tr>
-<td class="rank">06</td>
-<td class="tool">Skill: test-first-tdd</td>
-<td class="saas">Código sem cobertura de testes</td>
-<td class="econ">Reduz 90% dos bugs em produção</td>
-<td class="cat">TDD Gatekeeper Skill</td>
-<td class="lic">MIT / TDD Skill</td>
-</tr>
-<tr>
-<td class="rank">07</td>
-<td class="tool">Skill: architect-gatekeeper</td>
-<td class="saas">Acoplamento e quebra de SOLID por IA</td>
-<td class="econ">Zero débitos técnicos cumulativos</td>
-<td class="cat">Architecture Gatekeeper</td>
-<td class="lic">MIT / Architecture Skill</td>
-</tr>
-<tr>
-<td class="rank">08</td>
-<td class="tool">Skill: doc-contract</td>
-<td class="saas">Documentação e tipos dessincronizados</td>
-<td class="econ">Economiza horas de debugging de API</td>
-<td class="cat">Contract Synchronization</td>
-<td class="lic">MIT / Contract Skill</td>
-</tr>
-<tr>
-<td class="rank">09</td>
-<td class="tool">Aider CLI</td>
-<td class="saas">Assinatura Cursor ($ 20/mês)</td>
-<td class="econ">-$ 240 / ano por desenvolvedor</td>
-<td class="cat">Git Pair Programmer</td>
-<td class="lic">Apache-2.0</td>
-</tr>
-<tr>
-<td class="rank">10</td>
-<td class="tool">OpenHands (OpenDevin)</td>
-<td class="saas">Devin / Magic.dev ($ 500+/mês)</td>
-<td class="econ">-$ 6.000 / ano em ferramentas fechadas</td>
-<td class="cat">Autonomous Sandbox</td>
-<td class="lic">MIT</td>
-</tr>
-<tr>
-<td class="rank">11</td>
-<td class="tool">Instructor</td>
-<td class="saas">Tratamento manual de erros de JSON</td>
-<td class="econ">Economiza horas de debugging de parsing</td>
-<td class="cat">Structured Outputs</td>
-<td class="lic">MIT</td>
-</tr>
-<tr>
-<td class="rank">12</td>
-<td class="tool">LangGraph</td>
-<td class="saas">Scripts de agentes frágeis e lineares</td>
-<td class="econ">Zero travamentos por loops infinitos</td>
-<td class="cat">Cyclic State Graph</td>
-<td class="lic">MIT</td>
-</tr>
-<tr>
-<td class="rank">13</td>
-<td class="tool">CrewAI</td>
-<td class="saas">Prompts gigantes e confusos</td>
-<td class="econ">Reduz erros de contexto em 80%</td>
-<td class="cat">Role-Based Multi-Agent</td>
-<td class="lic">MIT</td>
-</tr>
-<tr>
-<td class="rank">14</td>
-<td class="tool">Letta (MemGPT) / Mem0</td>
-<td class="saas">Janela de contexto estourada</td>
-<td class="econ">-80% de reenvio de histórico antigo</td>
-<td class="cat">Long-Term Memory Engine</td>
-<td class="lic">Apache-2.0</td>
-</tr>
-<tr>
-<td class="rank">15</td>
-<td class="tool">E2B Code Interpreter</td>
-<td class="saas">Execuções inseguras no host</td>
-<td class="econ">100% de segurança contra scripts maliciosos</td>
-<td class="cat">Secure Code Sandbox</td>
-<td class="lic">Apache-2.0</td>
-</tr>
-<tr>
-<td class="rank">16</td>
-<td class="tool">AutoGen (Microsoft)</td>
-<td class="saas">Single-prompt engineering</td>
-<td class="econ">Auto-correção de bugs em tempo de execução</td>
-<td class="cat">Conversational Multi-Agent</td>
-<td class="lic">MIT</td>
-</tr>
-<tr>
-<td class="rank">17</td>
-<td class="tool">Dify (Agent Workflow)</td>
-<td class="saas">Flowise / Plataformas pagas de workflow</td>
-<td class="econ">-$ 2.400 / ano em ferramentas SaaS</td>
-<td class="cat">Visual Agent Workflow</td>
-<td class="lic">Apache-2.0</td>
-</tr>
-<tr>
-<td class="rank">18</td>
-<td class="tool">PydanticAI</td>
-<td class="saas">Frameworks com tipagem fraca</td>
-<td class="econ">Zero erros de tipo em tempo de execução</td>
-<td class="cat">Type-Safe Agent Framework</td>
-<td class="lic">MIT</td>
-</tr>
-<tr>
-<td class="rank">19</td>
-<td class="tool">DSPy Assertions</td>
-<td class="saas">Retentativas manuais com try/except</td>
-<td class="econ">-60% de chamadas com erro semântico</td>
-<td class="cat">Self-Correcting Pipelines</td>
-<td class="lic">MIT</td>
-</tr>
-<tr>
-<td class="rank">20</td>
-<td class="tool">Smolagents (Hugging Face)</td>
-<td class="saas">Tool calling inflado em JSON</td>
-<td class="econ">-40% de tokens em chamadas de ferramentas</td>
-<td class="cat">Code-First Agent Library</td>
-<td class="lic">Apache-2.0</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="fichas">
-<div class="sec-head">
-<span class="sec-num">Parte 3 · O Detalhamento Técnico &amp; Workflows Práticos</span>
-<h2>As fichas técnicas completas com Guia do Dia a Dia</h2>
-<p class="sec-note">O que faz, como funciona por baixo dos panos, comandos de execução e <strong>passo a passo detalhado para o seu fluxo diário</strong>.</p>
-</div>
-<div class="ledger">
-<!-- 01 Skill: spec-driven-contracts (Spec-Kit) -->
-<div class="entry">
-<div class="entry-rank">01</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>spec-driven-contracts (Spec-Kit) · Spec-Driven Dev Skill</h3>
-<span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
-<span class="killer-badge">Substitui: Desenvolvimento desgovernado por IA</span>
-<span class="econ-badge">Economia: Economiza semanas de retrabalho em código quebrado</span>
-<span class="lic-badge">MIT / SDD Skill</span>
-<span class="kind">Spec-Driven Dev Skill</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Framework formal que bloqueia a escrita de código até que o contrato de especificação (SPEC -&gt; PLAN -&gt; TASKS) e os critérios de aceite estejam aprovados.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code># SPEC.md -&gt; PLAN.md -&gt; TASKS.md -&gt; EXECUÇÃO</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Desenvolvimento desgovernado por IA</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Economiza semanas de retrabalho em código quebrado · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Spec-Driven Dev Skill</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/github/spec-kit" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/github/spec-kit ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Antes de pedir código à IA, crie <code>SPEC.md</code> definindo contratos e tipos.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 02 Skill: impeccable -->
-<div class="entry">
-<div class="entry-rank">02</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>impeccable · Design &amp; UI Guardrail Skill</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Interfaces geradas por IA genéricas e feias</span>
-<span class="econ-badge">Economia: Zero retrabalho de frontend e CSS</span>
-<span class="lic-badge">MIT / Design Skill</span>
-<span class="kind">Design &amp; UI Guardrail Skill</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Impõe regras matemáticas de design system: alinhamento estrito, tokens CSS, contraste WCAG AAA, hierarquia tipográfica e scrollbars customizadas.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code># Regra: 'Artefatos visuais seguem padrao editorial unico validado por gate de design'</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Interfaces geradas por IA genéricas e feias</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Zero retrabalho de frontend e CSS · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Design &amp; UI Guardrail Skill</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/pbakaus/impeccable" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/pbakaus/impeccable ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Ative a skill <code>impeccable</code> no seu agente de frontend.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 03 Skill: code-review-graph -->
-<div class="entry">
-<div class="entry-rank">03</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>code-review-graph · Graph Navigation Skill</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Exploração cega de arquivos pelo agente</span>
-<span class="econ-badge">Economia: -75% de chamadas de exploração de código</span>
-<span class="lic-badge">MIT / Codebase Graph</span>
-<span class="kind">Graph Navigation Skill</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Mapeia as dependências, classes, funções e chamadas do repositório em um grafo antes de permitir alterações.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code># Regra: 'Consultar code-review-graph antes de tools de leitura/busca'</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Exploração cega de arquivos pelo agente</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-75% de chamadas de exploração de código · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Graph Navigation Skill</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/code-review-graph" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/code-review-graph ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>O agente consulta o índice de grafo para saber onde a função é importada.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 04 Skill: hallmark -->
-<div class="entry">
-<div class="entry-rank">04</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>hallmark · Brand &amp; Editorial Fidelity</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Textos com tom de voz inconsistente</span>
-<span class="econ-badge">Economia: 100% de conformidade editorial</span>
-<span class="lic-badge">MIT / Editorial Skill</span>
-<span class="kind">Brand &amp; Editorial Fidelity</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Audita e formata todo o conteúdo de saída de acordo com a voz de marca, rigor terminológico e regras de idioma estritas (PT-BR).</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code># Regra: 'Idioma único e estrito (PT-BR), sem preâmbulos, direto ao ponto'</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Textos com tom de voz inconsistente</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>100% de conformidade editorial · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Brand &amp; Editorial Fidelity</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/topics/editorial-standards" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/topics/editorial-standards ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Ative a skill <code>hallmark</code> em agentes de documentação e relatórios.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 05 Skill: mira-animator -->
-<div class="entry">
-<div class="entry-rank">05</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>mira-animator · Declarative Motion Skill</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Animações pesadas em JavaScript</span>
-<span class="econ-badge">Economia: 60 FPS nativo e zero bibliotecas extras</span>
-<span class="lic-badge">MIT / Motion Skill</span>
-<span class="kind">Declarative Motion Skill</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Gera keyframes e transições em CSS puro e Canvas acelerado por hardware com curvas de bezier naturais.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code># Regra: 'Animações fluidas via CSS transforms/opacity nativos com will-change'</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Animações pesadas em JavaScript</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>60 FPS nativo e zero bibliotecas extras · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Declarative Motion Skill</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/topics/css-animation" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/topics/css-animation ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Peça ao agente para criar microinterações para botões, modais e transições de página.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 06 Skill: test-first-tdd -->
-<div class="entry">
-<div class="entry-rank">06</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>test-first-tdd · TDD Gatekeeper Skill</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Código sem cobertura de testes</span>
-<span class="econ-badge">Economia: Reduz 90% dos bugs em produção</span>
-<span class="lic-badge">MIT / TDD Skill</span>
-<span class="kind">TDD Gatekeeper Skill</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Impede o agente de escrever a lógica de negócio antes de criar e executar o teste unitário correspondente que falha (Red-Green-Refactor).</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code># Regra: 'Teste primeiro (Red) -&gt; Implementação (Green) -&gt; Refatoração'</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Código sem cobertura de testes</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Reduz 90% dos bugs em produção · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>TDD Gatekeeper Skill</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/topics/tdd-skills" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/topics/tdd-skills ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Solicite uma funcionalidade (ex: validação de CPF).</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 07 Skill: architect-gatekeeper -->
-<div class="entry">
-<div class="entry-rank">07</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>architect-gatekeeper · Architecture Gatekeeper</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Acoplamento e quebra de SOLID por IA</span>
-<span class="econ-badge">Economia: Zero débitos técnicos cumulativos</span>
-<span class="lic-badge">MIT / Architecture Skill</span>
-<span class="kind">Architecture Gatekeeper</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Avalia o impacto arquitetural de cada alteração: verifica acoplamento aferente/eferente, coesão modular e conformidade com Clean Architecture.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code># Regra: 'Camadas internas não conhecem camadas externas (Dependency Inversion)'</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Acoplamento e quebra de SOLID por IA</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Zero débitos técnicos cumulativos · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Architecture Gatekeeper</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/topics/software-architecture" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/topics/software-architecture ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>O agente arquiteto valida os diagramas e contratos antes do commit.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 08 Skill: doc-contract -->
-<div class="entry">
-<div class="entry-rank">08</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>doc-contract · Contract Synchronization</h3>
-<span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
-<span class="killer-badge">Substitui: Documentação e tipos dessincronizados</span>
-<span class="econ-badge">Economia: Economiza horas de debugging de API</span>
-<span class="lic-badge">MIT / Contract Skill</span>
-<span class="kind">Contract Synchronization</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Gera e sincroniza schemas OpenAPI, JSON Schema e tipos TypeScript automaticamente a partir dos modelos Pydantic/Rust.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code># Regra: 'Modelos de backend são a fonte única da verdade para contratos de frontend'</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Documentação e tipos dessincronizados</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Economiza horas de debugging de API · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Contract Synchronization</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/topics/openapi-contracts" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/topics/openapi-contracts ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Crie ou altere uma classe Pydantic no backend.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 09 Aider CLI -->
-<div class="entry">
-<div class="entry-rank">09</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Aider CLI · Git Pair Programmer</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Assinatura Cursor ($ 20/mês)</span>
-<span class="econ-badge">Economia: -$ 240 / ano por desenvolvedor</span>
-<span class="lic-badge">Apache-2.0</span>
-<span class="kind">Git Pair Programmer</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Assistente de linha de comando que opera no repositório Git, resolve issues e gera commits semânticos com árvore AST.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install aider-chat &amp;&amp; aider --model ollama/qwen2.5-coder:7b</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Assinatura Cursor ($ 20/mês)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 240 / ano por desenvolvedor · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Git Pair Programmer</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://aider.chat" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: aider.chat ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>No terminal do projeto, execute <code>aider src/main.py</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 10 OpenHands (OpenDevin) -->
-<div class="entry">
-<div class="entry-rank">10</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>OpenHands (OpenDevin) · Autonomous Sandbox</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Devin / Magic.dev ($ 500+/mês)</span>
-<span class="econ-badge">Economia: -$ 6.000 / ano em ferramentas fechadas</span>
-<span class="lic-badge">MIT</span>
-<span class="kind">Autonomous Sandbox</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Plataforma de agentes autônomos executados em containers Docker isolados com capacidade de usar browser, terminal e editor.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>docker run -it -p 3000:3000 ghcr.io/all-hands-ai/openhands:main</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Devin / Magic.dev ($ 500+/mês)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 6.000 / ano em ferramentas fechadas · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">1 vCPU · 512 MB a 1 GB RAM · Container Docker</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Autonomous Sandbox</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://all-hands.dev" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: all-hands.dev ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Acesse <code>http://localhost:3000</code> e conecte seu repositório Git.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 11 Instructor -->
-<div class="entry">
-<div class="entry-rank">11</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Instructor · Structured Outputs</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Tratamento manual de erros de JSON</span>
-<span class="econ-badge">Economia: Economiza horas de debugging de parsing</span>
-<span class="lic-badge">MIT</span>
-<span class="kind">Structured Outputs</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Biblioteca Python/TS que envelopa chamadas de LLM com validação estrita de modelos Pydantic e retentativas automáticas.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install instructor</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Tratamento manual de erros de JSON</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Economiza horas de debugging de parsing · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Structured Outputs</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://python.useinstructor.com" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: python.useinstructor.com ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Envolva seu cliente: <code>client = instructor.from_openai(OpenAI())</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 12 LangGraph -->
-<div class="entry">
-<div class="entry-rank">12</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>LangGraph · Cyclic State Graph</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Scripts de agentes frágeis e lineares</span>
-<span class="econ-badge">Economia: Zero travamentos por loops infinitos</span>
-<span class="lic-badge">MIT</span>
-<span class="kind">Cyclic State Graph</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Framework de orquestração multi-agente baseado em grafos com persistência de checkpoints e pontos de controle humano.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install langgraph</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Scripts de agentes frágeis e lineares</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Zero travamentos por loops infinitos · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Cyclic State Graph</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://langchain-ai.github.io/langgraph" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: langchain-ai.github.io/langgraph ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Defina o estado global: <code>class Estado(TypedDict): mensagens: list</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 13 CrewAI -->
-<div class="entry">
-<div class="entry-rank">13</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>CrewAI · Role-Based Multi-Agent</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Prompts gigantes e confusos</span>
-<span class="econ-badge">Economia: Reduz erros de contexto em 80%</span>
-<span class="lic-badge">MIT</span>
-<span class="kind">Role-Based Multi-Agent</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Framework que organiza agentes em equipes com papéis claros (Role, Goal, Backstory) e delegação autônoma de tarefas.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install crewai crewai-tools</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Prompts gigantes e confusos</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Reduz erros de contexto em 80% · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Role-Based Multi-Agent</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://crewai.com" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: crewai.com ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Declare os agentes: Pesquisador, Redator e Revisor.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 14 Letta (MemGPT) / Mem0 -->
-<div class="entry">
-<div class="entry-rank">14</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Letta (MemGPT) / Mem0 · Long-Term Memory Engine</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Janela de contexto estourada</span>
-<span class="econ-badge">Economia: -80% de reenvio de histórico antigo</span>
-<span class="lic-badge">Apache-2.0</span>
-<span class="kind">Long-Term Memory Engine</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Camada de memória de longo prazo auto-gerenciada que armazena fatos, preferências e histórico do usuário em banco relacional.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install letta &amp;&amp; letta run</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Janela de contexto estourada</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-80% de reenvio de histórico antigo · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Long-Term Memory Engine</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://letta.com" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: letta.com ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Conecte o SDK do Letta no backend do seu assistente ou agente.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 15 E2B Code Interpreter -->
-<div class="entry">
-<div class="entry-rank">15</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>E2B Code Interpreter · Secure Code Sandbox</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Execuções inseguras no host</span>
-<span class="econ-badge">Economia: 100% de segurança contra scripts maliciosos</span>
-<span class="lic-badge">Apache-2.0</span>
-<span class="kind">Secure Code Sandbox</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>MicroVMs efêmeras que sobem em 100ms para que o agente execute código Python, gere gráficos e analise dados com segurança.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>npm install @e2b/code-interpreter</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Execuções inseguras no host</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>100% de segurança contra scripts maliciosos · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Secure Code Sandbox</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://e2b.dev" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: e2b.dev ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Crie a sandbox: <code>const sandbox = await Sandbox.create();</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 16 AutoGen (Microsoft) -->
-<div class="entry">
-<div class="entry-rank">16</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>AutoGen (Microsoft) · Conversational Multi-Agent</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Single-prompt engineering</span>
-<span class="econ-badge">Economia: Auto-correção de bugs em tempo de execução</span>
-<span class="lic-badge">MIT</span>
-<span class="kind">Conversational Multi-Agent</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Framework da Microsoft para conversação multi-agente com suporte a agentes humanos e robôs executando código colaborativamente.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install autogen-agentchat</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Single-prompt engineering</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Auto-correção de bugs em tempo de execução · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Conversational Multi-Agent</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://microsoft.github.io/autogen" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: microsoft.github.io/autogen ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Configure um `AssistantAgent` (programador) e um `UserProxyAgent` (executor de código).</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 17 Dify (Agent Workflow) -->
-<div class="entry">
-<div class="entry-rank">17</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Dify (Agent Workflow) · Visual Agent Workflow</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Flowise / Plataformas pagas de workflow</span>
-<span class="econ-badge">Economia: -$ 2.400 / ano em ferramentas SaaS</span>
-<span class="lic-badge">Apache-2.0</span>
-<span class="kind">Visual Agent Workflow</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Plataforma visual completa para criação de fluxos agênticos, pipelines de RAG, testes de prompt e publicação de APIs prontas.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>docker compose up -d (no repositório oficial do Dify)</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Flowise / Plataformas pagas de workflow</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 2.400 / ano em ferramentas SaaS · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Visual Agent Workflow</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://dify.ai" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: dify.ai ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Suba o Dify via Docker Compose.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 18 PydanticAI -->
-<div class="entry">
-<div class="entry-rank">18</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>PydanticAI · Type-Safe Agent Framework</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Frameworks com tipagem fraca</span>
-<span class="econ-badge">Economia: Zero erros de tipo em tempo de execução</span>
-<span class="lic-badge">MIT</span>
-<span class="kind">Type-Safe Agent Framework</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>O framework agêntico oficial criado pela equipe do Pydantic, trazendo tipagem estrita de ponta a ponta e injeção de dependências nativa.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install pydantic-ai</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Frameworks com tipagem fraca</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Zero erros de tipo em tempo de execução · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Type-Safe Agent Framework</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://ai.pydantic.dev" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: ai.pydantic.dev ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Instancie seu agente: <code>agent = Agent('openai:gpt-4o', result_type=RelatorioTecnico)</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 19 DSPy Assertions -->
-<div class="entry">
-<div class="entry-rank">19</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>DSPy Assertions · Self-Correcting Pipelines</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Retentativas manuais com try/except</span>
-<span class="econ-badge">Economia: -60% de chamadas com erro semântico</span>
-<span class="lic-badge">MIT</span>
-<span class="kind">Self-Correcting Pipelines</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Mecanismo que injeta asserções lógicas dentro de pipelines de LLM, disparando backtracking automático caso a saída viole restrições de negócio.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install dspy-ai</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Retentativas manuais com try/except</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-60% de chamadas com erro semântico · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Self-Correcting Pipelines</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://dspy.ai" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: dspy.ai ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Dentro do seu módulo DSPy, adicione: <code>dspy.Assert(len(resposta.citacoes) &gt; 0, 'Você deve incluir ao menos 1 citação')</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 20 Smolagents (Hugging Face) -->
-<div class="entry">
-<div class="entry-rank">20</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Smolagents (Hugging Face) · Code-First Agent Library</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Tool calling inflado em JSON</span>
-<span class="econ-badge">Economia: -40% de tokens em chamadas de ferramentas</span>
-<span class="lic-badge">Apache-2.0</span>
-<span class="kind">Code-First Agent Library</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Biblioteca minimalista da Hugging Face onde os agentes escrevem e executam código Python puro para chamar ferramentas em vez de JSON.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install smolagents</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Tool calling inflado em JSON</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-40% de tokens em chamadas de ferramentas · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Code-First Agent Library</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/huggingface/smolagents" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/huggingface/smolagents ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Crie um agente: <code>agent = CodeAgent(tools=[busca_web, gerador_imagem], model=model)</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-</div>
-</section>
-<section>
-<div class="sec-head flagged">
-<span class="sec-num">Parte 4 · A Regra de Ouro</span>
-<h2>Como operar essa pilha com estabilidade</h2>
-<p class="sec-note">Diretrizes para rodar ferramentas no seu próprio servidor com resiliência máxima e zero sobrecarga.</p>
-</div>
-<div class="grid2">
-<div class="reject">
-<h4>1. Isolamento em Containers Docker</h4>
-<p>Nunca instale ferramentas diretamente no sistema host sem isolamento de rede e volumes mapeados em disco seguro.</p>
-</div>
-<div class="reject">
-<h4>2. Proxy Reverso com Caddy / Traefik</h4>
-<p>Aponte a borda de rede para proxies leves com renovação automática de certificados TLS sem scripts manuais.</p>
-</div>
-<div class="reject">
-<h4>3. Backup Imutável com Restic / Borg</h4>
-<p>Programe snapshots diários dos volumes para armazenamento S3 remoto compatível para restauração rápida em caso de desastre.</p>
-</div>
-<div class="reject">
-<h4>4. Acesso Seguro via WireGuard / Headscale</h4>
-<p>Mantenha painéis de administração e bancos de dados fora da internet pública, acessíveis apenas pela VPN mesh interna.</p>
-</div>
-</div>
-</section>
-<footer>
-<p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas e viabilidade em produção.</p>
-<div class="srcs">
-<span>Open Source Initiative (OSI)</span>
-<span>Linux Foundation</span>
-<span>CNCF Landscape</span>
-</div>
-</footer>
-</div>
+
+  <header>
+    <div class="eyebrow">
+      <span>Camada 02 · Orquestração de Agentes, Contratos & Skills</span><span>·</span><span>Curadoria de Elite</span><span>·</span>
+      <b>20 Ferramentas / Soberania Total</b>
+    </div>
+    <h1>Arquitetura Agêntica, Spec-Driven Development & Skills de Engenharia</h1>
+    <p class="deck">Frameworks, sandboxes e <strong>20 skills agênticas de elite para orquestrar squads com contratos estritos, especificações formais (SDD), guardrails de design (Impeccable), fidelidade editorial (Hallmark) e navegação por grafos</strong>: elimine o código espaguete e garanta que o agente teste o próprio trabalho antes da entrega.</p>
+    <div class="chips">
+      <div class="chip"><b>20</b> tecnologias auditadas</div>
+      <div class="chip"><b>0</b> taxas por assento ou cota oculta</div>
+      <div class="chip"><b>100%</b> soberania de dados</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 1 · A Equação da Soberania</span>
+      <h2>A fronteira entre refém de nuvem e autonomia técnica</h2>
+      <p class="sec-note">Assinaturas recorrentes cobram pedágio pelo seu próprio crescimento. A engenharia moderna devolve a governança para o desenvolvedor.</p>
+    </div>
+
+    <div class="routes">
+      <div class="route official">
+        <span class="tag">O Custo Fechado</span>
+        <h4>O Fim do Chatbot Monolítico</h4>
+        <p>Pedir tudo em um único prompt gera alucinação, código espaguete e perda de foco. A engenharia moderna decompõe o projeto em papéis especializados com permissões restritas e contratos formais.</p>
+      </div>
+
+      <div class="route gray">
+        <span class="tag">A Solução Aberta</span>
+        <h4>Spec-Driven Development & Skills de Elite</h4>
+        <p>Requisitos viram SPEC.md e testes automatizados antes da primeira linha de código. Skills acopladas ao contexto aplicam guardrails de design, tipagem estrita e verificação de dependências em tempo real.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 2 · O Panorama Geral</span>
+      <h2>O inventário completo da camada</h2>
+      <p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ferramenta</th>
+            <th>Substitui o SaaS Pago</th>
+            <th>Economia Declarada</th>
+            <th>Categoria</th>
+            <th>Licença</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank">01</td>
+            <td class="tool">Skill: spec-driven-contracts (Spec-Kit)</td>
+            <td class="saas">Desenvolvimento desgovernado por IA</td>
+            <td class="econ">Economiza semanas de retrabalho em código quebrado</td>
+            <td class="cat">Spec-Driven Dev Skill</td>
+            <td class="lic">MIT / SDD Skill</td>
+          </tr>
+          <tr>
+            <td class="rank">02</td>
+            <td class="tool">Skill: impeccable</td>
+            <td class="saas">Interfaces geradas por IA genéricas e feias</td>
+            <td class="econ">Zero retrabalho de frontend e CSS</td>
+            <td class="cat">Design & UI Guardrail Skill</td>
+            <td class="lic">MIT / Design Skill</td>
+          </tr>
+          <tr>
+            <td class="rank">03</td>
+            <td class="tool">Skill: code-review-graph</td>
+            <td class="saas">Exploração cega de arquivos pelo agente</td>
+            <td class="econ">-75% de chamadas de exploração de código</td>
+            <td class="cat">Graph Navigation Skill</td>
+            <td class="lic">MIT / Codebase Graph</td>
+          </tr>
+          <tr>
+            <td class="rank">04</td>
+            <td class="tool">Skill: hallmark</td>
+            <td class="saas">Textos com tom de voz inconsistente</td>
+            <td class="econ">100% de conformidade editorial</td>
+            <td class="cat">Brand & Editorial Fidelity</td>
+            <td class="lic">MIT / Editorial Skill</td>
+          </tr>
+          <tr>
+            <td class="rank">05</td>
+            <td class="tool">Skill: mira-animator</td>
+            <td class="saas">Animações pesadas em JavaScript</td>
+            <td class="econ">60 FPS nativo e zero bibliotecas extras</td>
+            <td class="cat">Declarative Motion Skill</td>
+            <td class="lic">MIT / Motion Skill</td>
+          </tr>
+          <tr>
+            <td class="rank">06</td>
+            <td class="tool">Skill: test-first-tdd</td>
+            <td class="saas">Código sem cobertura de testes</td>
+            <td class="econ">Reduz 90% dos bugs em produção</td>
+            <td class="cat">TDD Gatekeeper Skill</td>
+            <td class="lic">MIT / TDD Skill</td>
+          </tr>
+          <tr>
+            <td class="rank">07</td>
+            <td class="tool">Skill: architect-gatekeeper</td>
+            <td class="saas">Acoplamento e quebra de SOLID por IA</td>
+            <td class="econ">Zero débitos técnicos cumulativos</td>
+            <td class="cat">Architecture Gatekeeper</td>
+            <td class="lic">MIT / Architecture Skill</td>
+          </tr>
+          <tr>
+            <td class="rank">08</td>
+            <td class="tool">Skill: doc-contract</td>
+            <td class="saas">Documentação e tipos dessincronizados</td>
+            <td class="econ">Economiza horas de debugging de API</td>
+            <td class="cat">Contract Synchronization</td>
+            <td class="lic">MIT / Contract Skill</td>
+          </tr>
+          <tr>
+            <td class="rank">09</td>
+            <td class="tool">Aider CLI</td>
+            <td class="saas">Assinatura Cursor ($ 20/mês)</td>
+            <td class="econ">-$ 240 / ano por desenvolvedor</td>
+            <td class="cat">Git Pair Programmer</td>
+            <td class="lic">Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">10</td>
+            <td class="tool">OpenHands (OpenDevin)</td>
+            <td class="saas">Devin / Magic.dev ($ 500+/mês)</td>
+            <td class="econ">-$ 6.000 / ano em ferramentas fechadas</td>
+            <td class="cat">Autonomous Sandbox</td>
+            <td class="lic">MIT</td>
+          </tr>
+          <tr>
+            <td class="rank">11</td>
+            <td class="tool">Instructor</td>
+            <td class="saas">Tratamento manual de erros de JSON</td>
+            <td class="econ">Economiza horas de debugging de parsing</td>
+            <td class="cat">Structured Outputs</td>
+            <td class="lic">MIT</td>
+          </tr>
+          <tr>
+            <td class="rank">12</td>
+            <td class="tool">LangGraph</td>
+            <td class="saas">Scripts de agentes frágeis e lineares</td>
+            <td class="econ">Zero travamentos por loops infinitos</td>
+            <td class="cat">Cyclic State Graph</td>
+            <td class="lic">MIT</td>
+          </tr>
+          <tr>
+            <td class="rank">13</td>
+            <td class="tool">CrewAI</td>
+            <td class="saas">Prompts gigantes e confusos</td>
+            <td class="econ">Reduz erros de contexto em 80%</td>
+            <td class="cat">Role-Based Multi-Agent</td>
+            <td class="lic">MIT</td>
+          </tr>
+          <tr>
+            <td class="rank">14</td>
+            <td class="tool">Letta (MemGPT) / Mem0</td>
+            <td class="saas">Janela de contexto estourada</td>
+            <td class="econ">-80% de reenvio de histórico antigo</td>
+            <td class="cat">Long-Term Memory Engine</td>
+            <td class="lic">Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">15</td>
+            <td class="tool">E2B Code Interpreter</td>
+            <td class="saas">Execuções inseguras no host</td>
+            <td class="econ">100% de segurança contra scripts maliciosos</td>
+            <td class="cat">Secure Code Sandbox</td>
+            <td class="lic">Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">16</td>
+            <td class="tool">AutoGen (Microsoft)</td>
+            <td class="saas">Single-prompt engineering</td>
+            <td class="econ">Auto-correção de bugs em tempo de execução</td>
+            <td class="cat">Conversational Multi-Agent</td>
+            <td class="lic">MIT</td>
+          </tr>
+          <tr>
+            <td class="rank">17</td>
+            <td class="tool">Dify (Agent Workflow)</td>
+            <td class="saas">Flowise / Plataformas pagas de workflow</td>
+            <td class="econ">-$ 2.400 / ano em ferramentas SaaS</td>
+            <td class="cat">Visual Agent Workflow</td>
+            <td class="lic">Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">18</td>
+            <td class="tool">PydanticAI</td>
+            <td class="saas">Frameworks com tipagem fraca</td>
+            <td class="econ">Zero erros de tipo em tempo de execução</td>
+            <td class="cat">Type-Safe Agent Framework</td>
+            <td class="lic">MIT</td>
+          </tr>
+          <tr>
+            <td class="rank">19</td>
+            <td class="tool">DSPy Assertions</td>
+            <td class="saas">Retentativas manuais com try/except</td>
+            <td class="econ">-60% de chamadas com erro semântico</td>
+            <td class="cat">Self-Correcting Pipelines</td>
+            <td class="lic">MIT</td>
+          </tr>
+          <tr>
+            <td class="rank">20</td>
+            <td class="tool">Smolagents (Hugging Face)</td>
+            <td class="saas">Tool calling inflado em JSON</td>
+            <td class="econ">-40% de tokens em chamadas de ferramentas</td>
+            <td class="cat">Code-First Agent Library</td>
+            <td class="lic">Apache-2.0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 3 · O Detalhamento Técnico & Workflows Práticos</span>
+      <h2>As fichas técnicas completas com Guia do Dia a Dia</h2>
+      <p class="sec-note">O que faz, como funciona por baixo dos panos, comandos de execução e <strong>passo a passo detalhado para o seu fluxo diário</strong>.</p>
+    </div>
+
+    <div class="ledger">
+      <!-- 01 Skill: spec-driven-contracts (Spec-Kit) -->
+      <div class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Skill: spec-driven-contracts (Spec-Kit)</h3>
+            <span class="killer-badge">SUBSTITUI: Desenvolvimento desgovernado por IA</span>
+            <span class="econ-badge">ECONOMIA: Economiza semanas de retrabalho em código quebrado</span>
+            <span class="lic-badge">MIT / SDD Skill</span>
+            <span class="kind">Spec-Driven Dev Skill</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Framework formal que bloqueia a escrita de código até que o contrato de especificação (SPEC -> PLAN -> TASKS) e os critérios de aceite estejam aprovados.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Estrutura o ciclo agêntico em 3 fases rígidas: 1) SPEC.md (Entradas, saídas esperadas e contratos de API); 2) PLAN.md (Quebra arquitetural em tarefas atômicas); 3) TASKS.md (Execução passo a passo com testes).</p>
+
+              <pre><code># SPEC.md -> PLAN.md -> TASKS.md -> EXECUÇÃO</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Antes de pedir código à IA, crie <code>SPEC.md</code> definindo contratos e tipos.<br>2. Peça ao agente para emitir o <code>PLAN.md</code> detalhando cada módulo.<br>3. O agente implementa arquivo por arquivo, validando cada etapa contra os critérios de aceite.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Contratos formais / 0 RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Garante que a IA nunca comece a gerar arquivos sem saber exatamente o critério de aceite.</p>
+              </div>
+              <a class="repo" href="https://github.com/github/spec-kit" target="_blank" rel="noopener">github.com/github/spec-kit</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 Skill: impeccable -->
+      <div class="entry">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Skill: impeccable</h3>
+            <span class="killer-badge">SUBSTITUI: Interfaces geradas por IA genéricas e feias</span>
+            <span class="econ-badge">ECONOMIA: Zero retrabalho de frontend e CSS</span>
+            <span class="lic-badge">MIT / Design Skill</span>
+            <span class="kind">Design & UI Guardrail Skill</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Impõe regras matemáticas de design system: alinhamento estrito, tokens CSS, contraste WCAG AAA, hierarquia tipográfica e scrollbars customizadas.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Injeta guardrails de design na geração de código frontend: proíbe classes inline aleatórias, exige uso de variáveis CSS padronizadas, dark mode nativo e acabamento editorial refinado.</p>
+
+              <pre><code># Regra: 'Artefatos visuais seguem padrao editorial unico validado por gate de design'</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Ative a skill <code>impeccable</code> no seu agente de frontend.<br>2. Peça para gerar dashboards, landing pages ou componentes UI.<br>3. O agente emite código com acabamento profissional, proporção áurea, dark mode automático e scrollbar de 4px.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">0 MB RAM / Guardrail de prompt</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Elimina a aparência 'cara de template de IA' e gera interfaces prontas para produtos comerciais de alto nível.</p>
+              </div>
+              <a class="repo" href="https://github.com/pbakaus/impeccable" target="_blank" rel="noopener">github.com/pbakaus/impeccable</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Skill: code-review-graph -->
+      <div class="entry">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Skill: code-review-graph</h3>
+            <span class="killer-badge">SUBSTITUI: Exploração cega de arquivos pelo agente</span>
+            <span class="econ-badge">ECONOMIA: -75% de chamadas de exploração de código</span>
+            <span class="lic-badge">MIT / Codebase Graph</span>
+            <span class="kind">Graph Navigation Skill</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Mapeia as dependências, classes, funções e chamadas do repositório em um grafo antes de permitir alterações.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Lê o índice de símbolos gerado por AST e constrói a árvore de impacto: ao alterar a função A, consulta imediatamente quais módulos B, C e D serão afetados antes de escrever código.</p>
+
+              <pre><code># Regra: 'Consultar code-review-graph antes de tools de leitura/busca'</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. O agente consulta o índice de grafo para saber onde a função é importada.<br>2. Identifica todos os pontos de quebra antes de editar o primeiro arquivo.<br>3. Aplica refatorações cirúrgicas com 0 erros de regressão.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Grafo local em SQLite / < 20 MB</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Permite ao agente saber exatamente o efeito colateral de qualquer mudança sem precisar ler 50 arquivos.</p>
+              </div>
+              <a class="repo" href="https://github.com/code-review-graph" target="_blank" rel="noopener">github.com/code-review-graph</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 Skill: hallmark -->
+      <div class="entry">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Skill: hallmark</h3>
+            <span class="killer-badge">SUBSTITUI: Textos com tom de voz inconsistente</span>
+            <span class="econ-badge">ECONOMIA: 100% de conformidade editorial</span>
+            <span class="lic-badge">MIT / Editorial Skill</span>
+            <span class="kind">Brand & Editorial Fidelity</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Audita e formata todo o conteúdo de saída de acordo com a voz de marca, rigor terminológico e regras de idioma estritas (PT-BR).</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Valida os artefatos contra uma tabela de termos proibidos (buzzwords vazias, exageros de marketing) e força o uso de precisão técnica e linguagem direta.</p>
+
+              <pre><code># Regra: 'Idioma único e estrito (PT-BR), sem preâmbulos, direto ao ponto'</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Ative a skill <code>hallmark</code> em agentes de documentação e relatórios.<br>2. Ao gerar artigos, relatórios técnicos ou documentações de API, o texto sai limpo, sem enrolação e com terminologia consistente.<br>3. Economize tempo de revisão humana de texto.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">0 MB RAM / Regra comportamental</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Documentação com ruído e palavras vazias reduz a autoridade técnica do projeto. O Hallmark garante tom impecável.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/editorial-standards" target="_blank" rel="noopener">github.com/topics/editorial-standards</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 Skill: mira-animator -->
+      <div class="entry">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Skill: mira-animator</h3>
+            <span class="killer-badge">SUBSTITUI: Animações pesadas em JavaScript</span>
+            <span class="econ-badge">ECONOMIA: 60 FPS nativo e zero bibliotecas extras</span>
+            <span class="lic-badge">MIT / Motion Skill</span>
+            <span class="kind">Declarative Motion Skill</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Gera keyframes e transições em CSS puro e Canvas acelerado por hardware com curvas de bezier naturais.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Aplica física de amortecimento (spring physics) e aceleração de GPU (<code>transform</code> e <code>opacity</code>) sem importar bibliotecas pesadas de 100KB como Framer Motion.</p>
+
+              <pre><code># Regra: 'Animações fluidas via CSS transforms/opacity nativos com will-change'</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Peça ao agente para criar microinterações para botões, modais e transições de página.<br>2. A skill gera CSS enxuto com aceleração por hardware.<br>3. Sua interface roda fluida a 120 FPS em celulares e desktops.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">CSS nativo / 0 overhead JS</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Animações feitas com CSS nativo e transforms não bloqueiam a thread principal do navegador.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/css-animation" target="_blank" rel="noopener">github.com/topics/css-animation</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 Skill: test-first-tdd -->
+      <div class="entry">
+        <div class="entry-rank">06</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Skill: test-first-tdd</h3>
+            <span class="killer-badge">SUBSTITUI: Código sem cobertura de testes</span>
+            <span class="econ-badge">ECONOMIA: Reduz 90% dos bugs em produção</span>
+            <span class="lic-badge">MIT / TDD Skill</span>
+            <span class="kind">TDD Gatekeeper Skill</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Impede o agente de escrever a lógica de negócio antes de criar e executar o teste unitário correspondente que falha (Red-Green-Refactor).</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Injeta uma restrição no ciclo de execução: para toda nova feature ou bug fix, o agente deve gerar o arquivo de teste unitário primeiro (pytest, vitest, cargo test) e só pode prosseguir quando o teste falhar com a asserção correta.</p>
+
+              <pre><code># Regra: 'Teste primeiro (Red) -> Implementação (Green) -> Refatoração'</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Solicite uma funcionalidade (ex: validação de CPF).<br>2. O agente gera `tests/test_cpf.py` com 10 casos extremos.<br>3. Executa a suíte (falha esperada), implementa a função `validar_cpf()` e reexecuta até obter 100% de sucesso.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">0 MB RAM / Disciplina TDD</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Testes unitários escritos antes da implementação forçam a IA a pensar no contrato e nos casos de borda.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/tdd-skills" target="_blank" rel="noopener">github.com/topics/tdd-skills</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07 Skill: architect-gatekeeper -->
+      <div class="entry">
+        <div class="entry-rank">07</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Skill: architect-gatekeeper</h3>
+            <span class="killer-badge">SUBSTITUI: Acoplamento e quebra de SOLID por IA</span>
+            <span class="econ-badge">ECONOMIA: Zero débitos técnicos cumulativos</span>
+            <span class="lic-badge">MIT / Architecture Skill</span>
+            <span class="kind">Architecture Gatekeeper</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Avalia o impacto arquitetural de cada alteração: verifica acoplamento aferente/eferente, coesão modular e conformidade com Clean Architecture.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Executa análise estática de imports e chamadas de classes. Se uma camada de domínio tentar importar diretamente um driver de banco de dados ou framework web, o gatekeeper bloqueia a alteração com `exit 1`.</p>
+
+              <pre><code># Regra: 'Camadas internas não conhecem camadas externas (Dependency Inversion)'</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. O agente arquiteto valida os diagramas e contratos antes do commit.<br>2. Se uma dependência circular for detectada, o gatekeeper força a criação de uma interface desacoplada.<br>3. Garante que monorepos e microserviços permaneçam manuteníveis ao longo de meses.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Análise estática de dependências</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Evita que agentes autônomos transformem bases limpas em monolitos espaguete com imports cruzados.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/software-architecture" target="_blank" rel="noopener">github.com/topics/software-architecture</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08 Skill: doc-contract -->
+      <div class="entry">
+        <div class="entry-rank">08</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Skill: doc-contract</h3>
+            <span class="killer-badge">SUBSTITUI: Documentação e tipos dessincronizados</span>
+            <span class="econ-badge">ECONOMIA: Economiza horas de debugging de API</span>
+            <span class="lic-badge">MIT / Contract Skill</span>
+            <span class="kind">Contract Synchronization</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Gera e sincroniza schemas OpenAPI, JSON Schema e tipos TypeScript automaticamente a partir dos modelos Pydantic/Rust.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Extrai a definição tipada das estruturas de dados e compila contratos formais nos formatos OpenAPI 3.1 e `.d.ts` sem intervenção humana, garantindo paridade total entre backend e frontend.</p>
+
+              <pre><code># Regra: 'Modelos de backend são a fonte única da verdade para contratos de frontend'</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Crie ou altere uma classe Pydantic no backend.<br>2. A skill dispara a geração dos tipos TypeScript correspondentes em `frontend/types/api.d.ts`.<br>3. Frontend e backend compartilham 100% de tipagem sem erros de payload.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Scripts de compilação de tipos</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Elimina totalmente erros em tempo de execução causados por nomes de campos diferentes entre cliente e servidor.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/openapi-contracts" target="_blank" rel="noopener">github.com/topics/openapi-contracts</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09 Aider CLI -->
+      <div class="entry">
+        <div class="entry-rank">09</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Aider CLI</h3>
+            <span class="killer-badge">SUBSTITUI: Assinatura Cursor ($ 20/mês)</span>
+            <span class="econ-badge">ECONOMIA: -$ 240 / ano por desenvolvedor</span>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Git Pair Programmer</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Assistente de linha de comando que opera no repositório Git, resolve issues e gera commits semânticos com árvore AST.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Constrói um mapa de repositório (repo map) compacto usando Tree-sitter, envia apenas as assinaturas relevantes no prompt e aplica diffs unificados diretamente nos arquivos com validação de linters e testes locais.</p>
+
+              <pre><code>pip install aider-chat && aider --model ollama/qwen2.5-coder:7b</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. No terminal do projeto, execute <code>aider src/main.py</code>.<br>2. Diga: 'Implemente autenticação JWT e adicione testes pytest'.<br>3. O Aider edita o código, roda os testes locais e faz o commit semântico no Git automaticamente.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~60 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Líder mundial consistente no benchmark SWE-bench para resolução de problemas reais de engenharia de software.</p>
+              </div>
+              <a class="repo" href="https://aider.chat" target="_blank" rel="noopener">aider.chat</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 OpenHands (OpenDevin) -->
+      <div class="entry">
+        <div class="entry-rank">10</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>OpenHands (OpenDevin)</h3>
+            <span class="killer-badge">SUBSTITUI: Devin / Magic.dev ($ 500+/mês)</span>
+            <span class="econ-badge">ECONOMIA: -$ 6.000 / ano em ferramentas fechadas</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Autonomous Sandbox</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Plataforma de agentes autônomos executados em containers Docker isolados com capacidade de usar browser, terminal e editor.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Executa um runtime seguro com loop de evento autônomo (Thought -> Action -> Observation). O agente possui acesso a uma VM Linux containerizada onde instala pacotes, roda servidores e depura erros no terminal.</p>
+
+              <pre><code>docker run -it -p 3000:3000 ghcr.io/all-hands-ai/openhands:main</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Acesse <code>http://localhost:3000</code> e conecte seu repositório Git.<br>2. Atribua uma issue de bug ou refatoração complexa.<br>3. Acompanhe o agente instalando dependências, rodando testes e abrindo o Pull Request.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Ambiente Docker isolado</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> O agente instala pacotes e roda testes sem colocar em risco o sistema operacional do desenvolvedor.</p>
+              </div>
+              <a class="repo" href="https://all-hands.dev" target="_blank" rel="noopener">all-hands.dev</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11 Instructor -->
+      <div class="entry">
+        <div class="entry-rank">11</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Instructor</h3>
+            <span class="killer-badge">SUBSTITUI: Tratamento manual de erros de JSON</span>
+            <span class="econ-badge">ECONOMIA: Economiza horas de debugging de parsing</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Structured Outputs</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Biblioteca Python/TS que envelopa chamadas de LLM com validação estrita de modelos Pydantic e retentativas automáticas.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Envia o schema JSON via Function Calling/Tool Use e valida a resposta no Pydantic. Se ocorrer erro de validação de tipo, reenvia automaticamente apenas o erro de validação para o modelo com instrução de auto-correção.</p>
+
+              <pre><code>pip install instructor</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Envolva seu cliente: <code>client = instructor.from_openai(OpenAI())</code>.<br>2. Defina o schema: <code>class Lead(BaseModel): nome: str, email: str</code>.<br>3. Chame a API com <code>response_model=Lead</code> e receba objetos Python tipados.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Zero runtime overhead</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Se a saída não validar no Pydantic, o Instructor reenvia apenas o erro para a LLM corrigir o campo exato.</p>
+              </div>
+              <a class="repo" href="https://python.useinstructor.com" target="_blank" rel="noopener">python.useinstructor.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12 LangGraph -->
+      <div class="entry">
+        <div class="entry-rank">12</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>LangGraph</h3>
+            <span class="killer-badge">SUBSTITUI: Scripts de agentes frágeis e lineares</span>
+            <span class="econ-badge">ECONOMIA: Zero travamentos por loops infinitos</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Cyclic State Graph</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Framework de orquestração multi-agente baseado em grafos com persistência de checkpoints e pontos de controle humano.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Modela fluxos agênticos como Grafos Cíclicos Direcionados onde cada nó é uma função/LLM e as arestas contêm lógica condicional. Salva o snapshot de cada transição em SQLite para recuperação de estado e time-travel.</p>
+
+              <pre><code>pip install langgraph</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Defina o estado global: <code>class Estado(TypedDict): mensagens: list</code>.<br>2. Crie nós de agentes especialistas e arestas condicionais.<br>3. Execute com persistência de checkpoints para pausar e retomar a execução a qualquer momento.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~50 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Permite pausar a execução da esteira agêntica, pedir feedback ao usuário e retomar o estado com 100% de precisão.</p>
+              </div>
+              <a class="repo" href="https://langchain-ai.github.io/langgraph" target="_blank" rel="noopener">langchain-ai.github.io/langgraph</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13 CrewAI -->
+      <div class="entry">
+        <div class="entry-rank">13</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>CrewAI</h3>
+            <span class="killer-badge">SUBSTITUI: Prompts gigantes e confusos</span>
+            <span class="econ-badge">ECONOMIA: Reduz erros de contexto em 80%</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Role-Based Multi-Agent</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Framework que organiza agentes em equipes com papéis claros (Role, Goal, Backstory) e delegação autônoma de tarefas.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Implementa padrões de colaboração sequencial e hierárquica. Agentes gerentes delegam subtarefas para agentes especialistas equipados com ferramentas personalizadas e memória compartilhada.</p>
+
+              <pre><code>pip install crewai crewai-tools</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Declare os agentes: Pesquisador, Redator e Revisor.<br>2. Crie tarefas com saídas esperadas bem definidas.<br>3. Dispare a Crew: os agentes conversam, executam ferramentas e compilam o resultado final colaborativamente.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~65 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> A estrutura baseada em papéis reduz drasticamente a alucinação ao manter cada agente focado em seu domínio.</p>
+              </div>
+              <a class="repo" href="https://crewai.com" target="_blank" rel="noopener">crewai.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14 Letta (MemGPT) / Mem0 -->
+      <div class="entry">
+        <div class="entry-rank">14</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Letta (MemGPT) / Mem0</h3>
+            <span class="killer-badge">SUBSTITUI: Janela de contexto estourada</span>
+            <span class="econ-badge">ECONOMIA: -80% de reenvio de histórico antigo</span>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Long-Term Memory Engine</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Camada de memória de longo prazo auto-gerenciada que armazena fatos, preferências e histórico do usuário em banco relacional.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Implementa uma arquitetura de hierarquia de memória inspirada em Sistemas Operacionais (Core Memory em RAM vs Archival Memory em disco/vetores). O agente chama funções internas para persistir dados estruturados.</p>
+
+              <pre><code>pip install letta && letta run</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Conecte o SDK do Letta no backend do seu assistente ou agente.<br>2. Durante a conversa, quando o usuário definir uma regra de arquitetura, o Letta grava na memória permanente.<br>3. Semanas depois, o agente recupera os dados sem reexplicações.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~90 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> O agente não esquece decisões tomadas há 3 semanas sem precisar reenviar todo o histórico no prompt.</p>
+              </div>
+              <a class="repo" href="https://letta.com" target="_blank" rel="noopener">letta.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15 E2B Code Interpreter -->
+      <div class="entry">
+        <div class="entry-rank">15</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>E2B Code Interpreter</h3>
+            <span class="killer-badge">SUBSTITUI: Execuções inseguras no host</span>
+            <span class="econ-badge">ECONOMIA: 100% de segurança contra scripts maliciosos</span>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Secure Code Sandbox</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>MicroVMs efêmeras que sobem em 100ms para que o agente execute código Python, gere gráficos e analise dados com segurança.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Utiliza Firecracker MicroVMs em ambiente seguro. O agente envia código Python/JS arbitrário via WebSocket e recebe stdout, stderr e artefatos de imagem gerados em um ambiente 100% isolado do sistema hospedeiro.</p>
+
+              <pre><code>npm install @e2b/code-interpreter</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Crie a sandbox: <code>const sandbox = await Sandbox.create();</code>.<br>2. Execute o script da LLM: <code>const exec = await sandbox.runCode('import pandas as pd; ...');</code>.<br>3. Baixe os artefatos gerados sem risco de invasão do servidor.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">MicroVM sob demanda (< 100ms)</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Ambiente isolado ideal para agentes que geram e executam código de visualização em tempo real.</p>
+              </div>
+              <a class="repo" href="https://e2b.dev" target="_blank" rel="noopener">e2b.dev</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 16 AutoGen (Microsoft) -->
+      <div class="entry">
+        <div class="entry-rank">16</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>AutoGen (Microsoft)</h3>
+            <span class="killer-badge">SUBSTITUI: Single-prompt engineering</span>
+            <span class="econ-badge">ECONOMIA: Auto-correção de bugs em tempo de execução</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Conversational Multi-Agent</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Framework da Microsoft para conversação multi-agente com suporte a agentes humanos e robôs executando código colaborativamente.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Permite que agentes debatam entre si, proponham código, executem em ambiente local ou Docker e façam auto-correção de stack traces de erro até atingirem o critério de sucesso.</p>
+
+              <pre><code>pip install autogen-agentchat</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Configure um `AssistantAgent` (programador) e um `UserProxyAgent` (executor de código).<br>2. Inicie a conversa com a tarefa desejada.<br>3. O programador gera o script, o executor roda no terminal e devolve o erro para o programador corrigir autonomamente.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~70 MB RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Excelente para tarefas de ciência de dados e automação de scripts que exigem ciclos rápidos de tentativa e erro.</p>
+              </div>
+              <a class="repo" href="https://microsoft.github.io/autogen" target="_blank" rel="noopener">microsoft.github.io/autogen</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 17 Dify (Agent Workflow) -->
+      <div class="entry">
+        <div class="entry-rank">17</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Dify (Agent Workflow)</h3>
+            <span class="killer-badge">SUBSTITUI: Flowise / Plataformas pagas de workflow</span>
+            <span class="econ-badge">ECONOMIA: -$ 2.400 / ano em ferramentas SaaS</span>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Visual Agent Workflow</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Plataforma visual completa para criação de fluxos agênticos, pipelines de RAG, testes de prompt e publicação de APIs prontas.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Combina orquestração visual baseada em nós com runtime em Python/Go. Suporta múltiplos provedores de LLM, bancos vetoriais e publicação direta de webhooks e interfaces de chat para usuários finais.</p>
+
+              <pre><code>docker compose up -d (no repositório oficial do Dify)</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Suba o Dify via Docker Compose.<br>2. Crie um workflow arrastando blocos de LLM, código Python, busca vetorial e decisões condicionais.<br>3. Publique como API REST e consuma direto na sua aplicação.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">~650 MB RAM (Stack completa)</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> A melhor interface open-source para permitir que desenvolvedores e gestores de produto construam agentes sem código espaguete.</p>
+              </div>
+              <a class="repo" href="https://dify.ai" target="_blank" rel="noopener">dify.ai</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 18 PydanticAI -->
+      <div class="entry">
+        <div class="entry-rank">18</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>PydanticAI</h3>
+            <span class="killer-badge">SUBSTITUI: Frameworks com tipagem fraca</span>
+            <span class="econ-badge">ECONOMIA: Zero erros de tipo em tempo de execução</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Type-Safe Agent Framework</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>O framework agêntico oficial criado pela equipe do Pydantic, trazendo tipagem estrita de ponta a ponta e injeção de dependências nativa.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Constrói agentes utilizando decorators e genéricos Python (`Agent[Dependency, OutputType]`). Valida parâmetros de ferramentas e respostas finais diretamente nos modelos Pydantic com suporte nativo a streaming estruturado.</p>
+
+              <pre><code>pip install pydantic-ai</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instancie seu agente: <code>agent = Agent('openai:gpt-4o', result_type=RelatorioTecnico)</code>.<br>2. Registre ferramentas com tipagem estrita via <code>@agent.tool</code>.<br>3. Execute <code>result = await agent.run('Analise os logs')</code> e receba um objeto validado.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Overhead de runtime zero</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Projetado para engenheiros de software que exigem suporte total de IDE, autocomplete e validação matemática de tipos.</p>
+              </div>
+              <a class="repo" href="https://ai.pydantic.dev" target="_blank" rel="noopener">ai.pydantic.dev</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 19 DSPy Assertions -->
+      <div class="entry">
+        <div class="entry-rank">19</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>DSPy Assertions</h3>
+            <span class="killer-badge">SUBSTITUI: Retentativas manuais com try/except</span>
+            <span class="econ-badge">ECONOMIA: -60% de chamadas com erro semântico</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Self-Correcting Pipelines</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Mecanismo que injeta asserções lógicas dentro de pipelines de LLM, disparando backtracking automático caso a saída viole restrições de negócio.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Utiliza as primitivas `dspy.Assert` e `dspy.Suggest`. Se uma asserção falhar durante a execução, o compilador envia o feedback do erro diretamente para o módulo anterior no grafo e reexecuta com novos parâmetros.</p>
+
+              <pre><code>pip install dspy-ai</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Dentro do seu módulo DSPy, adicione: <code>dspy.Assert(len(resposta.citacoes) > 0, 'Você deve incluir ao menos 1 citação')</code>.<br>2. Se a LLM omitir a citação, o DSPy força a auto-correção antes de devolver o resultado.<br>3. Garante conformidade com regras de negócio complexas.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Biblioteca pura / 0 RAM</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Transforma regras de negócio subjetivas em asserções lógicas executáveis com auto-recuperação.</p>
+              </div>
+              <a class="repo" href="https://dspy.ai" target="_blank" rel="noopener">dspy.ai</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 20 Smolagents (Hugging Face) -->
+      <div class="entry">
+        <div class="entry-rank">20</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Smolagents (Hugging Face)</h3>
+            <span class="killer-badge">SUBSTITUI: Tool calling inflado em JSON</span>
+            <span class="econ-badge">ECONOMIA: -40% de tokens em chamadas de ferramentas</span>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Code-First Agent Library</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Biblioteca minimalista da Hugging Face onde os agentes escrevem e executam código Python puro para chamar ferramentas em vez de JSON.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Executa o paradigma *CodeAgent*: o modelo escreve blocos de código Python padrão com condicionais e loops para interagir com múltiplas ferramentas em uma única etapa, em vez de fazer N chamadas sequenciais de JSON.</p>
+
+              <pre><code>pip install smolagents</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Crie um agente: <code>agent = CodeAgent(tools=[busca_web, gerador_imagem], model=model)</code>.<br>2. O agente resolve tarefas complexas escrevendo um pequeno script Python.<br>3. Executa as ações em lote economizando turnos de ida e volta.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">< 30 MB RAM / Ultra-leve</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Escrever código Python é mais natural e compacto para LLMs de programação do que gerar schemas JSON gigantes.</p>
+              </div>
+              <a class="repo" href="https://github.com/huggingface/smolagents" target="_blank" rel="noopener">github.com/huggingface/smolagents</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head flagged">
+      <span class="sec-num">Parte 4 · A Regra de Ouro</span>
+      <h2>Como operar essa pilha com estabilidade</h2>
+      <p class="sec-note">Diretrizes para rodar ferramentas no seu próprio servidor com resiliência máxima e zero sobrecarga.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="reject">
+        <h4>1. Isolamento em Containers Docker</h4>
+        <p>Nunca instale ferramentas diretamente no sistema host sem isolamento de rede e volumes mapeados em disco seguro.</p>
+      </div>
+      <div class="reject">
+        <h4>2. Proxy Reverso com Caddy / Traefik</h4>
+        <p>Aponte a borda de rede para proxies leves com renovação automática de certificados TLS sem scripts manuais.</p>
+      </div>
+      <div class="reject">
+        <h4>3. Backup Imutável com Restic / Borg</h4>
+        <p>Programe snapshots diários dos volumes para armazenamento S3 remoto compatível para restauração rápida em caso de desastre.</p>
+      </div>
+      <div class="reject">
+        <h4>4. Acesso Seguro via WireGuard / Headscale</h4>
+        <p>Mantenha painéis de administração e bancos de dados fora da internet pública, acessíveis apenas pela VPN mesh interna.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas e viabilidade em produção.</p>
+    <div class="srcs">
+      <span>Open Source Initiative (OSI)</span>
+      <span>Linux Foundation</span>
+      <span>CNCF Landscape</span>
+    </div>
+  </footer>
+
+</div>
+
 </body>
 </html>

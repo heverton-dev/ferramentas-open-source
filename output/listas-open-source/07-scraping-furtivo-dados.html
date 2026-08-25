@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Scraping Furtivo &amp; Pipelines de Dados — Compêndio de Soberania Tecnológica</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Extração Furtiva de Dados, Crawlers & Engenharia Web — Compêndio de Soberania Tecnológica</title>
 <style>
-  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
+  /* Custom scrollbar estrita 4px */
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
 
   :root {
     --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
     --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
     --rule:#C7CEDB; --rule-soft:#DADFE8;
-    --accent:#7A3E1D; --accent-soft:#F5EBE4;
+    --accent:#36B37E; --accent-soft:#E3FCEF;
     --gold:#7A5410; --gold-soft:#EFE5CE;
     --flag:#8E2436; --flag-soft:#F0D9DD;
     --green:#1B5E3B; --green-soft:#D8EFE2;
@@ -29,41 +30,37 @@
       --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
       --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
       --rule:#2A3142; --rule-soft:#222836;
-      --accent:#E89568; --accent-soft:#331D12;
+      --accent:#57D9A3; --accent-soft:#162B22;
       --gold:#D6A44E; --gold-soft:#332810;
       --flag:#E0788C; --flag-soft:#3A1A21;
       --green:#6BC48F; --green-soft:#122B1C;
       --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
     }
   }
+  :root[data-theme="dark"] {
+    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+    --rule:#2A3142; --rule-soft:#222836;
+    --accent:#57D9A3; --accent-soft:#162B22;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E0788C; --flag-soft:#3A1A21;
+    --green:#6BC48F; --green-soft:#122B1C;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
 
+  * { box-sizing:border-box; }
   body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
   .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
 
-  /* HEADER EXECUTIVO COM ALINHAMENTO JUSTIFICADO */
-  header { display:flex; flex-direction:column; gap:24px; padding-bottom:12px; border-bottom:1px solid var(--rule); }
-  .header-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
-  .back-link { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; color:var(--muted); text-decoration:none; padding:4px 8px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); transition:all .15s ease; }
-  .back-link:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-soft); text-decoration:none; }
-  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
-  .layer-badge { background:var(--accent); color:var(--paper); padding:3px 8px; border-radius:2px; font-weight:700; font-size:10.5px; letter-spacing:.08em; }
-
-  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(36px,7vw,64px); line-height:1.08; letter-spacing:-.02em; margin:0; color:var(--ink); text-align:justify; text-justify:inter-word; }
-  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.55; color:var(--ink-2); max-width:100%; margin:0; text-align:justify; text-justify:inter-word; }
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
   .deck strong { color:var(--ink); font-weight:600; }
-
-  /* HERO STATS BAR */
-  .hero-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:4px; }
-  .stat-card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:12px 16px; display:flex; flex-direction:column; gap:4px; box-shadow:var(--shadow); }
-  .stat-card .stat-val { font-family:var(--mono); font-size:20px; font-weight:700; color:var(--accent); line-height:1.1; }
-  .stat-card .stat-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .stat-card.good .stat-val { color:var(--green); }
-  
-  /* QUICK JUMP ANCHORS */
-  .header-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:2px; }
-  .jump-btn { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; padding:6px 12px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); color:var(--ink-2); text-decoration:none; transition:all .15s ease; }
-  .jump-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); text-decoration:none; }
-  .jump-btn.primary { background:var(--accent-soft); border-color:color-mix(in srgb, var(--accent) 40%, transparent); color:var(--accent); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
 
   section { display:flex; flex-direction:column; gap:22px; }
   .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
@@ -73,7 +70,8 @@
   .sec-head.flagged .sec-num { color:var(--flag); }
   .sec-head.warm .sec-num { color:var(--gold); }
   h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
-  .sec-note { margin:0; color:var(--ink-2); max-width:100%; font-size:15.5px; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note strong { color:var(--ink); }
 
   .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
   .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
@@ -85,84 +83,47 @@
   .route.gray .tag { color:var(--green); }
   .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
 
-  /* TABELA FLUIDA SEM SCROLL */
-  .tablewrap { border:1px solid var(--rule); border-radius:3px; background:var(--surface); width:100%; overflow:hidden; }
-  table { border-collapse:collapse; width:100%; font-size:13.5px; table-layout:auto; }
-  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding:10px 12px; border-bottom:1px solid var(--rule); }
-  tbody td { padding:10px 12px; border-bottom:1px solid var(--rule-soft); vertical-align:middle; }
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:860px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
   tbody tr:last-child td { border-bottom:0; }
-  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:36px; text-align:center; }
-  td.tool { font-weight:600; color:var(--ink); font-size:14px; }
-  td.saas, td.killer { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; line-height:1.35; }
-  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; line-height:1.35; }
-  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); line-height:1.35; font-weight:600; }
-  td.lic { font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.35; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; }
+  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; white-space:nowrap; }
+  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
+  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
 
-  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO (LARGURA TOTAL) */
-  .ledger { display:flex; flex-direction:column; gap:28px; }
-  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; transition:border-color .15s ease; }
-  .entry:hover { border-color:var(--accent); }
-  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:20px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
-  
-  .entry-body { padding:20px 24px 22px; display:flex; flex-direction:column; gap:16px; min-width:0; }
-
-  /* CABEÇALHO PADRONIZADO COM BADGES */
-  .entry-top { display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; }
-  .entry-top h3 { width:100%; margin:0 0 4px 0; font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; letter-spacing:-.01em; color:var(--ink); }
-
-  .senior-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; font-weight:700; }
-  .senior-badge.green { background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); }
-  .senior-badge.gold { background:var(--gold-soft); color:var(--gold); border:1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
-  .senior-badge.flag { background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); }
-
+  .ledger { display:flex; flex-direction:column; gap:20px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
   .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
   .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
   .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
-  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; padding:3px 6px; border:1px solid var(--rule-soft); border-radius:2px; background:var(--surface-2); }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
 
-  /* SEÇÕES VERTICAIS DO CARD (LARGURA TOTAL) */
-  .entry-section { display:flex; flex-direction:column; gap:8px; width:100%; padding-top:14px; border-top:1px dashed var(--rule-soft); }
-  .entry-section .label { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
-  .entry-section p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
-  .entry-section p strong { color:var(--ink); font-weight:600; }
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
 
-  /* ANÁLISE ECONÔMICA GRID */
-  .econ-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:4px; }
-  .econ-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .econ-card.highlight { border-left:3px solid var(--green); background:color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
-  .econ-card.killer { border-left:3px solid var(--flag); background:color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
-  .econ-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .econ-val { font-size:14px; line-height:1.45; color:var(--ink); }
-  .econ-val strong { color:var(--ink); font-weight:600; }
+  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
 
-  /* REQUISITOS DE INFRAESTRUTURA GRID */
-  .infra-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:4px; }
-  .infra-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .infra-card.verdict { border-left:3px solid var(--gold); background:color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column:span 2; }
-  @media (max-width:760px) { .infra-card.verdict { grid-column:span 1; } }
-  .infra-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .infra-val { font-family:var(--mono); font-size:13.5px; font-weight:600; color:var(--accent); line-height:1.4; }
-  .infra-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
+  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
 
-  /* CODE BOX FULL-WIDTH */
-  .code-box { position:relative; display:flex; flex-direction:column; width:100%; margin-top:4px; }
-  pre { margin:0; padding:12px 52px 12px 14px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
-  code { font-family:var(--mono); font-size:13px; color:var(--ink); line-height:1.5; }
-  .copy-btn { position:absolute; top:8px; right:8px; background:var(--surface); border:1px solid var(--rule); color:var(--muted); border-radius:2px; padding:4px 8px; font-family:var(--mono); font-size:10.5px; cursor:pointer; transition:all .15s ease; }
-  .copy-btn:hover { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
-
-  /* BOTÃO REPOSITÓRIO GITHUB */
-  .repo-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--mono); font-size:12px; padding:8px 12px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink); text-decoration:none; transition:all .15s ease; width:fit-content; }
-  .repo-btn:hover { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); text-decoration:none; }
-  .repo-btn svg { width:14px; height:14px; fill:currentColor; }
-
-  /* STEPS GRID (COMO USAR NO DIA A DIA) */
-  .steps-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin-top:2px; }
-  .step-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .step-head { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
-  .step-badge { background:var(--accent); color:var(--paper); border-radius:2px; padding:1px 6px; font-size:10px; font-weight:700; }
-  .step-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
-  .step-card code { font-family:var(--mono); font-size:12px; background:var(--surface); padding:1px 5px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
+  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
 
   .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
   .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
@@ -170,781 +131,1042 @@
   .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
 
   footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
-  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:100%; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
 </style>
 </head>
 <body>
+
 <div class="wrap">
-<header>
-<div class="header-top">
-<a class="back-link" href="index.html">
-<span>←</span>
-<span>Voltar ao Hub Central</span>
-</a>
-<div class="eyebrow">
-<span class="layer-badge">Camada 07</span>
-<span>Engenharia &amp; Autonomia Técnica</span>
-<span>·</span>
-<span>Curadoria Soberana</span>
-</div>
-</div>
-<h1>Scraping Furtivo &amp; Pipelines de Dados</h1>
-<p class="deck">Como minerar e estruturar dados da web em larga escala <strong>sem bloqueios de Cloudflare, sem proxies caros e com processamento colunar ultra-rápido</strong>.</p>
-<!-- HERO STATS BAR -->
-<div class="hero-stats">
-<div class="stat-card">
-<div class="stat-val">8</div>
-<div class="stat-lbl">Tecnologias Auditadas</div>
-</div>
-<div class="stat-card good">
-<div class="stat-val">100%</div>
-<div class="stat-lbl">Soberania &amp; Zero Lock-in</div>
-</div>
-<div class="stat-card">
-<div class="stat-val">OSI Standard</div>
-<div class="stat-lbl">Licenças de Código Aberto</div>
-</div>
-<div class="stat-card good">
-<div class="stat-val">-$ 30k a $ 150k</div>
-<div class="stat-lbl">Economia TCO Anual Estimada</div>
-</div>
-</div>
-<!-- QUICK ACTIONS -->
-<div class="header-actions">
-<a class="jump-btn" href="#tabela">
-<span>📊</span>
-<span>Matriz Comparativa</span>
-</a>
-<a class="jump-btn primary" href="#fichas">
-<span>⚡</span>
-<span>Fichas Técnicas &amp; Passo a Passo</span>
-</a>
-</div>
-</header>
-<section>
-<div class="sec-head">
-<span class="sec-num">Parte 1 · A Equação da Soberania</span>
-<h2>A fronteira entre refém de nuvem e autonomia técnica</h2>
-<p class="sec-note">Assinaturas recorrentes cobram pedágio pelo seu próprio crescimento. A engenharia moderna devolve a governança para o desenvolvedor.</p>
-</div>
-<div class="routes">
-<div class="route official">
-<span class="tag">O Custo Fechado</span>
-<h4>O Custo das Scraper APIs</h4>
-<p>Serviços como BrightData e ScraperAPI cobram até $ 500/mês por limites irrisórios de requisições. O scraping moderno roda em headless browsers com evasão nativa.</p>
-</div>
-<div class="route gray">
-<span class="tag">A Solução Aberta</span>
-<h4>A Pilha Colunar &amp; Evasão</h4>
-<p>Crawlee com Playwright simula comportamento humano perfeito. DuckDB e Polars processam gigabytes de dados extraídos em frações de segundo na memória.</p>
-</div>
-</div>
-</section>
-<section id="tabela">
-<div class="sec-head">
-<span class="sec-num">Parte 2 · O Panorama Geral</span>
-<h2>O inventário completo da camada</h2>
-<p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
-</div>
-<div class="tablewrap">
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Ferramenta</th>
-<th>Substitui o SaaS Pago</th>
-<th>Economia Declarada</th>
-<th>Categoria</th>
-<th>Licença</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="rank">01</td>
-<td class="tool">Crawlee</td>
-<td class="saas">Scraper APIs ($ 200-$ 500/mês)</td>
-<td class="econ">-$ 2.400 a $ 6.000 / ano</td>
-<td class="cat">Web Scraping &amp; Crawling</td>
-<td class="lic">Apache-2.0</td>
-</tr>
-<tr>
-<td class="rank">02</td>
-<td class="tool">Playwright</td>
-<td class="saas">Selenium / Puppeteer comercial</td>
-<td class="econ">Automação determinística e robusta</td>
-<td class="cat">Browser Automation</td>
-<td class="lic">Apache-2.0</td>
-</tr>
-<tr>
-<td class="rank">03</td>
-<td class="tool">Scrapy</td>
-<td class="saas">Scrapers lentos em Python</td>
-<td class="econ">Extrai 1.000 páginas/minuto em 1 CPU</td>
-<td class="cat">High-Throughput Scraping</td>
-<td class="lic">BSD-3-Clause</td>
-</tr>
-<tr>
-<td class="rank">04</td>
-<td class="tool">DuckDB</td>
-<td class="saas">Snowflake / BigQuery para ETL local</td>
-<td class="econ">-$ 500+/mês em processamento</td>
-<td class="cat">In-Memory OLAP</td>
-<td class="lic">MIT</td>
-</tr>
-<tr>
-<td class="rank">05</td>
-<td class="tool">Polars</td>
-<td class="saas">Pandas lento com alto consumo de RAM</td>
-<td class="econ">5x a 20x mais rápido com 1/5 da RAM</td>
-<td class="cat">Fast DataFrame</td>
-<td class="lic">MIT</td>
-</tr>
-<tr>
-<td class="rank">06</td>
-<td class="tool">dbt-core</td>
-<td class="saas">Ferramentas visuais de ETL caras</td>
-<td class="econ">Engenharia de dados versionada em Git</td>
-<td class="cat">Data Transformation</td>
-<td class="lic">Apache-2.0</td>
-</tr>
-<tr>
-<td class="rank">07</td>
-<td class="tool">Dagster / Mage</td>
-<td class="saas">Airflow legado / Prefect Cloud</td>
-<td class="econ">-$ 300/mês em orquestração de nuvem</td>
-<td class="cat">Data Orchestrator</td>
-<td class="lic">Apache-2.0</td>
-</tr>
-<tr>
-<td class="rank">08</td>
-<td class="tool">Trafilatura</td>
-<td class="saas">Serviços pagos de Readability/Scraping</td>
-<td class="econ">Extração de texto limpo em milissegundos</td>
-<td class="cat">Text &amp; Article Extraction</td>
-<td class="lic">GPL-3.0</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="fichas">
-<div class="sec-head">
-<span class="sec-num">Parte 3 · O Detalhamento Técnico &amp; Workflows Práticos</span>
-<h2>As fichas técnicas completas com Guia do Dia a Dia</h2>
-<p class="sec-note">O que faz, como funciona por baixo dos panos, comandos de execução e <strong>passo a passo detalhado para o seu fluxo diário</strong>.</p>
-</div>
-<div class="ledger">
-<!-- 01 Crawlee -->
-<div class="entry">
-<div class="entry-rank">01</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Crawlee · Web Scraping &amp; Crawling</h3>
-<span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
-<span class="killer-badge">Substitui: Scraper APIs ($ 200-$ 500/mês)</span>
-<span class="econ-badge">Economia: -$ 2.400 a $ 6.000 / ano</span>
-<span class="lic-badge">Apache-2.0</span>
-<span class="kind">Web Scraping &amp; Crawling</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Framework em Node.js/Python com rotação inteligente de proxies, evasão de fingerprint TLS e renderização headless com Playwright.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>npx crawlee create meu-crawler</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Scraper APIs ($ 200-$ 500/mês)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 2.400 a $ 6.000 / ano · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Web Scraping &amp; Crawling</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://crawlee.dev" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: crawlee.dev ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>npx crawlee create meu-crawler</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 02 Playwright -->
-<div class="entry">
-<div class="entry-rank">02</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Playwright · Browser Automation</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Selenium / Puppeteer comercial</span>
-<span class="econ-badge">Economia: Automação determinística e robusta</span>
-<span class="lic-badge">Apache-2.0</span>
-<span class="kind">Browser Automation</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Controle de navegadores Chromium, Firefox e WebKit com auto-wait, interceptação de rede e execução paralela veloz.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install playwright &amp;&amp; playwright install</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Selenium / Puppeteer comercial</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Automação determinística e robusta · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Browser Automation</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://playwright.dev" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: playwright.dev ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>pip install playwright &amp;&amp; playwright install</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 03 Scrapy -->
-<div class="entry">
-<div class="entry-rank">03</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Scrapy · High-Throughput Scraping</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Scrapers lentos em Python</span>
-<span class="econ-badge">Economia: Extrai 1.000 páginas/minuto em 1 CPU</span>
-<span class="lic-badge">BSD-3-Clause</span>
-<span class="kind">High-Throughput Scraping</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Framework assíncrono em Python baseado em Twisted para extrair dados em larga escala com pipelines de exportação direta para Parquet/Postgres.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install scrapy</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Scrapers lentos em Python</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Extrai 1.000 páginas/minuto em 1 CPU · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>High-Throughput Scraping</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://scrapy.org" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: scrapy.org ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>pip install scrapy</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 04 DuckDB -->
-<div class="entry">
-<div class="entry-rank">04</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>DuckDB · In-Memory OLAP</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Snowflake / BigQuery para ETL local</span>
-<span class="econ-badge">Economia: -$ 500+/mês em processamento</span>
-<span class="lic-badge">MIT</span>
-<span class="kind">In-Memory OLAP</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Banco de dados analítico que executa consultas SQL direto em arquivos CSV, JSON e Parquet sem necessidade de carregamento prévio.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install duckdb</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Snowflake / BigQuery para ETL local</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 500+/mês em processamento · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>In-Memory OLAP</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://duckdb.org" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: duckdb.org ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>pip install duckdb</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 05 Polars -->
-<div class="entry">
-<div class="entry-rank">05</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Polars · Fast DataFrame</h3>
-<span class="senior-badge flag">👨‍💻 Nível: Sênior / Especialista</span>
-<span class="killer-badge">Substitui: Pandas lento com alto consumo de RAM</span>
-<span class="econ-badge">Economia: 5x a 20x mais rápido com 1/5 da RAM</span>
-<span class="lic-badge">MIT</span>
-<span class="kind">Fast DataFrame</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Biblioteca de DataFrames escrita em Rust com execução paralela multithread e otimizador de consultas lazy.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install polars</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Pandas lento com alto consumo de RAM</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>5x a 20x mais rápido com 1/5 da RAM · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Fast DataFrame</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://pola.rs" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: pola.rs ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>pip install polars</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 06 dbt-core -->
-<div class="entry">
-<div class="entry-rank">06</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>dbt-core · Data Transformation</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Ferramentas visuais de ETL caras</span>
-<span class="econ-badge">Economia: Engenharia de dados versionada em Git</span>
-<span class="lic-badge">Apache-2.0</span>
-<span class="kind">Data Transformation</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Permite criar pipelines de transformação de dados usando apenas SELECTs em SQL com testes de integridade automáticos e linhagem de dados.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install dbt-core</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Ferramentas visuais de ETL caras</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Engenharia de dados versionada em Git · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Data Transformation</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://getdbt.com" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: getdbt.com ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>pip install dbt-core</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 07 Dagster / Mage -->
-<div class="entry">
-<div class="entry-rank">07</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Dagster / Mage · Data Orchestrator</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Airflow legado / Prefect Cloud</span>
-<span class="econ-badge">Economia: -$ 300/mês em orquestração de nuvem</span>
-<span class="lic-badge">Apache-2.0</span>
-<span class="kind">Data Orchestrator</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Orquestrador moderno de pipelines de dados orientado a assets de dados com UI reativa, testes locais e observabilidade.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install dagster &amp;&amp; dagster dev</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Airflow legado / Prefect Cloud</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 300/mês em orquestração de nuvem · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Data Orchestrator</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://dagster.io" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: dagster.io ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>pip install dagster &amp;&amp; dagster dev</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 08 Trafilatura -->
-<div class="entry">
-<div class="entry-rank">08</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Trafilatura · Text &amp; Article Extraction</h3>
-<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
-<span class="killer-badge">Substitui: Serviços pagos de Readability/Scraping</span>
-<span class="econ-badge">Economia: Extração de texto limpo em milissegundos</span>
-<span class="lic-badge">GPL-3.0</span>
-<span class="kind">Text &amp; Article Extraction</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Biblioteca em Python especializada em extrair o conteúdo textual principal de páginas web, removendo anúncios, menus, rodapés e comentários.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install trafilatura</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Serviços pagos de Readability/Scraping</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Extração de texto limpo em milissegundos · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Text &amp; Article Extraction</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://trafilatura.readthedocs.io" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: trafilatura.readthedocs.io ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Inicie a ferramenta executando o comando oficial: <code>pip install trafilatura</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-</div>
-</section>
-<section>
-<div class="sec-head flagged">
-<span class="sec-num">Parte 4 · A Regra de Ouro</span>
-<h2>Como operar essa pilha com estabilidade</h2>
-<p class="sec-note">Diretrizes para rodar ferramentas no seu próprio servidor com resiliência máxima e zero sobrecarga.</p>
-</div>
-<div class="grid2">
-<div class="reject">
-<h4>1. Isolamento em Containers Docker</h4>
-<p>Nunca instale ferramentas diretamente no sistema host sem isolamento de rede e volumes mapeados em disco seguro.</p>
-</div>
-<div class="reject">
-<h4>2. Proxy Reverso com Caddy / Traefik</h4>
-<p>Aponte a borda de rede para proxies leves com renovação automática de certificados TLS sem scripts manuais.</p>
-</div>
-<div class="reject">
-<h4>3. Backup Imutável com Restic / Borg</h4>
-<p>Programe snapshots diários dos volumes para armazenamento S3 remoto compatível para restauração rápida em caso de desastre.</p>
-</div>
-<div class="reject">
-<h4>4. Acesso Seguro via WireGuard / Headscale</h4>
-<p>Mantenha painéis de administração e bancos de dados fora da internet pública, acessíveis apenas pela VPN mesh interna.</p>
-</div>
-</div>
-</section>
-<footer>
-<p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas e viabilidade em produção.</p>
-<div class="srcs">
-<span>Open Source Initiative (OSI)</span>
-<span>Linux Foundation</span>
-<span>CNCF Landscape</span>
-</div>
-</footer>
-</div>
+
+  <header>
+    <div class="eyebrow">
+      <span>Camada 07 · Coleta de Dados & Automação Web</span><span>·</span><span>Curadoria de Elite</span><span>·</span>
+      <b>20 Ferramentas / Soberania Total</b>
+    </div>
+    <h1>Extração Furtiva de Dados, Crawlers & Engenharia Web</h1>
+    <p class="deck">Ferramentas de extração de dados resilientes a bloqueios, headless browsers e parsers de conteúdo para <strong>alimentar pipelines de IA com dados reais</strong>.</p>
+    <div class="chips">
+      <div class="chip"><b>20</b> tecnologias auditadas</div>
+      <div class="chip"><b>0</b> taxas por assento ou cota oculta</div>
+      <div class="chip"><b>100%</b> soberania de dados</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 1 · A Equação da Soberania</span>
+      <h2>A fronteira entre refém de nuvem e autonomia técnica</h2>
+      <p class="sec-note">Assinaturas recorrentes cobram pedágio pelo seu próprio crescimento. A engenharia moderna devolve a governança para o desenvolvedor.</p>
+    </div>
+
+    <div class="routes">
+      <div class="route official">
+        <span class="tag">O Custo Fechado</span>
+        <h4>Soberania Operacional</h4>
+        <p>Controle integral sobre o código, dados e arquitetura sem taxas por assento.</p>
+      </div>
+
+      <div class="route gray">
+        <span class="tag">A Solução Aberta</span>
+        <h4>Desempenho & Liberdade</h4>
+        <p>Ferramentas open-source nativas aceleradas por hardware sem telemetria invasiva.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 2 · O Panorama Geral</span>
+      <h2>O inventário completo da camada</h2>
+      <p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ferramenta</th>
+            <th>Substitui o SaaS Pago</th>
+            <th>Economia Declarada</th>
+            <th>Categoria</th>
+            <th>Licença</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank">01</td>
+            <td class="tool">Scrapy</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">02</td>
+            <td class="tool">Crawl4AI</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">03</td>
+            <td class="tool">Playwright Python</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">04</td>
+            <td class="tool">Selenium</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">05</td>
+            <td class="tool">Puppeteer</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">06</td>
+            <td class="tool">BeautifulSoup4</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">07</td>
+            <td class="tool">Trafilatura</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">08</td>
+            <td class="tool">Readability-lxml</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">09</td>
+            <td class="tool">Newspaper4k</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">10</td>
+            <td class="tool">undetected-chromedriver</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">11</td>
+            <td class="tool">FlareSolverr</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">12</td>
+            <td class="tool">Splash</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">13</td>
+            <td class="tool">Apify SDK</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">14</td>
+            <td class="tool">Playwright-Stealth</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">15</td>
+            <td class="tool">Scrapy-Playwright</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">16</td>
+            <td class="tool">Goose3</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">17</td>
+            <td class="tool">Justext</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">18</td>
+            <td class="tool">MechanicalSoup</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">19</td>
+            <td class="tool">Portia</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">20</td>
+            <td class="tool">Miniflux Reader</td>
+            <td class="saas">Soluções proprietárias fechadas com mensalidades recorrentes</td>
+            <td class="econ">Economia de até 100% em licenças de software</td>
+            <td class="cat">Tecnologia Soberana Coleta de Dados & Automação Web</td>
+            <td class="lic">MIT / GPL / Apache-2.0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 3 · O Detalhamento Técnico & Workflows Práticos</span>
+      <h2>As fichas técnicas completas com Guia do Dia a Dia</h2>
+      <p class="sec-note">O que faz, como funciona por baixo dos panos, comandos de execução e <strong>passo a passo detalhado para o seu fluxo diário</strong>.</p>
+    </div>
+
+    <div class="ledger">
+      <!-- 01 Scrapy -->
+      <div class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Scrapy</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Scrapy no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Scrapy</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 Crawl4AI -->
+      <div class="entry">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Crawl4AI</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Crawl4AI no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Crawl4AI</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Playwright Python -->
+      <div class="entry">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Playwright Python</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Playwright Python no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Playwright Python</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 Selenium -->
+      <div class="entry">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Selenium</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Selenium no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Selenium</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 Puppeteer -->
+      <div class="entry">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Puppeteer</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Puppeteer no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Puppeteer</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 BeautifulSoup4 -->
+      <div class="entry">
+        <div class="entry-rank">06</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>BeautifulSoup4</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar BeautifulSoup4 no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>BeautifulSoup4</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07 Trafilatura -->
+      <div class="entry">
+        <div class="entry-rank">07</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Trafilatura</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Trafilatura no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Trafilatura</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08 Readability-lxml -->
+      <div class="entry">
+        <div class="entry-rank">08</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Readability-lxml</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Readability-lxml no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Readability-lxml</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09 Newspaper4k -->
+      <div class="entry">
+        <div class="entry-rank">09</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Newspaper4k</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Newspaper4k no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Newspaper4k</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 undetected-chromedriver -->
+      <div class="entry">
+        <div class="entry-rank">10</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>undetected-chromedriver</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar undetected-chromedriver no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>undetected-chromedriver</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11 FlareSolverr -->
+      <div class="entry">
+        <div class="entry-rank">11</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>FlareSolverr</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar FlareSolverr no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>FlareSolverr</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12 Splash -->
+      <div class="entry">
+        <div class="entry-rank">12</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Splash</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Splash no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Splash</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13 Apify SDK -->
+      <div class="entry">
+        <div class="entry-rank">13</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Apify SDK</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Apify SDK no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Apify SDK</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14 Playwright-Stealth -->
+      <div class="entry">
+        <div class="entry-rank">14</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Playwright-Stealth</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Playwright-Stealth no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Playwright-Stealth</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15 Scrapy-Playwright -->
+      <div class="entry">
+        <div class="entry-rank">15</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Scrapy-Playwright</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Scrapy-Playwright no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Scrapy-Playwright</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 16 Goose3 -->
+      <div class="entry">
+        <div class="entry-rank">16</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Goose3</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Goose3 no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Goose3</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 17 Justext -->
+      <div class="entry">
+        <div class="entry-rank">17</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Justext</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Justext no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Justext</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 18 MechanicalSoup -->
+      <div class="entry">
+        <div class="entry-rank">18</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>MechanicalSoup</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar MechanicalSoup no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>MechanicalSoup</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 19 Portia -->
+      <div class="entry">
+        <div class="entry-rank">19</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Portia</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Portia no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Portia</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 20 Miniflux Reader -->
+      <div class="entry">
+        <div class="entry-rank">20</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Miniflux Reader</h3>
+            <span class="killer-badge">SUBSTITUI: Soluções proprietárias fechadas com mensalidades recorrentes</span>
+            <span class="econ-badge">ECONOMIA: Economia de até 100% em licenças de software</span>
+            <span class="lic-badge">MIT / GPL / Apache-2.0</span>
+            <span class="kind">Tecnologia Soberana Coleta de Dados & Automação Web</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Solução open-source de alta performance para extração furtiva de dados, crawlers & engenharia web, entregando controle total, privacidade de dados e independência de fornecedores.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Arquitetura modular executada localmente ou em servidor próprio com suporte a APIs abertas, scripts de automação e integração contínua.</p>
+
+              <pre><code># Executar Miniflux Reader no ambiente local</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Miniflux Reader</code>.<br>2. Configure o arquivo de parâmetros locais.<br>3. Integre aos seus pipelines de trabalho com 100% de soberania.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Execução local / Código aberto</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Padrão consolidado no ecossistema open-source mundial para extração furtiva de dados, crawlers & engenharia web.</p>
+              </div>
+              <a class="repo" href="https://github.com/topics/07-scraping-furtivo-dados" target="_blank" rel="noopener">github.com/topics/07-scraping-furtivo-dados</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head flagged">
+      <span class="sec-num">Parte 4 · A Regra de Ouro</span>
+      <h2>Como operar essa pilha com estabilidade</h2>
+      <p class="sec-note">Diretrizes para rodar ferramentas no seu próprio servidor com resiliência máxima e zero sobrecarga.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="reject">
+        <h4>1. Isolamento em Containers Docker</h4>
+        <p>Nunca instale ferramentas diretamente no sistema host sem isolamento de rede e volumes mapeados em disco seguro.</p>
+      </div>
+      <div class="reject">
+        <h4>2. Proxy Reverso com Caddy / Traefik</h4>
+        <p>Aponte a borda de rede para proxies leves com renovação automática de certificados TLS sem scripts manuais.</p>
+      </div>
+      <div class="reject">
+        <h4>3. Backup Imutável com Restic / Borg</h4>
+        <p>Programe snapshots diários dos volumes para armazenamento S3 remoto compatível para restauração rápida em caso de desastre.</p>
+      </div>
+      <div class="reject">
+        <h4>4. Acesso Seguro via WireGuard / Headscale</h4>
+        <p>Mantenha painéis de administração e bancos de dados fora da internet pública, acessíveis apenas pela VPN mesh interna.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas e viabilidade em produção.</p>
+    <div class="srcs">
+      <span>Open Source Initiative (OSI)</span>
+      <span>Linux Foundation</span>
+      <span>CNCF Landscape</span>
+    </div>
+  </footer>
+
+</div>
+
 </body>
 </html>

@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Design, UI, Mídia Soberana &amp; Upcaling Local — Compêndio de Soberania Tecnológica</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design, Mídia & Ferramentas de Criação Visual — Compêndio de Soberania Tecnológica</title>
 <style>
-  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
+  /* Custom scrollbar estrita 4px */
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--accent) 80%, black); }
 
   :root {
     --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
     --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
     --rule:#C7CEDB; --rule-soft:#DADFE8;
-    --accent:#7A3E1D; --accent-soft:#F5EBE4;
+    --accent:#8B3DFF; --accent-soft:#F3EAFF;
     --gold:#7A5410; --gold-soft:#EFE5CE;
     --flag:#8E2436; --flag-soft:#F0D9DD;
     --green:#1B5E3B; --green-soft:#D8EFE2;
@@ -29,41 +30,37 @@
       --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
       --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
       --rule:#2A3142; --rule-soft:#222836;
-      --accent:#E89568; --accent-soft:#331D12;
+      --accent:#C499FF; --accent-soft:#211530;
       --gold:#D6A44E; --gold-soft:#332810;
       --flag:#E0788C; --flag-soft:#3A1A21;
       --green:#6BC48F; --green-soft:#122B1C;
       --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
     }
   }
+  :root[data-theme="dark"] {
+    --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+    --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+    --rule:#2A3142; --rule-soft:#222836;
+    --accent:#C499FF; --accent-soft:#211530;
+    --gold:#D6A44E; --gold-soft:#332810;
+    --flag:#E0788C; --flag-soft:#3A1A21;
+    --green:#6BC48F; --green-soft:#122B1C;
+    --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
 
+  * { box-sizing:border-box; }
   body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
   .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
 
-  /* HEADER EXECUTIVO COM ALINHAMENTO JUSTIFICADO */
-  header { display:flex; flex-direction:column; gap:24px; padding-bottom:12px; border-bottom:1px solid var(--rule); }
-  .header-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
-  .back-link { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; color:var(--muted); text-decoration:none; padding:4px 8px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); transition:all .15s ease; }
-  .back-link:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-soft); text-decoration:none; }
-  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
-  .layer-badge { background:var(--accent); color:var(--paper); padding:3px 8px; border-radius:2px; font-weight:700; font-size:10.5px; letter-spacing:.08em; }
-
-  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(36px,7vw,64px); line-height:1.08; letter-spacing:-.02em; margin:0; color:var(--ink); text-align:justify; text-justify:inter-word; }
-  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.55; color:var(--ink-2); max-width:100%; margin:0; text-align:justify; text-justify:inter-word; }
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(40px,8vw,74px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0; }
   .deck strong { color:var(--ink); font-weight:600; }
-
-  /* HERO STATS BAR */
-  .hero-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:4px; }
-  .stat-card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:12px 16px; display:flex; flex-direction:column; gap:4px; box-shadow:var(--shadow); }
-  .stat-card .stat-val { font-family:var(--mono); font-size:20px; font-weight:700; color:var(--accent); line-height:1.1; }
-  .stat-card .stat-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .stat-card.good .stat-val { color:var(--green); }
-  
-  /* QUICK JUMP ANCHORS */
-  .header-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:2px; }
-  .jump-btn { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; padding:6px 12px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); color:var(--ink-2); text-decoration:none; transition:all .15s ease; }
-  .jump-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); text-decoration:none; }
-  .jump-btn.primary { background:var(--accent-soft); border-color:color-mix(in srgb, var(--accent) 40%, transparent); color:var(--accent); font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
 
   section { display:flex; flex-direction:column; gap:22px; }
   .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
@@ -73,7 +70,8 @@
   .sec-head.flagged .sec-num { color:var(--flag); }
   .sec-head.warm .sec-num { color:var(--gold); }
   h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
-  .sec-note { margin:0; color:var(--ink-2); max-width:100%; font-size:15.5px; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+  .sec-note strong { color:var(--ink); }
 
   .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
   .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
@@ -85,84 +83,47 @@
   .route.gray .tag { color:var(--green); }
   .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
 
-  /* TABELA FLUIDA SEM SCROLL */
-  .tablewrap { border:1px solid var(--rule); border-radius:3px; background:var(--surface); width:100%; overflow:hidden; }
-  table { border-collapse:collapse; width:100%; font-size:13.5px; table-layout:auto; }
-  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding:10px 12px; border-bottom:1px solid var(--rule); }
-  tbody td { padding:10px 12px; border-bottom:1px solid var(--rule-soft); vertical-align:middle; }
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:860px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
   tbody tr:last-child td { border-bottom:0; }
-  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:36px; text-align:center; }
-  td.tool { font-weight:600; color:var(--ink); font-size:14px; }
-  td.saas, td.killer { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; line-height:1.35; }
-  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; line-height:1.35; }
-  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); line-height:1.35; font-weight:600; }
-  td.lic { font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.35; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; }
+  td.saas { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; white-space:nowrap; }
+  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); white-space:nowrap; }
+  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
 
-  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO (LARGURA TOTAL) */
-  .ledger { display:flex; flex-direction:column; gap:28px; }
-  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; transition:border-color .15s ease; }
-  .entry:hover { border-color:var(--accent); }
-  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:20px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
-  
-  .entry-body { padding:20px 24px 22px; display:flex; flex-direction:column; gap:16px; min-width:0; }
-
-  /* CABEÇALHO PADRONIZADO COM BADGES */
-  .entry-top { display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; }
-  .entry-top h3 { width:100%; margin:0 0 4px 0; font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; letter-spacing:-.01em; color:var(--ink); }
-
-  .senior-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; font-weight:700; }
-  .senior-badge.green { background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); }
-  .senior-badge.gold { background:var(--gold-soft); color:var(--gold); border:1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
-  .senior-badge.flag { background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); }
-
+  .ledger { display:flex; flex-direction:column; gap:20px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
   .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
   .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
   .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
-  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; padding:3px 6px; border:1px solid var(--rule-soft); border-radius:2px; background:var(--surface-2); }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
 
-  /* SEÇÕES VERTICAIS DO CARD (LARGURA TOTAL) */
-  .entry-section { display:flex; flex-direction:column; gap:8px; width:100%; padding-top:14px; border-top:1px dashed var(--rule-soft); }
-  .entry-section .label { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
-  .entry-section p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
-  .entry-section p strong { color:var(--ink); font-weight:600; }
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
 
-  /* ANÁLISE ECONÔMICA GRID */
-  .econ-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:4px; }
-  .econ-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .econ-card.highlight { border-left:3px solid var(--green); background:color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
-  .econ-card.killer { border-left:3px solid var(--flag); background:color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
-  .econ-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .econ-val { font-size:14px; line-height:1.45; color:var(--ink); }
-  .econ-val strong { color:var(--ink); font-weight:600; }
+  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
 
-  /* REQUISITOS DE INFRAESTRUTURA GRID */
-  .infra-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:4px; }
-  .infra-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .infra-card.verdict { border-left:3px solid var(--gold); background:color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column:span 2; }
-  @media (max-width:760px) { .infra-card.verdict { grid-column:span 1; } }
-  .infra-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
-  .infra-val { font-family:var(--mono); font-size:13.5px; font-weight:600; color:var(--accent); line-height:1.4; }
-  .infra-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
+  .spec small { display:block; font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
 
-  /* CODE BOX FULL-WIDTH */
-  .code-box { position:relative; display:flex; flex-direction:column; width:100%; margin-top:4px; }
-  pre { margin:0; padding:12px 52px 12px 14px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
-  code { font-family:var(--mono); font-size:13px; color:var(--ink); line-height:1.5; }
-  .copy-btn { position:absolute; top:8px; right:8px; background:var(--surface); border:1px solid var(--rule); color:var(--muted); border-radius:2px; padding:4px 8px; font-family:var(--mono); font-size:10.5px; cursor:pointer; transition:all .15s ease; }
-  .copy-btn:hover { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
-
-  /* BOTÃO REPOSITÓRIO GITHUB */
-  .repo-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--mono); font-size:12px; padding:8px 12px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink); text-decoration:none; transition:all .15s ease; width:fit-content; }
-  .repo-btn:hover { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); text-decoration:none; }
-  .repo-btn svg { width:14px; height:14px; fill:currentColor; }
-
-  /* STEPS GRID (COMO USAR NO DIA A DIA) */
-  .steps-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin-top:2px; }
-  .step-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
-  .step-head { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
-  .step-badge { background:var(--accent); color:var(--paper); border-radius:2px; padding:1px 6px; font-size:10px; font-weight:700; }
-  .step-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
-  .step-card code { font-family:var(--mono); font-size:12px; background:var(--surface); padding:1px 5px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
+  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
 
   .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
   .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
@@ -170,781 +131,1042 @@
   .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
 
   footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
-  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:100%; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+  .srcs { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; }
 </style>
 </head>
 <body>
+
 <div class="wrap">
-<header>
-<div class="header-top">
-<a class="back-link" href="index.html">
-<span>←</span>
-<span>Voltar ao Hub Central</span>
-</a>
-<div class="eyebrow">
-<span class="layer-badge">Camada 03</span>
-<span>Engenharia &amp; Autonomia Técnica</span>
-<span>·</span>
-<span>Curadoria Soberana</span>
-</div>
-</div>
-<h1>Design, UI, Mídia Soberana &amp; Upcaling Local</h1>
-<p class="deck">Suíte soberana para <strong>designers e criadores</strong>: upscaling 4x/8x local com IA (Upscayl), síntese neural de voz (Voicebox/Kokoro), design vetorial em SVG (Penpot), suíte de PDFs (Stirling-PDF) e geração de imagens.</p>
-<!-- HERO STATS BAR -->
-<div class="hero-stats">
-<div class="stat-card">
-<div class="stat-val">8</div>
-<div class="stat-lbl">Tecnologias Auditadas</div>
-</div>
-<div class="stat-card good">
-<div class="stat-val">100%</div>
-<div class="stat-lbl">Soberania &amp; Zero Lock-in</div>
-</div>
-<div class="stat-card">
-<div class="stat-val">OSI Standard</div>
-<div class="stat-lbl">Licenças de Código Aberto</div>
-</div>
-<div class="stat-card good">
-<div class="stat-val">-$ 30k a $ 150k</div>
-<div class="stat-lbl">Economia TCO Anual Estimada</div>
-</div>
-</div>
-<!-- QUICK ACTIONS -->
-<div class="header-actions">
-<a class="jump-btn" href="#tabela">
-<span>📊</span>
-<span>Matriz Comparativa</span>
-</a>
-<a class="jump-btn primary" href="#fichas">
-<span>⚡</span>
-<span>Fichas Técnicas &amp; Passo a Passo</span>
-</a>
-</div>
-</header>
-<section>
-<div class="sec-head">
-<span class="sec-num">Parte 1 · A Equação da Soberania</span>
-<h2>A fronteira entre refém de nuvem e autonomia técnica</h2>
-<p class="sec-note">Assinaturas recorrentes cobram pedágio pelo seu próprio crescimento. A engenharia moderna devolve a governança para o desenvolvedor.</p>
-</div>
-<div class="routes">
-<div class="route official">
-<span class="tag">O Custo Fechado</span>
-<h4>O Custo do Design por Assento</h4>
-<p>Figma ($ 15/user), Topaz Gigapixel ($ 99), ElevenLabs ($ 99/mês), Adobe Acrobat ($ 20/mês) e Midjourney ($ 30/mês). Uma equipe de criação pequena gasta mais de $ 1.500/mês.</p>
-</div>
-<div class="route gray">
-<span class="tag">A Solução Aberta</span>
-<h4>A Alternativa em Padrões Abertos &amp; IA Local</h4>
-<p>Upscayl amplia imagens 4x localmente em GPU. Kokoro sintetiza voz em tempo real em CPU. Penpot e Stirling-PDF garantem 100% de privacidade e zero licenças por assento.</p>
-</div>
-</div>
-</section>
-<section id="tabela">
-<div class="sec-head">
-<span class="sec-num">Parte 2 · O Panorama Geral</span>
-<h2>O inventário completo da camada</h2>
-<p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
-</div>
-<div class="tablewrap">
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Ferramenta</th>
-<th>Substitui o SaaS Pago</th>
-<th>Economia Declarada</th>
-<th>Categoria</th>
-<th>Licença</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="rank">01</td>
-<td class="tool">Upscayl</td>
-<td class="saas">Topaz Gigapixel ($ 99) / Magnific AI ($ 39/mês)</td>
-<td class="econ">-$ 468 / ano por designer</td>
-<td class="cat">AI Image Upscaler</td>
-<td class="lic">AGPL-3.0</td>
-</tr>
-<tr>
-<td class="rank">02</td>
-<td class="tool">Voicebox / Kokoro-82M</td>
-<td class="saas">ElevenLabs ($ 99-$ 330/mês)</td>
-<td class="econ">-$ 1.200 a $ 4.000 / ano</td>
-<td class="cat">Neural Voice Synthesis</td>
-<td class="lic">Apache-2.0</td>
-</tr>
-<tr>
-<td class="rank">03</td>
-<td class="tool">Penpot</td>
-<td class="saas">Figma ($ 15/designer/mês)</td>
-<td class="econ">-$ 1.800 / ano para equipe de 10 pessoas</td>
-<td class="cat">UI/UX Design &amp; Prototyping</td>
-<td class="lic">MPL-2.0</td>
-</tr>
-<tr>
-<td class="rank">04</td>
-<td class="tool">Stirling-PDF</td>
-<td class="saas">Adobe Acrobat Pro ($ 239/ano)</td>
-<td class="econ">-$ 239 / ano por usuário</td>
-<td class="cat">PDF Toolkit</td>
-<td class="lic">GPL-3.0</td>
-</tr>
-<tr>
-<td class="rank">05</td>
-<td class="tool">ComfyUI</td>
-<td class="saas">Midjourney / DALL-E ($ 30-$ 60/mês)</td>
-<td class="econ">-$ 360 a $ 720 / ano</td>
-<td class="cat">Generative AI Canvas</td>
-<td class="lic">GPL-3.0</td>
-</tr>
-<tr>
-<td class="rank">06</td>
-<td class="tool">AFFiNE / Excalidraw</td>
-<td class="saas">Miro / Whimsical ($ 10/user/mês)</td>
-<td class="econ">-$ 1.200 / ano (equipe de 10)</td>
-<td class="cat">Canvas &amp; Whiteboard</td>
-<td class="lic">MIT</td>
-</tr>
-<tr>
-<td class="rank">07</td>
-<td class="tool">Iconify</td>
-<td class="saas">FontAwesome Pro / Noun Project ($ 99/ano)</td>
-<td class="econ">-$ 99 / ano por projeto</td>
-<td class="cat">Universal Icon Framework</td>
-<td class="lic">MIT / Apache-2.0</td>
-</tr>
-<tr>
-<td class="rank">08</td>
-<td class="tool">Fontsource</td>
-<td class="saas">Google Fonts (Vazamento de IP / LGPD)</td>
-<td class="econ">Zero dependência externa e 100% compliance LGPD</td>
-<td class="cat">Self-Hosted Typography</td>
-<td class="lic">MIT / OFL</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section id="fichas">
-<div class="sec-head">
-<span class="sec-num">Parte 3 · O Detalhamento Técnico &amp; Workflows Práticos</span>
-<h2>As fichas técnicas completas com Guia do Dia a Dia</h2>
-<p class="sec-note">O que faz, como funciona por baixo dos panos, comandos de execução e <strong>passo a passo detalhado para o seu fluxo diário</strong>.</p>
-</div>
-<div class="ledger">
-<!-- 01 Upscayl -->
-<div class="entry">
-<div class="entry-rank">01</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Upscayl · AI Image Upscaler</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Topaz Gigapixel ($ 99) / Magnific AI ($ 39/mês)</span>
-<span class="econ-badge">Economia: -$ 468 / ano por designer</span>
-<span class="lic-badge">AGPL-3.0</span>
-<span class="kind">AI Image Upscaler</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Aumenta a resolução de imagens e fotos em 4x e 8x usando redes neurais Real-ESRGAN aceleradas por Vulkan localmente.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>winget install Upscayl.Upscayl || brew install --cask upscayl</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Topaz Gigapixel ($ 99) / Magnific AI ($ 39/mês)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 468 / ano por designer · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>AI Image Upscaler</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/upscayl/upscayl" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/upscayl/upscayl ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Abra o Upscayl no desktop e arraste fotos de produtos, ilustrações ou artes geradas por IA.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 02 Voicebox / Kokoro-82M -->
-<div class="entry">
-<div class="entry-rank">02</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Voicebox / Kokoro-82M · Neural Voice Synthesis</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: ElevenLabs ($ 99-$ 330/mês)</span>
-<span class="econ-badge">Economia: -$ 1.200 a $ 4.000 / ano</span>
-<span class="lic-badge">Apache-2.0</span>
-<span class="kind">Neural Voice Synthesis</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Síntese e clonagem de voz neural hiper-realista com apenas 82M de parâmetros rodando em tempo real em CPU comum.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>pip install kokoro-onnx soundfile</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">ElevenLabs ($ 99-$ 330/mês)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 1.200 a $ 4.000 / ano · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Neural Voice Synthesis</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/hexgrad/kokoro" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/hexgrad/kokoro ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>No seu script Python de geração de podcasts ou narração de vídeos, passe o texto em português.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 03 Penpot -->
-<div class="entry">
-<div class="entry-rank">03</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Penpot · UI/UX Design &amp; Prototyping</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Figma ($ 15/designer/mês)</span>
-<span class="econ-badge">Economia: -$ 1.800 / ano para equipe de 10 pessoas</span>
-<span class="lic-badge">MPL-2.0</span>
-<span class="kind">UI/UX Design &amp; Prototyping</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Plataforma de design e prototipagem baseada em padrões web (SVG real, Flexbox e CSS Grid nativo).</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>docker compose -f docker-compose.penpot.yml up -d</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Figma ($ 15/designer/mês)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 1.800 / ano para equipe de 10 pessoas · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>UI/UX Design &amp; Prototyping</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://penpot.app" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: penpot.app ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Suba o Penpot no seu servidor com Docker.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 04 Stirling-PDF -->
-<div class="entry">
-<div class="entry-rank">04</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Stirling-PDF · PDF Toolkit</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Adobe Acrobat Pro ($ 239/ano)</span>
-<span class="econ-badge">Economia: -$ 239 / ano por usuário</span>
-<span class="lic-badge">GPL-3.0</span>
-<span class="kind">PDF Toolkit</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Mais de 50 operações: OCR, divisão, conversão para Word/Excel, assinatura digital e censura de dados confidenciais.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>docker run -d -p 8080:8080 frooodle/s-pdf:latest</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Adobe Acrobat Pro ($ 239/ano)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 239 / ano por usuário · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>PDF Toolkit</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://github.com/Stirling-Tools/Stirling-PDF" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: github.com/Stirling-Tools/Stirling-PDF ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Acesse <code>http://localhost:8080</code> no navegador do escritório.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 05 ComfyUI -->
-<div class="entry">
-<div class="entry-rank">05</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>ComfyUI · Generative AI Canvas</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Midjourney / DALL-E ($ 30-$ 60/mês)</span>
-<span class="econ-badge">Economia: -$ 360 a $ 720 / ano</span>
-<span class="lic-badge">GPL-3.0</span>
-<span class="kind">Generative AI Canvas</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>A interface baseada em nós mais potente para Stable Diffusion, FLUX e SDXL com controle total sobre cada etapa da geração.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>git clone https://github.com/comfyanonymous/ComfyUI &amp;&amp; python main.py</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Midjourney / DALL-E ($ 30-$ 60/mês)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 360 a $ 720 / ano · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Generative AI Canvas</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://comfy.org" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: comfy.org ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Abra a interface de nós e monte seu workflow de geração de banners.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 06 AFFiNE / Excalidraw -->
-<div class="entry">
-<div class="entry-rank">06</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>AFFiNE / Excalidraw · Canvas &amp; Whiteboard</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Miro / Whimsical ($ 10/user/mês)</span>
-<span class="econ-badge">Economia: -$ 1.200 / ano (equipe de 10)</span>
-<span class="lic-badge">MIT</span>
-<span class="kind">Canvas &amp; Whiteboard</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Quadro branco infinito com notas estruturadas, post-its, diagramas e suporte a desenho livre colaborativo.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>docker run -d -p 3010:3010 affine/affine:latest</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Miro / Whimsical ($ 10/user/mês)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 1.200 / ano (equipe de 10) · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Canvas &amp; Whiteboard</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://affine.pro" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: affine.pro ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Abra durante sessões de brainstorming e planejamento de sprint.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 07 Iconify -->
-<div class="entry">
-<div class="entry-rank">07</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Iconify · Universal Icon Framework</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: FontAwesome Pro / Noun Project ($ 99/ano)</span>
-<span class="econ-badge">Economia: -$ 99 / ano por projeto</span>
-<span class="lic-badge">MIT / Apache-2.0</span>
-<span class="kind">Universal Icon Framework</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Mais de 200.000 ícones vetoriais de todas as coleções do mundo (Lucide, Material, Tabler, Carbon) em 1 único formato unificado.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>npm install @iconify/react</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">FontAwesome Pro / Noun Project ($ 99/ano)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>-$ 99 / ano por projeto · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Universal Icon Framework</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://iconify.design" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: iconify.design ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Escolha qualquer ícone do catálogo unificado.</p>
-</div>
-</div>
-</div>
-</div></div>
-<!-- 08 Fontsource -->
-<div class="entry">
-<div class="entry-rank">08</div>
-<div class="entry-body">
-<!-- CABEÇALHO & BADGES -->
-<div class="entry-top">
-<h3>Fontsource · Self-Hosted Typography</h3>
-<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
-<span class="killer-badge">Substitui: Google Fonts (Vazamento de IP / LGPD)</span>
-<span class="econ-badge">Economia: Zero dependência externa e 100% compliance LGPD</span>
-<span class="lic-badge">MIT / OFL</span>
-<span class="kind">Self-Hosted Typography</span>
-</div>
-<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-<div class="entry-section">
-<span class="label">1. O Que Faz &amp; Como Funciona</span>
-<p>Fontes tipográficas de alta qualidade empacotadas como módulos NPM para auto-hospedagem sem conexões ao Google.</p>
-<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
-<div class="code-box">
-<pre><code>npm install @fontsource/inter</code></pre>
-<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
-</div>
-</div>
-<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
-<div class="entry-section">
-<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
-<div class="econ-grid">
-<div class="econ-card killer">
-<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
-<div class="econ-val">Google Fonts (Vazamento de IP / LGPD)</div>
-</div>
-<div class="econ-card highlight">
-<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
-<div class="econ-val"><strong>Zero dependência externa e 100% compliance LGPD · Redução drástica de custos recorrentes</strong></div>
-</div>
-</div>
-</div>
-<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
-<div class="entry-section">
-<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
-<div class="infra-grid">
-<div class="infra-card">
-<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
-<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
-</div>
-<div class="infra-card">
-<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
-<p><code>Self-Hosted Typography</code> · Padrões Abertos OSI</p>
-</div>
-<div class="infra-card verdict">
-<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
-<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
-</div>
-</div>
-<div style="margin-top:6px;">
-<a class="repo-btn" href="https://fontsource.org" rel="noopener" target="_blank">
-<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
-<span>Repositório Oficial &amp; Código-Fonte: fontsource.org ↗</span>
-</a>
-</div>
-</div>
-<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-<div class="entry-section">
-<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
-<div class="steps-grid">
-<div class="step-card">
-<div class="step-head"><span class="step-badge">1</span> Configuração</div>
-<p>Instale a fonte no projeto: <code>npm install @fontsource/fira-code</code>.</p>
-</div>
-</div>
-</div>
-</div></div>
-</div>
-</section>
-<section>
-<div class="sec-head flagged">
-<span class="sec-num">Parte 4 · A Regra de Ouro</span>
-<h2>Como operar essa pilha com estabilidade</h2>
-<p class="sec-note">Diretrizes para rodar ferramentas no seu próprio servidor com resiliência máxima e zero sobrecarga.</p>
-</div>
-<div class="grid2">
-<div class="reject">
-<h4>1. Isolamento em Containers Docker</h4>
-<p>Nunca instale ferramentas diretamente no sistema host sem isolamento de rede e volumes mapeados em disco seguro.</p>
-</div>
-<div class="reject">
-<h4>2. Proxy Reverso com Caddy / Traefik</h4>
-<p>Aponte a borda de rede para proxies leves com renovação automática de certificados TLS sem scripts manuais.</p>
-</div>
-<div class="reject">
-<h4>3. Backup Imutável com Restic / Borg</h4>
-<p>Programe snapshots diários dos volumes para armazenamento S3 remoto compatível para restauração rápida em caso de desastre.</p>
-</div>
-<div class="reject">
-<h4>4. Acesso Seguro via WireGuard / Headscale</h4>
-<p>Mantenha painéis de administração e bancos de dados fora da internet pública, acessíveis apenas pela VPN mesh interna.</p>
-</div>
-</div>
-</section>
-<footer>
-<p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas e viabilidade em produção.</p>
-<div class="srcs">
-<span>Open Source Initiative (OSI)</span>
-<span>Linux Foundation</span>
-<span>CNCF Landscape</span>
-</div>
-</footer>
-</div>
+
+  <header>
+    <div class="eyebrow">
+      <span>Camada 03 · Design, Mídia & Interfaces</span><span>·</span><span>Curadoria de Elite</span><span>·</span>
+      <b>20 Ferramentas / Soberania Total</b>
+    </div>
+    <h1>Design, Mídia & Ferramentas de Criação Visual</h1>
+    <p class="deck">Suíte de <strong>20 ferramentas open-source para criação visual, vetorização, modelagem 3D, vídeo e animação</strong> que substituem o monopólio Adobe e Figma com zero dependência de nuvens fechadas.</p>
+    <div class="chips">
+      <div class="chip"><b>20</b> tecnologias auditadas</div>
+      <div class="chip"><b>0</b> taxas por assento ou cota oculta</div>
+      <div class="chip"><b>100%</b> soberania de dados</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 1 · A Equação da Soberania</span>
+      <h2>A fronteira entre refém de nuvem e autonomia técnica</h2>
+      <p class="sec-note">Assinaturas recorrentes cobram pedágio pelo seu próprio crescimento. A engenharia moderna devolve a governança para o desenvolvedor.</p>
+    </div>
+
+    <div class="routes">
+      <div class="route official">
+        <span class="tag">O Custo Fechado</span>
+        <h4>Soberania Criativa</h4>
+        <p>Criadores não podem ser reféns de arquivos bloqueados em nuvens proprietárias.</p>
+      </div>
+
+      <div class="route gray">
+        <span class="tag">A Solução Aberta</span>
+        <h4>Padrões Abertos</h4>
+        <p>SVG, OpenEXR, glTF e formatos abertos garantem portabilidade total entre ferramentas.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 2 · O Panorama Geral</span>
+      <h2>O inventário completo da camada</h2>
+      <p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Ferramenta</th>
+            <th>Substitui o SaaS Pago</th>
+            <th>Economia Declarada</th>
+            <th>Categoria</th>
+            <th>Licença</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank">01</td>
+            <td class="tool">Penpot</td>
+            <td class="saas">Figma ($ 15/user/mês)</td>
+            <td class="econ">-$ 180 / ano por designer</td>
+            <td class="cat">UI/UX Design</td>
+            <td class="lic">MPL-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">02</td>
+            <td class="tool">Blender</td>
+            <td class="saas">Cinema 4D / Maya ($ 2.000+/ano)</td>
+            <td class="econ">-$ 2.400 / ano por workstation</td>
+            <td class="cat">3D Creation Suite</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">03</td>
+            <td class="tool">Inkscape</td>
+            <td class="saas">Adobe Illustrator ($ 240/ano)</td>
+            <td class="econ">-$ 240 / ano por usuário</td>
+            <td class="cat">Vector Graphics</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">04</td>
+            <td class="tool">Krita</td>
+            <td class="saas">Corel Painter / Photoshop ($ 240/ano)</td>
+            <td class="econ">-$ 240 / ano por artista</td>
+            <td class="cat">Digital Painting</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">05</td>
+            <td class="tool">Excalidraw</td>
+            <td class="saas">Miro / Mural ($ 16/user/mês)</td>
+            <td class="econ">-$ 192 / ano por usuário</td>
+            <td class="cat">Virtual Whiteboard</td>
+            <td class="lic">MIT</td>
+          </tr>
+          <tr>
+            <td class="rank">06</td>
+            <td class="tool">Shotcut</td>
+            <td class="saas">Adobe Premiere ($ 240/ano)</td>
+            <td class="econ">-$ 240 / ano por editor</td>
+            <td class="cat">Video Editor</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">07</td>
+            <td class="tool">GIMP</td>
+            <td class="saas">Adobe Photoshop ($ 240/ano)</td>
+            <td class="econ">-$ 240 / ano por usuário</td>
+            <td class="cat">Image Manipulation</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">08</td>
+            <td class="tool">RawTherapee</td>
+            <td class="saas">Adobe Lightroom ($ 120/ano)</td>
+            <td class="econ">-$ 120 / ano por fotógrafo</td>
+            <td class="cat">RAW Photo Processing</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">09</td>
+            <td class="tool">Natron</td>
+            <td class="saas">Adobe After Effects / Nuke ($ 3.000+/ano)</td>
+            <td class="econ">-$ 3.000 / ano por artista VFX</td>
+            <td class="cat">Node-Based Compositing</td>
+            <td class="lic">GPL-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">10</td>
+            <td class="tool">Olive Video Editor</td>
+            <td class="saas">Final Cut Pro ($ 300)</td>
+            <td class="econ">-$ 300 compra única</td>
+            <td class="cat">Fast NLE Editor</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">11</td>
+            <td class="tool">Darktable</td>
+            <td class="saas">Lightroom Classic ($ 120/ano)</td>
+            <td class="econ">-$ 120 / ano por fotógrafo</td>
+            <td class="cat">Photography Workflow</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">12</td>
+            <td class="tool">Synfig Studio</td>
+            <td class="saas">Adobe Animate ($ 240/ano)</td>
+            <td class="econ">-$ 240 / ano por animador</td>
+            <td class="cat">2D Vector Animation</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">13</td>
+            <td class="tool">Flowblade</td>
+            <td class="saas">Sony Vegas ($ 200)</td>
+            <td class="econ">-$ 200 compra única</td>
+            <td class="cat">Fast Video Cutting</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">14</td>
+            <td class="tool">OpenShot</td>
+            <td class="saas">Filmora ($ 80/ano)</td>
+            <td class="econ">-$ 80 / ano por criador</td>
+            <td class="cat">Simple Video Editor</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">15</td>
+            <td class="tool">Audacity</td>
+            <td class="saas">Adobe Audition ($ 240/ano)</td>
+            <td class="econ">-$ 240 / ano por produtor</td>
+            <td class="cat">Audio Editor</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">16</td>
+            <td class="tool">FontForge</td>
+            <td class="saas">Glyphs / FontLab ($ 500)</td>
+            <td class="econ">-$ 500 compra única</td>
+            <td class="cat">Font Editor & Foundry</td>
+            <td class="lic">GPL-3.0</td>
+          </tr>
+          <tr>
+            <td class="rank">17</td>
+            <td class="tool">OpenColorIO</td>
+            <td class="saas">Sistemas de cores proprietários de Hollywood</td>
+            <td class="econ">Padrão de cor ACES universal</td>
+            <td class="cat">Color Management</td>
+            <td class="lic">BSD-3-Clause</td>
+          </tr>
+          <tr>
+            <td class="rank">18</td>
+            <td class="tool">MyPaint</td>
+            <td class="saas">Sketchbook Pro ($ 20/ano)</td>
+            <td class="econ">-$ 20 / ano</td>
+            <td class="cat">Distraction-Free Canvas</td>
+            <td class="lic">GPL-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">19</td>
+            <td class="tool">Pencil2D</td>
+            <td class="saas">Toon Boom Harmony ($ 500/ano)</td>
+            <td class="econ">-$ 500 / ano</td>
+            <td class="cat">Traditional Animation</td>
+            <td class="lic">GPL-2.0</td>
+          </tr>
+          <tr>
+            <td class="rank">20</td>
+            <td class="tool">FreeCAD Sketcher</td>
+            <td class="saas">AutoCAD 2D ($ 1.900/ano)</td>
+            <td class="econ">-$ 1.900 / ano por arquiteto</td>
+            <td class="cat">Parametric Vector 2D</td>
+            <td class="lic">LGPL-2.1</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 3 · O Detalhamento Técnico & Workflows Práticos</span>
+      <h2>As fichas técnicas completas com Guia do Dia a Dia</h2>
+      <p class="sec-note">O que faz, como funciona por baixo dos panos, comandos de execução e <strong>passo a passo detalhado para o seu fluxo diário</strong>.</p>
+    </div>
+
+    <div class="ledger">
+      <!-- 01 Penpot -->
+      <div class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Penpot</h3>
+            <span class="killer-badge">SUBSTITUI: Figma ($ 15/user/mês)</span>
+            <span class="econ-badge">ECONOMIA: -$ 180 / ano por designer</span>
+            <span class="lic-badge">MPL-2.0</span>
+            <span class="kind">UI/UX Design</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>A primeira plataforma open-source de design e prototipagem construída nativamente sobre SVG e CSS Grid moderno.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Renderiza layouts diretamente no DOM com flexbox e CSS grid nativos, facilitando a inspeção direta por desenvolvedores.</p>
+
+              <pre><code>docker compose -p penpot -f docker-compose.yaml up -d</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Penpot</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://penpot.app" target="_blank" rel="noopener">penpot.app</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 Blender -->
+      <div class="entry">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Blender</h3>
+            <span class="killer-badge">SUBSTITUI: Cinema 4D / Maya ($ 2.000+/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 2.400 / ano por workstation</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">3D Creation Suite</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>A suíte 3D mais avançada do mundo para modelagem, rigging, animação, simulação, rendering e motion tracking.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Motor de render Cycles acelerado por GPU (OptiX/HIP) e renderizador em tempo real EEVEE Next.</p>
+
+              <pre><code>blender --background scene.blend --render-anim</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Blender</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://blender.org" target="_blank" rel="noopener">blender.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Inkscape -->
+      <div class="entry">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Inkscape</h3>
+            <span class="killer-badge">SUBSTITUI: Adobe Illustrator ($ 240/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 240 / ano por usuário</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Vector Graphics</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Editor de gráficos vetoriais de qualidade profissional com suporte completo ao padrão SVG do W3C.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Manipulação direta de nós, curvas de Bézier, texto sobre caminho e exportação de alta fidelidade para PDF/EPS.</p>
+
+              <pre><code>inkscape input.svg --export-filename=output.png --export-dpi=300</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Inkscape</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://inkscape.org" target="_blank" rel="noopener">inkscape.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 Krita -->
+      <div class="entry">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Krita</h3>
+            <span class="killer-badge">SUBSTITUI: Corel Painter / Photoshop ($ 240/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 240 / ano por artista</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Digital Painting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Estúdio de pintura digital, ilustração conceitual e animação quadro a quadro focado em artistas profissionais.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Motor de pincéis com suporte a sensibilidade de pressão, gerenciamento de cores CMYK/ICC e estabilização de traço.</p>
+
+              <pre><code>flatpak install flathub org.kde.krita</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Krita</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://krita.org" target="_blank" rel="noopener">krita.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 Excalidraw -->
+      <div class="entry">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Excalidraw</h3>
+            <span class="killer-badge">SUBSTITUI: Miro / Mural ($ 16/user/mês)</span>
+            <span class="econ-badge">ECONOMIA: -$ 192 / ano por usuário</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Virtual Whiteboard</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Quadro branco virtual com estilo de desenho à mão livre, criptografia ponta a ponta e colaboração em tempo real.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Renderiza formas vetoriais com efeito rascunho usando Rough.js e exporta SVG puro com dados incorporados.</p>
+
+              <pre><code>npm install @excalidraw/excalidraw</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Excalidraw</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://excalidraw.com" target="_blank" rel="noopener">excalidraw.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06 Shotcut -->
+      <div class="entry">
+        <div class="entry-rank">06</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Shotcut</h3>
+            <span class="killer-badge">SUBSTITUI: Adobe Premiere ($ 240/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 240 / ano por editor</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Video Editor</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Editor de vídeo não-linear multiplataforma com suporte a 4K, edição em linha do tempo multitrack e aceleração por GPU.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Construído sobre o framework FFmpeg e MLT, permitindo importar qualquer codec sem necessidade de conversão prévia.</p>
+
+              <pre><code>shotcut project.mlt</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Shotcut</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://shotcut.org" target="_blank" rel="noopener">shotcut.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07 GIMP -->
+      <div class="entry">
+        <div class="entry-rank">07</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>GIMP</h3>
+            <span class="killer-badge">SUBSTITUI: Adobe Photoshop ($ 240/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 240 / ano por usuário</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Image Manipulation</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>O clássico manipulador de imagens open-source com suporte a camadas, máscaras, filtros avançados e plugins Python.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Motor GEGL com processamento de ponto flutuante de 32 bits por canal e edição não-destrutiva.</p>
+
+              <pre><code>gimp input.jpg</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>GIMP</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://gimp.org" target="_blank" rel="noopener">gimp.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08 RawTherapee -->
+      <div class="entry">
+        <div class="entry-rank">08</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>RawTherapee</h3>
+            <span class="killer-badge">SUBSTITUI: Adobe Lightroom ($ 120/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 120 / ano por fotógrafo</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">RAW Photo Processing</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Processador e revelador de fotos RAW não-destrutivo com algoritmos de demosaicing de alta precisão.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Pipeline de cores CIECAM02 com controle avançado de faixa dinâmica, redução de ruído wavelet e calibração de lentes.</p>
+
+              <pre><code>rawtherapee-cli -o output.jpg -c input.cr3</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>RawTherapee</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://rawtherapee.com" target="_blank" rel="noopener">rawtherapee.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09 Natron -->
+      <div class="entry">
+        <div class="entry-rank">09</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Natron</h3>
+            <span class="killer-badge">SUBSTITUI: Adobe After Effects / Nuke ($ 3.000+/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 3.000 / ano por artista VFX</span>
+            <span class="lic-badge">GPL-2.0</span>
+            <span class="kind">Node-Based Compositing</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Software de composição visual baseado em nós para efeitos visuais, rotoscopia e tracking 2D.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Suporte a plugins OpenFX, processamento multithreaded e pipeline de cores linear OpenColorIO.</p>
+
+              <pre><code>natron project.ntp</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Natron</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://natrongithub.github.io" target="_blank" rel="noopener">natrongithub.github.io</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 Olive Video Editor -->
+      <div class="entry">
+        <div class="entry-rank">10</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Olive Video Editor</h3>
+            <span class="killer-badge">SUBSTITUI: Final Cut Pro ($ 300)</span>
+            <span class="econ-badge">ECONOMIA: -$ 300 compra única</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Fast NLE Editor</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Editor de vídeo moderno focado em velocidade de renderização em tempo real com sombreamento GLSL.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Composição totalmente acelerada por hardware OpenGL com pipeline de cores nó-a-nó.</p>
+
+              <pre><code>olive-editor project.ove</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Olive Video Editor</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://olivevideoeditor.org" target="_blank" rel="noopener">olivevideoeditor.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11 Darktable -->
+      <div class="entry">
+        <div class="entry-rank">11</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Darktable</h3>
+            <span class="killer-badge">SUBSTITUI: Lightroom Classic ($ 120/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 120 / ano por fotógrafo</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Photography Workflow</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Mesa de luz virtual e câmara escura para gerenciar catálogos de milhares de fotos RAW com aceleração OpenCL.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Pipeline de pixels baseada em cena (Scene-Referred) com mapeamento de tom filmic e suporte a LUTs 3D.</p>
+
+              <pre><code>darktable-cli input.raw output.jpg</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Darktable</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://darktable.org" target="_blank" rel="noopener">darktable.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12 Synfig Studio -->
+      <div class="entry">
+        <div class="entry-rank">12</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Synfig Studio</h3>
+            <span class="killer-badge">SUBSTITUI: Adobe Animate ($ 240/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 240 / ano por animador</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">2D Vector Animation</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Software de animação vetorial 2D com interpolação automática de quadros (tweening) e esqueleto (bones).</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Renderização espacial e temporal de gradientes vetoriais com controle de curvas e deformação de malha.</p>
+
+              <pre><code>synfig animation.sifz -o output.png</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Synfig Studio</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://synfig.org" target="_blank" rel="noopener">synfig.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13 Flowblade -->
+      <div class="entry">
+        <div class="entry-rank">13</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Flowblade</h3>
+            <span class="killer-badge">SUBSTITUI: Sony Vegas ($ 200)</span>
+            <span class="econ-badge">ECONOMIA: -$ 200 compra única</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Fast Video Cutting</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Editor de vídeo focado em corte rápido com fluxo de trabalho magnético e precisão de quadro.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Integração profunda com MLT e G'MIC para processamento de filtros de vídeo em tempo real.</p>
+
+              <pre><code>flowblade</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Flowblade</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://jliljestr.github.io/flowblade" target="_blank" rel="noopener">jliljestr.github.io/flowblade</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14 OpenShot -->
+      <div class="entry">
+        <div class="entry-rank">14</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>OpenShot</h3>
+            <span class="killer-badge">SUBSTITUI: Filmora ($ 80/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 80 / ano por criador</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Simple Video Editor</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Editor de vídeo fácil de usar com camadas ilimitadas, transições 3D e exportação simplificada para redes sociais.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Motor C++ libopenshot com suporte a curvas de animação Bezier e renderização por áudio.</p>
+
+              <pre><code>openshot-qt</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>OpenShot</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://openshot.org" target="_blank" rel="noopener">openshot.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15 Audacity -->
+      <div class="entry">
+        <div class="entry-rank">15</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Audacity</h3>
+            <span class="killer-badge">SUBSTITUI: Adobe Audition ($ 240/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 240 / ano por produtor</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Audio Editor</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>O editor e gravador de áudio multitrack mais popular do mundo para podcasts, música e tratamento de ruído.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Processamento de ponto flutuante de 32 bits com suporte a plugins VST3, LADSPA e redução espectral de ruído.</p>
+
+              <pre><code>audacity audio.wav</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Audacity</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://audacityteam.org" target="_blank" rel="noopener">audacityteam.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 16 FontForge -->
+      <div class="entry">
+        <div class="entry-rank">16</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>FontForge</h3>
+            <span class="killer-badge">SUBSTITUI: Glyphs / FontLab ($ 500)</span>
+            <span class="econ-badge">ECONOMIA: -$ 500 compra única</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Font Editor & Foundry</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Editor e gerador de fontes tipográficas completo para criar e manipular arquivos OpenType, TrueType e WOFF.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Controle de curvas de Bézier cúbicas/quadráticas, kerning de pares, tabelas de hinting e script Python nativo.</p>
+
+              <pre><code>fontforge -script convert.py font.ttf</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>FontForge</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://fontforge.org" target="_blank" rel="noopener">fontforge.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 17 OpenColorIO -->
+      <div class="entry">
+        <div class="entry-rank">17</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>OpenColorIO</h3>
+            <span class="killer-badge">SUBSTITUI: Sistemas de cores proprietários de Hollywood</span>
+            <span class="econ-badge">ECONOMIA: Padrão de cor ACES universal</span>
+            <span class="lic-badge">BSD-3-Clause</span>
+            <span class="kind">Color Management</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>O padrão da indústria cinematográfica da Academia para gerenciamento de cores e LUTs em VFX e animação.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Transformações de cor aceleradas por GPU para manter paridade exata entre Blender, Natron, Krita e Unreal Engine.</p>
+
+              <pre><code>ociobakelut --inputspace raw --outputspace sRGB lut.cube</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>OpenColorIO</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://opencolorio.org" target="_blank" rel="noopener">opencolorio.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 18 MyPaint -->
+      <div class="entry">
+        <div class="entry-rank">18</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>MyPaint</h3>
+            <span class="killer-badge">SUBSTITUI: Sketchbook Pro ($ 20/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 20 / ano</span>
+            <span class="lic-badge">GPL-2.0</span>
+            <span class="kind">Distraction-Free Canvas</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Tela infinita e limpa para desenho conceitual com foco total no pincel e suporte a mesas digitalizadoras Wacom.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Motor libmypaint com simulação de pincéis naturais, carvão e tinta com tempo de resposta ultrarrápido.</p>
+
+              <pre><code>mypaint</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>MyPaint</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://mypaint.org" target="_blank" rel="noopener">mypaint.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 19 Pencil2D -->
+      <div class="entry">
+        <div class="entry-rank">19</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Pencil2D</h3>
+            <span class="killer-badge">SUBSTITUI: Toon Boom Harmony ($ 500/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 500 / ano</span>
+            <span class="lic-badge">GPL-2.0</span>
+            <span class="kind">Traditional Animation</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Aplicativo leve e intuitivo para animação tradicional desenhada à mão em 2D combinando bitmap e vetor.</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Timeline simples com papel vegetal (onion skinning) e exportação direta para MP4, GIF e sequências PNG.</p>
+
+              <pre><code>pencil2d</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>Pencil2D</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://pencil2d.org" target="_blank" rel="noopener">pencil2d.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 20 FreeCAD Sketcher -->
+      <div class="entry">
+        <div class="entry-rank">20</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>FreeCAD Sketcher</h3>
+            <span class="killer-badge">SUBSTITUI: AutoCAD 2D ($ 1.900/ano)</span>
+            <span class="econ-badge">ECONOMIA: -$ 1.900 / ano por arquiteto</span>
+            <span class="lic-badge">LGPL-2.1</span>
+            <span class="kind">Parametric Vector 2D</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Módulo de desenho paramétrico com resolução geométrica baseada em restrições (solver de restrições).</p>
+
+              <span class="label" style="margin-top:6px;">2. Como Funciona (Mecânica Interna)</span>
+              <p style="font-size:14px;color:var(--ink-2);">Calcula posições de arcos e linhas através de equações matemáticas, garantindo precisão milimétrica para manufatura.</p>
+
+              <pre><code>freecadcmd sketch.py</code></pre>
+
+              <div class="how-to-use" style="background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 2px 2px 0;margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                <span class="label" style="color:var(--accent);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;">3. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+                <p style="font-size:13.5px !important;color:var(--ink) !important;line-height:1.55 !important;margin:0;">1. Instale o pacote oficial de <code>FreeCAD Sketcher</code>.<br>2. Configure os parâmetros essenciais no ambiente local.<br>3. Integre aos seus pipelines de desenvolvimento com 100% de controle.</p>
+              </div>
+            </div>
+            <div class="block">
+              <span class="label">Especificação & Realidade</span>
+              <div class="spec">Open-source / Execução local</div>
+              <div class="truth">
+                <p><strong>Por que é ouro:</strong> Solução open-source consolidada que entrega máxima performance e independência tecnológica.</p>
+              </div>
+              <a class="repo" href="https://freecad.org" target="_blank" rel="noopener">freecad.org</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head flagged">
+      <span class="sec-num">Parte 4 · A Regra de Ouro</span>
+      <h2>Como operar essa pilha com estabilidade</h2>
+      <p class="sec-note">Diretrizes para rodar ferramentas no seu próprio servidor com resiliência máxima e zero sobrecarga.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="reject">
+        <h4>1. Isolamento em Containers Docker</h4>
+        <p>Nunca instale ferramentas diretamente no sistema host sem isolamento de rede e volumes mapeados em disco seguro.</p>
+      </div>
+      <div class="reject">
+        <h4>2. Proxy Reverso com Caddy / Traefik</h4>
+        <p>Aponte a borda de rede para proxies leves com renovação automática de certificados TLS sem scripts manuais.</p>
+      </div>
+      <div class="reject">
+        <h4>3. Backup Imutável com Restic / Borg</h4>
+        <p>Programe snapshots diários dos volumes para armazenamento S3 remoto compatível para restauração rápida em caso de desastre.</p>
+      </div>
+      <div class="reject">
+        <h4>4. Acesso Seguro via WireGuard / Headscale</h4>
+        <p>Mantenha painéis de administração e bancos de dados fora da internet pública, acessíveis apenas pela VPN mesh interna.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas e viabilidade em produção.</p>
+    <div class="srcs">
+      <span>Open Source Initiative (OSI)</span>
+      <span>Linux Foundation</span>
+      <span>CNCF Landscape</span>
+    </div>
+  </footer>
+
+</div>
+
 </body>
 </html>
