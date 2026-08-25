@@ -21,8 +21,12 @@ jobs:
       - name: Sintaxe (Python, JSON, frontmatter de skills)
         run: python tests/test-syntax.py
 
+      # Bloco `|` obrigatorio: em `run: grep -q "alwaysApply: true" ...` o `: `
+      # dentro das aspas faz o YAML ler a linha como mapping e o workflow inteiro
+      # nao carrega ("workflow file issue"), sem apontar a linha.
       - name: CLAUDE.md carrega sempre
-        run: grep -q "alwaysApply: true" .claude/CLAUDE.md
+        run: |
+          grep -q "alwaysApply: true" .claude/CLAUDE.md
 
       - name: Skills de economia presentes
         run: |
