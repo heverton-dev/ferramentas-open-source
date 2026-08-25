@@ -49,8 +49,7 @@ alwaysApply: true
 - **R2 (Silenciamento):** sem preambulos/saudacoes nos artefatos. Markdown limpo.
 - **R3 (Autonomia):** apos o escopo definido, o fluxo roda 100% autonomo.
 - **R4 (Auto-correcao):** desvios sao corrigidos internamente antes da entrega.
-- **R5 (Identidade visual):** artefatos visuais seguem um padrao unico e
-  validado por gate. `[CUSTOMIZAR]` — defina o padrao do seu dominio.
+- **R5 (Identidade visual & Padrão Dossiê Executivo):** artefatos visuais seguem o padrão obrigatório do **Dossiê Executivo**: (1) Header com Hero Stats Bar e âncoras rápidas; (2) Título H1 e Deck justificados (`text-align: justify; text-justify: inter-word;`); (3) Tabela de dados 100% fluida sem scroll horizontal; (4) Cards verticais de largura total divididos em 4 seções padronizadas: *O Que Faz & Como Funciona* (com bloco de código e botão Copiar), *Análise Econômica* (SaaS substituídos e ROI), *Requisitos de Infraestrutura & Veredito* (com botão GitHub) e *Como Usar no Dia a Dia* (grid com 3 mini-cards visuais de passos práticos). É estritamente proibido o uso de layouts em 2 colunas espremidas (`div.cols`) ou passos condensados em parágrafos únicos.
 - **R6 (Modelo Livre):** nenhum modelo LLM fixo. `model: inherit` em todos os agents.
 - **R7 (Conteudo de entrega e intocavel):** o que vai para o usuario final nao e
   resumido, truncado nem "melhorado" sem pedido explicito.
