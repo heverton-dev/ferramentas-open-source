@@ -1,23 +1,36 @@
 # 🌐 Token Economy Core
-### O Padrão Universal para Reduzir até 95% do Gasto de Tokens com IA (Para Iniciantes & Veteranos)
+### O Padrão Universal para Reduzir até 95% do Gasto de Tokens com IA (Para IDEs, ADEs, Iniciantes & Veteranos)
 
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Tokens Saved](https://img.shields.io/badge/Tokens%20Economy-Até%20--95.3%25-brightgreen.svg)](#-resultados-comprovados-em-testes-reais)
 [![Multi-OS](https://img.shields.io/badge/SO-Windows%20%7C%20macOS%20%7C%20Linux-blue.svg)](#)
-[![Multi-IDE](https://img.shields.io/badge/IDEs-Claude%20Code%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20Cline%20%7C%20Antigravity%20%7C%20Copilot%20%7C%20Aider-orange.svg)](#)
+[![ADE Ready](https://img.shields.io/badge/Ambientes-ORCA%20ADE%20%7C%20Antigravity%20%7C%20OpenHands%20%7C%20IDEs-purple.svg)](#)
 
 ---
 
 ## 🎯 O que é o Token Economy Core?
 
-Se você usa IA para programar (em **qualquer IDE, Harness ou Modelo**), já deve ter notado que a cota de 5 horas acaba rápido ou a fatura de tokens sobe desnecessariamente.
+Se você usa IA para programar — seja em **IDEs convencionais (Cursor, VS Code, Windsurf)** ou em **ADEs / Ambientes Agênticos Avançados (ORCA ADE, Antigravity, OpenHands, Aider)** —, a cota de 5 horas e a janela de contexto costumam estourar rapidamente.
 
 Isso acontece porque a IA costuma:
 1. **Ler arquivos gigantes inúteis** (como `package-lock.json`, `dist/` ou imagens).
 2. **Pensar de forma prolixa** (gastando centenas de tokens no raciocínio interno antes de responder).
 3. **Ler 300 linhas de logs de terminal** quando o erro real está em 3 linhas.
+4. **Multiplicar o consumo em Squads Multi-Agentes:** Quando 4 subagentes rodam em paralelo em um ADE, o consumo de tokens é multiplicado por 4x.
 
-O **Token Economy Core** é um submódulo universal e plugável que resolve isso de forma **100% automática, não-destrutiva e agnóstica a SO**: ele instala regras inteligentes, skills de disciplina e automação de empacotamento com **apenas 1 comando universal em Python**.
+O **Token Economy Core** é um submódulo universal e plugável que resolve isso de forma **100% automática, não-destrutiva e agnóstica a SO e IDE**: ele instala regras inteligentes, skills de disciplina e automação de empacotamento com **apenas 1 comando universal em Python**.
+
+---
+
+## 🪐 Aplicabilidade em Ambientes ADE (ORCA, Antigravity, OpenHands)
+
+Em **Ambientes de Desenvolvimento Agêntico (ADEs)** como o **ORCA**, o consumo de tokens não é linear: ele ocorre em *fan-out* (múltiplos subagentes operando em paralelo).
+
+O **Token Economy Core** atua como a infraestrutura de eficiência compartilhada:
+* **Prompt Caching Compartilhado:** Todos os subagentes consomem o mesmo snapshot do Repomix, gerando até 90% de desconto de cache em todas as instâncias paralelas.
+* **Comunicação Agente-para-Agente Telegráfica:** A skill `caveman` impede que subagentes troquem relatórios prolixos entre si, enxugando as mensagens internas.
+* **Logs de Sandbox Controlados:** A skill `headroom` impede que comandos executados nas sandboxes do ADE saturem o transcript do orquestrador.
+* **Memória Coletiva de Workspace:** A skill `rtk-memory` permite que um subagente aprenda com o erro do outro através do `RTK-SCRATCHPAD.md` compartilhado.
 
 ---
 
@@ -36,7 +49,7 @@ Em nossa bateria de benchmark empírico em projetos reais, obtivemos os seguinte
 
 ---
 
-## 🚀 Instalação Universal em 2 Passos (Qualquer SO e Qualquer IDE)
+## 🚀 Instalação Universal em 2 Passos (Qualquer SO, IDE ou ADE)
 
 O instalador é **100% multiplataforma (Windows, macOS e Linux)**.
 
@@ -68,13 +81,14 @@ python .token-economy/install.py
 
 ---
 
-## 🌐 Matriz de Universalidade
+## 🌐 Matriz de Universalidade Completa
 
-| Categoria | Suporte Completo |
+| Categoria | Suporte e Integração Nativas |
 |---|---|
 | **Sistemas Operacionais** | Windows 10/11, macOS (Intel/Apple Silicon), Linux (Ubuntu, Debian, Fedora, Arch). |
+| **Ambientes ADE & Agênticos** | ORCA ADE, Antigravity, OpenHands, Factory Droid, Devin-like platforms. |
 | **IDEs & Editores** | VS Code, Cursor, Windsurf, JetBrains, Zed, Void, Neovim. |
-| **Harnesses & CLIs** | Claude Code, Antigravity, Aider, OpenCode, Codebuff, Cline, Roo-Code, GitHub Copilot CLI. |
+| **Harnesses & CLIs** | Claude Code, Antigravity CLI, Aider, OpenCode, Codebuff, Cline, Roo-Code, Copilot CLI. |
 | **Modelos de IA** | Anthropic Claude, OpenAI GPT, Google Gemini, DeepSeek, Qwen, Meta Llama, Ollama Local. |
 
 ---
@@ -111,6 +125,9 @@ npx ccusage@latest daily
 
 ### A economia de tokens reduz a inteligência ou a qualidade do código?
 **Não.** O submódulo aplica a regra de **Compressão Assimétrica**: ele corta apenas o lixo (logs repetitivos, pensamentos prolixos e arquivos desnecessários). **O código final entregue para você nunca é resumido ou truncado.**
+
+### Posso usar em projetos que usam múltiplos subagentes ao mesmo tempo?
+**Sim!** Ele foi otimizado exatamente para ambientes ADE como o ORCA, impedindo que subagentes paralelos esgotem sua cota de tokens.
 
 ---
 
