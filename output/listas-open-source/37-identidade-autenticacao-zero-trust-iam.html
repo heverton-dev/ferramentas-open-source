@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Identidade, Autenticação & Zero-Trust SSO: IAM Aberto Corporativo</title>
+<style>
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+  :root {
+    --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
+    --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
+    --rule:#C7CEDB; --rule-soft:#DADFE8;
+    --accent:#2A4365; --accent-soft:#E2E8F0;
+    --gold:#7A5410; --gold-soft:#EFE5CE;
+    --flag:#8E2436; --flag-soft:#F0D9DD;
+    --green:#1B5E3B; --green-soft:#D8EFE2;
+    --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+      --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+      --rule:#2A3142; --rule-soft:#222836;
+      --accent:#90CDF4; --accent-soft:#1A365D;
+      --gold:#D6A44E; --gold-soft:#332810;
+      --flag:#E0788C; --flag-soft:#3A1A21;
+      --green:#6BC48F; --green-soft:#122B1C;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
+
+  header { display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 14px; align-items:baseline; }
+  .eyebrow b { color:var(--accent); font-weight:600; }
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(38px,7.5vw,72px); line-height:.98; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.5; color:var(--ink-2); max-width:64ch; margin:0; }
+  .deck strong { color:var(--ink); font-weight:600; }
+
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; padding:5px 10px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink-2); white-space:nowrap; }
+  .chip b { color:var(--ink); font-weight:600; }
+
+  section { display:flex; flex-direction:column; gap:22px; }
+  .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
+  .sec-num { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:68ch; font-size:15.5px; }
+
+  .tablewrap { overflow-x:auto; border:1px solid var(--rule); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:880px; font-size:14px; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:11px 14px; border-bottom:1px solid var(--rule); white-space:nowrap; }
+  tbody td { padding:10px 14px; border-bottom:1px solid var(--rule-soft); vertical-align:baseline; }
+  tbody tr:last-child td { border-bottom:0; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:1%; }
+  td.tool { font-weight:600; }
+  td.killer { font-family:var(--mono); font-size:11.5px; color:var(--flag); font-weight:600; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; white-space:nowrap; }
+  td.lic { font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
+
+  .ledger { display:flex; flex-direction:column; gap:20px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:18px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  .entry-body { padding:18px 20px 20px; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .entry-top { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 12px; }
+  .entry h3 { font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; margin:0; letter-spacing:-.01em; }
+  .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
+  .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
+  .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+
+  .cols { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr); gap:20px 28px; }
+  @media (max-width:720px) { .cols { grid-template-columns:1fr; } }
+  .block { display:flex; flex-direction:column; gap:8px; min-width:0; }
+  .label { font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .block p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .block p strong { color:var(--ink); font-weight:600; }
+
+  pre { margin:0; padding:10px 12px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:12.5px; color:var(--ink); line-height:1.5; }
+
+  .spec { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:17px; color:var(--accent); line-height:1.3; }
+  .truth { border-left:2px solid var(--gold); padding-left:12px; }
+  .truth p { font-size:14px; }
+
+  a { color:var(--accent); text-decoration-color:color-mix(in srgb, var(--accent) 40%, transparent); text-underline-offset:3px; }
+  a:hover { text-decoration-color:var(--accent); }
+  .repo { font-family:var(--mono); font-size:12.5px; word-break:break-all; }
+
+  footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:72ch; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">
+      <span>Camada 37 · Segurança de Acesso & Identidade</span><span>·</span><span>Curadoria de Elite</span><span>·</span>
+      <b>Top 20 Tecnologias de IAM & Zero-Trust</b>
+    </div>
+    <h1>Identidade, Autenticação & Zero-Trust SSO</h1>
+    <p class="deck">Como unificar logins, controle de permissões por papéis (RBAC), autenticação sem senhas (Passkeys) e acesso Zero-Trust <strong>substituindo Okta, Auth0, Microsoft Entra ID (Azure AD) e Ping Identity</strong>.</p>
+    <div class="chips">
+      <div class="chip"><b>20</b> tecnologias auditadas</div>
+      <div class="chip"><b>Economia:</b> -$ 15 a $ 60 por usuário / mês</div>
+      <div class="chip"><b>Padrões:</b> OpenID Connect, OAuth2, SAML 2.0 & Passkeys</div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 1 · Matriz Comparativa</span>
+      <h2>Top 20 Motores de Autenticação & Gestão de Acessos</h2>
+      <p class="sec-note">Auditoria de servidores de Single Sign-On (SSO), proxies Zero-Trust e cofres de segredos corporativos.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Tecnologia</th>
+            <th>Substitui no Mercado</th>
+            <th>Categoria / Foco</th>
+            <th>Economia Estimada</th>
+            <th>Licença</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="rank">01</td><td class="tool">Keycloak</td><td class="killer">Okta / Auth0 Enterprise</td><td>IAM & SSO Corporativo da Red Hat</td><td class="econ">-$ 40.000 a $ 120.000 / ano</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">02</td><td class="tool">Authentik</td><td class="killer">Auth0 / OneLogin</td><td>IdP Moderno para DevOps/Docker</td><td class="econ">-$ 25.000 / ano</td><td class="lic">GPLv3</td></tr>
+          <tr><td class="rank">03</td><td class="tool">Zitadel</td><td class="killer">Auth0 B2B Multi-Tenant</td><td>IAM Cloud-Native Multi-Tenancy</td><td class="econ">-$ 30.000 / ano</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">04</td><td class="tool">Ory Kratos</td><td class="killer">Firebase Auth / Cognito</td><td>Gestão de Usuários & Login em Go</td><td class="econ">-$ 18.000 / ano</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">05</td><td class="tool">Ory Hydra</td><td class="killer">PingFederate</td><td>Servidor OAuth2/OIDC Certificado</td><td class="econ">-$ 22.000 / ano</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">06</td><td class="tool">Teleport</td><td class="killer">CyberArk / BeyondTrust</td><td>Zero-Trust Access (SSH, K8s, DB)</td><td class="econ">-$ 50.000 / ano</td><td class="lic">AGPLv3 / Apache</td></tr>
+          <tr><td class="rank">07</td><td class="tool">Casdoor</td><td class="killer">Auth0 / Okta</td><td>IAM com UI rica e Login Social</td><td class="econ">-$ 20.000 / ano</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">08</td><td class="tool">Authelia</td><td class="killer">Duo Security / Cloudflare Access</td><td>Portal SSO 2FA para Proxies</td><td class="econ">-$ 15.000 / ano</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">09</td><td class="tool">SuperTokens</td><td class="killer">Auth0 / Clerk.dev</td><td>Auth SDK com Session Management</td><td class="econ">-$ 18.000 / ano</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">10</td><td class="tool">Vaultwarden</td><td class="killer">1Password Business / LastPass</td><td>Cofre de Senhas Corporativo (Rust)</td><td class="econ">-$ 8.000 / ano</td><td class="lic">AGPLv3</td></tr>
+          <tr><td class="rank">11</td><td class="tool">HashiCorp Vault</td><td class="killer">AWS Secrets Manager / CyberArk</td><td>Gestão de Segredos & PKI Dinâmica</td><td class="econ">-$ 30.000 / ano</td><td class="lic">BSL / MPL</td></tr>
+          <tr><td class="rank">12</td><td class="tool">Pomerium</td><td class="killer">Zscaler Private Access / Cloudflare</td><td>Identity-Aware Proxy Zero-Trust</td><td class="econ">-$ 28.000 / ano</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">13</td><td class="tool">Boundary</td><td class="killer">Bastião SSH Proprietário</td><td>Acesso Seguro a Redes Privadas</td><td class="econ">-$ 15.000 / ano</td><td class="lic">BSL</td></tr>
+          <tr><td class="rank">14</td><td class="tool">FreeIPA</td><td class="killer">Microsoft Active Directory (AD)</td><td>Domínio Linux Centralizado (LDAP)</td><td class="econ">-$ 25.000 / ano</td><td class="lic">GPLv3</td></tr>
+          <tr><td class="rank">15</td><td class="tool">OAuth2-Proxy</td><td class="killer">Módulos de Auth Proprietários</td><td>Proxy Injetor de Autenticação OIDC</td><td class="econ">-$ 10.000 / ano</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">16</td><td class="tool">PocketBase Auth</td><td class="killer">Firebase Authentication</td><td>Auth Leve embutido em SQLite</td><td class="econ">-$ 8.000 / ano</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">17</td><td class="tool">Dex IdP</td><td class="killer">IdPs de Nuvem Fechados</td><td>Conector de Identidade OIDC/LDAP</td><td class="econ">-$ 12.000 / ano</td><td class="lic">Apache-2.0</td></tr>
+          <tr><td class="rank">18</td><td class="tool">Kanidm</td><td class="killer">FreeIPA / Active Directory</td><td>Servidor de Identidade em Rust</td><td class="econ">-$ 15.000 / ano</td><td class="lic">MPLv2</td></tr>
+          <tr><td class="rank">19</td><td class="tool">SimpleWebAuthn</td><td class="killer">Passkey Providers Pagos</td><td>Autenticação FIDO2 / Passkeys</td><td class="econ">Incalculável</td><td class="lic">MIT</td></tr>
+          <tr><td class="rank">20</td><td class="tool">Cerbos</td><td class="killer">Permit.io / Ory Keto</td><td>Motor de Autorização Fina (ABAC)</td><td class="econ">-$ 18.000 / ano</td><td class="lic">Apache-2.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Parte 2 · Fichas Técnicas</span>
+      <h2>Detalhamento dos motores de IAM</h2>
+    </div>
+
+    <div class="ledger">
+      <!-- 01. Keycloak -->
+      <div class="entry">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Keycloak · O Padrão Ouro de SSO Corporativo</h3>
+            <span class="killer-badge">Substitui: Okta / Auth0</span>
+            <span class="econ-badge">Economia: -$ 40k a $ 120k/ano</span>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">IAM / SSO</span>
+          </div>
+          <div class="cols">
+            <div class="block">
+              <span class="label">1. O Que Faz</span>
+              <p>Servidor completo de <strong>Single Sign-On (SSO), autenticação centralizada, federação com Active Directory/LDAP e controle fino de permissões RBAC</strong> com suporte a OpenID Connect e SAML 2.0.</p>
+              <span class="label">2. Como Funciona</span>
+              <p>Roda sobre Quarkus/JVM com inicialização rápida e consumo otimizado, servindo como o provedor central de login de toda a empresa.</p>
+              <pre><code>docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:latest start-dev</code></pre>
+            </div>
+            <div class="block">
+              <span class="label">Especificações</span>
+              <div class="spec">Zero Custos por MAU · Suporta Milhões de Usuários</div>
+              <div class="truth">
+                <p><strong>Veredito:</strong> A escolha obrigatória para empresas que querem se libertar das cobranças dolarizadas por usuário do Okta e Auth0.</p>
+              </div>
+              <div class="repo"><a href="https://github.com/arsenal-open-source/keycloak" target="_blank">github.com/keycloak/keycloak</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Enciclopédia de Soberania Tecnológica gerada pela Fábrica Universal.</p>
+  </footer>
+
+</div>
+
+</body>
+</html>
