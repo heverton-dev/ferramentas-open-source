@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 NORMALIZADOR E COMPILADOR DETERMINÍSTICO UNIVERSAL (PADRÃO DIAMANTE R5)
-Converte automaticamente qualquer HTML gerado por LLMs (mesmo com classes fora do padrão)
-ou arquivos JSON estruturados no formato canônico Diamante R5 da Fábrica Universal.
-Torna a esteira 100% resiliente e à prova de variações entre modelos (Mimo, Claude, GPT, etc).
+Converte automaticamente qualquer HTML gerado por LLMs ou arquivos JSON estruturados
+no formato canônico Diamante R5 da Fábrica Universal sem alterar o nome do arquivo.
 """
 import os
 import sys
@@ -28,10 +27,8 @@ OUTPUT_DIR = BASE_DIR / "output" / "listas-open-source"
 DOCS_DIR = BASE_DIR / "docs" / "listas"
 
 def extrair_dados_de_html(html_content: str, numero_sugerido: int = 51) -> dict:
-    """Extrai os dados de ferramentas de qualquer HTML imperfeito via BeautifulSoup."""
     soup = BeautifulSoup(html_content, "html.parser")
     
-    # 1. Extrair Título e Deck
     h1 = soup.find("h1")
     titulo_raw = h1.text.strip() if h1 else f"Compêndio Camada {numero_sugerido:02d}"
     titulo_limpo = re.sub(r'^(Camada\s*\d+\s*[·\-]\s*|\d+\s*[·\-]\s*)', '', titulo_raw).strip()
@@ -39,14 +36,12 @@ def extrair_dados_de_html(html_content: str, numero_sugerido: int = 51) -> dict:
     p_deck = soup.find("p", class_="deck")
     deck = p_deck.text.strip() if p_deck else "Compêndio técnico de alternativas open-source com licença OSI e soberania operacional."
     
-    # Extrair número se houver no título ou badge
     match_num = re.search(r'(?:Camada\s*|#\s*)?(\d+)', titulo_raw)
     numero = int(match_num.group(1)) if match_num else numero_sugerido
     slug = re.sub(r'[^a-z0-9]+', '-', titulo_limpo.lower()).strip('-')
     if not slug:
         slug = f"camada-{numero:02d}"
 
-    # 2. Extrair Tabela (se houver)
     tabela_map = {}
     rows = soup.find_all("tr")[1:]
     for r in rows:
@@ -70,7 +65,6 @@ def extrair_dados_de_html(html_content: str, numero_sugerido: int = 51) -> dict:
             except Exception:
                 pass
 
-    # 3. Extrair Fichas (.entry)
     entries = soup.find_all("div", class_="entry")
     ferramentas = []
 
@@ -82,22 +76,18 @@ def extrair_dados_de_html(html_content: str, numero_sugerido: int = 51) -> dict:
         nome = partes[-1].strip() if len(partes) > 1 else nome_raw
         fslug = re.sub(r'[^a-z0-9]+', '-', nome.lower()).strip('-')
 
-        # O que faz
         p_desc = e.find("p")
         o_que_faz = p_desc.text.strip() if p_desc else "Solução open-source de alta maturidade corporativa."
         
-        # Código
         code_el = e.find("div", class_="code-block") or e.find("pre") or e.find("code")
         code_txt = code_el.text.replace("Copiar", "").strip() if code_el else f"docker run -d --name {fslug} {fslug}:latest"
 
-        # Economia / SaaS
         econ_el = e.find("div", class_="economic-analysis") or e.find(class_=re.compile(r'econ|killer'))
         econ_str = econ_el.text.strip() if econ_el else "Economia estimada de R$ 24.000/ano"
         saas_sub = "SaaS Proprietário"
         if "Substitui:" in econ_str:
             saas_sub = econ_str.split("Substitui:")[1].split("·")[0].strip()
 
-        # Link GitHub
         infra_el = e.find("div", class_="infrastructure") or e.find(class_=re.compile(r'infra'))
         github_link = f"https://github.com/topics/{fslug}"
         if infra_el:
@@ -105,14 +95,12 @@ def extrair_dados_de_html(html_content: str, numero_sugerido: int = 51) -> dict:
             if a_git and a_git.get("href"):
                 github_link = a_git["href"]
 
-        # Buscar dados na tabela
         tab_info = tabela_map.get(rank, {})
         licenca = tab_info.get("lic", "AGPL-3.0")
         saas_final = tab_info.get("saas", saas_sub)
         econ_final = tab_info.get("econ", "R$ 3.600/ano")
         cat_final = tab_info.get("cat", "Produtividade")
 
-        # Passos Práticos
         step_cards = e.find_all(class_=re.compile(r'step-card|mini-step|passo'))
         passos = []
         for s_idx, sc in enumerate(step_cards):
@@ -152,7 +140,7 @@ def extrair_dados_de_html(html_content: str, numero_sugerido: int = 51) -> dict:
             }
         })
 
-    # Se a tabela tiver mais ferramentas que os cards
+    # Preenchimento de ferramentas faltantes da tabela
     if len(ferramentas) < len(tabela_map):
         for r_num in range(len(ferramentas) + 1, len(tabela_map) + 1):
             tinfo = tabela_map[r_num]
@@ -208,7 +196,6 @@ def extrair_dados_de_html(html_content: str, numero_sugerido: int = 51) -> dict:
     }
 
 def normalizar_arquivo(caminho_arquivo: str):
-    """Lê um arquivo (HTML ou JSON), normaliza e grava no padrão Diamante R5 em output/ e docs/."""
     p = Path(caminho_arquivo)
     if not p.exists():
         print(f"❌ Arquivo não encontrado: {caminho_arquivo}")
@@ -216,16 +203,8 @@ def normalizar_arquivo(caminho_arquivo: str):
 
     conteudo = p.read_text(encoding="utf-8")
     
-    # Priorizar o número no nome do arquivo (ex: 51-*.html -> 51)
     match_filename_num = re.match(r'^(\d+)', p.name)
-    if match_filename_num:
-        numero = int(match_filename_num.group(1))
-    elif p.suffix.lower() == ".json":
-        dados = json.loads(conteudo)
-        numero = dados.get("numero", 51)
-    else:
-        match_num = re.search(r'(?:Camada\s*|#\s*)(\d+)', conteudo[:500])
-        numero = int(match_num.group(1)) if match_num else num_sugerido
+    numero = int(match_filename_num.group(1)) if match_filename_num else 51
 
     if p.suffix.lower() == ".json":
         dados = json.loads(conteudo)
@@ -234,9 +213,13 @@ def normalizar_arquivo(caminho_arquivo: str):
 
     dados["numero"] = numero
     html_diamante = compilar_dossie_diamante(dados)
-    nome_arquivo = f"{dados['numero']:02d}-{dados['slug']}.html"
+    
+    # Se o arquivo já tiver um nome padronizado (ex: 52-tabela-precos.html), MANTER o nome original!
+    if match_filename_num and p.name.endswith(".html"):
+        nome_arquivo = p.name
+    else:
+        nome_arquivo = f"{dados['numero']:02d}-{dados['slug']}.html"
 
-    # Salvar em output e docs
     out_path = OUTPUT_DIR / nome_arquivo
     doc_path = DOCS_DIR / nome_arquivo
 
@@ -247,8 +230,7 @@ def normalizar_arquivo(caminho_arquivo: str):
     doc_path.write_text(html_diamante, encoding="utf-8")
 
     print(f"✅ Compêndio Normalizado com Sucesso (Padrão Diamante R5):")
-    print(f"  -> Output: {out_path}")
-    print(f"  -> Docs:   {doc_path}")
+    print(f"  -> {out_path.name}")
     return True
 
 if __name__ == "__main__":
