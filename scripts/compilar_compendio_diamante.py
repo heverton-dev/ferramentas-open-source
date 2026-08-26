@@ -555,3 +555,35 @@ def compilar_dossie_diamante(dados: dict) -> str:
 </body>
 </html>"""
     return html
+
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Compilador Diamante R5 de Listas Horizontais (list-*.html)")
+    parser.add_argument("arquivo", help="Caminho do arquivo JSON com dados estruturados da lista")
+    parser.add_argument("--slug", help="Slug curto (gera list-<slug>.html). Se omitido, usa o slug do JSON.")
+    args = parser.parse_args()
+
+    caminho = Path(args.arquivo)
+    if not caminho.exists():
+        print(f"❌ Arquivo não encontrado: {args.arquivo}")
+        sys.exit(1)
+
+    dados = json.loads(caminho.read_text(encoding="utf-8"))
+    slug_final = args.slug or dados.get("slug", caminho.stem.replace("dossie-", "").replace("lista-", ""))
+    if not slug_final.startswith("list-") and not slug_final.startswith("tco-") and not slug_final.startswith("guia-"):
+        nome_arquivo = f"list-{slug_final}.html"
+    else:
+        nome_arquivo = f"{slug_final}.html" if not slug_final.endswith(".html") else slug_final
+
+    html_gerado = compilar_compendio_diamante(dados)
+
+    base_dir = Path(__file__).resolve().parent.parent
+    out_file = base_dir / "output" / "listas-open-source" / nome_arquivo
+    docs_file = base_dir / "docs" / "listas" / nome_arquivo
+
+    out_file.write_text(html_gerado, encoding="utf-8")
+    docs_file.write_text(html_gerado, encoding="utf-8")
+
+    print(f"✅ Lista Horizontal compilada com sucesso!")
+    print(f"   -> Output: {out_file.relative_to(base_dir)}")
+    print(f"   -> Docs:   {docs_file.relative_to(base_dir)}")
