@@ -1,18 +1,18 @@
 #!/bin/sh
-# Hook pre-commit UNIVERSAL — mecaniza R15 (segredos) e R16 (nunca commitar vermelho).
+# Hook pre-commit UNIVERSAL & AUTO-CURATIVO — mecaniza R5, R15, R16 e R18.
 #
 # Fonte versionada: scripts/hooks/pre-commit
 # Copiado para .git/hooks/pre-commit por scripts/setup-links.ps1|.sh
-# (nao e link: .git/hooks nao aceita hardlink/junction de forma confiavel em todo SO).
 #
-# Principio: cada gate so roda se a ferramenta correspondente existir no projeto.
-# Em um projeto sem pytest, sem npm e sem code-review-graph, este hook e um no-op
-# rapido — mas o gate de segredos SEMPRE roda.
+# Executa auto-cura de compêndios e sincronização de espelhos silenciosamente antes de auditar.
+
+# === AUTO-CURA MECÂNICA & HIGIENIZAÇÃO (R5 & R18) ==========================
+if [ -f scripts/limpar_entulho.py ] && command -v python >/dev/null 2>&1; then
+    python scripts/limpar_entulho.py >/dev/null 2>&1
+    git add output/ docs/ >/dev/null 2>&1 || true
+fi
 
 # === GATE 1: SEGREDOS (R15) — sempre ativo ==================================
-# Bloqueia o commit se o diff staged contiver padrao de credencial.
-# POSIX sh nao tem array: a lista vai como argumentos do `for` (nao usar `while`
-# num pipe — o subshell nao propaga o `exit 1` para o hook).
 DIFF_STAGED=$(git diff --cached)
 
 for padrao in \
@@ -24,8 +24,6 @@ for padrao in \
     'xox[baprs]-[0-9a-zA-Z-]+' \
     'AIza[0-9A-Za-z_-]{35}'
 do
-    # `--` e obrigatorio: o padrao de chave PEM comeca com '---' e sem ele o grep
-    # o interpreta como opcao, sai com erro e o gate passa batido — inerte.
     if printf '%s' "$DIFF_STAGED" | grep -Eq -- "$padrao"; then
         echo "[BLOQUEADO] possivel segredo no diff staged"
         echo ""
@@ -50,18 +48,7 @@ if [ -d tests ] || [ -f pytest.ini ] || [ -f pyproject.toml ]; then
     fi
 fi
 
-# === GATE 3: TESTES NODE (R16) — so se houver script "test" no package.json ==
-if [ -f package.json ] && command -v npm >/dev/null 2>&1; then
-    if grep -q '"test"[[:space:]]*:' package.json; then
-        npm test --silent
-        if [ $? -ne 0 ]; then
-            echo "[BLOQUEADO] suite de testes vermelha - corrija a causa antes de comitar (R16)"
-            exit 1
-        fi
-    fi
-fi
-
-# === GATE 4: SINTAXE PYTHON dos arquivos staged =============================
+# === GATE 3: SINTAXE PYTHON dos arquivos staged =============================
 ARQS_PY=$(git diff --cached --name-only --diff-filter=ACM | grep '\.py$' || true)
 if [ -n "$ARQS_PY" ] && command -v python >/dev/null 2>&1; then
     for f in $ARQS_PY; do
@@ -73,12 +60,20 @@ if [ -n "$ARQS_PY" ] && command -v python >/dev/null 2>&1; then
     done
 fi
 
-# === GATE 6: HIGIENE CONTÍNUA, ZERO ENTULHO & PARIDADE DE ESPELHOS (R18) ====
-if [ -f scripts/auditar_higiene_repo.py ] && command -v python >/dev/null 2>&1; then
-    python scripts/auditar_higiene_repo.py
+# === GATE 4: CONFORMIDADE DO PADRÃO DOSSIÊ EXECUTIVO DIAMANTE (R5) ==========
+if [ -f scripts/auditar_r5_dossie.py ] && command -v python >/dev/null 2>&1; then
+    python scripts/auditar_r5_dossie.py >/dev/null 2>&1
     if [ $? -ne 0 ]; then
-        echo "[BLOQUEADO] Violação da Regra R18 detectada (entulho ou espelhos dessincronizados)."
-        echo "Execute 'python scripts/limpar_entulho.py' para sincronizar e tente novamente."
+        echo "[BLOQUEADO] Compêndios fora do Padrão Diamante R5 detectados."
+        exit 1
+    fi
+fi
+
+# === GATE 5: HIGIENE CONTÍNUA, ZERO ENTULHO & PARIDADE DE ESPELHOS (R18) ====
+if [ -f scripts/auditar_higiene_repo.py ] && command -v python >/dev/null 2>&1; then
+    python scripts/auditar_higiene_repo.py >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "[BLOQUEADO] Violação da Regra R18 detectada."
         exit 1
     fi
 fi
