@@ -93,7 +93,7 @@ CSS_CANONICO_DIAMANTE = """
   .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
 
   .hero { margin: 20px 0 24px; }
-  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 42px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: justify; text-justify: inter-word; }
+  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 42px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
   .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
 
   .hero-stats {
