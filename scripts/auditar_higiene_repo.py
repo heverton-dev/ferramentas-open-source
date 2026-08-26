@@ -82,35 +82,34 @@ def auditar_paridade_espelhos():
 
     return erros
 
-def auditar_numeracao_camadas():
+def auditar_taxonomia_nomenclaturas():
     erros = []
-    listas = sorted([f for f in os.listdir(OUTPUT_DIR) if re.match(r"^\d{2}-", f)])
+    PREFIXOS_VALIDOS = (r"^list-", r"^vert-", r"^tco-", r"^guia-", r"^index\.html$", r"^README\.md$")
     
-    numeros_vistos = set()
-    for l in listas:
-        num = l.split("-")[0]
-        if num in numeros_vistos:
-            erros.append(f"Número de camada duplicado: {num} no arquivo {l}")
-        numeros_vistos.add(num)
+    arquivos = os.listdir(OUTPUT_DIR)
+    nomes_vistos = set()
 
-    # Checar se faltam números de 01 a 49
-    esperados = {f"{i:02d}" for i in range(1, 50)}
-    faltantes = esperados - numeros_vistos
-    for num in sorted(faltantes):
-        erros.append(f"Camada faltante na sequência 01-49: Camada {num}")
+    for arq in arquivos:
+        valido = any(re.match(p, arq) for p in PREFIXOS_VALIDOS)
+        if not valido:
+            erros.append(f"Arquivo fora da taxonomia padrão (use list-, vert-, tco- ou guia-): {arq}")
+
+        if arq.lower() in nomes_vistos:
+            erros.append(f"Arquivo duplicado ou colisão de case: {arq}")
+        nomes_vistos.add(arq.lower())
 
     return erros
 
 def executar_auditoria_completa():
     print("=" * 80)
-    print(" 🛡️ GATE MECÂNICO R18: AUDITORIA DE HIGIENE, PARIDADE & INTEGRIDADE")
+    print(" 🛡️ GATE MECÂNICO R18: AUDITORIA DE HIGIENE, PARIDADE & TAXONOMIA")
     print("=" * 80)
 
     erros_entulho = auditar_entulho_scripts()
     erros_paridade = auditar_paridade_espelhos()
-    erros_numeracao = auditar_numeracao_camadas()
+    erros_taxonomia = auditar_taxonomia_nomenclaturas()
 
-    total_erros = len(erros_entulho) + len(erros_paridade) + len(erros_numeracao)
+    total_erros = len(erros_entulho) + len(erros_paridade) + len(erros_taxonomia)
 
     if erros_entulho:
         print("\n [!] ENTULHO TÉCNICO / SCRIPTS TEMPORÁRIOS:")
@@ -122,9 +121,9 @@ def executar_auditoria_completa():
         for e in erros_paridade:
             print(f"     ❌ {e}")
 
-    if erros_numeracao:
-        print("\n [!] ERROS DE NUMERAÇÃO / DUPLICIDADE:")
-        for e in erros_numeracao:
+    if erros_taxonomia:
+        print("\n [!] ERROS DE TAXONOMIA / DUPLICIDADE:")
+        for e in erros_taxonomia:
             print(f"     ❌ {e}")
 
     print("\n" + "=" * 80)

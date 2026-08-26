@@ -24,8 +24,8 @@ def console_utf8():
 console_utf8()
 
 def auditar_dossies_verticais():
-    arquivos_out = sorted(glob.glob("output/listas-open-source/dossie-vertical-*.html"))
-    arquivos_doc = sorted(glob.glob("docs/listas/dossie-vertical-*.html"))
+    arquivos_out = sorted(glob.glob("output/listas-open-source/vert-*.html"))
+    arquivos_doc = sorted(glob.glob("docs/listas/vert-*.html"))
     todos = sorted(list(set(arquivos_out + arquivos_doc)))
 
     print("=" * 80)

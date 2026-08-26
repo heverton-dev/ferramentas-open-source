@@ -21,8 +21,8 @@ console_utf8()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_FILE = BASE_DIR / "scripts" / "data" / "dossie-vertical-granola.json"
-OUTPUT_FILE = BASE_DIR / "output" / "listas-open-source" / "dossie-vertical-granola.html"
-DOCS_FILE = BASE_DIR / "docs" / "listas" / "dossie-vertical-granola.html"
+OUTPUT_FILE = BASE_DIR / "output" / "listas-open-source" / "vert-granola.html"
+DOCS_FILE = BASE_DIR / "docs" / "listas" / "vert-granola.html"
 
 dados = json.loads(DATA_FILE.read_text(encoding="utf-8"))
 html = compilar_dossie_vertical(dados)

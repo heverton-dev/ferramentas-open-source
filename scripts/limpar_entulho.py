@@ -45,29 +45,19 @@ def limpar_pastas_e_arquivos_temporarios():
                     pass
 
 def desduplicar_camadas():
-    """Garante que haja estritamente 1 arquivo por número de camada (01 a 99)."""
-    print("[*] Verificando e desduplicando camadas por prefixo numérico...")
+    """Garante que não haja arquivos residuais com nomes antigos numerados ou duplicados."""
+    print("[*] Verificando e higienizando taxonomia de compêndios...")
     for pasta in [OUTPUT_DIR, DOCS_DIR]:
         if not pasta.exists():
             continue
-        arquivos = sorted(list(pasta.glob("[0-9][0-9]-*.html")))
-        by_num = {}
-        for a in arquivos:
-            num = a.name[:2]
-            by_num.setdefault(num, []).append(a)
-        
-        for num, lista in by_num.items():
-            if len(lista) > 1:
-                # Preferir o arquivo com nome mais limpo e curto
-                lista_sorted = sorted(lista, key=lambda x: (len(x.name), x.name))
-                manter = lista_sorted[0]
-                remover = lista_sorted[1:]
-                for r in remover:
-                    try:
-                        r.unlink()
-                        print(f"  -> [DESDUPLICAÇÃO] Removido duplicado: {r.name} (Mantido: {manter.name})")
-                    except Exception:
-                        pass
+        # Se restou algum arquivo antigo com prefixo [0-9][0-9]-, remove
+        antigos = list(pasta.glob("[0-9][0-9]-*.html")) + list(pasta.glob("dossie-vertical-*.html"))
+        for ant in antigos:
+            try:
+                ant.unlink()
+                print(f"  -> [HIGIENE] Removido arquivo com nomenclatura obsoleta: {ant.name}")
+            except Exception:
+                pass
 
 def ressincronizar_espelhos():
     print("[*] Ressincronizando espelhos (output/listas-open-source -> docs/listas)...")
@@ -96,8 +86,9 @@ if __name__ == "__main__":
     limpar_pastas_e_arquivos_temporarios()
     desduplicar_camadas()
     ressincronizar_espelhos()
-    print("\n[*] Rodando verificação do Gate R18 e Gate R5...")
+    print("\n[*] Rodando verificação dos Gates R18, R5 e R5-V...")
     r18_exit = os.system(f'python "{SCRIPTS_DIR}/auditar_higiene_repo.py"')
     r5_exit = os.system(f'python "{SCRIPTS_DIR}/auditar_r5_dossie.py"')
-    if r18_exit != 0 or r5_exit != 0:
+    r5v_exit = os.system(f'python "{SCRIPTS_DIR}/auditar_tipo_vertical.py"')
+    if r18_exit != 0 or r5_exit != 0 or r5v_exit != 0:
         sys.exit(1)

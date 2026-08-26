@@ -19,8 +19,8 @@ def console_utf8():
 console_utf8()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-OUTPUT_FILE = BASE_DIR / "output" / "listas-open-source" / "57-catalogo-definitivo-substituicao-saas-open-source.html"
-DOCS_FILE = BASE_DIR / "docs" / "listas" / "57-catalogo-definitivo-substituicao-saas-open-source.html"
+OUTPUT_FILE = BASE_DIR / "output" / "listas-open-source" / "list-catalogo-42-saas.html"
+DOCS_FILE = BASE_DIR / "docs" / "listas" / "list-catalogo-42-saas.html"
 
 # Carregar o CSS canônico idêntico ao da Camada 01
 sys.path.insert(0, str(BASE_DIR / "scripts"))

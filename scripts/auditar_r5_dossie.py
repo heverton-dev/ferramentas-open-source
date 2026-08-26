@@ -23,8 +23,12 @@ if sys.platform == "win32":
         pass
 
 def auditar_conformidade_r5():
-    arquivos_out = sorted(glob.glob("output/listas-open-source/[0-9][0-9]-*.html"))
-    arquivos_doc = sorted(glob.glob("docs/listas/[0-9][0-9]-*.html"))
+    padroes = ["list-*.html", "tco-*.html", "guia-*.html"]
+    arquivos_out = []
+    arquivos_doc = []
+    for p in padroes:
+        arquivos_out.extend(glob.glob(f"output/listas-open-source/{p}"))
+        arquivos_doc.extend(glob.glob(f"docs/listas/{p}"))
     todos_arquivos = sorted(list(set(arquivos_out + arquivos_doc)))
 
     print("=" * 80)
