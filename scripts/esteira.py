@@ -30,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SCRIPTS_DIR = BASE_DIR / "scripts"
 
 sys.path.insert(0, str(SCRIPTS_DIR))
-from compilar_compendio_diamante import compilar_compendio_diamante
+from compilar_compendio_diamante import compilar_dossie_diamante
 from compilar_compendio_vertical import compilar_dossie_vertical
 
 def disparar_lista(arquivo_json: str, slug_custom: str = None):
@@ -47,7 +47,7 @@ def disparar_lista(arquivo_json: str, slug_custom: str = None):
     nome_arquivo = f"{slug}.html" if not slug.endswith(".html") else slug
 
     print(f"\n[+] Compilando LISTA HORIZONTAL (Padrão Diamante R5): {nome_arquivo}")
-    html = compilar_compendio_diamante(dados)
+    html = compilar_dossie_diamante(dados)
 
     out_file = BASE_DIR / "output" / "listas-open-source" / nome_arquivo
     docs_file = BASE_DIR / "docs" / "listas" / nome_arquivo
