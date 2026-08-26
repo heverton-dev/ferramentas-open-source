@@ -220,6 +220,24 @@ CSS_CANONICO_DIAMANTE = """
 
   table tr { transition: background .12s ease; }
   table tbody tr:hover { background: var(--surface-2); }
+
+  /* SEÇÃO DESIGN SYSTEM & WHITE-LABEL */
+  .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
+  .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+  .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+  .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+  .ds-badge.esforco-alto { background: #FFEBE6; color: #DE350B; border: 1px solid #FFBDAD; }
+  .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
+  .ds-badge.wl-ready { background: #EAE6FF; color: #403294; border: 1px solid #C0B6F2; }
+
+  .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+  .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+  .ds-card p strong { color: var(--ink); }
+  .ds-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
 """
 
 JS_CANONICO_DIAMANTE = """
@@ -313,6 +331,26 @@ def compilar_dossie_diamante(dados: dict) -> str:
         if not repo_display or repo_display == "#":
             repo_display = f['slug']
 
+        # Extrair dados de Design System & White-Label
+        ds = f.get("design_system", {
+            "esforco": "Mínimo (Plug & Play)",
+            "stack_ui": "CSS Variables / Tailwind",
+            "white_label_nativo": True,
+            "mecanica_customizacao": "Customização direta via tokens de CSS e substituição de logotipo institucional via variáveis de ambiente.",
+            "manutenibilidade_upgrades": "Tema 100% desacoplado do core. Atualizações do container oficial preservam as cores e tokens da empresa."
+        })
+        esf_str = ds.get("esforco", "")
+        if "Mínimo" in esf_str:
+            ds_esforco_class = "esforco-minimo"
+        elif "Headless" in esf_str:
+            ds_esforco_class = "esforco-headless"
+        elif "Médio" in esf_str:
+            ds_esforco_class = "esforco-medio"
+        else:
+            ds_esforco_class = "esforco-alto"
+
+        ds_wl_badge = '<span class="ds-badge wl-ready">White-Label Nativo</span>' if ds.get("white_label_nativo") else '<span class="ds-badge stack-ui">White-Label Parcial</span>'
+
         cards_html += f"""      <article class="entry" id="card-{rank_str}">
         <div class="entry-rank">{rank_str}</div>
         <div class="entry-body">
@@ -387,6 +425,28 @@ def compilar_dossie_diamante(dados: dict) -> str:
               <div class="step-card">
                 <div class="step-head"><span class="step-badge">Passo 03</span> {passos[2]['titulo']}</div>
                 <p>{passos[2]['descricao']}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge {ds_esforco_class}">⚡ {ds['esforco']}</span>
+                <span class="ds-badge stack-ui">{ds['stack_ui']}</span>
+                {ds_wl_badge}
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>{ds['mecanica_customizacao']}</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>{ds['manutenibilidade_upgrades']}</p>
               </div>
             </div>
           </div>

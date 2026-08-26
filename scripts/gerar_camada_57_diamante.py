@@ -1177,6 +1177,28 @@ for c in categorias_57:
               </div>
             </div>
           </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-minimo">⚡ Esforço: Mínimo (Plug &amp; Play)</span>
+                <span class="ds-badge stack-ui">CSS Variables / Tailwind / Headless API</span>
+                <span class="ds-badge wl-ready">White-Label Nativo</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>A ferramenta mais completa (<strong>{c['completa']}</strong>) e suas alternativas modernas oferecem suporte desacoplado para injeção de tokens de CSS e logo corporativo via variáveis de ambiente ou painel administrativo, eliminando retrabalho estético.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p><strong>Risco Zero de Quebra:</strong> A identidade visual da sua empresa roda desacoplada do core dos containers, garantindo deploys contínuos sem perda de customização visual.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </article>\n"""
 

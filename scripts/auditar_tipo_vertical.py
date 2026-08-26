@@ -51,13 +51,14 @@ def auditar_dossies_verticais():
         has_sec2 = "2. análise econômica" in txt_lower or "2. analise economica" in txt_lower
         has_sec3 = "3. requisitos de infraestrutura" in txt_lower
         has_sec4 = "4. como usar no dia a dia" in txt_lower
-        has_sec5 = "5. uso complementar" in txt_lower or "complement-card" in txt
+        has_ds = "white-label" in txt_lower or "design system" in txt_lower
+        has_sec_comp = "uso complementar" in txt_lower or "complement-card" in txt
         has_mcp = "mcp server" in txt_lower or "agent skill" in txt_lower
         has_repo = "repo-btn" in txt and ("viewbox" in txt_lower)
         has_scroll = "::-webkit-scrollbar" in txt and "4px" in txt
 
         is_valido = (has_target and has_table and has_sec1 and has_sec2 and has_sec3 and 
-                     has_sec4 and has_sec5 and has_mcp and has_repo and has_scroll)
+                     has_sec4 and has_ds and has_sec_comp and has_mcp and has_repo and has_scroll)
 
         if is_valido:
             conformes.append(f)
