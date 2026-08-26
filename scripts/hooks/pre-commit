@@ -48,7 +48,18 @@ if [ -d tests ] || [ -f pytest.ini ] || [ -f pyproject.toml ]; then
     fi
 fi
 
-# === GATE 3: SINTAXE PYTHON dos arquivos staged =============================
+# === GATE 3: TESTES NODE (R16) — so se houver script "test" no package.json ==
+if [ -f package.json ] && command -v npm >/dev/null 2>&1; then
+    if grep -q '"test"[[:space:]]*:' package.json; then
+        npm test --silent
+        if [ $? -ne 0 ]; then
+            echo "[BLOQUEADO] suite de testes vermelha - corrija a causa antes de comitar (R16)"
+            exit 1
+        fi
+    fi
+fi
+
+# === GATE 4: SINTAXE PYTHON dos arquivos staged =============================
 ARQS_PY=$(git diff --cached --name-only --diff-filter=ACM | grep '\.py$' || true)
 if [ -n "$ARQS_PY" ] && command -v python >/dev/null 2>&1; then
     for f in $ARQS_PY; do
@@ -60,7 +71,7 @@ if [ -n "$ARQS_PY" ] && command -v python >/dev/null 2>&1; then
     done
 fi
 
-# === GATE 4: CONFORMIDADE DO PADRÃO DOSSIÊ EXECUTIVO DIAMANTE (R5) ==========
+# === GATE 5: CONFORMIDADE DO PADRÃO DOSSIÊ EXECUTIVO DIAMANTE (R5) ==========
 if [ -f scripts/auditar_r5_dossie.py ] && command -v python >/dev/null 2>&1; then
     python scripts/auditar_r5_dossie.py >/dev/null 2>&1
     if [ $? -ne 0 ]; then
@@ -69,7 +80,7 @@ if [ -f scripts/auditar_r5_dossie.py ] && command -v python >/dev/null 2>&1; the
     fi
 fi
 
-# === GATE 5: HIGIENE CONTÍNUA, ZERO ENTULHO & PARIDADE DE ESPELHOS (R18) ====
+# === GATE 6: HIGIENE CONTÍNUA, ZERO ENTULHO & PARIDADE DE ESPELHOS (R18) ====
 if [ -f scripts/auditar_higiene_repo.py ] && command -v python >/dev/null 2>&1; then
     python scripts/auditar_higiene_repo.py >/dev/null 2>&1
     if [ $? -ne 0 ]; then
