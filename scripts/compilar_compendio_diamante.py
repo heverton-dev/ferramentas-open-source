@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-COMPILADOR DETERMINÍSTICO DE COMPÊNDIOS TÉCNICOS (PADRÃO DIAMANTE R5)
-Gera o HTML final autocontido e ultra-refinado a partir de dados estruturados (JSON).
-Elimina 100% das variações e discrepâncias de layout entre diferentes LLMs.
+COMPILADOR DETERMINÍSTICO DE COMPÊNDIOS TÉCNICOS (PADRÃO DIAMANTE R5 · CANÔNICO DA CAMADA 01)
+Gera o HTML final autocontido e ultra-refinado baseado 100% no molde da Camada 01.
+Elimina qualquer discrepância e harmoniza a UX em todas as camadas.
 """
 import os
 import sys
@@ -69,11 +69,6 @@ CSS_CANONICO_DIAMANTE = """
   }
 
   *, *::before, *::after { box-sizing: border-box; }
-  * { scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
-  ::-webkit-scrollbar { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
-
   html { font-size: 16px; scroll-behavior: smooth; }
   body {
     margin: 0; padding: 0;
@@ -86,6 +81,7 @@ CSS_CANONICO_DIAMANTE = """
 
   .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
 
+  /* HEADER & HERO STATS */
   header { margin-bottom: 32px; }
   .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
   .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
@@ -107,6 +103,7 @@ CSS_CANONICO_DIAMANTE = """
   .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
   .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
 
+  /* PILARES */
   .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 24px 0; }
   .route { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 20px; }
   .route.red { border-left: 4px solid var(--flag); }
@@ -117,16 +114,19 @@ CSS_CANONICO_DIAMANTE = """
   .route h4 { font-family: var(--font-serif); font-size: 19px; margin: 6px 0 8px; color: var(--ink); }
   .route p { margin: 0; font-size: 14px; color: var(--ink-2); }
 
+  /* SEÇÕES */
   .sec-head { margin: 36px 0 16px; }
   .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
   h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
   .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
 
-  .search-wrapper { position: relative; margin: 20px 0 16px; }
-  .search-input { width: 100%; padding: 12px 16px 12px 42px; font-family: var(--font-sans); font-size: 14px; background: var(--surface); color: var(--ink); border: 1px solid var(--rule); border-radius: 4px; box-shadow: var(--shadow); outline: none; transition: border-color .15s ease; }
+  /* BUSCA */
+  .search-wrapper { position: relative; margin: 20px 0 24px; }
+  .search-input { width: 100%; padding: 12px 42px 12px 16px; font-family: var(--font-sans); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); outline: none; box-shadow: var(--shadow); }
   .search-input:focus { border-color: var(--accent); }
-  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; fill: var(--muted); pointer-events: none; }
+  .search-icon { position: absolute; right: 14px; top: 12px; width: 20px; height: 20px; fill: var(--muted); pointer-events: none; }
 
+  /* TABELA FLUIDA */
   .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
   table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
   th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
@@ -140,12 +140,14 @@ CSS_CANONICO_DIAMANTE = """
   td.cat { font-size: 12px; color: var(--muted); }
   td.lic { font-family: var(--mono); font-size: 11px; }
 
+  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO (MOLDE CAMADA 01) */
   .ledger { display: flex; flex-direction: column; gap: 24px; }
-  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease; }
-  .entry:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
+  .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
   .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
   
   .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
   .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
   .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
 
@@ -158,65 +160,45 @@ CSS_CANONICO_DIAMANTE = """
 
   .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
   .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
-  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); text-align: justify; text-justify: inter-word; }
+  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .entry-section p strong { color: var(--ink); font-weight: 600; }
 
-  .code-block { position: relative; background: var(--surface-dark); color: #E6E8ED; padding: 12px 14px; border-radius: 3px; font-family: var(--mono); font-size: 12.5px; overflow-x: auto; margin-top: 4px; }
-  .code-block code { font-family: inherit; }
-  .copy-btn { position: absolute; top: 6px; right: 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #FFF; font-family: var(--mono); font-size: 10px; padding: 2px 6px; border-radius: 2px; cursor: pointer; }
-  .copy-btn:hover { background: var(--accent); border-color: var(--accent); }
-
+  /* GRIDS CANÔNICAS DA CAMADA 01 */
   .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
   .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
   .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
   .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
-  .econ-card .card-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
-  .econ-card .card-val { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
 
-  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 2px; }
-  .infra-item { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 8px 10px; }
-  .infra-item .lbl { font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); display: block; margin-bottom: 2px; }
-  .infra-item .val { font-size: 12.5px; font-weight: 600; color: var(--ink); }
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
+  .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
+  @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
+  .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
+  .infra-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
 
-  .verdict-box { background: color-mix(in srgb, var(--accent-soft) 35%, var(--surface)); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 0 2px 2px 0; margin-top: 6px; }
-  .verdict-box .lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); font-weight: 700; display: block; margin-bottom: 2px; }
-  .verdict-box p { font-size: 13.5px; line-height: 1.5; color: var(--ink); margin: 0; }
+  .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
+  pre { margin: 0; padding: 10px 48px 10px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; }
+  code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); line-height: 1.45; }
+  .copy-btn { position: absolute; top: 6px; right: 6px; background: var(--surface); border: 1px solid var(--rule); color: var(--muted); border-radius: 2px; padding: 3px 6px; font-family: var(--mono); font-size: 10px; cursor: pointer; transition: all .15s ease; }
+  .copy-btn:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
 
-  .how-to-use-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 4px; }
-  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 3px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
-  .step-card .step-num { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; }
-  .step-card .step-title { font-size: 13px; font-weight: 600; color: var(--ink); }
-  .step-card p { font-size: 12px; line-height: 1.45; color: var(--ink-2); margin: 0; }
+  .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
+  .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .repo-btn svg { width: 13px; height: 13px; fill: currentColor; }
 
-  .repo-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: var(--mono);
-    font-size: 11.5px;
-    padding: 7px 14px;
-    border: 1px solid var(--rule);
-    border-radius: 3px;
-    background: var(--surface);
-    color: var(--ink);
-    text-decoration: none;
-    font-weight: 600;
-    transition: all .15s ease;
-    width: fit-content;
-    box-shadow: var(--shadow);
-  }
-  .repo-btn:hover {
-    background: var(--surface-dark);
-    color: #FFFFFF;
-    border-color: var(--surface-dark);
-    text-decoration: none;
-  }
-  .repo-btn svg {
-    width: 14px;
-    height: 14px;
-    fill: currentColor;
-    flex-shrink: 0;
-  }
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 2px; }
+  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; transition: transform .12s ease, border-color .12s ease; }
+  .step-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .step-head { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; }
+  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+  .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+  .step-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+
+  table tr { transition: background .12s ease; }
+  table tbody tr:hover { background: var(--surface-2); }
 """
 
 JS_CANONICO_DIAMANTE = """
@@ -264,7 +246,7 @@ function copyCode(btn) {
 """
 
 def compilar_dossie_diamante(dados: dict) -> str:
-    """Gera o HTML completo a partir de um dicionário canônico."""
+    """Gera o HTML completo a partir de um dicionário canônico no molde da Camada 01."""
     num_str = f"{dados['numero']:02d}"
     titulo = dados["titulo"]
     slug = dados["slug"]
@@ -286,106 +268,109 @@ def compilar_dossie_diamante(dados: dict) -> str:
         rank_str = f"{f['rank']:02d}"
         rows_html += f"""        <tr>
           <td class="rank">{rank_str}</td>
-          <td class="tool"><a href="#{f['slug']}">{f['nome']}</a></td>
+          <td class="tool"><a href="#card-{rank_str}">{f['nome']}</a></td>
           <td class="saas">{f['saas_substituido']}</td>
           <td class="econ">{f.get('economia_anual_str', 'R$ 24.000/ano')}</td>
           <td class="cat">{f.get('categoria', 'Produtividade')}</td>
           <td class="lic"><span class="lic-badge">{f['licenca_osi']}</span></td>
         </tr>\n"""
 
-    # Renderizar Cards (.entry)
+    # Renderizar Cards (.entry) no modelo canônico da Camada 01
     cards_html = ""
     for f in dados["ferramentas"]:
         rank_str = f"{f['rank']:02d}"
         passos = f.get("passos_praticos", [
-            {"passo": 1, "titulo": "Instalação & Configuração", "descricao": "Configuração rápida em container ou CLI local."},
-            {"passo": 2, "titulo": "Operação no Dia a Dia", "descricao": "Integração nativa com os fluxos da equipe."},
-            {"passo": 3, "titulo": "Entrega & Resultado", "descricao": "Soberania operacional com zero custo de licença."}
+            {"titulo": "Instalação", "descricao": f"Execute o comando oficial de implantação."},
+            {"titulo": "Configuração", "descricao": f"Ajuste os parâmetros locais para seu ambiente."},
+            {"titulo": "Execução", "descricao": f"Valide o funcionamento contínuo e integrado."}
         ])
+        while len(passos) < 3:
+            passos.append({"titulo": f"Etapa 0{len(passos)+1}", "descricao": "Parametrização operacional do serviço."})
 
-        cards_html += f"""    <div class="entry" id="{f['slug']}">
-      <div class="entry-rank">{rank_str}</div>
-      <div class="entry-body">
-        <div class="entry-top">
-          <h3>{f['nome']}</h3>
-          <span class="senior-badge green">{f.get('senioridade', 'Pleno')}</span>
-          <span class="killer-badge">Substitui: {f['saas_substituido']}</span>
-          <span class="econ-badge">Economia: {f.get('economia_anual_str', 'R$ 24.000/ano')}</span>
-          <span class="lic-badge">{f['licenca_osi']}</span>
-          <span class="kind">{f.get('categoria', 'Open Source')}</span>
-        </div>
+        repo_url = f.get("repositorio_github", "#")
+        repo_display = repo_url.replace("https://github.com/", "").replace("https://", "").rstrip("/")
+        if not repo_display or repo_display == "#":
+            repo_display = f['slug']
 
-        <div class="entry-section">
-          <span class="label">1. O Que Faz &amp; Como Funciona</span>
-          <p><strong>O que faz:</strong> {f['o_que_faz']}</p>
-          <p><strong>Como funciona:</strong> {f.get('como_funciona', f['o_que_faz'])}</p>
-          <div class="code-block">
-            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            <code>{f['comando_rapido']}</code>
+        cards_html += f"""      <article class="entry" id="card-{rank_str}">
+        <div class="entry-rank">{rank_str}</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>{f['nome']}</h3>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: {f['saas_substituido']}</span>
+            <span class="econ-badge">{f.get('economia_anual_str', 'R$ 24.000/ano')}</span>
+            <span class="lic-badge">{f['licenca_osi']}</span>
+            <span class="kind">{f.get('categoria', 'Open Source')}</span>
           </div>
-        </div>
 
-        <div class="entry-section">
-          <span class="label">2. Análise Econômica &amp; ROI</span>
-          <div class="econ-grid">
-            <div class="econ-card killer">
-              <span class="card-lbl">SaaS Eliminado</span>
-              <span class="card-val">{f['saas_substituido']}</span>
-            </div>
-            <div class="econ-card highlight">
-              <span class="card-lbl">Economia Estimada</span>
-              <span class="card-val">{f.get('economia_anual_str', 'R$ 24.000/ano')}</span>
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> {f['o_que_faz']}</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> {f.get('como_funciona', f['o_que_faz'])}</p>
+            <div class="code-box">
+              <pre><code>{f['comando_rapido']}</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
             </div>
           </div>
-        </div>
 
-        <div class="entry-section">
-          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
-          <div class="infra-grid">
-            <div class="infra-item">
-              <span class="lbl">Consumo de Memória</span>
-              <span class="val">{f.get('requisitos_infra', {}).get('ram_minima', '128 MB RAM')}</span>
-            </div>
-            <div class="infra-item">
-              <span class="lbl">Processamento</span>
-              <span class="val">{f.get('requisitos_infra', {}).get('cpu_minima', '1 vCPU')}</span>
-            </div>
-            <div class="infra-item">
-              <span class="lbl">Licença Declarada</span>
-              <span class="val">{f['licenca_osi']}</span>
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>{f['saas_substituido']}</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>{f.get('economia_anual_str', 'R$ 24.000/ano')}</strong></span>
+              </div>
             </div>
           </div>
-          <div style="margin-top: 10px;">
-            <a class="repo-btn" href="{f.get('repositorio_github', '#')}" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-              <span>Repositório Oficial no GitHub ↗</span>
-            </a>
-          </div>
-          <div class="verdict-box">
-            <span class="lbl">Veredito do Arquiteto</span>
-            <p>{f.get('veredito', 'Ferramenta altamente recomendada para soberania operacional.')}</p>
-          </div>
-        </div>
 
-        <div class="entry-section">
-          <span class="label">4. Como Usar no Dia a Dia</span>
-          <div class="how-to-use-grid">
-            <div class="step-card">
-              <span class="step-num">[1] {passos[0]['titulo']}</span>
-              <p>{passos[0]['descricao']}</p>
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">{f.get('requisitos_infra', {}).get('ram_minima', '128 MB RAM')} / {f.get('requisitos_infra', {}).get('cpu_minima', '1 vCPU')}</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>{f.get('veredito', 'Ferramenta altamente recomendada para soberania operacional.')}</p>
+              </div>
             </div>
-            <div class="step-card">
-              <span class="step-num">[2] {passos[1]['titulo']}</span>
-              <p>{passos[1]['descricao']}</p>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="{repo_url}" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub ({repo_display})
+              </a>
             </div>
-            <div class="step-card">
-              <span class="step-num">[3] {passos[2]['titulo']}</span>
-              <p>{passos[2]['descricao']}</p>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> {passos[0]['titulo']}</div>
+                <p>{passos[0]['descricao']}</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> {passos[1]['titulo']}</div>
+                <p>{passos[1]['descricao']}</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> {passos[2]['titulo']}</div>
+                <p>{passos[2]['descricao']}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>\n"""
+      </article>\n"""
 
     html = f"""<!DOCTYPE html>
 <html lang="pt-BR">
@@ -487,19 +472,5 @@ def compilar_dossie_diamante(dados: dict) -> str:
 
 {JS_CANONICO_DIAMANTE}
 </body>
-</html>
-"""
+</html>"""
     return html
-
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        json_path = sys.argv[1]
-        with open(json_path, "r", encoding="utf-8") as f:
-            dados = json.load(f)
-        html_out = compilar_dossie_diamante(dados)
-        out_file = f"output/listas-open-source/{dados['numero']:02d}-{dados['slug']}.html"
-        with open(out_file, "w", encoding="utf-8") as f:
-            f.write(html_out)
-        print(f"✅ Compêndio compilado com sucesso no Padrão Diamante: {out_file}")
-    else:
-        print("Uso: python scripts/compilar_compendio_diamante.py <dados.json>")
