@@ -186,6 +186,37 @@ CSS_CANONICO_DIAMANTE = """
   .step-card .step-num { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; }
   .step-card .step-title { font-size: 13px; font-weight: 600; color: var(--ink); }
   .step-card p { font-size: 12px; line-height: 1.45; color: var(--ink-2); margin: 0; }
+
+  .repo-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    padding: 7px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--surface);
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all .15s ease;
+    width: fit-content;
+    box-shadow: var(--shadow);
+  }
+  .repo-btn:hover {
+    background: var(--surface-dark);
+    color: #FFFFFF;
+    border-color: var(--surface-dark);
+    text-decoration: none;
+  }
+  .repo-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
 """
 
 JS_CANONICO_DIAMANTE = """
@@ -320,9 +351,15 @@ def compilar_dossie_diamante(dados: dict) -> str:
               <span class="val">{f.get('requisitos_infra', {}).get('cpu_minima', '1 vCPU')}</span>
             </div>
             <div class="infra-item">
-              <span class="lbl">Repositório Oficial</span>
-              <span class="val"><a href="{f.get('repositorio_github', '#')}" target="_blank" rel="noopener">GitHub</a></span>
+              <span class="lbl">Licença Declarada</span>
+              <span class="val">{f['licenca_osi']}</span>
             </div>
+          </div>
+          <div style="margin-top: 10px;">
+            <a class="repo-btn" href="{f.get('repositorio_github', '#')}" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>Repositório Oficial no GitHub ↗</span>
+            </a>
           </div>
           <div class="verdict-box">
             <span class="lbl">Veredito do Arquiteto</span>
