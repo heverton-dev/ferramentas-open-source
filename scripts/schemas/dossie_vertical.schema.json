@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DossieVerticalSaaS",
+  "description": "Schema estrito para o formato Dossiê Vertical de Desmantelamento SaaS com foco em uma única ferramenta proprietária e o Quinteto Soberano Open Source com MCPs e Skills.",
+  "type": "object",
+  "required": [
+    "saas_em_foco",
+    "titulo",
+    "slug",
+    "deck",
+    "stats",
+    "rotas",
+    "quinteto"
+  ],
+  "properties": {
+    "numero": { "type": "integer" },
+    "saas_em_foco": {
+      "type": "object",
+      "required": ["nome", "preco_medio", "principais_limitacoes", "riscos_privacidade"],
+      "properties": {
+        "nome": { "type": "string" },
+        "preco_medio": { "type": "string" },
+        "principais_limitacoes": { "type": "string" },
+        "riscos_privacidade": { "type": "string" }
+      }
+    },
+    "titulo": { "type": "string" },
+    "slug": { "type": "string" },
+    "deck": { "type": "string" },
+    "stats": {
+      "type": "object",
+      "required": ["ferramentas", "saas_substituidos", "economia_anual", "licencas"],
+      "properties": {
+        "ferramentas": { "type": "string" },
+        "saas_substituidos": { "type": "string" },
+        "economia_anual": { "type": "string" },
+        "licencas": { "type": "string" }
+      }
+    },
+    "rotas": {
+      "type": "object",
+      "required": ["fragil", "soberana"],
+      "properties": {
+        "fragil": {
+          "type": "object",
+          "required": ["titulo", "desc"],
+          "properties": { "titulo": { "type": "string" }, "desc": { "type": "string" } }
+        },
+        "soberana": {
+          "type": "object",
+          "required": ["titulo", "desc"],
+          "properties": { "titulo": { "type": "string" }, "desc": { "type": "string" } }
+        }
+      }
+    },
+    "quinteto": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": [
+          "classificacao",
+          "rank",
+          "nome",
+          "slug",
+          "saas_substituido",
+          "economia_anual_str",
+          "licenca_osi",
+          "categoria",
+          "o_que_faz",
+          "como_funciona",
+          "comando_rapido",
+          "repositorio_github",
+          "requisitos_infra",
+          "veredito",
+          "passos_praticos",
+          "uso_complementar"
+        ],
+        "properties": {
+          "classificacao": {
+            "type": "string",
+            "enum": [
+              "A Mais Robusta",
+              "A Mais Completa",
+              "A Mais Moderna",
+              "A Mais Leve",
+              "A Mais Simples"
+            ]
+          },
+          "rank": { "type": "integer" },
+          "nome": { "type": "string" },
+          "slug": { "type": "string" },
+          "saas_substituido": { "type": "string" },
+          "economia_anual_str": { "type": "string" },
+          "licenca_osi": { "type": "string" },
+          "categoria": { "type": "string" },
+          "senioridade": { "type": "string" },
+          "o_que_faz": { "type": "string" },
+          "como_funciona": { "type": "string" },
+          "comando_rapido": { "type": "string" },
+          "repositorio_github": { "type": "string" },
+          "requisitos_infra": {
+            "type": "object",
+            "required": ["ram_minima", "cpu_minima"],
+            "properties": {
+              "ram_minima": { "type": "string" },
+              "cpu_minima": { "type": "string" }
+            }
+          },
+          "veredito": { "type": "string" },
+          "passos_praticos": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "required": ["titulo", "descricao"],
+              "properties": {
+                "titulo": { "type": "string" },
+                "descricao": { "type": "string" }
+              }
+            }
+          },
+          "uso_complementar": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["tipo", "nome", "descricao"],
+              "properties": {
+                "tipo": {
+                  "type": "string",
+                  "enum": ["MCP Server", "Agent Skill", "Sidecar Plugin", "CLI Tool"]
+                },
+                "nome": { "type": "string" },
+                "comando_ou_repo": { "type": "string" },
+                "descricao": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

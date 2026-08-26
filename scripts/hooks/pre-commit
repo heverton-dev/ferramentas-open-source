@@ -80,6 +80,15 @@ if [ -f scripts/auditar_r5_dossie.py ] && command -v python >/dev/null 2>&1; the
     fi
 fi
 
+# === GATE 5.5: CONFORMIDADE DOSSIÊ VERTICAL SAAS (R5-V) =====================
+if [ -f scripts/auditar_tipo_vertical.py ] && command -v python >/dev/null 2>&1; then
+    python scripts/auditar_tipo_vertical.py >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "[BLOQUEADO] Dossiês Verticais fora da Regra R5-V detectados."
+        exit 1
+    fi
+fi
+
 # === GATE 6: HIGIENE CONTÍNUA, ZERO ENTULHO & PARIDADE DE ESPELHOS (R18) ====
 if [ -f scripts/auditar_higiene_repo.py ] && command -v python >/dev/null 2>&1; then
     python scripts/auditar_higiene_repo.py >/dev/null 2>&1
