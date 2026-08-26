@@ -70,6 +70,27 @@ CSS_CANONICO_DIAMANTE = """
 
   *, *::before, *::after { box-sizing: border-box; }
   html { font-size: 16px; scroll-behavior: smooth; }
+
+  /* SCROLLBAR REFINADA (MAX 4PX & COR ACCENT) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--green);
+  }
+
   body {
     margin: 0; padding: 0;
     background: var(--paper);
