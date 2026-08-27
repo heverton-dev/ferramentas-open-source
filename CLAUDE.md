@@ -1,120 +1,69 @@
----
+﻿---
 description: Governanca universal, squad e fluxo do projeto — orquestrador para qualquer agente neste diretorio.
 alwaysApply: true
 ---
 
 # Arsenal Open Source · Fábrica Universal — Orquestrador Central
 
-> **Governança Mestre e Arquitetura Agêntica.**
-> Hardlink de `CLAUDE.md`, `.cursor/rules/projeto.mdc`, `.windsurfrules`,
-> `.clinerules`, `.github/copilot-instructions.md`. Edite apenas este arquivo.
-> Junctions: `agentic/` aponta para `.claude/` (portabilidade multi-IDE);
-> `.agents/` recebe so `agents/` e `commands/` (ver Secao 6).
-> Para recriar links apos clone: `scripts/setup-links.ps1` (Win) ou
-> `scripts/setup-links.sh` (Mac/Linux).
+> **Governança Mestre & Arquitetura Agêntica Multi-IDE.**
+> Hardlink canônico: `CLAUDE.md`, `.cursor/rules/projeto.mdc`, `.windsurfrules`, `.clinerules`, `.github/copilot-instructions.md`.
+> Junctions: `agentic/` ➔ `.claude/`. Fonte de skills/commands: `.agents/`. Setup: `scripts/setup-links.ps1` | `scripts/setup-links.sh`.
 
-## 0. Economia Severa de Tokens (PRIORIDADE MAXIMA)
+## 0. Economia Severa de Tokens (PRIORIDADE MÁXIMA)
 
-1. **Caveman Ativo:** pensamento telegrafico (3-5 linhas), sem preambulos/saudacoes.
-2. **Headroom & RTK:** logs/builds >7 linhas -> comprimir (3 topo + 4 fim).
-   EXCECAO: conteudo de entrega (ver R7) NUNCA e comprimido.
-3. **LeanCTX:** grep antes de read em codigo/config. Limitar leitura por linha.
-4. **Delegacao comprimida:** subagentes para buscas/edicoes extensas
-   (nunca para prosa que sera entregue ao usuario).
-5. **Compilacao ISENTA:** geracao de artefato final (HTML, dossiês, bundles) e
-   liberada e obrigatoria. Nenhuma regra de token economy interfere.
-6. **Fallback Terminal:** se o sandbox bloquear, exibir os comandos no chat
-   para o operador rodar.
-7. **Soberania do Usuario:** nada e barrado sem confirmacao explicita do operador.
-8. **Fidelidade de Conteudo (sobrepoe 2-4):** arquivos de entrega (`output/**`
-   ou equivalente do seu dominio), JSONs de estado e saidas de gates de
-   validacao sao isentos de compressao — leitura sempre integral.
-9. **Busca via Grafo:** se houver indice de codigo (ex.: `code-review-graph`),
-   consultar antes das tools de leitura/busca.
-10. **Auto-commit/push:** alteracoes devem ser commitadas e pushadas para manter
-    o indice/grafo atualizado.
-11. **UTF-8 no Windows:** todo script Python com `print`/emojis DEVE chamar
-    `console_utf8()` (padrao em `scripts/padroes/script-template.py`) ou
-    `sys.stdout.reconfigure(encoding="utf-8")` — sem isso quebra em cp1252.
-12. **Skills de economia disponiveis:** `caveman`, `headroom`, `lean-ctx`,
-    `rtk-memory`, `pre-flight-check` (em `.claude/skills/`).
-13. **Vocabulário Controlado & Termos Proibidos:** Banidos clichês de IA
-    ("como uma IA", "espero ter ajudado", "com certeza", "certamente", "olá").
-    Respostas 100% técnicas, densas e diretas ao ponto.
-14. **Orçamento de Cache da TELA:** O prompt mestre é mantido estável e abaixo
-    de 2.500 palavras para maximizar o desconto de 90% de Prompt Caching. Aprendizados
-    novos são salvos externamente em `RTK-SCRATCHPAD.md`.
+1. **Caveman & Silenciamento:** Pensamento telegráfico (3-5 linhas PT-BR). Respostas diretas ao ponto, sem preâmbulos, saudações ou clichês de IA.
+2. **Headroom & LeanCTX:** Logs/builds >7 linhas truncar (3 topo + 4 fim). `grep` antes de `view/read`. Limitar leitura por linhas.
+3. **Isenção de Entrega:** Arquivos `output/**`, JSONs de estado e relatórios de gates NUNCA são truncados (leitura/escrita integrais).
+4. **Subagentes:** Apenas para varreduras extensas de código; nunca para gerar texto retornado ao usuário.
+5. **Compilação Determinística:** Geração de artefatos (HTML, MD, PDF) via scripts Python. Proibido editar HTML manualmente de cabeça.
+6. **Soberania do Usuário & Fallback:** Decisões críticas exigem confirmação. Sandbox bloqueou ➔ exibir comando no terminal.
+7. **UTF-8 no Windows:** Scripts com saída de texto/emojis DEVEM chamar `sys.stdout.reconfigure(encoding="utf-8")` ou `console_utf8()`.
+8. **Estabilidade de Cache & RTK:** Prompt mestre imutável (<1.500 tokens). Aprendizados e memórias vivem em `RTK-SCRATCHPAD.md`.
 
 ## 1. Regras Globais
 
-- **R1 (Idioma):** idioma único e estrito em toda comunicação e artefatos (PT-BR).
-- **R2 (Silenciamento):** sem preâmbulos/saudações nos artefatos. Markdown limpo e executivo.
-- **R3 (Autonomia):** após o escopo definido, o fluxo roda 100% autônomo.
-- **R4 (Auto-correção):** desvios são corrigidos internamente antes da entrega.
-- **R5 (Padrão Dossiê Executivo Diamante & Compilação Determinística):** É TERMINANTEMENTE PROIBIDO a qualquer agente/LLM gerar ou editar arquivos HTML de compêndios manualmente de cabeça. Toda camada DEVE ser gerada a partir de JSON estruturado ou normalizada pelo compilador determinístico (`scripts/normalizar_compendio.py`). Os artefatos visuais seguem obrigatoriamente: (1) Header com Hero Stats Bar e busca interativa client-side; (2) Título H1 alinhado naturalmente e Deck justificado; (3) Tabela de dados fluida; (4) Cards em grid `60px 1fr` com rank lateral `.entry-rank`, seções padronizadas (`.entry-section`: O Que Faz, Análise Econômica com `.econ-card`, Requisitos & Veredito com `.infra-grid` e `.verdict-box`, 3 mini-cards visuais de passos práticos em `.steps-grid`, e **Seção de White-Label & Aderência ao Design System Corporativo** com badges de esforço). Proibido o uso de layouts em 2 colunas espremidas (`div.cols`), classes CSS inventadas ou qualquer alteração estrutural que não esteja documentada no `template_dossie_executivo.py`. Qualquer tentativa de "embelezar" o HTML ignorando o template disparará erro crítico no `auditar_r5_dossie.py`.
-- **R5-V (Dossiê Vertical de Desmantelamento SaaS & Quinteto Soberano):** Formato cirúrgico de desmantelamento de SaaS proprietários específicos (ex: Granola, Notion, Salesforce, Zapier). Estrutura obrigatória: (1) Caixa de Alvo SaaS com preço e riscos de privacidade; (2) O Quinteto Soberano classificado estritamente em: *A Mais Robusta*, *A Mais Completa*, *A Mais Moderna*, *A Mais Leve* e *A Mais Simples*; (3) Presença obrigatória da Seção 5: `5. White-Label & Aderência ao Design System Corporativo` com badges de esforço e análise de risco de upgrades; (4) Presença obrigatória da Seção 6: `6. Uso Complementar & Ecossistema Agêntico (MCPs, Skills & Plugins)` mapeando servidores MCP, Agent Skills e extensões reais; (5) Scrollbars de no máximo 4px na cor accent; (6) Validação mecânica obrigatória via `scripts/auditar_tipo_vertical.py`.
-- **R6 (Modelo Livre):** nenhum modelo LLM fixo. `model: inherit` em todos os agents.
-- **R7 (Conteúdo de entrega intocável):** o que vai para o usuário final não é resumido, truncado nem "melhorado" sem pedido explícito.
-- **R8 (Determinismo primeiro):** se um script resolve, não gaste LLM. Gerar, validar, contar e converter são tarefas de script — não de agente.
-- **R9 (Gates mecânicos):** toda regra de qualidade que puder virar script vira script com retorno `exit 0` (sucesso) ou `exit 1` (erro). Promessa em prosa não é gate.
-- **R10 (Idempotência):** scripts podem rodar N vezes com o mesmo resultado e sem efeito colateral. Reexecução nunca corrompe estado.
-- **R11 (Estado em disco):** o estado da esteira vive em banco relacional SQLite (`estado_esteira.db`), nunca apenas no contexto volátil da conversa.
-- **R12 (Registro declarativo):** adicionar um tipo/variante novo deve custar **1 entrada** em `scripts/tipos.py`.
-- **R13 (Taxonomia Semântica de Nomenclaturas & Slugs Curtos):** Fica expressamente abolida a dependência de numeração sequencial frágil (`01-`, `02-`). Todos os compêndios e artefatos adotam obrigatoriamente prefixos semânticos canônicos: (1) `list-<slug-curto>.html` para listas temáticas horizontais; (2) `vert-<saas-slug>.html` para dossiês verticais de desmantelamento SaaS com o Quinteto Soberano e MCPs/Skills; (3) `tco-<slug-curto>.html` para tabelas de comparação de preço e ROI; (4) `guia-<slug-curto>.html` para playbooks práticos e deploys em VPS. Todos os nomes de arquivo devem permanecer estritamente abaixo de 35 caracteres, em minúsculas e separados por hífen.
-- **R14 (Caminhos curtos):** nomes de pasta/arquivo gerados respeitam o MAX_PATH do Windows (260 chars). Preferir slug curto a título por extenso.
-- **R15 (Segredos):** nenhuma credencial em arquivo versionado. O hook `pre-commit` bloqueia o commit se detectar padrão de segredo no diff staged.
-- **R16 (Pós-implementação — nunca commitar vermelho):** APÓS TODA nova implementação: (1) rodar a suíte de testes necessária; (2) **100%** -> commit + push; (3) **<100%** -> analisar a falha, corrigir o código, re-testar até 100%. Nunca commitar suíte vermelha; nunca contornar o teste para fazê-lo passar.
-- **R17 (Integridade de Repositórios & Validação de URLs):** toda ferramenta catalogada DEVE possuir licença OSI explícita, identificação do SaaS substituído e URL de repositório válida.
-- **R18 (Higiene Soberana em Output, Zero Entulho & Blindagem Anti-Fork):** regra inegociável de pureza: (1) **Zero Arquivos Temporários:** nenhum script descartável (`temp_*`, `fix_*`, `.bak`, `.tmp`) pode permanecer no repositório. (2) **Soberania Única de Output:** todos os artefatos residem na pasta soberana única `output/` (`01-listas-horizontais/`, `02-dossies-verticais/`, `03-manuais-e-trilhas/`), com eliminação definitiva de pastas duplicadas (`docs/`). O deploy é direto via GitHub Actions (`.github/workflows/deploy-pages.yml`). (3) **Blindagem Anti-Fork:** é terminantemente proibido qualquer script de auto-forking em lote via API do GitHub para prevenir sanções na conta do operador.
-- **R19 (Comunicação Limpa & Objetiva — Resposta ao Usuário):** Toda resposta exibida ao usuário final DEVE ser: (1) **Sem firula/enrolação:** zero preâmbulos, saudações, disclaimers desnecessários, ou frases de transição ("como mencionei", "conforme solicitado"). (2) **Direto ao ponto:** primeira linha já contém a informação central; contexto vem depois se relevante. (3) **Objetiva:** uma sentença por tópico; nenhuma redundância. Usar verbos de ação (implementei, criei, corrigi) não adjetivos vagos. (4) **Sem perder qualidade:** densidade técnica mantida; explicações são precisas, não simplificadas. (5) **Português do Brasil obrigatório:** PT-BR em 100% da comunicação (chat, docs, nomes de variáveis públicas, comentários em código-entrega). (6) **Anti-padrões banidos:** "Olá!", "Claro!", "Com certeza!", "Espero ter ajudado", "Como uma IA", "Deixe-me...", "Segue abaixo:", frases longas sem resposta (>2 linhas), emojis em contexto técnico (exceto em listas/badges estruturais). (7) **Estrutura:** resultado primeiro, detalhes/contexto segundo, próximos passos terceiro (quando aplicável). Linhas em branco usadas para separar blocos lógicos, não para "respirar".
+- **R1 (Idioma):** PT-BR estrito em toda comunicação, código-entrega, documentação e artefatos.
+- **R2 (Silenciamento):** Sem saudações. Markdown limpo, técnico e executivo.
+- **R3 (Autonomia):** Escopo definido ➔ execução 100% autônoma até o veredito dos gates.
+- **R4 (Auto-correção):** Desvios e falhas de validação são corrigidos internamente antes da entrega.
+- **R5 (Padrão Diamante R5):** Proibido HTML manual. Listas horizontais compiladas via script (`scripts/normalizar_compendio.py`) com Hero Stats Bar, busca, grid `60px 1fr` (`.entry-rank`), `.econ-card`, `.infra-grid`, `.steps-grid` e White-Label. Validado via `scripts/auditar_r5_dossie.py`.
+- **R5-V (Dossiê Vertical R5-V):** Desmantelamento SaaS. Estrutura: Alvo SaaS, Quinteto Soberano (*Mais Robusta, Completa, Moderna, Leve, Simples*), Seção White-Label e Seção MCPs/Skills. Validado via `scripts/auditar_tipo_vertical.py`.
+- **R6 (Modelo Livre):** `model: inherit` em todos os agentes.
+- **R7 (Conteúdo Intocável):** Entregas finais não são resumidas ou truncadas sem pedido explícito.
+- **R8 (Determinismo Primeiro):** Se um script resolve (gerar, contar, validar, converter), não gaste LLM.
+- **R9 (Gates Mecânicos):** Validação por scripts (`exit 0` / `exit 1`). Promessa em prosa não é gate.
+- **R10 (Idempotência):** Reexecução produz o mesmo resultado sem corromper estado.
+- **R11 (Estado Persistente):** Estado vive no SQLite `estado_esteira.db`, nunca apenas no contexto volátil.
+- **R12 (Registro Declarativo):** Adicionar tipo/camada tecnológica custa 1 entrada em `scripts/tipos.py`.
+- **R13 (Taxonomia & Slugs):** `list-<slug>.html` (listas), `vert-<saas>.html` (verticais), `tco-<slug>.html` (preço) e `guia-<slug>.html` (VPS). Slugs <= 35 chars, minúsculos com hífen.
+- **R14 (Caminhos Curtos):** Respeitar MAX_PATH (260 chars) do Windows.
+- **R15 (Segredos):** Zero credenciais versionadas. O hook `pre-commit` bloqueia detecções.
+- **R16 (Nunca Commitar Vermelho):** Pós-implementação: suite de testes e gates ➔ 100% verde ➔ commit + push.
+- **R17 (Integridade OSI):** Ferramentas devem ter licença OSI explícita, SaaS substituído e URL válida.
+- **R18 (Higiene Soberana):** Zero `.tmp`/`.bak`/`.typ`. Pasta soberana única `output/` (`01-listas-horizontais/`, `02-dossies-verticais/`, `03-manuais-e-trilhas/`). Proibido auto-fork em lote.
+- **R19 (Comunicação Direta):** Resultado na primeira linha. Uma sentença por tópico. Verbos de ação. Zero clichês.
 
 ## 2. Squad & Especialistas
 
-- `<pesquisador-open-source>`: Coleta determinística de metadados, licenças e repositórios.
-- `<redator-diamante>`: Geração de fichas no Padrão Dossiê Executivo (R5).
-- `<auditor-r18>`: Validador de integridade e ausência de entulho no repositório.
-- `<orquestrador-harness>`: Gerenciador de links multi-IDE e gates mecânicos.
+- `<pesquisador-open-source>`: Coleta de metadados, licenças OSI e repositórios.
+- `<redator-diamante>`: Compilação determinística no Padrão Diamante R5 e R5-V.
+- `<auditor-r18>`: Auditoria de integridade, paridade de espelhos e ausência de entulho.
+- `<orquestrador-harness>`: Gerenciador de links multi-IDE, SQLite e gates mecânicos.
 
-## 3. Servidores MCP
+## 3. Servidores MCP & Templates
 
-Declarados em `.mcp.json` na raiz:
-- `db_state_esteira` (SQLite) — Estado persistente da esteira (R11).
-- `file_validator` — Auditor criptográfico de integridade e espelhos (R18).
+- **MCPs (`.mcp.json`):** `db_state_esteira` (SQLite R11) e `file_validator` (Integridade R18).
+- **Templates:** `scripts/padroes/template_dossie_executivo.py`, `relatorio_enterprise.css`, `scripts/schemas/`.
 
-## 4. Templates de Saída
+## 4. Os 3 Macro-Fluxos AIDD
 
-- `scripts/padroes/template_dossie_executivo.py`: Molde canônico em HTML/CSS para os 49 compêndios.
-- `scripts/schemas/`: Schemas JSON para estruturação de dados de ferramentas e relatórios.
+1. **Fluxo 1 · Listas Horizontais (49 Camadas):** `/fluxo1 [slug]` | `python scripts/run_fluxo1.py --slug <slug>` ➔ `output/01-listas-horizontais/list-<slug>/` (HTML R5, MD, PDF + relatórios)
+2. **Fluxo 2 · Dossiês Verticais & Quinteto:** `/fluxo2 [saas]` | `python scripts/run_fluxo2.py --saas <saas>` ➔ `output/02-dossies-verticais/vert-<saas>/` (HTML R5-V, MD, PDF + relatórios)
+3. **Fluxo 3 · Manuais VPS & Trilhas:** `/fluxo3 [ferramenta] [saas]` | `python scripts/run_fluxo3.py --ferramenta <slug> --saas <saas>` ➔ `output/03-manuais-e-trilhas/<saas>/<ferramenta>/` (9 arquivos)
+4. **Pipeline Total:** `/fluxo-total` | `python scripts/run_fluxo_total.py`
 
-## 5. Os 3 Macro-Fluxos AIDD & Acionamento Universal
+## 5. Portabilidade Multi-IDE & RTK
 
-A esteira opera sob 3 Macro-Fluxos desacoplados com 4 Skills Universais e Runners CLI:
-
-1. **Fluxo 1 · Listas Horizontais (49 Camadas & Temas Livres):**
-   - *Skill / Chat:* `.agents/skills/fluxo1-listas-horizontais/` ➔ `/fluxo1 [slug]`
-   - *CLI:* `python scripts/run_fluxo1.py --slug <slug>`
-   - *Entrega:* `output/01-listas-horizontais/list-<slug>/` (`materiais/` [HTML R5, MD, PDF] + `relatorios/` [HTML, MD, PDF])
-2. **Fluxo 2 · Dossiês Verticais & Quinteto Soberano:**
-   - *Skill / Chat:* `.agents/skills/fluxo2-dossies-verticais/` ➔ `/fluxo2 [saas]`
-   - *CLI:* `python scripts/run_fluxo2.py --saas <saas>`
-   - *Entrega:* `output/02-dossies-verticais/vert-<saas>/` (`materiais/` [HTML R5-V, MD, PDF] + `relatorios/` [HTML, MD, PDF])
-3. **Fluxo 3 · Esteira de Engenharia, Manuais VPS & Trilhas:**
-   - *Skill / Chat:* `.agents/skills/fluxo3-manuais-e-trilhas/` ➔ `/fluxo3 [ferramenta] [saas]`
-   - *CLI:* `python scripts/run_fluxo3.py --ferramenta <slug> --saas <saas>`
-   - *Entrega:* `output/03-manuais-e-trilhas/<saas>/<ferramenta>/` (`manuais/`, `trilhas/` e `relatorios/` com 9 arquivos)
-4. **Pipeline Total Integrado (Cascata dos 3 Fluxos com 3 Gates de Decisão):**
-   - *Skill / Chat:* `.agents/skills/fluxo-total-aidd/` ➔ `/fluxo-total`
-   - *CLI:* `python scripts/run_fluxo_total.py`
-
-## 6. Portabilidade Multi-IDE
-
-Fonte única universal: `.agents/`.
-- **Skills Universais:** `.agents/skills/` espelhadas para `.claude/skills/` e `agentic/skills/`.
-- **Comandos Universais:** `.agents/commands/` espelhados para `.claude/commands/`.
-- **Junctions & Links:** `AGENTS.md` -> `.claude/CLAUDE.md`, `.cursor/rules/` -> `.claude/CLAUDE.md`.
-- **Pre-commit hook:** Instalado em `.git/hooks/pre-commit`.
-- **Recriar links:** `scripts/setup-links.ps1` (Win) ou `scripts/setup-links.sh` (Linux/Mac).
-
-## 7. RTK Scratchpad
-
-Aprendizados e decisões de sessões anteriores vivem em `RTK-SCRATCHPAD.md` na raiz do projeto.
+- **Fonte Única:** `.agents/` espelhado para `.claude/` e `agentic/`. Links: `scripts/setup-links.ps1`.
+- **Pre-commit:** `.git/hooks/pre-commit` bloqueia falhas e segredos.
+- **Scratchpad:** `RTK-SCRATCHPAD.md` na raiz para aprendizados e memórias dinâmicas.
