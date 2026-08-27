@@ -1,7 +1,7 @@
 # Relatório Oficial de Execução & Telemetria · Fluxo 2: ElevenLabs (Generative Voice AI & Voice Cloning)
 
 > **Data de Execução:** 27/08/2026  
-> **Janela de Tempo:** Início: 16:40:12 | Término: 17:12:52 | Duração Total: 2m 29s  
+> **Janela de Tempo:** Início: 16:40:12 | Término: 19:50:38 | Duração Total: 2m 29s  
 > **Harness & Orquestração:** Antigravity Multi-Agent Harness · Fábrica Universal  
 > **LLM Utilizada:** Claude 3.5 Sonnet / Gemini 3.7 Flash  
 > **Tools Utilizadas:** `run_command`, `view_file`, `grep_search`, `write_to_file`, `typst_compiler`  
@@ -57,8 +57,8 @@ A sessão de desmantelamento agêntico para o alvo **ElevenLabs (Generative Voic
 | Artefato | Arquivo | Tamanho / Volume | SHA-256 (12 chars) |
 | :--- | :--- | :--- | :--- |
 | **HTML Interativo (Padrão Diamante R5-V)** | `vert-elevenlabs.html` | 68,400 bytes | `13629f4b83c4` |
-| **Markdown Limpo Estruturado** | `vert-elevenlabs.md` | 0 linhas | `N/A` |
-| **PDF Executivo (Typst)** | `vert-elevenlabs.pdf` | N/A | `N/A` |
+| **Markdown Limpo Estruturado** | `vert-elevenlabs.md` | 91 linhas | `8abbaffdb401` |
+| **PDF Executivo (Typst)** | `vert-elevenlabs.pdf` | 116,520 bytes | `7e8b5fabd539` |
 
 ---
 
