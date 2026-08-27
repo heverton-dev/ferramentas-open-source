@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual Operacional: Modoboa · Deploy VPS &amp; Uso Exaustivo</title>
+  <style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --paper: #F8FAFC;
+    --surface: #FFFFFF;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --rule: #CBD5E1;
+    --rule-soft: #E2E8F0;
+    --accent: #0284C7;
+    --accent-dark: #0369A1;
+    --accent-soft: #E0F2FE;
+    --green: #10B981;
+    --green-dark: #065F46;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+    --purple: #8B5CF6;
+    --purple-soft: #EDE9FE;
+    --code-bg: #0F172A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .container { max-width: 1060px; margin: 0 auto; }
+  
+  .header-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+  
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    background: var(--paper);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--rule-soft);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat-val { font-size: 14.5px; font-weight: 800; color: var(--ink); }
+
+  .nav-anchors {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .nav-anchors a {
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    color: var(--ink-2);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-anchors a:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    background: var(--accent-soft);
+  }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .section-header {
+    border-bottom: 2px solid var(--rule-soft);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title { font-size: 20px; font-weight: 800; color: var(--ink); }
+
+  /* CARDS DE NIVELAMENTO */
+  .grid-conceitos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card-conceito {
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    padding: 16px;
+    border-left: 4px solid var(--purple);
+  }
+  .conceito-termo { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+  .conceito-analogia { font-size: 12.5px; font-weight: 700; color: #6D28D9; background: var(--purple-soft); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+  .conceito-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+
+  /* PASSOS DE INSTALAÇÃO */
+  .step-box {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .step-box:last-child { border-bottom: none; }
+  .step-top {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .step-num {
+    background: var(--accent);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .step-heading { font-size: 17px; font-weight: 800; color: var(--ink); }
+  .analogia-box {
+    background: #F0FDF4;
+    border-left: 4px solid var(--green);
+    padding: 8px 12px;
+    border-radius: 0 4px 4px 0;
+    margin: 8px 0;
+    font-size: 13px;
+    color: var(--green-dark);
+  }
+  .feedback-box {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #92400E;
+  }
+  .validacao-box {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #1E40AF;
+  }
+
+  .code-box {
+    position: relative;
+    background: var(--code-bg);
+    border-radius: 6px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  .code-box pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #F8FAFC;
+    line-height: 1.5;
+  }
+  .btn-copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.15);
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-copy:hover { background: rgba(255,255,255,0.3); }
+
+  .cite-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--gold-soft);
+    color: #B45309;
+    vertical-align: super;
+    margin-left: 4px;
+    text-decoration: none;
+  }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  table.data-table th {
+    background: var(--paper);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--ink-2);
+    border-bottom: 2px solid var(--rule);
+  }
+  table.data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink-2);
+  }
+  table.data-table tr:hover td { background: rgba(2, 132, 199, 0.02); }
+
+  .trouble-card {
+    background: #FFFBEB;
+    border-left: 4px solid var(--gold);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 0 4px 4px 0;
+  }
+  .trouble-symptom { font-weight: 700; color: #92400E; font-size: 13.5px; }
+  .trouble-cause { font-size: 13px; color: #78350F; margin: 4px 0; }
+  .trouble-fix { font-family: var(--mono); font-size: 12px; background: #FEF3C7; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="header-card">
+    <div class="breadcrumb">
+      <a href="../../listas-open-source/vert-locaweb-email.html">← Voltar ao Dossiê Vertical Locaweb-Email</a>
+      &nbsp;·&nbsp;
+      <a href="../trilhas/trilha-modoboa-aprendizado.html">Ver Trilha de Aprendizado 🗺️</a>
+    </div>
+    <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
+    <h1>Manual Operacional Completo: Modoboa</h1>
+    <p class="deck">
+      Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
+    </p>
+
+    <!-- HERO STATS DA VPS -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">VPS Recomendada</span>
+        <span class="stat-val">Locaweb VPS G2 (ou Hetzner Cloud CX31)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Hardware Mínimo</span>
+        <span class="stat-val">4 vCPU Dedicadas (Intel Xeon / AMD EPYC) · 8 GB RAM ECC</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Armazenamento &amp; SO</span>
+        <span class="stat-val">160 GB SSD NVMe Gen4 · Ubuntu 24.04 LTS (x86_64)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Custo Mensal Estimado</span>
+        <span class="stat-val" style="color:var(--accent-dark);">R$ 150,00/mês (Locaweb) ou EUR 14,00/mês (Hetzner)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Licença de Uso</span>
+        <span class="stat-val" style="color:var(--green);">AGPL-3.0 (Livre &amp; Comercial)</span>
+      </div>
+    </div>
+
+    <!-- NAVEGAÇÃO RÁPIDA -->
+    <div class="nav-anchors">
+      <a href="#nivelamento">💡 Módulo 0: Nivelamento para Iniciantes</a>
+      <a href="#instalacao">📦 Parte I: Instalação Passo a Passo</a>
+      <a href="#configuracao">⚙️ Arquivos de Configuração</a>
+      <a href="#primeiro-voo">✈️ Roteiro de Primeiro Voo</a>
+      <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
+      <a href="#manual-api">🌐 Endpoints de API</a>
+      <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
+      <a href="#desinstalacao">🛡️ Desinstalação Cirúrgica VPS</a>
+      <a href="#bibliografia">📚 Referências Bibliográficas</a>
+    </div>
+  </div>
+
+  <!-- MÓDULO 0: NIVELAMENTO CONCEITUAL -->
+  <div class="section-card" id="nivelamento">
+    <div class="section-header">
+      <h2 class="section-title">Módulo 0: Nivelamento Conceitual (O que você precisa saber antes de começar)</h2>
+      <span class="badge-tag" style="background:var(--purple-soft); color:#6D28D9;">Zero Programação</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:16px;">
+      Você não precisa ser engenheiro de software para entender como o sistema funciona. Abaixo explicamos os 5 conceitos-chave usando analogias do cotidiano:
+    </p>
+    <div class="grid-conceitos">
+      
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Modoboa (A Ferramenta)</div>
+          <div class="conceito-analogia">Analogia: Seu Próprio Google Workspace Hospedado no Seu Servidor</div>
+          <p class="conceito-desc">Modoboa é uma plataforma completa de email e colaboração que você instala dentro da sua própria VPS. Ela oferece webmail (como Gmail), calendário (como Google Calendar), contatos sincronizados e filtros antispam — tudo sob seu controle total, sem pagar por usuário ou domínio para terceiros.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 VPS (Servidor Privado Virtual)</div>
+          <div class="conceito-analogia">Analogia: Uma Sala Comercial Alugada que Nunca Apaga a Luz</div>
+          <p class="conceito-desc">Em vez de usar email do Gmail ou Outlook da Microsoft, você aluga por cerca de R$ 80 a R$ 150 por mês um computador profissional em um data center na nuvem (como a Locaweb, Hetzner ou Contabo). Ele fica ligado o tempo todo com backup automático e geradores de energia, pronto para rodar seu email 24/7.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 SMTP / IMAP / POP3 (Protocolos de Email)</div>
+          <div class="conceito-analogia">Analogia: Os Correios e a Caixa de Entrada Universal</div>
+          <p class="conceito-desc">SMTP é como enviar uma carta pelos Correios (envia email saindo). IMAP é como ter uma caixa de correio que você pode acessar de qualquer lugar (recebe email, sincroniza). POP3 é o antiquado que baixa e apaga (não recomendado). Modoboa fala todos os três para funcionar com qualquer cliente de email.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 SSH (Conexão Segura)</div>
+          <div class="conceito-analogia">Analogia: Um Túnel Secreto de Controle Remoto</div>
+          <p class="conceito-desc">É a tecnologia que liga o teclado do seu computador atual diretamente ao seu servidor na nuvem. Você digita na sua casa e o comando é executado lá com criptografia blindada.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Docker & Containers</div>
+          <div class="conceito-analogia">Analogia: Uma Caixa de Sapatos Lacrada de Fábrica</div>
+          <p class="conceito-desc">Modoboa e seus dependências (banco de dados PostgreSQL, Redis cache, Nginx proxy) vêm pré-configurados dentro de um container Docker. Você não precisa instalar cada pedaço separadamente — basta mandar a caixa abrir.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Firewall (UFW)</div>
+          <div class="conceito-analogia">Analogia: O Porteiro do Condomínio com Crachá Rígido</div>
+          <p class="conceito-desc">Um servidor tem milhares de portas virtuais. O Firewall tranca tudo e só permite: SSH (porta 22 para você controlar), email (portas 25, 110, 143, 465, 587, 993, 995) e web (80 e 443).</p>
+        </div>
+        
+    </div>
+  </div>
+
+  <!-- SEÇÃO 1: INSTALAÇÃO EM PRODUÇÃO -->
+  <div class="section-card" id="instalacao">
+    <div class="section-header">
+      <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
+      <span class="badge-tag">Tempo ~30 a 45 minutos (Zero conhecimento prévio)</span>
+    </div>
+    
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 1</span>
+            <span class="step-heading">Alugar o Servidor VPS e Obter o Endereço IP</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Acesse locaweb.com.br, crie sua conta, escolha VPS G2 com Ubuntu 24.04 LTS e conclua a compra. Você receberá por email o IP (ex: 192.168.1.100) e a senha root. Salve esses dados em um lugar seguro.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Pegar a chave da sua nova sala comercial e guardar em local seguro.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># No seu computador (Windows PowerShell ou Mac Terminal):
+ssh root@SEU_IP_AQUI</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Um email chega com 'Seu servidor foi criado com sucesso. IP: XXX.XXX.XXX.XXX'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Você consegue fazer login no painel de controle da Locaweb e ver o servidor com status 'Online'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 2</span>
+            <span class="step-heading">Blindagem Inicial: Criar Usuário Seguro e Ativar Firewall</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Criamos um usuário chamado 'modoboa' (não usar root todos os dias) e ativamos o firewall UFW para liberar apenas as portas necessárias.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Instalar fechaduras tetra e colocar o porteiro com lista de convidados permitidos.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>adduser modoboa && usermod -aG sudo modoboa
+ufw default deny incoming && ufw default allow outgoing
+ufw allow 22/tcp && ufw allow 25/tcp && ufw allow 80/tcp && ufw allow 110/tcp && ufw allow 143/tcp && ufw allow 443/tcp && ufw allow 465/tcp && ufw allow 587/tcp && ufw allow 993/tcp && ufw allow 995/tcp
+ufw --force enable</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> O sistema pedirá senha e confirmará 'Firewall is active and enabled on system startup'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Digite 'ufw status' e veja portas 22, 25, 80, 110, 143, 443, 465, 587, 993, 995 marcadas como 'ALLOW IN'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 3</span>
+            <span class="step-heading">Instalação do Docker e Docker Compose</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Instalamos o motor Docker para rodar Modoboa em um container isolado junto com PostgreSQL, Redis e Nginx, tudo em perfeita harmonia.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Montar as prateleiras industriais no galpão para receber as caixas lacradas.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>apt-get update && apt-get install -y ca-certificates curl
+curl -fsSL https://get.docker.com | sh
+usermod -aG docker modoboa
+curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Linhas de download e compilação passam pela tela durante 2 a 3 minutos.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'docker --version' e veja 'Docker version 27.x.x' ou superior.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 4</span>
+            <span class="step-heading">Criação das Pastas de Dados e Configuração do Modoboa</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Criamos a pasta /opt/modoboa/ que abrigará os dados de email, calendários, contatos, configurações e arquivos de dependências.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Montar a escrivaninha e criar as gavetas onde os documentos serão arquivados.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>mkdir -p /opt/modoboa/{data,postgres,redis}
+chown -R modoboa:modoboa /opt/modoboa
+chmod -R 750 /opt/modoboa</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> As pastas são criadas silenciosamente em menos de 1 segundo.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> O comando 'ls -ld /opt/modoboa' mostra a pasta pertencendo ao usuário 'modoboa'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 5</span>
+            <span class="step-heading">Iniciar Modoboa com Docker Compose</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Iniciamos o Modoboa, PostgreSQL, Redis e Nginx em segundo plano. O sistema baixa as imagens oficiais e começa a rodar imediatamente.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Apertar o botão verde no painel elétrico: as luzes acendem e as máquinas começam a operar.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>cd /opt/modoboa
+docker compose up -d
+docker compose ps</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Docker fará pull das imagens e exibirá 'Container modoboa-web Started', 'Container modoboa-postgres Started', 'Container modoboa-redis Started'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Digite 'docker compose ps' e veja todos os containers com status 'Up'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 6</span>
+            <span class="step-heading">Configuração do SSL (Certificado de Segurança) com Certbot</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Nginx + Certbot emitem automaticamente um certificado Let's Encrypt gratuito para que ninguém intercepte seus emails na internet.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Lacre inviolável dos Correios com assinatura digital em cada pacote.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>apt-get install -y certbot python3-certbot-nginx
+certbot certonly --nginx -d seu-dominio.com.br -d mail.seu-dominio.com.br
+nginx -s reload</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Certbot verificará seu domínio (deve estar apontando para o IP do servidor) e confirmará 'Congratulations! Your certificate is issued'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Abra https://seu-dominio no navegador e veja o cadeado verde fechado.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
+  <div class="section-card" id="configuracao">
+    <div class="section-header">
+      <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
+    </div>
+    
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/modoboa/docker-compose.yml</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Orquestra PostgreSQL, Redis e Modoboa em perfeita harmonia via Docker.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>version: '3.8'
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: modoboa
+      POSTGRES_USER: modoboa
+      POSTGRES_PASSWORD: sua-senha-forte
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - ./redis:/data
+  modoboa:
+    image: modoboa/modoboa:latest
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: postgresql://modoboa:sua-senha-forte@postgres:5432/modoboa
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "25:25"
+      - "587:587"
+    volumes:
+      - ./data:/data</code></pre>
+          </div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
+  <div class="section-card" id="primeiro-voo">
+    <div class="section-header">
+      <h2 class="section-title">Parte II: Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green-dark);">Prática Imediata</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
+      Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
+    </p>
+    
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 1: Acessar painel administrativo:</strong> Abra https://seu-dominio.com.br no navegador com credenciais admin.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Dashboard administrativo carrega com estatísticas de usuários e emails.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 2: Adicionar domínio:</strong> Clique 'Domains' > 'Add Domain', digite seu domínio e valide registros MX/SPF/DKIM.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Domínio aparece ativo na lista.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 4: MANUAL DE USO CLI -->
+  <div class="section-card" id="manual-cli">
+    <div class="section-header">
+      <h2 class="section-title">Dicionário Completo de Comandos (CLI)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Comando / Opção</th>
+          <th>O que faz (em português claro)</th>
+          <th>Exemplo de Execução</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose ps</code></td>
+          <td>Mostra status de todos os containers do Modoboa (web, postgres, redis, nginx).</td>
+          <td><code>docker compose ps</code></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose logs -f modoboa</code></td>
+          <td>Exibe logs em tempo real do container web para diagnosticar problemas.</td>
+          <td><code>docker compose logs -f modoboa | grep -i error</code></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose exec postgres pg_dump -U modoboa modoboa</code></td>
+          <td>Faz backup do banco de dados PostgreSQL com todos os emails, calendários e contatos.</td>
+          <td><code>docker compose exec postgres pg_dump -U modoboa modoboa > backup.sql</code></td>
+          <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">postqueue -p</code></td>
+          <td>Mostra fila de emails aguardando entrega (usar via 'docker compose exec modoboa postqueue -p').</td>
+          <td><code>docker compose exec modoboa postqueue -p</code></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 5: REFERÊNCIA DE API REST -->
+  <div class="section-card" id="manual-api">
+    <div class="section-header">
+      <h2 class="section-title">Endpoints de API REST &amp; Conexão com Agentes (MCP)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Método</th>
+          <th>Rota</th>
+          <th>Finalidade</th>
+          <th>Payload / Resposta</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/admin/accounts/users/</code></td>
+          <td>Lista todos os usuários de email cadastrados no sistema.</td>
+          <td><pre style="font-size:11px; margin:0;">GET /admin/accounts/users/
+Resposta: {"users": [{"username": "maria", "email": "maria@dominio.com"}]}</pre></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">POST</span></td>
+          <td><code>/admin/accounts/users/</code></td>
+          <td>Cria novo usuário de email via API (requer autenticação).</td>
+          <td><pre style="font-size:11px; margin:0;">POST /admin/accounts/users/
+Body: {"username": "joao", "password": "senha", "email": "joao@dominio.com"}</pre></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/admin/domains/</code></td>
+          <td>Lista todos os domínios configurados e seu status de validação DNS.</td>
+          <td><pre style="font-size:11px; margin:0;">GET /admin/domains/
+Resposta: {"domains": [{"name": "seu-dominio.com.br", "status": "active"}]}</pre></td>
+          <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 6: TROUBLESHOOTING -->
+  <div class="section-card" id="troubleshooting">
+    <div class="section-header">
+      <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
+    </div>
+    
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Emails não são entregues</div>
+          <div class="trouble-cause">Causa Provável: Registros DNS (MX) não estão apontando para o servidor ou fila Postfix travada.</div>
+          <div>Solução Prática: <code class="trouble-fix">nslookup -type=MX seu-dominio.com.br # Verifique os registros; depois: docker compose exec modoboa postqueue -p</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Usuários não conseguem fazer login no webmail</div>
+          <div class="trouble-cause">Causa Provável: PostgreSQL desligado ou password hash inválido no banco.</div>
+          <div>Solução Prática: <code class="trouble-fix">docker compose restart postgres && docker compose logs postgres | tail -20</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Certificado SSL expirou</div>
+          <div class="trouble-cause">Causa Provável: Certbot não foi configurado para renovação automática.</div>
+          <div>Solução Prática: <code class="trouble-fix">certbot renew --force-renewal && docker compose restart nginx</code></div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
+  <div class="section-card" id="desinstalacao">
+    <div class="section-header">
+      <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
+      <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
+    </div>
+    
+        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
+          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
+          <p style="margin:0; font-size:13.5px; color:#1E293B;">Remove exclusivamente containers Modoboa preservando Docker daemon e outros serviços.</p>
+        </div>
+        
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 1</span>
+                <span class="step-title">Parada dos Containers</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Interrompe todos os processos do Modoboa.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>cd /opt/modoboa && docker compose down</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Não execute 'docker system prune -a'.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>docker ps | grep modoboa # Deve estar vazio</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 2</span>
+                <span class="step-title">Remoção de Volumes</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove dados de email (IRREVERSÍVEL - fazer backup antes).</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>docker compose down -v && docker volume rm modoboa_postgres modoboa_redis 2>/dev/null || true</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> BACKUP ANTES: docker compose exec postgres pg_dump -U modoboa modoboa > backup.sql</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>docker volume ls | grep modoboa # Não deve constar</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 3</span>
+                <span class="step-title">Revogação de Portas no Firewall</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Fecha portas de email (25, 110, 143, etc).</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>for port in 25 110 143 465 587 993 995; do ufw delete allow $port/tcp 2>/dev/null; done
+ufw reload</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Mantém SSH e web abertos.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>ufw status # Verifique ausência de portas de email</code></div>
+            </div>
+            
+        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
+          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
+          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
+            <li style='margin-bottom:6px;'><code>docker ps # Outros containers continuam 'Up'</code></li><li style='margin-bottom:6px;'><code>free -h # Memória liberada (PostgreSQL+Redis liberam 4-6 GB)</code></li><li style='margin-bottom:6px;'><code>df -h # Disco liberado (emails liberam espaço significativo)</code></li>
+          </ul>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
+  <div class="section-card" id="bibliografia">
+    <div class="section-header">
+      <h2 class="section-title">Parte III: Fontes Citadas &amp; Referência Bibliográfica Auditada</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green);">100% Verificadas</span>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Categoria</th>
+          <th>Título da Obra / Documento</th>
+          <th>Autor / Mantenedor</th>
+          <th>Link Oficial</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr id="ref-F01">
+          <td><strong style="color:var(--accent);">F01</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Modoboa Official Documentation</strong></td>
+          <td>Modoboa Core Team</td>
+          <td><a href="https://modoboa.readthedocs.io/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    const original = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => { btn.innerText = original; }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>

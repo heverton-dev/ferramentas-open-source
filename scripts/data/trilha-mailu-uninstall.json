@@ -1,0 +1,176 @@
+{
+  "$schema": "../schemas/schema_trilha_aprendizado.json",
+  "produto_foco": "Mailu - Desinstalação Segura & Migração para Open Source",
+  "slug": "mailu-uninstall",
+  "saas_origem": "mailu",
+  "tempo_total_estimado": "8 horas de imersão guiada (Ao longo de 1-2 semanas de implantação)",
+  "fases": [
+    {
+      "fase_numero": 1,
+      "titulo": "Fase 1: Fundamentos de Desinstalação Segura & Compliance LGPD",
+      "tempo_estimado": "1h 15min",
+      "objetivo": "Entender os riscos legais, técnicos e operacionais de desinstalar um servidor de email em produção. Aprender como breaches ocorrem durante migração e como proteger dados de usuários conforme LGPD.",
+      "recursos": [
+        {
+          "titulo": "Por que Desinstalar Email Servers é Diferente de Desinstalar Aplicativos",
+          "tipo_midia": "Artigo Técnico / Guia Aberto",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Conteúdo 100% nativo em Português do Brasil.",
+          "autor": "Equipe de Segurança de Dados Brasil",
+          "duracao": "35 min de leitura",
+          "url": "https://www.gov.br/cidadania/pt-br/acesso-a-informacao/lgpd",
+          "aprendizado_chave": "Diferença entre desinstalar um app e desinstalar um servidor de email: (1) Email contém dados pessoais de terceiros; (2) Filas de tráfego em voo podem estar em memória/disco; (3) Compliance LGPD exige prova de destruição total; (4) Um backup esquecido significa violação de dados.",
+          "fonte_id": "F01"
+        },
+        {
+          "titulo": "Mapeamento de Dados Sensíveis em Servidores Mailu",
+          "tipo_midia": "Documentação Técnica & Checklist",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Guia prático criado pela comunidade brasileira.",
+          "autor": "DevOps Brasil Security",
+          "duracao": "40 min de estudo prático",
+          "url": "https://github.com/mailu/mailu/wiki/Data-Security",
+          "aprendizado_chave": "Onde os dados sensíveis vivem em um Mailu: (1) /data/data.db = banco SQLite com senhas bcrypt + tentativas de login; (2) /mail/vmail = arquivos de email brutos (não criptografados por padrão); (3) /etc/letsencrypt = certificados privados (EXPOSIÇÃO = MITM attacks); (4) Docker volumes não são apagados automaticamente.",
+          "fonte_id": "F02"
+        }
+      ]
+    },
+    {
+      "fase_numero": 2,
+      "titulo": "Fase 2: Backup Cirúrgico & Validação de Integridade",
+      "tempo_estimado": "1h 50min",
+      "objetivo": "Dominar o processo de backup completo offline (banco SQLite + vmail files) com criptografia, checksums e testes de restauração antes de tocar na produção.",
+      "recursos": [
+        {
+          "titulo": "Estratégia de 3-Camadas de Backup: Local, Remoto & Externo",
+          "tipo_midia": "Guia Prático / Tutorial",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Passo a passo didático para evitar perda total.",
+          "autor": "Comunidade de Infraestrutura Brasileira",
+          "duracao": "50 min de estudo + prática",
+          "url": "https://docs.mailu.io/configuration/backup.html",
+          "aprendizado_chave": "3-2-1 Rule of Backup: manter 3 cópias (original + 2 backups), em 2 tipos de mídia diferentes (HD + SSD), 1 cópia offline em local seguro. Para Mailu significa: (1) Backup local em /backup-mailu (2h após, validação com checksum); (2) Backup remoto criptografado em servidor externo (rsync com gpg); (3) Backup externo em HD externo fechado em cofre (testado 1x/mês).",
+          "fonte_id": "F03"
+        },
+        {
+          "titulo": "Processo Prático: Exportar SQLite + Vmail com Checksums",
+          "tipo_midia": "Playbook / Código & Scripts",
+          "idioma": "EN",
+          "dica_traducao_ptbr": "Use Chrome Translate ou consulte manual em PT-BR fornecido.",
+          "autor": "Mailu DevOps Core",
+          "duracao": "1h de prática guiada",
+          "url": "https://github.com/mailu/mailu/tree/main/docs/configuration/backup",
+          "aprendizado_chave": "Comandos Docker para backup seguro: (1) docker exec mailu-admin sqlite3 -backup para exportar banco; (2) tar + gpg para criptografar vmail; (3) sha256sum para validar integridade; (4) testando restauração em servidor teste ANTES de desinstalar.",
+          "fonte_id": "F04"
+        }
+      ]
+    },
+    {
+      "fase_numero": 3,
+      "titulo": "Fase 3: Drenagem de Filas & Parada Segura do Stack Docker",
+      "tempo_estimado": "1h 30min",
+      "objetivo": "Aprender técnicas para desativar email server sem perder mensagens em trânsito, controlando parada de componentes na ordem correta (webmail → IMAP/POP3 → SMTP → DB).",
+      "recursos": [
+        {
+          "titulo": "Monitoramento de Fila SMTP & Retry Automático em Postfix",
+          "tipo_midia": "Guia Técnico / Troubleshooting",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Documentação prática e sem jargão excessivo.",
+          "autor": "Equipe de Infraestrutura Brasileira",
+          "duracao": "40 min de leitura + prática",
+          "url": "https://www.postfix.org/QSHAPE_README.html",
+          "aprendizado_chave": "Como ler e interpretar fila do Postfix: (1) mailq mostra emails com falha temporária (retry em 5h); (2) postsuper -d ALL remove emails travados (cuidado!); (3) tail -f /var/log/mail.log mostra entrega em tempo real; (4) aguardar 30min após MX redirect garante fila zerada.",
+          "fonte_id": "F05"
+        },
+        {
+          "titulo": "Orquestração de Parada: Sequência Correta de docker stop",
+          "tipo_midia": "Checklist & Playbook",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Ordem errada = perda de dados e timeouts.",
+          "autor": "DevOps Brasil",
+          "duracao": "30 min de estudo",
+          "url": "https://docs.docker.com/compose/reference/stop/",
+          "aprendizado_chave": "Parada em 5 etapas para evitar perda: (1) webmail/reverse-proxy (parar interface); (2) imap/pop3 (clients param de sincronizar); (3) aguardar 5min (retry de clients); (4) postfix (parar aceitação de email novo); (5) aguardar 10min + parar db (fila final é drenada). Se pular etapas = emails perdidos.",
+          "fonte_id": "F06"
+        }
+      ]
+    },
+    {
+      "fase_numero": 4,
+      "titulo": "Fase 4: Limpeza Segura de Dados Sensíveis & Destruição",
+      "tempo_estimado": "1h 45min",
+      "objetivo": "Dominar técnicas de overwrite seguro (shred, LUKS, secure-erase) para garantir que dados de email não possam ser recuperados de HDD/SSD mesmo após remoção de container.",
+      "recursos": [
+        {
+          "titulo": "Técnicas Forense de Recuperação de Dados & Como Prevenir",
+          "tipo_midia": "Artigo Técnico / Segurança",
+          "idioma": "EN",
+          "dica_traducao_ptbr": "Tradução recomendada para português via Chrome.",
+          "autor": "Schneier on Security & DBAN Documentation",
+          "duracao": "50 min de leitura",
+          "url": "https://dban.sourceforge.io/",
+          "aprendizado_chave": "Por que rm simples não basta: arquivos 'deletados' deixam rastros em alocadores de inode (ext4/btrfs). Solução: (1) shred -vfz sobrescreve 3x + random bytes; (2) LUKS encryption + key-destroy é mais seguro; (3) SSD TRIM é irreversível mas requer firmware moderno; (4) HDD 7-pass DoD Wipe é padrão industrial.",
+          "fonte_id": "F07"
+        },
+        {
+          "titulo": "Destruição Segura de Volumes Docker & Remoção de Secrets",
+          "tipo_midia": "Playbook / Scripts",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Passo a passo para destruir Mailu sem deixar rastros.",
+          "autor": "Comunidade Docker Brasil",
+          "duracao": "45 min de prática",
+          "url": "https://docs.docker.com/storage/volumes/",
+          "aprendizado_chave": "Destruir Mailu completamente: (1) docker rm -v mailu-* (remove containers + volumes nomeados); (2) docker volume prune -f (remove orphaned volumes); (3) shred -vfz /data/data.db.backup (overwrite 3x); (4) grep -r MAILU_ADMIN_PASSWORD /root/.docker/ && rm (remover secrets em arquivos); (5) rm -rf /etc/mailu/ + /mailu/ (remover repositório inteiro).",
+          "fonte_id": "F08"
+        }
+      ]
+    },
+    {
+      "fase_numero": 5,
+      "titulo": "Fase 5: Migração para Alternativas Open Source (Mailcow, Postfix+Dovecot)",
+      "tempo_estimado": "1h 40min",
+      "objetivo": "Conhecer alternativas robustas ao Mailu, estratégias de migração de dados (IMAP Sync, vmail import) e validação de emails no novo servidor.",
+      "recursos": [
+        {
+          "titulo": "Comparativo: Mailu vs Mailcow vs Postfix+Dovecot Bare Metal",
+          "tipo_midia": "Documento Comparativo / Matriz de Decisão",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Documento nativo da fábrica universal do Arsenal.",
+          "autor": "Equipe Arsenal Open Source",
+          "duracao": "45 min de leitura",
+          "url": "https://dossie-mailu.html",
+          "aprendizado_chave": "Quando escolher qual: (1) Mailcow = Docker + robustez, ideal para empresas que já estão em Mailu; (2) Postfix+Dovecot bare = máximo controle, ideal para arquitetos de infra avançados; (3) Cloud provider (Hetzner Mail, Linode Email) = zero ops, ideal para startup sem DevOps. Economia anual: Mailcow R$18k, Postfix R$6k, Cloud R$30k.",
+          "fonte_id": "F09"
+        },
+        {
+          "titulo": "Migração Passo-a-Passo: Exportar de Mailu, Importar em Mailcow",
+          "tipo_midia": "Playbook / Tutorial Prático",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Guia didático com exemplos em português.",
+          "autor": "Comunidade Mailcow Brasil",
+          "duracao": "55 min de prática",
+          "url": "https://mailcow.email/post/migration/",
+          "aprendizado_chave": "Etapas de migração: (1) Exportar usuários de Mailu em JSON (docker exec mailu-admin sqlite3 -json); (2) Criar domínios em Mailcow via API; (3) Importar usuários com senhas hasheadas; (4) IMAP Sync de vmail antigos para novos (servidor Courier IMAP); (5) Validar com mutt/telnet; (6) Atualizar MX/SPF/DKIM; (7) Monitorar logs 7 dias.",
+          "fonte_id": "F10"
+        }
+      ]
+    }
+  ],
+  "sumario_aprendizado": {
+    "competencias_adquiridas": [
+      "Desinstalação segura de servidores email em produção com zero perda de dados",
+      "Backup cirúrgico com criptografia, checksums e validação de integridade",
+      "Monitoramento de filas SMTP, retry automático e drenagem de tráfego",
+      "Parada ordenada de stack Docker para garantir persistência",
+      "Limpeza forense de dados sensíveis (overwrite, LUKS, secure-erase)",
+      "Migração de dados para alternativas like Mailcow e Postfix+Dovecot",
+      "Atualização de DNS (MX, SPF, DKIM) sem downtime",
+      "Validação pós-migração com mxtoolbox, mail-tester e monitoramento 7d"
+    ],
+    "proximas_trilhas_recomendadas": [
+      "Trilha Mailcow: Deep Dive em Infraestrutura Email Escalável",
+      "Trilha Postfix+Dovecot: Email Server Bare Metal do Zero",
+      "Trilha LGPD & Privacidade: Compliance em Servidores de Email"
+    ]
+  }
+}

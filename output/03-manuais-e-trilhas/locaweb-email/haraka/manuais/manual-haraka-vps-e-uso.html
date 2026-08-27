@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Manual Operacional: Haraka SMTP Server + Spamassassin · Deploy VPS &amp; Uso Exaustivo</title>
+  <title>Manual Operacional: Haraka · Deploy VPS &amp; Uso Exaustivo</title>
   <style>
 
   :root {
@@ -277,7 +277,7 @@
       <a href="../trilhas/trilha-haraka-aprendizado.html">Ver Trilha de Aprendizado 🗺️</a>
     </div>
     <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
-    <h1>Manual Operacional Completo: Haraka SMTP Server + Spamassassin</h1>
+    <h1>Manual Operacional Completo: Haraka</h1>
     <p class="deck">
       Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
     </p>
@@ -286,7 +286,7 @@
     <div class="hero-stats">
       <div class="stat-item">
         <span class="stat-lbl">VPS Recomendada</span>
-        <span class="stat-val">Hetzner Cloud CX21</span>
+        <span class="stat-val">Contabo Cloud VPS S ou Hetzner CPX11</span>
       </div>
       <div class="stat-item">
         <span class="stat-lbl">Hardware Mínimo</span>
@@ -294,11 +294,11 @@
       </div>
       <div class="stat-item">
         <span class="stat-lbl">Armazenamento &amp; SO</span>
-        <span class="stat-val">40 GB SSD · Ubuntu 24.04 LTS</span>
+        <span class="stat-val">80 GB SSD NVMe · Ubuntu 24.04 LTS (x86_64)</span>
       </div>
       <div class="stat-item">
         <span class="stat-lbl">Custo Mensal Estimado</span>
-        <span class="stat-val" style="color:var(--accent-dark);">EUR 4,00/mes</span>
+        <span class="stat-val" style="color:var(--accent-dark);">EUR 4,00 a EUR 8,00/mês (R$ 24 a R$ 48/mês)</span>
       </div>
       <div class="stat-item">
         <span class="stat-lbl">Licença de Uso</span>
@@ -332,9 +332,27 @@
     <div class="grid-conceitos">
       
         <div class="card-conceito">
-          <div class="conceito-termo">💡 SMTP</div>
-          <div class="conceito-analogia">Analogia: O Servico de Entrega de Cartas</div>
-          <p class="conceito-desc">Haraka e um servidor SMTP que funciona como uma central de entrega de e-mails.</p>
+          <div class="conceito-termo">💡 Haraka (A Ferramenta)</div>
+          <div class="conceito-analogia">Analogia: O Gerente de Correspondência da Sua Empresa</div>
+          <p class="conceito-desc">Um servidor SMTP que recebe emails, valida, analisa (spam, vírus) e os encaminha para o destino. Você tem total controle, diferente do Locaweb.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 SMTP Gateway</div>
+          <div class="conceito-analogia">Analogia: Uma Comporta Controlada de Água</div>
+          <p class="conceito-desc">Locaweb é uma comporta que você não controla. Haraka é a comporta na sua própria casa: você vê cada gota de água (email).</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Node.js Runtime</div>
+          <div class="conceito-analogia">Analogia: Um Intérprete Simultâneo</div>
+          <p class="conceito-desc">Haraka é escrito em JavaScript e roda sobre Node.js: rápido, paralelo e fácil de estender com plugins.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 VPS e Infraestrutura Própria</div>
+          <div class="conceito-analogia">Analogia: Sua Agência de Correios Privada</div>
+          <p class="conceito-desc">Em vez de usar Locaweb, você aluga sua própria VPS por R$ 50-100/mês e monta sua agência de correios pessoal.</p>
         </div>
         
     </div>
@@ -344,9 +362,115 @@
   <div class="section-card" id="instalacao">
     <div class="section-header">
       <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
-      <span class="badge-tag">Tempo ~20 min</span>
+      <span class="badge-tag">Tempo ~30 a 45 minutos</span>
     </div>
     
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 1</span>
+            <span class="step-heading">Alugar a VPS e Acessar via SSH</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Acesse contabo.com ou hetzner.cloud, crie sua conta, clique em 'Add Server', escolha Ubuntu 24.04 LTS. Em 30 segundos você receberá por e-mail o endereço IP do seu servidor.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> É o equivalente a pegar a chave de sua nova sala comercial alugada e ligar para a recepção.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># Substitua SEU_IP_AQUI pelo IP que você recebeu por email
+ssh root@SEU_IP_AQUI</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Uma janela de terminal com cursor piscando, pronta para receber suas instruções.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Você conseguirá fazer login sem erros e verá o prompt 'root@servidor:~#'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 2</span>
+            <span class="step-heading">Atualizar o Sistema e Instalar Dependências</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Atualizamos os repositórios do Linux e instalamos Node.js e ferramentas essenciais para Haraka.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Varrer o chão da sala comercial nova e colocar as prateleiras essenciais no lugar.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>apt update && apt upgrade -y
+apt install -y curl git build-essential nodejs npm
+node --version && npm --version</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Várias linhas de download e instalação de pacotes passarão pela tela durante 2-3 minutos.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'node --version' e verá 'v20.x.x' ou superior. Execute 'npm --version' e verá '10.x.x' ou superior.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 3</span>
+            <span class="step-heading">Instalar Haraka Globalmente</span>
+            <a href="#ref-F03" class="cite-badge">[F03]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Instalamos o Haraka via npm (gerenciador de pacotes Node.js) e inicializamos o diretório de configuração.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Colocar a máquina de correios (Haraka) no chão pronto para funcionar.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>npm install -g haraka
+haraka -i /etc/haraka
+haraka --version</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Várias linhas de instalação de módulos npm. Ao final, mensagem 'added X packages'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'haraka --version' e verá '3.0.0' ou superior.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 4</span>
+            <span class="step-heading">Configurar Arquivo de Hosts Local</span>
+            <a href="#ref-F04" class="cite-badge">[F04]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Registramos o hostname do servidor para evitar loops de DNS.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Colocar um aviso na porta: 'Este é o servidor mail.suaempresa.com.br'.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>echo 'mail.suaempresa.com.br localhost' >> /etc/hosts
+cat /etc/hosts | tail -3</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Sem feedback visível, operação silenciosa.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'cat /etc/hosts | grep suaempresa' e verá a entrada adicionada.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 5</span>
+            <span class="step-heading">Gerar Certificado SSL com LetsEncrypt</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Provisionamos um certificado TLS GRATUITO para conexões criptografadas SMTPS (porta 465) e Submission (porta 587).</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Instalar um lacre inviolável nos Correios para que ninguém intercepção seus emails.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>apt install -y certbot
+certbot certonly --standalone -d mail.suaempresa.com.br --agree-tos -n -m admin@suaempresa.com.br
+ls -la /etc/letsencrypt/live/mail.suaempresa.com.br</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Várias linhas de validação de domínio. Mensagem 'Successfully received certificate'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'ls -la /etc/letsencrypt/live/mail.suaempresa.com.br' e verá os arquivos de certificado.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 6</span>
+            <span class="step-heading">Iniciar Haraka em Produção</span>
+            <a href="#ref-F06" class="cite-badge">[F06]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Iniciamos o Haraka como serviço systemd permanente que roda ao boot.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Apertar o botão verde no painel elétrico: as máquinas começam a operar 24/7.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>cd /etc/haraka && npm start &
+sleep 3
+systemctl status haraka</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Mensagem 'Started Haraka SMTP Server'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'systemctl status haraka' e verá 'active (running)'.</div>
+        </div>
+        
   </div>
 
   <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
@@ -355,6 +479,26 @@
       <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
     </div>
     
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/etc/haraka/config/smtpd.ini</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Arquivo de configuração principal do Haraka: define hostname, portas, certificados SSL e quais plugins ativar.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>[main]
+host = mail.suaempresa.com.br
+port = 25
+
+[tls]
+key = /etc/letsencrypt/live/mail.suaempresa.com.br/privkey.pem
+cert = /etc/letsencrypt/live/mail.suaempresa.com.br/fullchain.pem
+
+[plugins]
+known_hosts
+spam_header
+limit_concurrency = 10</code></pre>
+          </div>
+        </div>
+        
   </div>
 
   <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
@@ -367,6 +511,21 @@
       Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
     </p>
     
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 1: Testar Conectividade SMTP:</strong> No seu computador local, abra um terminal e execute 'telnet mail.suaempresa.com.br 25'. Você deve receber a resposta '220 mail.suaempresa.com.br ESMTP Haraka'.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Conexão bem-sucedida com o servidor SMTP. Se receber erro, verifique se a porta 25 está aberta no firewall.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 2: Enviar Email de Teste:</strong> Use um cliente de email (Thunderbird, Outlook, Apple Mail) ou comando 'mail': configure SMTP como 'mail.suaempresa.com.br', porta 25, sem autenticação, e envie email para teste@gmail.com.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Email chega na caixa de entrada do destinatário em segundos. Verifique os logs do servidor: 'tail -f /var/log/haraka/haraka.log'.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 3: Validar SPF/DKIM/DMARC:</strong> Acesse https://mxtoolbox.com/spf.aspx?domain=suaempresa.com.br e coloque seu domínio. Deve aparecer score 10/10 em SPF.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Seu domínio tem proteção completa contra spoofing e emails não caem em spam.</div>
+        </div>
+        
   </div>
 
   <!-- SEÇÃO 4: MANUAL DE USO CLI -->
@@ -384,6 +543,36 @@
         </tr>
       </thead>
       <tbody>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">haraka -v</code></td>
+          <td>Mostra a versão atual do Haraka</td>
+          <td><code>haraka -v
+# Retorna: Haraka 3.0.0</code></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">systemctl status haraka</code></td>
+          <td>Verifica se o serviço Haraka está rodando</td>
+          <td><code>systemctl status haraka
+# Retorna: active (running) since...</code></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">tail -f /var/log/haraka/haraka.log</code></td>
+          <td>Segue os logs em tempo real do Haraka</td>
+          <td><code>tail -f /var/log/haraka/haraka.log</code></td>
+          <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">npm install <plugin-name></code></td>
+          <td>Instala um novo plugin Haraka</td>
+          <td><code>cd /etc/haraka && npm install haraka-plugin-rspamd</code></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
         
       </tbody>
     </table>
@@ -406,6 +595,22 @@
       </thead>
       <tbody>
         
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/admin/queue</code></td>
+          <td>Lista emails pendentes na fila</td>
+          <td><pre style="font-size:11px; margin:0;">curl http://localhost:3000/admin/queue</pre></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">POST</span></td>
+          <td><code>/admin/config/reload</code></td>
+          <td>Recarrega configuração sem reiniciar o servidor</td>
+          <td><pre style="font-size:11px; margin:0;">curl -X POST http://localhost:3000/admin/config/reload</pre></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
       </tbody>
     </table>
   </div>
@@ -416,6 +621,24 @@
       <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
     </div>
     
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Emails sendo rejeitados com erro '550 User not found'</div>
+          <div class="trouble-cause">Causa Provável: O plugin 'rcpt_to' está validando destinatários contra banco de dados, mas a consulta falhou.</div>
+          <div>Solução Prática: <code class="trouble-fix">Verifique banco de dados: mysql -u haraka -p -e 'SELECT * FROM virtual_mailbox;' Se vazio, adicione entradas manualmente ou desative validação temporariamente removendo o plugin.</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Fila de emails crescendo (processos lentos)</div>
+          <div class="trouble-cause">Causa Provável: Limite de concorrência baixo ou DNS timeout na validação de MX records do destinatário.</div>
+          <div>Solução Prática: <code class="trouble-fix">Aumente limite de concorrência: cd /etc/haraka && echo '50' > config/limit_concurrency. Restart: systemctl restart haraka</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Certificado SSL expirado (erro TLS 'certificate expired')</div>
+          <div class="trouble-cause">Causa Provável: LetsEncrypt não renovou automaticamente</div>
+          <div>Solução Prática: <code class="trouble-fix">Renove manualmente: certbot renew --force-renewal && systemctl restart haraka</code></div>
+        </div>
+        
   </div>
 
   <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
@@ -425,18 +648,6 @@
       <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
     </div>
     
-        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
-          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
-          <p style="margin:0; font-size:13.5px; color:#1E293B;">Remocao limpa sem afetar SO.</p>
-        </div>
-        
-        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
-          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
-          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
-            
-          </ul>
-        </div>
-        
   </div>
 
   <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
@@ -456,6 +667,54 @@
         </tr>
       </thead>
       <tbody>
+        
+        <tr id="ref-F01">
+          <td><strong style="color:var(--accent);">F01</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>RFC 5321 - Simple Mail Transfer Protocol</strong></td>
+          <td>IETF</td>
+          <td><a href="https://tools.ietf.org/html/rfc5321" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F02">
+          <td><strong style="color:var(--accent);">F02</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Haraka Official Documentation & GitHub</strong></td>
+          <td>Haraka Community & Jason Walker</td>
+          <td><a href="https://haraka.github.io/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F03">
+          <td><strong style="color:var(--accent);">F03</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Guia Técnico</span></td>
+          <td><strong>DKIM, SPF and DMARC - MXToolbox Reference</strong></td>
+          <td>MXToolbox Community</td>
+          <td><a href="https://mxtoolbox.com/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F04">
+          <td><strong style="color:var(--accent);">F04</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>LetsEncrypt - Free SSL/TLS Certificates</strong></td>
+          <td>Electronic Frontier Foundation (EFF)</td>
+          <td><a href="https://letsencrypt.org/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F05">
+          <td><strong style="color:var(--accent);">F05</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Rspamd - Spam Filtering with Machine Learning</strong></td>
+          <td>Vsevolod Stakhov & Rspamd Community</td>
+          <td><a href="https://rspamd.com/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F06">
+          <td><strong style="color:var(--accent);">F06</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Node.js Official Documentation & Runtime</strong></td>
+          <td>OpenJS Foundation</td>
+          <td><a href="https://nodejs.org/en/docs/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
         
       </tbody>
     </table>

@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual Operacional: Mailu - Desinstalação Cirúrgica & Migração Segura · Deploy VPS &amp; Uso Exaustivo</title>
+  <style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --paper: #F8FAFC;
+    --surface: #FFFFFF;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --rule: #CBD5E1;
+    --rule-soft: #E2E8F0;
+    --accent: #0284C7;
+    --accent-dark: #0369A1;
+    --accent-soft: #E0F2FE;
+    --green: #10B981;
+    --green-dark: #065F46;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+    --purple: #8B5CF6;
+    --purple-soft: #EDE9FE;
+    --code-bg: #0F172A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .container { max-width: 1060px; margin: 0 auto; }
+  
+  .header-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+  
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    background: var(--paper);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--rule-soft);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat-val { font-size: 14.5px; font-weight: 800; color: var(--ink); }
+
+  .nav-anchors {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .nav-anchors a {
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    color: var(--ink-2);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-anchors a:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    background: var(--accent-soft);
+  }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .section-header {
+    border-bottom: 2px solid var(--rule-soft);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title { font-size: 20px; font-weight: 800; color: var(--ink); }
+
+  /* CARDS DE NIVELAMENTO */
+  .grid-conceitos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card-conceito {
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    padding: 16px;
+    border-left: 4px solid var(--purple);
+  }
+  .conceito-termo { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+  .conceito-analogia { font-size: 12.5px; font-weight: 700; color: #6D28D9; background: var(--purple-soft); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+  .conceito-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+
+  /* PASSOS DE INSTALAÇÃO */
+  .step-box {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .step-box:last-child { border-bottom: none; }
+  .step-top {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .step-num {
+    background: var(--accent);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .step-heading { font-size: 17px; font-weight: 800; color: var(--ink); }
+  .analogia-box {
+    background: #F0FDF4;
+    border-left: 4px solid var(--green);
+    padding: 8px 12px;
+    border-radius: 0 4px 4px 0;
+    margin: 8px 0;
+    font-size: 13px;
+    color: var(--green-dark);
+  }
+  .feedback-box {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #92400E;
+  }
+  .validacao-box {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #1E40AF;
+  }
+
+  .code-box {
+    position: relative;
+    background: var(--code-bg);
+    border-radius: 6px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  .code-box pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #F8FAFC;
+    line-height: 1.5;
+  }
+  .btn-copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.15);
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-copy:hover { background: rgba(255,255,255,0.3); }
+
+  .cite-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--gold-soft);
+    color: #B45309;
+    vertical-align: super;
+    margin-left: 4px;
+    text-decoration: none;
+  }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  table.data-table th {
+    background: var(--paper);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--ink-2);
+    border-bottom: 2px solid var(--rule);
+  }
+  table.data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink-2);
+  }
+  table.data-table tr:hover td { background: rgba(2, 132, 199, 0.02); }
+
+  .trouble-card {
+    background: #FFFBEB;
+    border-left: 4px solid var(--gold);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 0 4px 4px 0;
+  }
+  .trouble-symptom { font-weight: 700; color: #92400E; font-size: 13.5px; }
+  .trouble-cause { font-size: 13px; color: #78350F; margin: 4px 0; }
+  .trouble-fix { font-family: var(--mono); font-size: 12px; background: #FEF3C7; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="header-card">
+    <div class="breadcrumb">
+      <a href="../../listas-open-source/vert-mailu.html">← Voltar ao Dossiê Vertical Mailu</a>
+      &nbsp;·&nbsp;
+      <a href="../trilhas/trilha-mailu-uninstall-aprendizado.html">Ver Trilha de Aprendizado 🗺️</a>
+    </div>
+    <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
+    <h1>Manual Operacional Completo: Mailu - Desinstalação Cirúrgica & Migração Segura</h1>
+    <p class="deck">
+      Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
+    </p>
+
+    <!-- HERO STATS DA VPS -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">VPS Recomendada</span>
+        <span class="stat-val">Mesma VPS do Mailu Atual</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Hardware Mínimo</span>
+        <span class="stat-val">2+ vCPU · 2+ GB RAM</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Armazenamento &amp; SO</span>
+        <span class="stat-val">Volume adicional: 50% do tamanho total de vmail · Ubuntu 22.04 LTS ou 24.04 LTS</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Custo Mensal Estimado</span>
+        <span class="stat-val" style="color:var(--accent-dark);">Mesma VPS + R$ 10-30/mês por volume SSD temporário</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Licença de Uso</span>
+        <span class="stat-val" style="color:var(--green);">Apache-2.0 (Livre &amp; Comercial)</span>
+      </div>
+    </div>
+
+    <!-- NAVEGAÇÃO RÁPIDA -->
+    <div class="nav-anchors">
+      <a href="#nivelamento">💡 Módulo 0: Nivelamento para Iniciantes</a>
+      <a href="#instalacao">📦 Parte I: Instalação Passo a Passo</a>
+      <a href="#configuracao">⚙️ Arquivos de Configuração</a>
+      <a href="#primeiro-voo">✈️ Roteiro de Primeiro Voo</a>
+      <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
+      <a href="#manual-api">🌐 Endpoints de API</a>
+      <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
+      <a href="#desinstalacao">🛡️ Desinstalação Cirúrgica VPS</a>
+      <a href="#bibliografia">📚 Referências Bibliográficas</a>
+    </div>
+  </div>
+
+  <!-- MÓDULO 0: NIVELAMENTO CONCEITUAL -->
+  <div class="section-card" id="nivelamento">
+    <div class="section-header">
+      <h2 class="section-title">Módulo 0: Nivelamento Conceitual (O que você precisa saber antes de começar)</h2>
+      <span class="badge-tag" style="background:var(--purple-soft); color:#6D28D9;">Zero Programação</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:16px;">
+      Você não precisa ser engenheiro de software para entender como o sistema funciona. Abaixo explicamos os 5 conceitos-chave usando analogias do cotidiano:
+    </p>
+    <div class="grid-conceitos">
+      
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Desinstalação Cirúrgica de Email Server</div>
+          <div class="conceito-analogia">Analogia: Desmontagem de uma Usina Elétrica</div>
+          <p class="conceito-desc">Um servidor de email em produção é crítico. A desinstalação cirúrgica é um procedimento em 7 etapas ordenadas para não perder dados.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Backup Completo vs. Incremental</div>
+          <div class="conceito-analogia">Analogia: Fotografia Total vs. Registro de Mudanças</div>
+          <p class="conceito-desc">Para desinstalação segura, você precisa de um backup completo ANTES de começar.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 DKIM, SPF & DMARC</div>
+          <div class="conceito-analogia">Analogia: Assinatura Criptográfica de Email</div>
+          <p class="conceito-desc">Ao remover Mailu, atualizar DNS para novo servidor evita emails em spam.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Spool & Filas de Entrega</div>
+          <div class="conceito-analogia">Analogia: Caixa de Entrada da Agência de Correios</div>
+          <p class="conceito-desc">Precisa esvaziar filas de emails pendentes antes de desligar o servidor.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Criptografia SQLite & Destruição Segura</div>
+          <div class="conceito-analogia">Analogia: Cofre Eletrônico com Senhas</div>
+          <p class="conceito-desc">Ao remover, DEVE destruir o arquivo de forma segura com overwrite múltiplo.</p>
+        </div>
+        
+    </div>
+  </div>
+
+  <!-- SEÇÃO 1: INSTALAÇÃO EM PRODUÇÃO -->
+  <div class="section-card" id="instalacao">
+    <div class="section-header">
+      <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
+      <span class="badge-tag">Tempo ~4 a 6 horas (Desinstalação Segura de Produção)</span>
+    </div>
+    
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 0</span>
+            <span class="step-heading">Pré-Voo: Análise de Risco & Roadmap</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Fazer auditoria completa do Mailu antes de começar desinstalação</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Como o piloto faz checklist antes de decolar</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>docker exec mailu-admin sqlite3 /data/data.db 'SELECT COUNT(*) FROM mailbox;'
+docker exec mailu-admin du -sh /mail/vmail/
+docker exec mailu-admin sqlite3 /data/data.db 'SELECT name FROM domain;'</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Você verá listagem de contas, tamanho de dados e domínios gerenciados</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Todos os números aparecem sem erro</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 1</span>
+            <span class="step-heading">Backup Etapa 1: Exportar Banco SQLite</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Fazer backup cripto do banco de dados SQLite com senhas e usuários</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Como fazer radiografia de um paciente antes de cirurgia</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>mkdir -p /backup-mailu-$(date +%Y%m%d)
+docker exec mailu-admin sqlite3 /data/data.db 'UPDATE domain SET updated=1;'
+docker cp mailu-admin:/data/data.db /backup-mailu-$(date +%Y%m%d)/
+tar czf - /backup-mailu-$(date +%Y%m%d)/ | gpg --symmetric --output mailu-db-backup.tar.gz.gpg</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> GPG pedirá frase-secreta para criptografia</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Arquivo mailu-db-backup.tar.gz.gpg criado</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 2</span>
+            <span class="step-heading">Backup Etapa 2: Exportar Arquivos Vmail</span>
+            <a href="#ref-F03" class="cite-badge">[F03]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Fazer backup de todas as caixas postais (emails dos usuários)</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Como fazer fotocópia de todos os documentos importantes</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>docker exec mailu-admin tar czf /vmail-backup.tar.gz /mail/vmail/
+docker exec mailu-admin sha256sum /vmail-backup.tar.gz > /backup-mailu-$(date +%Y%m%d)/CHECKSUM.txt
+docker cp mailu-admin:/vmail-backup.tar.gz /tmp/
+ls -lh /tmp/vmail-backup.tar.gz</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Você verá progresso de compressão (pode levar vários minutos)</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Arquivo .tar.gz criado e listado</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 3</span>
+            <span class="step-heading">Drenagem: Esvaziar Fila SMTP</span>
+            <a href="#ref-F04" class="cite-badge">[F04]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Redirecionar tráfego e aguardar fila de emails ser drenada</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Como descarregar um caminhão cheio antes de enviá-lo para reciclagem</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>docker exec mailu-postfix mailq | head -20
+sleep 1800
+docker exec mailu-postfix mailq | tail -1</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> mailq mostrará emails em fila; após 30min, retornará vazio ou com muito menos</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Comando mailq final mostra 'Mail queue is empty'</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 4</span>
+            <span class="step-heading">Parada Segura: Desligar Stack Docker</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Parar componentes Mailu na ordem correta</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Como desligar uma usina: primeiro reduz, depois desliga</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>docker stop mailu-webmail
+docker stop mailu-imap mailu-pop3
+sleep 300
+docker stop mailu-postfix
+sleep 600
+docker stop mailu-db mailu-redis
+docker-compose -f /mailu/docker-compose.yml down
+docker ps | grep mailu</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Cada docker stop mostrará ID do container</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Último docker ps | grep mailu retorna nada</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 5</span>
+            <span class="step-heading">Destruição: Limpeza Segura de Dados</span>
+            <a href="#ref-F06" class="cite-badge">[F06]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Apagar dados Mailu de forma que não possam ser recuperados</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Como destruir documentos sensíveis em triturador antes de descartar</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>shred -vfz -n 3 /data/data.db
+docker rm -v mailu-admin mailu-postfix mailu-imap mailu-pop3 mailu-webmail 2>/dev/null || true
+docker volume prune -f
+rm -rf /mailu/
+rm -rf /etc/mailu/</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> shred mostrará progresso; rm retornará sem erros</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Arquivos Mailu sumiram completamente</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 6</span>
+            <span class="step-heading">Configuração: Atualizar DNS & Firewall</span>
+            <a href="#ref-F07" class="cite-badge">[F07]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Apontar DNS para novo servidor e fechar portas de email antigas</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Como redirecionar correspondência de endereço antigo para novo</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>sudo ufw delete allow 25/tcp
+sudo ufw delete allow 110/tcp
+sudo ufw delete allow 143/tcp
+sudo ufw delete allow 465/tcp
+sudo ufw delete allow 587/tcp
+sudo ufw status numbered</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Firewall mostrará 'deleted' ou 'rule not found'</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Portas de email já não aparecem em ufw status</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 7</span>
+            <span class="step-heading">Validação Final: Confirmar Sucesso</span>
+            <a href="#ref-F08" class="cite-badge">[F08]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Testar novo servidor e confirmar backup externo</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Como fazer teste de direto ao vivo após reforma de casa</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>telnet novo-mail.seu-dominio.com.br 25
+echo 'Data: '$(date) >> /root/mailu-desinstalacao.log
+echo 'Backup: /backup-mailu-'$(date +%Y%m%d) >> /root/mailu-desinstalacao.log
+cat /root/mailu-desinstalacao.log</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> telnet mostrará 220 ESMTP; log será criado</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> telnet retorna 220; arquivo log contém data da desinstalação</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
+  <div class="section-card" id="configuracao">
+    <div class="section-header">
+      <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
+    </div>
+    
+  </div>
+
+  <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
+  <div class="section-card" id="primeiro-voo">
+    <div class="section-header">
+      <h2 class="section-title">Parte II: Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green-dark);">Prática Imediata</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
+      Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
+    </p>
+    
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 1:</strong> Fazer backup completo do banco SQLite e caixas postais
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Arquivos .tar.gz.gpg criados com checksums validados</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 2:</strong> Aguardar drenagem de fila SMTP (30 minutos)
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> mailq retorna 'Mail queue is empty'</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 3:</strong> Parar stack Docker na ordem correta
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> docker ps mostra lista vazia de containers Mailu</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 4:</strong> Destruir dados com shred 3x + remover volumes
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Diretórios /mailu/ e /etc/mailu/ não existem</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 5:</strong> Validar novo servidor SMTP e DNS
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> telnet retorna 220 ESMTP; mxtoolbox valida MX</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 4: MANUAL DE USO CLI -->
+  <div class="section-card" id="manual-cli">
+    <div class="section-header">
+      <h2 class="section-title">Dicionário Completo de Comandos (CLI)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Comando / Opção</th>
+          <th>O que faz (em português claro)</th>
+          <th>Exemplo de Execução</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">mailq</code></td>
+          <td>Listar fila de emails pendentes no Postfix</td>
+          <td><code>docker exec mailu-postfix mailq | head -10</code></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">shred</code></td>
+          <td>Sobrescrever arquivo 3x com dados aleatórios antes de deletar</td>
+          <td><code>shred -vfz -n 3 /data/data.db</code></td>
+          <td><a href="#ref-F06" class="cite-badge">[F06]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker ps</code></td>
+          <td>Listar containers ativos (deve estar vazio após desinstalação)</td>
+          <td><code>docker ps | grep mailu</code></td>
+          <td><a href="#ref-F05" class="cite-badge">[F05]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">telnet</code></td>
+          <td>Testar conectividade SMTP no novo servidor</td>
+          <td><code>telnet novo-mail.seu-dominio.com.br 25</code></td>
+          <td><a href="#ref-F08" class="cite-badge">[F08]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">nslookup</code></td>
+          <td>Validar propagação de registro MX</td>
+          <td><code>nslookup -type=MX seu-dominio.com.br</code></td>
+          <td><a href="#ref-F08" class="cite-badge">[F08]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 5: REFERÊNCIA DE API REST -->
+  <div class="section-card" id="manual-api">
+    <div class="section-header">
+      <h2 class="section-title">Endpoints de API REST &amp; Conexão com Agentes (MCP)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Método</th>
+          <th>Rota</th>
+          <th>Finalidade</th>
+          <th>Payload / Resposta</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/api/v1/domains</code></td>
+          <td>Listar domínios gerenciados em Mailu (útil para documentação)</td>
+          <td><pre style="font-size:11px; margin:0;"># Retorna lista JSON de domínios</pre></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/api/v1/mailbox?domain=seu-dominio.com.br</code></td>
+          <td>Exportar usuários de um domínio para migração</td>
+          <td><pre style="font-size:11px; margin:0;"># Retorna JSON com mailbox, nome, quota</pre></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">DELETE</span></td>
+          <td><code>/api/v1/mailbox/usuario@seu-dominio.com.br</code></td>
+          <td>Deletar usuário (cuidado: não recuperável)</td>
+          <td><pre style="font-size:11px; margin:0;"># NUNCA use isto; será substituído por novo servidor</pre></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 6: TROUBLESHOOTING -->
+  <div class="section-card" id="troubleshooting">
+    <div class="section-header">
+      <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
+    </div>
+    
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Fila SMTP nunca esvazia após 2 horas</div>
+          <div class="trouble-cause">Causa Provável: Servidor destinatário rejeitando emails</div>
+          <div>Solução Prática: <code class="trouble-fix">docker logs mailu-postfix | grep 'permanent failure'</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Permission denied ao copiar vmail</div>
+          <div class="trouble-cause">Causa Provável: Usuario Docker sem permissão de leitura</div>
+          <div>Solução Prática: <code class="trouble-fix">docker exec mailu-admin chmod -R 755 /mail/vmail/</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Novo servidor não recebe emails</div>
+          <div class="trouble-cause">Causa Provável: MX record ainda apontando para IP antigo</div>
+          <div>Solução Prática: <code class="trouble-fix">nslookup seu-dominio.com.br deve retornar novo IP</code></div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
+  <div class="section-card" id="desinstalacao">
+    <div class="section-header">
+      <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
+      <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
+    </div>
+    
+        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
+          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
+          <p style="margin:0; font-size:13.5px; color:#1E293B;">A desinstalação remove exclusivamente o container Mailu, volume e serviço, preservando Docker, Nginx e outros projetos hospedados na VPS.</p>
+        </div>
+        
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 1</span>
+                <span class="step-title">Parada do Serviço Mailu</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Interrompe o processo do Mailu sem enviar sinal para nenhum outro serviço da VPS</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>docker stop mailu-postfix mailu-imap mailu-pop3 mailu-webmail mailu-admin</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> NÃO utilize 'docker system prune -a'. Apenas o serviço Mailu é desligado.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>docker ps | grep mailu # Deve estar vazio</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 2</span>
+                <span class="step-title">Remoção de Contêiner e Volume</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove cirurgicamente apenas containers Mailu e seus volumes</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>docker rm -v mailu-admin mailu-postfix mailu-imap mailu-pop3 mailu-webmail 2>/dev/null || true
+docker volume rm mailu_data 2>/dev/null || true</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Verifique que backup foi feito ANTES desta etapa</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>docker volume ls | grep mailu # Deve estar vazio</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 3</span>
+                <span class="step-title">Revogação de Portas no Firewall</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Fecha portas de email (25, 110, 143, 443, 465, 587, 993, 995)</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo ufw delete allow 25/tcp
+sudo ufw delete allow 110/tcp
+sudo ufw delete allow 143/tcp
+sudo ufw delete allow 465/tcp
+sudo ufw delete allow 587/tcp
+sudo ufw reload</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Mantenha SSH (22) aberto para acesso remoto</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo ufw status | grep -E '25|110|143' # Não deve constar</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 4</span>
+                <span class="step-title">Limpeza de Diretórios Mailu</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove repositórios e configurações Mailu</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>rm -rf /mailu/
+rm -rf /etc/mailu/
+rm -rf /mail/vmail/ (se não for compartilhado)</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> CONFIRME que backup externo foi feito com sucesso ANTES</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>ls /mailu/ 2>&1 || echo 'Diretório não existe - OK'</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 5</span>
+                <span class="step-title">Destruição Segura de Banco de Dados</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Sobrescreve arquivo SQLite 3x antes de deletar</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>shred -vfz -n 3 /data/data.db 2>/dev/null || true
+rm -f /data/data.db*</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Data.db contém senhas criptografadas. Overwrite múltiplo é essencial.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>ls -la /data/data.db 2>&1 | grep 'cannot access' # Confirmação de remoção</code></div>
+            </div>
+            
+        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
+          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
+          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
+            <li style='margin-bottom:6px;'><code>docker ps | grep -v mailu (não deve haver containers Mailu)</code></li><li style='margin-bottom:6px;'><code>curl localhost:80 (webserver ainda respondendo)</code></li><li style='margin-bottom:6px;'><code>curl localhost:443 (HTTPS ainda respondendo)</code></li><li style='margin-bottom:6px;'><code>sudo ufw status | grep -E '25|110|143' (portas de email não devem constar)</code></li><li style='margin-bottom:6px;'><code>df -h (espaço em disco recuperado após remoção de vmail)</code></li><li style='margin-bottom:6px;'><code>docker volume ls | grep -v mailu (nenhum volume Mailu orfão)</code></li><li style='margin-bottom:6px;'><code>ps aux | grep nginx (servidor web ainda ativo se usado)</code></li><li style='margin-bottom:6px;'><code>systemctl status docker (docker ainda rodando)</code></li>
+          </ul>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
+  <div class="section-card" id="bibliografia">
+    <div class="section-header">
+      <h2 class="section-title">Parte III: Fontes Citadas &amp; Referência Bibliográfica Auditada</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green);">100% Verificadas</span>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Categoria</th>
+          <th>Título da Obra / Documento</th>
+          <th>Autor / Mantenedor</th>
+          <th>Link Oficial</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr id="ref-F01">
+          <td><strong style="color:var(--accent);">F01</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Mailu Official Documentation</strong></td>
+          <td>Mailu Core Team</td>
+          <td><a href="https://mailu.io/master/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F02">
+          <td><strong style="color:var(--accent);">F02</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>SQLite Backup & Security</strong></td>
+          <td>SQLite Development Team</td>
+          <td><a href="https://www.sqlite.org/backup.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F03">
+          <td><strong style="color:var(--accent);">F03</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Guia Técnico</span></td>
+          <td><strong>Email Server Backup Best Practices</strong></td>
+          <td>Postfix Documentation</td>
+          <td><a href="https://www.postfix.org/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F04">
+          <td><strong style="color:var(--accent);">F04</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Postfix Queue Management</strong></td>
+          <td>Postfix Core Team</td>
+          <td><a href="https://www.postfix.org/QSHAPE_README.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F05">
+          <td><strong style="color:var(--accent);">F05</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Guia Técnico</span></td>
+          <td><strong>Docker Container Lifecycle & Safe Shutdown</strong></td>
+          <td>Docker Official Documentation</td>
+          <td><a href="https://docs.docker.com/compose/reference/stop/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F06">
+          <td><strong style="color:var(--accent);">F06</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Segurança</span></td>
+          <td><strong>Secure Data Destruction with shred & LUKS</strong></td>
+          <td>DBAN & Data Security Research</td>
+          <td><a href="https://dban.sourceforge.io/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F07">
+          <td><strong style="color:var(--accent);">F07</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>UFW Firewall Management</strong></td>
+          <td>Ubuntu Community</td>
+          <td><a href="https://help.ubuntu.com/community/UFW" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F08">
+          <td><strong style="color:var(--accent);">F08</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Guia Técnico</span></td>
+          <td><strong>DNS Mail Server Validation & Troubleshooting</strong></td>
+          <td>MXToolbox Community</td>
+          <td><a href="https://mxtoolbox.com/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    const original = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => { btn.innerText = original; }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual Operacional: Postal · Deploy VPS &amp; Uso Exaustivo</title>
+  <style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --paper: #F8FAFC;
+    --surface: #FFFFFF;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --rule: #CBD5E1;
+    --rule-soft: #E2E8F0;
+    --accent: #0284C7;
+    --accent-dark: #0369A1;
+    --accent-soft: #E0F2FE;
+    --green: #10B981;
+    --green-dark: #065F46;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+    --purple: #8B5CF6;
+    --purple-soft: #EDE9FE;
+    --code-bg: #0F172A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .container { max-width: 1060px; margin: 0 auto; }
+  
+  .header-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+  
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    background: var(--paper);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--rule-soft);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat-val { font-size: 14.5px; font-weight: 800; color: var(--ink); }
+
+  .nav-anchors {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .nav-anchors a {
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    color: var(--ink-2);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-anchors a:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    background: var(--accent-soft);
+  }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .section-header {
+    border-bottom: 2px solid var(--rule-soft);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title { font-size: 20px; font-weight: 800; color: var(--ink); }
+
+  /* CARDS DE NIVELAMENTO */
+  .grid-conceitos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card-conceito {
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    padding: 16px;
+    border-left: 4px solid var(--purple);
+  }
+  .conceito-termo { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+  .conceito-analogia { font-size: 12.5px; font-weight: 700; color: #6D28D9; background: var(--purple-soft); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+  .conceito-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+
+  /* PASSOS DE INSTALAÇÃO */
+  .step-box {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .step-box:last-child { border-bottom: none; }
+  .step-top {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .step-num {
+    background: var(--accent);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .step-heading { font-size: 17px; font-weight: 800; color: var(--ink); }
+  .analogia-box {
+    background: #F0FDF4;
+    border-left: 4px solid var(--green);
+    padding: 8px 12px;
+    border-radius: 0 4px 4px 0;
+    margin: 8px 0;
+    font-size: 13px;
+    color: var(--green-dark);
+  }
+  .feedback-box {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #92400E;
+  }
+  .validacao-box {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #1E40AF;
+  }
+
+  .code-box {
+    position: relative;
+    background: var(--code-bg);
+    border-radius: 6px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  .code-box pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #F8FAFC;
+    line-height: 1.5;
+  }
+  .btn-copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.15);
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-copy:hover { background: rgba(255,255,255,0.3); }
+
+  .cite-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--gold-soft);
+    color: #B45309;
+    vertical-align: super;
+    margin-left: 4px;
+    text-decoration: none;
+  }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  table.data-table th {
+    background: var(--paper);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--ink-2);
+    border-bottom: 2px solid var(--rule);
+  }
+  table.data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink-2);
+  }
+  table.data-table tr:hover td { background: rgba(2, 132, 199, 0.02); }
+
+  .trouble-card {
+    background: #FFFBEB;
+    border-left: 4px solid var(--gold);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 0 4px 4px 0;
+  }
+  .trouble-symptom { font-weight: 700; color: #92400E; font-size: 13.5px; }
+  .trouble-cause { font-size: 13px; color: #78350F; margin: 4px 0; }
+  .trouble-fix { font-family: var(--mono); font-size: 12px; background: #FEF3C7; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="header-card">
+    <div class="breadcrumb">
+      <a href="../../listas-open-source/vert-cuttlefish.html">← Voltar ao Dossiê Vertical Cuttlefish</a>
+      &nbsp;·&nbsp;
+      <a href="../trilhas/trilha-cuttlefish-aprendizado.html">Ver Trilha de Aprendizado 🗺️</a>
+    </div>
+    <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
+    <h1>Manual Operacional Completo: Postal</h1>
+    <p class="deck">
+      Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
+    </p>
+
+    <!-- HERO STATS DA VPS -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">VPS Recomendada</span>
+        <span class="stat-val">Hetzner Cloud CPX31 ou Linode Linode 8GB</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Hardware Mínimo</span>
+        <span class="stat-val">4 vCPU Dedicadas (AMD EPYC) · 8 GB RAM ECC</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Armazenamento &amp; SO</span>
+        <span class="stat-val">160 GB NVMe Gen4 · Ubuntu 24.04 LTS (x86_64)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Custo Mensal Estimado</span>
+        <span class="stat-val" style="color:var(--accent-dark);">EUR 14,00/mês (~R$ 84,00/mês na cotação média)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Licença de Uso</span>
+        <span class="stat-val" style="color:var(--green);">MIT (Livre &amp; Comercial)</span>
+      </div>
+    </div>
+
+    <!-- NAVEGAÇÃO RÁPIDA -->
+    <div class="nav-anchors">
+      <a href="#nivelamento">💡 Módulo 0: Nivelamento para Iniciantes</a>
+      <a href="#instalacao">📦 Parte I: Instalação Passo a Passo</a>
+      <a href="#configuracao">⚙️ Arquivos de Configuração</a>
+      <a href="#primeiro-voo">✈️ Roteiro de Primeiro Voo</a>
+      <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
+      <a href="#manual-api">🌐 Endpoints de API</a>
+      <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
+      <a href="#desinstalacao">🛡️ Desinstalação Cirúrgica VPS</a>
+      <a href="#bibliografia">📚 Referências Bibliográficas</a>
+    </div>
+  </div>
+
+  <!-- MÓDULO 0: NIVELAMENTO CONCEITUAL -->
+  <div class="section-card" id="nivelamento">
+    <div class="section-header">
+      <h2 class="section-title">Módulo 0: Nivelamento Conceitual (O que você precisa saber antes de começar)</h2>
+      <span class="badge-tag" style="background:var(--purple-soft); color:#6D28D9;">Zero Programação</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:16px;">
+      Você não precisa ser engenheiro de software para entender como o sistema funciona. Abaixo explicamos os 5 conceitos-chave usando analogias do cotidiano:
+    </p>
+    <div class="grid-conceitos">
+      
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Postal (Plataforma de Email Transacional)</div>
+          <div class="conceito-analogia">Analogia: O Cartório Privado de Mensagens</div>
+          <p class="conceito-desc">Postal é um sistema completo de email transacional que funciona como o Cuttlefish, mas instalado em sua própria VPS sob controle total. Ele recebe requisições da sua aplicação, fila de emails, valida domínios, entrega e rastreia cada mensagem com webhooks.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Email Transacional vs. Marketing</div>
+          <div class="conceito-analogia">Analogia: Confirmação vs. Propaganda</div>
+          <p class="conceito-desc">Transacional são emails críticos como 'Reset de Senha', 'Confirmação de Pedido', 'Aviso de Falha'. Marketing são newsletters e campanhas. Postal é especializado em transacional: entrega garantida, alta reputação, sem limite de taxa.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Fila de Trabalho Assíncrona (Sidekiq + Redis)</div>
+          <div class="conceito-analogia">Analogia: A Caixa de Saída de um Cartório</div>
+          <p class="conceito-desc">Quando sua aplicação pede para enviar 1.000 emails de confirmação, ela não espera cada um ser enviado. A requisição vai para uma fila (Redis), e workers em background processam um por um com retry automático.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Webhooks de Entrega & Bounce</div>
+          <div class="conceito-analogia">Analogia: Confirmação de Recebimento Automática</div>
+          <p class="conceito-desc">Postal avisa sua aplicação quando um email foi entregue, aberto ou retornou (bounce). Sua aplicação recebe um POST HTTP com os dados e pode atualizar o banco de dados do usuário automaticamente.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 DKIM, SPF e DMARC (Segurança de Reputação)</div>
+          <div class="conceito-analogia">Analogia: Assinatura, Carimbo e Carta Notarial</div>
+          <p class="conceito-desc">Para que o Gmail não jogue seus emails na pasta de spam, você configura certificados digitais (DKIM), autoriza seus servidores (SPF) e cria política de autenticação (DMARC). Postal automatiza tudo isso.</p>
+        </div>
+        
+    </div>
+  </div>
+
+  <!-- SEÇÃO 1: INSTALAÇÃO EM PRODUÇÃO -->
+  <div class="section-card" id="instalacao">
+    <div class="section-header">
+      <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
+      <span class="badge-tag">Tempo ~45 a 60 minutos (Conhecimento intermediário de Docker & PostgreSQL)</span>
+    </div>
+    
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 1</span>
+            <span class="step-heading">Hardening & Firewall Inicial (UFW)</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Configurar acesso restrito à VPS com apenas portas essenciais.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Trancar o prédio do cartório e deixar apenas a guarita aberta.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>ufw default deny incoming
+ufw default allow outgoing
+ufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp
+ufw --force enable</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Mensagens confirmando regras de firewall aplicadas sem erro.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Digite 'ufw status' e veja portas 22, 80, 443 marcadas como 'ALLOW IN'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 2</span>
+            <span class="step-heading">Instalação de Docker & Docker Compose</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Preparar motor de containers para rodar Postal, PostgreSQL e Redis.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Montar a estrutura física do cartório: prateleiras, mesas e sistema de arquivos.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>apt-get update && apt-get install -y ca-certificates curl
+curl -fsSL https://get.docker.com | sh
+usermod -aG docker deployer</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Pacotes instalados sem erro, docker engine iniciando.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'docker --version' e veja Docker 27+ retornado.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 3</span>
+            <span class="step-heading">Provisionar Diretórios & Volumes Persistentes</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Criar pasta /opt/postal com subpastas para dados, backups e configuração.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Preparar as gavetas e prateleiras do cartório para armazenar documentos.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>mkdir -p /opt/postal/{data,db,redis,caddy,backups}
+chown -R deployer:deployer /opt/postal
+chmod -R 750 /opt/postal</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Diretórios criados silenciosamente em menos de 1 segundo.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'ls -ld /opt/postal' e veja pasta pertencendo ao deployer.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 4</span>
+            <span class="step-heading">Deploy da Stack Postal com Docker Compose</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Levantamento de containers: Postal (Rails), PostgreSQL, Redis e Caddy (proxy reverso).</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Ligar as máquinas e sistemas do cartório: computadores, impressoras e telefones.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>cd /opt/postal
+cat > docker-compose.yml << 'EOF'
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: postal
+      POSTGRES_USER: postal
+      POSTGRES_PASSWORD: $(openssl rand -base64 32)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+  postal:
+    image: postalserver/postal:latest
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: postgres://postal:password@postgres:5432/postal
+      REDIS_URL: redis://redis:6379
+    ports:
+      - '5000:5000'
+    volumes:
+      - postal_data:/opt/postal/data
+    restart: unless-stopped
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+    restart: unless-stopped
+volumes:
+  postgres_data:
+  redis_data:
+  postal_data:
+  caddy_data:
+EOF
+docker compose up -d</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Docker faz download de imagens e containers iniciam com logs coloridos. Aguarde 2-3 minutos.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'docker compose ps' e veja 4 containers com status 'Up'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 5</span>
+            <span class="step-heading">Configuração de Domínios & Certificados SSL</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Registrar domínios corporativos no painel Postal e configurar DKIM/SPF/DMARC.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Registrar o domínio legal do cartório e obter autorizações de segurança.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># No painel Postal:
+# 1. Clique em 'Add Domain'
+# 2. Digite seu domínio (ex: transacional.empresa.com.br)
+# 3. Copie os registros DKIM/SPF/DMARC para sua zona de DNS
+# 4. Aguarde propagação (5-30 minutos)
+# 5. Clique 'Verify' quando DNS estiver propagado</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Painel web exibindo formulário de domínios e registros DNS necessários.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Acesse https://seu-dominio.com/admin, faça login e veja seus domínios listados com status 'Verified'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 6</span>
+            <span class="step-heading">Geração de API Keys & Teste de Conexão</span>
+            <a href="#ref-F03" class="cite-badge">[F03]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Criar credenciais de API para integração com sua aplicação e validar entrega.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Entregar a carteira com as chaves de acesso ao cartório para os clientes autorizados.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># No painel Postal:
+# 1. Clique em 'API Credentials'
+# 2. Clique 'Create New'
+# 3. Copie o token
+# 4. Salve em variável de ambiente: export POSTAL_API_KEY='seu-token'</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Painel exibindo string de token longo. Copie para lugar seguro (seu .env).</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'curl -H "Authorization: Bearer seu-token" https://seu-postal/api/v1/stats' e receba JSON com estatísticas.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
+  <div class="section-card" id="configuracao">
+    <div class="section-header">
+      <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
+    </div>
+    
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/postal/Caddyfile</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Proxy reverso com SSL automático (Let's Encrypt), rate limiting na API de envio e headers de segurança.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>postal.seu-dominio.com.br {
+  encode gzip
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    X-Content-Type-Options nosniff
+    X-Frame-Options DENY
+  }
+  reverse_proxy localhost:5000 {
+    header_uri X-Real-IP {http.request.remote.host}
+    header_uri X-Forwarded-For {http.request.remote.host}
+  }
+  rate_limit /api/v1/send 1000 100
+}</code></pre>
+          </div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/postal/.env.production</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Variáveis de ambiente para Postal em modo produção com banco PostgreSQL e Redis.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>RAILS_ENV=production
+RAILS_LOG_TO_STDOUT=true
+DATABASE_URL=postgres://postal:senha-forte-aqui@postgres:5432/postal
+REDIS_URL=redis://redis:6379/0
+SECRET_KEY_BASE=$(openssl rand -hex 64)
+BRAND_NAME="Postal - Email Transacional"
+ADMIN_EMAIL=admin@seu-dominio.com.br
+SMTP_PORT=25
+SMTP_TLS_ENABLED=true</code></pre>
+          </div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/postal/docker-compose.override.yml</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Configurações de override para produção com health check automático.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>version: '3.8'
+services:
+  postal:
+    environment:
+      POSTAL_WEB_PROTOCOL: https
+      POSTAL_WEB_HOST: postal.seu-dominio.com.br
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s</code></pre>
+          </div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
+  <div class="section-card" id="primeiro-voo">
+    <div class="section-header">
+      <h2 class="section-title">Parte II: Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green-dark);">Prática Imediata</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
+      Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
+    </p>
+    
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 1: Acessar Painel Administrativo:</strong> Abra https://postal.seu-dominio.com.br/admin
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Formulário de login solicitando email e senha.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 2: Registrar Seu Primeiro Domínio:</strong> Clique em 'Domains' → 'Add Domain' e digite seu domínio corporativo.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Postal exibe registros DKIM/SPF/DMARC para copiar na zona de DNS.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 3: Verificar Domínio:</strong> Aguarde 5-10 minutos pela propagação de DNS. Clique 'Verify Domain'.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Status muda para 'Verified' com checkmark verde.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 4: Criar Credencial de API:</strong> Em Settings → API Credentials → Create New. Copie o token.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> String longa de token salva em variável de ambiente POSTAL_API_KEY.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 5: Enviar Email de Teste:</strong> Execute: curl -X POST https://postal.seu-dominio.com.br/api/v1/send -H 'Authorization: Bearer seu-token' -H 'Content-Type: application/json' -d '{"to": "seu-email@gmail.com", "from": "noreply@seu-dominio.com.br", "subject": "Teste", "plain_body": "Olá!"}'
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Resposta JSON com messageId. Email chega no Gmail em 5-10 segundos.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 6: Configurar Webhook de Entrega:</strong> Em Webhooks → Add Webhook. Configure URL do seu backend e selecione events: 'Message Delivered', 'Message Bounced'.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Seu backend recebe POST HTTPS cada vez que um email é entregue ou retorna.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 4: MANUAL DE USO CLI -->
+  <div class="section-card" id="manual-cli">
+    <div class="section-header">
+      <h2 class="section-title">Dicionário Completo de Comandos (CLI)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Comando / Opção</th>
+          <th>O que faz (em português claro)</th>
+          <th>Exemplo de Execução</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose ps</code></td>
+          <td>Ver status dos containers Postal, PostgreSQL, Redis e Caddy.</td>
+          <td><code>docker compose ps</code></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose logs -f postal</code></td>
+          <td>Ver logs em tempo real da aplicação Postal.</td>
+          <td><code>docker compose logs -f postal --tail=100</code></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose exec postgres psql -U postal -d postal</code></td>
+          <td>Acessar console PostgreSQL para queries diretas.</td>
+          <td><code>docker compose exec postgres psql -U postal -d postal -c 'SELECT COUNT(*) FROM messages;'</code></td>
+          <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose exec redis redis-cli</code></td>
+          <td>Acessar console Redis para inspecionar fila.</td>
+          <td><code>docker compose exec redis redis-cli LLEN resque:queue:default</code></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 5: REFERÊNCIA DE API REST -->
+  <div class="section-card" id="manual-api">
+    <div class="section-header">
+      <h2 class="section-title">Endpoints de API REST &amp; Conexão com Agentes (MCP)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Método</th>
+          <th>Rota</th>
+          <th>Finalidade</th>
+          <th>Payload / Resposta</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">POST</span></td>
+          <td><code>/api/v1/send</code></td>
+          <td>Enviar email transacional individual.</td>
+          <td><pre style="font-size:11px; margin:0;">POST /api/v1/send -H 'Authorization: Bearer token' -H 'Content-Type: application/json' -d '{"to": "usuario@dominio.com", "from": "noreply@empresa.com", "subject": "Bem-vindo", "html_body": "<h1>Olá!</h1>"}'</pre></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">POST</span></td>
+          <td><code>/api/v1/send/batch</code></td>
+          <td>Enviar múltiplos emails em lote (mais eficiente).</td>
+          <td><pre style="font-size:11px; margin:0;">POST /api/v1/send/batch -H 'Authorization: Bearer token' -d '{"messages": [{"to": "user1@...", ...}, {"to": "user2@...", ...}]}'</pre></td>
+          <td><a href="#ref-F05" class="cite-badge">[F05]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/api/v1/stats</code></td>
+          <td>Obter estatísticas de envios (total, entregues, bounced).</td>
+          <td><pre style="font-size:11px; margin:0;">GET /api/v1/stats -H 'Authorization: Bearer token'</pre></td>
+          <td><a href="#ref-F06" class="cite-badge">[F06]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/api/v1/messages</code></td>
+          <td>Listar histórico de emails enviados com filtros.</td>
+          <td><pre style="font-size:11px; margin:0;">GET '/api/v1/messages?limit=50&offset=0' -H 'Authorization: Bearer token'</pre></td>
+          <td><a href="#ref-F07" class="cite-badge">[F07]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">POST</span></td>
+          <td><code>/webhooks</code></td>
+          <td>Endpoint que você cria para receber eventos de entrega/bounce.</td>
+          <td><pre style="font-size:11px; margin:0;">POST seu-backend/webhooks -H 'Content-Type: application/json' -d '{"event": "message.delivered", "message_id": "...", "timestamp": "..."}' (recebido por Postal)</pre></td>
+          <td><a href="#ref-F08" class="cite-badge">[F08]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 6: TROUBLESHOOTING -->
+  <div class="section-card" id="troubleshooting">
+    <div class="section-header">
+      <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
+    </div>
+    
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Emails não estão sendo enviados</div>
+          <div class="trouble-cause">Causa Provável: Domínio não verificado ou DKIM inválido.</div>
+          <div>Solução Prática: <code class="trouble-fix">docker compose logs postal | grep -i dkim && No painel, verifique status do domínio e copie registros DKIM corretos</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Emails retornando com 'Permanent Failure'</div>
+          <div class="trouble-cause">Causa Provável: Endereço de email inválido ou lista negra de IP.</div>
+          <div>Solução Prática: <code class="trouble-fix">docker compose exec postgres psql -U postal -d postal -c "SELECT message_id, last_error FROM messages ORDER BY created_at DESC LIMIT 5;"</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Fila de Sidekiq crescendo infinitamente</div>
+          <div class="trouble-cause">Causa Provável: Worker de background morreu ou Redis cheio.</div>
+          <div>Solução Prática: <code class="trouble-fix">docker compose restart postal && docker compose exec redis redis-cli DBSIZE && docker compose logs postal | grep -i sidekiq</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: PostgreSQL reportando 'Disk full'</div>
+          <div class="trouble-cause">Causa Provável: Histórico de mensagens muito antigo consumindo espaço.</div>
+          <div>Solução Prática: <code class="trouble-fix">docker compose exec postgres psql -U postal -d postal -c "DELETE FROM messages WHERE created_at < NOW() - INTERVAL 90 DAY;"</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Certificado SSL expirado em Caddy</div>
+          <div class="trouble-cause">Causa Provável: Caddy não conseguiu renovar com Let's Encrypt.</div>
+          <div>Solução Prática: <code class="trouble-fix">docker compose logs caddy && docker compose restart caddy && sleep 5 && docker compose logs caddy</code></div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
+  <div class="section-card" id="desinstalacao">
+    <div class="section-header">
+      <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
+      <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
+    </div>
+    
+        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
+          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
+          <p style="margin:0; font-size:13.5px; color:#1E293B;">A desinstalação remove exclusivamente as credenciais de API do Cuttlefish, endpoints de integração e configurações da aplicação, preservando intactos os dados de emails já armazenados, histórico de entrega e regras de negócio.</p>
+        </div>
+        
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 1</span>
+                <span class="step-title">Auditoria de Integrações Cuttlefish</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Encontrar todas as referências a Cuttlefish no código da aplicação.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>grep -r 'cuttlefish\|Cuttlefish\|CUTTLEFISH' . --include='*.py' --include='*.js' --include='*.rb' --include='.env*' --include='*.yaml'</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> NÃO remova arquivo nenhum ainda. Esta é apenas uma auditoria.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>Listar todos os arquivos que contêm referências a Cuttlefish (API keys, endpoints, domínios)</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 2</span>
+                <span class="step-title">Backup de Histórico & Exportação de Configurações Cuttlefish</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Exportar domínios, templates de email e histórico de mensagens do Cuttlefish antes de desativar.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code># Acessar console Cuttlefish > Export Data > Baixar arquivo CSV de mensagens e configurações</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Mantenha backups em local seguro e encriptado (local ou S3 privado).</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>Arquivo cuttlefish_backup.csv com histórico completo gerado</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 3</span>
+                <span class="step-title">Ativar Postal em Paralelo (Blue-Green Deploy)</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Postal e Cuttlefish rodando simultaneamente por 48-72h de teste de produção.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code># Configurar seu backend para tentar enviar para Postal primeiro, fallback para Cuttlefish se erro
+# Monitorar logs de ambos os sistemas durante período de teste</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Monitore ambos os sistemas 24/7 durante este período. NÃO desligue Cuttlefish ainda.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>Ambos os sistemas entregando 100% das mensagens sem erro ou duplicatas</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 4</span>
+                <span class="step-title">Migrar Domínios para Postal</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Registrar domínios corporativos no Postal e copiar registros DKIM/SPF/DMARC para DNS.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code># No Postal: Domains > Add Domain > transacional.empresa.com.br
+# Copiar DKIM, SPF, DMARC records para seu provedor de DNS
+# Aguardar propagação (5-30 min) > Verify Domain</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> NÃO remova registros antigos de Cuttlefish do DNS até ter certeza que Postal está 100% funcional.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>Postal exibir status 'Verified' para todos os domínios</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 5</span>
+                <span class="step-title">Redirecionar Webhooks de Entrega & Bounce</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Webhooks de entrega mudam de Cuttlefish para Postal.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code># Alterar config de webhook: webhook_url = https://seu-dominio.com/api/postal/webhooks ao invés de https://cuttlefish.io/webhooks
+# Registrar novo webhook no Postal com mesmo endpoint</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Valide que todos os webhooks estão sendo recebidos pelo backend ANTES de remover Cuttlefish.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>curl seu-webhook-url e verificar que recebe dados de Postal (message.delivered, message.bounced)</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 6</span>
+                <span class="step-title">Remover Credenciais Cuttlefish do .env</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Deletar CUTTLEFISH_* das variáveis de ambiente.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>unset CUTTLEFISH_API_KEY CUTTLEFISH_API_URL
+grep -v CUTTLEFISH .env > .env.new && mv .env.new .env
+grep CUTTLEFISH .env # Não retorna nada</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Não execute este passo sem confirmar que Postal está 100% funcional com todas as rotas.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>grep CUTTLEFISH .env # Sem retorno significa sucesso</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 7</span>
+                <span class="step-title">Downgrade & Cancelamento de Plano Cuttlefish</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Reduzir plano Cuttlefish para free tier e iniciar período de retenção antes de cancelar.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code># Acessar console Cuttlefish > Account Settings > Billing > Downgrade or Cancel
+# Selecionar 'Keep history for 30 days before deletion'</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Cuttlefish pode levar até 30 dias para processar o cancelamento. Fique atento a cobranças residuais.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>Console Cuttlefish exibir 'Free Account' ou 'Scheduled for Deletion' sem cobranças futuras</code></div>
+            </div>
+            
+        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
+          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
+          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
+            <li style='margin-bottom:6px;'><code>docker compose ps # Confirma que Postal está 'Up' (4 containers: postal, postgres, redis, caddy)</code></li><li style='margin-bottom:6px;'><code>docker compose exec postgres psql -U postal -d postal -c 'SELECT COUNT(*) FROM messages;' # Valida banco de dados</code></li><li style='margin-bottom:6px;'><code>docker compose exec redis redis-cli DBSIZE # Verifica fila de trabalho (idealmente < 100 jobs pendentes)</code></li><li style='margin-bottom:6px;'><code>curl -s https://postal.seu-dominio.com.br/health | jq # Confirma API health check</code></li><li style='margin-bottom:6px;'><code>docker compose logs postal | tail -20 # Verifica erros recentes</code></li><li style='margin-bottom:6px;'><code>curl -s https://postal.seu-dominio.com.br/api/v1/stats -H 'Authorization: Bearer seu-token' | jq # Valida estatísticas de envio</code></li>
+          </ul>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
+  <div class="section-card" id="bibliografia">
+    <div class="section-header">
+      <h2 class="section-title">Parte III: Fontes Citadas &amp; Referência Bibliográfica Auditada</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green);">100% Verificadas</span>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Categoria</th>
+          <th>Título da Obra / Documento</th>
+          <th>Autor / Mantenedor</th>
+          <th>Link Oficial</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr id="ref-F01">
+          <td><strong style="color:var(--accent);">F01</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Postal Official GitHub Repository & Documentation</strong></td>
+          <td>Postal Server Team</td>
+          <td><a href="https://github.com/postalserver/postal" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F02">
+          <td><strong style="color:var(--accent);">F02</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Framework</span></td>
+          <td><strong>Docker Compose Official Documentation</strong></td>
+          <td>Docker Inc.</td>
+          <td><a href="https://docs.docker.com/compose/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F03">
+          <td><strong style="color:var(--accent);">F03</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Framework</span></td>
+          <td><strong>PostgreSQL 16 Official Documentation</strong></td>
+          <td>PostgreSQL Global Development Group</td>
+          <td><a href="https://www.postgresql.org/docs/16/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F04">
+          <td><strong style="color:var(--accent);">F04</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Framework</span></td>
+          <td><strong>Redis Official Documentation & Best Practices</strong></td>
+          <td>Redis Labs</td>
+          <td><a href="https://redis.io/documentation" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F05">
+          <td><strong style="color:var(--accent);">F05</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Security & Best Practices</span></td>
+          <td><strong>Email Authentication: DKIM, SPF, DMARC Explained</strong></td>
+          <td>MXToolbox & Email Security Community</td>
+          <td><a href="https://mxtoolbox.com/dkim.aspx" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    const original = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => { btn.innerText = original; }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>

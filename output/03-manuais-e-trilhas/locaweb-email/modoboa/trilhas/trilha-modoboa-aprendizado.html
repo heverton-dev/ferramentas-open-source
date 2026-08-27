@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trilha Cronológica de Aprendizado: Modoboa</title>
+  <style>
+
+  :root {
+    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --paper: #F8FAFC;
+    --surface: #FFFFFF;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --rule: #CBD5E1;
+    --rule-soft: #E2E8F0;
+    --accent: #0284C7;
+    --accent-dark: #0369A1;
+    --accent-soft: #E0F2FE;
+    --green: #10B981;
+    --green-dark: #065F46;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .container { max-width: 980px; margin: 0 auto; }
+  .header-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    background: var(--paper);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--rule-soft);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat-val { font-size: 15px; font-weight: 800; color: var(--ink); }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    bottom: 20px;
+    left: 11px;
+    width: 2px;
+    background: var(--rule);
+  }
+  .timeline-node {
+    position: relative;
+    margin-bottom: 36px;
+  }
+  .timeline-marker {
+    position: absolute;
+    left: -32px;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 4px var(--paper);
+  }
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .phase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--rule-soft);
+    padding-bottom: 8px;
+  }
+  .phase-title { font-size: 18px; font-weight: 800; color: var(--ink); }
+  .phase-time { font-size: 12px; font-weight: 700; color: var(--accent-dark); background: var(--accent-soft); padding: 2px 8px; border-radius: 4px; }
+  .phase-goal { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
+
+  .resource-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    transition: background 0.2s;
+  }
+  .resource-item:hover { background: #F1F5F9; }
+  .chk-item {
+    margin-top: 4px;
+    cursor: pointer;
+    width: 17px;
+    height: 17px;
+    accent-color: var(--green);
+  }
+  .resource-content { flex: 1; }
+  .resource-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .resource-title a { color: var(--ink); text-decoration: none; }
+  .resource-title a:hover { color: var(--accent); }
+  .resource-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--rule-soft);
+    color: var(--ink-2);
+  }
+  .lang-badge-br { background: #DCFCE7; color: #166534; font-weight: 800; }
+  .lang-badge-en { background: #EFF6FF; color: #1E40AF; font-weight: 800; }
+
+  .resource-takeaway {
+    font-size: 13px;
+    color: var(--ink-2);
+    margin-top: 5px;
+  }
+  .resource-dica-ptbr {
+    font-size: 12px;
+    color: #92400E;
+    background: #FEF3C7;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    display: inline-block;
+  }
+  .resource-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    display: flex;
+    gap: 12px;
+  }
+  .btn-link {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-dark);
+    text-decoration: none;
+  }
+  .btn-link:hover { text-decoration: underline; }
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="header-card">
+    <div class="breadcrumb">
+      <a href="../../listas-open-source/vert-locaweb-email.html">← Voltar ao Dossiê Vertical Locaweb-Email</a>
+      &nbsp;·&nbsp;
+      <a href="../manuais/manual-modoboa-vps-e-uso.html">Ver Manual de Engenharia 📖</a>
+    </div>
+    <span class="badge-tag">Jornada Pedagógica Autoguiada · Brasil First</span>
+    <h1>Trilha de Aprendizado: Modoboa</h1>
+    <p class="deck">
+      Roteiro cronológico passo a passo para dominar a ferramenta a partir de fontes verificadas, priorizando materiais em língua portuguesa (PT-BR) e fornecendo orientações práticas de tradução assistida para conteúdos internacionais.
+    </p>
+
+    <!-- HERO STATS -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">Tempo Total Estimado</span>
+        <span class="stat-val" style="color:var(--accent-dark);">8 horas de imersão guiada (No seu próprio ritmo)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Fases de Estudo</span>
+        <span class="stat-val">5 Módulos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Recursos Auditados</span>
+        <span class="stat-val">10 Conteúdos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Progresso do Operador</span>
+        <span class="stat-val" id="progresso-txt" style="color:var(--green);">0 de 10</span>
+      </div>
+    </div>
+
+    <!-- BARRA DE PROGRESSO -->
+    <div style="margin-top: 16px; background: var(--rule-soft); border-radius: 4px; height: 8px; overflow: hidden;">
+      <div id="progresso-bar" style="width: 0%; height: 100%; background: var(--green); transition: width 0.3s;"></div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+    
+        <div class="timeline-node">
+          <div class="timeline-marker">1</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Aula 1: Conceito, Privacidade & Soberania de Email (Brasil First)</h2>
+              <span class="phase-time">⏱️ ~1h 30min</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Entender por que manter seu próprio servidor de email é crucial para empresas brasileiras sob a LGPD e como funciona a infraestrutura de email sem terceiros.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://dev.to/t/opensource" target="_blank" rel="noopener noreferrer">Entendendo a Privacidade e Segurança de Dados de Email</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Artigo Técnico / Guia Aberto</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Diferenças entre armazenar emails em nuvens estrangeiras (Gmail, Outlook) e manter 100% dos dados sob custódia interna com criptografia LGPD.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Conteúdo 100% nativo em Português do Brasil.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 45 min de leitura</span>
+                  <span>👤 Comunidade Brasileira de Open Source & Email Soberano</span>
+                  <a href="https://dev.to/t/opensource" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://modoboa.readthedocs.io/" target="_blank" rel="noopener noreferrer">Visão Geral da Arquitetura do Modoboa & Infraestrutura SMTP/IMAP</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Documentação Oficial</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Como funciona a pilha de protocolos (SMTP, IMAP, POP3, DKIM, SPF) em um servidor de email corporativo.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Abra no Chrome ou Edge, clique com o botão direito e selecione 'Traduzir para o português'.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 45 min de leitura assistida</span>
+                  <span>👤 Equipe Modoboa</span>
+                  <a href="https://modoboa.readthedocs.io/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">2</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Aula 2: Instalação Descomplicada na VPS & Primeiros Passos</h2>
+              <span class="phase-time">⏱️ ~2h</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Acompanhar tutoriais de Linux e Docker para colocar seu próprio servidor de email no ar sem medo de terminal.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://modoboa.readthedocs.io/en/master/install.html" target="_blank" rel="noopener noreferrer">Como Alugar uma VPS e Rodar Containers Docker do Zero</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Guia Prático / Tutorial</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Comandos básicos de navegação em pastas no Linux, SSH e inicialização com docker compose up.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Passo a passo didático em língua portuguesa para leigos.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 1h de estudo</span>
+                  <span>👤 Comunidade DevOps Brasil</span>
+                  <a href="https://modoboa.readthedocs.io/en/master/install.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://github.com/modoboa/modoboa-docker" target="_blank" rel="noopener noreferrer">Playbook Oficial de Deploy e Infraestrutura em Produção</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Código & Playbook</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Configuração do reverse proxy Nginx com SSL automático e certificado Let's Encrypt para proteger seu acesso.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Use a tradução automática da página ou consulte a Seção II do Manual em Português.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 1h de prática guiada</span>
+                  <span>👤 Modoboa DevOps Core</span>
+                  <a href="https://github.com/modoboa/modoboa-docker" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">3</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Aula 3: Gerenciamento de Domínios, Usuários & Configuração de Email</h2>
+              <span class="phase-time">⏱️ ~1h 45min</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Dominar a interface de administração: adicionar domínios, criar usuários, configurar SPF/DKIM/DMARC, quotas e políticas de senha.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://www.youtube.com/results?search_query=modoboa+admin+setup" target="_blank" rel="noopener noreferrer">Demonstração Completa: Criando Domínio, Usuários e Enviando Primeiro Email</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Vídeo Tutorial / YouTube</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F04]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Como adicionar um domínio, validar registros DNS (MX, SPF, DKIM), criar usuários e testar entrega de emails.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Pressione a tecla 'C' no YouTube e selecione: Detalhes -> Legendas -> Tradução Automática -> Português.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 25 min de vídeo + 50 min de prática</span>
+                  <span>👤 Self-Hosted Email Community</span>
+                  <a href="https://www.youtube.com/results?search_query=modoboa+admin+setup" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://modoboa.readthedocs.io/en/master/admin/index.html" target="_blank" rel="noopener noreferrer">Guia de Configuração de SPF, DKIM e DMARC para Reputação de Email</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Guia Técnico</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F03]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Como configurar registros DNS para garantir que seus emails não caiam em spam e sejam entregues com segurança.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Tabela comparativa disponível no Módulo III do manual em português.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 40 min de leitura</span>
+                  <span>👤 Internet Mail Consortium</span>
+                  <a href="https://modoboa.readthedocs.io/en/master/admin/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">4</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Aula 4: Webmail, Calendário, Contatos & Sincronização com Clientes</h2>
+              <span class="phase-time">⏱️ ~1h 45min</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Usar a interface Webmail do Modoboa como Gmail, sincronizar calendário e contatos via CalDAV/CardDAV com Outlook, Apple Mail e Thunderbird.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://modoboa.readthedocs.io/en/master/user/index.html" target="_blank" rel="noopener noreferrer">Guia de Uso do Webmail Modoboa: Composição, Filtros e Assinaturas</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Tutorial Prático</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Como compor emails em HTML, anexar arquivos, criar assinaturas automáticas e usar filtros de spam.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Artigo em português explicando a interface com metáforas do cotidiano.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 50 min de leitura</span>
+                  <span>👤 Fábrica Universal Brasil</span>
+                  <a href="https://modoboa.readthedocs.io/en/master/user/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://github.com/modoboa/modoboa" target="_blank" rel="noopener noreferrer">Sincronização de Calendário e Contatos (CalDAV / CardDAV) em Thunderbird & Apple Mail</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Código & Especificação</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Uso de protocolo CalDAV/CardDAV para sincronizar calendário e contatos com clientes de desktop e mobile.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Basta copiar as URLs de sincronização fornecidas na interface do Modoboa e colar nos clientes.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 55 min de testes</span>
+                  <span>👤 Modoboa Community</span>
+                  <a href="https://github.com/modoboa/modoboa" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">5</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Aula 5: Operação Contínua, Backup, Monitoramento & Segurança Avançada</h2>
+              <span class="phase-time">⏱️ ~1h</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Manter seu servidor de email rodando com segurança: backup automático, monitoramento de saúde, alertas, atualização de patches e compliance LGPD.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://modoboa.readthedocs.io/en/master/admin/index.html" target="_blank" rel="noopener noreferrer">Estratégia de Backup Automático com PostgreSQL e Criptografia</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Guia de Operação</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Como fazer backup do banco PostgreSQL, criptografar e enviar para serviço externo seguro (S3, Wasabi) com retenção automática.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Conjunto de scripts prontos para usar em português.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 30 min de leitura</span>
+                  <span>👤 DevOps Brasil & Comunidade de Email Open Source</span>
+                  <a href="https://modoboa.readthedocs.io/en/master/admin/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://github.com/modoboa/modoboa" target="_blank" rel="noopener noreferrer">Monitoramento de Saúde, Logs e Alerts com Prometheus + Grafana</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Tutorial Operacional</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Como configurar alertas para fila de emails travada, queda de disco, aumento de spam ou autenticação suspeita.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Dashboards pré-configurados no repositório Modoboa GitHub.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 30 min de prática</span>
+                  <span>👤 Modoboa DevOps & Prometheus Community</span>
+                  <a href="https://github.com/modoboa/modoboa" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const checkboxes = document.querySelectorAll('.chk-item');
+  checkboxes.forEach((chk, idx) => {
+    const key = 'trilha_chk_' + idx;
+    chk.checked = localStorage.getItem(key) === 'true';
+    chk.addEventListener('change', () => {
+      localStorage.setItem(key, chk.checked);
+      atualizarProgresso();
+    });
+  });
+  atualizarProgresso();
+
+  function atualizarProgresso() {
+    const total = checkboxes.length;
+    const marcados = Array.from(checkboxes).filter(c => c.checked).length;
+    const pct = total ? Math.round((marcados / total) * 100) : 0;
+    const bar = document.getElementById('progresso-bar');
+    const txt = document.getElementById('progresso-txt');
+    if (bar) bar.style.width = pct + '%';
+    if (txt) txt.innerText = marcados + ' de ' + total + ' concluídos (' + pct + '%)';
+  }
+});
+</script>
+
+</body>
+</html>

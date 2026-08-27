@@ -1,0 +1,380 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "Mailu - Desinstalação Cirúrgica & Migração Segura",
+  "slug": "mailu-uninstall",
+  "saas_origem": "mailu",
+  "versao": "1.0",
+  "licenca_osi": "Apache-2.0",
+  "tempo_estimado_setup": "4 a 6 horas (Desinstalação Segura de Produção)",
+  "nivelamento_conceitual": [
+    {
+      "termo": "Desinstalação Cirúrgica de Email Server",
+      "analogia_cotidiana": "Desmontagem de uma Usina Elétrica",
+      "explicacao_simples": "Um servidor de email em produção é crítico. A desinstalação cirúrgica é um procedimento em 7 etapas ordenadas para não perder dados."
+    },
+    {
+      "termo": "Backup Completo vs. Incremental",
+      "analogia_cotidiana": "Fotografia Total vs. Registro de Mudanças",
+      "explicacao_simples": "Para desinstalação segura, você precisa de um backup completo ANTES de começar."
+    },
+    {
+      "termo": "DKIM, SPF & DMARC",
+      "analogia_cotidiana": "Assinatura Criptográfica de Email",
+      "explicacao_simples": "Ao remover Mailu, atualizar DNS para novo servidor evita emails em spam."
+    },
+    {
+      "termo": "Spool & Filas de Entrega",
+      "analogia_cotidiana": "Caixa de Entrada da Agência de Correios",
+      "explicacao_simples": "Precisa esvaziar filas de emails pendentes antes de desligar o servidor."
+    },
+    {
+      "termo": "Criptografia SQLite & Destruição Segura",
+      "analogia_cotidiana": "Cofre Eletrônico com Senhas",
+      "explicacao_simples": "Ao remover, DEVE destruir o arquivo de forma segura com overwrite múltiplo."
+    }
+  ],
+  "vps_recomendada": {
+    "provedor_modelo": "Mesma VPS do Mailu Atual",
+    "vcpu": "2+ vCPU",
+    "ram": "2+ GB RAM",
+    "armazenamento": "Volume adicional: 50% do tamanho total de vmail",
+    "so_recomendado": "Ubuntu 22.04 LTS ou 24.04 LTS",
+    "custo_mensal_estimado": "Mesma VPS + R$ 10-30/mês por volume SSD temporário",
+    "portas_abertas": [
+      "22/tcp (SSH)",
+      "25/tcp (SMTP)",
+      "110/tcp (POP3)",
+      "143/tcp (IMAP)",
+      "443/tcp (Webmail)"
+    ]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 0,
+        "titulo": "Pré-Voo: Análise de Risco & Roadmap",
+        "fonte_id": "F01",
+        "descricao": "Fazer auditoria completa do Mailu antes de começar desinstalação",
+        "comandos": "docker exec mailu-admin sqlite3 /data/data.db 'SELECT COUNT(*) FROM mailbox;'\ndocker exec mailu-admin du -sh /mail/vmail/\ndocker exec mailu-admin sqlite3 /data/data.db 'SELECT name FROM domain;'",
+        "analogia": "Como o piloto faz checklist antes de decolar",
+        "o_que_acontece_na_tela": "Você verá listagem de contas, tamanho de dados e domínios gerenciados",
+        "como_saber_se_deu_certo": "Todos os números aparecem sem erro"
+      },
+      {
+        "numero": 1,
+        "titulo": "Backup Etapa 1: Exportar Banco SQLite",
+        "fonte_id": "F02",
+        "descricao": "Fazer backup cripto do banco de dados SQLite com senhas e usuários",
+        "comandos": "mkdir -p /backup-mailu-$(date +%Y%m%d)\ndocker exec mailu-admin sqlite3 /data/data.db 'UPDATE domain SET updated=1;'\ndocker cp mailu-admin:/data/data.db /backup-mailu-$(date +%Y%m%d)/\ntar czf - /backup-mailu-$(date +%Y%m%d)/ | gpg --symmetric --output mailu-db-backup.tar.gz.gpg",
+        "analogia": "Como fazer radiografia de um paciente antes de cirurgia",
+        "o_que_acontece_na_tela": "GPG pedirá frase-secreta para criptografia",
+        "como_saber_se_deu_certo": "Arquivo mailu-db-backup.tar.gz.gpg criado"
+      },
+      {
+        "numero": 2,
+        "titulo": "Backup Etapa 2: Exportar Arquivos Vmail",
+        "fonte_id": "F03",
+        "descricao": "Fazer backup de todas as caixas postais (emails dos usuários)",
+        "comandos": "docker exec mailu-admin tar czf /vmail-backup.tar.gz /mail/vmail/\ndocker exec mailu-admin sha256sum /vmail-backup.tar.gz > /backup-mailu-$(date +%Y%m%d)/CHECKSUM.txt\ndocker cp mailu-admin:/vmail-backup.tar.gz /tmp/\nls -lh /tmp/vmail-backup.tar.gz",
+        "analogia": "Como fazer fotocópia de todos os documentos importantes",
+        "o_que_acontece_na_tela": "Você verá progresso de compressão (pode levar vários minutos)",
+        "como_saber_se_deu_certo": "Arquivo .tar.gz criado e listado"
+      },
+      {
+        "numero": 3,
+        "titulo": "Drenagem: Esvaziar Fila SMTP",
+        "fonte_id": "F04",
+        "descricao": "Redirecionar tráfego e aguardar fila de emails ser drenada",
+        "comandos": "docker exec mailu-postfix mailq | head -20\nsleep 1800\ndocker exec mailu-postfix mailq | tail -1",
+        "analogia": "Como descarregar um caminhão cheio antes de enviá-lo para reciclagem",
+        "o_que_acontece_na_tela": "mailq mostrará emails em fila; após 30min, retornará vazio ou com muito menos",
+        "como_saber_se_deu_certo": "Comando mailq final mostra 'Mail queue is empty'"
+      },
+      {
+        "numero": 4,
+        "titulo": "Parada Segura: Desligar Stack Docker",
+        "fonte_id": "F05",
+        "descricao": "Parar componentes Mailu na ordem correta",
+        "comandos": "docker stop mailu-webmail\ndocker stop mailu-imap mailu-pop3\nsleep 300\ndocker stop mailu-postfix\nsleep 600\ndocker stop mailu-db mailu-redis\ndocker-compose -f /mailu/docker-compose.yml down\ndocker ps | grep mailu",
+        "analogia": "Como desligar uma usina: primeiro reduz, depois desliga",
+        "o_que_acontece_na_tela": "Cada docker stop mostrará ID do container",
+        "como_saber_se_deu_certo": "Último docker ps | grep mailu retorna nada"
+      },
+      {
+        "numero": 5,
+        "titulo": "Destruição: Limpeza Segura de Dados",
+        "fonte_id": "F06",
+        "descricao": "Apagar dados Mailu de forma que não possam ser recuperados",
+        "comandos": "shred -vfz -n 3 /data/data.db\ndocker rm -v mailu-admin mailu-postfix mailu-imap mailu-pop3 mailu-webmail 2>/dev/null || true\ndocker volume prune -f\nrm -rf /mailu/\nrm -rf /etc/mailu/",
+        "analogia": "Como destruir documentos sensíveis em triturador antes de descartar",
+        "o_que_acontece_na_tela": "shred mostrará progresso; rm retornará sem erros",
+        "como_saber_se_deu_certo": "Arquivos Mailu sumiram completamente"
+      },
+      {
+        "numero": 6,
+        "titulo": "Configuração: Atualizar DNS & Firewall",
+        "fonte_id": "F07",
+        "descricao": "Apontar DNS para novo servidor e fechar portas de email antigas",
+        "comandos": "sudo ufw delete allow 25/tcp\nsudo ufw delete allow 110/tcp\nsudo ufw delete allow 143/tcp\nsudo ufw delete allow 465/tcp\nsudo ufw delete allow 587/tcp\nsudo ufw status numbered",
+        "analogia": "Como redirecionar correspondência de endereço antigo para novo",
+        "o_que_acontece_na_tela": "Firewall mostrará 'deleted' ou 'rule not found'",
+        "como_saber_se_deu_certo": "Portas de email já não aparecem em ufw status"
+      },
+      {
+        "numero": 7,
+        "titulo": "Validação Final: Confirmar Sucesso",
+        "fonte_id": "F08",
+        "descricao": "Testar novo servidor e confirmar backup externo",
+        "comandos": "telnet novo-mail.seu-dominio.com.br 25\necho 'Data: '$(date) >> /root/mailu-desinstalacao.log\necho 'Backup: /backup-mailu-'$(date +%Y%m%d) >> /root/mailu-desinstalacao.log\ncat /root/mailu-desinstalacao.log",
+        "analogia": "Como fazer teste de direto ao vivo após reforma de casa",
+        "o_que_acontece_na_tela": "telnet mostrará 220 ESMTP; log será criado",
+        "como_saber_se_deu_certo": "telnet retorna 220; arquivo log contém data da desinstalação"
+      }
+    ],
+    "arquivos_configuracao": []
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "Desinstalação em 7 etapas ordenadas: Análise → Backup → Drenagem → Parada → Destruição → DNS → Validação",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "Passo 1",
+        "acao": "Fazer backup completo do banco SQLite e caixas postais",
+        "resultado_esperado": "Arquivos .tar.gz.gpg criados com checksums validados"
+      },
+      {
+        "passo": "Passo 2",
+        "acao": "Aguardar drenagem de fila SMTP (30 minutos)",
+        "resultado_esperado": "mailq retorna 'Mail queue is empty'"
+      },
+      {
+        "passo": "Passo 3",
+        "acao": "Parar stack Docker na ordem correta",
+        "resultado_esperado": "docker ps mostra lista vazia de containers Mailu"
+      },
+      {
+        "passo": "Passo 4",
+        "acao": "Destruir dados com shred 3x + remover volumes",
+        "resultado_esperado": "Diretórios /mailu/ e /etc/mailu/ não existem"
+      },
+      {
+        "passo": "Passo 5",
+        "acao": "Validar novo servidor SMTP e DNS",
+        "resultado_esperado": "telnet retorna 220 ESMTP; mxtoolbox valida MX"
+      }
+    ],
+    "comandos_cli": [
+      {
+        "comando": "mailq",
+        "descricao": "Listar fila de emails pendentes no Postfix",
+        "exemplo": "docker exec mailu-postfix mailq | head -10",
+        "fonte_id": "F04"
+      },
+      {
+        "comando": "shred",
+        "descricao": "Sobrescrever arquivo 3x com dados aleatórios antes de deletar",
+        "exemplo": "shred -vfz -n 3 /data/data.db",
+        "fonte_id": "F06"
+      },
+      {
+        "comando": "docker ps",
+        "descricao": "Listar containers ativos (deve estar vazio após desinstalação)",
+        "exemplo": "docker ps | grep mailu",
+        "fonte_id": "F05"
+      },
+      {
+        "comando": "telnet",
+        "descricao": "Testar conectividade SMTP no novo servidor",
+        "exemplo": "telnet novo-mail.seu-dominio.com.br 25",
+        "fonte_id": "F08"
+      },
+      {
+        "comando": "nslookup",
+        "descricao": "Validar propagação de registro MX",
+        "exemplo": "nslookup -type=MX seu-dominio.com.br",
+        "fonte_id": "F08"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "GET",
+        "rota": "/api/v1/domains",
+        "descricao": "Listar domínios gerenciados em Mailu (útil para documentação)",
+        "payload_exemplo": "# Retorna lista JSON de domínios",
+        "fonte_id": "F01"
+      },
+      {
+        "metodo": "GET",
+        "rota": "/api/v1/mailbox?domain=seu-dominio.com.br",
+        "descricao": "Exportar usuários de um domínio para migração",
+        "payload_exemplo": "# Retorna JSON com mailbox, nome, quota",
+        "fonte_id": "F01"
+      },
+      {
+        "metodo": "DELETE",
+        "rota": "/api/v1/mailbox/usuario@seu-dominio.com.br",
+        "descricao": "Deletar usuário (cuidado: não recuperável)",
+        "payload_exemplo": "# NUNCA use isto; será substituído por novo servidor",
+        "fonte_id": "F01"
+      }
+    ],
+    "modulos": [
+      {
+        "modulo": "Monitoramento de Filas SMTP",
+        "descricao": "Como monitorar e entender filas de email durante desinstalação",
+        "recursos_chave": [
+          "mailq command para ver fila atual",
+          "postsuper para remover emails travados",
+          "Logs de retry automático do Postfix"
+        ]
+      },
+      {
+        "modulo": "Backup Seguro com GPG",
+        "descricao": "Como criptografar e validar integridade de backups",
+        "recursos_chave": [
+          "Uso de GPG para criptografia simétrica",
+          "Checksum SHA256 para validar integridade",
+          "Teste de restauração antes de deletar original"
+        ]
+      },
+      {
+        "modulo": "Migração para Mailcow ou Postfix",
+        "descricao": "Como migrar dados de Mailu para alternativas open-source",
+        "recursos_chave": [
+          "Exportar usuários em JSON do Mailu",
+          "IMAP Sync para sincronizar caixas postais",
+          "Validação com mxtoolbox após migração"
+        ]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Fila SMTP nunca esvazia após 2 horas",
+        "causa_provavel": "Servidor destinatário rejeitando emails",
+        "solucao_comando": "docker logs mailu-postfix | grep 'permanent failure'"
+      },
+      {
+        "sintoma": "Permission denied ao copiar vmail",
+        "causa_provavel": "Usuario Docker sem permissão de leitura",
+        "solucao_comando": "docker exec mailu-admin chmod -R 755 /mail/vmail/"
+      },
+      {
+        "sintoma": "Novo servidor não recebe emails",
+        "causa_provavel": "MX record ainda apontando para IP antigo",
+        "solucao_comando": "nslookup seu-dominio.com.br deve retornar novo IP"
+      }
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "Mailu Official Documentation",
+      "url": "https://mailu.io/master/",
+      "autor_ou_canal": "Mailu Core Team"
+    },
+    {
+      "id": "F02",
+      "categoria": "Documentação Oficial",
+      "titulo": "SQLite Backup & Security",
+      "url": "https://www.sqlite.org/backup.html",
+      "autor_ou_canal": "SQLite Development Team"
+    },
+    {
+      "id": "F03",
+      "categoria": "Guia Técnico",
+      "titulo": "Email Server Backup Best Practices",
+      "url": "https://www.postfix.org/",
+      "autor_ou_canal": "Postfix Documentation"
+    },
+    {
+      "id": "F04",
+      "categoria": "Documentação Oficial",
+      "titulo": "Postfix Queue Management",
+      "url": "https://www.postfix.org/QSHAPE_README.html",
+      "autor_ou_canal": "Postfix Core Team"
+    },
+    {
+      "id": "F05",
+      "categoria": "Guia Técnico",
+      "titulo": "Docker Container Lifecycle & Safe Shutdown",
+      "url": "https://docs.docker.com/compose/reference/stop/",
+      "autor_ou_canal": "Docker Official Documentation"
+    },
+    {
+      "id": "F06",
+      "categoria": "Segurança",
+      "titulo": "Secure Data Destruction with shred & LUKS",
+      "url": "https://dban.sourceforge.io/",
+      "autor_ou_canal": "DBAN & Data Security Research"
+    },
+    {
+      "id": "F07",
+      "categoria": "Documentação Oficial",
+      "titulo": "UFW Firewall Management",
+      "url": "https://help.ubuntu.com/community/UFW",
+      "autor_ou_canal": "Ubuntu Community"
+    },
+    {
+      "id": "F08",
+      "categoria": "Guia Técnico",
+      "titulo": "DNS Mail Server Validation & Troubleshooting",
+      "url": "https://mxtoolbox.com/",
+      "autor_ou_canal": "MXToolbox Community"
+    }
+  ],
+  "desinstalacao_cirurgica": {
+    "principio_isolamento": "A desinstalação remove exclusivamente o container Mailu, volume e serviço, preservando Docker, Nginx e outros projetos hospedados na VPS.",
+    "checklist_saude_vps": [
+      "docker ps | grep -v mailu (não deve haver containers Mailu)",
+      "curl localhost:80 (webserver ainda respondendo)",
+      "curl localhost:443 (HTTPS ainda respondendo)",
+      "sudo ufw status | grep -E '25|110|143' (portas de email não devem constar)",
+      "df -h (espaço em disco recuperado após remoção de vmail)",
+      "docker volume ls | grep -v mailu (nenhum volume Mailu orfão)",
+      "ps aux | grep nginx (servidor web ainda ativo se usado)",
+      "systemctl status docker (docker ainda rodando)"
+    ],
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Parada do Serviço Mailu",
+        "descricao": "Interrompe o processo do Mailu sem enviar sinal para nenhum outro serviço da VPS",
+        "comandos": "docker stop mailu-postfix mailu-imap mailu-pop3 mailu-webmail mailu-admin",
+        "alerta_seguranca": "NÃO utilize 'docker system prune -a'. Apenas o serviço Mailu é desligado.",
+        "como_validar": "docker ps | grep mailu # Deve estar vazio"
+      },
+      {
+        "numero": 2,
+        "titulo": "Remoção de Contêiner e Volume",
+        "descricao": "Remove cirurgicamente apenas containers Mailu e seus volumes",
+        "comandos": "docker rm -v mailu-admin mailu-postfix mailu-imap mailu-pop3 mailu-webmail 2>/dev/null || true\ndocker volume rm mailu_data 2>/dev/null || true",
+        "alerta_seguranca": "Verifique que backup foi feito ANTES desta etapa",
+        "como_validar": "docker volume ls | grep mailu # Deve estar vazio"
+      },
+      {
+        "numero": 3,
+        "titulo": "Revogação de Portas no Firewall",
+        "descricao": "Fecha portas de email (25, 110, 143, 443, 465, 587, 993, 995)",
+        "comandos": "sudo ufw delete allow 25/tcp\nsudo ufw delete allow 110/tcp\nsudo ufw delete allow 143/tcp\nsudo ufw delete allow 465/tcp\nsudo ufw delete allow 587/tcp\nsudo ufw reload",
+        "alerta_seguranca": "Mantenha SSH (22) aberto para acesso remoto",
+        "como_validar": "sudo ufw status | grep -E '25|110|143' # Não deve constar"
+      },
+      {
+        "numero": 4,
+        "titulo": "Limpeza de Diretórios Mailu",
+        "descricao": "Remove repositórios e configurações Mailu",
+        "comandos": "rm -rf /mailu/\nrm -rf /etc/mailu/\nrm -rf /mail/vmail/ (se não for compartilhado)",
+        "alerta_seguranca": "CONFIRME que backup externo foi feito com sucesso ANTES",
+        "como_validar": "ls /mailu/ 2>&1 || echo 'Diretório não existe - OK'"
+      },
+      {
+        "numero": 5,
+        "titulo": "Destruição Segura de Banco de Dados",
+        "descricao": "Sobrescreve arquivo SQLite 3x antes de deletar",
+        "comandos": "shred -vfz -n 3 /data/data.db 2>/dev/null || true\nrm -f /data/data.db*",
+        "alerta_seguranca": "Data.db contém senhas criptografadas. Overwrite múltiplo é essencial.",
+        "como_validar": "ls -la /data/data.db 2>&1 | grep 'cannot access' # Confirmação de remoção"
+      }
+    ]
+  }
+}
