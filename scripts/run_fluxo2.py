@@ -21,7 +21,7 @@ def console_utf8():
 
 console_utf8()
 
-from gerar_dossie_vertical_tripartite import compilar_dossie_vertical as compilar_dossie_tripartite
+from gerar_dossie_vertical_tripartite import compilar_dossie_vertical_tripartite
 
 def executar_fluxo2(saas: str = None) -> bool:
     print("\n" + "="*70)
@@ -42,7 +42,7 @@ def executar_fluxo2(saas: str = None) -> bool:
         print(f"   ℹ️ Nenhum SaaS informado. Assumindo alvo canônico padrão: '{saas}'")
 
     print(f"\n⚙️ Disparando compilação tripartite para o SaaS: '{saas}'...")
-    sucesso = compilar_dossie_tripartite(saas)
+    sucesso = compilar_dossie_vertical_tripartite(saas)
 
     if sucesso:
         print("\n" + "="*70)

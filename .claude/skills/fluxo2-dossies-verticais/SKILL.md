@@ -15,14 +15,32 @@ Esta skill governa o **Desmantelamento Cirúrgico de SaaS Proprietários**, subs
 
 ## Protocolo de Execução Agêntica
 
-1. **Identificação do SaaS Alvo (Gate de Entrada):**
-   - Se o usuário forneceu o SaaS alvo (ex: `/fluxo2 granola`), prossiga imediatamente;
-   - Se não informou, solicite o nome ou categoria do SaaS no chat.
-
-2. **Acionamento Determinístico via CLI:**
-   Execute o runner oficial:
+### Caso 1 · SaaS Já Existente (ou com JSON em `scripts/data/`):
+1. Execute diretamente o runner oficial:
    ```bash
    python scripts/run_fluxo2.py --saas <saas-slug>
+   ```
+
+### Caso 2 · Novo SaaS Sob Demanda (Pesquisa & Geração Autônoma):
+Se o SaaS solicitado pelo operador não existir previamente:
+1. **NUNCA** recuse nem diga que precisa de um arquivo pré-existente. A Fábrica Universal é ativa e geradora!
+2. **Normalização do Slug:** Converta o SaaS em slug limpo (ex: `vert-twilio`, `vert-zendesk`).
+3. **Mapeamento do Quinteto Soberano (5 Ferramentas):**
+   Elege rigorosamente as 5 ferramentas classificadas em:
+   - *A Mais Robusta*: Gateway corporativo de alta disponibilidade;
+   - *A Mais Completa*: Plataforma enterprise com suite ampla de recursos;
+   - *A Mais Moderna*: Arquitetura de última geração e stack contemporânea;
+   - *A Mais Leve*: Binário ultraleve de baixo consumo de RAM;
+   - *A Mais Simples*: Instalação em 1 comando para testes e sandbox.
+4. **Mapeamento de White-Label & Design System (Seção 5):**
+   Defina esforço (Baixo/Médio/Alto), stack UI, mecânica de customização e impacto em upgrades.
+5. **Mapeamento do Ecossistema Agêntico (Seção 6):**
+   Mapeie servidores MCP, Agent Skills e plugins reais para integração com LLMs.
+6. **Persistência do JSON:** Salve os dados em `scripts/data/dossie-vertical-<saas>.json`.
+7. **Compilação Tripartite Diamante:**
+   Execute o compilador oficial:
+   ```bash
+   python scripts/gerar_dossie_vertical_tripartite.py --saas <saas>
    ```
 
 3. **Verificação dos Critérios R5-V:**
