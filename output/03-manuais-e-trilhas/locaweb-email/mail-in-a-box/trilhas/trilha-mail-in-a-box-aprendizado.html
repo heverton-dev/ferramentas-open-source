@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trilha Cronológica de Aprendizado: Mail-in-a-Box</title>
+  <style>
+
+  :root {
+    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --paper: #F8FAFC;
+    --surface: #FFFFFF;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --rule: #CBD5E1;
+    --rule-soft: #E2E8F0;
+    --accent: #0284C7;
+    --accent-dark: #0369A1;
+    --accent-soft: #E0F2FE;
+    --green: #10B981;
+    --green-dark: #065F46;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .container { max-width: 980px; margin: 0 auto; }
+  .header-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    background: var(--paper);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--rule-soft);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat-val { font-size: 15px; font-weight: 800; color: var(--ink); }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    bottom: 20px;
+    left: 11px;
+    width: 2px;
+    background: var(--rule);
+  }
+  .timeline-node {
+    position: relative;
+    margin-bottom: 36px;
+  }
+  .timeline-marker {
+    position: absolute;
+    left: -32px;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 4px var(--paper);
+  }
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .phase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--rule-soft);
+    padding-bottom: 8px;
+  }
+  .phase-title { font-size: 18px; font-weight: 800; color: var(--ink); }
+  .phase-time { font-size: 12px; font-weight: 700; color: var(--accent-dark); background: var(--accent-soft); padding: 2px 8px; border-radius: 4px; }
+  .phase-goal { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
+
+  .resource-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    transition: background 0.2s;
+  }
+  .resource-item:hover { background: #F1F5F9; }
+  .chk-item {
+    margin-top: 4px;
+    cursor: pointer;
+    width: 17px;
+    height: 17px;
+    accent-color: var(--green);
+  }
+  .resource-content { flex: 1; }
+  .resource-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .resource-title a { color: var(--ink); text-decoration: none; }
+  .resource-title a:hover { color: var(--accent); }
+  .resource-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--rule-soft);
+    color: var(--ink-2);
+  }
+  .lang-badge-br { background: #DCFCE7; color: #166534; font-weight: 800; }
+  .lang-badge-en { background: #EFF6FF; color: #1E40AF; font-weight: 800; }
+
+  .resource-takeaway {
+    font-size: 13px;
+    color: var(--ink-2);
+    margin-top: 5px;
+  }
+  .resource-dica-ptbr {
+    font-size: 12px;
+    color: #92400E;
+    background: #FEF3C7;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    display: inline-block;
+  }
+  .resource-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    display: flex;
+    gap: 12px;
+  }
+  .btn-link {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-dark);
+    text-decoration: none;
+  }
+  .btn-link:hover { text-decoration: underline; }
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="header-card">
+    <div class="breadcrumb">
+      <a href="../../listas-open-source/vert-locaweb-email.html">← Voltar ao Dossiê Vertical Locaweb-Email</a>
+      &nbsp;·&nbsp;
+      <a href="../manuais/manual-mail-in-a-box-vps-e-uso.html">Ver Manual de Engenharia 📖</a>
+    </div>
+    <span class="badge-tag">Jornada Pedagógica Autoguiada · Brasil First</span>
+    <h1>Trilha de Aprendizado: Mail-in-a-Box</h1>
+    <p class="deck">
+      Roteiro cronológico passo a passo para dominar a ferramenta a partir de fontes verificadas, priorizando materiais em língua portuguesa (PT-BR) e fornecendo orientações práticas de tradução assistida para conteúdos internacionais.
+    </p>
+
+    <!-- HERO STATS -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">Tempo Total Estimado</span>
+        <span class="stat-val" style="color:var(--accent-dark);">8 horas</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Fases de Estudo</span>
+        <span class="stat-val">5 Módulos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Recursos Auditados</span>
+        <span class="stat-val">11 Conteúdos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Progresso do Operador</span>
+        <span class="stat-val" id="progresso-txt" style="color:var(--green);">0 de 11</span>
+      </div>
+    </div>
+
+    <!-- BARRA DE PROGRESSO -->
+    <div style="margin-top: 16px; background: var(--rule-soft); border-radius: 4px; height: 8px; overflow: hidden;">
+      <div id="progresso-bar" style="width: 0%; height: 100%; background: var(--green); transition: width 0.3s;"></div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+    
+        <div class="timeline-node">
+          <div class="timeline-marker">1</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Fase 1: Fundamentos de Email e Protocolos</h2>
+              <span class="phase-time">⏱️ ~1h 30min</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Entender os principios de comunicacao por email e diferenca entre SMTP/IMAP</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://mailinabox.email/guide.html" target="_blank" rel="noopener noreferrer">Mail-in-a-Box Official Documentation</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Documentacao Oficial</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Arquitetura completa: Postfix, Dovecot, certificados SSL, seguranca</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Use Chrome Translate ou copie para tradutor</div>
+                <div class="resource-meta">
+                  <span>⏱️ 45 min</span>
+                  <span>👤 Joshua Tate</span>
+                  <a href="https://mailinabox.email/guide.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://tools.ietf.org/html/rfc5321" target="_blank" rel="noopener noreferrer">SMTP e IMAP - Protocolos Fundamentais</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Artigo Tecnico</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Como email viaja pela internet, diferenca entre protocolos</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> RFC 5321 e RFC 3501 sao tecnicos mas fundamentais</div>
+                <div class="resource-meta">
+                  <span>⏱️ 45 min</span>
+                  <span>👤 IETF Standards</span>
+                  <a href="https://tools.ietf.org/html/rfc5321" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">2</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Fase 2: Instalacao de Mail-in-a-Box em VPS</h2>
+              <span class="phase-time">⏱️ ~2h</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Deploy completo em producao com configuracao inicial</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://mailinabox.email/" target="_blank" rel="noopener noreferrer">Mail-in-a-Box Quick Start Guide</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Tutorial Pratico</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F03]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Script automatizado, configuracao DNS inicial, criacao de admin</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Siga os passos exatos do setup.sh</div>
+                <div class="resource-meta">
+                  <span>⏱️ 1h 30min de pratica</span>
+                  <span>👤 Mail-in-a-Box Documentation</span>
+                  <a href="https://mailinabox.email/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://www.icann.org/resources/pages/domain-registry-2013-12-02-en" target="_blank" rel="noopener noreferrer">DNS Configuration e Domain Pointing</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Lab Interativo</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F04]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Apontar A record, MX record e TXT record para sua VPS</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Cada registrador tem interface diferente (GoDaddy, Namecheap, CloudFlare)</div>
+                <div class="resource-meta">
+                  <span>⏱️ 30 min de pratica</span>
+                  <span>👤 ICANN e Registradores de Dominio</span>
+                  <a href="https://www.icann.org/resources/pages/domain-registry-2013-12-02-en" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">3</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Fase 3: Autenticacao de Email - SPF, DKIM e DMARC</h2>
+              <span class="phase-time">⏱️ ~1h 45min</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Configurar registros que evitam spam e falsificacao</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://dmarc.org/" target="_blank" rel="noopener noreferrer">SPF DKIM DMARC Configuration Guide</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Guia Completo</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Registros que provam identidade do servidor e previnem spoofing</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Leia DMARC.org para entender policy de rejeicao</div>
+                <div class="resource-meta">
+                  <span>⏱️ 1h</span>
+                  <span>👤 DMARC.org e Email Security Community</span>
+                  <a href="https://dmarc.org/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://mxtoolbox.com" target="_blank" rel="noopener noreferrer">Validacao de Configuracao com MXToolbox</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Ferramenta Online</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F06]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Como verificar se SPF, DKIM, DMARC estao corretos</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Interface grafica - nao precisa de traducao</div>
+                <div class="resource-meta">
+                  <span>⏱️ 30 min</span>
+                  <span>👤 MXToolbox</span>
+                  <a href="https://mxtoolbox.com" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">4</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Fase 4: Testes de Entrega e Monitoramento</h2>
+              <span class="phase-time">⏱️ ~1h 30min</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Validar que emails chegam sem cair em spam</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://www.returnpath.com/deliverability/" target="_blank" rel="noopener noreferrer">Email Deliverability Testing Guide</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Tutorial Pratico</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F07]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Como testar se emails sao recebidos vs entram em spam</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Teste com suas contas Gmail, Outlook, Yahoo reais</div>
+                <div class="resource-meta">
+                  <span>⏱️ 1h</span>
+                  <span>👤 Email Security Best Practices</span>
+                  <a href="https://www.returnpath.com/deliverability/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://www.postfix.org/DEBUG_README.html" target="_blank" rel="noopener noreferrer">Monitoramento de Logs e Troubleshooting</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Documentacao Tecnica</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F08]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Como ler logs de mail.log e diagnosticar falhas</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Comandos Linux para diagnosticar problemas</div>
+                <div class="resource-meta">
+                  <span>⏱️ 30 min</span>
+                  <span>👤 Postfix e Dovecot Docs</span>
+                  <a href="https://www.postfix.org/DEBUG_README.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">5</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Fase 5: Migracao para Locaweb Email e Desinstalacao</h2>
+              <span class="phase-time">⏱️ ~1h 15min</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Migrar usuarios para Locaweb e remover Mail-in-a-Box</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://imapsync.lamiral.info/" target="_blank" rel="noopener noreferrer">IMAPSync - Migracao entre Servidores de Email</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Guia Pratico</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F09]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Como sincronizar 100% do historico sem perder emails</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Exemplos de comando com explicacao em portugues</div>
+                <div class="resource-meta">
+                  <span>⏱️ 35 min</span>
+                  <span>👤 IMAPSync Community</span>
+                  <a href="https://imapsync.lamiral.info/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://ajuda.locaweb.com.br/email/" target="_blank" rel="noopener noreferrer">Como Contratar e Configurar Locaweb Email</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Tutorial em Video</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F10]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Criar contas, obter MX records, validar IMAP</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> 100% em portugues brasileiro com interface Locaweb real</div>
+                <div class="resource-meta">
+                  <span>⏱️ 25 min</span>
+                  <span>👤 Suporte Locaweb</span>
+                  <a href="https://ajuda.locaweb.com.br/email/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://github.com/trcnologia/arsenal-opensource" target="_blank" rel="noopener noreferrer">Desinstalacao Cirurgica de Mail-in-a-Box</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Checklist de Acao</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F11]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Ordem correta: backup, migrar, DNS, parar servicos, remover</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Sequencia segura de comandos para remover sem quebrar nada</div>
+                <div class="resource-meta">
+                  <span>⏱️ 15 min</span>
+                  <span>👤 Arsenal Open Source - Este Manual</span>
+                  <a href="https://github.com/trcnologia/arsenal-opensource" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const checkboxes = document.querySelectorAll('.chk-item');
+  checkboxes.forEach((chk, idx) => {
+    const key = 'trilha_chk_' + idx;
+    chk.checked = localStorage.getItem(key) === 'true';
+    chk.addEventListener('change', () => {
+      localStorage.setItem(key, chk.checked);
+      atualizarProgresso();
+    });
+  });
+  atualizarProgresso();
+
+  function atualizarProgresso() {
+    const total = checkboxes.length;
+    const marcados = Array.from(checkboxes).filter(c => c.checked).length;
+    const pct = total ? Math.round((marcados / total) * 100) : 0;
+    const bar = document.getElementById('progresso-bar');
+    const txt = document.getElementById('progresso-txt');
+    if (bar) bar.style.width = pct + '%';
+    if (txt) txt.innerText = marcados + ' de ' + total + ' concluídos (' + pct + '%)';
+  }
+});
+</script>
+
+</body>
+</html>

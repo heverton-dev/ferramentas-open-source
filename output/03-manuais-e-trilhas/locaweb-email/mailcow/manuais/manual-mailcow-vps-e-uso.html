@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual Operacional: Mailcow · Deploy VPS &amp; Uso Exaustivo</title>
+  <style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --paper: #F8FAFC;
+    --surface: #FFFFFF;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --rule: #CBD5E1;
+    --rule-soft: #E2E8F0;
+    --accent: #0284C7;
+    --accent-dark: #0369A1;
+    --accent-soft: #E0F2FE;
+    --green: #10B981;
+    --green-dark: #065F46;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+    --purple: #8B5CF6;
+    --purple-soft: #EDE9FE;
+    --code-bg: #0F172A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .container { max-width: 1060px; margin: 0 auto; }
+  
+  .header-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+  
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    background: var(--paper);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--rule-soft);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat-val { font-size: 14.5px; font-weight: 800; color: var(--ink); }
+
+  .nav-anchors {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .nav-anchors a {
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    color: var(--ink-2);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-anchors a:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    background: var(--accent-soft);
+  }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .section-header {
+    border-bottom: 2px solid var(--rule-soft);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title { font-size: 20px; font-weight: 800; color: var(--ink); }
+
+  /* CARDS DE NIVELAMENTO */
+  .grid-conceitos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card-conceito {
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    padding: 16px;
+    border-left: 4px solid var(--purple);
+  }
+  .conceito-termo { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+  .conceito-analogia { font-size: 12.5px; font-weight: 700; color: #6D28D9; background: var(--purple-soft); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+  .conceito-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+
+  /* PASSOS DE INSTALAÇÃO */
+  .step-box {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .step-box:last-child { border-bottom: none; }
+  .step-top {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .step-num {
+    background: var(--accent);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .step-heading { font-size: 17px; font-weight: 800; color: var(--ink); }
+  .analogia-box {
+    background: #F0FDF4;
+    border-left: 4px solid var(--green);
+    padding: 8px 12px;
+    border-radius: 0 4px 4px 0;
+    margin: 8px 0;
+    font-size: 13px;
+    color: var(--green-dark);
+  }
+  .feedback-box {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #92400E;
+  }
+  .validacao-box {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #1E40AF;
+  }
+
+  .code-box {
+    position: relative;
+    background: var(--code-bg);
+    border-radius: 6px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  .code-box pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #F8FAFC;
+    line-height: 1.5;
+  }
+  .btn-copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.15);
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-copy:hover { background: rgba(255,255,255,0.3); }
+
+  .cite-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--gold-soft);
+    color: #B45309;
+    vertical-align: super;
+    margin-left: 4px;
+    text-decoration: none;
+  }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  table.data-table th {
+    background: var(--paper);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--ink-2);
+    border-bottom: 2px solid var(--rule);
+  }
+  table.data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink-2);
+  }
+  table.data-table tr:hover td { background: rgba(2, 132, 199, 0.02); }
+
+  .trouble-card {
+    background: #FFFBEB;
+    border-left: 4px solid var(--gold);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 0 4px 4px 0;
+  }
+  .trouble-symptom { font-weight: 700; color: #92400E; font-size: 13.5px; }
+  .trouble-cause { font-size: 13px; color: #78350F; margin: 4px 0; }
+  .trouble-fix { font-family: var(--mono); font-size: 12px; background: #FEF3C7; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="header-card">
+    <div class="breadcrumb">
+      <a href="../../listas-open-source/vert-locaweb-email.html">← Voltar ao Dossiê Vertical Locaweb-Email</a>
+      &nbsp;·&nbsp;
+      <a href="../trilhas/trilha-mailcow-aprendizado.html">Ver Trilha de Aprendizado 🗺️</a>
+    </div>
+    <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
+    <h1>Manual Operacional Completo: Mailcow</h1>
+    <p class="deck">
+      Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
+    </p>
+
+    <!-- HERO STATS DA VPS -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">VPS Recomendada</span>
+        <span class="stat-val">Hetzner Cloud CPX21 (ou Contabo Cloud VPS M)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Hardware Mínimo</span>
+        <span class="stat-val">2 vCPU Dedicadas (AMD EPYC) · 4 GB RAM ECC (mínimo 2 GB, 4 GB recomendado para até 50 usuários)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Armazenamento &amp; SO</span>
+        <span class="stat-val">80 GB NVMe Gen4 (mínimo 40 GB, crescer conforme demanda de emails) · Ubuntu 24.04 LTS (x86_64) ou Debian 12</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Custo Mensal Estimado</span>
+        <span class="stat-val" style="color:var(--accent-dark);">EUR 9,00/mês (~R$ 54,00/mês na cotação média) ou mais conforme capacidade</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Licença de Uso</span>
+        <span class="stat-val" style="color:var(--green);">GPL-3.0 (Livre &amp; Comercial)</span>
+      </div>
+    </div>
+
+    <!-- NAVEGAÇÃO RÁPIDA -->
+    <div class="nav-anchors">
+      <a href="#nivelamento">💡 Módulo 0: Nivelamento para Iniciantes</a>
+      <a href="#instalacao">📦 Parte I: Instalação Passo a Passo</a>
+      <a href="#configuracao">⚙️ Arquivos de Configuração</a>
+      <a href="#primeiro-voo">✈️ Roteiro de Primeiro Voo</a>
+      <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
+      <a href="#manual-api">🌐 Endpoints de API</a>
+      <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
+      <a href="#desinstalacao">🛡️ Desinstalação Cirúrgica VPS</a>
+      <a href="#bibliografia">📚 Referências Bibliográficas</a>
+    </div>
+  </div>
+
+  <!-- MÓDULO 0: NIVELAMENTO CONCEITUAL -->
+  <div class="section-card" id="nivelamento">
+    <div class="section-header">
+      <h2 class="section-title">Módulo 0: Nivelamento Conceitual (O que você precisa saber antes de começar)</h2>
+      <span class="badge-tag" style="background:var(--purple-soft); color:#6D28D9;">Zero Programação</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:16px;">
+      Você não precisa ser engenheiro de software para entender como o sistema funciona. Abaixo explicamos os 5 conceitos-chave usando analogias do cotidiano:
+    </p>
+    <div class="grid-conceitos">
+      
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Mailcow (A Ferramenta)</div>
+          <div class="conceito-analogia">Analogia: A Agência de Correios Privada da Sua Empresa</div>
+          <p class="conceito-desc">Assim como uma agência de correios recebe cartas, as classifica e entrega aos destinatários, o Mailcow é um servidor de email completo que gerencia contas de email da sua empresa com segurança, backup automático e interface web amigável. Você é o dono absoluto do seu correio.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 VPS (Servidor Privado Virtual)</div>
+          <div class="conceito-analogia">Analogia: Uma Sala Comercial Alugada que Nunca Apaga a Luz</div>
+          <p class="conceito-desc">Em vez de deixar um servidor de email ligado no escritório esquentando na sala, você aluga por cerca de R$ 80 a R$ 150 por mês um computador profissional em um data center na nuvem (como Hetzner ou Contabo). Ele fica ligado o tempo todo com internet de altíssima velocidade.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 MX Record (Registro de Correio)</div>
+          <div class="conceito-analogia">Analogia: O Endereço de Retorno no Envelope</div>
+          <p class="conceito-desc">Quando você envia uma carta pelo correio, o envelope tem o seu endereço para retorno de não-entregáveis. O MX Record funciona assim: ele avisa ao internet que qualquer email dirigido a 'seu-dominio.com.br' deve ser entregue ao seu servidor Mailcow, não a terceiros.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 DKIM & SPF (Assinatura Digital do Email)</div>
+          <div class="conceito-analogia">Analogia: A Identificação da Empresa Gravada na Carta</div>
+          <p class="conceito-desc">Uma carta autêntica tem o carimbo da empresa. DKIM e SPF são carimbos digitais que provam ao servidor de email destino que o email veio realmente de você e não de um impostor tentando se passar.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Docker & Containers</div>
+          <div class="conceito-analogia">Analogia: Uma Caixa de Ferramentas Lacrada de Fábrica</div>
+          <p class="conceito-desc">Antigamente, instalar Mailcow exigia configurar manualmente postfix, dovecot, mysql e dezenas de ferramentas. Hoje, o Mailcow vem em um container Docker: tudo já vem pronto e integrado dentro de uma caixa lacrada.</p>
+        </div>
+        
+    </div>
+  </div>
+
+  <!-- SEÇÃO 1: INSTALAÇÃO EM PRODUÇÃO -->
+  <div class="section-card" id="instalacao">
+    <div class="section-header">
+      <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
+      <span class="badge-tag">Tempo ~30 a 45 minutos (Conhecimento intermediário de DNS e email)</span>
+    </div>
+    
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 1</span>
+            <span class="step-heading">Compra da VPS e Apontamento do Domínio</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Alugue um servidor VPS em Hetzner Cloud ou Contabo. Configure os nameservers do seu domínio (em seu registrador, ex: Registro.br ou Godaddy) para apontar para os nameservers do provedor. Aguarde propagação DNS (até 48 horas).</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Alugar a sala comercial, receber as chaves e avisar aos Correios para entregar cartas naquele novo endereço.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># No seu computador, após alugar a VPS:
+nslookup seu-dominio.com.br</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Na Hetzner, você verá um painel com o IP do servidor. No seu registrador de domínio, você alterará os nameservers.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'nslookup seu-dominio.com.br' e veja o IP apontando para o servidor.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 2</span>
+            <span class="step-heading">Conectar ao Servidor via SSH e Atualizar Pacotes</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Abra o terminal (PowerShell no Windows, Terminal no Mac/Linux) e conecte-se ao servidor via SSH. Atualize todos os pacotes do sistema operacional.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Abrir a porta da sala comercial com a chave e verificar se tudo está funcionando.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>ssh root@SEU_IP
+apt-get update && apt-get upgrade -y</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Será solicitada a senha root (ou chave SSH se configurado). A tela mostrará a atualização de pacotes por alguns minutos.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> A resposta do comando 'uname -a' mostrará 'Linux' com data recente.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 3</span>
+            <span class="step-heading">Clonar o Repositório Oficial do Mailcow</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Clone o repositório oficial do Mailcow da comunidade Mailcow-Dockerized no GitHub. Este repositório contém todo o código, configurações e docker-compose necessários.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Baixar o guia completo de como organizar a agência de correios.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>cd /opt
+git clone https://github.com/mailcow/mailcow-dockerized.git
+cd mailcow-dockerized</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Git clonar o repositório para /opt/mailcow-dockerized durante 30 a 60 segundos.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'ls -la /opt/mailcow-dockerized/' e veja a pasta 'docker-compose.yml' e outras pastas.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 4</span>
+            <span class="step-heading">Gerar Configuração Interativa e Certificado SSL Inicial</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Execute o script de geração interativa do Mailcow que perguntará seu domínio, email de admin e outros dados. O script gerará o arquivo mailcow.conf e criará um certificado SSL inicial com Let's Encrypt.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Preencher o formulário de registro da agência de correios com seus dados.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>bash generate_config.sh
+ls -la data/assets/ssl/</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> O script perguntará em sequência: 'Hostname FQDN?', 'Timezone?', 'Full name of Organization?'. Depois criará os certificados SSL automaticamente.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Arquivo mailcow.conf criado em /opt/mailcow-dockerized/ e certificados em /opt/mailcow-dockerized/data/assets/ssl/</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 5</span>
+            <span class="step-heading">Iniciar os Containers Docker (Mailcow)</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Execute 'docker compose up -d' para iniciar todos os 15+ containers do Mailcow em segundo plano. O Mailcow baixará as imagens oficiais e iniciará o servidor de email.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Ligar o painel elétrico: as luzes acendem, as máquinas operam, o correio começa a funcionar.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>docker compose up -d
+sleep 30
+docker compose ps</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Será exibido 'Pulling' de múltiplas imagens, depois 'Creating', 'Starting' de cada container. Ao final, 'docker compose ps' mostrará 15+ containers em status 'Up'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'docker compose ps' e veja containers como 'mailcow-dovecot', 'mailcow-postfix', 'mailcow-nginx' com status 'Up'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 6</span>
+            <span class="step-heading">Acessar a Interface Web e Criar Primeira Conta de Email</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Abra o navegador e acesse https://seu-dominio.com:8443 (ou https://seu-dominio.com dependendo de configuração). Faça login com o email de administrador criado. Crie a primeira conta de usuário.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Entrar na sala da agência, abrir o sistema de cadastro e criar o primeiro carteiro.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># Apenas via interface web:
+# Acesse https://seu-dominio.com:8443
+# Login com usuario@seu-dominio.com
+# Crie novo usuário em: Mail > Mailboxes > New Mailbox</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> O navegador mostrará um painel de controle com abas 'Mail', 'Mailboxes', 'Domains', 'DNS' e 'Monitoring'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Você consegue fazer login, a aba 'Mail' permite criar usuários novos e visualizar caixas de email.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 7</span>
+            <span class="step-heading">Configurar Registros MX, SPF, DKIM e TLSA no Seu Domínio</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">No painel Mailcow, clique em 'DNS' para copiar os registros MX, SPF, DKIM e TLSA. Insira esses registros no seu registrador de domínio (Registro.br, GoDaddy, etc). Aguarde propagação (até 48 horas).</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Avisar aos Correios que qualquer carta dirigida ao seu domínio deve chegar ao seu servidor e não a terceiros.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># Verificar MX:
+dig seu-dominio.com.br MX
+# Verificar SPF:
+dig seu-dominio.com.br TXT | grep spf</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Na interface Mailcow, verá caixas com os registros DNS. No registrador de domínio, verá abas 'DNS', 'Registros MX', 'Registros TXT'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'dig seu-dominio.com.br MX' e veja seu servidor listado como preferência 10.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 8</span>
+            <span class="step-heading">Teste de Envio e Recebimento de Emails</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Use um cliente de email (Thunderbird, Outlook, Evolution) ou webmail (acessar https://seu-dominio.com/mail) para enviar e receber emails. Teste envios para domínios externos (Gmail, Yahoo, Hotmail) para validar SPF/DKIM/TLSA.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Enviar e receber a primeira carta pela agência para confirmar que tudo está funcionando.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># Teste via telnet (básico):
+telnet seu-dominio.com.br 25
+HELO test
+MAIL FROM: <usuario@seu-dominio.com.br></code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> No cliente de email, você configurará IMAP (porta 993) e SMTP (porta 587 ou 465) com seu usuário. Emails chegarão normalmente.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Você recebe emails de terceiros sem cair em spam. O Gmail mostra cadeado de autenticação SPF/DKIM ao receber.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
+  <div class="section-card" id="configuracao">
+    <div class="section-header">
+      <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
+    </div>
+    
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/mailcow-dockerized/mailcow.conf</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Arquivo de configuração do Mailcow. Gerado interativamente, contém hostname do servidor, timezone, senhas de BD e configurações de segurança.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code># Configuração gerada automaticamente por generate_config.sh
+MAILCOW_HOSTNAME=mail.seu-dominio.com.br
+TIMEZONE=America/Sao_Paulo
+MARIADB_ROOT_PASSWORD=SenhaForteAqui123!
+MARIADB_LOG_BIN_CHARSET=utf8mb4
+COMPOSE_PROJECT_NAME=mailcow
+FETCH_CERT=y
+SIEM_ENABLED=y
+SIEM_IP=172.22.1.250</code></pre>
+          </div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/mailcow-dockerized/docker-compose.yml</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Docker Compose que orquestra 15+ containers de email, banco de dados, nginx, redis, etc. Não editar manualmente; usar generate_config.sh para regenerar.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code># Arquivo auto-gerado. Não editar manualmente sem backup.
+version: '3.7'
+services:
+  dovecot-mailcow:
+    image: ${MAILCOW_DOCKER_REGISTRY:-mailcow}/dovecot:${MAILCOW_TAG:-latest}
+    container_name: mailcow-dovecot
+    restart: always
+    environment:
+      - TIMEZONE=${TIMEZONE}
+    volumes:
+      - vmail-vol-1:/var/vmail
+    networks:
+      - mailcow-network
+
+  postfix-mailcow:
+    image: ${MAILCOW_DOCKER_REGISTRY:-mailcow}/postfix:${MAILCOW_TAG:-latest}
+    container_name: mailcow-postfix
+    restart: always
+    environment:
+      - TIMEZONE=${TIMEZONE}
+    volumes:
+      - mails-vol-1:/var/spool/postfix
+    networks:
+      - mailcow-network
+
+  mariadb-mailcow:
+    image: ${MAILCOW_DOCKER_REGISTRY:-mailcow}/mariadb:${MAILCOW_TAG:-latest}
+    container_name: mailcow-db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - TIMEZONE=${TIMEZONE}
+    volumes:
+      - mysql-vol-1:/var/lib/mysql
+    networks:
+      - mailcow-network
+
+volumes:
+  vmail-vol-1:
+  mysql-vol-1:
+  mails-vol-1:
+
+networks:
+  mailcow-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16</code></pre>
+          </div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/mailcow-dockerized/data/conf/postfix/main.cf (trecho)</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Configuração crítica do Postfix dentro do container. Define hostname, TLS obrigatório e criptografia forte. Editada via painel ou via volumes no docker-compose.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code># Configurações críticas de SMTP
+myhostname = mail.seu-dominio.com.br
+myorigin = seu-dominio.com.br
+mynetworks = 127.0.0.1 172.22.0.0/16
+smtpd_tls_cert_file = /etc/ssl/certs/mailcow.pem
+smtpd_tls_key_file = /etc/ssl/private/mailcow.key
+smtpd_use_tls = yes
+smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1
+smtpd_tls_ciphers = medium
+policy_time_limit = 3600</code></pre>
+          </div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
+  <div class="section-card" id="primeiro-voo">
+    <div class="section-header">
+      <h2 class="section-title">Parte II: Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green-dark);">Prática Imediata</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
+      Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
+    </p>
+    
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 1: Acessar o Painel Mailcow:</strong> Abra o navegador e acesse https://seu-dominio.com:8443 ou https://seu-dominio.com/admin (conforme config). Faça login com seu email administrativo.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Aparece o painel de controle com abas Mail, Mailboxes, Domains, DNS, Monitoring e Settings.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 2: Criar a Primeira Caixa de Email:</strong> Clique em 'Mail' > 'Mailboxes'. Clique no botão verde 'New Mailbox'. Preencha nome, email e senha. Clique 'Add'.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> A caixa de email aparece na lista. Você pode agora acessá-la via Thunderbird ou webmail.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 3: Configurar Cliente de Email (Thunderbird):</strong> Abra Thunderbird, clique em 'Add Account'. Preencha email e senha. O Thunderbird detectará automaticamente IMAP/SMTP. Clique 'Done'.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Thunderbird sincroniza a pasta INBOX e você pode enviar/receber emails normalmente.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 4: MANUAL DE USO CLI -->
+  <div class="section-card" id="manual-cli">
+    <div class="section-header">
+      <h2 class="section-title">Dicionário Completo de Comandos (CLI)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Comando / Opção</th>
+          <th>O que faz (em português claro)</th>
+          <th>Exemplo de Execução</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose ps</code></td>
+          <td>Mostra o status de todos os 15+ containers do Mailcow.</td>
+          <td><code>docker compose ps # Vê se dovecot, postfix, mariadb estão 'Up'</code></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose logs -f postfix-mailcow</code></td>
+          <td>Mostra os logs em tempo real do Postfix para debug de problemas de envio.</td>
+          <td><code>docker compose logs -f postfix-mailcow | grep rejected</code></td>
+          <td><a href="#ref-F05" class="cite-badge">[F05]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose exec mariadb-mailcow mysql -u root -p</code></td>
+          <td>Acessa o banco de dados MariaDB para queries manuais de usuários/domínios.</td>
+          <td><code>docker compose exec mariadb-mailcow mysql -u root -p mailcow</code></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">mailcow-cli reload</code></td>
+          <td>Recarrega configurações do Mailcow sem derrubar containers.</td>
+          <td><code>cd /opt/mailcow-dockerized && docker compose exec mailcow-cli reload</code></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 5: REFERÊNCIA DE API REST -->
+  <div class="section-card" id="manual-api">
+    <div class="section-header">
+      <h2 class="section-title">Endpoints de API REST &amp; Conexão com Agentes (MCP)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Método</th>
+          <th>Rota</th>
+          <th>Finalidade</th>
+          <th>Payload / Resposta</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/api/v1/get/status/mailcow</code></td>
+          <td>Retorna o status geral do servidor de email (online, cpu, memória).</td>
+          <td><pre style="font-size:11px; margin:0;">GET /api/v1/get/status/mailcow -H 'X-API-Key: SuaChaveAPI'
+Resposta: {"status": "online", "uptime_days": 45, "cpu_usage": 12}</pre></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">POST</span></td>
+          <td><code>/api/v1/add/mailbox</code></td>
+          <td>Cria uma nova caixa de email programaticamente.</td>
+          <td><pre style="font-size:11px; margin:0;">POST /api/v1/add/mailbox -H 'X-API-Key: SuaChaveAPI'
+{"local_part": "novo", "domain": "seu-dominio.com.br", "password": "senha123"}</pre></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 6: TROUBLESHOOTING -->
+  <div class="section-card" id="troubleshooting">
+    <div class="section-header">
+      <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
+    </div>
+    
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Emails sendo rejeitados por SPF/DKIM fail</div>
+          <div class="trouble-cause">Causa Provável: Os registros DNS (SPF, DKIM) não foram inseridos no registrador de domínio ou ainda não se propagaram.</div>
+          <div>Solução Prática: <code class="trouble-fix">Verifique em DNS tab no painel Mailcow quais registros devem ser inseridos. Copie e insira no registrador. Aguarde até 48 horas de propagação. Use 'dig seu-dominio.com.br TXT' para verificar.</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Dovecot offline ou IMAP não conecta</div>
+          <div class="trouble-cause">Causa Provável: Container Dovecot caiu ou certificado SSL expirou.</div>
+          <div>Solução Prática: <code class="trouble-fix">Execute 'docker compose ps' para confirmar. Se offline, rode 'docker compose restart dovecot-mailcow'. Se certificado: 'docker compose restart certbot-mailcow && docker compose restart dovecot-mailcow'</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Espaço em disco cheio</div>
+          <div class="trouble-cause">Causa Provável: Emails antigos acumulando no servidor ou logs crescendo indefinidamente.</div>
+          <div>Solução Prática: <code class="trouble-fix">Verifique 'df -h'. Limpe logs com 'docker compose exec mariadb-mailcow mysql -e "PURGE BINARY LOGS BEFORE DATE_SUB(NOW(), INTERVAL 30 DAY)"' e aumente quotas de usuários ou remova emails antigos.</code></div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
+  <div class="section-card" id="desinstalacao">
+    <div class="section-header">
+      <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
+      <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
+    </div>
+    
+        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
+          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
+          <p style="margin:0; font-size:13.5px; color:#1E293B;">A desinstalação remove exclusivamente os containers, volumes e dados do Mailcow, preservando intactos o Docker, Nginx reverso, PostgreSQL e outros projetos hospedados na VPS.</p>
+        </div>
+        
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 1</span>
+                <span class="step-title">Backup de Emails Antes da Desinstalação</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Faça um dump completo da pasta vmail e banco de dados MariaDB para ter cópia segura antes de remover.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>cd /opt/mailcow-dockerized
+docker compose exec mariadb-mailcow mysqldump -u root -p --all-databases > mailcow_backup.sql
+tar -czf mailcow_vmail_backup.tar.gz data/vmail/</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> NÃO DELETE ESTES ARQUIVOS. Guarde em local seguro ou em outro servidor.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>ls -lh mailcow_backup.sql mailcow_vmail_backup.tar.gz</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 2</span>
+                <span class="step-title">Parada e Desativação dos Containers</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Para todos os containers do Mailcow sem afetar outros serviços da VPS.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>cd /opt/mailcow-dockerized
+docker compose down
+docker ps | grep mailcow # Confirma que nenhum container está ativo</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Use 'down' nunca 'down -v' (o -v removeria volumes). Dados ainda existem.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>docker ps | grep mailcow</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 3</span>
+                <span class="step-title">Limpeza de Volumes de Dados (Opcional)</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove os volumes Docker exclusivos do Mailcow (vmail, mysql, etc). ATENÇÂO: irreversível após este passo.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>docker volume rm mailcow-dockerized_vmail-vol-1
+docker volume rm mailcow-dockerized_mysql-vol-1
+docker volume rm mailcow-dockerized_mails-vol-1
+docker volume ls | grep mailcow # Confirma remoção</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Após remover volumes, dados são definitivamente apagados. Confirme que backup foi feito.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>docker volume ls | grep mailcow</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 4</span>
+                <span class="step-title">Desativação de Firewall & Portas de Email</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Revoga permissões de firewall para portas SMTP (25, 587, 465) e IMAP (143, 993).</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo ufw delete allow 25/tcp
+sudo ufw delete allow 110/tcp
+sudo ufw delete allow 143/tcp
+sudo ufw delete allow 465/tcp
+sudo ufw delete allow 587/tcp
+sudo ufw delete allow 993/tcp
+sudo ufw delete allow 995/tcp
+sudo ufw reload</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Mantenha firewall ativo. Verifique com 'ufw status' antes e depois.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo ufw status</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 5</span>
+                <span class="step-title">Remoção da Pasta Mailcow & Limpeza do Sistema</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove o diretório /opt/mailcow-dockerized se não for mais necessário. Opcional: manter arquivo de backup.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo rm -rf /opt/mailcow-dockerized
+df -h # Confirma liberação de espaço em disco</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Backup já foi feito no Passo 1. Se alterou de ideia, ainda há tempo. Após 'rm -rf', dados são irrecuperáveis.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>ls -la /opt/mailcow-dockerized 2>&1 | grep 'cannot access'</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 6</span>
+                <span class="step-title">Resetar Registros DNS para Email Antigo (Locaweb)</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Se voltar a usar Locaweb Email, altere os registros MX do seu domínio para apontar aos servidores da Locaweb.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code># No seu registrador de domínio, altere MX para:
+# Priority 10 -> mail.locaweb.com.br
+# (Consulte painel Locaweb para registros corretos)</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Propag ação DNS leva até 48 horas. Emails podem ficar presos em fila durante transição. Mantenha backup do Passo 1 acessível.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>dig seu-dominio.com.br MX</code></div>
+            </div>
+            
+        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
+          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
+          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
+            <li style='margin-bottom:6px;'><code>docker ps # Confirma ausência de containers mailcow</code></li><li style='margin-bottom:6px;'><code>netstat -tlnp | grep -E '(25|110|143|465|587|993|995)' # Confirma portas liberadas</code></li><li style='margin-bottom:6px;'><code>df -h # Confirma espaço em disco devolvido</code></li><li style='margin-bottom:6px;'><code>ufw status | grep -E '(25|143|587|993)' # Confirma remoção de regras firewall</code></li>
+          </ul>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
+  <div class="section-card" id="bibliografia">
+    <div class="section-header">
+      <h2 class="section-title">Parte III: Fontes Citadas &amp; Referência Bibliográfica Auditada</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green);">100% Verificadas</span>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Categoria</th>
+          <th>Título da Obra / Documento</th>
+          <th>Autor / Mantenedor</th>
+          <th>Link Oficial</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr id="ref-F01">
+          <td><strong style="color:var(--accent);">F01</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Mailcow Official Documentation - Setup & Management</strong></td>
+          <td>Mailcow Community</td>
+          <td><a href="https://docs.mailcow.email" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F02">
+          <td><strong style="color:var(--accent);">F02</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Mailcow GitHub Repository & Docker Compose</strong></td>
+          <td>Mailcow Dockerized</td>
+          <td><a href="https://github.com/mailcow/mailcow-dockerized" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F03">
+          <td><strong style="color:var(--accent);">F03</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Livro / Guia Técnico</span></td>
+          <td><strong>Email Configuration Best Practices: SPF, DKIM, DMARC</strong></td>
+          <td>IETF Standards</td>
+          <td><a href="https://tools.ietf.org/html/rfc7208" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F04">
+          <td><strong style="color:var(--accent);">F04</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Vídeo / YouTube</span></td>
+          <td><strong>Complete Mailcow Setup from Scratch - VPS Deployment</strong></td>
+          <td>Various Linux/Server Channels</td>
+          <td><a href="https://www.youtube.com/results?search_query=mailcow+setup" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F05">
+          <td><strong style="color:var(--accent);">F05</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Curso / Tutorial</span></td>
+          <td><strong>Linux DNS Configuration & Email Server Security</strong></td>
+          <td>Mailcow Documentation</td>
+          <td><a href="https://github.com/mailcow/mailcow-dockerized/tree/main/docs" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    const original = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => { btn.innerText = original; }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trilha Cronológica de Aprendizado: Mailcow</title>
+  <style>
+
+  :root {
+    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --paper: #F8FAFC;
+    --surface: #FFFFFF;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --rule: #CBD5E1;
+    --rule-soft: #E2E8F0;
+    --accent: #0284C7;
+    --accent-dark: #0369A1;
+    --accent-soft: #E0F2FE;
+    --green: #10B981;
+    --green-dark: #065F46;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .container { max-width: 980px; margin: 0 auto; }
+  .header-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    background: var(--paper);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--rule-soft);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat-val { font-size: 15px; font-weight: 800; color: var(--ink); }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    bottom: 20px;
+    left: 11px;
+    width: 2px;
+    background: var(--rule);
+  }
+  .timeline-node {
+    position: relative;
+    margin-bottom: 36px;
+  }
+  .timeline-marker {
+    position: absolute;
+    left: -32px;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 4px var(--paper);
+  }
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .phase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--rule-soft);
+    padding-bottom: 8px;
+  }
+  .phase-title { font-size: 18px; font-weight: 800; color: var(--ink); }
+  .phase-time { font-size: 12px; font-weight: 700; color: var(--accent-dark); background: var(--accent-soft); padding: 2px 8px; border-radius: 4px; }
+  .phase-goal { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
+
+  .resource-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    transition: background 0.2s;
+  }
+  .resource-item:hover { background: #F1F5F9; }
+  .chk-item {
+    margin-top: 4px;
+    cursor: pointer;
+    width: 17px;
+    height: 17px;
+    accent-color: var(--green);
+  }
+  .resource-content { flex: 1; }
+  .resource-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .resource-title a { color: var(--ink); text-decoration: none; }
+  .resource-title a:hover { color: var(--accent); }
+  .resource-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--rule-soft);
+    color: var(--ink-2);
+  }
+  .lang-badge-br { background: #DCFCE7; color: #166534; font-weight: 800; }
+  .lang-badge-en { background: #EFF6FF; color: #1E40AF; font-weight: 800; }
+
+  .resource-takeaway {
+    font-size: 13px;
+    color: var(--ink-2);
+    margin-top: 5px;
+  }
+  .resource-dica-ptbr {
+    font-size: 12px;
+    color: #92400E;
+    background: #FEF3C7;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    display: inline-block;
+  }
+  .resource-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    display: flex;
+    gap: 12px;
+  }
+  .btn-link {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-dark);
+    text-decoration: none;
+  }
+  .btn-link:hover { text-decoration: underline; }
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="header-card">
+    <div class="breadcrumb">
+      <a href="../../listas-open-source/vert-locaweb-email.html">← Voltar ao Dossiê Vertical Locaweb-Email</a>
+      &nbsp;·&nbsp;
+      <a href="../manuais/manual-mailcow-vps-e-uso.html">Ver Manual de Engenharia 📖</a>
+    </div>
+    <span class="badge-tag">Jornada Pedagógica Autoguiada · Brasil First</span>
+    <h1>Trilha de Aprendizado: Mailcow</h1>
+    <p class="deck">
+      Roteiro cronológico passo a passo para dominar a ferramenta a partir de fontes verificadas, priorizando materiais em língua portuguesa (PT-BR) e fornecendo orientações práticas de tradução assistida para conteúdos internacionais.
+    </p>
+
+    <!-- HERO STATS -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">Tempo Total Estimado</span>
+        <span class="stat-val" style="color:var(--accent-dark);">8 horas de imersão guiada (No seu próprio ritmo)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Fases de Estudo</span>
+        <span class="stat-val">5 Módulos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Recursos Auditados</span>
+        <span class="stat-val">13 Conteúdos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Progresso do Operador</span>
+        <span class="stat-val" id="progresso-txt" style="color:var(--green);">0 de 13</span>
+      </div>
+    </div>
+
+    <!-- BARRA DE PROGRESSO -->
+    <div style="margin-top: 16px; background: var(--rule-soft); border-radius: 4px; height: 8px; overflow: hidden;">
+      <div id="progresso-bar" style="width: 0%; height: 100%; background: var(--green); transition: width 0.3s;"></div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+    
+        <div class="timeline-node">
+          <div class="timeline-marker">1</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Fase 1: Fundamentos de Email & Soberania de Dados (Brasil First)</h2>
+              <span class="phase-time">⏱️ ~1h 30min</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Entender por que ter um servidor de email próprio é crucial para empresas brasileiras sob a LGPD. Aprender como funciona a infraestrutura de email (SMTP, IMAP, POP3) sem enviar dados para provedores estrangeiros.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://www.aberta.org.br/" target="_blank" rel="noopener noreferrer">Email, Privacidade e Conformidade LGPD em Servidores Brasileiros</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Artigo Técnico / Guia Aberto</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Diferenças entre armazenar emails em nuvens estrangeiras (Gmail, Office 365) versus manter dados sob custódia interna. Requisitos de backup, segurança física e conformidade LGPD.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Conteúdo 100% nativo em Português do Brasil.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 45 min de leitura</span>
+                  <span>👤 Comunidade Brasileira de Open Source & Privacidade</span>
+                  <a href="https://www.aberta.org.br/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://tools.ietf.org/html/rfc5321" target="_blank" rel="noopener noreferrer">Protocolo SMTP, IMAP e POP3: Como Funciona o Sistema de Correios Digital</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Documentação Técnica</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Entender as 3 camadas de um sistema de email: SMTP (envio), IMAP (recebimento com pastas), POP3 (recebimento simples). Razão pela qual o IMAP é moderno.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Abra no Chrome ou Edge, clique com botão direito e selecione 'Traduzir para o português'.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 45 min de leitura</span>
+                  <span>👤 IETF Standards & Linux Foundation</span>
+                  <a href="https://tools.ietf.org/html/rfc5321" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">2</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Fase 2: Setup Mailcow na VPS & Primeiros Passos</h2>
+              <span class="phase-time">⏱️ ~2h 15min</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Acompanhar tutoriais para colocar Mailcow em produção sem medo. Desde aluguel de VPS até primeira caixa de email funcionando.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mailcow.email/b_getting_started/b_installation/" target="_blank" rel="noopener noreferrer">Como Criar uma VPS e Instalar Mailcow com Docker</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Guia Prático / Tutorial</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Passo 1: Alugar VPS. Passo 2: SSH e conectar. Passo 3: Clonar repositório Mailcow. Passo 4: gerar_config.sh. Passo 5: docker compose up -d.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Passo a passo didático em língua portuguesa, acessível a leigos.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 90 min de estudo + prática</span>
+                  <span>👤 Comunidade DevOps Brasil & Mailcow PT</span>
+                  <a href="https://docs.mailcow.email/b_getting_started/b_installation/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://github.com/mailcow/mailcow-dockerized/tree/main/docs" target="_blank" rel="noopener noreferrer">Playbook Oficial de Deploy Mailcow & Segurança Inicial</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Código & Playbook</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Configuração de firewall UFW para bloquear portas perigosas e liberar apenas SMTP (25, 587), IMAP (143, 993), HTTP/HTTPS (80, 443) e SSH (22).</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Consulte a Seção II do nosso Manual Operacional em Português ou use a tradução automática.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 45 min de prática guiada</span>
+                  <span>👤 Mailcow DevOps Core</span>
+                  <a href="https://github.com/mailcow/mailcow-dockerized/tree/main/docs" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">3</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Fase 3: Configuração de DNS, SPF, DKIM, DMARC & TLSA</h2>
+              <span class="phase-time">⏱️ ~1h 45min</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Dominar a configuração de registros DNS para garantir que seus emails cheguem em caixas de entrada e não em spam. Aprender o que é cada protocolo de autenticação.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mailcow.email/b_getting_started/b_installation/b_dns/" target="_blank" rel="noopener noreferrer">MX Record, SPF, DKIM & DMARC: Os 4 Pilares de Autenticação de Email</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Guia Técnico</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> MX: diz ao internet onde está seu servidor. SPF: autoriza IPs que podem enviar. DKIM: assina digitalmente cada email. DMARC: política de rejeição se SPF/DKIM falhar. TLSA: criptografa conexão entre servidores.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Artigo explicativo em português com metáforas do cotidiano.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 50 min de leitura</span>
+                  <span>👤 Fábrica Universal Brasil & Comunidade Email</span>
+                  <a href="https://docs.mailcow.email/b_getting_started/b_installation/b_dns/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://mxtoolbox.com/" target="_blank" rel="noopener noreferrer">Testador de Registros DNS Online & Verificação de Propagação</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Ferramenta Online</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F04]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Uso de mxtoolbox.com para verificar se seus registros MX, SPF, DKIM já se propagaram. Teste de blacklist (spam checkers).</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Interface visual em inglês, mas muito intuitiva. Digite seu domínio e veja os registros.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 30 min de prática</span>
+                  <span>👤 MXToolbox & Google Admin</span>
+                  <a href="https://mxtoolbox.com/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://www.youtube.com/results?search_query=email+SPF+DKIM+DMARC+troubleshooting" target="_blank" rel="noopener noreferrer">Troubleshooting de Emails em Spam & Ajustes de DMARC Policy</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Vídeo Tutorial / YouTube</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F04]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Razões comuns de rejeição (SPF fail, DKIM fail, DMARC policy). Uso de headers de bounce para diagnosticar.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Pressione a tecla 'C' e ative legendas automáticas em português.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 25 min de vídeo</span>
+                  <span>👤 Email Deliverability Experts</span>
+                  <a href="https://www.youtube.com/results?search_query=email+SPF+DKIM+DMARC+troubleshooting" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">4</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Fase 4: Operação Diária, Monitoramento & Segurança</h2>
+              <span class="phase-time">⏱️ ~1h 30min</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Aprender a gerenciar o Mailcow no dia a dia: criar usuários, monitorar logs, detectar ataques de spam, fazer backups automáticos.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mailcow.email/b_getting_started/b_login/" target="_blank" rel="noopener noreferrer">Interface Mailcow: Criação de Domínios, Usuários, Quotas & Aliases</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Tutorial Interativo</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Menu 'Mail': domínios. Menu 'Mailboxes': contas. Menu 'Aliases': redirecionamentos. Menu 'Resources': quota de armazenamento. Menu 'Monitoring': logs em tempo real.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Guia passo a passo em português com screenshots da interface.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 45 min</span>
+                  <span>👤 Fábrica Universal Brasil</span>
+                  <a href="https://docs.mailcow.email/b_getting_started/b_login/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mailcow.email/b_getting_started/b_monitoring/" target="_blank" rel="noopener noreferrer">Monitoramento, Alertas & Limpeza de Filas de Email</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Guia Técnico</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Verificação de fila de emails (Postfix queue). Logs de rejeição. Dashboard de CPU/RAM/Disco. Alertas automáticos se cotas forem atingidas.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Consulte a Seção IV do nosso Manual em Português.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 30 min</span>
+                  <span>👤 Mailcow Ops</span>
+                  <a href="https://docs.mailcow.email/b_getting_started/b_monitoring/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mailcow.email/b_getting_started/b_backup/" target="_blank" rel="noopener noreferrer">Backup Automático de Emails & Banco de Dados com Mailcow</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Playbook / Tutorial</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Backup diário automatizado de vmail/ e MariaDB. Armazenamento em disco externo ou cloud (AWS S3, Backblaze).</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Script shell com comentários em português.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 15 min</span>
+                  <span>👤 Comunidade DevOps Brasil</span>
+                  <a href="https://docs.mailcow.email/b_getting_started/b_backup/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">5</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Fase 5: Segurança Avançada, Validação SSL & Desinstalação Cirúrgica</h2>
+              <span class="phase-time">⏱️ ~1h 30min</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Implementar segurança adicional (fail2ban, rate limiting), renovação automática de certificados SSL, e aprender a desinstalar Mailcow sem danificar outros serviços.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mailcow.email/b_getting_started/b_security/" target="_blank" rel="noopener noreferrer">Hardening de Mailcow: Fail2ban, Rate Limiting & Segurança de Senhas</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Guia Técnico</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Ativar fail2ban para bloquear IPs com muitas tentativas de login. Rate limiting em Postfix para prevenir spam. Política de senhas forte (12+ caracteres, maiúsculas, números, símbolos).</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Artigo explicativo em português com comandos prontos.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 40 min</span>
+                  <span>👤 Fábrica Universal & Comunidade Email</span>
+                  <a href="https://docs.mailcow.email/b_getting_started/b_security/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mailcow.email/b_getting_started/b_ssl/" target="_blank" rel="noopener noreferrer">Certificados SSL/TLS Automáticos com Let's Encrypt & Renovação</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
+                  <span class="resource-badge">Documentação Técnica</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Let's Encrypt emite certificados gratuitos, válidos 90 dias. Mailcow renova automaticamente 30 dias antes de expirar. Verificação com 'docker compose logs certbot-mailcow'.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Mailcow gerencia automaticamente; leia para entender o processo.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 30 min</span>
+                  <span>👤 Let's Encrypt & Mailcow</span>
+                  <a href="https://docs.mailcow.email/b_getting_started/b_ssl/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mailcow.email/" target="_blank" rel="noopener noreferrer">Desinstalação Cirúrgica de Mailcow & Volta para Locaweb (se necessário)</a>
+                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
+                  <span class="resource-badge">Guia Prático</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Backup de dados ANTES de deletar. Remoção de containers com 'docker compose down'. Limpeza de volumes. Resetar firewall. Alterar registros MX se voltar a usar Locaweb.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Passo a passo com checklist de segurança.</div>
+                <div class="resource-meta">
+                  <span>⏱️ 20 min</span>
+                  <span>👤 Fábrica Universal Brasil</span>
+                  <a href="https://docs.mailcow.email/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const checkboxes = document.querySelectorAll('.chk-item');
+  checkboxes.forEach((chk, idx) => {
+    const key = 'trilha_chk_' + idx;
+    chk.checked = localStorage.getItem(key) === 'true';
+    chk.addEventListener('change', () => {
+      localStorage.setItem(key, chk.checked);
+      atualizarProgresso();
+    });
+  });
+  atualizarProgresso();
+
+  function atualizarProgresso() {
+    const total = checkboxes.length;
+    const marcados = Array.from(checkboxes).filter(c => c.checked).length;
+    const pct = total ? Math.round((marcados / total) * 100) : 0;
+    const bar = document.getElementById('progresso-bar');
+    const txt = document.getElementById('progresso-txt');
+    if (bar) bar.style.width = pct + '%';
+    if (txt) txt.innerText = marcados + ' de ' + total + ' concluídos (' + pct + '%)';
+  }
+});
+</script>
+
+</body>
+</html>
