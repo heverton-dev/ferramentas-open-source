@@ -21,7 +21,15 @@ def console_utf8():
 
 console_utf8()
 
-from gerar_lista_horizontal_tripartite import compilar_lista_horizontal_tripartite as compilar_lista_tripartite
+from compilar_lista_horizontal_tripartite import compilar_lista_horizontal_tripartite as compilar_nova_lista
+from gerar_lista_horizontal_tripartite import compilar_lista_horizontal_tripartite as compilar_lista_legada
+
+def compilar_lista_tripartite(slug: str) -> bool:
+    slug_limpo = slug.replace("list-", "").replace(".html", "").replace(".json", "")
+    json_path = BASE_DIR / "scripts" / "data" / f"lista-{slug_limpo}.json"
+    if json_path.exists():
+        return compilar_nova_lista(slug_limpo)
+    return compilar_lista_legada(slug_limpo)
 
 def executar_fluxo1(slug: str = None) -> bool:
     print("\n" + "="*70)

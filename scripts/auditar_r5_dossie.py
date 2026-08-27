@@ -25,11 +25,10 @@ if sys.platform == "win32":
 def auditar_conformidade_r5():
     padroes = ["list-*.html", "tco-*.html", "guia-*.html"]
     arquivos_out = []
-    arquivos_doc = []
     for p in padroes:
+        arquivos_out.extend(glob.glob(f"output/01-listas-horizontais/**/{p}", recursive=True))
         arquivos_out.extend(glob.glob(f"output/listas-open-source/{p}"))
-        arquivos_doc.extend(glob.glob(f"docs/listas/{p}"))
-    todos_arquivos = sorted(list(set(arquivos_out + arquivos_doc)))
+    todos_arquivos = sorted(list(set(arquivos_out)))
 
     print("=" * 80)
     print(" 🔍 AUDITORIA DE CONFORMIDADE COM A REGRA R5 (PADRÃO DOSSIÊ EXECUTIVO DIAMANTE)")
