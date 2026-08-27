@@ -99,15 +99,51 @@ def inicializar_banco():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 saas_slug TEXT NOT NULL UNIQUE,
                 saas_nome TEXT NOT NULL,
-                preco_anual_dolar REAL,
-                quinteto_ferramentas TEXT NOT NULL,
-                total_ferramentas INTEGER DEFAULT 5,
-                gate_r5v TEXT DEFAULT 'APROVADO',
-                gate_r18 TEXT DEFAULT 'APROVADO',
+                preco_medio TEXT,
+                data_execucao TEXT NOT NULL,
+                duracao_seg REAL,
+                tokens_totais INTEGER,
+                gate_r5v TEXT,
+                gate_r18 TEXT,
+                gate_r11 TEXT,
+                gate_osi TEXT,
+                caminho_bundle TEXT,
+                atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        # Tabela de Catálogo Mestre Canônico de Ferramentas Open Source (Anti-Duplicação)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS catalogo_ferramentas (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                slug TEXT NOT NULL UNIQUE,
+                nome TEXT NOT NULL,
+                licenca_osi TEXT,
+                categoria_primaria TEXT,
+                repo_url TEXT,
+                stack_tecnologica TEXT,
+                descricao_canonica TEXT,
+                saas_substituidos TEXT,
+                total_mencoes INTEGER DEFAULT 1,
+                possui_manual_vps BOOLEAN DEFAULT 0,
+                atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        # Tabela de Matriz de Rastreabilidade Cruzada de Materiais
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS rastreabilidade_materiais (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ferramenta_slug TEXT NOT NULL,
+                tipo_material TEXT NOT NULL,
+                origem_slug TEXT NOT NULL,
+                titulo_material TEXT NOT NULL,
+                posicao_ou_rank TEXT,
                 caminho_html TEXT,
                 caminho_md TEXT,
                 caminho_pdf TEXT,
-                atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(ferramenta_slug, tipo_material, origem_slug)
             )
         """)
 
@@ -270,6 +306,116 @@ def registrar_execucao_gate(camada: str, gate_nome: str, exit_code: int, detalhe
         """, (camada, gate_nome, exit_code, detalhes))
         conn.commit()
 
+def registrar_ferramenta_catalogo(dados: dict):
+    """Registra ou atualiza uma ferramenta no catálogo mestre canônico."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO catalogo_ferramentas (
+                slug, nome, licenca_osi, categoria_primaria, repo_url,
+                stack_tecnologica, descricao_canonica, saas_substituidos,
+                total_mencoes, possui_manual_vps, atualizado_em
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(slug) DO UPDATE SET
+                nome=excluded.nome,
+                licenca_osi=COALESCE(excluded.licenca_osi, catalogo_ferramentas.licenca_osi),
+                categoria_primaria=COALESCE(excluded.categoria_primaria, catalogo_ferramentas.categoria_primaria),
+                repo_url=COALESCE(excluded.repo_url, catalogo_ferramentas.repo_url),
+                stack_tecnologica=COALESCE(excluded.stack_tecnologica, catalogo_ferramentas.stack_tecnologica),
+                descricao_canonica=COALESCE(excluded.descricao_canonica, catalogo_ferramentas.descricao_canonica),
+                saas_substituidos=COALESCE(excluded.saas_substituidos, catalogo_ferramentas.saas_substituidos),
+                total_mencoes=catalogo_ferramentas.total_mencoes + 1,
+                possui_manual_vps=MAX(catalogo_ferramentas.possui_manual_vps, excluded.possui_manual_vps),
+                atualizado_em=CURRENT_TIMESTAMP
+        """, (
+            dados["slug"],
+            dados.get("nome", dados["slug"].title()),
+            dados.get("licenca_osi", "OSI"),
+            dados.get("categoria_primaria", "Geral"),
+            dados.get("repo_url", ""),
+            dados.get("stack_tecnologica", ""),
+            dados.get("descricao_canonica", ""),
+            dados.get("saas_substituidos", ""),
+            dados.get("total_mencoes", 1),
+            1 if dados.get("possui_manual_vps") else 0
+        ))
+        conn.commit()
+
+def registrar_rastreabilidade_material(dados: dict):
+    """Registra uma aparição/material cruzado para uma ferramenta."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO rastreabilidade_materiais (
+                ferramenta_slug, tipo_material, origem_slug, titulo_material,
+                posicao_ou_rank, caminho_html, caminho_md, caminho_pdf, atualizado_em
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(ferramenta_slug, tipo_material, origem_slug) DO UPDATE SET
+                titulo_material=excluded.titulo_material,
+                posicao_ou_rank=excluded.posicao_ou_rank,
+                caminho_html=excluded.caminho_html,
+                caminho_md=excluded.caminho_md,
+                caminho_pdf=excluded.caminho_pdf,
+                atualizado_em=CURRENT_TIMESTAMP
+        """, (
+            dados["ferramenta_slug"],
+            dados["tipo_material"],
+            dados["origem_slug"],
+            dados.get("titulo_material", ""),
+            dados.get("posicao_ou_rank", ""),
+            dados.get("caminho_html", ""),
+            dados.get("caminho_md", ""),
+            dados.get("caminho_pdf", "")
+        ))
+        conn.commit()
+
+def consultar_catalogo_ferramenta(slug: str) -> dict | None:
+    """Busca os dados canônicos de uma ferramenta no catálogo mestre."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM catalogo_ferramentas WHERE slug = ?", (slug,))
+        row = cursor.fetchone()
+        return dict(row) if row else None
+
+def listar_catalogo_completo() -> list[dict]:
+    """Retorna todas as ferramentas catalogadas ordenadas por nome."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM catalogo_ferramentas ORDER BY nome ASC")
+        return [dict(r) for r in cursor.fetchall()]
+
+def obter_rastreabilidade_ferramenta(slug: str) -> list[dict]:
+    """Retorna todos os materiais vinculados a uma ferramenta específica."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM rastreabilidade_materiais WHERE ferramenta_slug = ? ORDER BY tipo_material ASC, origem_slug ASC", (slug,))
+        return [dict(r) for r in cursor.fetchall()]
+
+def obter_estatisticas_catalogo() -> dict:
+    """Retorna métricas consolidadas do catálogo mestre."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) as total FROM catalogo_ferramentas")
+        total_ferramentas = cursor.fetchone()["total"]
+        cursor.execute("SELECT COUNT(DISTINCT origem_slug) as total FROM rastreabilidade_materiais WHERE tipo_material = 'horizontal'")
+        total_listas = cursor.fetchone()["total"]
+        cursor.execute("SELECT COUNT(DISTINCT origem_slug) as total FROM rastreabilidade_materiais WHERE tipo_material = 'vertical'")
+        total_verticais = cursor.fetchone()["total"]
+        cursor.execute("SELECT COUNT(*) as total FROM rastreabilidade_materiais WHERE tipo_material = 'manual_vps'")
+        total_manuais = cursor.fetchone()["total"]
+        return {
+            "total_ferramentas": total_ferramentas,
+            "total_listas": total_listas,
+            "total_verticais": total_verticais,
+            "total_manuais": total_manuais
+        }
+
 def consultar_resumo_estado() -> dict:
     inicializar_banco()
     with obter_conexao() as conn:
@@ -280,10 +426,13 @@ def consultar_resumo_estado() -> dict:
         cursor.execute("SELECT COUNT(*) as total FROM auditorias_gates WHERE status_saida != 0")
         gates_falha = cursor.fetchone()["total"]
 
+        stats_cat = obter_estatisticas_catalogo()
+
         return {
             "db_path": DB_PATH,
             "gates_sucesso": gates_ok,
-            "gates_falha": gates_falha
+            "gates_falha": gates_falha,
+            "estatisticas_catalogo": stats_cat
         }
 
 if __name__ == "__main__":

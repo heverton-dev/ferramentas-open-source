@@ -110,6 +110,17 @@ def executar_fluxo_total(camada: str = None, saas: str = None, ferramenta: str =
     print(f"   2. [Fluxo 2] output/02-dossies-verticais/vert-{saas}/")
     print(f"   3. [Fluxo 3] output/03-manuais-e-trilhas/{saas}/{ferramenta}/")
     print(f"   4. [Relatório] output/relatorios/ (Tripartite consolidado)")
+    
+    # Atualizar Catálogo Mestre & Portal Interativo
+    try:
+        from popular_catalogo_mestre import executar_ingestao_completa
+        from gerar_indice_mestre_cruzado import compilar_indice_mestre_completo
+        executar_ingestao_completa()
+        compilar_indice_mestre_completo()
+        print("   5. [Portal Mestre] output/INDICE-MESTRE.html (Catálogo Rastreável)")
+    except Exception as e:
+        print(f"   ⚠️ Aviso: Falha ao atualizar Índice Mestre: {e}")
+
     print("="*75 + "\n")
     return True
 
