@@ -145,7 +145,7 @@ def compilar_lista_horizontal_tripartite(slug_ou_json: str) -> bool:
     print(f"\n🚀 Compilando Lista Horizontal Tripartite: 'list-{slug_limpo}'")
     print(f"📁 Lendo dados JSON de: {data_file.name}")
 
-    with open(data_file, "r", encoding="utf-8") as f:
+    with open(data_file, "r", encoding="utf-8-sig") as f:
         dados = json.load(f)
 
     # Diretório soberano de saída
