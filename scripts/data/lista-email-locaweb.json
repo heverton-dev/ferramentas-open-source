@@ -1,0 +1,400 @@
+{
+  "slug": "email-locaweb",
+  "numero": 99,
+  "camada": "Camada 99 · Infraestrutura de Email Corporativo Soberano",
+  "titulo": "Email Corporativo Open-Source: Substituindo Locaweb Email",
+  "subtitulo": "Stack Soberana de Servidores SMTP/IMAP, Webmail e Gerenciamento de Domínios para Empresas que Rejeitam Fornecedores Brasileiros Proprietários",
+  "deck": "Compêndio determinístico de ferramentas open-source para substituição cirúrgica de Locaweb Email. Análise de 8 soluções maduras cobrindo 5 camadas: infraestrutura de servidor (SMTP/IMAP/POP3), plataforma de gerenciamento (painel admin), integrações (LDAP/AD, antispam, antivírus), segurança (TLS, DKIM, SPF, DMARC) e TCO operacional. Foco: autonomia 100% self-hosted, conformidade LGPD, redundância geográfica e deployabilidade em VPS.",
+  "hero": {
+    "total_ferramentas": 8,
+    "licencas_osi": "100%",
+    "economia_media": "85%",
+    "autonomia": "100% Self-Hosted"
+  },
+  "ferramentas": [
+    {
+      "rank": 1,
+      "slug": "mailcow",
+      "nome": "Mailcow Dockerized",
+      "subtitulo": "Suite Completa de Email com Painel Web, Segurança e Failover",
+      "saas_substituido": "Locaweb Email / cPanel Webmail / Plesk",
+      "economia_anual_str": "R$ 24.000/ano",
+      "licenca_osi": "GPL-3.0",
+      "categoria": "Email Server Suite",
+      "senioridade": "Intermediário",
+      "repositorio_github": "https://github.com/mailcow/mailcow-dockerized",
+      "o_que_faz": "Stack containerizado completo: Postfix (SMTP), Dovecot (IMAP/POP3), Nginx (webmail), Roundcube (cliente web), SOGo (calendário/contatos), gerenciamento de usuários, antispam (Rspamd), antivírus (ClamAV), certificados Let's Encrypt, backup automático e failover geo-redundante.",
+      "como_funciona": "Docker Compose orquestra 12+ containers. Nginx reverse-proxy expõe webmail, Admin UI para gerenciar domínios/mailboxes, Postfix recebe e roteia mensagens, Dovecot autentica e entrega via IMAP/POP3. Rspamd aprende padrões de spam em tempo real. ClamAV escaneia anexos.",
+      "comando_rapido": "git clone https://github.com/mailcow/mailcow-dockerized.git && cd mailcow-dockerized && ./generate_config.sh && docker-compose up -d",
+      "analise_economica": {
+        "custo_saas": "Locaweb Email cobra R$ 180-480/mês por domínio com cota limitada. Para 10 domínios: R$ 24.000/ano.",
+        "custo_os": "VPS 2 vCPU / 4 GB RAM (R$ 60-120/mês) + backup cloud (R$ 50/mês) = R$ 1.320-2.040/ano.",
+        "roi_meses": "Payback em 2 meses. Economia acumulada no ano: R$ 22.000+."
+      },
+      "requisitos_infra": {
+        "ram_minima": "4 GB RAM",
+        "cpu_minima": "2 vCPU",
+        "banco": "MariaDB/MySQL (já incluído no compose)",
+        "url_github": "https://github.com/mailcow/mailcow-dockerized"
+      },
+      "veredito": "Padrão-ouro da substituição Locaweb. Stack pronta para produção com segurança certificada (DKIM, SPF, DMARC, TLS), gerenciamento de usuários robusto e suporte ativo da comunidade.",
+      "passos_praticos": [
+        {
+          "titulo": "Deploy em VPS",
+          "descricao": "Clonar repositório, executar generate_config.sh, ajustar DNS records e iniciar com docker-compose up -d."
+        },
+        {
+          "titulo": "Configurar Domínios",
+          "descricao": "Acessar painel Admin (porta 80/443), adicionar domínio, criar mailboxes e configurar certificado TLS automático via Let's Encrypt."
+        },
+        {
+          "titulo": "Migração de Emails",
+          "descricao": "Usar ferramenta como Imapsync para migrar mensagens de Locaweb, configurar registros MX para apontar ao novo servidor."
+        }
+      ],
+      "design_system": {
+        "esforco": "Suite Integrada / UI Incluída",
+        "stack_ui": "Roundcube + SOGo + Admin UI customizável",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Roundcube totalmente personalizável via plugins. Logo, cores e domínio do webmail são configuráveis por usuário/domínio.",
+        "manutenibilidade_upgrades": "Releases mensais, breaking changes raros. Upgrade via docker-compose pull && docker-compose up -d."
+      }
+    },
+    {
+      "rank": 2,
+      "slug": "mailu",
+      "nome": "Mailu",
+      "subtitulo": "Email Server Minimalista com Foco em Simplicidade e Conformidade RGPD",
+      "saas_substituido": "Locaweb Email / Yandex Mail for Domains",
+      "economia_anual_str": "R$ 20.000/ano",
+      "licenca_osi": "MIT",
+      "categoria": "Email Server",
+      "senioridade": "Principiante",
+      "repositorio_github": "https://github.com/Mailu/Mailu",
+      "o_que_faz": "Stack docker minimalista: Postfix, Dovecot, Rainloop (webmail), gerenciamento de usuários via Admin Web UI, antispam, antivírus integrado. Filosofia: simples, seguro e RGPD-compliant (dados na UE por padrão).",
+      "como_funciona": "Docker Compose com 6 containers essenciais. Admin UI permite criar domínios e usuários sem SSH. Nginx expõe webmail com TLS obrigatório. Spamassassin (alternativa ao Rspamd) para filtros de spam customizáveis.",
+      "comando_rapido": "docker run -it --rm -v mailu:/data mailu/admin:latest admin create -p your_password admin@example.com",
+      "analise_economica": {
+        "custo_saas": "R$ 20.000/ano em serviços similares com menor robustez.",
+        "custo_os": "VPS 1 vCPU / 2 GB RAM (R$ 30-60/mês) = R$ 360-720/ano.",
+        "roi_meses": "Payback em 1-2 meses para deployments pequenos."
+      },
+      "requisitos_infra": {
+        "ram_minima": "2 GB RAM",
+        "cpu_minima": "1 vCPU",
+        "banco": "PostgreSQL (incluído)",
+        "url_github": "https://github.com/Mailu/Mailu"
+      },
+      "veredito": "Solução ideal para PMEs e startups que priorizam simplicidade sobre recursos avançados. RGPD-ready, sem overhead de gerenciamento complexo.",
+      "passos_praticos": [
+        {
+          "titulo": "Clonar e Configurar",
+          "descricao": "git clone Mailu, editar docker-compose.yml com domínio e senhas, docker-compose up -d."
+        },
+        {
+          "titulo": "Acessar Admin UI",
+          "descricao": "Abrir https://seu-servidor/admin, criar domínios, adicionar mailboxes, configurar cotas."
+        },
+        {
+          "titulo": "Apontar MX Records",
+          "descricao": "Atualizar DNS do seu domínio para apontar ao servidor Mailu; verificar DKIM/SPF via ferramentas online."
+        }
+      ],
+      "design_system": {
+        "esforco": "Minimal / UI Nativa",
+        "stack_ui": "Rainloop + Admin Web UI",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Rainloop permite customização de logo e paleta de cores via configuração. Admin UI é acessível e intuitiva.",
+        "manutenibilidade_upgrades": "Releases quadrimestrais estáveis. Upgrade simples via docker-compose pull."
+      }
+    },
+    {
+      "rank": 3,
+      "slug": "mail-in-a-box",
+      "nome": "Mail-in-a-Box",
+      "subtitulo": "Email + DNS + Certificados: Turnkey Solution para Não-Sysadmins",
+      "saas_substituido": "Locaweb Email / Google Workspace (solo email)",
+      "economia_anual_str": "R$ 15.000/ano",
+      "licenca_osi": "MIT",
+      "categoria": "Turnkey Email Solution",
+      "senioridade": "Principiante",
+      "repositorio_github": "https://github.com/mail-in-a-box/mailinabox",
+      "o_que_faz": "Instalador bash all-in-one que configura email (Postfix/Dovecot), DNS (Nsd), webmail (Roundcube), certificados (Let's Encrypt), backup (B2), antispam (Rspamd) e monitoramento em uma única VPS Ubuntu.",
+      "como_funciona": "Script bash automatiza setup completo sem docker. Postfix recebe mensagens, Dovecot entrega via IMAP, Roundcube expõe webmail. Box gerencia DNS records internos para MX, DKIM, SPF. Monitoramento de saúde do servidor.",
+      "comando_rapido": "curl https://mailinabox.email/setup.sh | sudo bash",
+      "analise_economica": {
+        "custo_saas": "R$ 15.000-30.000/ano em soluções gerenciadas.",
+        "custo_os": "VPS 1 vCPU / 2 GB RAM dedicado (R$ 50-100/mês) = R$ 600-1.200/ano.",
+        "roi_meses": "Payback em 1-2 meses. Ideal para pequenos negócios com 1-5 domínios."
+      },
+      "requisitos_infra": {
+        "ram_minima": "2 GB RAM",
+        "cpu_minima": "1 vCPU",
+        "banco": "PostgreSQL + OpenLDAP (instalados via script)",
+        "url_github": "https://github.com/mail-in-a-box/mailinabox"
+      },
+      "veredito": "Melhor escolha para entusiastas não-sysadmins. Instalação one-command, interface de admin clara, backup automático no Backblaze B2.",
+      "passos_praticos": [
+        {
+          "titulo": "Provisionar VPS",
+          "descricao": "Alugar VPS Ubuntu 20.04+ com IP estático dedicado, apontar domínio ao IP."
+        },
+        {
+          "titulo": "Executar Setup",
+          "descricao": "SSH na VPS, executar curl https://mailinabox.email/setup.sh | sudo bash, seguir prompts."
+        },
+        {
+          "titulo": "Configurar Domínios",
+          "descricao": "Acessar https://seu-servidor/admin, adicionar domínios, criar usuários, verificar status de entrega."
+        }
+      ],
+      "design_system": {
+        "esforco": "Turnkey / UI Admin Incluída",
+        "stack_ui": "Roundcube + Admin Control Panel nativo",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Roundcube oferece temas e plugins para white-label. Admin UI é responsiva.",
+        "manutenibilidade_upgrades": "Atualizações automáticas de segurança. Upgrades manuais via painel admin."
+      }
+    },
+    {
+      "rank": 4,
+      "slug": "postfix-dovecot",
+      "nome": "Postfix + Dovecot (Config Manual)",
+      "subtitulo": "Stack Clássico de Email para Sysadmins Avançados",
+      "saas_substituido": "Locaweb Email / Sendgrid (SMTP relay)",
+      "economia_anual_str": "R$ 18.000/ano",
+      "licenca_osi": "IPL / MIT",
+      "categoria": "MTA/MDA (Manual Setup)",
+      "senioridade": "Avançado",
+      "repositorio_github": "https://github.com/postfix/postfix (mirror) + https://github.com/dovecot/core",
+      "o_que_faz": "Dupla clássica: Postfix (Mail Transfer Agent) recebe/envia mensagens SMTP, Dovecot (Mail Delivery Agent) autentica usuários e entrega via IMAP/POP3. Requer configuração manual de TLS, DKIM, SPF, DMARC, antispam e backup.",
+      "como_funciona": "Instalação via apt-get, configuração de /etc/postfix/ e /etc/dovecot/. Spamd ou Rspamd opcional para antispam. Certificados Let's Encrypt para TLS. Banco de dados (MySQL/PostgreSQL) para gerenciar usuários e domínios.",
+      "comando_rapido": "apt-get install postfix dovecot-core dovecot-imapd dovecot-pop3d && postfix-config",
+      "analise_economica": {
+        "custo_saas": "R$ 18.000/ano em alternativas gerenciadas.",
+        "custo_os": "VPS 2 vCPU / 2 GB RAM (R$ 60-120/mês) + time de SysAdmin (~5-10h/mês) = R$ 1.440/ano + labor.",
+        "roi_meses": "ROI em 8-12 meses para equipes com expertise interna."
+      },
+      "requisitos_infra": {
+        "ram_minima": "2 GB RAM",
+        "cpu_minima": "1 vCPU",
+        "banco": "MySQL/PostgreSQL (externo recomendado)",
+        "url_github": "https://github.com/postfix/postfix"
+      },
+      "veredito": "Gold standard para sysadmins experientes. Máxima flexibilidade, controle granular, integração profunda com LDAP/Active Directory. Exige expertise e monitoramento ativo.",
+      "passos_praticos": [
+        {
+          "titulo": "Instalar Componentes",
+          "descricao": "apt-get install postfix dovecot-{core,imapd,pop3d,mysql} && systemctl enable postfix dovecot"
+        },
+        {
+          "titulo": "Configurar Postfix",
+          "descricao": "Editar /etc/postfix/main.cf para mydomain, mynetworks, TLS, DKIM. Configurar virtual_mailbox_domains e virtual_mailbox_maps com banco de dados."
+        },
+        {
+          "titulo": "Configurar Dovecot",
+          "descricao": "Editar /etc/dovecot/conf.d/10-ssl.conf para TLS, 10-auth.conf para autenticação MySQL, 10-mail.conf para mailbox_location."
+        }
+      ],
+      "design_system": {
+        "esforco": "CLI / Sem UI Nativa (requer Roundcube/Rainloop separado)",
+        "stack_ui": "Roundcube ou Rainloop como frontend opcional",
+        "white_label_nativo": false,
+        "mecanica_customizacao": "Requer integração manual de webmail. TLS, DKIM, SPF configuráveis via texto. Exige SSH acesso.",
+        "manutenibilidade_upgrades": "Upgrade manual de pacotes. Monitoramento via Nagios/Prometheus recomendado."
+      }
+    },
+    {
+      "rank": 5,
+      "slug": "sovereign",
+      "nome": "Sovereign",
+      "subtitulo": "Orquestrador Ansible para Email Soberano em VPS",
+      "saas_substituido": "Locaweb Email / iCloud Mail / ProtonMail (infraestrutura proprietária)",
+      "economia_anual_str": "R$ 12.000/ano",
+      "licenca_osi": "MIT",
+      "categoria": "IaC/Automation",
+      "senioridade": "Avançado",
+      "repositorio_github": "https://github.com/sovereign/sovereign",
+      "o_que_faz": "Playbooks Ansible que automatizam deploy de stack completo (Postfix, Dovecot, Roundcube, OpenVPN, Monitoring, Backups) em VPS. Configuração como código, versionável e reproduzível.",
+      "como_funciona": "Ansible provisiona servidor bare-metal com playbooks declarativos. Define roles para email, webmail, DNS, firewalls, monitoramento. TLS automático via Let's Encrypt. Backup para S3-compatible storage.",
+      "comando_rapido": "git clone https://github.com/sovereign/sovereign.git && ansible-playbook -i hosts site.yml",
+      "analise_economica": {
+        "custo_saas": "R$ 12.000-24.000/ano em infraestrutura gerenciada equivalente.",
+        "custo_os": "VPS 2 vCPU / 4 GB RAM (R$ 100/mês) = R$ 1.200/ano + Ansible expertise.",
+        "roi_meses": "Payback em 6-12 meses. ROI amplificado em deployments multi-servidor (replicas, failover)."
+      },
+      "requisitos_infra": {
+        "ram_minima": "2 GB RAM",
+        "cpu_minima": "2 vCPU",
+        "banco": "PostgreSQL (provisionado via Ansible)",
+        "url_github": "https://github.com/sovereign/sovereign"
+      },
+      "veredito": "Excelente para equipes DevOps/SRE que já usam Ansible. Infraestrutura como código, versionável em Git. Scaling horizontal facilitado (replica em múltiplos servidores).",
+      "passos_praticos": [
+        {
+          "titulo": "Preparar Ambiente Ansible",
+          "descricao": "Clonar repositório, ajustar hosts.ini com IPs de VPS, configurar vars/mail.yml com domínios."
+        },
+        {
+          "titulo": "Executar Playbook",
+          "descricao": "ansible-playbook -i hosts.ini site.yml (10-15 minutos de provisionamento automático)."
+        },
+        {
+          "titulo": "Validar & Monitorar",
+          "descricao": "Acessar dashboard de monitoramento (incluído), testar MX records, validar TLS/DKIM."
+        }
+      ],
+      "design_system": {
+        "esforco": "IaC / Declarativo",
+        "stack_ui": "Roundcube + Monitoramento nativo (Kibana/Grafana opcional)",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Playbooks Ansible modulares permitem customização profunda. Stack UI é personalizável via override de variáveis.",
+        "manutenibilidade_upgrades": "Versionável em Git. Upgrades via ansible-playbook com idempotência garantida."
+      }
+    },
+    {
+      "rank": 6,
+      "slug": "modoboa",
+      "nome": "Modoboa",
+      "subtitulo": "Email Server Modular com Painel Web Intuitivo & Webmail",
+      "saas_substituido": "Locaweb Email / cPanel Webmail",
+      "economia_anual_str": "R$ 16.000/ano",
+      "licenca_osi": "MIT",
+      "categoria": "Email Server",
+      "senioridade": "Intermediário",
+      "repositorio_github": "https://github.com/modoboa/modoboa",
+      "o_que_faz": "Suite de email com Postfix, Dovecot, Modoboa Admin (painel web Python/Django), Radicale (caldário/contatos), webmail nativo, antispam integrado, backup automático e relatórios de segurança.",
+      "como_funciona": "Python/Django backend gerencia domínios e usuários via REST API. Frontend responsivo para admin e usuários. Docker ou setup manual em CentOS/Ubuntu.",
+      "comando_rapido": "pip install modoboa && modoboa-admin.py collectstatic && python manage.py runserver 0.0.0.0:8000",
+      "analise_economica": {
+        "custo_saas": "R$ 16.000-20.000/ano em plataformas SaaS comparáveis.",
+        "custo_os": "VPS 2 vCPU / 4 GB RAM (R$ 80/mês) = R$ 960/ano.",
+        "roi_meses": "Payback em 2-3 meses. Escalável horizontalmente."
+      },
+      "requisitos_infra": {
+        "ram_minima": "4 GB RAM",
+        "cpu_minima": "2 vCPU",
+        "banco": "PostgreSQL/MySQL",
+        "url_github": "https://github.com/modoboa/modoboa"
+      },
+      "veredito": "Ótima alternativa com interface moderna (Python/Django) e comunidade ativa. Suporte comercial disponível (Modoboa SAS). Menos maduro que Mailcow, mas mais intuitivo.",
+      "passos_praticos": [
+        {
+          "titulo": "Instalar via pip/docker",
+          "descricao": "pip install modoboa || docker run -d modoboa/modoboa:latest"
+        },
+        {
+          "titulo": "Configurar Banco de Dados",
+          "descricao": "PostgreSQL/MySQL, executar modoboa-admin.py migrate"
+        },
+        {
+          "titulo": "Acessar Painel Admin",
+          "descricao": "https://seu-servidor/admin, criar super-usuário, adicionar domínios e mailboxes."
+        }
+      ],
+      "design_system": {
+        "esforco": "Web-Based UI / Python Backend",
+        "stack_ui": "Django + Bootstrap frontend responsivo",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "UI personalizável via temas. REST API permite extensões customizadas.",
+        "manutenibilidade_upgrades": "Releases regulares. Upgrade via pip install --upgrade modoboa."
+      }
+    },
+    {
+      "rank": 7,
+      "slug": "cuttlefish",
+      "nome": "Cuttlefish",
+      "subtitulo": "SMTP Relay Open-Source com Tracking de Entrega",
+      "saas_substituido": "SendGrid / Mailgun / AWS SES",
+      "economia_anual_str": "R$ 8.000/ano",
+      "licenca_osi": "GPL-3.0",
+      "categoria": "SMTP Relay",
+      "senioridade": "Intermediário",
+      "repositorio_github": "https://github.com/twentyfortyeight/cuttlefish",
+      "o_que_faz": "SMTP relay gerenciado para aplicações (Ruby on Rails, APIs, etc) enviarem emails sem manter própria infraestrutura MTA. Dashboard de estatísticas, tracking de bounces, retry automático.",
+      "como_funciona": "Ruby on Rails backend. Aplicações enviam para localhost:2525, Cuttlefish roteia via DNS MX records. Dashboard oferece analytics de entrega, bounce handling e rate limiting.",
+      "comando_rapido": "docker run -d -p 2525:2525 -e CUTTLEFISH_DOMAIN=seu-domain.com 1024mb/cuttlefish",
+      "analise_economica": {
+        "custo_saas": "SendGrid cobra US$ 0,10 por email ou R$ 150-300/mês para planos PRO. Para 100k/mês: R$ 1.200-3.600/ano.",
+        "custo_os": "VPS 1 vCPU / 2 GB RAM (R$ 40/mês) = R$ 480/ano.",
+        "roi_meses": "Payback em 1-2 meses para volume alto."
+      },
+      "requisitos_infra": {
+        "ram_minima": "1 GB RAM",
+        "cpu_minima": "1 vCPU",
+        "banco": "PostgreSQL (incluído no docker)",
+        "url_github": "https://github.com/twentyfortyeight/cuttlefish"
+      },
+      "veredito": "Excelente para aplicações que precisam de relay SMTP confiável com tracking. Ideal para SaaS internas, startups e integrações programáticas.",
+      "passos_praticos": [
+        {
+          "titulo": "Deploy via Docker",
+          "descricao": "docker run -d -p 2525:2525 1024mb/cuttlefish"
+        },
+        {
+          "titulo": "Configurar Aplicação",
+          "descricao": "Apontar SMTP_HOST=seu-servidor, SMTP_PORT=2525 em variáveis de ambiente."
+        },
+        {
+          "titulo": "Monitorar Entregas",
+          "descricao": "Acessar dashboard https://seu-servidor/admin para analytics de bounce/delivery."
+        }
+      ],
+      "design_system": {
+        "esforco": "SMTP Relay / API Nativa",
+        "stack_ui": "Rails Admin Dashboard",
+        "white_label_nativo": false,
+        "mecanica_customizacao": "API REST para integrações. Dashboard oferece basic white-label (logo/colors).",
+        "manutenibilidade_upgrades": "Releases ocasionais. Upgrade via docker pull."
+      }
+    },
+    {
+      "rank": 8,
+      "slug": "haraka",
+      "nome": "Haraka",
+      "subtitulo": "MTA de Alta Performance em Node.js para Volumes Massivos",
+      "saas_substituido": "Locaweb Email / Postmark (infraestrutura)",
+      "economia_anual_str": "R$ 30.000/ano",
+      "licenca_osi": "MIT",
+      "categoria": "MTA (Node.js)",
+      "senioridade": "Avançado",
+      "repositorio_github": "https://github.com/haraka/Haraka",
+      "o_que_faz": "MTA escrito em Node.js otimizado para throughput massivo. Suporta plugins para antispam, antivírus, SPF/DKIM/DMARC. Ideal para carriers, ISPs e plataformas de email transacional em escala.",
+      "como_funciona": "Baseado em eventos Node.js (async I/O). Plugins modular permite estender funcionalidade sem recompilação. Integração com Redis para queues distribuídas.",
+      "comando_rapido": "npm install haraka && haraka -i my-mail-server && haraka -c my-mail-server",
+      "analise_economica": {
+        "custo_saas": "Plataformas transacionais cobram R$ 0,001-0,01 por email ou R$ 500-5.000/mês para volume alto (1M+/mês).",
+        "custo_os": "VPS 4 vCPU / 8 GB RAM com Redis (R$ 200/mês) = R$ 2.400/ano.",
+        "roi_meses": "Payback em 1-3 meses para carriers/ISPs com volume >10M emails/mês."
+      },
+      "requisitos_infra": {
+        "ram_minima": "4 GB RAM",
+        "cpu_minima": "4 vCPU",
+        "banco": "Redis (recomendado para queues)",
+        "url_github": "https://github.com/haraka/Haraka"
+      },
+      "veredito": "Solução enterprise para carriers e plataformas de email em escala. Performance não comparável a MTAs tradicionais. Comunidade ativa, usado por empresas Fortune 500.",
+      "passos_praticos": [
+        {
+          "titulo": "Instalar Node.js & Haraka",
+          "descricao": "npm install -g Haraka && haraka -i meu-servidor"
+        },
+        {
+          "titulo": "Configurar Plugins",
+          "descricao": "Editar config/haraka.conf, ativar plugins/spf, plugins/dkim, plugins/bounce_hook em config/plugins"
+        },
+        {
+          "titulo": "Deploy & Scale",
+          "descricao": "Usar PM2 para gerenciar múltiplas instâncias, Redis para distribuição de queues, Load Balancer (HAProxy) para entrada SMTP."
+        }
+      ],
+      "design_system": {
+        "esforco": "Headless MTA / Plugins Arquiteturais",
+        "stack_ui": "Nenhuma UI nativa (CLI-only ou integração customizada)",
+        "white_label_nativo": false,
+        "mecanica_customizacao": "Plugins Node.js permitem customização ilimitada. Requer expertise JavaScript.",
+        "manutenibilidade_upgrades": "Releases frequentes. Upgrade via npm update haraka."
+      }
+    }
+  ]
+}
