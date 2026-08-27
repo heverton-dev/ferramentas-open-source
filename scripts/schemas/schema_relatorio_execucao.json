@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RelatorioExecucaoTelemetria",
+  "type": "object",
+  "required": [
+    "produto_foco",
+    "slug",
+    "saas_origem",
+    "data_execucao",
+    "horario_inicio",
+    "horario_fim",
+    "tempo_total_segundos",
+    "harness_utilizado",
+    "llm_utilizada",
+    "tools_utilizadas",
+    "skills_utilizadas",
+    "telemetria_tokens",
+    "materiais_entregues",
+    "gates_status"
+  ],
+  "properties": {
+    "produto_foco": { "type": "string" },
+    "slug": { "type": "string" },
+    "saas_origem": { "type": "string" },
+    "data_execucao": { "type": "string" },
+    "horario_inicio": { "type": "string" },
+    "horario_fim": { "type": "string" },
+    "tempo_total_segundos": { "type": "number" },
+    "harness_utilizado": { "type": "string" },
+    "llm_utilizada": { "type": "string" },
+    "tools_utilizadas": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "skills_utilizadas": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "telemetria_tokens": {
+      "type": "object",
+      "required": ["tokens_input", "tokens_output", "tokens_totais", "taxa_economia_determinismo"],
+      "properties": {
+        "tokens_input": { "type": "integer" },
+        "tokens_output": { "type": "integer" },
+        "tokens_totais": { "type": "integer" },
+        "taxa_economia_determinismo": { "type": "string" }
+      }
+    },
+    "materiais_entregues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tipo", "nome_arquivo", "formato", "caminho_relativo"],
+        "properties": {
+          "tipo": { "type": "string" },
+          "nome_arquivo": { "type": "string" },
+          "formato": { "type": "string" },
+          "caminho_relativo": { "type": "string" }
+        }
+      }
+    },
+    "gates_status": {
+      "type": "object",
+      "required": ["gate_g0", "gate_g1", "gate_g2", "gate_r18"],
+      "properties": {
+        "gate_g0": { "type": "string" },
+        "gate_g1": { "type": "string" },
+        "gate_g2": { "type": "string" },
+        "gate_r18": { "type": "string" }
+      }
+    }
+  }
+}

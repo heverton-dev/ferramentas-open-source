@@ -60,19 +60,22 @@ def gerar_typst_trilha(dados: dict) -> str:
               autor: "{r['autor']}"
             )""")
 
+        rec_str = f"({', '.join(rec_typ)}, )" if rec_typ else "()"
         fases_typ.append(f"""(
           titulo: "{f['titulo']}",
           tempo_estimado: "{f['tempo_estimado']}",
           objetivo: "{f['objetivo'].replace('\"', '\\\"')}",
-          recursos: ({', '.join(rec_typ)})
+          recursos: {rec_str}
         )""")
+
+    fases_str = f"({', '.join(fases_typ)}, )" if fases_typ else "()"
 
     return f"""#import "/scripts/padroes/template_trilha_aprendizado.typ": gerar_trilha_typst
 
 #gerar_trilha_typst(
   produto_foco: "{dados['produto_foco']}",
   tempo_total: "{dados['tempo_total_estimado']}",
-  fases: ({', '.join(fases_typ)})
+  fases: {fases_str}
 )
 """
 
@@ -85,8 +88,8 @@ def compilar_trilha(slug: str) -> bool:
     with open(data_file, "r", encoding="utf-8") as f:
         dados = json.load(f)
 
-    out_dir = BASE_DIR / "output" / "trilhas"
-    docs_dir = BASE_DIR / "docs" / "trilhas"
+    out_dir = BASE_DIR / "output" / slug / "trilhas"
+    docs_dir = BASE_DIR / "docs" / slug / "trilhas"
     out_dir.mkdir(parents=True, exist_ok=True)
     docs_dir.mkdir(parents=True, exist_ok=True)
 

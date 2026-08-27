@@ -69,7 +69,81 @@ def inicializar_banco():
                 UNIQUE(camada_num, rank)
             )
         """)
+
+        # Tabela de Bundles da Esteira de Manuais & Trilhas (AI Driven)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS esteira_manuais_bundles (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                slug TEXT NOT NULL,
+                saas_origem TEXT NOT NULL,
+                data_execucao TEXT NOT NULL,
+                horario_inicio TEXT,
+                horario_fim TEXT,
+                duracao_seg REAL,
+                tokens_totais INTEGER,
+                taxa_economia TEXT,
+                gate_g0 TEXT,
+                gate_g1 TEXT,
+                gate_g2 TEXT,
+                gate_r18 TEXT,
+                total_arquivos INTEGER DEFAULT 9,
+                caminho_bundle TEXT,
+                atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(slug, saas_origem)
+            )
+        """)
         conn.commit()
+
+def registrar_bundle_esteira(dados: dict):
+    """Registra ou atualiza um bundle completo na esteira_manuais_bundles."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO esteira_manuais_bundles (
+                slug, saas_origem, data_execucao, horario_inicio, horario_fim,
+                duracao_seg, tokens_totais, taxa_economia, gate_g0, gate_g1,
+                gate_g2, gate_r18, total_arquivos, caminho_bundle
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(slug, saas_origem) DO UPDATE SET
+                data_execucao = excluded.data_execucao,
+                horario_inicio = excluded.horario_inicio,
+                horario_fim = excluded.horario_fim,
+                duracao_seg = excluded.duracao_seg,
+                tokens_totais = excluded.tokens_totais,
+                taxa_economia = excluded.taxa_economia,
+                gate_g0 = excluded.gate_g0,
+                gate_g1 = excluded.gate_g1,
+                gate_g2 = excluded.gate_g2,
+                gate_r18 = excluded.gate_r18,
+                total_arquivos = excluded.total_arquivos,
+                caminho_bundle = excluded.caminho_bundle,
+                atualizado_em = CURRENT_TIMESTAMP
+        """, (
+            dados["slug"],
+            dados["saas_origem"],
+            dados["data_execucao"],
+            dados.get("horario_inicio", ""),
+            dados.get("horario_fim", ""),
+            dados.get("duracao_seg", 0.0),
+            dados.get("tokens_totais", 0),
+            dados.get("taxa_economia", ""),
+            dados.get("gate_g0", "APROVADO"),
+            dados.get("gate_g1", "APROVADO"),
+            dados.get("gate_g2", "APROVADO"),
+            dados.get("gate_r18", "APROVADO"),
+            dados.get("total_arquivos", 9),
+            dados.get("caminho_bundle", f"output/{dados['slug']}/")
+        ))
+        conn.commit()
+
+def listar_bundles_esteira() -> list[dict]:
+    """Retorna todos os bundles registrados no banco."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM esteira_manuais_bundles ORDER BY id ASC")
+        return [dict(r) for r in cursor.fetchall()]
 
 def registrar_execucao_gate(camada: str, gate_nome: str, exit_code: int, detalhes: str = ""):
     inicializar_banco()

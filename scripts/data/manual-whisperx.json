@@ -5,9 +5,31 @@
   "saas_origem": "granola",
   "versao": "3.1.2",
   "licenca_osi": "BSD-4-Clause",
-  "tempo_estimado_setup": "12 min",
+  "tempo_estimado_setup": "15 min (Zero conhecimento prévio)",
+  "nivelamento_conceitual": [
+    {
+      "termo": "Diarização de Locutores",
+      "analogia_cotidiana": "A Ata de Assembleia com Identificação de Voz",
+      "explicacao_simples": "Imagine uma reunião com 5 pessoas falando ao mesmo tempo. Um gravador comum apenas transcreve um amontoado de texto. A diarização é como um escrivão com ouvido absoluto que anota exatamente quem falou cada frase: 'Diretor Silva disse X', 'Dra. Mariana respondeu Y'."
+    },
+    {
+      "termo": "Alinhamento em Nível de Palavra (Word-Level Timestamps)",
+      "analogia_cotidiana": "O Karaokê com Iluminação Sincronizada",
+      "explicacao_simples": "Em vez de marcar apenas o minuto geral da gravação, o WhisperX sincroniza cada sílaba e palavra dita com o milissegundo exato do arquivo de áudio. Se você clicar em uma palavra no texto, o áudio toca exatamente naquele instante."
+    },
+    {
+      "termo": "PyAnnote Audio",
+      "analogia_cotidiana": "O Scanner de Impressão Digital da Voz",
+      "explicacao_simples": "É a rede neural que analisa as frequências e o timbre de cada participante para criar um perfil biométrico da voz, garantindo que o locutor A não seja confundido com o locutor B."
+    },
+    {
+      "termo": "Aceleração GPU / CTranslate2",
+      "analogia_cotidiana": "O Motor Turbo de Fórmula 1",
+      "explicacao_simples": "Processar 2 horas de áudio em um computador comum pode levar 1 hora. Com o motor CTranslate2 acelerado, o WhisperX transcreve e separa os locutores de uma reunião de 2 horas em menos de 5 minutos."
+    }
+  ],
   "vps_recomendada": {
-    "provedor_modelo": "Hetzner Cloud CPX31 (ou GPU Server Hetzner GEX44)",
+    "provedor_modelo": "Hetzner Cloud CPX31 (ou Hetzner Server com GPU dedicada)",
     "vcpu": "4 vCPU Dedicadas (AMD EPYC)",
     "ram": "8 GB RAM ECC",
     "armazenamento": "160 GB NVMe Gen4",
@@ -20,21 +42,30 @@
       {
         "numero": 1,
         "titulo": "Hardening do Servidor & Configuração de Firewall",
-        "descricao": "Criação de usuário deployer, desativação de login por senha e configuração do firewall UFW.",
+        "descricao": "Criação do usuário deployer e configuração das portas permitidas no firewall UFW.",
+        "analogia": "Trancar todas as portas do galpão industrial e deixar apenas a guarita com controle de entrada.",
+        "o_que_acontece_na_tela": "Mensagem 'Firewall is active and enabled on system startup'.",
+        "como_saber_se_deu_certo": "O comando 'ufw status' exibe portas 22, 80 e 443 como ALLOW IN.",
         "comandos": "adduser deployer && usermod -aG sudo deployer\nufw default deny incoming && ufw default allow outgoing\nufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp && ufw --force enable",
         "fonte_id": "F05"
       },
       {
         "numero": 2,
-        "titulo": "Instalação do Docker Engine & Suporte a Runtime CUDA/CPU",
-        "descricao": "Instalação do Docker oficial com suporte a aceleração multithread para CTranslate2.",
+        "titulo": "Instalação do Docker Engine & Suporte a Runtime",
+        "descricao": "Instalação do motor de containers oficial para isolamento completo de dependências Python.",
+        "analogia": "Montar a bancada padronizada para receber os equipamentos pesados de áudio.",
+        "o_que_acontece_na_tela": "Instalação dos pacotes Docker e registro do serviço no sistema operacional.",
+        "como_saber_se_deu_certo": "Execute 'docker --version' e receba Docker version 27 ou superior.",
         "comandos": "apt-get update && apt-get install -y docker.io docker-compose-v2\nusermod -aG docker deployer",
         "fonte_id": "F01"
       },
       {
         "numero": 3,
         "titulo": "Provisionamento de Diretórios de Modelos & Cache",
-        "descricao": "Configuração da pasta /opt/whisperx com isolamento de cache Hugging Face para modelos PyAnnote.",
+        "descricao": "Criação das pastas isoladas em /opt/whisperx com permissões restritas ao usuário de deploy.",
+        "analogia": "Criar gavetas identificadas para guardar os áudios brutos e os relatórios transcritos.",
+        "o_que_acontece_na_tela": "Pastas criadas em menos de um segundo.",
+        "como_saber_se_deu_certo": "O comando 'ls -ld /opt/whisperx' confirma a posse do usuário deployer.",
         "comandos": "mkdir -p /opt/whisperx/{models,cache,audio,output}\nchown -R deployer:deployer /opt/whisperx && chmod -R 750 /opt/whisperx",
         "fonte_id": "F02"
       },
@@ -42,6 +73,9 @@
         "numero": 4,
         "titulo": "Deploy do Container de Diarização via Docker Compose",
         "descricao": "Inicialização do container WhisperX com alocação de memória e volume de áudio mapeado.",
+        "analogia": "Ligar a esteira de processamento que lê os arquivos da pasta e devolve transcritos.",
+        "o_que_acontece_na_tela": "Docker inicia o container whisperx-engine.",
+        "como_saber_se_deu_certo": "O comando 'docker compose ps' exibe o status Up.",
         "comandos": "cd /opt/whisperx\ndocker compose up -d",
         "fonte_id": "F05"
       },
@@ -49,6 +83,9 @@
         "numero": 5,
         "titulo": "Execução da Primeira Transcrição com Diarização Multilocutor",
         "descricao": "Processamento de áudio com identificação de locutores SPEAKER_00 e alinhamento fonético.",
+        "analogia": "Passar a primeira fita de gravação pela máquina para testar a separação das vozes.",
+        "o_que_acontece_na_tela": "Barras de progresso de transcrição e detecção de locutores.",
+        "como_saber_se_deu_certo": "Arquivos JSON e SRT gerados dentro da pasta /data/output.",
         "comandos": "docker compose exec whisperx whisperx /data/audio/reuniao.wav --model large-v3 --diarize --output_dir /data/output --compute_type float16",
         "fonte_id": "F04"
       },
@@ -56,6 +93,9 @@
         "numero": 6,
         "titulo": "Rotina de Processamento em Lote & Limpeza Automática",
         "descricao": "Agendamento cron para varredura de gravações da empresa e exportação automática em JSON.",
+        "analogia": "Programar o robô para varrer a pasta de reuniões a cada 10 minutos automaticamente.",
+        "o_que_acontece_na_tela": "Linha de agendamento salva na tabela do cron.",
+        "como_saber_se_deu_certo": "O comando 'crontab -l' exibe a tarefa ativa.",
         "comandos": "echo '*/10 * * * * deployer /opt/whisperx/process_batch.sh' | crontab -",
         "fonte_id": "F01"
       }
@@ -70,7 +110,24 @@
     ]
   },
   "manual_uso_exaustivo": {
-    "arquitetura_uso": "O WhisperX integra a velocidade do Faster-Whisper com a rede neural PyAnnote Audio, realizando alinhamento fonético com wav2vec2 para determinar com precisão de milissegundos quem pronunciou cada termo da conversa.",
+    "arquitetura_uso": "O WhisperX combina a velocidade do Faster-Whisper com a diarização neural PyAnnote Audio, permitindo separar quem falou o quê em conversas multilocutor com precisão de milissegundos.",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "Passo 1: Copiar o Áudio da Reunião",
+        "acao": "Coloque um arquivo de áudio de teste de 1 minuto na pasta /opt/whisperx/audio com duas pessoas conversando.",
+        "resultado_esperado": "O arquivo reuniao.wav fica visível na pasta."
+      },
+      {
+        "passo": "Passo 2: Rodar o Comando de Diarização",
+        "acao": "Execute 'whisperx /opt/whisperx/audio/reuniao.wav --diarize --language pt'.",
+        "resultado_esperado": "O terminal processa em menos de 10 segundos e divide as falas em SPEAKER_00 e SPEAKER_01."
+      },
+      {
+        "passo": "Passo 3: Visualizar o Arquivo de Texto Estruturado",
+        "acao": "Abra o arquivo reuniao.json gerado na pasta de saída.",
+        "resultado_esperado": "Cada frase vem acompanhada do nome do locutor e dos segundos exatos de início e fim."
+      }
+    ],
     "comandos_cli": [
       {
         "comando": "whisperx --diarize",

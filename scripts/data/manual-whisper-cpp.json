@@ -5,7 +5,24 @@
   "saas_origem": "granola",
   "versao": "1.7.1",
   "licenca_osi": "MIT",
-  "tempo_estimado_setup": "8 min",
+  "tempo_estimado_setup": "8 min (Zero conhecimento prévio)",
+  "nivelamento_conceitual": [
+    {
+      "termo": "Código C/C++ Nativo",
+      "analogia_cotidiana": "Um Motor de Alta Eficiência sem Peso Morto",
+      "explicacao_simples": "Diferente de sistemas pesados que exigem dezenas de bibliotecas instaladas, o whisper.cpp é um único arquivo binário enxuto. Ele conversa diretamente com o processador da sua máquina sem intermediários."
+    },
+    {
+      "termo": "Consumo de Menos de 200 MB de RAM",
+      "analogia_cotidiana": "Uma Bicicleta Elétrica Leve em Vez de um Caminhão",
+      "explicacao_simples": "Enquanto outras soluções de IA precisam de computadores potentes com placas de vídeo caras, o whisper.cpp roda suave até em computadores antigos ou de baixo custo sem travar o navegador ou o Word."
+    },
+    {
+      "termo": "Modelos Quantizados GGML",
+      "analogia_cotidiana": "A Foto Comprimida em Alta Resolução",
+      "explicacao_simples": "O arquivo do modelo de inteligência artificial é reduzido matematicamente para ocupar 4 vezes menos espaço no disco, mantendo mais de 98% da precisão de fala."
+    }
+  ],
   "vps_recomendada": {
     "provedor_modelo": "Hetzner Cloud CX22 (ou qualquer VPS de entrada)",
     "vcpu": "2 vCPU",
@@ -21,6 +38,9 @@
         "numero": 1,
         "titulo": "Compilação Nativa Otimizada para o Processador",
         "descricao": "Clone e compilação em C/C++ puro com instruções vetoriais AVX2.",
+        "analogia": "Ajustar o motor com chave de precisão para o modelo exato do seu carro.",
+        "o_que_acontece_na_tela": "Linhas de compilação C++ gerando o binário executável 'main'.",
+        "como_saber_se_deu_certo": "O comando 'ls -l main' exibe o arquivo executável pronto.",
         "comandos": "apt-get update && apt-get install -y build-essential git\nmkdir -p /opt/whisper-cpp && cd /opt/whisper-cpp\ngit clone https://github.com/ggerganov/whisper.cpp .\nmake -j4",
         "fonte_id": "F01"
       },
@@ -28,6 +48,9 @@
         "numero": 2,
         "titulo": "Download do Modelo Compacto Quantizado GGML",
         "descricao": "Download do modelo whisper GGML em formato binário estático.",
+        "analogia": "Baixar o dicionário de inteligência artificial compacto em disco.",
+        "o_que_acontece_na_tela": "Barra de download do modelo base de cerca de 140 MB.",
+        "como_saber_se_deu_certo": "Arquivo ggml-base.bin presente na pasta models.",
         "comandos": "bash ./models/download-ggml-model.sh base",
         "fonte_id": "F02"
       },
@@ -35,6 +58,9 @@
         "numero": 3,
         "titulo": "Execução da Transcrição Ultrarrápida",
         "descricao": "Transcrição de áudio em segundos consumindo menos de 200 MB de RAM.",
+        "analogia": "Ligar a esteira e ver as palavras saindo na velocidade da fala.",
+        "o_que_acontece_na_tela": "Texto transcrito com marcação de segundos impresso no terminal.",
+        "como_saber_se_deu_certo": "Arquivo .txt gerado com o conteúdo da fala.",
         "comandos": "./main -m models/ggml-base.bin -f reuniao.wav -l pt -otxt",
         "fonte_id": "F04"
       }
@@ -50,6 +76,23 @@
   },
   "manual_uso_exaustivo": {
     "arquitetura_uso": "Portabilidade pura dos modelos Whisper em C/C++ com aceleração por hardware e quantização de alta performance.",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "Passo 1: Gravar Áudio de Teste em WAV",
+        "acao": "Grave 20 segundos de fala e salve como teste.wav a 16kHz mono.",
+        "resultado_esperado": "Arquivo teste.wav pronto na pasta."
+      },
+      {
+        "passo": "Passo 2: Rodar o Binário Whisper.cpp",
+        "acao": "Execute './main -m models/ggml-base.bin -f teste.wav -l pt'.",
+        "resultado_esperado": "A transcrição surge na tela em menos de 2 segundos."
+      },
+      {
+        "passo": "Passo 3: Conferir o Texto Gerado",
+        "acao": "Abra o arquivo teste.wav.txt gerado automaticamente.",
+        "resultado_esperado": "Texto idêntico às palavras faladas com pontuação correta."
+      }
+    ],
     "comandos_cli": [
       {
         "comando": "./main -m <model> -f <audio>",
@@ -62,6 +105,18 @@
         "descricao": "Modo de escuta contínua de microfone em tempo real.",
         "exemplo": "./stream -m models/ggml-base.bin -t 4",
         "fonte_id": "F04"
+      },
+      {
+        "comando": "./quantize",
+        "descricao": "Quantiza modelos GGML para formato de 4-bits ou 8-bits reduzindo consumo de memória.",
+        "exemplo": "./quantize models/ggml-base.bin models/ggml-base-q4_0.bin q4_0",
+        "fonte_id": "F03"
+      },
+      {
+        "comando": "bash ./examples/bench.sh",
+        "descricao": "Executa benchmarks de performance e throughput de transcrição em lote.",
+        "exemplo": "bash ./examples/bench.sh",
+        "fonte_id": "F05"
       }
     ],
     "rotas_api": [
@@ -120,9 +175,9 @@
     {
       "id": "F05",
       "categoria": "Curso / Tutorial",
-      "titulo": "Obsidian Whisper & Note-Taking Integration Guide",
-      "url": "https://github.com/nikdanilov/whisper-obsidian",
-      "autor_ou_canal": "Nikita Danilov"
+      "titulo": "Whisper.cpp Real-World Deployment Examples & CLI Guides",
+      "url": "https://github.com/ggerganov/whisper.cpp/tree/master/examples",
+      "autor_ou_canal": "Whisper.cpp Community Maintainers"
     }
   ]
 }

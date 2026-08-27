@@ -151,6 +151,12 @@ def gerar_typst_codigo(dados: dict) -> str:
           autor_ou_canal: "{r['autor_ou_canal']}"
         )""")
 
+    nivelamento_str = f"({', '.join(nivelamento_typ)}, )" if nivelamento_typ else "()"
+    passos_str = f"({', '.join(passos_typ)}, )" if passos_typ else "()"
+    primeiro_voo_str = f"({', '.join(primeiro_voo_typ)}, )" if primeiro_voo_typ else "()"
+    cli_str = f"({', '.join(cli_typ)}, )" if cli_typ else "()"
+    refs_str = f"({', '.join(refs_typ)}, )" if refs_typ else "()"
+
     return f"""#import "/scripts/padroes/template_manual_operacional.typ": gerar_manual_typst
 
 #gerar_manual_typst(
@@ -161,11 +167,11 @@ def gerar_typst_codigo(dados: dict) -> str:
   vps_specs: "{vps['vcpu']} · {vps['ram']} · {vps['armazenamento']}",
   vps_so: "{vps['so_recomendado']}",
   vps_custo: "{vps['custo_mensal_estimado']}",
-  nivelamento: ({', '.join(nivelamento_typ)}),
-  passos: ({', '.join(passos_typ)}),
-  primeiro_voo: ({', '.join(primeiro_voo_typ)}),
-  comandos_cli: ({', '.join(cli_typ)}),
-  referencias: ({', '.join(refs_typ)})
+  nivelamento: {nivelamento_str},
+  passos: {passos_str},
+  primeiro_voo: {primeiro_voo_str},
+  comandos_cli: {cli_str},
+  referencias: {refs_str}
 )
 """
 
@@ -178,8 +184,8 @@ def compilar_manual(slug: str) -> bool:
     with open(data_file, "r", encoding="utf-8") as f:
         dados = json.load(f)
 
-    out_dir = BASE_DIR / "output" / "manuais"
-    docs_dir = BASE_DIR / "docs" / "manuais"
+    out_dir = BASE_DIR / "output" / slug / "manuais"
+    docs_dir = BASE_DIR / "docs" / slug / "manuais"
     out_dir.mkdir(parents=True, exist_ok=True)
     docs_dir.mkdir(parents=True, exist_ok=True)
 

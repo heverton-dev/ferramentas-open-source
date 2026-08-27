@@ -294,9 +294,9 @@ def renderizar_trilha_html(dados: dict) -> str:
   <!-- CABEÇALHO -->
   <div class="header-card">
     <div class="breadcrumb">
-      <a href="../listas/vert-{dados['saas_origem']}.html">← Voltar ao Dossiê Vertical {dados['saas_origem'].title()}</a>
+      <a href="../../listas-open-source/vert-{dados['saas_origem']}.html">← Voltar ao Dossiê Vertical {dados['saas_origem'].title()}</a>
       &nbsp;·&nbsp;
-      <a href="manual-{dados['slug']}-vps-e-uso.html">Ver Manual de Engenharia 📖</a>
+      <a href="../manuais/manual-{dados['slug']}-vps-e-uso.html">Ver Manual de Engenharia 📖</a>
     </div>
     <span class="badge-tag">Jornada Pedagógica Autoguiada · Brasil First</span>
     <h1>Trilha de Aprendizado: {dados['produto_foco']}</h1>

@@ -411,7 +411,9 @@ def renderizar_manual_html(dados: dict) -> str:
   <!-- CABEÇALHO -->
   <div class="header-card">
     <div class="breadcrumb">
-      <a href="../listas/vert-{dados['saas_origem']}.html">← Voltar ao Dossiê Vertical {dados['saas_origem'].title()}</a>
+      <a href="../../listas-open-source/vert-{dados['saas_origem']}.html">← Voltar ao Dossiê Vertical {dados['saas_origem'].title()}</a>
+      &nbsp;·&nbsp;
+      <a href="../trilhas/trilha-{dados['slug']}-aprendizado.html">Ver Trilha de Aprendizado 🗺️</a>
     </div>
     <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
     <h1>Manual Operacional Completo: {dados['produto_foco']}</h1>

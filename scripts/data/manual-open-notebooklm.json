@@ -5,7 +5,24 @@
   "saas_origem": "granola",
   "versao": "1.0.0",
   "licenca_osi": "Apache-2.0",
-  "tempo_estimado_setup": "10 min",
+  "tempo_estimado_setup": "12 min (Zero conhecimento prévio)",
+  "nivelamento_conceitual": [
+    {
+      "termo": "Podcast com IA",
+      "analogia_cotidiana": "O Programa de Rádio com Dois Apresentadores",
+      "explicacao_simples": "Em vez de ter que ler um documento de 30 páginas sobre uma reunião chata, a IA transforma as decisões em um bate-papo descontraído entre dois apresentadores que comentam os pontos altos enquanto você dirige ou faz academia."
+    },
+    {
+      "termo": "Roteirização Conversacional",
+      "analogia_cotidiana": "O Roteirista de Teatro",
+      "explicacao_simples": "A inteligência artificial pega os pontos complexos e cria um diálogo natural com perguntas, respostas, concordâncias e ênfases nos pontos que realmente importam para o negócio."
+    },
+    {
+      "termo": "Síntese de Voz Neural (TTS)",
+      "analogia_cotidiana": "O Dublador Profissional Invisível",
+      "explicacao_simples": "Modelos como o F5-TTS dão vida ao texto, gerando entonações humanas, risadas discretas e respirações reais para não soar como um robô metálico."
+    }
+  ],
   "vps_recomendada": {
     "provedor_modelo": "Hetzner Cloud CPX31",
     "vcpu": "4 vCPU Dedicadas",
@@ -20,28 +37,40 @@
       {
         "numero": 1,
         "titulo": "Hardening do Servidor & Firewall UFW",
-        "descricao": "Configuração de usuário deployer e regras de firewall.",
+        "descricao": "Configuração do usuário deployer e liberação seletiva das portas no firewall.",
+        "analogia": "Colocar o alarme e o portão eletrônico na casa antes de trazer os móveis.",
+        "o_que_acontece_na_tela": "Firewall ativado com confirmação das regras.",
+        "como_saber_se_deu_certo": "O comando 'ufw status' exibe portas 22, 80 e 443 liberadas.",
         "comandos": "adduser deployer && usermod -aG sudo deployer\nufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp && ufw --force enable",
         "fonte_id": "F01"
       },
       {
         "numero": 2,
-        "titulo": "Instalação do Docker & Docker Compose",
-        "descricao": "Provisionamento do motor Docker oficial.",
+        "titulo": "Instalação do Motor Docker Oficial",
+        "descricao": "Provisionamento do motor Docker para isolamento da aplicação de podcast.",
+        "analogia": "Instalar o estúdio de gravação acústico dentro da sala comercial.",
+        "o_que_acontece_na_tela": "Instalação automática do motor Docker.",
+        "como_saber_se_deu_certo": "Comando 'docker --version' retorna a versão instalada.",
         "comandos": "apt-get update && apt-get install -y docker.io docker-compose-v2\nusermod -aG docker deployer",
         "fonte_id": "F01"
       },
       {
         "numero": 3,
         "titulo": "Clone do Repositório & Configuração do Ambiente",
-        "descricao": "Download da base de código oficial e configuração de modelos de voz F5-TTS.",
+        "descricao": "Download da base oficial do Open-NotebookLM e permissões de pasta.",
+        "analogia": "Desempacotar os microfones e mesas de som na bancada do estúdio.",
+        "o_que_acontece_na_tela": "Download do código-fonte em segundos.",
+        "como_saber_se_deu_certo": "A pasta /opt/open-notebooklm contém os arquivos app.py e requirements.txt.",
         "comandos": "mkdir -p /opt/open-notebooklm && cd /opt/open-notebooklm\ngit clone https://github.com/gabrielchua/open-notebooklm .\nchown -R deployer:deployer /opt/open-notebooklm",
         "fonte_id": "F02"
       },
       {
         "numero": 4,
         "titulo": "Deploy do Serviço de Síntese de Podcast",
-        "descricao": "Inicialização dos containers de geração de diálogo e áudio.",
+        "descricao": "Inicialização dos containers de geração de diálogo e síntese de voz.",
+        "analogia": "Ligar os amplificadores e colocar os locutores no ar.",
+        "o_que_acontece_na_tela": "Docker inicia o container e exibe logs de inicialização.",
+        "como_saber_se_deu_certo": "O comando 'docker compose ps' mostra status Up.",
         "comandos": "docker compose up -d\ndocker compose logs -f --tail 30",
         "fonte_id": "F05"
       }
@@ -51,18 +80,41 @@
         "caminho": "/opt/open-notebooklm/docker-compose.yml",
         "linguagem": "yaml",
         "conteudo": "services:\n  notebooklm:\n    image: python:3.11-slim\n    container_name: open-notebooklm\n    restart: unless-stopped\n    volumes:\n      - ./:/app\n    working_dir: /app\n    command: python app.py --port 7860",
-        "explicacao": "Compose para o serviço de podcast."
+        "explicacao": "Compose para o estúdio de podcast."
       }
     ]
   },
   "manual_uso_exaustivo": {
     "arquitetura_uso": "Transforma transcrições em roteiros dinâmicos de perguntas e respostas entre dois analistas de IA e sintetiza vozes neurais.",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "Passo 1: Fazer Upload da Ata de Reunião",
+        "acao": "Abra o navegador no endereço do seu servidor e cole o texto ou suba o arquivo Markdown da reunião.",
+        "resultado_esperado": "O texto aparece carregado na tela de edição."
+      },
+      {
+        "passo": "Passo 2: Gerar o Roteiro do Podcast",
+        "acao": "Clique no botão 'Gerar Diálogo'.",
+        "resultado_esperado": "Dois personagens aparecem debatendo as decisões e valores da reunião."
+      },
+      {
+        "passo": "Passo 3: Baixar o MP3 Final",
+        "acao": "Clique em 'Sintetizar Áudio' e ouça o resumo conversacional de 5 minutos.",
+        "resultado_esperado": "Download do áudio em alta qualidade pronto para ouvir ou compartilhar."
+      }
+    ],
     "comandos_cli": [
       {
         "comando": "python generate_podcast.py",
         "descricao": "Converte ata ou notas de reunião em podcast falado de 5 minutos.",
         "exemplo": "python generate_podcast.py --input ata.md --output briefing.mp3",
         "fonte_id": "F04"
+      },
+      {
+        "comando": "--tts-model",
+        "descricao": "Define o modelo acústico neural de síntese de voz (Bark, XTTS ou F5-TTS).",
+        "exemplo": "python generate_podcast.py --tts-model f5-tts",
+        "fonte_id": "F03"
       }
     ],
     "rotas_api": [

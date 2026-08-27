@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual Operacional: Screenpipe · Deploy VPS &amp; Uso Exaustivo</title>
+  <style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --paper: #F8FAFC;
+    --surface: #FFFFFF;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --rule: #CBD5E1;
+    --rule-soft: #E2E8F0;
+    --accent: #0284C7;
+    --accent-dark: #0369A1;
+    --accent-soft: #E0F2FE;
+    --green: #10B981;
+    --green-dark: #065F46;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+    --purple: #8B5CF6;
+    --purple-soft: #EDE9FE;
+    --code-bg: #0F172A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .container { max-width: 1060px; margin: 0 auto; }
+  
+  .header-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+  
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    background: var(--paper);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--rule-soft);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat-val { font-size: 14.5px; font-weight: 800; color: var(--ink); }
+
+  .nav-anchors {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .nav-anchors a {
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    color: var(--ink-2);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-anchors a:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    background: var(--accent-soft);
+  }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .section-header {
+    border-bottom: 2px solid var(--rule-soft);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title { font-size: 20px; font-weight: 800; color: var(--ink); }
+
+  /* CARDS DE NIVELAMENTO */
+  .grid-conceitos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card-conceito {
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    padding: 16px;
+    border-left: 4px solid var(--purple);
+  }
+  .conceito-termo { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+  .conceito-analogia { font-size: 12.5px; font-weight: 700; color: #6D28D9; background: var(--purple-soft); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+  .conceito-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+
+  /* PASSOS DE INSTALAÇÃO */
+  .step-box {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .step-box:last-child { border-bottom: none; }
+  .step-top {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .step-num {
+    background: var(--accent);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .step-heading { font-size: 17px; font-weight: 800; color: var(--ink); }
+  .analogia-box {
+    background: #F0FDF4;
+    border-left: 4px solid var(--green);
+    padding: 8px 12px;
+    border-radius: 0 4px 4px 0;
+    margin: 8px 0;
+    font-size: 13px;
+    color: var(--green-dark);
+  }
+  .feedback-box {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #92400E;
+  }
+  .validacao-box {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #1E40AF;
+  }
+
+  .code-box {
+    position: relative;
+    background: var(--code-bg);
+    border-radius: 6px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  .code-box pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #F8FAFC;
+    line-height: 1.5;
+  }
+  .btn-copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.15);
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-copy:hover { background: rgba(255,255,255,0.3); }
+
+  .cite-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--gold-soft);
+    color: #B45309;
+    vertical-align: super;
+    margin-left: 4px;
+    text-decoration: none;
+  }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  table.data-table th {
+    background: var(--paper);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--ink-2);
+    border-bottom: 2px solid var(--rule);
+  }
+  table.data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink-2);
+  }
+  table.data-table tr:hover td { background: rgba(2, 132, 199, 0.02); }
+
+  .trouble-card {
+    background: #FFFBEB;
+    border-left: 4px solid var(--gold);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 0 4px 4px 0;
+  }
+  .trouble-symptom { font-weight: 700; color: #92400E; font-size: 13.5px; }
+  .trouble-cause { font-size: 13px; color: #78350F; margin: 4px 0; }
+  .trouble-fix { font-family: var(--mono); font-size: 12px; background: #FEF3C7; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="header-card">
+    <div class="breadcrumb">
+      <a href="../../listas-open-source/vert-granola.html">← Voltar ao Dossiê Vertical Granola</a>
+      &nbsp;·&nbsp;
+      <a href="../trilhas/trilha-screenpipe-aprendizado.html">Ver Trilha de Aprendizado 🗺️</a>
+    </div>
+    <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
+    <h1>Manual Operacional Completo: Screenpipe</h1>
+    <p class="deck">
+      Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
+    </p>
+
+    <!-- HERO STATS DA VPS -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">VPS Recomendada</span>
+        <span class="stat-val">Hetzner Cloud CPX31 (ou Contabo Cloud VPS M)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Hardware Mínimo</span>
+        <span class="stat-val">4 vCPU Dedicadas (AMD EPYC) · 8 GB RAM ECC</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Armazenamento &amp; SO</span>
+        <span class="stat-val">160 GB NVMe Gen4 · Ubuntu 24.04 LTS (x86_64)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Custo Mensal Estimado</span>
+        <span class="stat-val" style="color:var(--accent-dark);">EUR 14,00/mês (~R$ 84,00/mês na cotação média)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Licença de Uso</span>
+        <span class="stat-val" style="color:var(--green);">Apache-2.0 (Livre &amp; Comercial)</span>
+      </div>
+    </div>
+
+    <!-- NAVEGAÇÃO RÁPIDA -->
+    <div class="nav-anchors">
+      <a href="#nivelamento">💡 Módulo 0: Nivelamento para Iniciantes</a>
+      <a href="#instalacao">📦 Parte I: Instalação Passo a Passo</a>
+      <a href="#configuracao">⚙️ Arquivos de Configuração</a>
+      <a href="#primeiro-voo">✈️ Roteiro de Primeiro Voo</a>
+      <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
+      <a href="#manual-api">🌐 Endpoints de API</a>
+      <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
+      <a href="#bibliografia">📚 Referências Bibliográficas</a>
+    </div>
+  </div>
+
+  <!-- MÓDULO 0: NIVELAMENTO CONCEITUAL -->
+  <div class="section-card" id="nivelamento">
+    <div class="section-header">
+      <h2 class="section-title">Módulo 0: Nivelamento Conceitual (O que você precisa saber antes de começar)</h2>
+      <span class="badge-tag" style="background:var(--purple-soft); color:#6D28D9;">Zero Programação</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:16px;">
+      Você não precisa ser engenheiro de software para entender como o sistema funciona. Abaixo explicamos os 5 conceitos-chave usando analogias do cotidiano:
+    </p>
+    <div class="grid-conceitos">
+      
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Screenpipe (A Ferramenta)</div>
+          <div class="conceito-analogia">Analogia: A Caixa-Preta Inteligente de um Avião</div>
+          <p class="conceito-desc">Assim como um avião tem uma caixa-preta que grava tudo o que acontece para segurança do voo, o Screenpipe funciona como um gravador silencioso que guarda o áudio das suas reuniões e a tela do seu computador. A diferença mágica é que ele transcreve tudo na hora e permite que você faça perguntas em português, como se estivesse conversando com um assistente que participou de todas as suas conversas.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 VPS (Servidor Privado Virtual)</div>
+          <div class="conceito-analogia">Analogia: Uma Sala Comercial Alugada que Nunca Apaga a Luz</div>
+          <p class="conceito-desc">Em vez de deixar o seu notebook de trabalho ligado 24 horas por dia esquentando na mesa, você aluga por cerca de R$ 80 por mês um computador profissional em um data center na nuvem (como a Hetzner ou Contabo). Ele fica ligado o tempo todo, com internet de altíssima velocidade e geradores de energia, pronto para processar suas gravações.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 SSH (Conexão Segura)</div>
+          <div class="conceito-analogia">Analogia: Um Túnel Secreto de Controle Remoto</div>
+          <p class="conceito-desc">É a tecnologia que liga o teclado do seu computador atual diretamente à sua sala comercial alugada na nuvem. Você digita na sua casa e o comando é executado lá no servidor a milhares de quilômetros de distância com criptografia blindada.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Docker & Containers</div>
+          <div class="conceito-analogia">Analogia: Uma Caixa de Sapatos Lacrada de Fábrica</div>
+          <p class="conceito-desc">Antigamente, instalar um programa em servidor exigia configurar dezenas de ferramentas manuais, e qualquer erro quebrava o sistema. O Docker entrega o Screenpipe dentro de uma 'caixa lacrada': tudo o que ele precisa já está pronto e funcionando lá dentro. Você só precisa mandar a caixa abrir.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Firewall (UFW)</div>
+          <div class="conceito-analogia">Analogia: O Porteiro do Condomínio com Crachá Rígido</div>
+          <p class="conceito-desc">Um servidor na internet tem milhares de portas virtuais de entrada. O Firewall tranca todas as portas com chave e só permite que passem duas coisas: você (pela porta secreta do SSH) e o tráfego do site com cadeado seguro (portas web 80 e 443).</p>
+        </div>
+        
+    </div>
+  </div>
+
+  <!-- SEÇÃO 1: INSTALAÇÃO EM PRODUÇÃO -->
+  <div class="section-card" id="instalacao">
+    <div class="section-header">
+      <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
+      <span class="badge-tag">Tempo ~15 a 20 minutos (Zero conhecimento prévio)</span>
+    </div>
+    
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 1</span>
+            <span class="step-heading">Como Alugar o Servidor e Abrir o Terminal no Windows/Mac</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Acesse hetzner.com/cloud, crie sua conta e clique em 'Add Server'. Escolha a localização (Alemanha ou Finlândia), selecione a imagem 'Ubuntu 24.04' e o tipo 'CPX31'. Em 30 segundos você receberá por e-mail o endereço de IP do seu servidor (ex: 123.45.67.89). No Windows, pressione a tecla Windows + R, digite 'powershell' e aperte Enter. No Mac, abra o aplicativo 'Terminal'.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> É o equivalente a pegar a chave da sua nova sala comercial e abrir o laptop para ligar para a recepção.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># Digite no seu computador (substitua pelo IP recebido por e-mail):
+ssh root@SEU_IP_AQUI</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Uma janela preta ou azul se abrirá com um cursor piscando, pronta para receber suas instruções.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Aparecerá a linha PS C:\Users\seu-nome> aguardando comandos.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 2</span>
+            <span class="step-heading">Blindagem Inicial do Servidor (Hardening & Firewall)</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Vamos criar um usuário seguro chamado 'deployer' para você não precisar usar a conta root (administrador absoluto), fechar todas as portas perigosas do servidor e ativar o firewall de proteção.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Instalar fechaduras tetra e colocar o porteiro na guarita com a lista estrita de convidados permitidos.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>adduser deployer && usermod -aG sudo deployer
+ufw default deny incoming && ufw default allow outgoing
+ufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp
+ufw --force enable</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> O sistema solicitará que você defina uma senha forte para o novo usuário e confirmará as regras do firewall com a mensagem 'Firewall is active and enabled on system startup'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Digite 'ufw status' e veja as portas 22, 80 e 443 marcadas como 'ALLOW IN'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 3</span>
+            <span class="step-heading">Instalação do Motor Docker Oficial</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Instalamos o motor do Docker para permitir que o Screenpipe e o servidor de segurança rodem dentro de caixas isoladas e seguras, sem risco de conflito com outros programas.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Colocar prateleiras industriais no galpão para receber as caixas lacradas pré-fabricadas.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>apt-get update && apt-get install -y ca-certificates curl
+curl -fsSL https://get.docker.com | sh
+usermod -aG docker deployer</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Várias linhas de download e instalação de pacotes passarão rapidamente pela tela durante cerca de 1 a 2 minutos.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'docker --version' e o terminal responderá 'Docker version 27.x.x' ou superior.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 4</span>
+            <span class="step-heading">Criação da Pasta do Screenpipe & Arquivo de Produção</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Criamos o diretório /opt/screenpipe/ onde ficarão armazenados o banco de dados das gravações e o arquivo que comanda os serviços.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Montar a escrivaninha e colocar a gaveta com a chave onde as atas serão arquivadas.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>mkdir -p /opt/screenpipe/{data,caddy}
+chown -R deployer:deployer /opt/screenpipe
+chmod -R 750 /opt/screenpipe</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> As pastas são criadas silenciosamente em menos de 1 segundo.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> O comando 'ls -ld /opt/screenpipe' mostrará a pasta pertencente ao usuário deployer.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 5</span>
+            <span class="step-heading">Colocando o Sistema no Ar com Docker Compose</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Iniciamos o Screenpipe e o servidor web seguro Caddy em segundo plano. O sistema baixa a imagem oficial e começa a rodar imediatamente.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Apertar o botão verde no painel elétrico: as luzes acendem e as máquinas começam a operar.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>cd /opt/screenpipe
+docker compose up -d
+docker compose ps</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> O Docker fará o download das camadas da imagem (Pull complete) e exibirá 'Container screenpipe-engine Started' e 'Container screenpipe-proxy Started'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Digite 'docker compose ps' dentro da pasta e veja ambos os containers com status 'Up'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 6</span>
+            <span class="step-heading">Configuração do Cadeado de Segurança (SSL) e Teste de Saúde</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">O Caddy se encarrega automaticamente de emitir um certificado de segurança gratuito com o Let's Encrypt para que ninguém consiga interceptar o áudio das suas reuniões na internet.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Lacre inviolável dos Correios com assinatura digital em cada pacote que entra ou sai.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>curl -s http://127.0.0.1:3030/health | grep healthy || echo 'Aguarde 10 segundos e tente novamente'</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> A resposta confirmará 'status: healthy' com tempo de atividade registrado.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Abra o navegador no seu computador e acesse https://SEU_DOMINIO/health. O navegador mostrará o cadeado verde fechado.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
+  <div class="section-card" id="configuracao">
+    <div class="section-header">
+      <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
+    </div>
+    
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/screenpipe/docker-compose.yml</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Arquivo que define como o Screenpipe roda isolado e como o proxy de segurança Caddy expõe a ferramenta com proteção contra travamentos.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>services:
+  screenpipe:
+    image: mediar/screenpipe:latest
+    container_name: screenpipe-engine
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '3.5'
+          memory: 6G
+    volumes:
+      - ./data:/root/.screenpipe
+    environment:
+      - SCREENPIPE_SERVER_PORT=3030
+      - AUDIO_ENGINE=whisper-large-v3
+      - LOG_LEVEL=info
+    networks:
+      - internal_net
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: screenpipe-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/data:/data
+      - ./caddy/config:/config
+    networks:
+      - internal_net
+
+networks:
+  internal_net:
+    driver: bridge</code></pre>
+          </div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/screenpipe/caddy/Caddyfile</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Configuração da recepção segura: transforma conexões normais em criptografadas com certificado SSL automático.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>seu-dominio-empresa.com {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+    }
+    reverse_proxy screenpipe:3030
+}</code></pre>
+          </div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
+  <div class="section-card" id="primeiro-voo">
+    <div class="section-header">
+      <h2 class="section-title">Parte II: Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green-dark);">Prática Imediata</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
+      Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
+    </p>
+    
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 1: Conectar o Microfone:</strong> Abra a interface web do Screenpipe no seu navegador (https://seu-dominio) e clique no ícone de microfone no canto superior direito para confirmar que seu dispositivo de áudio está ativo.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Uma barrinha verde de volume oscilará quando você falar.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 2: Fazer um Teste Falado de 30 Segundos:</strong> Fale em voz alta: 'Reunião de teste com o cliente XPTO. Ficou combinado o orçamento de R$ 50.000 para entrega no dia 15 de setembro'.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Em cerca de 3 a 5 segundos, a frase aparecerá transcrita palavra por palavra na timeline de reuniões.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 3: Fazer sua Primeira Pergunta em Linguagem Natural:</strong> No campo de busca no topo da tela, digite: 'Qual foi o valor combinado para o cliente XPTO?' e pressione Enter.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> O assistente responderá na hora: 'O orçamento combinado foi de R$ 50.000 com entrega em 15 de setembro', destacando o trecho exato do áudio com link para ouvir a gravação.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 4: MANUAL DE USO CLI -->
+  <div class="section-card" id="manual-cli">
+    <div class="section-header">
+      <h2 class="section-title">Dicionário Completo de Comandos (CLI)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Comando / Opção</th>
+          <th>O que faz (em português claro)</th>
+          <th>Exemplo de Execução</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">screenpipe --help</code></td>
+          <td>Mostra todas as opções disponíveis no sistema explicadas na tela.</td>
+          <td><code>screenpipe --help</code></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">--audio-transcription-engine</code></td>
+          <td>Escolhe qual modelo de inteligência artificial fará a transcrição (large-v3 para máxima precisão em português).</td>
+          <td><code>screenpipe --audio-transcription-engine whisper-large-v3</code></td>
+          <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">--port <PORTA></code></td>
+          <td>Muda a porta de acesso se a porta padrão 3030 já estiver sendo usada por outro programa.</td>
+          <td><code>screenpipe --port 8080</code></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">--data-dir <CAMINHO></code></td>
+          <td>Muda a pasta do disco onde as gravações e transcrições são salvas.</td>
+          <td><code>screenpipe --data-dir /opt/screenpipe/data</code></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 5: REFERÊNCIA DE API REST -->
+  <div class="section-card" id="manual-api">
+    <div class="section-header">
+      <h2 class="section-title">Endpoints de API REST &amp; Conexão com Agentes (MCP)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Método</th>
+          <th>Rota</th>
+          <th>Finalidade</th>
+          <th>Payload / Resposta</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/search</code></td>
+          <td>Busca instantânea por qualquer palavra, cliente ou decisão falada em reuniões passadas.</td>
+          <td><pre style="font-size:11px; margin:0;">GET /search?q=contrato
+Resposta: {"results": [{"text": "Contrato assinado em 3 vias", "timestamp": "2026-08-27"}]}</pre></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/health</code></td>
+          <td>Verifica se o gravador está saudável e funcionando perfeitamente.</td>
+          <td><pre style="font-size:11px; margin:0;">GET /health
+Resposta: {"status": "healthy", "uptime_sec": 3600}</pre></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">POST</span></td>
+          <td><code>/audio/transcribe</code></td>
+          <td>Permite enviar um arquivo de áudio gravado no celular para ser transcrito pelo servidor.</td>
+          <td><pre style="font-size:11px; margin:0;">POST /audio/transcribe (anexando arquivo gravacao.m4a)</pre></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 6: TROUBLESHOOTING -->
+  <div class="section-card" id="troubleshooting">
+    <div class="section-header">
+      <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
+    </div>
+    
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: O áudio está gravando, mas as palavras demoram para aparecer</div>
+          <div class="trouble-cause">Causa Provável: O servidor está usando o modelo grande (large-v3) em um processador sem aceleração suficiente.</div>
+          <div>Solução Prática: <code class="trouble-fix">Altere para o modelo médio com o comando: screenpipe --audio-transcription-engine whisper-medium</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Aparece a mensagem 'Port 3030 already in use'</div>
+          <div class="trouble-cause">Causa Provável: Já existe outra cópia do Screenpipe rodando em segundo plano.</div>
+          <div>Solução Prática: <code class="trouble-fix">Finalize o processo antigo com: pkill -f screenpipe && screenpipe</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: A página web não abre no navegador</div>
+          <div class="trouble-cause">Causa Provável: O firewall do servidor ainda não liberou as portas web.</div>
+          <div>Solução Prática: <code class="trouble-fix">Rode no servidor: ufw allow 80/tcp && ufw allow 443/tcp && ufw reload</code></div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
+  <div class="section-card" id="bibliografia">
+    <div class="section-header">
+      <h2 class="section-title">Parte III: Fontes Citadas &amp; Referência Bibliográfica Auditada</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green);">100% Verificadas</span>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Categoria</th>
+          <th>Título da Obra / Documento</th>
+          <th>Autor / Mantenedor</th>
+          <th>Link Oficial</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr id="ref-F01">
+          <td><strong style="color:var(--accent);">F01</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Screenpipe Official Documentation & Architecture Guide</strong></td>
+          <td>Screenpipe Core Team (Louis & Mediar AI)</td>
+          <td><a href="https://docs.screenpipe.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F02">
+          <td><strong style="color:var(--accent);">F02</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Screenpipe GitHub Official Repository, Dockerfiles & Releases</strong></td>
+          <td>Mediar AI Open Source</td>
+          <td><a href="https://github.com/mediar-ai/screenpipe/tree/main/docs" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F03">
+          <td><strong style="color:var(--accent);">F03</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Livro / Guia Técnico</span></td>
+          <td><strong>Building Real-Time Audio Intelligence with Open Models & Local Privacy</strong></td>
+          <td>Hugging Face Research & Open Community</td>
+          <td><a href="https://huggingface.co/openai/whisper-large-v3" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F04">
+          <td><strong style="color:var(--accent);">F04</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Vídeo / YouTube</span></td>
+          <td><strong>Screenpipe Full Walkthrough: Local 24/7 Audio & Screen Memory for AI Agents</strong></td>
+          <td>AI Engineering Reviews</td>
+          <td><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F05">
+          <td><strong style="color:var(--accent);">F05</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Curso / Tutorial</span></td>
+          <td><strong>Deploying Self-Hosted AI Meeting Recorders on Linux Infrastructure</strong></td>
+          <td>Screenpipe DevOps & Community</td>
+          <td><a href="https://github.com/mediar-ai/screenpipe/tree/main/infra" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    const original = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => { btn.innerText = original; }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>

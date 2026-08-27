@@ -5,7 +5,24 @@
   "saas_origem": "granola",
   "versao": "1.0.3",
   "licenca_osi": "MIT",
-  "tempo_estimado_setup": "5 min",
+  "tempo_estimado_setup": "5 min (Zero conhecimento prévio)",
+  "nivelamento_conceitual": [
+    {
+      "termo": "Motor CTranslate2",
+      "analogia_cotidiana": "O Compressor de Alta Potência",
+      "explicacao_simples": "É uma tecnologia de aceleração que reescreve as contas matemáticas da inteligência artificial para que elas rodem até 4 vezes mais rápido usando metade da memória RAM."
+    },
+    {
+      "termo": "Transcrição via CLI (1 Linha)",
+      "analogia_cotidiana": "O Micro-ondas com Botão Único",
+      "explicacao_simples": "Você não precisa abrir telas complexas: basta colar um comando simples com o nome do arquivo de áudio e a transcrição sai na hora na sua frente."
+    },
+    {
+      "termo": "Automação de Atas com Fabric",
+      "analogia_cotidiana": "O Secretário Executivo que Resume a Gravação",
+      "explicacao_simples": "Pega o texto bruto gerado pela fala e organiza automaticamente em: (1) Decisões tomadas; (2) Prazos combinados; (3) Quem é o responsável por cada tarefa."
+    }
+  ],
   "vps_recomendada": {
     "provedor_modelo": "Hetzner Cloud CX22",
     "vcpu": "2 vCPU",
@@ -20,7 +37,10 @@
       {
         "numero": 1,
         "titulo": "Instalação da Engine via Pip",
-        "descricao": "Instalação do runtime CTranslate2 otimizado com faster-whisper.",
+        "descricao": "Instalação do runtime CTranslate2 otimizado com faster-whisper e conversor FFmpeg.",
+        "analogia": "Instalar a ferramenta de precisão com um único clique de download.",
+        "o_que_acontece_na_tela": "Download dos pacotes Python oficiais sem erros.",
+        "como_saber_se_deu_certo": "Comando 'python3 -c \"import faster_whisper\"' executa sem erros.",
         "comandos": "apt-get update && apt-get install -y python3-pip ffmpeg\npip install --upgrade faster-whisper",
         "fonte_id": "F01"
       },
@@ -28,6 +48,9 @@
         "numero": 2,
         "titulo": "Execução da Primeira Transcrição em 1 Linha",
         "descricao": "Processamento imediato de arquivo de áudio com modelo quantizado.",
+        "analogia": "Apertar o botão de ligar e ver o texto saindo imediatamente.",
+        "o_que_acontece_na_tela": "Texto transcrito com as falas e os segundos de cada trecho.",
+        "como_saber_se_deu_certo": "Texto da conversa impresso na tela.",
         "comandos": "python3 -c \"from faster_whisper import WhisperModel; model = WhisperModel('small'); segments, _ = model.transcribe('reuniao.mp3'); print(' '.join([s.text for s in segments]))\"",
         "fonte_id": "F04"
       },
@@ -35,6 +58,9 @@
         "numero": 3,
         "titulo": "Automação de Atas com o Framework Fabric",
         "descricao": "Canalização da transcrição para geração de atas executivas.",
+        "analogia": "Passar o texto bruto pelo filtro que transforma conversa em documento de diretoria.",
+        "o_que_acontece_na_tela": "Ata formatada em tópicos com decisões e pendências.",
+        "como_saber_se_deu_certo": "Arquivo ata_reuniao.md pronto para envio.",
         "comandos": "cat transcricao.txt | fabric --pattern create_meeting_minutes",
         "fonte_id": "F05"
       }
@@ -50,12 +76,35 @@
   },
   "manual_uso_exaustivo": {
     "arquitetura_uso": "Reimplementação dos modelos Whisper sobre CTranslate2 com velocidade 4x maior e metade da memória RAM.",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "Passo 1: Apontar para o Arquivo de Áudio",
+        "acao": "Coloque um arquivo audio.mp3 de teste na pasta.",
+        "resultado_esperado": "Arquivo visível na pasta."
+      },
+      {
+        "passo": "Passo 2: Rodar o Script de Transcrição",
+        "acao": "Execute 'python transcribe.py audio.mp3'.",
+        "resultado_esperado": "As frases surgem instantaneamente acompanhadas do cronômetro."
+      },
+      {
+        "passo": "Passo 3: Salvar em Formato de Ata",
+        "acao": "Execute 'python transcribe.py audio.mp3 > ata.txt'.",
+        "resultado_esperado": "Arquivo de texto salvo com 100% da reunião transcrita."
+      }
+    ],
     "comandos_cli": [
       {
         "comando": "python transcribe.py <arquivo>",
         "descricao": "Transcreve arquivo de áudio ou vídeo imprimindo texto com timestamps.",
         "exemplo": "python transcribe.py audio.mp3",
         "fonte_id": "F01"
+      },
+      {
+        "comando": "--compute_type int8 / float16",
+        "descricao": "Configura o tipo de quantização para acelerar a inferência sem perda de precisão.",
+        "exemplo": "python transcribe.py audio.mp3 --compute_type int8",
+        "fonte_id": "F03"
       }
     ],
     "rotas_api": [

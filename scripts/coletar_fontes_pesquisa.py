@@ -353,16 +353,16 @@ FONTES_CATALOGADAS_GRANOLA = {
         {
             "id": "F05",
             "categoria": "curso_tutorial",
-            "titulo": "Obsidian Whisper & Note-Taking Integration Guide",
-            "url": "https://github.com/nikdanilov/whisper-obsidian",
-            "autor_ou_canal": "Nikita Danilov",
-            "duracao_ou_paginas": "Tutorial Prático",
+            "titulo": "Whisper.cpp Real-World Deployment Examples & CLI Guides",
+            "url": "https://github.com/ggerganov/whisper.cpp/tree/master/examples",
+            "autor_ou_canal": "Whisper.cpp Community Maintainers",
+            "duracao_ou_paginas": "Repositório de Exemplos Práticos",
             "topicos": ["integracao_notas", "configuracao_producao"],
             "trechos_chave": [
                 {
                     "topico": "integracao_notas",
-                    "conteudo": "Gravação de reuniões direto para notas Markdown estruturadas usando o binário whisper.cpp.",
-                    "ancora_ou_minutagem": "Setup Guide"
+                    "conteudo": "Exemplos de integração do binário whisper.cpp com scripts bash, pipelines de áudio e ferramentas locais.",
+                    "ancora_ou_minutagem": "examples/README.md"
                 }
             ]
         }
