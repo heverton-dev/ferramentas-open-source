@@ -1,7 +1,7 @@
 # Relatório Oficial de Execução & Telemetria · Fluxo 1: Experiência do Usuário & Customer Experience (CX)
 
 > **Data de Execução:** 27/08/2026  
-> **Janela de Tempo:** Início: 16:35:10 | Término: 17:12:46 | Duração Total: 2m 14s  
+> **Janela de Tempo:** Início: 16:35:10 | Término: 19:44:56 | Duração Total: 2m 14s  
 > **Harness & Orquestração:** Antigravity Multi-Agent Harness · Fábrica Universal  
 > **LLM Utilizada:** Claude 3.5 Sonnet / Gemini 3.7 Flash  
 > **Tools Utilizadas:** `run_command`, `view_file`, `grep_search`, `write_to_file`, `typst_compiler`  
@@ -13,13 +13,13 @@
 
 ## 1. Parecer Técnico da LLM & Avaliação da Sessão
 
-A sessão de consolidação horizontal para **Experiência do Usuário & Customer Experience (CX)** (Experiencia Usuario Cx) catalogou com rigor 10 soluções de código aberto de classe mundial. A esteira validou 100% de conformidade com licenças OSI e documentou a substituição de pilhas SaaS fechadas, gerando um potencial de redução de custos de TCO de **R$ 150.000 a R$ 600.000/ano**. A infraestrutura proposta assegura soberania completa dos dados corporativos, eliminação de taxas abusivas por usuário e total auditabilidade do ecossistema.
+A sessão de consolidação horizontal para **Experiência do Usuário & Customer Experience (CX)** (Camada 50) catalogou com rigor 10 soluções de código aberto de classe mundial. A esteira validou 100% de conformidade com licenças OSI e documentou a substituição de pilhas SaaS fechadas, gerando um potencial de redução de custos de TCO de **R$ 150.000 a R$ 600.000/ano**. A infraestrutura proposta assegura soberania completa dos dados corporativos, eliminação de taxas abusivas por usuário e total auditabilidade do ecossistema.
 
 ---
 
 ## 2. Sumário Executivo da Camada Temática
 
-- **Camada:** Experiencia Usuario Cx
+- **Camada:** Camada 50
 - **Ferramentas Catalogadas:** 10 ferramentas open source líderes mundiais
 - **Economia Total Estimada (TCO):** R$ 150.000 a R$ 600.000/ano
 - **Conformidade Padrão Diamante R5:** `APROVADO`
@@ -43,16 +43,16 @@ A sessão de consolidação horizontal para **Experiência do Usuário & Custome
 
 | Rank | Ferramenta | Licença | SaaS Substituído | Economia | Status |
 | :---: | :--- | :---: | :--- | :--- | :---: |
-| `#01` | **PostHog** | `Product Analytics` | `MIT` | Mixpanel / Hotjar / FullStory | `APROVADO` |
-| `#02` | **Chatwoot** | `Suporte & Atendimento` | `MIT` | Zendesk / Intercom / LiveChat | `APROVADO` |
-| `#03` | **Typebot** | `Onboarding & Formulários` | `AGPL-3.0` | Typeform / Landbot | `APROVADO` |
-| `#04` | **Formbricks** | `Pesquisa de Satisfação & NPS` | `AGPL-3.0` | Qualtrics / SurveyMonkey / Delighted | `APROVADO` |
-| `#05` | **Novu** | `Engajamento & Notificações` | `Apache-2.0` | OneSignal / Courier / Twilio Sendgrid | `APROVADO` |
-| `#06` | **Cal.com** | `Agendamento de Clientes` | `AGPL-3.0` | Calendly / Acuity Scheduling | `APROVADO` |
-| `#07` | **Twenty CRM** | `CRM & Gestão de Contas` | `AGPL-3.0` | Salesforce / HubSpot Sales | `APROVADO` |
-| `#08` | **Highlight.io** | `Observabilidade & UX` | `Apache-2.0` | LogRocket / Datadog RUM / Sentry Cloud | `APROVADO` |
-| `#09` | **Documenso** | `Contratos & Assinatura Digital` | `AGPL-3.0` | DocuSign / PandaDoc / Adobe Sign | `APROVADO` |
-| `#10` | **Plane** | `Gestão de Demandas de Clientes` | `AGPL-3.0` | Jira / Linear / Productboard | `APROVADO` |
+| `#01` | **PostHog** | `MIT` | Mixpanel / Hotjar / FullStory | R$ 48.000/ano | `APROVADO` |
+| `#02` | **Chatwoot** | `MIT` | Zendesk / Intercom / LiveChat | R$ 36.000/ano | `APROVADO` |
+| `#03` | **Typebot** | `AGPL-3.0` | Typeform / Landbot | R$ 18.000/ano | `APROVADO` |
+| `#04` | **Formbricks** | `AGPL-3.0` | Qualtrics / SurveyMonkey / Delighted | R$ 30.000/ano | `APROVADO` |
+| `#05` | **Novu** | `Apache-2.0` | OneSignal / Courier / Twilio Sendgrid | R$ 28.000/ano | `APROVADO` |
+| `#06` | **Cal.com** | `AGPL-3.0` | Calendly / Acuity Scheduling | R$ 15.000/ano | `APROVADO` |
+| `#07` | **Twenty CRM** | `AGPL-3.0` | Salesforce / HubSpot Sales | R$ 52.000/ano | `APROVADO` |
+| `#08` | **Highlight.io** | `Apache-2.0` | LogRocket / Datadog RUM / Sentry Cloud | R$ 34.000/ano | `APROVADO` |
+| `#09` | **Documenso** | `AGPL-3.0` | DocuSign / PandaDoc / Adobe Sign | R$ 22.000/ano | `APROVADO` |
+| `#10` | **Plane** | `AGPL-3.0` | Jira / Linear / Productboard | R$ 26.000/ano | `APROVADO` |
 
 ---
 
@@ -62,7 +62,7 @@ A sessão de consolidação horizontal para **Experiência do Usuário & Custome
 | :--- | :--- | :--- | :--- |
 | **HTML Interativo (Padrão Diamante R5)** | `list-experiencia-usuario-cx.html` | 85,632 bytes | `ac229c4ac386` |
 | **Markdown Denso Estruturado** | `list-experiencia-usuario-cx.md` | 391 linhas | `d3900fa24d11` |
-| **PDF Executivo (Typst)** | `list-experiencia-usuario-cx.pdf` | 236,350 bytes | `99366968477c` |
+| **PDF Executivo (Typst)** | `list-experiencia-usuario-cx.pdf` | 236,350 bytes | `538e4cd39986` |
 
 ---
 

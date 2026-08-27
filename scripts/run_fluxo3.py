@@ -47,7 +47,7 @@ def executar_fluxo3(ferramenta: str = None, saas: str = "granola") -> bool:
     print(f"\n🔍 [Gate G0/G1] Auditando fontes oficiais para '{ferramenta}'...")
     json_fontes = BASE_DIR / "scripts" / "data" / f"sumario-fontes-{ferramenta}.json"
     if json_fontes.exists():
-        auditar_qualidade_sumario(str(json_fontes))
+        auditar_qualidade_sumario(json_fontes)
         auditar_fontes_veridicas(json_fontes)
 
     print(f"\n⚙️ 1/2 Compilando Manual Operacional VPS (com Desinstalação Cirúrgica)...")

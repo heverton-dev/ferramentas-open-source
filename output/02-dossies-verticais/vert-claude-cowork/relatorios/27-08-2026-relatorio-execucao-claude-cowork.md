@@ -1,7 +1,7 @@
 # Relatório Oficial de Execução & Telemetria · Fluxo 2: Claude Team / Claude Projects (Anthropic Commercial Workspaces)
 
 > **Data de Execução:** 27/08/2026  
-> **Janela de Tempo:** Início: 16:40:12 | Término: 17:12:52 | Duração Total: 2m 29s  
+> **Janela de Tempo:** Início: 16:40:12 | Término: 19:44:56 | Duração Total: 2m 29s  
 > **Harness & Orquestração:** Antigravity Multi-Agent Harness · Fábrica Universal  
 > **LLM Utilizada:** Claude 3.5 Sonnet / Gemini 3.7 Flash  
 > **Tools Utilizadas:** `run_command`, `view_file`, `grep_search`, `write_to_file`, `typst_compiler`  
@@ -57,8 +57,8 @@ A sessão de desmantelamento agêntico para o alvo **Claude Team / Claude Projec
 | Artefato | Arquivo | Tamanho / Volume | SHA-256 (12 chars) |
 | :--- | :--- | :--- | :--- |
 | **HTML Interativo (Padrão Diamante R5-V)** | `vert-claude-cowork.html` | 68,603 bytes | `f2df7a93ffb0` |
-| **Markdown Limpo Estruturado** | `vert-claude-cowork.md` | 0 linhas | `N/A` |
-| **PDF Executivo (Typst)** | `vert-claude-cowork.pdf` | N/A | `N/A` |
+| **Markdown Limpo Estruturado** | `vert-claude-cowork.md` | 91 linhas | `150e00c84f7c` |
+| **PDF Executivo (Typst)** | `vert-claude-cowork.pdf` | 115,704 bytes | `8117bb2c42d4` |
 
 ---
 
