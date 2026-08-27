@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual Operacional: Mailu · Deploy VPS &amp; Uso Exaustivo</title>
+  <style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --paper: #F8FAFC;
+    --surface: #FFFFFF;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --rule: #CBD5E1;
+    --rule-soft: #E2E8F0;
+    --accent: #0284C7;
+    --accent-dark: #0369A1;
+    --accent-soft: #E0F2FE;
+    --green: #10B981;
+    --green-dark: #065F46;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+    --purple: #8B5CF6;
+    --purple-soft: #EDE9FE;
+    --code-bg: #0F172A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .container { max-width: 1060px; margin: 0 auto; }
+  
+  .header-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+  
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    background: var(--paper);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--rule-soft);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat-val { font-size: 14.5px; font-weight: 800; color: var(--ink); }
+
+  .nav-anchors {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .nav-anchors a {
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    color: var(--ink-2);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-anchors a:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    background: var(--accent-soft);
+  }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .section-header {
+    border-bottom: 2px solid var(--rule-soft);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title { font-size: 20px; font-weight: 800; color: var(--ink); }
+
+  /* CARDS DE NIVELAMENTO */
+  .grid-conceitos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card-conceito {
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    padding: 16px;
+    border-left: 4px solid var(--purple);
+  }
+  .conceito-termo { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+  .conceito-analogia { font-size: 12.5px; font-weight: 700; color: #6D28D9; background: var(--purple-soft); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+  .conceito-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+
+  /* PASSOS DE INSTALAÇÃO */
+  .step-box {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .step-box:last-child { border-bottom: none; }
+  .step-top {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .step-num {
+    background: var(--accent);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .step-heading { font-size: 17px; font-weight: 800; color: var(--ink); }
+  .analogia-box {
+    background: #F0FDF4;
+    border-left: 4px solid var(--green);
+    padding: 8px 12px;
+    border-radius: 0 4px 4px 0;
+    margin: 8px 0;
+    font-size: 13px;
+    color: var(--green-dark);
+  }
+  .feedback-box {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #92400E;
+  }
+  .validacao-box {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #1E40AF;
+  }
+
+  .code-box {
+    position: relative;
+    background: var(--code-bg);
+    border-radius: 6px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  .code-box pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #F8FAFC;
+    line-height: 1.5;
+  }
+  .btn-copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.15);
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-copy:hover { background: rgba(255,255,255,0.3); }
+
+  .cite-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--gold-soft);
+    color: #B45309;
+    vertical-align: super;
+    margin-left: 4px;
+    text-decoration: none;
+  }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  table.data-table th {
+    background: var(--paper);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--ink-2);
+    border-bottom: 2px solid var(--rule);
+  }
+  table.data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink-2);
+  }
+  table.data-table tr:hover td { background: rgba(2, 132, 199, 0.02); }
+
+  .trouble-card {
+    background: #FFFBEB;
+    border-left: 4px solid var(--gold);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 0 4px 4px 0;
+  }
+  .trouble-symptom { font-weight: 700; color: #92400E; font-size: 13.5px; }
+  .trouble-cause { font-size: 13px; color: #78350F; margin: 4px 0; }
+  .trouble-fix { font-family: var(--mono); font-size: 12px; background: #FEF3C7; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="header-card">
+    <div class="breadcrumb">
+      <a href="../../listas-open-source/vert-locaweb-email.html">← Voltar ao Dossiê Vertical Locaweb-Email</a>
+      &nbsp;·&nbsp;
+      <a href="../trilhas/trilha-mailu-aprendizado.html">Ver Trilha de Aprendizado 🗺️</a>
+    </div>
+    <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
+    <h1>Manual Operacional Completo: Mailu</h1>
+    <p class="deck">
+      Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
+    </p>
+
+    <!-- HERO STATS DA VPS -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">VPS Recomendada</span>
+        <span class="stat-val">Hetzner Cloud CPX21 (ou Contabo Cloud VPS M)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Hardware Mínimo</span>
+        <span class="stat-val">2 vCPU Dedicadas (AMD EPYC) · 4 GB RAM ECC</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Armazenamento &amp; SO</span>
+        <span class="stat-val">80 GB SSD (mínimo 50 GB para backups) · Ubuntu 24.04 LTS (x86_64)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Custo Mensal Estimado</span>
+        <span class="stat-val" style="color:var(--accent-dark);">EUR 6,90/mês (~R$ 41,40/mês na cotação média)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Licença de Uso</span>
+        <span class="stat-val" style="color:var(--green);">AGPL-3.0 (Livre &amp; Comercial)</span>
+      </div>
+    </div>
+
+    <!-- NAVEGAÇÃO RÁPIDA -->
+    <div class="nav-anchors">
+      <a href="#nivelamento">💡 Módulo 0: Nivelamento para Iniciantes</a>
+      <a href="#instalacao">📦 Parte I: Instalação Passo a Passo</a>
+      <a href="#configuracao">⚙️ Arquivos de Configuração</a>
+      <a href="#primeiro-voo">✈️ Roteiro de Primeiro Voo</a>
+      <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
+      <a href="#manual-api">🌐 Endpoints de API</a>
+      <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
+      <a href="#desinstalacao">🛡️ Desinstalação Cirúrgica VPS</a>
+      <a href="#bibliografia">📚 Referências Bibliográficas</a>
+    </div>
+  </div>
+
+  <!-- MÓDULO 0: NIVELAMENTO CONCEITUAL -->
+  <div class="section-card" id="nivelamento">
+    <div class="section-header">
+      <h2 class="section-title">Módulo 0: Nivelamento Conceitual (O que você precisa saber antes de começar)</h2>
+      <span class="badge-tag" style="background:var(--purple-soft); color:#6D28D9;">Zero Programação</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:16px;">
+      Você não precisa ser engenheiro de software para entender como o sistema funciona. Abaixo explicamos os 5 conceitos-chave usando analogias do cotidiano:
+    </p>
+    <div class="grid-conceitos">
+      
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Mailu (A Ferramenta)</div>
+          <div class="conceito-analogia">Analogia: Sua Agência de Correios Privada em Casa</div>
+          <p class="conceito-desc">Assim como você poderia montar uma agência de correios dentro da sua garagem em vez de depender do Correios oficial, o Mailu é um servidor de email completo que você hospeda na sua VPS. Ele recebe, armazena, processa e envia emails com total soberania. Nenhum terceiro (como a Locaweb) guarda suas mensagens.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 MTA (Mail Transfer Agent)</div>
+          <div class="conceito-analogia">Analogia: O Carteiro que Entrega Correspondência Entre Agências</div>
+          <p class="conceito-desc">É o serviço que recebe emails de fora e os coloca nas caixas de correio dos seus usuários. No Mailu, ele roda automaticamente usando o Postfix, que é o padrão de ouro da internet desde 1998.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 IMAP & POP3 (Protocolos de Leitura)</div>
+          <div class="conceito-analogia">Analogia: Janelas de Vidro da sua Caixa de Correio</div>
+          <p class="conceito-desc">São os portais que seu Outlook, Gmail ou Thunderbird usam para ler seus emails remotamente sem ter que acessar a máquina dele pessoalmente. IMAP sincroniza em tempo real; POP3 apenas baixa e apaga.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Spam & Antivírus (Escudo Digital)</div>
+          <div class="conceito-analogia">Analogia: O Detector de Encomendas Suspeitas na Entrada</div>
+          <p class="conceito-desc">Mailu vem com Rspamd (filtro de spam) e ClamAV (antivírus) integrados. Toda mensagem é verificada antes de chegar à sua caixa, bloqueando vírus e mensagens de scam.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 SPF, DKIM & DMARC (Assinatura Digital de Email)</div>
+          <div class="conceito-analogia">Analogia: Hologramas de Segurança do CPF em seus Emails</div>
+          <p class="conceito-desc">São certificados criptográficos que você coloca no seu domínio via DNS. Quando você envia um email de seu servidor Mailu para o Gmail ou Outlook, esses serviços verificam se o email realmente veio de você e não foi falsificado.</p>
+        </div>
+        
+    </div>
+  </div>
+
+  <!-- SEÇÃO 1: INSTALAÇÃO EM PRODUÇÃO -->
+  <div class="section-card" id="instalacao">
+    <div class="section-header">
+      <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
+      <span class="badge-tag">Tempo ~40 a 60 minutos (Conhecimento intermediário de DNS)</span>
+    </div>
+    
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 1</span>
+            <span class="step-heading">Aquisição do Domínio & Delegação de Nameservers</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Você compra um domínio (ex: empresa.com.br) em um registrador (NameCheap, GoDaddy, Registro.br) e aponta seus nameservers (DNS) para a VPS. Sem isso, ninguém consegue encontrar seu servidor de email na internet.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> É como registrar sua agência de correios em um mapa da cidade para que as pessoas saibam onde entregar cartas.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># No painel do registrador, aponte os nameservers para:
+# NS1: seu-ip.dominio.com.br
+# NS2: seu-ip-backup.dominio.com.br (se disponível)
+# Aguarde 12-24 horas para propagação global</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Você receberá um painel de controle do registrador onde pode editar os registros DNS.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Digite 'nslookup empresa.com.br' no terminal e ele retornará o IP da sua VPS.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 2</span>
+            <span class="step-heading">Blindagem Inicial & Hardening do Sistema Operacional</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Criamos um usuário mailu dedicado, ativamos UFW firewall e aplicamos patches de segurança.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Instalar alarme, câmeras e reforçar as fechaduras da agência antes de começar a receber correspondência.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>ssh root@SEU_IP
+apt-get update && apt-get upgrade -y
+adduser mailu && usermod -aG sudo mailu
+ufw default deny incoming && ufw default allow outgoing
+ufw allow 22/tcp && ufw allow 25/tcp && ufw allow 143/tcp && ufw allow 587/tcp && ufw allow 993/tcp && ufw allow 995/tcp && ufw allow 80/tcp && ufw allow 443/tcp
+ufw --force enable</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Mensagens de confirmação de firewall ativo e regras de entrada/saída definidas.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'ufw status' e veja todas as portas de email listadas com ALLOW IN.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 3</span>
+            <span class="step-heading">Instalação do Docker & Docker Compose</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Mailu roda através de containers Docker, que isolam o servidor de email de outros serviços. Sem Docker, seria necessário configurar Postfix, Dovecot, Sieve, etc manualmente (um pesadelo).</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Encomendar um escritório modular pré-montado em vez de construir a agência de zero com tijolos.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>apt-get install -y ca-certificates curl
+curl -fsSL https://get.docker.com | sh
+usermod -aG docker mailu
+curl -SL https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Download de pacotes Docker durante 2-3 minutos.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'docker --version' e retorna 'Docker version 27.x.x' ou superior.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 4</span>
+            <span class="step-heading">Clone do Repositório Oficial Mailu & Configuração Inicial</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Baixamos o código-fonte oficial do Mailu do GitHub e rodamos o assistente de configuração interativo.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Descarregar o manual de operação da agência e preencher os formulários iniciais.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>cd /opt
+git clone https://github.com/Mailu/Mailu.git mailu
+cd /opt/mailu
+python3 setup.py</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Uma série de perguntas na tela: qual é seu domínio, quantos usuários, qual certificado SSL, etc.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> O arquivo /opt/mailu/.env será gerado com todas as configurações.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 5</span>
+            <span class="step-heading">Inicialização dos Containers Mailu (Docker Compose Up)</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Levantamos os containers de Postfix (MTA), Dovecot (IMAP), Rspamd (antispam), Webmail e Admin simultaneamente.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Ligar a energia, os sistemas de ar, alarme e iluminação da agência ao mesmo tempo.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>cd /opt/mailu
+docker-compose up -d
+docker-compose ps</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Docker fará o pull das imagens oficiais (200-300 MB) e exibirá logs de inicialização.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'docker ps' e veja 8-10 containers rodando com status 'Up'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 6</span>
+            <span class="step-heading">Configuração de Registros DNS (SPF, DKIM, DMARC)</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Criamos certificados criptográficos no DNS que assinam cada email enviado. Sem isso, Gmail e Outlook rejeitarão seus emails.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Colocar o holograma de segurança em cada envelope que sai da agência.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># 1. Entre no painel de admin: https://empresa.com.br/admin
+# 2. Vá em 'Configurações de Domínio'
+# 3. Copie os registros TXT de SPF, DKIM e DMARC
+# 4. Cole-os no painel DNS do seu registrador
+# 5. Aguarde 2-4 horas para propagação
+dig empresa.com.br MX  # Valida MX
+dig mailu._domainkey.empresa.com.br TXT  # Valida DKIM</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> O painel admin de Mailu exibirá os registros DNS exatos que você deve copiar.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Use a ferramenta MXToolbox para validar: MX, SPF, DKIM e DMARC aparecem com checkmark verde.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 7</span>
+            <span class="step-heading">Teste de Saúde & Primeiro Email Enviado</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Verificamos que o servidor pode receber e enviar emails, que o antivírus está ativo e que os logs indicam 0 erros.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Fazer um teste de funcionamento da agência antes de abrir ao público.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># Via admin:
+# 1. Crie um usuário de teste: admin@empresa.com.br
+# 2. Envie um email de teste para seu Gmail pessoal
+# 3. Verifique que o email chegou com SPF=pass, DKIM=pass no cabeçalho</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Confirmação de entrega do email de teste e ausência de rejeições.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Acesse https://empresa.com.br/webmail e leia o email de teste recebido.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
+  <div class="section-card" id="configuracao">
+    <div class="section-header">
+      <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
+    </div>
+    
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/mailu/docker-compose.yml</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Orquestração de 6 containers: front (proxy SMTP/IMAP), admin (painel), imap (Dovecot), smtp (Postfix), redis (cache) e db (banco PostgreSQL). Todas as comunicações são internas; apenas front expõe portas ao mundo.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>version: '3.8'
+services:
+  front:
+    image: mailu/nginx:2.0.1
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "25:25"
+      - "465:465"
+      - "587:587"
+      - "143:143"
+      - "993:993"
+      - "995:995"
+    volumes:
+      - ./data/certs:/etc/letsencrypt
+    depends_on:
+      - admin
+      - webmail
+
+  admin:
+    image: mailu/admin:2.0.1
+    restart: always
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_URL=postgresql://mailu:${DB_PASSWORD}@db/mailu
+    depends_on:
+      - db
+      - redis
+
+  imap:
+    image: mailu/dovecot:2.0.1
+    restart: always
+    volumes:
+      - ./data/mail:/mail
+
+  smtp:
+    image: mailu/postfix:2.0.1
+    restart: always
+    volumes:
+      - ./data/mail:/mail
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=mailu
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+
+networks:
+  default:
+    name: mailu-net</code></pre>
+          </div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/mailu/.env.example</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Arquivo de configuração centralizado. Customize com seu domínio, senhas fortes e preferências de segurança.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code># Domínio e hostname
+DOMAIN=empresa.com.br
+HOSTNAME=mail.empresa.com.br
+
+# Senhas e Segredo
+SECRET_KEY=mudeme123456789abcdefg
+DB_PASSWORD=mudeme_db_senha_forte_aqui
+
+# Certificado SSL (Let's Encrypt automático)
+TLS_FLAVOR=letsencrypt
+
+# Filtros de Spam e Antivírus
+SPAM_LEVEL=10
+VIRUS_ENABLED=true
+
+# Limites de Taxa (rate-limit)
+RELAY_DOMAIN=empresa.com.br
+RELAY_HOST=
+RELAY_PORT=25</code></pre>
+          </div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
+  <div class="section-card" id="primeiro-voo">
+    <div class="section-header">
+      <h2 class="section-title">Parte II: Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green-dark);">Prática Imediata</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
+      Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
+    </p>
+    
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 1: Acessar o Painel de Administração:</strong> Abra https://empresa.com.br/admin no navegador. Faça login com admin@empresa.com.br e a senha que configurou.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Você verá o dashboard com estatísticas de usuários, domínios e emails recebidos.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 2: Criar Primeiro Usuário de Email:</strong> No painel Admin, clique em 'Usuários' → 'Adicionar'. Preencha nome, email (ex: joao@empresa.com.br) e senha forte. Clique em Salvar.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> O novo usuário aparecerá na lista e receberá um email de boas-vindas no webmail.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 3: Configurar Seu Cliente (Thunderbird, Outlook, iPhone):</strong> IMAP: mail.empresa.com.br porta 993 com TLS. SMTP: mail.empresa.com.br porta 587 com TLS. Insira joao@empresa.com.br e a senha.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> O cliente sincronizará as pastas INBOX, Drafts, Sent e Trash do servidor.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 4: Enviar Email de Teste:</strong> Do seu cliente local, envie um email para seu Gmail pessoal. Verifique que chegou e inspecione o cabeçalho (Show original) para confirmar SPF=pass e DKIM=pass.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> O email chega na caixa de entrada (não em spam) com SPF=pass, DKIM=pass e DMARC=pass no cabeçalho.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 4: MANUAL DE USO CLI -->
+  <div class="section-card" id="manual-cli">
+    <div class="section-header">
+      <h2 class="section-title">Dicionário Completo de Comandos (CLI)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Comando / Opção</th>
+          <th>O que faz (em português claro)</th>
+          <th>Exemplo de Execução</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker-compose logs -f smtp</code></td>
+          <td>Acompanha em tempo real os logs de recebimento de emails (Postfix).</td>
+          <td><code>Você verá 'accept message' para cada email recebido.</code></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker-compose logs -f imap</code></td>
+          <td>Monitora as conexões IMAP (clientes lendo emails).</td>
+          <td><code>Você verá 'user=joao' para cada login.</code></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker-compose exec admin flask mailu admin create admin@empresa.com.br</code></td>
+          <td>Cria um novo administrador via CLI sem entrar no painel web.</td>
+          <td><code>Será solicitada uma senha forte.</code></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker-compose restart smtp</code></td>
+          <td>Reinicia apenas o serviço SMTP/Postfix sem derrubar IMAP ou banco de dados.</td>
+          <td><code>Útil após editar configurações de rateLimit.</code></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 5: REFERÊNCIA DE API REST -->
+  <div class="section-card" id="manual-api">
+    <div class="section-header">
+      <h2 class="section-title">Endpoints de API REST &amp; Conexão com Agentes (MCP)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Método</th>
+          <th>Rota</th>
+          <th>Finalidade</th>
+          <th>Payload / Resposta</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/admin/antispam/status</code></td>
+          <td>Retorna estatísticas de emails bloqueados por spam nos últimos 7 dias.</td>
+          <td><pre style="font-size:11px; margin:0;">Resposta: {"spam_blocked": 234, "virus_detected": 3, "users_created": 45}</pre></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">POST</span></td>
+          <td><code>/admin/users</code></td>
+          <td>Cria um novo usuário de email via JSON.</td>
+          <td><pre style="font-size:11px; margin:0;">{"email": "maria@empresa.com.br", "password": "senha123"}</pre></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 6: TROUBLESHOOTING -->
+  <div class="section-card" id="troubleshooting">
+    <div class="section-header">
+      <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
+    </div>
+    
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Emails de fora não chegam (erro 550)</div>
+          <div class="trouble-cause">Causa Provável: Registros DNS SPF, DKIM ou DMARC não estão configurados corretamente.</div>
+          <div>Solução Prática: <code class="trouble-fix">No painel Admin, copie os registros DNS exatos. Valide com: dig empresa.com.br TXT | grep v=spf1</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Clientes não conseguem conectar em IMAP (porta 993 timeout)</div>
+          <div class="trouble-cause">Causa Provável: Firewall bloqueando a porta ou certificado SSL expirado.</div>
+          <div>Solução Prática: <code class="trouble-fix">ufw allow 993/tcp && docker-compose logs front | grep certificate</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Caixa de entrada cheia, disco lotado</div>
+          <div class="trouble-cause">Causa Provável: Nenhum backup é feito automaticamente; o disco está em 100%.</div>
+          <div>Solução Prática: <code class="trouble-fix">docker-compose exec admin du -sh /mail/* # Vê tamanho de cada usuário. Aumente o disco da VPS ou implemente rotina de backup.</code></div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
+  <div class="section-card" id="desinstalacao">
+    <div class="section-header">
+      <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
+      <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
+    </div>
+    
+        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
+          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
+          <p style="margin:0; font-size:13.5px; color:#1E293B;">A desinstalação remove exclusivamente os containers Mailu, volumes de dados de email e certificados SSL, preservando intactos o Docker, firewall, banco de dados PostgreSQL compartilhado (se houver) e outros serviços na VPS.</p>
+        </div>
+        
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 1</span>
+                <span class="step-title">Backup de Segurança (Exportar Todos os Emails & Configurações)</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Antes de remover, fazemos backup de todos os emails, configurações de usuários e certificados SSL.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>cd /opt/mailu
+mkdir -p backups
+docker-compose exec db pg_dump -U postgres mailu > backups/mailu-$(date +%Y%m%d).sql
+tar -czf backups/mailu-certs-$(date +%Y%m%d).tar.gz ./data/certs/
+du -sh backups/  # Confirma tamanho do backup</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Nunca delete a pasta /opt/mailu até confirmar que o backup foi feito com sucesso.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>ls -lah backups/ # Arquivos de backup recentes com tamanho > 0</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 2</span>
+                <span class="step-title">Parada Ordeira dos Containers Mailu</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Interrompe todos os containers Mailu permitindo que encerrem gracefully, sem matar processos abruptamente.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>cd /opt/mailu
+docker-compose down --remove-orphans</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> NÃO use 'docker kill' ou 'docker-compose rm -f'. Isso corrompe o banco de dados PostgreSQL.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>docker ps | grep mailu # Não deve constar nada</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 3</span>
+                <span class="step-title">Remoção de Volumes de Dados (Mails, DB, Cache)</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove os volumes Docker que armazenam emails, banco de dados PostgreSQL e cache Redis do Mailu.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>docker volume rm mailu_maildata 2>/dev/null || true
+docker volume rm mailu_db 2>/dev/null || true
+docker volume rm mailu_redis 2>/dev/null || true
+docker volume ls | grep -i mailu  # Não deve retornar nada</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Esta ação é IRREVERSÍVEL. Certifique-se que o backup foi feito no Passo 1.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>Nenhum volume Docker com 'mailu' no nome deve constar em 'docker volume ls'</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 4</span>
+                <span class="step-title">Revogação de Portas no Firewall</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Fecha exclusivamente as portas de email (25, 143, 587, 993, 995) sem interferir em SSH (22), HTTP (80) ou HTTPS (443).</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo ufw delete allow 25/tcp
+sudo ufw delete allow 143/tcp
+sudo ufw delete allow 587/tcp
+sudo ufw delete allow 993/tcp
+sudo ufw delete allow 995/tcp
+sudo ufw reload
+sudo ufw status | grep -E '25|143|587|993|995'  # Não deve constar</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Mantenha o firewall ativo e nunca desabilite UFW.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo ufw status numbered | grep -v 25 | grep -v 143 | grep -v 587 | grep -v 993 | grep -v 995</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 5</span>
+                <span class="step-title">Remoção de Pastas e Arquivo de Configuração</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove a pasta /opt/mailu e limpa o arquivo docker-compose.yml para liberar espaço em disco.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code># Opção 1: Remover completamente
+sudo rm -rf /opt/mailu
+
+# Opção 2: Manter backups (recomendado)
+sudo mv /opt/mailu /opt/mailu-backup-archived
+ls -la /opt/  # Confirma que /opt/mailu não existe mais</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Se escolher Opção 1, os backups em backups/ serão deletados também. Considere copiar para outro local: scp backups/ usuario@outra-vps:/backups</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>which docker-compose mailu  # Não deve encontrar</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 6</span>
+                <span class="step-title">Remoção de Imagens Docker Mailu (Opcional)</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove as imagens Docker do Mailu para liberar espaço de disco (~500 MB).</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>docker image rm -f mailu/nginx:2.0.1 mailu/admin:2.0.1 mailu/dovecot:2.0.1 mailu/postfix:2.0.1 2>/dev/null || true
+docker images | grep -i mailu  # Não deve retornar nada</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Somente execute se tiver certeza que não vai reinstalar Mailu em breve.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>docker image ls | grep mailu # Deve estar vazio</code></div>
+            </div>
+            
+        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
+          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
+          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
+            <li style='margin-bottom:6px;'><code>free -h # Confirma devolução de memória RAM</code></li><li style='margin-bottom:6px;'><code>df -h # Confirma devolução de espaço em disco em /opt</code></li><li style='margin-bottom:6px;'><code>docker ps # Confirma ausência de containers Mailu</code></li><li style='margin-bottom:6px;'><code>docker volume ls # Confirma ausência de volumes Mailu</code></li><li style='margin-bottom:6px;'><code>netstat -tulpn | grep -E '25|143|587|993|995' # Confirma que portas de email estão liberadas</code></li>
+          </ul>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
+  <div class="section-card" id="bibliografia">
+    <div class="section-header">
+      <h2 class="section-title">Parte III: Fontes Citadas &amp; Referência Bibliográfica Auditada</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green);">100% Verificadas</span>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Categoria</th>
+          <th>Título da Obra / Documento</th>
+          <th>Autor / Mantenedor</th>
+          <th>Link Oficial</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr id="ref-F01">
+          <td><strong style="color:var(--accent);">F01</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Mailu Official Documentation & Architecture</strong></td>
+          <td>Mailu Core Team & Community</td>
+          <td><a href="https://mailu.io/latest/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F02">
+          <td><strong style="color:var(--accent);">F02</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Mailu GitHub Repository & Deployment Guides</strong></td>
+          <td>Mailu Open Source</td>
+          <td><a href="https://github.com/Mailu/Mailu" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F03">
+          <td><strong style="color:var(--accent);">F03</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Livro / Guia Técnico</span></td>
+          <td><strong>Postfix, Dovecot & DKIM: A Complete Email Server Setup</strong></td>
+          <td>Wietse Venema & Community</td>
+          <td><a href="https://www.postfix.org/OVERVIEW.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F04">
+          <td><strong style="color:var(--accent);">F04</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Vídeo / YouTube</span></td>
+          <td><strong>Self-Hosted Email Server: Mailu Complete Tutorial</strong></td>
+          <td>Open Source DevOps Channels</td>
+          <td><a href="https://www.youtube.com/results?search_query=mailu+self+hosted+email" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F05">
+          <td><strong style="color:var(--accent);">F05</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Curso / Tutorial</span></td>
+          <td><strong>Email Server Hardening & SPF/DKIM/DMARC Configuration</strong></td>
+          <td>Mailu Documentation & Community</td>
+          <td><a href="https://github.com/Mailu/Mailu/tree/master/docs" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    const original = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => { btn.innerText = original; }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>

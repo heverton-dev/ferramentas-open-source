@@ -1,0 +1,345 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "Mailu",
+  "slug": "mailu",
+  "saas_origem": "locaweb-email",
+  "versao": "2.0.1",
+  "licenca_osi": "AGPL-3.0",
+  "tempo_estimado_setup": "40 a 60 minutos (Conhecimento intermediário de DNS)",
+  "nivelamento_conceitual": [
+    {
+      "termo": "Mailu (A Ferramenta)",
+      "analogia_cotidiana": "Sua Agência de Correios Privada em Casa",
+      "explicacao_simples": "Assim como você poderia montar uma agência de correios dentro da sua garagem em vez de depender do Correios oficial, o Mailu é um servidor de email completo que você hospeda na sua VPS. Ele recebe, armazena, processa e envia emails com total soberania. Nenhum terceiro (como a Locaweb) guarda suas mensagens."
+    },
+    {
+      "termo": "MTA (Mail Transfer Agent)",
+      "analogia_cotidiana": "O Carteiro que Entrega Correspondência Entre Agências",
+      "explicacao_simples": "É o serviço que recebe emails de fora e os coloca nas caixas de correio dos seus usuários. No Mailu, ele roda automaticamente usando o Postfix, que é o padrão de ouro da internet desde 1998."
+    },
+    {
+      "termo": "IMAP & POP3 (Protocolos de Leitura)",
+      "analogia_cotidiana": "Janelas de Vidro da sua Caixa de Correio",
+      "explicacao_simples": "São os portais que seu Outlook, Gmail ou Thunderbird usam para ler seus emails remotamente sem ter que acessar a máquina dele pessoalmente. IMAP sincroniza em tempo real; POP3 apenas baixa e apaga."
+    },
+    {
+      "termo": "Spam & Antivírus (Escudo Digital)",
+      "analogia_cotidiana": "O Detector de Encomendas Suspeitas na Entrada",
+      "explicacao_simples": "Mailu vem com Rspamd (filtro de spam) e ClamAV (antivírus) integrados. Toda mensagem é verificada antes de chegar à sua caixa, bloqueando vírus e mensagens de scam."
+    },
+    {
+      "termo": "SPF, DKIM & DMARC (Assinatura Digital de Email)",
+      "analogia_cotidiana": "Hologramas de Segurança do CPF em seus Emails",
+      "explicacao_simples": "São certificados criptográficos que você coloca no seu domínio via DNS. Quando você envia um email de seu servidor Mailu para o Gmail ou Outlook, esses serviços verificam se o email realmente veio de você e não foi falsificado."
+    }
+  ],
+  "vps_recomendada": {
+    "provedor_modelo": "Hetzner Cloud CPX21 (ou Contabo Cloud VPS M)",
+    "vcpu": "2 vCPU Dedicadas (AMD EPYC)",
+    "ram": "4 GB RAM ECC",
+    "armazenamento": "80 GB SSD (mínimo 50 GB para backups)",
+    "so_recomendado": "Ubuntu 24.04 LTS (x86_64)",
+    "custo_mensal_estimado": "EUR 6,90/mês (~R$ 41,40/mês na cotação média)",
+    "portas_abertas": [
+      "22/tcp (SSH para administração remota)",
+      "25/tcp (SMTP para recebimento de emails de fora)",
+      "143/tcp (IMAP para leitura segura de emails)",
+      "587/tcp (Submission - envio de emails de clientes)",
+      "993/tcp (IMAPS - IMAP com criptografia)",
+      "995/tcp (POP3S - POP3 com criptografia)",
+      "80/tcp (HTTP para Let's Encrypt auto-renovação)",
+      "443/tcp (HTTPS para acessar webmail e admin)"
+    ]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Aquisição do Domínio & Delegação de Nameservers",
+        "descricao": "Você compra um domínio (ex: empresa.com.br) em um registrador (NameCheap, GoDaddy, Registro.br) e aponta seus nameservers (DNS) para a VPS. Sem isso, ninguém consegue encontrar seu servidor de email na internet.",
+        "analogia": "É como registrar sua agência de correios em um mapa da cidade para que as pessoas saibam onde entregar cartas.",
+        "o_que_acontece_na_tela": "Você receberá um painel de controle do registrador onde pode editar os registros DNS.",
+        "como_saber_se_deu_certo": "Digite 'nslookup empresa.com.br' no terminal e ele retornará o IP da sua VPS.",
+        "comandos": "# No painel do registrador, aponte os nameservers para:\n# NS1: seu-ip.dominio.com.br\n# NS2: seu-ip-backup.dominio.com.br (se disponível)\n# Aguarde 12-24 horas para propagação global",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Blindagem Inicial & Hardening do Sistema Operacional",
+        "descricao": "Criamos um usuário mailu dedicado, ativamos UFW firewall e aplicamos patches de segurança.",
+        "analogia": "Instalar alarme, câmeras e reforçar as fechaduras da agência antes de começar a receber correspondência.",
+        "o_que_acontece_na_tela": "Mensagens de confirmação de firewall ativo e regras de entrada/saída definidas.",
+        "como_saber_se_deu_certo": "Execute 'ufw status' e veja todas as portas de email listadas com ALLOW IN.",
+        "comandos": "ssh root@SEU_IP\napt-get update && apt-get upgrade -y\nadduser mailu && usermod -aG sudo mailu\nufw default deny incoming && ufw default allow outgoing\nufw allow 22/tcp && ufw allow 25/tcp && ufw allow 143/tcp && ufw allow 587/tcp && ufw allow 993/tcp && ufw allow 995/tcp && ufw allow 80/tcp && ufw allow 443/tcp\nufw --force enable",
+        "fonte_id": "F05"
+      },
+      {
+        "numero": 3,
+        "titulo": "Instalação do Docker & Docker Compose",
+        "descricao": "Mailu roda através de containers Docker, que isolam o servidor de email de outros serviços. Sem Docker, seria necessário configurar Postfix, Dovecot, Sieve, etc manualmente (um pesadelo).",
+        "analogia": "Encomendar um escritório modular pré-montado em vez de construir a agência de zero com tijolos.",
+        "o_que_acontece_na_tela": "Download de pacotes Docker durante 2-3 minutos.",
+        "como_saber_se_deu_certo": "Execute 'docker --version' e retorna 'Docker version 27.x.x' ou superior.",
+        "comandos": "apt-get install -y ca-certificates curl\ncurl -fsSL https://get.docker.com | sh\nusermod -aG docker mailu\ncurl -SL https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose\nchmod +x /usr/local/bin/docker-compose",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 4,
+        "titulo": "Clone do Repositório Oficial Mailu & Configuração Inicial",
+        "descricao": "Baixamos o código-fonte oficial do Mailu do GitHub e rodamos o assistente de configuração interativo.",
+        "analogia": "Descarregar o manual de operação da agência e preencher os formulários iniciais.",
+        "o_que_acontece_na_tela": "Uma série de perguntas na tela: qual é seu domínio, quantos usuários, qual certificado SSL, etc.",
+        "como_saber_se_deu_certo": "O arquivo /opt/mailu/.env será gerado com todas as configurações.",
+        "comandos": "cd /opt\ngit clone https://github.com/Mailu/Mailu.git mailu\ncd /opt/mailu\npython3 setup.py",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 5,
+        "titulo": "Inicialização dos Containers Mailu (Docker Compose Up)",
+        "descricao": "Levantamos os containers de Postfix (MTA), Dovecot (IMAP), Rspamd (antispam), Webmail e Admin simultaneamente.",
+        "analogia": "Ligar a energia, os sistemas de ar, alarme e iluminação da agência ao mesmo tempo.",
+        "o_que_acontece_na_tela": "Docker fará o pull das imagens oficiais (200-300 MB) e exibirá logs de inicialização.",
+        "como_saber_se_deu_certo": "Execute 'docker ps' e veja 8-10 containers rodando com status 'Up'.",
+        "comandos": "cd /opt/mailu\ndocker-compose up -d\ndocker-compose ps",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 6,
+        "titulo": "Configuração de Registros DNS (SPF, DKIM, DMARC)",
+        "descricao": "Criamos certificados criptográficos no DNS que assinam cada email enviado. Sem isso, Gmail e Outlook rejeitarão seus emails.",
+        "analogia": "Colocar o holograma de segurança em cada envelope que sai da agência.",
+        "o_que_acontece_na_tela": "O painel admin de Mailu exibirá os registros DNS exatos que você deve copiar.",
+        "como_saber_se_deu_certo": "Use a ferramenta MXToolbox para validar: MX, SPF, DKIM e DMARC aparecem com checkmark verde.",
+        "comandos": "# 1. Entre no painel de admin: https://empresa.com.br/admin\n# 2. Vá em 'Configurações de Domínio'\n# 3. Copie os registros TXT de SPF, DKIM e DMARC\n# 4. Cole-os no painel DNS do seu registrador\n# 5. Aguarde 2-4 horas para propagação\ndig empresa.com.br MX  # Valida MX\ndig mailu._domainkey.empresa.com.br TXT  # Valida DKIM",
+        "fonte_id": "F05"
+      },
+      {
+        "numero": 7,
+        "titulo": "Teste de Saúde & Primeiro Email Enviado",
+        "descricao": "Verificamos que o servidor pode receber e enviar emails, que o antivírus está ativo e que os logs indicam 0 erros.",
+        "analogia": "Fazer um teste de funcionamento da agência antes de abrir ao público.",
+        "o_que_acontece_na_tela": "Confirmação de entrega do email de teste e ausência de rejeições.",
+        "como_saber_se_deu_certo": "Acesse https://empresa.com.br/webmail e leia o email de teste recebido.",
+        "comandos": "# Via admin:\n# 1. Crie um usuário de teste: admin@empresa.com.br\n# 2. Envie um email de teste para seu Gmail pessoal\n# 3. Verifique que o email chegou com SPF=pass, DKIM=pass no cabeçalho",
+        "fonte_id": "F01"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/opt/mailu/docker-compose.yml",
+        "linguagem": "yaml",
+        "conteudo": "version: '3.8'\nservices:\n  front:\n    image: mailu/nginx:2.0.1\n    restart: always\n    ports:\n      - \"80:80\"\n      - \"443:443\"\n      - \"25:25\"\n      - \"465:465\"\n      - \"587:587\"\n      - \"143:143\"\n      - \"993:993\"\n      - \"995:995\"\n    volumes:\n      - ./data/certs:/etc/letsencrypt\n    depends_on:\n      - admin\n      - webmail\n\n  admin:\n    image: mailu/admin:2.0.1\n    restart: always\n    environment:\n      - SECRET_KEY=${SECRET_KEY}\n      - DATABASE_URL=postgresql://mailu:${DB_PASSWORD}@db/mailu\n    depends_on:\n      - db\n      - redis\n\n  imap:\n    image: mailu/dovecot:2.0.1\n    restart: always\n    volumes:\n      - ./data/mail:/mail\n\n  smtp:\n    image: mailu/postfix:2.0.1\n    restart: always\n    volumes:\n      - ./data/mail:/mail\n\n  redis:\n    image: redis:7-alpine\n    restart: always\n\n  db:\n    image: postgres:16-alpine\n    restart: always\n    environment:\n      - POSTGRES_DB=mailu\n      - POSTGRES_PASSWORD=${DB_PASSWORD}\n    volumes:\n      - ./data/db:/var/lib/postgresql/data\n\nnetworks:\n  default:\n    name: mailu-net",
+        "explicacao": "Orquestração de 6 containers: front (proxy SMTP/IMAP), admin (painel), imap (Dovecot), smtp (Postfix), redis (cache) e db (banco PostgreSQL). Todas as comunicações são internas; apenas front expõe portas ao mundo."
+      },
+      {
+        "caminho": "/opt/mailu/.env.example",
+        "linguagem": "bash",
+        "conteudo": "# Domínio e hostname\nDOMAIN=empresa.com.br\nHOSTNAME=mail.empresa.com.br\n\n# Senhas e Segredo\nSECRET_KEY=mudeme123456789abcdefg\nDB_PASSWORD=mudeme_db_senha_forte_aqui\n\n# Certificado SSL (Let's Encrypt automático)\nTLS_FLAVOR=letsencrypt\n\n# Filtros de Spam e Antivírus\nSPAM_LEVEL=10\nVIRUS_ENABLED=true\n\n# Limites de Taxa (rate-limit)\nRELAY_DOMAIN=empresa.com.br\nRELAY_HOST=\nRELAY_PORT=25",
+        "explicacao": "Arquivo de configuração centralizado. Customize com seu domínio, senhas fortes e preferências de segurança."
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "Mailu é um servidor de email autossuficiente: ele recebe mensagens de fora (SMTP 25), guarda nos usuários locais (banco de dados PostgreSQL), permite leitura via IMAP (porta 143/993) e oferece uma interface webmail em HTML5. Nenhum email sai da VPS sem sua autorização. O antivírus ClamAV e o filtro Rspamd rodam em paralelo, capturando spam e vírus antes de chegar às caixas.",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "Passo 1: Acessar o Painel de Administração",
+        "acao": "Abra https://empresa.com.br/admin no navegador. Faça login com admin@empresa.com.br e a senha que configurou.",
+        "resultado_esperado": "Você verá o dashboard com estatísticas de usuários, domínios e emails recebidos."
+      },
+      {
+        "passo": "Passo 2: Criar Primeiro Usuário de Email",
+        "acao": "No painel Admin, clique em 'Usuários' → 'Adicionar'. Preencha nome, email (ex: joao@empresa.com.br) e senha forte. Clique em Salvar.",
+        "resultado_esperado": "O novo usuário aparecerá na lista e receberá um email de boas-vindas no webmail."
+      },
+      {
+        "passo": "Passo 3: Configurar Seu Cliente (Thunderbird, Outlook, iPhone)",
+        "acao": "IMAP: mail.empresa.com.br porta 993 com TLS. SMTP: mail.empresa.com.br porta 587 com TLS. Insira joao@empresa.com.br e a senha.",
+        "resultado_esperado": "O cliente sincronizará as pastas INBOX, Drafts, Sent e Trash do servidor."
+      },
+      {
+        "passo": "Passo 4: Enviar Email de Teste",
+        "acao": "Do seu cliente local, envie um email para seu Gmail pessoal. Verifique que chegou e inspecione o cabeçalho (Show original) para confirmar SPF=pass e DKIM=pass.",
+        "resultado_esperado": "O email chega na caixa de entrada (não em spam) com SPF=pass, DKIM=pass e DMARC=pass no cabeçalho."
+      }
+    ],
+    "comandos_cli": [
+      {
+        "comando": "docker-compose logs -f smtp",
+        "descricao": "Acompanha em tempo real os logs de recebimento de emails (Postfix).",
+        "exemplo": "Você verá 'accept message' para cada email recebido.",
+        "fonte_id": "F02"
+      },
+      {
+        "comando": "docker-compose logs -f imap",
+        "descricao": "Monitora as conexões IMAP (clientes lendo emails).",
+        "exemplo": "Você verá 'user=joao' para cada login.",
+        "fonte_id": "F02"
+      },
+      {
+        "comando": "docker-compose exec admin flask mailu admin create admin@empresa.com.br",
+        "descricao": "Cria um novo administrador via CLI sem entrar no painel web.",
+        "exemplo": "Será solicitada uma senha forte.",
+        "fonte_id": "F01"
+      },
+      {
+        "comando": "docker-compose restart smtp",
+        "descricao": "Reinicia apenas o serviço SMTP/Postfix sem derrubar IMAP ou banco de dados.",
+        "exemplo": "Útil após editar configurações de rateLimit.",
+        "fonte_id": "F02"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "GET",
+        "rota": "/admin/antispam/status",
+        "descricao": "Retorna estatísticas de emails bloqueados por spam nos últimos 7 dias.",
+        "payload_exemplo": "Resposta: {\"spam_blocked\": 234, \"virus_detected\": 3, \"users_created\": 45}",
+        "fonte_id": "F01"
+      },
+      {
+        "metodo": "POST",
+        "rota": "/admin/users",
+        "descricao": "Cria um novo usuário de email via JSON.",
+        "payload_exemplo": "{\"email\": \"maria@empresa.com.br\", \"password\": \"senha123\"}",
+        "fonte_id": "F04"
+      }
+    ],
+    "interface_ui": [
+      {
+        "modulo": "Painel Admin (Webmail Integrado)",
+        "descricao": "Acesse https://empresa.com.br/admin para gerenciar usuários, domínios e ver estatísticas de tráfego.",
+        "recursos_chave": [
+          "Criar/deletar usuários",
+          "Definir quotas de armazenamento por usuário",
+          "Visualizar logs de autenticação",
+          "Configurar regras de antispam por domínio"
+        ]
+      },
+      {
+        "modulo": "Webmail Roundcube",
+        "descricao": "Interface de email em HTML5 em https://empresa.com.br/webmail. Acesse de qualquer navegador sem cliente desktop.",
+        "recursos_chave": [
+          "Ler, escrever e responder emails",
+          "Gerenciar pastas (Inbox, Trash, Junk)",
+          "Filtros automáticos com regras Sieve",
+          "Assinatura de email personalizada"
+        ]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Emails de fora não chegam (erro 550)",
+        "causa_provavel": "Registros DNS SPF, DKIM ou DMARC não estão configurados corretamente.",
+        "solucao_comando": "No painel Admin, copie os registros DNS exatos. Valide com: dig empresa.com.br TXT | grep v=spf1"
+      },
+      {
+        "sintoma": "Clientes não conseguem conectar em IMAP (porta 993 timeout)",
+        "causa_provavel": "Firewall bloqueando a porta ou certificado SSL expirado.",
+        "solucao_comando": "ufw allow 993/tcp && docker-compose logs front | grep certificate"
+      },
+      {
+        "sintoma": "Caixa de entrada cheia, disco lotado",
+        "causa_provavel": "Nenhum backup é feito automaticamente; o disco está em 100%.",
+        "solucao_comando": "docker-compose exec admin du -sh /mail/* # Vê tamanho de cada usuário. Aumente o disco da VPS ou implemente rotina de backup."
+      }
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "Mailu Official Documentation & Architecture",
+      "url": "https://mailu.io/latest/",
+      "autor_ou_canal": "Mailu Core Team & Community"
+    },
+    {
+      "id": "F02",
+      "categoria": "Documentação Oficial",
+      "titulo": "Mailu GitHub Repository & Deployment Guides",
+      "url": "https://github.com/Mailu/Mailu",
+      "autor_ou_canal": "Mailu Open Source"
+    },
+    {
+      "id": "F03",
+      "categoria": "Livro / Guia Técnico",
+      "titulo": "Postfix, Dovecot & DKIM: A Complete Email Server Setup",
+      "url": "https://www.postfix.org/OVERVIEW.html",
+      "autor_ou_canal": "Wietse Venema & Community"
+    },
+    {
+      "id": "F04",
+      "categoria": "Vídeo / YouTube",
+      "titulo": "Self-Hosted Email Server: Mailu Complete Tutorial",
+      "url": "https://www.youtube.com/results?search_query=mailu+self+hosted+email",
+      "autor_ou_canal": "Open Source DevOps Channels"
+    },
+    {
+      "id": "F05",
+      "categoria": "Curso / Tutorial",
+      "titulo": "Email Server Hardening & SPF/DKIM/DMARC Configuration",
+      "url": "https://github.com/Mailu/Mailu/tree/master/docs",
+      "autor_ou_canal": "Mailu Documentation & Community"
+    }
+  ],
+  "desinstalacao_cirurgica": {
+    "principio_isolamento": "A desinstalação remove exclusivamente os containers Mailu, volumes de dados de email e certificados SSL, preservando intactos o Docker, firewall, banco de dados PostgreSQL compartilhado (se houver) e outros serviços na VPS.",
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Backup de Segurança (Exportar Todos os Emails & Configurações)",
+        "descricao": "Antes de remover, fazemos backup de todos os emails, configurações de usuários e certificados SSL.",
+        "comandos": "cd /opt/mailu\nmkdir -p backups\ndocker-compose exec db pg_dump -U postgres mailu > backups/mailu-$(date +%Y%m%d).sql\ntar -czf backups/mailu-certs-$(date +%Y%m%d).tar.gz ./data/certs/\ndu -sh backups/  # Confirma tamanho do backup",
+        "alerta_seguranca": "Nunca delete a pasta /opt/mailu até confirmar que o backup foi feito com sucesso.",
+        "como_validar": "ls -lah backups/ # Arquivos de backup recentes com tamanho > 0"
+      },
+      {
+        "numero": 2,
+        "titulo": "Parada Ordeira dos Containers Mailu",
+        "descricao": "Interrompe todos os containers Mailu permitindo que encerrem gracefully, sem matar processos abruptamente.",
+        "comandos": "cd /opt/mailu\ndocker-compose down --remove-orphans",
+        "alerta_seguranca": "NÃO use 'docker kill' ou 'docker-compose rm -f'. Isso corrompe o banco de dados PostgreSQL.",
+        "como_validar": "docker ps | grep mailu # Não deve constar nada"
+      },
+      {
+        "numero": 3,
+        "titulo": "Remoção de Volumes de Dados (Mails, DB, Cache)",
+        "descricao": "Remove os volumes Docker que armazenam emails, banco de dados PostgreSQL e cache Redis do Mailu.",
+        "comandos": "docker volume rm mailu_maildata 2>/dev/null || true\ndocker volume rm mailu_db 2>/dev/null || true\ndocker volume rm mailu_redis 2>/dev/null || true\ndocker volume ls | grep -i mailu  # Não deve retornar nada",
+        "alerta_seguranca": "Esta ação é IRREVERSÍVEL. Certifique-se que o backup foi feito no Passo 1.",
+        "como_validar": "Nenhum volume Docker com 'mailu' no nome deve constar em 'docker volume ls'"
+      },
+      {
+        "numero": 4,
+        "titulo": "Revogação de Portas no Firewall",
+        "descricao": "Fecha exclusivamente as portas de email (25, 143, 587, 993, 995) sem interferir em SSH (22), HTTP (80) ou HTTPS (443).",
+        "comandos": "sudo ufw delete allow 25/tcp\nsudo ufw delete allow 143/tcp\nsudo ufw delete allow 587/tcp\nsudo ufw delete allow 993/tcp\nsudo ufw delete allow 995/tcp\nsudo ufw reload\nsudo ufw status | grep -E '25|143|587|993|995'  # Não deve constar",
+        "alerta_seguranca": "Mantenha o firewall ativo e nunca desabilite UFW.",
+        "como_validar": "sudo ufw status numbered | grep -v 25 | grep -v 143 | grep -v 587 | grep -v 993 | grep -v 995"
+      },
+      {
+        "numero": 5,
+        "titulo": "Remoção de Pastas e Arquivo de Configuração",
+        "descricao": "Remove a pasta /opt/mailu e limpa o arquivo docker-compose.yml para liberar espaço em disco.",
+        "comandos": "# Opção 1: Remover completamente\nsudo rm -rf /opt/mailu\n\n# Opção 2: Manter backups (recomendado)\nsudo mv /opt/mailu /opt/mailu-backup-archived\nls -la /opt/  # Confirma que /opt/mailu não existe mais",
+        "alerta_seguranca": "Se escolher Opção 1, os backups em backups/ serão deletados também. Considere copiar para outro local: scp backups/ usuario@outra-vps:/backups",
+        "como_validar": "which docker-compose mailu  # Não deve encontrar"
+      },
+      {
+        "numero": 6,
+        "titulo": "Remoção de Imagens Docker Mailu (Opcional)",
+        "descricao": "Remove as imagens Docker do Mailu para liberar espaço de disco (~500 MB).",
+        "comandos": "docker image rm -f mailu/nginx:2.0.1 mailu/admin:2.0.1 mailu/dovecot:2.0.1 mailu/postfix:2.0.1 2>/dev/null || true\ndocker images | grep -i mailu  # Não deve retornar nada",
+        "alerta_seguranca": "Somente execute se tiver certeza que não vai reinstalar Mailu em breve.",
+        "como_validar": "docker image ls | grep mailu # Deve estar vazio"
+      }
+    ],
+    "checklist_saude_vps": [
+      "free -h # Confirma devolução de memória RAM",
+      "df -h # Confirma devolução de espaço em disco em /opt",
+      "docker ps # Confirma ausência de containers Mailu",
+      "docker volume ls # Confirma ausência de volumes Mailu",
+      "netstat -tulpn | grep -E '25|143|587|993|995' # Confirma que portas de email estão liberadas"
+    ]
+  }
+}
