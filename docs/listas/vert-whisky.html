@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Dossiê Vertical · CrossOver / Parallels Desktop (Commercial Windows Emulation on Mac) · Arsenal Open Source</title>
+<style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    --paper: #F6F4EF;
+    --surface: #FFFFFF;
+    --surface-2: #FBF9F4;
+    --surface-dark: #0A0F1D;
+    --ink: #1B1E23;
+    --ink-2: #383D45;
+    --muted: #666E7A;
+    --rule: #D8D2C4;
+    --rule-soft: #EAE5D9;
+    --accent: #00875A;
+    --accent-dark: #57D9A3;
+    --accent-soft: #E3FCEF;
+    --accent-soft-dark: #162B22;
+    --green: #00875A;
+    --green-soft: #E3FCEF;
+    --gold: #FFAB00;
+    --gold-soft: #FFF0B3;
+    --flag: #DE350B;
+    --flag-soft: #FFEBE6;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0E121B;
+      --surface: #141924;
+      --surface-2: #1A2130;
+      --ink: #E6E8ED;
+      --ink-2: #B0B5C0;
+      --muted: #7E8695;
+      --rule: #262F40;
+      --rule-soft: #1E2533;
+      --accent: var(--accent-dark);
+      --accent-soft: var(--accent-soft-dark);
+      --green: #57D9A3;
+      --green-soft: #162B22;
+      --gold: #FFC400;
+      --gold-soft: #332600;
+      --flag: #FF7452;
+      --flag-soft: #361B15;
+      --shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  /* SCROLLBAR REFINADA (MAX 4PX & COR ACCENT) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--green);
+  }
+
+  body {
+    margin: 0; padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* HEADER & HERO */
+  header { margin-bottom: 32px; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .back-link:hover { color: var(--accent); }
+  .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+
+  .hero { margin: 20px 0 24px; }
+  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 40px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
+  .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
+
+  .hero-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px; margin: 24px 0 32px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 12px 16px; box-shadow: var(--shadow);
+  }
+  .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+
+  /* CAIXA DE ALVO SAAS */
+  .target-box { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--flag); border-radius: 3px; padding: 18px 20px; margin: 24px 0; }
+  .target-tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--flag); }
+  .target-box h4 { font-family: var(--font-serif); font-size: 21px; margin: 6px 0 8px; color: var(--ink); }
+  .target-box p { margin: 0 0 10px; font-size: 14px; color: var(--ink-2); }
+  .target-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .target-pill { font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); font-weight: 600; }
+
+  /* PILARES */
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 24px 0; }
+  .route { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 20px; }
+  .route.red { border-left: 4px solid var(--flag); }
+  .route.green { border-left: 4px solid var(--green); }
+  .route .tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+  .route.red .tag { color: var(--flag); }
+  .route.green .tag { color: var(--green); }
+  .route h4 { font-family: var(--font-serif); font-size: 19px; margin: 6px 0 8px; color: var(--ink); }
+  .route p { margin: 0; font-size: 14px; color: var(--ink-2); }
+
+  /* SEÇÕES */
+  .sec-head { margin: 36px 0 16px; }
+  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
+  h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
+  .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
+
+  /* BUSCA */
+  .search-wrapper { position: relative; margin: 20px 0 24px; }
+  .search-input { width: 100%; padding: 12px 42px 12px 16px; font-family: var(--font-sans); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); outline: none; box-shadow: var(--shadow); }
+  .search-input:focus { border-color: var(--accent); }
+  .search-icon { position: absolute; right: 14px; top: 12px; width: 20px; height: 20px; fill: var(--muted); pointer-events: none; }
+
+  /* TABELA */
+  .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+  th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
+  tr:last-child td { border-bottom: none; }
+  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
+  td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
+  td.tool a:hover { color: var(--accent); }
+  td.classificacao { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+  td.saas { color: var(--flag); }
+  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
+  td.lic { font-family: var(--mono); font-size: 11px; }
+
+  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO */
+  .ledger { display: flex; flex-direction: column; gap: 24px; }
+  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
+  .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+  .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
+  
+  .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+  .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+
+  .class-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent); color: #FFF; font-weight: 700; }
+  .senior-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
+  .senior-badge.green { background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+  .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
+  .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
+  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+  .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
+
+  .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .entry-section p strong { color: var(--ink); font-weight: 600; }
+
+  /* GRIDS CANÔNICAS */
+  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
+  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
+  .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
+  @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
+  .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
+  .infra-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+  .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
+  pre { margin: 0; padding: 10px 48px 10px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; }
+  code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); line-height: 1.45; }
+  .copy-btn { position: absolute; top: 6px; right: 6px; background: var(--surface); border: 1px solid var(--rule); color: var(--muted); border-radius: 2px; padding: 3px 6px; font-family: var(--mono); font-size: 10px; cursor: pointer; transition: all .15s ease; }
+  .copy-btn:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+  .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
+  .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .repo-btn svg { width: 13px; height: 13px; fill: currentColor; }
+
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 2px; }
+  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; transition: transform .12s ease, border-color .12s ease; }
+  .step-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .step-head { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; }
+  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+  .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+  .step-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+
+  /* NOVA SEÇÃO 5: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES) */
+  .complement-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .complement-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 3px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+  .complement-card.mcp { border-left: 3px solid #7C3AED; }
+  .complement-card.skill { border-left: 3px solid #2563EB; }
+  .complement-card.plugin { border-left: 3px solid #059669; }
+  .complement-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+  .comp-tag { font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; letter-spacing: .06em; }
+  .complement-card.mcp .comp-tag { background: #EDE9FE; color: #7C3AED; }
+  .complement-card.skill .comp-tag { background: #DBEAFE; color: #2563EB; }
+  .complement-card.plugin .comp-tag { background: #D1FAE5; color: #059669; }
+  .comp-title { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--ink); }
+  .comp-code { font-family: var(--mono); font-size: 11px; background: var(--surface); border: 1px solid var(--rule-soft); padding: 3px 6px; border-radius: 2px; color: var(--ink-2); word-break: break-all; margin-top: 2px; }
+  .complement-card p { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--ink-2); }
+
+  /* SEÇÃO DESIGN SYSTEM & WHITE-LABEL */
+  .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
+  .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+  .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+  .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+  .ds-badge.esforco-alto { background: #FFEBE6; color: #DE350B; border: 1px solid #FFBDAD; }
+  .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
+  .ds-badge.wl-ready { background: #EAE6FF; color: #403294; border: 1px solid #C0B6F2; }
+
+  .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+  .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+  .ds-card p strong { color: var(--ink); }
+  .ds-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="header-top">
+      <a class="back-link" href="index.html">← Voltar ao Hub Central</a>
+      <span class="camada-pill">Dossiê Vertical · SaaS em Foco</span>
+    </div>
+
+    <div class="hero">
+      <h1>Dossiê Vertical: 5 Alternativas Open Source que Superam o CrossOver e Parallels</h1>
+      <p class="deck">Desmantelamento técnico do CrossOver, Parallels Desktop e softwares comerciais de emulação e execução de aplicativos Windows no macOS e Linux. Conheça o Quinteto Soberano Open Source: a ferramenta mais robusta, a mais completa, a mais moderna, a mais leve e a mais simples, cobrindo tradução de chamadas de sistema com Wine, gerenciamento de prefixos com Bottles, aceleração gráfica com Game Porting Toolkit via Whisky e automações via MCP.</p>
+    </div>
+
+    <!-- ALVO SAAS EM FOCO -->
+    <div class="target-box">
+      <span class="target-tag">SaaS em Foco sob Desmantelamento</span>
+      <h4>CrossOver / Parallels Desktop (Commercial Windows Emulation on Mac) (US$ 74 a US$ 120/ano (assinaturas anuais recorrentes para rodar programas legados))</h4>
+      <p><strong>Principais Limitações:</strong> Cobrança anual para receber atualizações de compatibilidade com novas versões do macOS, máquinas virtuais pesadas que consomem 8 GB de RAM só para o Windows e lentidão em jogos e softwares 3D.</p>
+      <div class="target-pills">
+        <span class="target-pill">⚠️ Riscos de Privacidade: Softwares proprietários de virtualização com drivers de baixo nível no kernel e telemetria opaca de execução.</span>
+        <span class="target-pill">💸 Modelo: Cobrança por Assento / Recorrente</span>
+        <span class="target-pill">🔒 Nuvem Fechada</span>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="num">5 Motores</div>
+        <div class="lbl">Quinteto Soberano</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">CrossOver + Parallels Desktop</div>
+        <div class="lbl">SaaS Eliminado</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">R$ 3.600/ano (estúdio ou profissional Mac)</div>
+        <div class="lbl">Economia Estimada/Ano</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">100% OSI</div>
+        <div class="lbl">Conformidade Aberta</div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="route red">
+        <span class="tag">Rota Frágil (Proprietária)</span>
+        <h4>Rota Frágil (CrossOver & Parallels)</h4>
+        <p>Assinaturas anuais compulsórias a cada atualização do macOS, consumo excessivo de bateria por máquinas virtuais inteiras e perda de dinheiro.</p>
+      </div>
+      <div class="route green">
+        <span class="tag">Rota Soberana (Quinteto Open Source)</span>
+        <h4>Rota Soberana (Quinteto Open Source & Wine Ecosystem)</h4>
+        <p>Execução nativa de softwares Windows (.exe) traduzindo chamadas de API em tempo real sem máquina virtual, desempenho máximo por GPU (Metal/Vulkan) e custo zero.</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="sec-head">
+    <span class="sec-num">Parte 1</span>
+    <h2>Matriz Comparativa do Quinteto Soberano</h2>
+    <p class="sec-note">Classificação das 5 ferramentas que igualam ou superam o CrossOver / Parallels Desktop (Commercial Windows Emulation on Mac) sob 5 perspectivas de engenharia.</p>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Classificação</th>
+          <th>Ferramenta Soberana</th>
+          <th>Substitui</th>
+          <th>Economia</th>
+          <th>Licença</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rank">01</td>
+          <td class="classificacao">A Mais Robusta</td>
+          <td class="tool"><a href="#card-01"><strong>Wine (A Lendária Camada de Compatibilidade Windows que Move o Mundo Aberto)</strong></a></td>
+          <td class="saas">CrossOver Core Engine</td>
+          <td class="econ">R$ 2.400/ano</td>
+          <td class="lic"><span class="lic-badge">LGPL-2.1</span></td>
+        </tr>
+        <tr>
+          <td class="rank">02</td>
+          <td class="classificacao">A Mais Completa</td>
+          <td class="tool"><a href="#card-02"><strong>Bottles (O Gerenciador Moderno e Visual de Ambientes Windows)</strong></a></td>
+          <td class="saas">CrossOver Mac / Linux GUI</td>
+          <td class="econ">R$ 3.000/ano</td>
+          <td class="lic"><span class="lic-badge">GPL-3.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">03</td>
+          <td class="classificacao">A Mais Moderna</td>
+          <td class="tool"><a href="#card-03"><strong>Whisky (O Frontend Nativo em SwiftUI com Game Porting Toolkit no Mac)</strong></a></td>
+          <td class="saas">CrossOver Mac + Parallels Desktop</td>
+          <td class="econ">R$ 3.600/ano</td>
+          <td class="lic"><span class="lic-badge">GPL-3.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">04</td>
+          <td class="classificacao">A Mais Leve</td>
+          <td class="tool"><a href="#card-04"><strong>Winetricks (O Script Clássico em Shell para Configuração Cirúrgica de DLLs)</strong></a></td>
+          <td class="saas">CrossOver Dependency Installer</td>
+          <td class="econ">R$ 1.200/ano</td>
+          <td class="lic"><span class="lic-badge">LGPL-2.1</span></td>
+        </tr>
+        <tr>
+          <td class="rank">05</td>
+          <td class="classificacao">A Mais Simples</td>
+          <td class="tool"><a href="#card-05"><strong>Porting Kit (O Instalador Automático de Softwares e Jogos Windows no Mac)</strong></a></td>
+          <td class="saas">CrossOver Mac One-Click Installer</td>
+          <td class="econ">R$ 2.400/ano</td>
+          <td class="lic"><span class="lic-badge">GPL-3.0</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-head" id="fichas">
+    <span class="sec-num">Parte 2</span>
+    <h2>Fichas Técnicas &amp; Extensões Agênticas (MCPs / Skills)</h2>
+    <p class="sec-note">Detalhamento dos 5 pilares com comandos em Docker e ecossistema de Model Context Protocol (MCP) e Agent Skills.</p>
+  </div>
+
+  <div class="search-wrapper">
+    <input class="search-input" id="search-input" onkeyup="filterTools(this.value)" placeholder="Buscar por ferramenta, classificação, MCP server ou comando..." type="text"/>
+    <svg class="search-icon" viewbox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 14z"></path></svg>
+    <div id="search-count" style="margin-top: 6px; font-size: 12px; color: var(--muted); font-family: var(--mono);"></div >
+  </div>
+
+  <div class="ledger">
+      <article class="entry" id="card-01">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Wine (A Lendária Camada de Compatibilidade Windows que Move o Mundo Aberto)</h3>
+            <span class="class-badge">A Mais Robusta</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: CrossOver Core Engine</span>
+            <span class="econ-badge">R$ 2.400/ano</span>
+            <span class="lic-badge">LGPL-2.1</span>
+            <span class="kind">Universal Windows Compatibility Layer</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> A camada de compatibilidade aberta definitiva que permite executar programas, softwares de engenharia, ERPs e jogos compilados para Microsoft Windows nativamente no Linux e macOS sem precisar de licença do Windows ou máquina virtual.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em C de baixo nível há mais de 30 anos. Em vez de emular um processador inteiro, o Wine traduz as chamadas da API Win32/Win64 diretamente para chamadas equivalentes POSIX e Unix em tempo real, atingindo velocidade quase nativa.</p>
+            <div class="code-box">
+              <pre><code>wine programa.exe</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>CrossOver Core Engine</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 2.400/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">512 MB RAM / 1 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>O Wine é uma das maiores façanhas da engenharia reversa da história da computação: é o motor fundamental que alimenta o Proton da Valve no Steam Deck e liberta milhões de usuários do monopólio da Microsoft.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://gitlab.winehq.org/wine/wine" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (gitlab.winehq.org/wine/wine)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Instalação do Pacote</div>
+                <p>Instale o Wine através do gerenciador de pacotes oficial da sua distribuição ou via Homebrew no Mac.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Criação do Prefixo Limpo</div>
+                <p>Execute winecfg para criar o diretório ~/.wine simulando a estrutura de pastas e o registro do Windows.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Execução do Instalador</div>
+                <p>Execute wine setup.exe para instalar seu software corporativo favorito com atalhos criados na sua área de trabalho nativa.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-headless">⚡ Headless (API / CLI First)</span>
+                <span class="ds-badge stack-ui">C Puro + X11 / Wayland / Cocoa Bridge</span>
+                <span class="ds-badge wl-ready">White-Label Nativo</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Totalmente desacoplado de interfaces, integrando janelas do Windows ao gerenciador nativo do sistema operacional.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Projeto mantido com rigor industrial pela WineHQ sob licença permissiva LGPL-2.1.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">CLI Control</span>
+              <span class="comp-title">wine-regedit</span>
+            </div>
+            <p>Editor de registro do Windows aberto para aplicar chaves de configuração de softwares corporativos.</p>
+            <div class="comp-code"><code>wine regedit</code></div>
+          </div>
+          <div class="complement-card skill">
+            <div class="complement-head">
+              <span class="comp-tag">Agent Skill</span>
+              <span class="comp-title">skill-wine-prefix-manager</span>
+            </div>
+            <p>Skill para isolar diferentes softwares corporativos em prefixos WINEPREFIX dedicados sem conflitos de DLLs.</p>
+            <div class="comp-code"><code>.claude/skills/wine-prefix-manager/SKILL.md</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">DXVK / VKD3D</span>
+              <span class="comp-title">wine-vulkan-dx</span>
+            </div>
+            <p>Aceleração gráfica de alta fidelidade para rodar programas 3D pesados sem perda de FPS.</p>
+            <div class="comp-code"><code>Tradução de DirectX 9/10/11/12 para a API gráfica Vulkan</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-02">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Bottles (O Gerenciador Moderno e Visual de Ambientes Windows)</h3>
+            <span class="class-badge">A Mais Completa</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: CrossOver Mac / Linux GUI</span>
+            <span class="econ-badge">R$ 3.000/ano</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Complete Graphical Environment & Prefix Manager</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> O aplicativo visual mais elegante e completo para gerenciar prefixos do Wine: cria 'garrafas' isoladas para softwares corporativos ou jogos, instala dependências (Visual C++, .NET Framework, DirectX) com 1 clique e restaura snapshots do sistema.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em Python e GTK4 com Libadwaita. Oferece instaladores automáticos com receitas pré-testadas pela comunidade, sandbox isolado e gerenciamento de múltiplos runners (SODA, GE-Proton, Vanilla Wine).</p>
+            <div class="code-box">
+              <pre><code>flatpak install flathub com.usebottles.bottles</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>CrossOver Mac / Linux GUI</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 3.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">2 GB RAM / 2 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>O Bottles elimina toda a complicação de mexer em terminal para rodar programas Windows: você clica em 'Criar Garrafa', arrasta o executável e ele roda liso com visual profissional.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/bottlesdevs/Bottles" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (bottlesdevs/Bottles)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Instalação via Flatpak</div>
+                <p>Instale o Bottles com 1 clique pela loja de aplicativos do seu sistema operacional.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Criação da Garrafa de Trabalho</div>
+                <p>Selecione o tipo 'Aplicação' para criar um ambiente otimizado para softwares de escritório e produtividade.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Instalação de Dependências em 1 Toque</div>
+                <p>Acesse a aba 'Dependências' e marque dotnet48 ou vcredist2022 para instalação automática sem erros.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-minimo">⚡ Mínimo (Plug & Play)</span>
+                <span class="ds-badge stack-ui">Python 3 + GTK 4 + Libadwaita</span>
+                <span class="ds-badge wl-ready">White-Label Nativo</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Interface moderna no padrão GNOME moderno com suporte nativo a temas claros e escuros.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Projeto premiado e mantido ativamente pela organização Bottles sob licença GPL-3.0.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">CLI Control</span>
+              <span class="comp-title">bottles-cli</span>
+            </div>
+            <p>Linha de comando para disparar programas de dentro de garrafas via atalhos do sistema.</p>
+            <div class="comp-code"><code>bottles-cli run -b 'MinhaGarrafa' -p 'programa'</code></div>
+          </div>
+          <div class="complement-card skill">
+            <div class="complement-head">
+              <span class="comp-tag">Agent Skill</span>
+              <span class="comp-title">skill-bottles-recipe-builder</span>
+            </div>
+            <p>Skill para gerar manifestos YAML de instalação automática de sistemas corporativos no Bottles.</p>
+            <div class="comp-code"><code>.claude/skills/bottles-recipe-builder/SKILL.md</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Backup State</span>
+              <span class="comp-title">bottles-snapshot</span>
+            </div>
+            <p>Reversão instantânea do estado da garrafa caso uma atualização do programa cause instabilidade.</p>
+            <div class="comp-code"><code>Criação de pontos de restauração de ambiente</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-03">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Whisky (O Frontend Nativo em SwiftUI com Game Porting Toolkit no Mac)</h3>
+            <span class="class-badge">A Mais Moderna</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: CrossOver Mac + Parallels Desktop</span>
+            <span class="econ-badge">R$ 3.600/ano</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Native SwiftUI Windows Wrapper for macOS Apple Silicon</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Aplicativo nativo para macOS deslumbrante construído em SwiftUI que encapsula o Game Porting Toolkit (GPTK) da Apple e o Wine: permite executar programas e jogos Windows em Macs com Apple Silicon (chips M1, M2, M3, M4) com aceleração gráfica Metal pura.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em Swift puro por Isaac Marovitz. Conecta o motor de tradução D3DMetal da Apple diretamente ao Wine, traduzindo instruções DirectX para chamadas nativas dos núcleos de GPU do processador Apple Silicon sem a perda de desempenho de emuladores tradicionais.</p>
+            <div class="code-box">
+              <pre><code>brew install --cask whisky || Baixar instalador oficial em https://getwhisky.app</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>CrossOver Mac + Parallels Desktop</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 3.600/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">8 GB RAM / Mac com Apple Silicon (M1 ou superior) e macOS Sonoma+</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>O Whisky é o aplicativo mais amado pelos usuários de Mac modernos: bonito como um aplicativo oficial da Apple, gratuito, de código aberto e capaz de rodar programas Windows pesados como se fossem nativos do Mac.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/Whiskey-App/Whisky" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (Whiskey-App/Whisky)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Instalação do Aplicativo</div>
+                <p>Instale o Whisky pelo Homebrew ou baixando o arquivo .dmg oficial para a pasta Aplicativos.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Download Automático do GPTK</div>
+                <p>Na primeira abertura, o Whisky baixa e configura automaticamente o Wine e os componentes de tradução da Apple.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Execução com 2 Cliques</div>
+                <p>Dê um clique duplo em qualquer arquivo .exe ou .msi do Windows para instalar e rodar diretamente no seu Mac.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-minimo">⚡ Mínimo (Plug & Play)</span>
+                <span class="ds-badge stack-ui">SwiftUI + AppKit + Metal Framework</span>
+                <span class="ds-badge wl-ready">White-Label Nativo</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Interface totalmente integrada às diretrizes de design do macOS com design impecável.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Projeto mantido ativamente com lançamentos alinhados às novidades da Apple sob licença GPL-3.0.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Metal HUD</span>
+              <span class="comp-title">whisky-metal-hud</span>
+            </div>
+            <p>Exibição em tempo real de FPS, consumo de VRAM e temperatura da GPU durante o uso.</p>
+            <div class="comp-code"><code>Ativação da telemetria Metal HUD nas configurações da garrafa</code></div>
+          </div>
+          <div class="complement-card skill">
+            <div class="complement-head">
+              <span class="comp-tag">Agent Skill</span>
+              <span class="comp-title">skill-whisky-bottle-tuner</span>
+            </div>
+            <p>Skill para otimizar variáveis de ambiente (WINEESYNC, WINEDLLOVERRIDES) para softwares corporativos no Mac.</p>
+            <div class="comp-code"><code>.claude/skills/whisky-bottle-tuner/SKILL.md</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Pin to Launchpad</span>
+              <span class="comp-title">whisky-pin-app</span>
+            </div>
+            <p>Permite abrir o programa Windows diretamente pelo Spotlight ou Launchpad como um app Mac normal.</p>
+            <div class="comp-code"><code>Criação automática de atalhos .app no macOS</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-04">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Winetricks (O Script Clássico em Shell para Configuração Cirúrgica de DLLs)</h3>
+            <span class="class-badge">A Mais Leve</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: CrossOver Dependency Installer</span>
+            <span class="econ-badge">R$ 1.200/ano</span>
+            <span class="lic-badge">LGPL-2.1</span>
+            <span class="kind">Lightweight Shell Script Dependency Automation</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Script de automação em shell POSIX indispensável que baixa e configura bibliotecas de tempo de execução proprietárias do Windows (pacotes de fontes corefonts, DirectX, MSXML, codecs e runtimes do Visual Studio) com 1 comando.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Script puro em bash/sh mantido por Austin English e Dan Kegel. Detecta o prefixo Wine ativo e baixa os pacotes oficiais diretamente dos servidores da Microsoft, aplicando as correções de registro necessárias automaticamente.</p>
+            <div class="code-box">
+              <pre><code>winetricks corefonts vcrun2022 msxml6</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>CrossOver Dependency Installer</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 1.200/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">64 MB RAM / Zero exigência</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>O Winetricks é o salva-vidas de qualquer administrador: quando um programa Windows antigo acusa falta de uma DLL misteriosa, o Winetricks instala a biblioteca exata em 10 segundos.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/Winetricks/winetricks" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (Winetricks/winetricks)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Instalação do Script</div>
+                <p>Baixe o script executável winetricks com curl e mova para /usr/local/bin com permissão de execução.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Instalação de Fontes Nativas</div>
+                <p>Execute winetricks corefonts para instalar as fontes Arial, Times New Roman e Tahoma no Wine.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Modo Gráfico Opcional</div>
+                <p>Execute winetricks sem parâmetros para abrir o assistente visual de seleção de pacotes.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-headless">⚡ Headless (API / CLI First)</span>
+                <span class="ds-badge stack-ui">Shell Script Puro + Zenity (Opcional)</span>
+                <span class="ds-badge wl-ready">White-Label Nativo</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Totalmente scriptável e invisível sob licença permissiva LGPL-2.1.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>O comando 'winetricks --self-update' mantém o script atualizado com novas receitas.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Quiet Mode</span>
+              <span class="comp-title">winetricks-silent</span>
+            </div>
+            <p>Instalação silenciosa sem janelas de confirmação para scripts de provisionamento automatizado.</p>
+            <div class="comp-code"><code>winetricks -q pacote</code></div>
+          </div>
+          <div class="complement-card skill">
+            <div class="complement-head">
+              <span class="comp-tag">Agent Skill</span>
+              <span class="comp-title">skill-winetricks-diagnostician</span>
+            </div>
+            <p>Skill para analisar logs de erro de programas Windows e identificar qual pacote do Winetricks resolve a falha.</p>
+            <div class="comp-code"><code>.claude/skills/winetricks-diagnostician/SKILL.md</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">DLL Override</span>
+              <span class="comp-title">winetricks-override</span>
+            </div>
+            <p>Forçamento de uso de DLLs nativas para garantir compatibilidade com motores gráficos modernos.</p>
+            <div class="comp-code"><code>winetricks d3dcompiler_47</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-05">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Porting Kit (O Instalador Automático de Softwares e Jogos Windows no Mac)</h3>
+            <span class="class-badge">A Mais Simples</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: CrossOver Mac One-Click Installer</span>
+            <span class="econ-badge">R$ 2.400/ano</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Zero-Friction Windows Application Installer for Mac</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Aplicativo aberto para macOS que possui um catálogo integrado com centenas de receitas de instalação de softwares e jogos clássicos do Windows com 1 clique sem exigir que o usuário entenda nada sobre Wine ou configurações técnicas.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido por Vitor Santanna em Objective-C e Swift sobre a tecnologia Wineskin. Cria pacotes autocontidos .app no Mac onde cada software fica isolado com suas próprias configurações otimizadas.</p>
+            <div class="code-box">
+              <pre><code>Baixar instalador oficial para Mac em https://portingkit.com</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>CrossOver Mac One-Click Installer</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 2.400/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">4 GB RAM / Mac Intel ou Apple Silicon</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>A alternativa gratuita mais amigável para quem quer apenas clicar no nome do software no catálogo, inserir o instalador e jogar ou trabalhar no Mac sem dores de cabeça.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/vitor251093/portingkit-legacy" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (vitor251093/portingkit-legacy)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Instalação do Aplicativo</div>
+                <p>Baixe o Porting Kit oficial e arraste para sua pasta Aplicativos do Mac.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Busca no Catálogo</div>
+                <p>Digite o nome do programa ou jogo desejado na barra de pesquisa da biblioteca de receitas.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Clique em Instalar</div>
+                <p>O Porting Kit baixa a versão ideal do Wine, configura as DLLs necessárias e cria o aplicativo final na sua pasta.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-minimo">⚡ Mínimo (Plug & Play)</span>
+                <span class="ds-badge stack-ui">Swift + Objective-C + Cocoa UI</span>
+                <span class="ds-badge wl-ready">White-Label Nativo</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Interface no padrão visual do macOS sob licença aberta GPL-3.0.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Projeto mantido ativamente há mais de 10 anos com suporte contínuo para as novas versões do macOS.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Wineskin Winery Engine</span>
+              <span class="comp-title">wineskin-engine</span>
+            </div>
+            <p>Empacotamento de softwares corporativos internos em arquivos .app autônomos para distribuir para a equipe.</p>
+            <div class="comp-code"><code>Motor integrado para criação de portas customizadas</code></div>
+          </div>
+          <div class="complement-card skill">
+            <div class="complement-head">
+              <span class="comp-tag">Agent Skill</span>
+              <span class="comp-title">skill-portingkit-wrapper</span>
+            </div>
+            <p>Skill para estruturar scripts de instalação de novos pacotes corporativos no Porting Kit.</p>
+            <div class="comp-code"><code>.claude/skills/portingkit-wrapper/SKILL.md</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Cloud Saves Sync</span>
+              <span class="comp-title">portingkit-sync</span>
+            </div>
+            <p>Preservação de arquivos gerados pelos programas Windows na pasta Documentos do Mac.</p>
+            <div class="comp-code"><code>Sincronização de pastas de documentos e salvamentos</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+  </div>
+
+</div>
+
+
+<script>
+function filterTools(query) {
+  const q = query.toLowerCase().trim();
+  const entries = document.querySelectorAll('.entry');
+  const rows = document.querySelectorAll('.tablewrap tbody tr');
+  let visibleCount = 0;
+
+  entries.forEach(entry => {
+    const text = entry.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      entry.style.display = 'grid';
+      visibleCount++;
+    } else {
+      entry.style.display = 'none';
+    }
+  });
+
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  const countEl = document.getElementById('search-count');
+  if (countEl) {
+    countEl.innerText = q ? `${visibleCount} ferramentas encontradas` : '';
+  }
+}
+
+function copyCode(btn) {
+  const code = btn.parentElement.querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const orig = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => btn.innerText = orig, 1500);
+  });
+}
+</script>
+
+</body>
+</html>

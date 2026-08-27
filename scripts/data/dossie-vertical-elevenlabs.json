@@ -1,0 +1,335 @@
+{
+  "numero": 13,
+  "titulo": "Dossiê Vertical: 5 Alternativas Open Source que Superam o ElevenLabs",
+  "slug": "vert-elevenlabs",
+  "deck": "Desmantelamento técnico do ElevenLabs e serviços proprietários de Text-to-Speech (TTS), clonagem de voz e dublagem neural. Conheça o Quinteto Soberano Open Source: a ferramenta mais robusta, a mais completa, a mais moderna, a mais leve e a mais simples, cobrindo síntese neural com zero latência, clonagem instantânea de voz (voice cloning) com 3 segundos de áudio e servidores de inferência de voz via MCP.",
+  "saas_em_foco": {
+    "nome": "ElevenLabs (Generative Voice AI & Voice Cloning)",
+    "preco_medio": "US$ 60 a US$ 396/ano por usuário (Planos Starter a Pro com limites restritivos de caracteres)",
+    "principais_limitacoes": "Cobrança punitiva por caractere falado, bloqueio arbitrário de vozes por moderação opaca, dependência de conexão de internet e latência incompatível com agentes conversacionais de tempo real.",
+    "riscos_privacidade": "Envio de áudios de gravações corporativas, vozes de executivos e roteiros de produtos confidenciais para os servidores em nuvem do ElevenLabs."
+  },
+  "stats": {
+    "ferramentas": "5 Motores",
+    "saas_substituidos": "ElevenLabs",
+    "economia_anual": "R$ 18.000/ano (estúdio de mídia)",
+    "licencas": "100% OSI"
+  },
+  "rotas": {
+    "fragil": {
+      "titulo": "Rota Frágil (ElevenLabs Cloud)",
+      "desc": "Orçamento devorado por quotas de caracteres em dólar, direitos autorais de vozes geradas sob custódia de terceiros e risco de descontinuação de modelos sem aviso."
+    },
+    "soberana": {
+      "titulo": "Rota Soberana (Quinteto Open Source & Neural Audio)",
+      "desc": "Síntese de voz e clonagem de timbre rodando localmente na GPU da empresa, caracteres ilimitados a custo zero e privacidade absoluta protegida por licenças OSI."
+    }
+  },
+  "quinteto": [
+    {
+      "rank": 1,
+      "classificacao": "A Mais Robusta",
+      "nome": "Coqui XTTS v2 (Clonagem de Voz Multilíngue de Alta Fidelidade)",
+      "slug": "coqui-xtts",
+      "saas_substituido": "ElevenLabs Multilingual Voice Cloning",
+      "economia_anual_str": "R$ 14.400/ano",
+      "licenca_osi": "MPL-2.0",
+      "categoria": "Multi-Voice Generative TTS & Cloning Engine",
+      "senioridade": "Sênior",
+      "o_que_faz": "Clona qualquer voz a partir de um arquivo de áudio de apenas 3 segundos e sintetiza fala natural em 17 idiomas (incluindo Português do Brasil) preservando emoção, ritmo e timbre original.",
+      "como_funciona": "Arquitetura baseada em autoregressive speech language modeling com decoder HiFi-GAN em PyTorch, processando áudios a 24kHz com alta naturalidade fonética e controle de entonação.",
+      "comando_rapido": "pip install TTS && tts --model_name tts_models/multilingual/multi-dataset/xtts_v2 --text 'Voz soberana sem custos por token.' --speaker_wav ./amostra.wav --language_idx pt --out_path output.wav",
+      "repositorio_github": "https://github.com/coqui-ai/TTS",
+      "requisitos_infra": {
+        "ram_minima": "4 GB RAM",
+        "cpu_minima": "4 vCPU + GPU Nvidia com 4 GB VRAM"
+      },
+      "veredito": "O Coqui XTTS v2 é a referência absoluta de clonagem de voz da comunidade aberta. Entrega expressividade e clonagem de timbre que rivalizam diretamente com os planos pagos do ElevenLabs.",
+      "passos_praticos": [
+        {
+          "titulo": "Instalação do Toolkit",
+          "descricao": "Instale o pacote oficial via pip install TTS em um ambiente com Python 3.10 e suporte a CUDA habilitado."
+        },
+        {
+          "titulo": "Gravação da Amostra",
+          "descricao": "Grave um áudio limpo de 5 a 10 segundos do locutor desejado em formato WAV sem ruídos de fundo."
+        },
+        {
+          "titulo": "Síntese de Áudio em Lote",
+          "descricao": "Execute o comando de inferência ou utilize a API Python para gerar horas de narração contínua sem gastar 1 centavo."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "MCP Server",
+          "nome": "xtts-mcp-server",
+          "comando_ou_repo": "npx -y @coqui/xtts-mcp",
+          "descricao": "Servidor MCP para delegar a agentes de IA a geração de áudios narrados em tempo de execução."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-voice-cloner",
+          "comando_ou_repo": ".claude/skills/voice-cloner/SKILL.md",
+          "descricao": "Skill para normalizar áudios de amostra (corte de silêncios, equalização e gating) antes da clonagem no XTTS."
+        },
+        {
+          "tipo": "Docker Container",
+          "nome": "xtts-api-server",
+          "comando_ou_repo": "docker run -d -p 8020:8020 --gpus all ghcr.io/daswer123/xtts-api-server",
+          "descricao": "Servidor REST compatível com a API do ElevenLabs para migração de código existente apenas trocando a URL."
+        }
+      ],
+      "design_system": {
+        "esforco": "Headless (API / CLI First)",
+        "stack_ui": "Python CLI + Gradio WebUI + REST API",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Totalmente headless. Permite plugar a síntese em qualquer reprodutor de áudio corporativo ou aplicativo mobile da empresa.",
+        "manutenibilidade_upgrades": "Pesos do modelo e biblioteca desacoplados em disco. Atualizações de código não exigem re-download dos modelos já baixados."
+      }
+    },
+    {
+      "rank": 2,
+      "classificacao": "A Mais Completa",
+      "nome": "OpenVoice v2 (Clonagem Instantânea com Controle de Estilo e Emoção)",
+      "slug": "openvoice",
+      "saas_substituido": "ElevenLabs VoiceLab",
+      "economia_anual_str": "R$ 16.800/ano",
+      "licenca_osi": "MIT",
+      "categoria": "Instant Voice Cloning & Style Control Engine",
+      "senioridade": "Sênior",
+      "o_que_faz": "Permite clonagem de voz instantânea e desacoplamento de timbre e emoção: você pode aplicar a voz clonada falando com raiva, alegria, tristeza ou cochicho sem precisar de amostras emotivas do locutor original.",
+      "como_funciona": "Desenvolvido pela MyShell e MIT. Separa o modelo base de fala (controlador de prosódia e sotaque) do extrator de embedding de tom (tone color converter), permitindo transferir qualquer timbre para qualquer estilo de fala.",
+      "comando_rapido": "git clone https://github.com/myshell-ai/OpenVoice && cd OpenVoice && pip install -r requirements.txt && python demo.py",
+      "repositorio_github": "https://github.com/myshell-ai/OpenVoice",
+      "requisitos_infra": {
+        "ram_minima": "4 GB RAM",
+        "cpu_minima": "4 vCPU ou GPU 4 GB VRAM"
+      },
+      "veredito": "O OpenVoice v2 é a melhor ferramenta para criação de personagens, audiolivros dramáticos e agentes com modulação emocional, onde flexibilidade tonal é indispensável.",
+      "passos_praticos": [
+        {
+          "titulo": "Download dos Checkpoints",
+          "descricao": "Clone o repositório oficial e baixe os pesos do OpenVoice v2 na pasta checkpoints/ via script de download automatizado."
+        },
+        {
+          "titulo": "Extração de Timbre",
+          "descricao": "Execute a extração do vetor de tom do locutor alvo utilizando a função se_extractor.get_se()."
+        },
+        {
+          "titulo": "Renderização Multimodal",
+          "descricao": "Gere a fala base no estilo desejado e aplique a conversão de tom para produzir o áudio final clonado."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "Gradio App",
+          "nome": "openvoice-webui",
+          "comando_ou_repo": "python app.py",
+          "descricao": "Interface gráfica amigável para testes de entonação e comparação de amostras de áudio lado a lado."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-emotion-speech",
+          "comando_ou_repo": ".claude/skills/emotion-speech/SKILL.md",
+          "descricao": "Skill para analisar o sentimento de um parágrafo de texto e ajustar a entonação do OpenVoice automaticamente."
+        },
+        {
+          "tipo": "REST Server",
+          "nome": "openvoice-api",
+          "comando_ou_repo": "python -m openvoice.server --port 8000",
+          "descricao": "Servidor HTTP para integrar geração de vozes com esteiras de automação de vídeo e podcasts."
+        }
+      ],
+      "design_system": {
+        "esforco": "Headless (API / CLI First)",
+        "stack_ui": "Python + PyTorch + Gradio",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Totalmente desacoplado de interfaces web fechadas, permitindo exportar arquivos de áudio padronizados prontos para uso em campanhas.",
+        "manutenibilidade_upgrades": "Código sob licença permissiva MIT, com suporte ativo e fácil empacotamento em contêineres Docker corporativos."
+      }
+    },
+    {
+      "rank": 3,
+      "classificacao": "A Mais Moderna",
+      "nome": "ChatTTS (Conversação Natural & Sons Não-Verbais Realistas)",
+      "slug": "chattts",
+      "saas_substituido": "ElevenLabs Conversational Voice",
+      "economia_anual_str": "R$ 15.000/ano",
+      "licenca_osi": "Apache-2.0",
+      "categoria": "Conversational Speech & Prosody Modeling Engine",
+      "senioridade": "Sênior",
+      "o_que_faz": "Modelo generativo especializado em diálogos conversacionais naturais. É capaz de reproduzir pausas naturais, respirações, risos, hesitações e suspiros, tornando a fala de assistentes indistinguível de um ser humano real.",
+      "como_funciona": "Treinado em mais de 100.000 horas de fala em inglês e chinês com alta generalização. Utiliza marcadores especiais de texto como [laugh], [sigh] e [break] para injetar comportamento expressivo em tempo de síntese.",
+      "comando_rapido": "pip install ChatTTS && python -c \"import ChatTTS; chat = ChatTTS.Chat(); chat.load(); wavs = chat.infer(['Olá, tudo bem? [laugh] Que bom falar com você!']);\"",
+      "repositorio_github": "https://github.com/2noise/ChatTTS",
+      "requisitos_infra": {
+        "ram_minima": "4 GB RAM",
+        "cpu_minima": "4 vCPU ou GPU 4 GB VRAM"
+      },
+      "veredito": "Se o seu objetivo é criar atendentes virtuais telefônicos ou bots de voz com calor humano e risadas autênticas sem parecer um robô mecânico, o ChatTTS é incomparável.",
+      "passos_praticos": [
+        {
+          "titulo": "Instalação do Pacote",
+          "descricao": "Instale a biblioteca com pip install ChatTTS e inicialize o modelo em seu script de atendimento."
+        },
+        {
+          "titulo": "Injeção de Expressões",
+          "descricao": "Insira tags como [laugh] ou [chuckle] no texto do roteiro para orientar o modelo onde dar uma risada ou fazer uma pausa deliberada."
+        },
+        {
+          "titulo": "Fixação da Semente de Voz",
+          "descricao": "Fixe o parâmetro manual_seed para que o assistente mantenha exatamente o mesmo timbre de voz em todas as respostas geradas."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "WebUI",
+          "nome": "chattts-ui",
+          "comando_ou_repo": "git clone https://github.com/jianchang512/ChatTTS-ui && cd ChatTTS-ui && python app.py",
+          "descricao": "Interface gráfica completa com sliders para controle fino de risos, velocidade e tom de fala."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-dialog-polisher",
+          "comando_ou_repo": ".claude/skills/dialog-polisher/SKILL.md",
+          "descricao": "Skill para transformar respostas duras de LLM em roteiros conversacionais com tags de respiração do ChatTTS."
+        },
+        {
+          "tipo": "FastAPI Wrapper",
+          "nome": "chattts-api",
+          "comando_ou_repo": "uvicorn main:app --host 0.0.0.0 --port 8080",
+          "descricao": "Wrapper de API de alta performance para atendimento telefônico e bots de suporte ao vivo."
+        }
+      ],
+      "design_system": {
+        "esforco": "Headless (API / CLI First)",
+        "stack_ui": "PyTorch + Python + WebUI Integrada",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Totalmente programável via código, com saídas em formato WAV mono/estéreo sem marcas d'água de áudio.",
+        "manutenibilidade_upgrades": "Estrutura enxuta com dependências padrão de ciência de dados (PyTorch/Torchaudio), garantindo longevidade."
+      }
+    },
+    {
+      "rank": 4,
+      "classificacao": "A Mais Leve",
+      "nome": "Piper TTS (Síntese Neural Ultra-Rápida para CPU & Dispositivos de Borda)",
+      "slug": "piper-tts",
+      "saas_substituido": "ElevenLabs Turbo v2",
+      "economia_anual_str": "R$ 10.800/ano",
+      "licenca_osi": "MIT",
+      "categoria": "Ultra-Fast Neural Text-to-Speech Engine",
+      "senioridade": "Sênior",
+      "o_que_faz": "Motor de síntese neural ultrarrápido projetado para rodar localmente em processadores comuns (CPU) e computadores de placa única (Raspberry Pi), sintetizando áudio até 10 vezes mais rápido que o tempo real.",
+      "como_funciona": "Desenvolvido por Michael Hansen em C++ e Python sobre o motor VITS e ONNX Runtime. Consome menos de 50 MB de memória RAM e entrega vozes naturais em português do Brasil com zero latência perceptível.",
+      "comando_rapido": "echo 'Soberania digital com altíssima velocidade.' | piper --model pt_BR-faber-medium.onnx --output_file audio.wav",
+      "repositorio_github": "https://github.com/rhasspy/piper",
+      "requisitos_infra": {
+        "ram_minima": "256 MB RAM",
+        "cpu_minima": "1 vCPU (Zero exigência de GPU)"
+      },
+      "veredito": "O Piper é a ferramenta mais leve do planeta para síntese neural de voz. É a escolha perfeita para totens de atendimento, sistemas embarcados, acessibilidade e bots que exigem resposta instantânea.",
+      "passos_praticos": [
+        {
+          "titulo": "Download do Binário",
+          "descricao": "Baixe o binário pré-compilado do Piper para Linux, Windows ou Mac com um clique sem dependências de compilação."
+        },
+        {
+          "titulo": "Seleção do Modelo ONNX",
+          "descricao": "Baixe o modelo em português brasileiro (ex: pt_BR-faber-medium.onnx) e seu respectivo arquivo de configuração JSON."
+        },
+        {
+          "titulo": "Pipelines de Terminal",
+          "descricao": "Encaminhe qualquer saída de texto via pipe (cat texto.txt | piper) para gerar arquivos de áudio instantaneamente."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "CLI Pipe",
+          "nome": "piper-pipe",
+          "comando_ou_repo": "echo 'Alerta do sistema' | piper -m voz.onnx -f saida.wav && aplay saida.wav",
+          "descricao": "Execução instantânea de notificações de áudio diretamente no alto-falante do servidor."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-piper-announcer",
+          "comando_ou_repo": ".claude/skills/piper-announcer/SKILL.md",
+          "descricao": "Skill para converter resumos de notícias diárias em podcasts compactos utilizando o Piper."
+        },
+        {
+          "tipo": "Home Assistant Add-on",
+          "nome": "piper-ha",
+          "comando_ou_repo": "Instalação nativa via Home Assistant Community Store",
+          "descricao": "Integração para alertas de voz residenciais e corporativos 100% offline em automação predial."
+        }
+      ],
+      "design_system": {
+        "esforco": "Headless (API / CLI First)",
+        "stack_ui": "C++ / ONNX Runtime + CLI Standalone",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Puramente headless. Permite que toda aplicação corporativa fale sem adicionar peso ou latência de rede.",
+        "manutenibilidade_upgrades": "Distribuição em binário estático sem dependências externas de pacotes de sistema operacional."
+      }
+    },
+    {
+      "rank": 5,
+      "classificacao": "A Mais Simples",
+      "nome": "Edge-TTS (Síntese Neural Gratuita em Python sem Chave de API)",
+      "slug": "edge-tts",
+      "saas_substituido": "ElevenLabs Free Tier",
+      "economia_anual_str": "R$ 7.200/ano",
+      "licenca_osi": "GPL-3.0",
+      "categoria": "Zero-Config Neural Speech CLI",
+      "senioridade": "Sênior",
+      "o_que_faz": "Biblioteca e utilitário de linha de comando em Python que permite sintetizar texto com as vozes neurais ultra-realistas da Microsoft (as mesmas vozes do Edge e Azure Speech) gratuitamente e sem chaves de API pagas.",
+      "como_funciona": "Comunica-se diretamente via WebSockets criptografados com os endpoints de leitura em voz alta do navegador, suportando dezenas de vozes em português (Francisca, Antonio, Thalita) com ajuste de velocidade e tom.",
+      "comando_rapido": "pip install edge-tts && edge-tts --voice pt-BR-AntonioNeural --text 'Síntese de alta fidelidade sem gastar nada.' --write-media out.mp3",
+      "repositorio_github": "https://github.com/rany2/edge-tts",
+      "requisitos_infra": {
+        "ram_minima": "128 MB RAM",
+        "cpu_minima": "1 vCPU"
+      },
+      "veredito": "Se você precisa de uma voz com qualidade de estúdio agora, sem ter que baixar modelos pesados de 5 GB nem pagar pelo ElevenLabs, o Edge-TTS resolve seu problema em 30 segundos com 1 comando.",
+      "passos_praticos": [
+        {
+          "titulo": "Instalação Instantânea",
+          "descricao": "Instale o pacote com pip install edge-tts em qualquer terminal ou ambiente virtual Python."
+        },
+        {
+          "titulo": "Listagem de Vozes Nacionais",
+          "descricao": "Execute edge-tts --list-voices | grep pt-BR para ver a lista de narradores masculinos e femininos disponíveis."
+        },
+        {
+          "titulo": "Geração do Arquivo MP3",
+          "descricao": "Execute o comando informando o texto e a voz escolhida para receber o arquivo .mp3 gerado com qualidade de rádio comercial."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "CLI Tool",
+          "nome": "edge-playback",
+          "comando_ou_repo": "edge-playback --voice pt-BR-FranciscaNeural --text 'Executando comando com sucesso'",
+          "descricao": "Reproduz o áudio sintetizado diretamente nos fones de ouvido sem precisar salvar o arquivo intermediário."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-edge-narrator",
+          "comando_ou_repo": ".claude/skills/edge-narrator/SKILL.md",
+          "descricao": "Skill para transformar relatórios de sprint gerados por agentes em áudio narrado compartilhado com o time."
+        },
+        {
+          "tipo": "Subtitle Generator",
+          "nome": "edge-tts-srt",
+          "comando_ou_repo": "edge-tts --text 'Texto' --write-subtitles legendas.vtt",
+          "descricao": "Gera simultaneamente o áudio falado e o arquivo de legendas com marcação precisa de tempo por palavra."
+        }
+      ],
+      "design_system": {
+        "esforco": "Headless (API / CLI First)",
+        "stack_ui": "Python AsyncIO + WebSockets",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Totalmente invisível na ponta final: os arquivos de áudio gerados são arquivos MP3 limpos prontos para edição de vídeo ou publicação.",
+        "manutenibilidade_upgrades": "Pacote Python enxuto mantido ativamente com atualizações contínuas de compatibilidade."
+      }
+    }
+  ]
+}
