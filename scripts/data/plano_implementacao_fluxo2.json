@@ -1,0 +1,45 @@
+{
+  "plan_id": "impl-2026-08-27-fluxo2-10-10",
+  "title": "Elevação do Fluxo 2 (Dossiês Verticais) ao Padrão 10/10 AIDD",
+  "phases": [
+    {
+      "id": "impl",
+      "name": "Implementação Tripartite",
+      "task": {
+        "command": "python scripts/gerar_dossie_vertical_tripartite.py --saas granola",
+        "timeout_ms": 30000,
+        "expected_outputs": [
+          "output/dossies-verticais/vert-granola/vert-granola.html",
+          "output/dossies-verticais/vert-granola/vert-granola.md",
+          "output/dossies-verticais/vert-granola/vert-granola.pdf"
+        ]
+      },
+      "retry_on_missing_outputs": true
+    },
+    {
+      "id": "test",
+      "name": "Suíte de Testes Unitários Automatizados",
+      "task": {
+        "test_command": "python -m unittest tests/test_fluxo2_verticais.py -v",
+        "coverage_min": 100,
+        "timeout_ms": 15000
+      }
+    },
+    {
+      "id": "validate",
+      "name": "Validação Mecânica R5-V (Padrão Diamante)",
+      "task": {
+        "gate_command": "python scripts/auditar_tipo_vertical.py output/listas-open-source/vert-granola.html",
+        "timeout_ms": 10000
+      }
+    },
+    {
+      "id": "verify",
+      "name": "Verificação Final de Higiene R18 & Sintaxe",
+      "task": {
+        "verify_command": "python scripts/auditar_higiene_repo.py",
+        "timeout_ms": 10000
+      }
+    }
+  ]
+}

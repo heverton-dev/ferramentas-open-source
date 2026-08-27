@@ -92,7 +92,122 @@ def inicializar_banco():
                 UNIQUE(slug, saas_origem)
             )
         """)
+
+        # Tabela de Dossiês Verticais de Desmantelamento SaaS (Fluxo 2)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS esteira_dossies_verticais (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                saas_slug TEXT NOT NULL UNIQUE,
+                saas_nome TEXT NOT NULL,
+                preco_anual_dolar REAL,
+                quinteto_ferramentas TEXT NOT NULL,
+                total_ferramentas INTEGER DEFAULT 5,
+                gate_r5v TEXT DEFAULT 'APROVADO',
+                gate_r18 TEXT DEFAULT 'APROVADO',
+                caminho_html TEXT,
+                caminho_md TEXT,
+                caminho_pdf TEXT,
+                atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        # Tabela de Listas Horizontais / Compêndios Temáticos (Fluxo 1)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS esteira_listas_horizontais (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                slug TEXT NOT NULL UNIQUE,
+                titulo TEXT NOT NULL,
+                total_ferramentas INTEGER NOT NULL,
+                gate_r5 TEXT DEFAULT 'APROVADO',
+                gate_r18 TEXT DEFAULT 'APROVADO',
+                caminho_html TEXT,
+                caminho_md TEXT,
+                caminho_pdf TEXT,
+                atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
         conn.commit()
+
+def registrar_lista_horizontal(dados: dict):
+    """Registra ou atualiza uma Lista Horizontal do Fluxo 1 no SQLite."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO esteira_listas_horizontais (
+                slug, titulo, total_ferramentas, gate_r5, gate_r18, caminho_html, caminho_md, caminho_pdf
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(slug) DO UPDATE SET
+                titulo = excluded.titulo,
+                total_ferramentas = excluded.total_ferramentas,
+                gate_r5 = excluded.gate_r5,
+                gate_r18 = excluded.gate_r18,
+                caminho_html = excluded.caminho_html,
+                caminho_md = excluded.caminho_md,
+                caminho_pdf = excluded.caminho_pdf,
+                atualizado_em = CURRENT_TIMESTAMP
+        """, (
+            dados["slug"],
+            dados.get("titulo", dados["slug"].replace("-", " ").title()),
+            dados.get("total_ferramentas", 0),
+            dados.get("gate_r5", "APROVADO"),
+            dados.get("gate_r18", "APROVADO"),
+            dados.get("caminho_html", f"output/listas-open-source/list-{dados['slug']}.html"),
+            dados.get("caminho_md", f"output/listas-open-source/list-{dados['slug']}.md"),
+            dados.get("caminho_pdf", f"output/listas-open-source/list-{dados['slug']}.pdf")
+        ))
+        conn.commit()
+
+def listar_listas_horizontais() -> list[dict]:
+    """Retorna todas as listas horizontais registradas no banco."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM esteira_listas_horizontais ORDER BY id ASC")
+        return [dict(r) for r in cursor.fetchall()]
+
+def registrar_dossie_vertical(dados: dict):
+    """Registra ou atualiza um Dossiê Vertical do Fluxo 2 no SQLite."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO esteira_dossies_verticais (
+                saas_slug, saas_nome, preco_anual_dolar, quinteto_ferramentas,
+                total_ferramentas, gate_r5v, gate_r18, caminho_html, caminho_md, caminho_pdf
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(saas_slug) DO UPDATE SET
+                saas_nome = excluded.saas_nome,
+                preco_anual_dolar = excluded.preco_anual_dolar,
+                quinteto_ferramentas = excluded.quinteto_ferramentas,
+                total_ferramentas = excluded.total_ferramentas,
+                gate_r5v = excluded.gate_r5v,
+                gate_r18 = excluded.gate_r18,
+                caminho_html = excluded.caminho_html,
+                caminho_md = excluded.caminho_md,
+                caminho_pdf = excluded.caminho_pdf,
+                atualizado_em = CURRENT_TIMESTAMP
+        """, (
+            dados["saas_slug"],
+            dados.get("saas_nome", dados["saas_slug"].title()),
+            dados.get("preco_anual_dolar", 0.0),
+            dados.get("quinteto_ferramentas", ""),
+            dados.get("total_ferramentas", 5),
+            dados.get("gate_r5v", "APROVADO"),
+            dados.get("gate_r18", "APROVADO"),
+            dados.get("caminho_html", f"output/listas-open-source/vert-{dados['saas_slug']}.html"),
+            dados.get("caminho_md", f"output/listas-open-source/vert-{dados['saas_slug']}.md"),
+            dados.get("caminho_pdf", f"output/listas-open-source/vert-{dados['saas_slug']}.pdf")
+        ))
+        conn.commit()
+
+def listar_dossies_verticais() -> list[dict]:
+    """Retorna todos os dossiês verticais registrados no banco."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM esteira_dossies_verticais ORDER BY id ASC")
+        return [dict(r) for r in cursor.fetchall()]
 
 def registrar_bundle_esteira(dados: dict):
     """Registra ou atualiza um bundle completo na esteira_manuais_bundles."""
