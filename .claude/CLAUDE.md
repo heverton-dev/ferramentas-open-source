@@ -65,14 +65,14 @@ alwaysApply: true
 - **R15 (Segredos):** nenhuma credencial em arquivo versionado. O hook `pre-commit` bloqueia o commit se detectar padrão de segredo no diff staged.
 - **R16 (Pós-implementação — nunca commitar vermelho):** APÓS TODA nova implementação: (1) rodar a suíte de testes necessária; (2) **100%** -> commit + push; (3) **<100%** -> analisar a falha, corrigir o código, re-testar até 100%. Nunca commitar suíte vermelha; nunca contornar o teste para fazê-lo passar.
 - **R17 (Integridade de Repositórios & Validação de URLs):** toda ferramenta catalogada DEVE possuir licença OSI explícita, identificação do SaaS substituído e URL de repositório válida.
-- **R18 (Higiene Contínua, Zero Entulho & Sincronização Estrita):** regra inegociável de pureza: (1) **Zero Arquivos Temporários:** nenhum script descartável (`temp_*`, `fix_*`, `.bak`, `.tmp`) pode permanecer no repositório. (2) **Paridade Estrita de Espelhos:** qualquer compêndio em `output/listas-open-source/` DEVE ter paridade de hash MD5 idêntica em `docs/listas/`. (3) O hook `pre-commit` bloqueia qualquer tentativa de commitar com divergência de espelho ou lixo temporário (`exit 1`).
+- **R18 (Higiene Soberana em Output, Zero Entulho & Blindagem Anti-Fork):** regra inegociável de pureza: (1) **Zero Arquivos Temporários:** nenhum script descartável (`temp_*`, `fix_*`, `.bak`, `.tmp`) pode permanecer no repositório. (2) **Soberania Única de Output:** todos os artefatos residem na pasta soberana única `output/` (`01-listas-horizontais/`, `02-dossies-verticais/`, `03-manuais-e-trilhas/`), com eliminação definitiva de pastas duplicadas (`docs/`). O deploy é direto via GitHub Actions (`.github/workflows/deploy-pages.yml`). (3) **Blindagem Anti-Fork:** é terminantemente proibido qualquer script de auto-forking em lote via API do GitHub para prevenir sanções na conta do operador.
 - **R19 (Comunicação Limpa & Objetiva — Resposta ao Usuário):** Toda resposta exibida ao usuário final DEVE ser: (1) **Sem firula/enrolação:** zero preâmbulos, saudações, disclaimers desnecessários, ou frases de transição ("como mencionei", "conforme solicitado"). (2) **Direto ao ponto:** primeira linha já contém a informação central; contexto vem depois se relevante. (3) **Objetiva:** uma sentença por tópico; nenhuma redundância. Usar verbos de ação (implementei, criei, corrigi) não adjetivos vagos. (4) **Sem perder qualidade:** densidade técnica mantida; explicações são precisas, não simplificadas. (5) **Português do Brasil obrigatório:** PT-BR em 100% da comunicação (chat, docs, nomes de variáveis públicas, comentários em código-entrega). (6) **Anti-padrões banidos:** "Olá!", "Claro!", "Com certeza!", "Espero ter ajudado", "Como uma IA", "Deixe-me...", "Segue abaixo:", frases longas sem resposta (>2 linhas), emojis em contexto técnico (exceto em listas/badges estruturais). (7) **Estrutura:** resultado primeiro, detalhes/contexto segundo, próximos passos terceiro (quando aplicável). Linhas em branco usadas para separar blocos lógicos, não para "respirar".
 
 ## 2. Squad & Especialistas
 
 - `<pesquisador-open-source>`: Coleta determinística de metadados, licenças e repositórios.
 - `<redator-diamante>`: Geração de fichas no Padrão Dossiê Executivo (R5).
-- `<auditor-r18>`: Validador de integridade de espelhos e ausência de entulho.
+- `<auditor-r18>`: Validador de integridade e ausência de entulho no repositório.
 - `<orquestrador-harness>`: Gerenciador de links multi-IDE e gates mecânicos.
 
 ## 3. Servidores MCP
@@ -86,17 +86,31 @@ Declarados em `.mcp.json` na raiz:
 - `scripts/padroes/template_dossie_executivo.py`: Molde canônico em HTML/CSS para os 49 compêndios.
 - `scripts/schemas/`: Schemas JSON para estruturação de dados de ferramentas e relatórios.
 
-## 5. Fluxo Operacional da Fábrica Universal
+## 5. Os 3 Macro-Fluxos AIDD & Acionamento Universal
 
-O fluxo canônico para cada camada ou módulo do projeto:
-1. **Fase 1 (Mapeamento & Auditoria):** Coleta determinística de ferramentas, validação de licença OSI e definição de SaaS substituídos.
-2. **Fase 2 (Produção Diamante):** Geração do compêndio HTML autocontido com Hero Stats, tabela fluida, 4 seções por card e 3 mini-cards de passos práticos.
-3. **Fase 2.5 (Auditoria Mecânica):** Execução dos gates `auditar_r5_dossie.py`, `auditar_higiene_repo.py` e `auditar_todas_camadas.py`.
-4. **Fase 3 (Sincronização & Custódia):** `python scripts/limpar_entulho.py` (garante paridade entre `output/` e `docs/`) ➡️ Commit ➡️ Sincronização dos forks no GitHub.
+A esteira opera sob 3 Macro-Fluxos desacoplados com 4 Skills Universais e Runners CLI:
+
+1. **Fluxo 1 · Listas Horizontais (49 Camadas):**
+   - *Skill / Chat:* `.agents/skills/fluxo1-listas-horizontais/` ➔ `/fluxo1 [slug]`
+   - *CLI:* `python scripts/run_fluxo1.py --slug <slug>`
+   - *Entrega:* `output/01-listas-horizontais/list-<slug>/` (HTML, MD, PDF Typst)
+2. **Fluxo 2 · Dossiês Verticais & Quinteto Soberano:**
+   - *Skill / Chat:* `.agents/skills/fluxo2-dossies-verticais/` ➔ `/fluxo2 [saas]`
+   - *CLI:* `python scripts/run_fluxo2.py --saas <saas>`
+   - *Entrega:* `output/02-dossies-verticais/vert-<saas>/` (HTML R5-V, MD, PDF Typst)
+3. **Fluxo 3 · Esteira de Engenharia, Manuais VPS & Trilhas:**
+   - *Skill / Chat:* `.agents/skills/fluxo3-manuais-e-trilhas/` ➔ `/fluxo3 [ferramenta] [saas]`
+   - *CLI:* `python scripts/run_fluxo3.py --ferramenta <slug> --saas <saas>`
+   - *Entrega:* `output/03-manuais-e-trilhas/<saas>/<ferramenta>/` (Manual com Desinstalação Cirúrgica & Trilha 5 Aulas)
+4. **Pipeline Total Integrado (Cascata dos 3 Fluxos com 3 Gates de Decisão):**
+   - *Skill / Chat:* `.agents/skills/fluxo-total-aidd/` ➔ `/fluxo-total`
+   - *CLI:* `python scripts/run_fluxo_total.py`
 
 ## 6. Portabilidade Multi-IDE
 
-Fonte única: `.claude/`.
+Fonte única universal: `.agents/`.
+- **Skills Universais:** `.agents/skills/` espelhadas para `.claude/skills/` e `agentic/skills/`.
+- **Comandos Universais:** `.agents/commands/` espelhados para `.claude/commands/`.
 - **Junctions & Links:** `AGENTS.md` -> `.claude/CLAUDE.md`, `.cursor/rules/` -> `.claude/CLAUDE.md`.
 - **Pre-commit hook:** Instalado em `.git/hooks/pre-commit`.
 - **Recriar links:** `scripts/setup-links.ps1` (Win) ou `scripts/setup-links.sh` (Linux/Mac).

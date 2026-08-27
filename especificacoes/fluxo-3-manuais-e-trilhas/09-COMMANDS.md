@@ -19,23 +19,38 @@ O módulo suporta três formas de interação adaptadas ao perfil do operador:
 
 ---
 
-## 2. Comandos Principais do Orquestrador Mestre
+## 2. Acionamento Agêntico & CLI Runner Universal
+
+### 2.1. Via Slash Command no Chat (Qualquer IDE)
+Dispara o fluxo pelo chat interativo:
+```text
+/fluxo3 screenpipe granola
+```
+
+### 2.2. Via CLI Runner Determinístico (Terminal)
+```powershell
+python scripts/run_fluxo3.py --ferramenta screenpipe --saas granola
+```
+
+---
+
+## 3. Comandos do Orquestrador Mestre em Lote
 
 Arquivo principal: [`scripts/orquestrador_esteira_manuais.py`](file:///C:/Users/trcnologia/orca/projects/open-source/scripts/orquestrador_esteira_manuais.py)
 
-### 2.1. Executar o Quinteto Soberano Completo (Modo em Lote)
+### 3.1. Executar o Quinteto Soberano Completo (Modo em Lote)
 Executa as 5 ferramentas do SaaS indicado, gerando os 45 arquivos e gravando no SQLite:
 ```powershell
 python scripts/orquestrador_esteira_manuais.py --saas granola --modo todas
 ```
 
-### 2.2. Executar uma Única Ferramenta Cirúrgica
+### 3.2. Executar uma Única Ferramenta Cirúrgica
 Processa apenas a ferramenta especificada:
 ```powershell
 python scripts/orquestrador_esteira_manuais.py --saas granola --ferramenta screenpipe
 ```
 
-### 2.3. Abrir o Menu Interativo no Terminal
+### 3.3. Abrir o Menu Interativo no Terminal
 Exibe o menu visual numerado no terminal para escolha manual:
 ```powershell
 python scripts/orquestrador_esteira_manuais.py --saas granola

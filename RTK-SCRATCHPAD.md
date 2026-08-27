@@ -1,22 +1,29 @@
 # 🧠 RTK-SCRATCHPAD · Memória Persistente de Longo Prazo
 
-> **Finalidade:** Arquivo externo para registrar aprendizados, decisões técnicas e resoluções de bugs ocorridos durante as sessões.
-> **Regra de Injeção de Contexto:** A Camada TELA lê apenas os **últimos 5 aprendizados** relevantes sob demanda, preservando o cache fixo do prompt mestre (`CLAUDE.md`).
+> **Finalidade:** Arquivo externo para registrar aprendizados, decisões técnicas e resoluções de bugs ocorridos durante as sessões.  
+> **Regra de Injeção de Contexto:** A Camada TELA lê apenas os **últimos 5 aprendizados** relevantes sob demanda, preservando o cache fixo do prompt mestre (`AGENTS.md` / `CLAUDE.md`).
 
 ---
 
 ## 📌 Aprendizados Registrados
 
-### [2026-08-25] Padronização Universal do Padrão Diamante R5
-* **Decisão:** Todas as 49 listas técnicas foram unificadas no Padrão Dossiê Executivo (Hero Stats Bar, Tabela fluida sem scroll horizontal, 4 seções verticais nos cards e 3 mini-cards de passos práticos).
-* **Anti-Pattern Eliminado:** Banido terminantemente o uso de 2 colunas espremidas (`div.cols`) e parágrafos corridos de instruções.
+### [2026-08-27] Soberania de Pasta Única `output/` & Deploy Direto (Anti-Forks)
+* **Decisão:** A pasta duplicada `docs/` foi eliminada definitivamente do repositório. Todos os compêndios dos 3 fluxos vivem na estrutura soberana tripartite dentro de `output/` (`01-listas-horizontais/`, `02-dossies-verticais/`, `03-manuais-e-trilhas/`).
+* **Blindagem de Conta GitHub:** Banido expressamente qualquer script de auto-forking em lote via API para prevenir sanções de conta. O deploy online é realizado via GitHub Actions direta (`.github/workflows/deploy-pages.yml`) a partir de `output/`.
 
-### [2026-08-25] Gate Mecânico R18 & Paridade Estrita de Espelhos
-* **Decisão:** Criado o auditor `scripts/auditar_higiene_repo.py` acionado no `pre-commit`.
-* **Regra:** Nenhuma alteração é commitada se houver divergência de hash MD5 entre `output/listas-open-source/` e `docs/listas/` ou se existirem arquivos temporários (`temp_*`, `fix_*`, `.bak`).
+### [2026-08-27] As 4 Skills Universais em `.agents/` & CLI Runners Determinísticos
+* **Decisão:** Criadas as 4 skills especialistas na raiz universal `.agents/skills/` com junctions para `.claude/skills/` e `agentic/skills/`:
+  1. `fluxo1-listas-horizontais` (`/fluxo1` e `scripts/run_fluxo1.py`)
+  2. `fluxo2-dossies-verticais` (`/fluxo2` e `scripts/run_fluxo2.py`)
+  3. `fluxo3-manuais-e-trilhas` (`/fluxo3` e `scripts/run_fluxo3.py`)
+  4. `fluxo-total-aidd` (`/fluxo-total` e `scripts/run_fluxo_total.py`)
+* **Multi-IDE:** Os comandos slash residem em `.agents/commands/`, habilitando interface via chat e via terminal para qualquer IDE.
 
-### [2026-08-25] Tratamento de Permissões no Windows para Expurgo Seguro
-* **Aprendizado:** Pastas `.git/objects` no Windows possuem atributo Read-Only nativo. Funções de `shutil.rmtree` devem usar `onexc=remove_readonly` com `os.chmod(path, stat.S_IWRITE)` para evitar erros de `PermissionError: [WinError 5]`.
+### [2026-08-27] Desinstalação Cirúrgica & Isolamento da VPS (Zero Efeito Colateral)
+* **Decisão:** Todo manual operacional do Fluxo 3 agora contém obrigatoriamente a Seção 5 detalhando 4 passos de remoção isolada (parada de serviço, remoção de contêineres/volumes dedicados, revogação de portas UFW e remoção de binários) com checklist pós-desinstalação, garantindo que nenhum outro projeto na VPS seja afetado.
 
-### [2026-08-25] Vocabulário Controlado da TELA
-* **Regra:** Silenciamento absoluto de introduções e saudações ("Como uma IA", "Espero ter ajudado"). Respostas sempre diretas, técnicas e em conformidade com o padrão executivo.
+### [2026-08-27] Microtipografia Estrita Anti-Sobreposição em PDFs
+* **Aprendizado Typst:** Imagens Mermaid esticadas no PDF geram retângulos vazios e quebras arbitrárias; o Mermaid deve renderizar em SVG interativo nativo no HTML e texto institucional compacto no PDF. Para tabelas, a regra rígida de ouro (`size: 6.8pt`, `leading: 0.4em`, `inset: (x: 4pt, y: 3.5pt)`) impede 100% das sobreposições em folhas A4.
+
+### [2026-08-25] Gate Mecânico R18 & Higiene Contínua
+* **Regra:** Nenhuma alteração é commitada se existirem arquivos temporários (`temp_*`, `fix_*`, `.bak`, `.tmp`) ou scripts de migração descartáveis. Auditoria mecânica mandatória via `scripts/auditar_higiene_repo.py`.

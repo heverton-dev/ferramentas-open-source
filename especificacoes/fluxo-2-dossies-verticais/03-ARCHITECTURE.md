@@ -1,18 +1,19 @@
 # 03 · Arquitetura do Sistema & Topologia Modular (Fluxo 2)
 
 > **Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS  
-> **Padrão de Armazenamento:** Bundles Modulares em `output/dossies-verticais/`
+> **Padrão:** Soberania em `output/` · Zero Duplicação em `docs/`  
+> **Status:** Homologado AIDD · Nota 10.0 / 10.0
 
 ---
 
-## 1. Topologia de Diretórios dos Dossiês Verticais
+## 1. Topologia Soberana dos Dossiês Verticais
 
 ```
-output/dossies-verticais/
+output/02-dossies-verticais/
   ├── vert-granola/
   │     ├── vert-granola.html   ➔ Compêndio Interativo Diamante R5-V
-  │     ├── vert-granola.md     ➔ Markdown Estruturado
-  │     └── vert-granola.pdf    ➔ PDF Executivo via Typst
+  │     ├── vert-granola.md     ➔ Markdown Estruturado Limpo
+  │     └── vert-granola.pdf    ➔ PDF Executivo via Typst (Anti-Sobreposição)
   │
   ├── vert-notion/
   │     ├── vert-notion.html
@@ -25,6 +26,9 @@ output/dossies-verticais/
         └── vert-salesforce.pdf
 ```
 
-## 2. Regra de Paridade Estrita (R18)
-
-Todos os bundles gerados em `output/dossies-verticais/vert-<saas>/` possuem cópia espelho idêntica em `docs/dossies-verticais/vert-<saas>/`. Adicionalmente, para retrocompatibilidade com compêndios legados, o arquivo HTML também é mantido em `output/listas-open-source/vert-<saas>.html` e `docs/listas/vert-<saas>.html`.
+## 2. Acionamento Agêntico & CLI
+- **Skill Agêntica:** `.agents/skills/fluxo2-dossies-verticais/`
+- **Slash Command:** `/fluxo2 [saas]`
+- **CLI Runner:** `python scripts/run_fluxo2.py --saas <saas>`
+- **Persistência Relacional:** Gravado no banco SQLite `estado_esteira.db` (Regra R11).
+- **Publicação:** Deploy contínuo direto de `output/` via GitHub Actions (`deploy-pages.yml`).

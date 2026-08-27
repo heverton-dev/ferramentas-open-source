@@ -343,23 +343,37 @@ gravado na tabela <code>esteira_listas_horizontais</code>.</li>
 Arquitetura do Sistema (Fluxo 1: Listas Horizontais)</h1>
 <blockquote>
 <p><strong>Módulo:</strong> Fluxo 1 — Listas Horizontais &amp;
-Compêndios Temáticos</p>
+Compêndios Temáticos<br />
+<strong>Padrão:</strong> Soberania em <code>output/</code> · Zero
+Duplicação em <code>docs/</code><br />
+<strong>Status:</strong> Homologado AIDD · Nota 10.0 / 10.0</p>
 </blockquote>
 <hr />
-<h2 id="topologia-de-bundles">1. Topologia de Bundles</h2>
-<pre><code>output/listas-tematicas/
+<h2 id="topologia-de-bundles-soberana">1. Topologia de Bundles
+Soberana</h2>
+<pre><code>output/01-listas-horizontais/
   ├── list-bancos-dados-estado/
-  │     ├── list-bancos-dados-estado.html
-  │     ├── list-bancos-dados-estado.md
-  │     └── list-bancos-dados-estado.pdf
+  │     ├── list-bancos-dados-estado.html   # Interativo Padrão Diamante R5
+  │     ├── list-bancos-dados-estado.md     # Markdown Limpo Estruturado
+  │     └── list-bancos-dados-estado.pdf    # Typst Anti-Sobreposição
   │
   ├── list-crm-erp-corporativo/
   │     ├── list-crm-erp-corporativo.html
   │     ├── list-crm-erp-corporativo.md
   │     └── list-crm-erp-corporativo.pdf</code></pre>
-<p>Cada bundle possui espelho idêntico em
-<code>docs/listas-tematicas/</code> e cópia legada em
-<code>output/listas-open-source/</code> e <code>docs/listas/</code>.</p>
+<h2 id="acionamento-agêntico-cli">2. Acionamento Agêntico &amp; CLI</h2>
+<ul>
+<li><strong>Skill Agêntica:</strong>
+<code>.agents/skills/fluxo1-listas-horizontais/</code></li>
+<li><strong>Slash Command:</strong> <code>/fluxo1 [slug]</code></li>
+<li><strong>CLI Runner:</strong>
+<code>python scripts/run_fluxo1.py --slug &lt;slug&gt;</code></li>
+<li><strong>Persistência Relacional:</strong> Gravado automaticamente no
+banco SQLite <code>estado_esteira.db</code> (Regra R11).</li>
+<li><strong>Publicação:</strong> Deploy contínuo direto de
+<code>output/</code> via <code>.github/workflows/deploy-pages.yml</code>
+(sem duplicidade em <code>docs/</code>).</li>
+</ul>
 <!-- FIM DO MÓDULO: 03-ARCHITECTURE.md -->
 <hr />
 <!-- INÍCIO DO MÓDULO: 04-AGENTS.md -->

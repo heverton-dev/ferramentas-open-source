@@ -548,6 +548,11 @@ Markdown Limpo e PDF Executivo via Typst (&lt;100ms).</li>
 ferramenta processada deve receber um relatório tripartite registrando
 tempos, consumo de tokens, modelo de LLM, tools, skills e conformidade
 dos gates.</li>
+<li><strong>RF08 (Desinstalação Cirúrgica &amp; Isolamento da
+VPS):</strong> O manual deve conter obrigatoriamente a Seção 5
+detalhando os 4 passos de remoção segura sem afetar outros contêineres,
+bancos ou serviços da VPS, acompanhado de checklist de validação de
+saúde do servidor.</li>
 </ul>
 <hr />
 <h2 id="requisitos-não-funcionais-rnf">2. Requisitos Não-Funcionais
@@ -562,9 +567,10 @@ completa de um pacote de 9 arquivos deve levar menos de 4 segundos.</li>
 deve garantir compatibilidade UTF-8 nativa no Windows
 (<code>sys.stdout.reconfigure(encoding="utf-8")</code>) e respeitar o
 limite de 260 caracteres de caminho (MAX_PATH).</li>
-<li><strong>RNF04 (Regra R18 - Paridade Estrita):</strong> Os diretórios
-<code>output/&lt;slug&gt;/</code> e <code>docs/&lt;slug&gt;/</code>
-devem manter paridade absoluta de arquivos e conteúdo.</li>
+<li><strong>RNF04 (Regra R18 - Soberania em Output &amp; Zero
+Entulho):</strong> Todos os artefatos residem na pasta soberana única
+<code>output/03-manuais-e-trilhas/</code>, com publicação direta via
+CI/CD e zero arquivos duplicados ou temporários.</li>
 </ul>
 <hr />
 <h2 id="contratos-de-schemas-json">3. Contratos de Schemas JSON</h2>
@@ -1525,26 +1531,37 @@ Para auditar ou debugar uma única etapa mecânica (ex: auditar apenas
 links ou apenas citações).</li>
 </ol>
 <hr />
-<h2 id="comandos-principais-do-orquestrador-mestre">2. Comandos
-Principais do Orquestrador Mestre</h2>
+<h2 id="acionamento-agêntico-cli-runner-universal">2. Acionamento
+Agêntico &amp; CLI Runner Universal</h2>
+<h3 id="via-slash-command-no-chat-qualquer-ide">2.1. Via Slash Command
+no Chat (Qualquer IDE)</h3>
+<p>Dispara o fluxo pelo chat interativo:</p>
+<pre class="text"><code>/fluxo3 screenpipe granola</code></pre>
+<h3 id="via-cli-runner-determinístico-terminal">2.2. Via CLI Runner
+Determinístico (Terminal)</h3>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>run_fluxo3<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>ferramenta screenpipe <span class="op">--</span>saas granola</span></code></pre></div>
+<hr />
+<h2 id="comandos-do-orquestrador-mestre-em-lote">3. Comandos do
+Orquestrador Mestre em Lote</h2>
 <p>Arquivo principal: <a
 href="file:///C:/Users/trcnologia/orca/projects/open-source/scripts/orquestrador_esteira_manuais.py"><code>scripts/orquestrador_esteira_manuais.py</code></a></p>
-<h3 id="executar-o-quinteto-soberano-completo-modo-em-lote">2.1.
+<h3 id="executar-o-quinteto-soberano-completo-modo-em-lote">3.1.
 Executar o Quinteto Soberano Completo (Modo em Lote)</h3>
 <p>Executa as 5 ferramentas do SaaS indicado, gerando os 45 arquivos e
 gravando no SQLite:</p>
-<div class="sourceCode" id="cb23"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>orquestrador_esteira_manuais<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>saas granola <span class="op">--</span>modo todas</span></code></pre></div>
-<h3 id="executar-uma-única-ferramenta-cirúrgica">2.2. Executar uma Única
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>orquestrador_esteira_manuais<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>saas granola <span class="op">--</span>modo todas</span></code></pre></div>
+<h3 id="executar-uma-única-ferramenta-cirúrgica">3.2. Executar uma Única
 Ferramenta Cirúrgica</h3>
 <p>Processa apenas a ferramenta especificada:</p>
-<div class="sourceCode" id="cb24"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>orquestrador_esteira_manuais<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>saas granola <span class="op">--</span>ferramenta screenpipe</span></code></pre></div>
-<h3 id="abrir-o-menu-interativo-no-terminal">2.3. Abrir o Menu
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>orquestrador_esteira_manuais<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>saas granola <span class="op">--</span>ferramenta screenpipe</span></code></pre></div>
+<h3 id="abrir-o-menu-interativo-no-terminal">3.3. Abrir o Menu
 Interativo no Terminal</h3>
 <p>Exibe o menu visual numerado no terminal para escolha manual:</p>
-<div class="sourceCode" id="cb25"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>orquestrador_esteira_manuais<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>saas granola</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>orquestrador_esteira_manuais<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>saas granola</span></code></pre></div>
 <hr />
 <h2 id="comandos-dos-gates-mecânicos-isolados">3. Comandos dos Gates
 Mecânicos Isolados</h2>
@@ -1553,45 +1570,45 @@ Mecânicos Isolados</h2>
 Auditoria de Qualidade e Whitelist</h3>
 <p>Valida se as fontes atendem aos critérios de autoridade, recência e
 densidade:</p>
-<div class="sourceCode" id="cb26"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>auditar_qualidade_fontes<span class="op">.</span><span class="fu">py</span> scripts<span class="op">/</span><span class="kw">data</span><span class="op">/</span>sumario-fontes-screenpipe<span class="op">.</span><span class="fu">json</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>auditar_qualidade_fontes<span class="op">.</span><span class="fu">py</span> scripts<span class="op">/</span><span class="kw">data</span><span class="op">/</span>sumario-fontes-screenpipe<span class="op">.</span><span class="fu">json</span></span></code></pre></div>
 <h3 id="gate-g1-auditoria-de-veracidade-digital-http-200">3.2. Gate G1 ·
 Auditoria de Veracidade Digital (HTTP 200)</h3>
 <p>Testa se todas as URLs do sumário estão ativas na internet:</p>
-<div class="sourceCode" id="cb27"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>auditar_fontes_veridicas<span class="op">.</span><span class="fu">py</span> scripts<span class="op">/</span><span class="kw">data</span><span class="op">/</span>sumario-fontes-screenpipe<span class="op">.</span><span class="fu">json</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>auditar_fontes_veridicas<span class="op">.</span><span class="fu">py</span> scripts<span class="op">/</span><span class="kw">data</span><span class="op">/</span>sumario-fontes-screenpipe<span class="op">.</span><span class="fu">json</span></span></code></pre></div>
 <h3 id="gate-g2-auditoria-de-citações-cruzadas-zero-alucinação">3.3.
 Gate G2 · Auditoria de Citações Cruzadas (Zero Alucinação)</h3>
 <p>Verifica se 100% dos IDs de fontes são citados no manual:</p>
-<div class="sourceCode" id="cb28"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>auditar_citacoes_manuais<span class="op">.</span><span class="fu">py</span> screenpipe</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>auditar_citacoes_manuais<span class="op">.</span><span class="fu">py</span> screenpipe</span></code></pre></div>
 <h3 id="gate-r18-auditoria-de-higiene-e-paridade-de-espelhos">3.4. Gate
 R18 · Auditoria de Higiene e Paridade de Espelhos</h3>
 <p>Garante ausência de arquivos temporários e paridade estrita entre
 <code>output/</code> e <code>docs/</code>:</p>
-<div class="sourceCode" id="cb29"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>auditar_higiene_repo<span class="op">.</span><span class="fu">py</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>auditar_higiene_repo<span class="op">.</span><span class="fu">py</span></span></code></pre></div>
 <hr />
 <h2 id="comandos-de-compilação-direta-ad-hoc">4. Comandos de Compilação
 Direta Ad-Hoc</h2>
 <h3
 id="compilar-apenas-o-manual-operacional-html-md-e-pdf-typst">Compilar
 Apenas o Manual Operacional (HTML, MD e PDF Typst):</h3>
-<div class="sourceCode" id="cb30"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>gerar_manual_operacional<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>slug screenpipe</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>gerar_manual_operacional<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>slug screenpipe</span></code></pre></div>
 <h3
 id="compilar-apenas-a-trilha-de-aprendizado-html-md-e-pdf-typst">Compilar
 Apenas a Trilha de Aprendizado (HTML, MD e PDF Typst):</h3>
-<div class="sourceCode" id="cb31"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>gerar_trilha_aprendizado<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>slug screenpipe</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>gerar_trilha_aprendizado<span class="op">.</span><span class="fu">py</span> <span class="op">--</span>slug screenpipe</span></code></pre></div>
 <h3 id="executar-a-suíte-completa-de-testes-unitários">Executar a Suíte
 Completa de Testes Unitários:</h3>
-<div class="sourceCode" id="cb32"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>python <span class="op">-</span>m unittest tests<span class="op">/</span>test_esteira_manuais<span class="op">.</span><span class="fu">py</span> <span class="op">-</span>v</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>python <span class="op">-</span>m unittest tests<span class="op">/</span>test_esteira_manuais<span class="op">.</span><span class="fu">py</span> <span class="op">-</span>v</span></code></pre></div>
 <h3 id="consultar-o-estado-persistente-no-sqlite">Consultar o Estado
 Persistente no SQLite:</h3>
-<div class="sourceCode" id="cb33"><pre
-class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>estado_esteira<span class="op">.</span><span class="fu">py</span></span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>python scripts<span class="op">/</span>estado_esteira<span class="op">.</span><span class="fu">py</span></span></code></pre></div>
 <!-- FIM DO MÓDULO: 09-COMMANDS.md -->
 <hr />
 <!-- INÍCIO DO MÓDULO: 10-HOOKS.md -->

@@ -19,6 +19,7 @@
 - **RF05 (Brasil First & Acessibilidade PT-BR):** A trilha deve priorizar fontes em português brasileiro e fornecer roteiros de tradução assistida para conteúdos em inglês.
 - **RF06 (Compilação Tripartite):** Manuais, trilhas e relatórios devem ser compilados simultaneamente em HTML Interativo, Markdown Limpo e PDF Executivo via Typst (<100ms).
 - **RF07 (Relatório de Fechamento com Telemetria):** Cada ferramenta processada deve receber um relatório tripartite registrando tempos, consumo de tokens, modelo de LLM, tools, skills e conformidade dos gates.
+- **RF08 (Desinstalação Cirúrgica & Isolamento da VPS):** O manual deve conter obrigatoriamente a Seção 5 detalhando os 4 passos de remoção segura sem afetar outros contêineres, bancos ou serviços da VPS, acompanhado de checklist de validação de saúde do servidor.
 
 ---
 
@@ -27,7 +28,7 @@
 - **RNF01 (Determinismo Radical):** Scripts em Python e Typst devem ser idempotentes e executar sem consumo de tokens de LLM.
 - **RNF02 (Tempo de Resposta):** A compilação gráfica completa de um pacote de 9 arquivos deve levar menos de 4 segundos.
 - **RNF03 (Portabilidade Windows / Linux):** Todo script deve garantir compatibilidade UTF-8 nativa no Windows (`sys.stdout.reconfigure(encoding="utf-8")`) e respeitar o limite de 260 caracteres de caminho (MAX_PATH).
-- **RNF04 (Regra R18 - Paridade Estrita):** Os diretórios `output/<slug>/` e `docs/<slug>/` devem manter paridade absoluta de arquivos e conteúdo.
+- **RNF04 (Regra R18 - Soberania em Output & Zero Entulho):** Todos os artefatos residem na pasta soberana única `output/03-manuais-e-trilhas/`, com publicação direta via CI/CD e zero arquivos duplicados ou temporários.
 
 ---
 
