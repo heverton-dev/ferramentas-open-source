@@ -85,7 +85,7 @@ def compilar_trilha(slug: str) -> bool:
         print(f"❌ Arquivo de dados não encontrado: {data_file}")
         return False
 
-    with open(data_file, "r", encoding="utf-8") as f:
+    with open(data_file, "r", encoding="utf-8-sig") as f:
         dados = json.load(f)
 
     saas = dados.get("saas_origem", "granola")

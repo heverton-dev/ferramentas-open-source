@@ -1,0 +1,158 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "Postfix + Dovecot",
+  "slug": "postfix-dovecot",
+  "saas_origem": "locaweb-email",
+  "versao": "3.7.0 (Postfix) + 2.3.21 (Dovecot)",
+  "licenca_osi": "EPL-2.0 (Postfix) + LGPL-2.1 (Dovecot)",
+  "tempo_estimado_setup": "45 a 60 minutos",
+  "nivelamento_conceitual": [
+    {"termo": "Postfix", "analogia_cotidiana": "Carteiro", "explicacao_simples": "Recebe e entrega emails SMTP"},
+    {"termo": "Dovecot", "analogia_cotidiana": "Zelador", "explicacao_simples": "Gerencia caixas IMAP/POP3"},
+    {"termo": "SMTP", "analogia_cotidiana": "Caixa Saida", "explicacao_simples": "Envio de emails"},
+    {"termo": "IMAP", "analogia_cotidiana": "Cofre Online", "explicacao_simples": "Acesso sincronizado"},
+    {"termo": "DNS MX", "analogia_cotidiana": "Lista Telefonica", "explicacao_simples": "Localizacao do servidor"},
+    {"termo": "SSL/TLS", "analogia_cotidiana": "Lacre", "explicacao_simples": "Criptografia de email"}
+  ],
+  "vps_recomendada": {
+    "provedor_modelo": "Contabo VPS M",
+    "vcpu": "4",
+    "ram": "8 GB",
+    "armazenamento": "160 GB SSD",
+    "so_recomendado": "Ubuntu 24.04 LTS",
+    "custo_mensal_estimado": "EUR 3.99-8.00",
+    "portas_abertas": ["22/tcp", "25/tcp", "587/tcp", "993/tcp", "110/tcp", "995/tcp"]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Preparacao do Sistema",
+        "descricao": "Conectar ao servidor VPS e atualizar pacotes",
+        "analogia": "Colocar moveis na nova sala",
+        "o_que_acontece_na_tela": "Varias linhas de atualizacao",
+        "como_saber_se_deu_certo": "apt list --upgradable retorna lista vazia",
+        "comandos": "ssh root@SEU_IP\napt update && apt upgrade -y",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Instalacao Postfix",
+        "descricao": "Instalar servidor SMTP",
+        "analogia": "Carteiro central",
+        "o_que_acontece_na_tela": "Tela interativa",
+        "como_saber_se_deu_certo": "postfix -v mostra versao",
+        "comandos": "apt install postfix postfix-mysql -y",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 3,
+        "titulo": "Instalacao Dovecot",
+        "descricao": "Instalar servidor IMAP/POP3",
+        "analogia": "Zelador de caixas",
+        "o_que_acontece_na_tela": "Instalacao silenciosa",
+        "como_saber_se_deu_certo": "doveadm --version mostra versao",
+        "comandos": "apt install dovecot-core dovecot-imapd dovecot-pop3d -y",
+        "fonte_id": "F03"
+      },
+      {
+        "numero": 4,
+        "titulo": "Configuracao Postfix main.cf",
+        "descricao": "Editar arquivo principal",
+        "analogia": "Registrar empresa",
+        "o_que_acontece_na_tela": "Editor de texto",
+        "como_saber_se_deu_certo": "postconf myhostname mostra valor",
+        "comandos": "nano /etc/postfix/main.cf",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 5,
+        "titulo": "Certificado Let's Encrypt",
+        "descricao": "Obter certificado de seguranca",
+        "analogia": "Lacre de seguranca",
+        "o_que_acontece_na_tela": "Certbot pergunta validacao",
+        "como_saber_se_deu_certo": "ls /etc/letsencrypt/live mostra certificados",
+        "comandos": "apt install certbot -y\ncertbot certonly -d mail.seudominio.com",
+        "fonte_id": "F04"
+      },
+      {
+        "numero": 6,
+        "titulo": "Configuracao TLS/SSL",
+        "descricao": "Apontar certificados",
+        "analogia": "Instalar fechaduras",
+        "o_que_acontece_na_tela": "Nenhuma saida",
+        "como_saber_se_deu_certo": "openssl mostra certificado",
+        "comandos": "postconf -e 'smtpd_tls_cert_file=/etc/letsencrypt/live/mail.seudominio.com/fullchain.pem'",
+        "fonte_id": "F04"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/etc/postfix/main.cf",
+        "linguagem": "text",
+        "conteudo": "myhostname = mail.seudominio.com\nmydomain = seudominio.com",
+        "explicacao": "Arquivo principal do Postfix"
+      },
+      {
+        "caminho": "/etc/dovecot/dovecot.conf",
+        "linguagem": "text",
+        "conteudo": "protocols = imap pop3\nssl = required",
+        "explicacao": "Configuracao do Dovecot"
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "Postfix + Dovecot",
+    "roteiro_primeiro_voo": [
+      {"passo": "1", "acao": "Criar usuario", "resultado_esperado": "Usuario criado"},
+      {"passo": "2", "acao": "Enviar email teste", "resultado_esperado": "Email na fila"},
+      {"passo": "3", "acao": "Conectar Thunderbird", "resultado_esperado": "Email recebido"},
+      {"passo": "4", "acao": "Testar SASL", "resultado_esperado": "Autenticado"}
+    ],
+    "comandos_cli": [
+      {
+        "comando": "postqueue -p",
+        "descricao": "Listar emails na fila",
+        "exemplo": "postqueue -p",
+        "fonte_id": "F01"
+      },
+      {
+        "comando": "doveadm user",
+        "descricao": "Verificar se usuario existe",
+        "exemplo": "doveadm user usuario@dominio",
+        "fonte_id": "F02"
+      },
+      {
+        "comando": "systemctl status postfix",
+        "descricao": "Verificar status Postfix",
+        "exemplo": "systemctl status postfix",
+        "fonte_id": "F01"
+      },
+      {
+        "comando": "postcat -q",
+        "descricao": "Ver email completo na fila",
+        "exemplo": "postcat -q QUEUE_ID",
+        "fonte_id": "F03"
+      }
+    ],
+    "rotas_api": [],
+    "interface_ui": [],
+    "troubleshooting": [
+      {
+        "sintoma": "Emails nao sao entregues",
+        "causas": ["Porta 25 bloqueada", "MX record incorreto"],
+        "diagnostico": "tail -f /var/log/mail.log",
+        "solucao": "Verificar firewall e registros DNS"
+      }
+    ]
+  },
+  "desinstalacao_cirurgica": {
+    "titulo": "Desinstalacao Limpa",
+    "aviso_critico": "ATENCAO: Faca backup",
+    "passos_reversores": [
+      {"numero": 1, "acao": "Parar", "comando": "systemctl stop postfix dovecot"},
+      {"numero": 2, "acao": "Desinstalar", "comando": "apt remove --purge postfix dovecot -y"},
+      {"numero": 3, "acao": "Limpar", "comando": "rm -rf /etc/postfix /etc/dovecot"}
+    ]
+  }
+}

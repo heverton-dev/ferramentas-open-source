@@ -298,7 +298,7 @@
       </div>
       <div class="stat-item">
         <span class="stat-lbl">Custo Mensal Estimado</span>
-        <span class="stat-val" style="color:var(--accent-dark);">EUR 6.00/mes (~R$ 36.00)</span>
+        <span class="stat-val" style="color:var(--accent-dark);">EUR 6.00/mes</span>
       </div>
       <div class="stat-item">
         <span class="stat-lbl">Licença de Uso</span>
@@ -334,7 +334,7 @@
         <div class="card-conceito">
           <div class="conceito-termo">💡 Mail Server Self-Hosted</div>
           <div class="conceito-analogia">Analogia: Sua Propria Agencia dos Correios</div>
-          <p class="conceito-desc">Mail-in-a-Box eh um servidor de email completo que roda na sua VPS.</p>
+          <p class="conceito-desc">Mail-in-a-Box eh um servidor de email completo que roda na sua VPS. Em vez de confiar em Google ou Microsoft, voce hospeda tudo em sua propria maquina.</p>
         </div>
         
         <div class="card-conceito">
@@ -346,7 +346,7 @@
         <div class="card-conceito">
           <div class="conceito-termo">💡 DNS & Registros SPF/DKIM/DMARC</div>
           <div class="conceito-analogia">Analogia: Cartorio que Autentica Sua Identidade</div>
-          <p class="conceito-desc">Registros que provam que emails vieram de voce.</p>
+          <p class="conceito-desc">Registros digitais que provam que emails vieram de voce.</p>
         </div>
         
     </div>
@@ -365,14 +365,82 @@
             <span class="step-heading">Preparacao da VPS & Hardening</span>
             <a href="#ref-F01" class="cite-badge">[F01]</a>
           </div>
-          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Configurar firewall, hostname e atualizacoes.</p>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Configurar firewall e atualizacoes.</p>
           <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Limpar e proteger o canteiro de obra.</div>
           <div class="code-box">
             <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
-            <pre><code>apt-get update && apt-get upgrade -y</code></pre>
+            <pre><code>apt-get update && apt-get upgrade -y
+ufw default deny incoming
+ufw allow 22/tcp && ufw allow 25/tcp && ufw allow 143/tcp</code></pre>
           </div>
           <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Sistema atualizado com firewall ativo.</div>
-          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> ufw status mostra portas como ALLOW.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> ufw status mostra portas abertas.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 2</span>
+            <span class="step-heading">Execucao do Script de Instalacao</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Mail-in-a-Box automatiza todo setup.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Chamar o especialista que monta tudo.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>cd /root
+curl -L https://mailinabox.email/setup.sh -o setup.sh
+bash setup.sh</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Script executa com credenciais admin geradas.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> URL de admin com senha.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 3</span>
+            <span class="step-heading">Configuracao de DNS</span>
+            <a href="#ref-F03" class="cite-badge">[F03]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Apontar dominio para VPS.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Registrar seu dominio.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>dig @8.8.8.8 seu-dominio.com +short</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Registros DNS adicionados.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> dig retorna IP da VPS.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 4</span>
+            <span class="step-heading">Criacao de Usuarios</span>
+            <a href="#ref-F04" class="cite-badge">[F04]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Adicionar contas de email.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Abrir novas caixas de correio.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># Via painel web admin: Mail > Users > Add User</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Painel exibe usuarios.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Usuario criado com sucesso.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 5</span>
+            <span class="step-heading">Teste de Envio & Recebimento</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Validar funcionamento.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Teste de corrida.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># Enviar teste via webmail</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Emails aparecem nos clientes.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Email chega sem spam.</div>
         </div>
         
   </div>
@@ -383,6 +451,24 @@
       <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
     </div>
     
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/etc/hostname</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Hostname da maquina.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>mail.seu-dominio.com</code></pre>
+          </div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/root/.env</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Variaveis de configuracao.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>ADMIN_EMAIL=admin@seu-dominio.com</code></pre>
+          </div>
+        </div>
+        
   </div>
 
   <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
@@ -395,6 +481,26 @@
       Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
     </p>
     
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 1: Acessar Admin:</strong> Abra https://mail.seu-dominio.com/admin
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Login com credenciais admin.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 2: Verificar Saude:</strong> Clique em System > Diagnostics
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Todos os servicos OK.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 3: Configurar Webmail:</strong> Acesse https://mail.seu-dominio.com com usuario
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Webmail carrega com inbox vazio.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 4: Testar IMAP:</strong> Configure Thunderbird
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Cliente conecta e sincroniza.</div>
+        </div>
+        
   </div>
 
   <!-- SEÇÃO 4: MANUAL DE USO CLI -->
@@ -412,6 +518,27 @@
         </tr>
       </thead>
       <tbody>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">sudo systemctl status postfix</code></td>
+          <td>Ver status SMTP.</td>
+          <td><code>sudo systemctl status postfix</code></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">sudo systemctl status dovecot</code></td>
+          <td>Ver status IMAP.</td>
+          <td><code>sudo systemctl status dovecot</code></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">tail -f /var/log/mail.log</code></td>
+          <td>Logs de email.</td>
+          <td><code>tail -f /var/log/mail.log</code></td>
+          <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
+        </tr>
         
       </tbody>
     </table>
@@ -434,6 +561,30 @@
       </thead>
       <tbody>
         
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/admin/mail/users</code></td>
+          <td>Listar usuarios.</td>
+          <td><pre style="font-size:11px; margin:0;">curl -u admin@seu-dominio.com:sua-senha https://mail.seu-dominio.com/admin/mail/users</pre></td>
+          <td><a href="#ref-F05" class="cite-badge">[F05]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">POST</span></td>
+          <td><code>/admin/mail/users/add</code></td>
+          <td>Adicionar usuario.</td>
+          <td><pre style="font-size:11px; margin:0;">curl -X POST -u admin@seu-dominio.com:sua-senha https://mail.seu-dominio.com/admin/mail/users/add</pre></td>
+          <td><a href="#ref-F06" class="cite-badge">[F06]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/admin/diagnostics</code></td>
+          <td>Diagnostico.</td>
+          <td><pre style="font-size:11px; margin:0;">curl -u admin@seu-dominio.com:sua-senha https://mail.seu-dominio.com/admin/diagnostics</pre></td>
+          <td><a href="#ref-F07" class="cite-badge">[F07]</a></td>
+        </tr>
+        
       </tbody>
     </table>
   </div>
@@ -444,6 +595,24 @@
       <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
     </div>
     
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Emails caem em spam</div>
+          <div class="trouble-cause">Causa Provável: SPF/DKIM nao configurados.</div>
+          <div>Solução Prática: <code class="trouble-fix">Adicionar records DNS no registrador.</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Nao conecta IMAP</div>
+          <div class="trouble-cause">Causa Provável: Porta bloqueada.</div>
+          <div>Solução Prática: <code class="trouble-fix">ufw allow 143/tcp</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Disco cheio</div>
+          <div class="trouble-cause">Causa Provável: Logs acumulando.</div>
+          <div>Solução Prática: <code class="trouble-fix">du -sh /var/mail/*</code></div>
+        </div>
+        
   </div>
 
   <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
@@ -455,13 +624,55 @@
     
         <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
           <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
-          <p style="margin:0; font-size:13.5px; color:#1E293B;">Remover exclusivamente credenciais e DNS</p>
+          <p style="margin:0; font-size:13.5px; color:#1E293B;">Remove credenciais e DNS do Google.</p>
         </div>
         
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 1</span>
+                <span class="step-title">Backup Completo</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Exportar emails e dados.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>Use Google Takeout (https://takeout.google.com)</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Mantenha backup seguro.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>Arquivo ZIP gerado.</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 2</span>
+                <span class="step-title">Importar Emails</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Restaurar em Mail-in-a-Box.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>Via Thunderbird ou cliente IMAP</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Valide importacao.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>Emails aparecem.</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 3</span>
+                <span class="step-title">Mudar DNS</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remover Google, adicionar Mail-in-a-Box.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>dig MX seu-dominio.com @8.8.8.8</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> NAO remova sem validacao.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>dig mostra mail.seu-dominio.com</code></div>
+            </div>
+            
         <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
           <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
           <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
-            
+            <li style='margin-bottom:6px;'><code>systemctl status postfix dovecot</code></li><li style='margin-bottom:6px;'><code>tail -30 /var/log/mail.log</code></li><li style='margin-bottom:6px;'><code>dig MX seu-dominio.com @8.8.8.8</code></li><li style='margin-bottom:6px;'><code>sudo df -h /var/mail</code></li>
           </ul>
         </div>
         
@@ -491,6 +702,38 @@
           <td><strong>Mail-in-a-Box Official Setup</strong></td>
           <td>Joshua Tate & Contributors</td>
           <td><a href="https://mailinabox.email/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F02">
+          <td><strong style="color:var(--accent);">F02</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentacao Oficial</span></td>
+          <td><strong>Mail-in-a-Box GitHub Repository</strong></td>
+          <td>Mail-in-a-Box Community</td>
+          <td><a href="https://github.com/mail-in-a-box/mailinabox" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F03">
+          <td><strong style="color:var(--accent);">F03</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Padroes Tecnicos</span></td>
+          <td><strong>RFC 5321 - SMTP Protocol</strong></td>
+          <td>IETF</td>
+          <td><a href="https://datatracker.ietf.org/doc/html/rfc5321" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F04">
+          <td><strong style="color:var(--accent);">F04</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Padroes Tecnicos</span></td>
+          <td><strong>RFC 3501 - IMAP4 Protocol</strong></td>
+          <td>IETF</td>
+          <td><a href="https://datatracker.ietf.org/doc/html/rfc3501" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F05">
+          <td><strong style="color:var(--accent);">F05</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Best Practices</span></td>
+          <td><strong>SPF, DKIM & DMARC Best Practices</strong></td>
+          <td>DMARC.org Community</td>
+          <td><a href="https://dmarc.org/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
         </tr>
         
       </tbody>

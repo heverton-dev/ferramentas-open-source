@@ -1,0 +1,367 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "Postal",
+  "slug": "cuttlefish",
+  "saas_origem": "cuttlefish",
+  "versao": "3.0.0",
+  "licenca_osi": "MIT",
+  "tempo_estimado_setup": "45 a 60 minutos (Conhecimento intermediário de Docker & PostgreSQL)",
+  "nivelamento_conceitual": [
+    {
+      "termo": "Postal (Plataforma de Email Transacional)",
+      "analogia_cotidiana": "O Cartório Privado de Mensagens",
+      "explicacao_simples": "Postal é um sistema completo de email transacional que funciona como o Cuttlefish, mas instalado em sua própria VPS sob controle total. Ele recebe requisições da sua aplicação, fila de emails, valida domínios, entrega e rastreia cada mensagem com webhooks."
+    },
+    {
+      "termo": "Email Transacional vs. Marketing",
+      "analogia_cotidiana": "Confirmação vs. Propaganda",
+      "explicacao_simples": "Transacional são emails críticos como 'Reset de Senha', 'Confirmação de Pedido', 'Aviso de Falha'. Marketing são newsletters e campanhas. Postal é especializado em transacional: entrega garantida, alta reputação, sem limite de taxa."
+    },
+    {
+      "termo": "Fila de Trabalho Assíncrona (Sidekiq + Redis)",
+      "analogia_cotidiana": "A Caixa de Saída de um Cartório",
+      "explicacao_simples": "Quando sua aplicação pede para enviar 1.000 emails de confirmação, ela não espera cada um ser enviado. A requisição vai para uma fila (Redis), e workers em background processam um por um com retry automático."
+    },
+    {
+      "termo": "Webhooks de Entrega & Bounce",
+      "analogia_cotidiana": "Confirmação de Recebimento Automática",
+      "explicacao_simples": "Postal avisa sua aplicação quando um email foi entregue, aberto ou retornou (bounce). Sua aplicação recebe um POST HTTP com os dados e pode atualizar o banco de dados do usuário automaticamente."
+    },
+    {
+      "termo": "DKIM, SPF e DMARC (Segurança de Reputação)",
+      "analogia_cotidiana": "Assinatura, Carimbo e Carta Notarial",
+      "explicacao_simples": "Para que o Gmail não jogue seus emails na pasta de spam, você configura certificados digitais (DKIM), autoriza seus servidores (SPF) e cria política de autenticação (DMARC). Postal automatiza tudo isso."
+    }
+  ],
+  "vps_recomendada": {
+    "provedor_modelo": "Hetzner Cloud CPX31 ou Linode Linode 8GB",
+    "vcpu": "4 vCPU Dedicadas (AMD EPYC)",
+    "ram": "8 GB RAM ECC",
+    "armazenamento": "160 GB NVMe Gen4",
+    "so_recomendado": "Ubuntu 24.04 LTS (x86_64)",
+    "custo_mensal_estimado": "EUR 14,00/mês (~R$ 84,00/mês na cotação média)",
+    "portas_abertas": [
+      "22/tcp (SSH - Controle remoto)",
+      "80/tcp (HTTP - Renovação de certificados SSL)",
+      "443/tcp (HTTPS - Painel web & API segura)",
+      "25/tcp (SMTP - Opcional, para relay de outros servidores)"
+    ]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Hardening & Firewall Inicial (UFW)",
+        "descricao": "Configurar acesso restrito à VPS com apenas portas essenciais.",
+        "analogia": "Trancar o prédio do cartório e deixar apenas a guarita aberta.",
+        "o_que_acontece_na_tela": "Mensagens confirmando regras de firewall aplicadas sem erro.",
+        "como_saber_se_deu_certo": "Digite 'ufw status' e veja portas 22, 80, 443 marcadas como 'ALLOW IN'.",
+        "comandos": "ufw default deny incoming\nufw default allow outgoing\nufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp\nufw --force enable",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Instalação de Docker & Docker Compose",
+        "descricao": "Preparar motor de containers para rodar Postal, PostgreSQL e Redis.",
+        "analogia": "Montar a estrutura física do cartório: prateleiras, mesas e sistema de arquivos.",
+        "o_que_acontece_na_tela": "Pacotes instalados sem erro, docker engine iniciando.",
+        "como_saber_se_deu_certo": "Execute 'docker --version' e veja Docker 27+ retornado.",
+        "comandos": "apt-get update && apt-get install -y ca-certificates curl\ncurl -fsSL https://get.docker.com | sh\nusermod -aG docker deployer",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 3,
+        "titulo": "Provisionar Diretórios & Volumes Persistentes",
+        "descricao": "Criar pasta /opt/postal com subpastas para dados, backups e configuração.",
+        "analogia": "Preparar as gavetas e prateleiras do cartório para armazenar documentos.",
+        "o_que_acontece_na_tela": "Diretórios criados silenciosamente em menos de 1 segundo.",
+        "como_saber_se_deu_certo": "Execute 'ls -ld /opt/postal' e veja pasta pertencendo ao deployer.",
+        "comandos": "mkdir -p /opt/postal/{data,db,redis,caddy,backups}\nchown -R deployer:deployer /opt/postal\nchmod -R 750 /opt/postal",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 4,
+        "titulo": "Deploy da Stack Postal com Docker Compose",
+        "descricao": "Levantamento de containers: Postal (Rails), PostgreSQL, Redis e Caddy (proxy reverso).",
+        "analogia": "Ligar as máquinas e sistemas do cartório: computadores, impressoras e telefones.",
+        "o_que_acontece_na_tela": "Docker faz download de imagens e containers iniciam com logs coloridos. Aguarde 2-3 minutos.",
+        "como_saber_se_deu_certo": "Execute 'docker compose ps' e veja 4 containers com status 'Up'.",
+        "comandos": "cd /opt/postal\ncat > docker-compose.yml << 'EOF'\nversion: '3.8'\nservices:\n  postgres:\n    image: postgres:16-alpine\n    environment:\n      POSTGRES_DB: postal\n      POSTGRES_USER: postal\n      POSTGRES_PASSWORD: $(openssl rand -base64 32)\n    volumes:\n      - postgres_data:/var/lib/postgresql/data\n    restart: unless-stopped\n  redis:\n    image: redis:7-alpine\n    volumes:\n      - redis_data:/data\n    restart: unless-stopped\n  postal:\n    image: postalserver/postal:latest\n    depends_on:\n      - postgres\n      - redis\n    environment:\n      RAILS_ENV: production\n      DATABASE_URL: postgres://postal:password@postgres:5432/postal\n      REDIS_URL: redis://redis:6379\n    ports:\n      - '5000:5000'\n    volumes:\n      - postal_data:/opt/postal/data\n    restart: unless-stopped\n  caddy:\n    image: caddy:2-alpine\n    ports:\n      - '80:80'\n      - '443:443'\n    volumes:\n      - ./Caddyfile:/etc/caddy/Caddyfile\n      - caddy_data:/data\n    restart: unless-stopped\nvolumes:\n  postgres_data:\n  redis_data:\n  postal_data:\n  caddy_data:\nEOF\ndocker compose up -d",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 5,
+        "titulo": "Configuração de Domínios & Certificados SSL",
+        "descricao": "Registrar domínios corporativos no painel Postal e configurar DKIM/SPF/DMARC.",
+        "analogia": "Registrar o domínio legal do cartório e obter autorizações de segurança.",
+        "o_que_acontece_na_tela": "Painel web exibindo formulário de domínios e registros DNS necessários.",
+        "como_saber_se_deu_certo": "Acesse https://seu-dominio.com/admin, faça login e veja seus domínios listados com status 'Verified'.",
+        "comandos": "# No painel Postal:\n# 1. Clique em 'Add Domain'\n# 2. Digite seu domínio (ex: transacional.empresa.com.br)\n# 3. Copie os registros DKIM/SPF/DMARC para sua zona de DNS\n# 4. Aguarde propagação (5-30 minutos)\n# 5. Clique 'Verify' quando DNS estiver propagado",
+        "fonte_id": "F05"
+      },
+      {
+        "numero": 6,
+        "titulo": "Geração de API Keys & Teste de Conexão",
+        "descricao": "Criar credenciais de API para integração com sua aplicação e validar entrega.",
+        "analogia": "Entregar a carteira com as chaves de acesso ao cartório para os clientes autorizados.",
+        "o_que_acontece_na_tela": "Painel exibindo string de token longo. Copie para lugar seguro (seu .env).",
+        "como_saber_se_deu_certo": "Execute 'curl -H \"Authorization: Bearer seu-token\" https://seu-postal/api/v1/stats' e receba JSON com estatísticas.",
+        "comandos": "# No painel Postal:\n# 1. Clique em 'API Credentials'\n# 2. Clique 'Create New'\n# 3. Copie o token\n# 4. Salve em variável de ambiente: export POSTAL_API_KEY='seu-token'",
+        "fonte_id": "F03"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/opt/postal/Caddyfile",
+        "linguagem": "caddyfile",
+        "conteudo": "postal.seu-dominio.com.br {\n  encode gzip\n  header {\n    Strict-Transport-Security \"max-age=31536000; includeSubDomains\"\n    X-Content-Type-Options nosniff\n    X-Frame-Options DENY\n  }\n  reverse_proxy localhost:5000 {\n    header_uri X-Real-IP {http.request.remote.host}\n    header_uri X-Forwarded-For {http.request.remote.host}\n  }\n  rate_limit /api/v1/send 1000 100\n}",
+        "explicacao": "Proxy reverso com SSL automático (Let's Encrypt), rate limiting na API de envio e headers de segurança."
+      },
+      {
+        "caminho": "/opt/postal/.env.production",
+        "linguagem": "bash",
+        "conteudo": "RAILS_ENV=production\nRAILS_LOG_TO_STDOUT=true\nDATABASE_URL=postgres://postal:senha-forte-aqui@postgres:5432/postal\nREDIS_URL=redis://redis:6379/0\nSECRET_KEY_BASE=$(openssl rand -hex 64)\nBRAND_NAME=\"Postal - Email Transacional\"\nADMIN_EMAIL=admin@seu-dominio.com.br\nSMTP_PORT=25\nSMTP_TLS_ENABLED=true",
+        "explicacao": "Variáveis de ambiente para Postal em modo produção com banco PostgreSQL e Redis."
+      },
+      {
+        "caminho": "/opt/postal/docker-compose.override.yml",
+        "linguagem": "yaml",
+        "conteudo": "version: '3.8'\nservices:\n  postal:\n    environment:\n      POSTAL_WEB_PROTOCOL: https\n      POSTAL_WEB_HOST: postal.seu-dominio.com.br\n    healthcheck:\n      test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:5000/health\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n      start_period: 60s",
+        "explicacao": "Configurações de override para produção com health check automático."
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "Postal é uma aplicação Rails que expõe API REST para envio de emails. Sua aplicação faz POST para /api/v1/send com autenticação por bearer token. Postal fila o email em Redis/Sidekiq, processa em background e notifica eventos via webhooks. Todas as mensagens são armazenadas em PostgreSQL para rastreabilidade.",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "Passo 1: Acessar Painel Administrativo",
+        "acao": "Abra https://postal.seu-dominio.com.br/admin",
+        "resultado_esperado": "Formulário de login solicitando email e senha."
+      },
+      {
+        "passo": "Passo 2: Registrar Seu Primeiro Domínio",
+        "acao": "Clique em 'Domains' → 'Add Domain' e digite seu domínio corporativo.",
+        "resultado_esperado": "Postal exibe registros DKIM/SPF/DMARC para copiar na zona de DNS."
+      },
+      {
+        "passo": "Passo 3: Verificar Domínio",
+        "acao": "Aguarde 5-10 minutos pela propagação de DNS. Clique 'Verify Domain'.",
+        "resultado_esperado": "Status muda para 'Verified' com checkmark verde."
+      },
+      {
+        "passo": "Passo 4: Criar Credencial de API",
+        "acao": "Em Settings → API Credentials → Create New. Copie o token.",
+        "resultado_esperado": "String longa de token salva em variável de ambiente POSTAL_API_KEY."
+      },
+      {
+        "passo": "Passo 5: Enviar Email de Teste",
+        "acao": "Execute: curl -X POST https://postal.seu-dominio.com.br/api/v1/send -H 'Authorization: Bearer seu-token' -H 'Content-Type: application/json' -d '{\"to\": \"seu-email@gmail.com\", \"from\": \"noreply@seu-dominio.com.br\", \"subject\": \"Teste\", \"plain_body\": \"Olá!\"}'",
+        "resultado_esperado": "Resposta JSON com messageId. Email chega no Gmail em 5-10 segundos."
+      },
+      {
+        "passo": "Passo 6: Configurar Webhook de Entrega",
+        "acao": "Em Webhooks → Add Webhook. Configure URL do seu backend e selecione events: 'Message Delivered', 'Message Bounced'.",
+        "resultado_esperado": "Seu backend recebe POST HTTPS cada vez que um email é entregue ou retorna."
+      }
+    ],
+    "comandos_cli": [
+      {
+        "comando": "docker compose ps",
+        "descricao": "Ver status dos containers Postal, PostgreSQL, Redis e Caddy.",
+        "exemplo": "docker compose ps",
+        "fonte_id": "F01"
+      },
+      {
+        "comando": "docker compose logs -f postal",
+        "descricao": "Ver logs em tempo real da aplicação Postal.",
+        "exemplo": "docker compose logs -f postal --tail=100",
+        "fonte_id": "F02"
+      },
+      {
+        "comando": "docker compose exec postgres psql -U postal -d postal",
+        "descricao": "Acessar console PostgreSQL para queries diretas.",
+        "exemplo": "docker compose exec postgres psql -U postal -d postal -c 'SELECT COUNT(*) FROM messages;'",
+        "fonte_id": "F03"
+      },
+      {
+        "comando": "docker compose exec redis redis-cli",
+        "descricao": "Acessar console Redis para inspecionar fila.",
+        "exemplo": "docker compose exec redis redis-cli LLEN resque:queue:default",
+        "fonte_id": "F04"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "POST",
+        "rota": "/api/v1/send",
+        "descricao": "Enviar email transacional individual.",
+        "payload_exemplo": "POST /api/v1/send -H 'Authorization: Bearer token' -H 'Content-Type: application/json' -d '{\"to\": \"usuario@dominio.com\", \"from\": \"noreply@empresa.com\", \"subject\": \"Bem-vindo\", \"html_body\": \"<h1>Olá!</h1>\"}'",
+        "fonte_id": "F04"
+      },
+      {
+        "metodo": "POST",
+        "rota": "/api/v1/send/batch",
+        "descricao": "Enviar múltiplos emails em lote (mais eficiente).",
+        "payload_exemplo": "POST /api/v1/send/batch -H 'Authorization: Bearer token' -d '{\"messages\": [{\"to\": \"user1@...\", ...}, {\"to\": \"user2@...\", ...}]}'",
+        "fonte_id": "F05"
+      },
+      {
+        "metodo": "GET",
+        "rota": "/api/v1/stats",
+        "descricao": "Obter estatísticas de envios (total, entregues, bounced).",
+        "payload_exemplo": "GET /api/v1/stats -H 'Authorization: Bearer token'",
+        "fonte_id": "F06"
+      },
+      {
+        "metodo": "GET",
+        "rota": "/api/v1/messages",
+        "descricao": "Listar histórico de emails enviados com filtros.",
+        "payload_exemplo": "GET '/api/v1/messages?limit=50&offset=0' -H 'Authorization: Bearer token'",
+        "fonte_id": "F07"
+      },
+      {
+        "metodo": "POST",
+        "rota": "/webhooks",
+        "descricao": "Endpoint que você cria para receber eventos de entrega/bounce.",
+        "payload_exemplo": "POST seu-backend/webhooks -H 'Content-Type: application/json' -d '{\"event\": \"message.delivered\", \"message_id\": \"...\", \"timestamp\": \"...\"}' (recebido por Postal)",
+        "fonte_id": "F08"
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Emails não estão sendo enviados",
+        "causa_provavel": "Domínio não verificado ou DKIM inválido.",
+        "solucao_comando": "docker compose logs postal | grep -i dkim && No painel, verifique status do domínio e copie registros DKIM corretos"
+      },
+      {
+        "sintoma": "Emails retornando com 'Permanent Failure'",
+        "causa_provavel": "Endereço de email inválido ou lista negra de IP.",
+        "solucao_comando": "docker compose exec postgres psql -U postal -d postal -c \"SELECT message_id, last_error FROM messages ORDER BY created_at DESC LIMIT 5;\""
+      },
+      {
+        "sintoma": "Fila de Sidekiq crescendo infinitamente",
+        "causa_provavel": "Worker de background morreu ou Redis cheio.",
+        "solucao_comando": "docker compose restart postal && docker compose exec redis redis-cli DBSIZE && docker compose logs postal | grep -i sidekiq"
+      },
+      {
+        "sintoma": "PostgreSQL reportando 'Disk full'",
+        "causa_provavel": "Histórico de mensagens muito antigo consumindo espaço.",
+        "solucao_comando": "docker compose exec postgres psql -U postal -d postal -c \"DELETE FROM messages WHERE created_at < NOW() - INTERVAL 90 DAY;\""
+      },
+      {
+        "sintoma": "Certificado SSL expirado em Caddy",
+        "causa_provavel": "Caddy não conseguiu renovar com Let's Encrypt.",
+        "solucao_comando": "docker compose logs caddy && docker compose restart caddy && sleep 5 && docker compose logs caddy"
+      }
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "Postal Official GitHub Repository & Documentation",
+      "url": "https://github.com/postalserver/postal",
+      "autor_ou_canal": "Postal Server Team"
+    },
+    {
+      "id": "F02",
+      "categoria": "Framework",
+      "titulo": "Docker Compose Official Documentation",
+      "url": "https://docs.docker.com/compose/",
+      "autor_ou_canal": "Docker Inc."
+    },
+    {
+      "id": "F03",
+      "categoria": "Framework",
+      "titulo": "PostgreSQL 16 Official Documentation",
+      "url": "https://www.postgresql.org/docs/16/",
+      "autor_ou_canal": "PostgreSQL Global Development Group"
+    },
+    {
+      "id": "F04",
+      "categoria": "Framework",
+      "titulo": "Redis Official Documentation & Best Practices",
+      "url": "https://redis.io/documentation",
+      "autor_ou_canal": "Redis Labs"
+    },
+    {
+      "id": "F05",
+      "categoria": "Security & Best Practices",
+      "titulo": "Email Authentication: DKIM, SPF, DMARC Explained",
+      "url": "https://mxtoolbox.com/dkim.aspx",
+      "autor_ou_canal": "MXToolbox & Email Security Community"
+    }
+  ],
+  "desinstalacao_cirurgica": {
+    "titulo": "Desinstalação Cirúrgica: Remover Cuttlefish SaaS & Migrar para Postal",
+    "objetivo": "Remover todas as dependências de Cuttlefish SaaS e garantir zero downtime durante transição.",
+    "principio_isolamento": "A desinstalação remove exclusivamente as credenciais de API do Cuttlefish, endpoints de integração e configurações da aplicação, preservando intactos os dados de emails já armazenados, histórico de entrega e regras de negócio.",
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Auditoria de Integrações Cuttlefish",
+        "descricao": "Encontrar todas as referências a Cuttlefish no código da aplicação.",
+        "comandos": "grep -r 'cuttlefish\\|Cuttlefish\\|CUTTLEFISH' . --include='*.py' --include='*.js' --include='*.rb' --include='.env*' --include='*.yaml'",
+        "alerta_seguranca": "NÃO remova arquivo nenhum ainda. Esta é apenas uma auditoria.",
+        "como_validar": "Listar todos os arquivos que contêm referências a Cuttlefish (API keys, endpoints, domínios)"
+      },
+      {
+        "numero": 2,
+        "titulo": "Backup de Histórico & Exportação de Configurações Cuttlefish",
+        "descricao": "Exportar domínios, templates de email e histórico de mensagens do Cuttlefish antes de desativar.",
+        "comandos": "# Acessar console Cuttlefish > Export Data > Baixar arquivo CSV de mensagens e configurações",
+        "alerta_seguranca": "Mantenha backups em local seguro e encriptado (local ou S3 privado).",
+        "como_validar": "Arquivo cuttlefish_backup.csv com histórico completo gerado"
+      },
+      {
+        "numero": 3,
+        "titulo": "Ativar Postal em Paralelo (Blue-Green Deploy)",
+        "descricao": "Postal e Cuttlefish rodando simultaneamente por 48-72h de teste de produção.",
+        "comandos": "# Configurar seu backend para tentar enviar para Postal primeiro, fallback para Cuttlefish se erro\n# Monitorar logs de ambos os sistemas durante período de teste",
+        "alerta_seguranca": "Monitore ambos os sistemas 24/7 durante este período. NÃO desligue Cuttlefish ainda.",
+        "como_validar": "Ambos os sistemas entregando 100% das mensagens sem erro ou duplicatas"
+      },
+      {
+        "numero": 4,
+        "titulo": "Migrar Domínios para Postal",
+        "descricao": "Registrar domínios corporativos no Postal e copiar registros DKIM/SPF/DMARC para DNS.",
+        "comandos": "# No Postal: Domains > Add Domain > transacional.empresa.com.br\n# Copiar DKIM, SPF, DMARC records para seu provedor de DNS\n# Aguardar propagação (5-30 min) > Verify Domain",
+        "alerta_seguranca": "NÃO remova registros antigos de Cuttlefish do DNS até ter certeza que Postal está 100% funcional.",
+        "como_validar": "Postal exibir status 'Verified' para todos os domínios"
+      },
+      {
+        "numero": 5,
+        "titulo": "Redirecionar Webhooks de Entrega & Bounce",
+        "descricao": "Webhooks de entrega mudam de Cuttlefish para Postal.",
+        "comandos": "# Alterar config de webhook: webhook_url = https://seu-dominio.com/api/postal/webhooks ao invés de https://cuttlefish.io/webhooks\n# Registrar novo webhook no Postal com mesmo endpoint",
+        "alerta_seguranca": "Valide que todos os webhooks estão sendo recebidos pelo backend ANTES de remover Cuttlefish.",
+        "como_validar": "curl seu-webhook-url e verificar que recebe dados de Postal (message.delivered, message.bounced)"
+      },
+      {
+        "numero": 6,
+        "titulo": "Remover Credenciais Cuttlefish do .env",
+        "descricao": "Deletar CUTTLEFISH_* das variáveis de ambiente.",
+        "comandos": "unset CUTTLEFISH_API_KEY CUTTLEFISH_API_URL\ngrep -v CUTTLEFISH .env > .env.new && mv .env.new .env\ngrep CUTTLEFISH .env # Não retorna nada",
+        "alerta_seguranca": "Não execute este passo sem confirmar que Postal está 100% funcional com todas as rotas.",
+        "como_validar": "grep CUTTLEFISH .env # Sem retorno significa sucesso"
+      },
+      {
+        "numero": 7,
+        "titulo": "Downgrade & Cancelamento de Plano Cuttlefish",
+        "descricao": "Reduzir plano Cuttlefish para free tier e iniciar período de retenção antes de cancelar.",
+        "comandos": "# Acessar console Cuttlefish > Account Settings > Billing > Downgrade or Cancel\n# Selecionar 'Keep history for 30 days before deletion'",
+        "alerta_seguranca": "Cuttlefish pode levar até 30 dias para processar o cancelamento. Fique atento a cobranças residuais.",
+        "como_validar": "Console Cuttlefish exibir 'Free Account' ou 'Scheduled for Deletion' sem cobranças futuras"
+      }
+    ],
+    "checklist_saude_vps": [
+      "docker compose ps # Confirma que Postal está 'Up' (4 containers: postal, postgres, redis, caddy)",
+      "docker compose exec postgres psql -U postal -d postal -c 'SELECT COUNT(*) FROM messages;' # Valida banco de dados",
+      "docker compose exec redis redis-cli DBSIZE # Verifica fila de trabalho (idealmente < 100 jobs pendentes)",
+      "curl -s https://postal.seu-dominio.com.br/health | jq # Confirma API health check",
+      "docker compose logs postal | tail -20 # Verifica erros recentes",
+      "curl -s https://postal.seu-dominio.com.br/api/v1/stats -H 'Authorization: Bearer seu-token' | jq # Valida estatísticas de envio"
+    ]
+  }
+}

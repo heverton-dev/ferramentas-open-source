@@ -1,0 +1,257 @@
+{
+  "$schema": "../schemas/schema_trilha_aprendizado.json",
+  "produto_foco": "Postal",
+  "slug": "cuttlefish",
+  "saas_origem": "cuttlefish",
+  "tempo_total_estimado": "10 horas de imersão guiada (No seu próprio ritmo)",
+  "fases": [
+    {
+      "fase_numero": 1,
+      "titulo": "Fase 1: Conceito de Email Transacional, Privacidade & Soberania (Brasil First)",
+      "tempo_estimado": "1h 30min",
+      "objetivo": "Entender por que empresas brasileiras precisam de infraestrutura de email transacional soberana, diferenças entre SaaS como Cuttlefish e soluções self-hosted como Postal, e conformidade com LGPD.",
+      "recursos": [
+        {
+          "titulo": "Diferenças entre Email Transacional e Marketing",
+          "tipo_midia": "Artigo Técnico / Guia Conceitual",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Conteúdo 100% nativo em Português do Brasil.",
+          "autor": "Comunidade Brasileira de DevOps & Email Seguro",
+          "duracao": "25 min de leitura",
+          "url": "https://dev.to/t/email-infrastructure",
+          "aprendizado_chave": "Por que emails críticos (reset de senha, confirmação de pagamento) exigem infraestrutura dedicada diferente de campanhas de marketing.",
+          "fonte_id": "F01"
+        },
+        {
+          "titulo": "LGPD e Armazenamento de Dados de Email em Servidores Estrangeiros",
+          "tipo_midia": "Guia Legal & Técnico",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Leitura obrigatória para empresas sob LGPD brasileira.",
+          "autor": "Instituto de Tecnologia do Brasil (ABNT/LGPD)",
+          "duracao": "30 min de leitura",
+          "url": "https://www.gov.br/cidadania/pt-br/acesso-a-informacao/lgpd",
+          "aprendizado_chave": "Riscos legais de armazenar metadados de transações (confirmação de pagamento, reset de senha) em datacenters de terceiros sujeitos a regulações estrangeiras.",
+          "fonte_id": "F05"
+        },
+        {
+          "titulo": "Arquitetura de Email Transacional: Filas, Webhooks e Entrega Garantida",
+          "tipo_midia": "Documentação Técnica",
+          "idioma": "EN",
+          "dica_traducao_ptbr": "Use tradução automática do navegador. Conceitos técnicos são universais.",
+          "autor": "Postal Oficial & Comunidade Rails",
+          "duracao": "35 min de leitura assistida",
+          "url": "https://github.com/postalserver/postal/wiki/Architecture",
+          "aprendizado_chave": "Como Postal usa PostgreSQL para persistência de mensagens, Redis para fila de trabalho (Sidekiq) e webhooks para notificar eventos de entrega.",
+          "fonte_id": "F02"
+        }
+      ]
+    },
+    {
+      "fase_numero": 2,
+      "titulo": "Fase 2: Infraestrutura VPS, Docker & Primeiro Deploy de Postal",
+      "tempo_estimado": "2h 30min",
+      "objetivo": "Provisionar VPS em Hetzner/Contabo, instalar Docker, configurar firewall e colocar Postal no ar pela primeira vez.",
+      "recursos": [
+        {
+          "titulo": "Como Alugar VPS e Configurar SSH (Guia para Leigos)",
+          "tipo_midia": "Tutorial Prático / Screencast",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Passo a passo didático desde criar conta até acessar terminal.",
+          "autor": "Comunidade DevOps Brasil",
+          "duracao": "45 min de estudo + prática",
+          "url": "https://www.youtube.com/@LinuxTips",
+          "aprendizado_chave": "Criar conta Hetzner, provisionar VPS Ubuntu 24.04 LTS CPX31, copiar IP, abrir PowerShell/Terminal e conectar via SSH.",
+          "fonte_id": "F01"
+        },
+        {
+          "titulo": "Hardening Inicial de VPS com Firewall (UFW)",
+          "tipo_midia": "Guia de Segurança",
+          "idioma": "EN",
+          "dica_traducao_ptbr": "Comandos são universais. Consulte manual fornecido.",
+          "autor": "DigitalOcean Community",
+          "duracao": "30 min de prática",
+          "url": "https://www.digitalocean.com/community/tutorials/ufw-essentials-common-firewall-rules-and-commands",
+          "aprendizado_chave": "Configurar firewall UFW: negar tudo por padrão, permitir SSH, HTTP, HTTPS. Ativar com --force enable.",
+          "fonte_id": "F05"
+        },
+        {
+          "titulo": "Instalação de Docker & Docker Compose em Ubuntu 24.04",
+          "tipo_midia": "Tutorial Oficial",
+          "idioma": "EN",
+          "dica_traducao_ptbr": "Copie os comandos do manual. Resultados são idênticos em qualquer idioma.",
+          "autor": "Docker Official Docs",
+          "duracao": "45 min de instalação",
+          "url": "https://docs.docker.com/engine/install/ubuntu/",
+          "aprendizado_chave": "Instalar Docker engine via repositório oficial, adicionar usuário deployer ao grupo docker, validar com docker --version.",
+          "fonte_id": "F02"
+        },
+        {
+          "titulo": "Deploy de Postal com Docker Compose (Passo a Passo)",
+          "tipo_midia": "Guia Prático / Manual Operacional",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Está incluído no manual VPS em português.",
+          "autor": "AIDD - Fábrica Universal",
+          "duracao": "1h de prática",
+          "url": "file:///opt/postal/instalacao_producao.md",
+          "aprendizado_chave": "Clonar docker-compose.yml, configurar variáveis de ambiente, executar docker compose up -d, validar containers com docker compose ps.",
+          "fonte_id": "F03"
+        }
+      ]
+    },
+    {
+      "fase_numero": 3,
+      "titulo": "Fase 3: Configuração de Domínios, DKIM/SPF/DMARC e Primeiros Envios",
+      "tempo_estimado": "2h 00min",
+      "objetivo": "Registrar domínios corporativos no Postal, configurar registros de segurança DNS e enviar emails de teste.",
+      "recursos": [
+        {
+          "titulo": "DNS, DKIM, SPF e DMARC Explicados para Não-Técnicos",
+          "tipo_midia": "Artigo Técnico Acessível",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Explicação em português com analogias cotidianas.",
+          "autor": "Comunidade de Email Security",
+          "duracao": "40 min de leitura",
+          "url": "https://dev.to/t/email-security",
+          "aprendizado_chave": "DKIM = assinatura digital, SPF = autoriza quem pode enviar, DMARC = política de autenticação. Por que Gmail rejeita emails sem esses registros.",
+          "fonte_id": "F04"
+        },
+        {
+          "titulo": "Registrar Domínio e Configurar Registros DNS no Postal",
+          "tipo_midia": "Tutorial Prático",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Passo a passo prático para não-técnicos.",
+          "autor": "AIDD - Fábrica Universal",
+          "duracao": "45 min de prática",
+          "url": "file:///opt/postal/primeiros_domínios.md",
+          "aprendizado_chave": "Acessar painel Postal, clicar 'Add Domain', copiar registros DKIM/SPF/DMARC, colar no provedor de DNS, aguardar propagação, clicar 'Verify'.",
+          "fonte_id": "F01"
+        },
+        {
+          "titulo": "Teste de Entrega com Curl & Verificação em Gmail/Outlook",
+          "tipo_midia": "Lab Interativo",
+          "idioma": "EN",
+          "dica_traducao_ptbr": "Comandos são universais. Siga o exemplo.",
+          "autor": "Postal Community",
+          "duracao": "35 min de prática",
+          "url": "file:///opt/postal/teste_entrega_api.md",
+          "aprendizado_chave": "Gerar token de API, disparar POST /api/v1/send via curl, validar que email chega em caixa de entrada (não spam) em 5-10 segundos.",
+          "fonte_id": "F02"
+        }
+      ]
+    },
+    {
+      "fase_numero": 4,
+      "titulo": "Fase 4: Webhooks, Fila de Trabalho (Sidekiq/Redis) e Monitoramento",
+      "tempo_estimado": "2h 30min",
+      "objetivo": "Configurar webhooks para notificação de entrega/bounce, monitorar fila Redis, entender Sidekiq e implementar alertas básicos.",
+      "recursos": [
+        {
+          "titulo": "Webhooks & Eventos de Entrega em Tempo Real",
+          "tipo_midia": "Documentação Oficial",
+          "idioma": "EN",
+          "dica_traducao_ptbr": "Conceitos técnicos são universais. Leia com cuidado.",
+          "autor": "Postal Official Docs",
+          "duracao": "50 min",
+          "url": "https://docs.postal.io/api/webhooks/",
+          "aprendizado_chave": "Tipos de webhook (message.delivered, message.bounced, message.blocked), payload JSON, retry automático, assinatura HMAC para validação.",
+          "fonte_id": "F05"
+        },
+        {
+          "titulo": "Monitoramento de Fila Redis/Sidekiq & Troubleshooting",
+          "tipo_midia": "Guia Prático",
+          "idioma": "EN",
+          "dica_traducao_ptbr": "Use a tradução automática. Comandos Redis são universais.",
+          "autor": "Sidekiq Official & Redis Community",
+          "duracao": "1h de prática",
+          "url": "https://github.com/sidekiq/sidekiq/wiki/",
+          "aprendizado_chave": "Acessar Redis CLI, inspecionar tamanho da fila (DBSIZE), ver jobs em processamento, identificar deadlocks.",
+          "fonte_id": "F03"
+        },
+        {
+          "titulo": "Construir Endpoint de Webhook em Node.js/Python",
+          "tipo_midia": "Hands-on Lab",
+          "idioma": "EN",
+          "dica_traducao_ptbr": "Adapte para sua stack favorita.",
+          "autor": "Dev Community",
+          "duracao": "40 min de codificação",
+          "url": "https://github.com/postalserver/postal-examples",
+          "aprendizado_chave": "Criar rota POST /webhooks, validar signature HMAC, registrar em banco de dados, atualizar status de usuário.",
+          "fonte_id": "F04"
+        }
+      ]
+    },
+    {
+      "fase_numero": 5,
+      "titulo": "Fase 5: Migração de Cuttlefish para Postal & Go-Live em Produção",
+      "tempo_estimado": "1h 30min",
+      "objetivo": "Executar plano de migração zero-downtime de Cuttlefish SaaS para Postal self-hosted, validar equivalência de APIs e monitorar primeiras horas de produção.",
+      "recursos": [
+        {
+          "titulo": "Playbook de Migração Cuttlefish → Postal (Blue-Green Deploy)",
+          "tipo_midia": "Playbook de Engenharia",
+          "idioma": "PT-BR",
+          "dica_traducao_ptbr": "Guia prático fornecido no manual de VPS.",
+          "autor": "AIDD - Arsenal Open Source",
+          "duracao": "30 min de leitura",
+          "url": "file:///opt/postal/playbook_migracao.md",
+          "aprendizado_chave": "Estratégia blue-green: manter Cuttlefish ativo enquanto valida Postal, switch de tráfego apenas quando 100% de confiança, rollback rápido se algo falhar.",
+          "fonte_id": "F09"
+        },
+        {
+          "titulo": "Migração de Templates de Email & Conversão para MJML",
+          "tipo_midia": "Guia Técnico",
+          "idioma": "EN",
+          "dica_traducao_ptbr": "Ferramentas de automação podem fazer a conversão.",
+          "autor": "MJML Community",
+          "duracao": "25 min",
+          "url": "https://mjml.io/documentation",
+          "aprendizado_chave": "MJML é mais simples que HTML puro. Postal renderiza automaticamente. Migrar templates existentes é procedimento mecânico.",
+          "fonte_id": "F06"
+        },
+        {
+          "titulo": "Observabilidade & Monitoramento em Produção (Prometheus + Grafana)",
+          "tipo_midia": "Tutorial de Observabilidade",
+          "idioma": "EN",
+          "dica_traducao_ptbr": "Conceitos de observabilidade são universais.",
+          "autor": "Postal Community & Prometheus Docs",
+          "duracao": "35 min",
+          "url": "https://github.com/postalserver/postal/discussions/monitoring",
+          "aprendizado_chave": "Coletar métricas de entrega, taxa de erro, latência de webhook, uptime de banco de dados. Configurar alertas para anomalias.",
+          "fonte_id": "F10"
+        }
+      ]
+    }
+  ],
+  "resumo_aprendizado": {
+    "competencias_adquiridas": [
+      "Conceitos de email transacional e segurança de infraestrutura",
+      "Conformidade com LGPD e regulações de privacidade brasileiras",
+      "Provisionamento e hardening de VPS na Hetzner/Contabo",
+      "Containerização com Docker & Docker Compose",
+      "Gestão de banco de dados PostgreSQL em produção",
+      "Fila de trabalho assíncrona com Redis/Sidekiq",
+      "Configuração de segurança de email (DKIM, SPF, DMARC)",
+      "API REST para envio de emails transacionais",
+      "Webhooks para notificação de eventos em tempo real",
+      "Troubleshooting de infraestrutura de email",
+      "Migração zero-downtime de SaaS para self-hosted",
+      "Monitoramento & alertas com Prometheus/Grafana"
+    ],
+    "projeto_capstone": {
+      "titulo": "Infraestrutura Completa de Email Transacional com Postal",
+      "descricao": "Construir stack completo: VPS com Postal, PostgreSQL backup automático, webhook de entrega no seu backend, monitoramento em Grafana, migração segura de Cuttlefish SaaS com zero downtime.",
+      "tempo_estimado": "6-8 horas",
+      "tecnologias": [
+        "Postal (Rails)",
+        "PostgreSQL 16",
+        "Redis 7",
+        "Docker Compose",
+        "Caddy (reverse proxy)",
+        "Sidekiq (job queue)",
+        "Prometheus + Grafana",
+        "Node.js/Python (webhook backend)"
+      ],
+      "entregavel": "Repositório GitHub com docker-compose.yml, scripts de backup, playbook de migração, dashboard Grafana pronto para produção"
+    }
+  }
+}

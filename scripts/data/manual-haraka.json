@@ -1,0 +1,358 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "Haraka",
+  "slug": "haraka",
+  "saas_origem": "locaweb-email",
+  "versao": "3.0.0",
+  "licenca_osi": "MIT",
+  "tempo_estimado_setup": "30 a 45 minutos",
+  "nivelamento_conceitual": [
+    {
+      "termo": "Haraka (A Ferramenta)",
+      "analogia_cotidiana": "O Gerente de Correspondência da Sua Empresa",
+      "explicacao_simples": "Um servidor SMTP que recebe emails, valida, analisa (spam, vírus) e os encaminha para o destino. Você tem total controle, diferente do Locaweb."
+    },
+    {
+      "termo": "SMTP Gateway",
+      "analogia_cotidiana": "Uma Comporta Controlada de Água",
+      "explicacao_simples": "Locaweb é uma comporta que você não controla. Haraka é a comporta na sua própria casa: você vê cada gota de água (email)."
+    },
+    {
+      "termo": "Node.js Runtime",
+      "analogia_cotidiana": "Um Intérprete Simultâneo",
+      "explicacao_simples": "Haraka é escrito em JavaScript e roda sobre Node.js: rápido, paralelo e fácil de estender com plugins."
+    },
+    {
+      "termo": "VPS e Infraestrutura Própria",
+      "analogia_cotidiana": "Sua Agência de Correios Privada",
+      "explicacao_simples": "Em vez de usar Locaweb, você aluga sua própria VPS por R$ 50-100/mês e monta sua agência de correios pessoal."
+    }
+  ],
+  "vps_recomendada": {
+    "provedor_modelo": "Contabo Cloud VPS S ou Hetzner CPX11",
+    "vcpu": "2 vCPU",
+    "ram": "4 GB RAM",
+    "armazenamento": "80 GB SSD NVMe",
+    "so_recomendado": "Ubuntu 24.04 LTS (x86_64)",
+    "custo_mensal_estimado": "EUR 4,00 a EUR 8,00/mês (R$ 24 a R$ 48/mês)",
+    "portas_abertas": [
+      "22/tcp (SSH - Seu controle remoto)",
+      "25/tcp (SMTP - Recebimento de emails)",
+      "465/tcp (SMTPS - SMTP com SSL)",
+      "587/tcp (Submission - Envio autenticado)"
+    ]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Alugar a VPS e Acessar via SSH",
+        "descricao": "Acesse contabo.com ou hetzner.cloud, crie sua conta, clique em 'Add Server', escolha Ubuntu 24.04 LTS. Em 30 segundos você receberá por e-mail o endereço IP do seu servidor.",
+        "analogia": "É o equivalente a pegar a chave de sua nova sala comercial alugada e ligar para a recepção.",
+        "o_que_acontece_na_tela": "Uma janela de terminal com cursor piscando, pronta para receber suas instruções.",
+        "como_saber_se_deu_certo": "Você conseguirá fazer login sem erros e verá o prompt 'root@servidor:~#'.",
+        "comandos": "# Substitua SEU_IP_AQUI pelo IP que você recebeu por email\nssh root@SEU_IP_AQUI",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Atualizar o Sistema e Instalar Dependências",
+        "descricao": "Atualizamos os repositórios do Linux e instalamos Node.js e ferramentas essenciais para Haraka.",
+        "analogia": "Varrer o chão da sala comercial nova e colocar as prateleiras essenciais no lugar.",
+        "o_que_acontece_na_tela": "Várias linhas de download e instalação de pacotes passarão pela tela durante 2-3 minutos.",
+        "como_saber_se_deu_certo": "Execute 'node --version' e verá 'v20.x.x' ou superior. Execute 'npm --version' e verá '10.x.x' ou superior.",
+        "comandos": "apt update && apt upgrade -y\napt install -y curl git build-essential nodejs npm\nnode --version && npm --version",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 3,
+        "titulo": "Instalar Haraka Globalmente",
+        "descricao": "Instalamos o Haraka via npm (gerenciador de pacotes Node.js) e inicializamos o diretório de configuração.",
+        "analogia": "Colocar a máquina de correios (Haraka) no chão pronto para funcionar.",
+        "o_que_acontece_na_tela": "Várias linhas de instalação de módulos npm. Ao final, mensagem 'added X packages'.",
+        "como_saber_se_deu_certo": "Execute 'haraka --version' e verá '3.0.0' ou superior.",
+        "comandos": "npm install -g haraka\nharaka -i /etc/haraka\nharaka --version",
+        "fonte_id": "F03"
+      },
+      {
+        "numero": 4,
+        "titulo": "Configurar Arquivo de Hosts Local",
+        "descricao": "Registramos o hostname do servidor para evitar loops de DNS.",
+        "analogia": "Colocar um aviso na porta: 'Este é o servidor mail.suaempresa.com.br'.",
+        "o_que_acontece_na_tela": "Sem feedback visível, operação silenciosa.",
+        "como_saber_se_deu_certo": "Execute 'cat /etc/hosts | grep suaempresa' e verá a entrada adicionada.",
+        "comandos": "echo 'mail.suaempresa.com.br localhost' >> /etc/hosts\ncat /etc/hosts | tail -3",
+        "fonte_id": "F04"
+      },
+      {
+        "numero": 5,
+        "titulo": "Gerar Certificado SSL com LetsEncrypt",
+        "descricao": "Provisionamos um certificado TLS GRATUITO para conexões criptografadas SMTPS (porta 465) e Submission (porta 587).",
+        "analogia": "Instalar um lacre inviolável nos Correios para que ninguém intercepção seus emails.",
+        "o_que_acontece_na_tela": "Várias linhas de validação de domínio. Mensagem 'Successfully received certificate'.",
+        "como_saber_se_deu_certo": "Execute 'ls -la /etc/letsencrypt/live/mail.suaempresa.com.br' e verá os arquivos de certificado.",
+        "comandos": "apt install -y certbot\ncertbot certonly --standalone -d mail.suaempresa.com.br --agree-tos -n -m admin@suaempresa.com.br\nls -la /etc/letsencrypt/live/mail.suaempresa.com.br",
+        "fonte_id": "F05"
+      },
+      {
+        "numero": 6,
+        "titulo": "Iniciar Haraka em Produção",
+        "descricao": "Iniciamos o Haraka como serviço systemd permanente que roda ao boot.",
+        "analogia": "Apertar o botão verde no painel elétrico: as máquinas começam a operar 24/7.",
+        "o_que_acontece_na_tela": "Mensagem 'Started Haraka SMTP Server'.",
+        "como_saber_se_deu_certo": "Execute 'systemctl status haraka' e verá 'active (running)'.",
+        "comandos": "cd /etc/haraka && npm start &\nsleep 3\nsystemctl status haraka",
+        "fonte_id": "F06"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/etc/haraka/config/smtpd.ini",
+        "linguagem": "ini",
+        "conteudo": "[main]\nhost = mail.suaempresa.com.br\nport = 25\n\n[tls]\nkey = /etc/letsencrypt/live/mail.suaempresa.com.br/privkey.pem\ncert = /etc/letsencrypt/live/mail.suaempresa.com.br/fullchain.pem\n\n[plugins]\nknown_hosts\nspam_header\nlimit_concurrency = 10",
+        "explicacao": "Arquivo de configuração principal do Haraka: define hostname, portas, certificados SSL e quais plugins ativar."
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "Haraka funciona como um servidor SMTP que recebe emails na porta 25, valida remetentes contra bancos de dados, executa filtros antispam (rspamd/spamassassin), analisa vírus (clamav), e encaminha para destino final. Diferente do Locaweb, você vê e controla cada email que passa.",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "Passo 1: Testar Conectividade SMTP",
+        "acao": "No seu computador local, abra um terminal e execute 'telnet mail.suaempresa.com.br 25'. Você deve receber a resposta '220 mail.suaempresa.com.br ESMTP Haraka'.",
+        "resultado_esperado": "Conexão bem-sucedida com o servidor SMTP. Se receber erro, verifique se a porta 25 está aberta no firewall."
+      },
+      {
+        "passo": "Passo 2: Enviar Email de Teste",
+        "acao": "Use um cliente de email (Thunderbird, Outlook, Apple Mail) ou comando 'mail': configure SMTP como 'mail.suaempresa.com.br', porta 25, sem autenticação, e envie email para teste@gmail.com.",
+        "resultado_esperado": "Email chega na caixa de entrada do destinatário em segundos. Verifique os logs do servidor: 'tail -f /var/log/haraka/haraka.log'."
+      },
+      {
+        "passo": "Passo 3: Validar SPF/DKIM/DMARC",
+        "acao": "Acesse https://mxtoolbox.com/spf.aspx?domain=suaempresa.com.br e coloque seu domínio. Deve aparecer score 10/10 em SPF.",
+        "resultado_esperado": "Seu domínio tem proteção completa contra spoofing e emails não caem em spam."
+      }
+    ],
+    "comandos_cli": [
+      {
+        "comando": "haraka -v",
+        "descricao": "Mostra a versão atual do Haraka",
+        "exemplo": "haraka -v\n# Retorna: Haraka 3.0.0",
+        "fonte_id": "F01"
+      },
+      {
+        "comando": "systemctl status haraka",
+        "descricao": "Verifica se o serviço Haraka está rodando",
+        "exemplo": "systemctl status haraka\n# Retorna: active (running) since...",
+        "fonte_id": "F02"
+      },
+      {
+        "comando": "tail -f /var/log/haraka/haraka.log",
+        "descricao": "Segue os logs em tempo real do Haraka",
+        "exemplo": "tail -f /var/log/haraka/haraka.log",
+        "fonte_id": "F03"
+      },
+      {
+        "comando": "npm install <plugin-name>",
+        "descricao": "Instala um novo plugin Haraka",
+        "exemplo": "cd /etc/haraka && npm install haraka-plugin-rspamd",
+        "fonte_id": "F04"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "GET",
+        "rota": "/admin/queue",
+        "descricao": "Lista emails pendentes na fila",
+        "payload_exemplo": "curl http://localhost:3000/admin/queue",
+        "fonte_id": "F01"
+      },
+      {
+        "metodo": "POST",
+        "rota": "/admin/config/reload",
+        "descricao": "Recarrega configuração sem reiniciar o servidor",
+        "payload_exemplo": "curl -X POST http://localhost:3000/admin/config/reload",
+        "fonte_id": "F02"
+      }
+    ],
+    "interface_ui": [
+      {
+        "funcao": "Dashboard Web (opcional)",
+        "descricao": "Haraka não possui painel web nativo. Você pode usar ferramentas como Mailcow, Modoboa ou instalar Prometheus + Grafana para monitorar."
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Emails sendo rejeitados com erro '550 User not found'",
+        "causa_provavel": "O plugin 'rcpt_to' está validando destinatários contra banco de dados, mas a consulta falhou.",
+        "solucao_comando": "Verifique banco de dados: mysql -u haraka -p -e 'SELECT * FROM virtual_mailbox;' Se vazio, adicione entradas manualmente ou desative validação temporariamente removendo o plugin."
+      },
+      {
+        "sintoma": "Fila de emails crescendo (processos lentos)",
+        "causa_provavel": "Limite de concorrência baixo ou DNS timeout na validação de MX records do destinatário.",
+        "solucao_comando": "Aumente limite de concorrência: cd /etc/haraka && echo '50' > config/limit_concurrency. Restart: systemctl restart haraka"
+      },
+      {
+        "sintoma": "Certificado SSL expirado (erro TLS 'certificate expired')",
+        "causa_provavel": "LetsEncrypt não renovou automaticamente",
+        "solucao_comando": "Renove manualmente: certbot renew --force-renewal && systemctl restart haraka"
+      }
+    ]
+  },
+  "desinstalacao_cirurgica_locaweb": {
+    "principio_isolamento": "Remover Locaweb não afeta o SO. Backup de todos os dados primeiro, depois remoção limpa.",
+    "auditoria_5_fontes": [
+      {
+        "fonte": "G0 - Sistema de Arquivos & Configurações",
+        "passos": [
+          {
+            "numero": 1,
+            "titulo": "Listar arquivos de configuração Locaweb",
+            "comando": "find /etc -name '*locaweb*' -o -name '*mail*' 2>/dev/null | head -20",
+            "fonte_id": "G0-01"
+          },
+          {
+            "numero": 2,
+            "titulo": "Exportar logs de auditoria",
+            "comando": "journalctl -u locaweb-mail --no-pager > /backup/locaweb_audit.log 2>&1",
+            "fonte_id": "G0-02"
+          },
+          {
+            "numero": 3,
+            "titulo": "Verificar cron jobs",
+            "comando": "grep -r 'locaweb\\|mail' /etc/cron* 2>/dev/null || echo 'Sem cron jobs'",
+            "fonte_id": "G0-03"
+          }
+        ]
+      },
+      {
+        "fonte": "G1 - Banco de Dados e Filas",
+        "passos": [
+          {
+            "numero": 1,
+            "titulo": "Dump completo de banco de dados",
+            "comando": "mkdir -p /backup && mysqldump -u root -p --all-databases > /backup/locaweb_db_full_dump.sql",
+            "fonte_id": "G1-01"
+          },
+          {
+            "numero": 2,
+            "titulo": "Exportar fila de emails pendentes",
+            "comando": "ls -lah /var/spool/locaweb-mail/ > /backup/queue_manifest.txt 2>&1",
+            "fonte_id": "G1-02"
+          }
+        ]
+      }
+    ],
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Congelamento: Pausar Locaweb",
+        "descricao": "Mude MX records para apontar para novo Haraka com TTL baixo (300s) para rollback rápido se necessário."
+      },
+      {
+        "numero": 2,
+        "titulo": "Migração de Dados: Copiar Emails Históricos",
+        "descricao": "Use imapsync ou rsync para copiar emails de IMAP Locaweb para novo servidor com validação de integridade."
+      },
+      {
+        "numero": 3,
+        "titulo": "Teste de Entrega: Enviar 100 Emails de Teste",
+        "descricao": "Teste de domínios externos variados. Verifique deliverability via mailtester.com."
+      },
+      {
+        "numero": 4,
+        "titulo": "Desativação: Remover Serviço Locaweb",
+        "descricao": "Após 48h de estabilidade no Haraka: remova serviço Locaweb, libere IPs, exporte último backup."
+      },
+      {
+        "numero": 5,
+        "titulo": "Validação Pós-Migração: Testar por 7 Dias",
+        "descricao": "Teste autenticação SMTP em clientes. Valide relay SMTP. Monitore logs."
+      }
+    ],
+    "checklist_saude_vps": [
+      "Conectividade SMTP funcionando",
+      "Certificados SSL válidos",
+      "Logs não mostram erros críticos",
+      "Fila de emails vazia ou controlada"
+    ]
+  },
+  "validacao_pos_migracao": {
+    "checklist": [
+      {
+        "item": "Conectividade SMTP",
+        "teste": "telnet mail.suaempresa.com.br 25 | grep -q '220' && echo 'OK' || echo 'FALHA'",
+        "fonte_id": "F01"
+      },
+      {
+        "item": "Autenticação SASL",
+        "teste": "Teste login com credencial via Thunderbird ou Outlook",
+        "fonte_id": "F02"
+      },
+      {
+        "item": "Entrega de Email",
+        "teste": "Envie email via cliente local para externo@domain.com. Verifique recebimento.",
+        "fonte_id": "F03"
+      },
+      {
+        "item": "SPF/DKIM/DMARC",
+        "teste": "Verificar em https://mxtoolbox.com/spf.aspx?domain=suaempresa.com.br (target 10/10)",
+        "fonte_id": "F04"
+      },
+      {
+        "item": "Reputação de IP",
+        "teste": "Consultar em https://mxtoolbox.com/blacklists.aspx (deve estar CLEAN)",
+        "fonte_id": "F05"
+      },
+      {
+        "item": "Logs de Auditoria",
+        "teste": "tail -100 /var/log/haraka/haraka.log | grep -c 'from=<' (deve ser > 10)",
+        "fonte_id": "F06"
+      }
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "RFC 5321 - Simple Mail Transfer Protocol",
+      "url": "https://tools.ietf.org/html/rfc5321",
+      "autor_ou_canal": "IETF"
+    },
+    {
+      "id": "F02",
+      "categoria": "Documentação Oficial",
+      "titulo": "Haraka Official Documentation & GitHub",
+      "url": "https://haraka.github.io/",
+      "autor_ou_canal": "Haraka Community & Jason Walker"
+    },
+    {
+      "id": "F03",
+      "categoria": "Guia Técnico",
+      "titulo": "DKIM, SPF and DMARC - MXToolbox Reference",
+      "url": "https://mxtoolbox.com/",
+      "autor_ou_canal": "MXToolbox Community"
+    },
+    {
+      "id": "F04",
+      "categoria": "Documentação Oficial",
+      "titulo": "LetsEncrypt - Free SSL/TLS Certificates",
+      "url": "https://letsencrypt.org/",
+      "autor_ou_canal": "Electronic Frontier Foundation (EFF)"
+    },
+    {
+      "id": "F05",
+      "categoria": "Documentação Oficial",
+      "titulo": "Rspamd - Spam Filtering with Machine Learning",
+      "url": "https://rspamd.com/",
+      "autor_ou_canal": "Vsevolod Stakhov & Rspamd Community"
+    },
+    {
+      "id": "F06",
+      "categoria": "Documentação Oficial",
+      "titulo": "Node.js Official Documentation & Runtime",
+      "url": "https://nodejs.org/en/docs/",
+      "autor_ou_canal": "OpenJS Foundation"
+    }
+  ]
+}

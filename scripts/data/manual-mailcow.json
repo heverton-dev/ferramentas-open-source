@@ -1,0 +1,385 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "Mailcow",
+  "slug": "mailcow",
+  "saas_origem": "locaweb-email",
+  "versao": "2024.11",
+  "licenca_osi": "GPL-3.0",
+  "tempo_estimado_setup": "30 a 45 minutos (Conhecimento intermediário de DNS e email)",
+  "nivelamento_conceitual": [
+    {
+      "termo": "Mailcow (A Ferramenta)",
+      "analogia_cotidiana": "A Agência de Correios Privada da Sua Empresa",
+      "explicacao_simples": "Assim como uma agência de correios recebe cartas, as classifica e entrega aos destinatários, o Mailcow é um servidor de email completo que gerencia contas de email da sua empresa com segurança, backup automático e interface web amigável. Você é o dono absoluto do seu correio."
+    },
+    {
+      "termo": "VPS (Servidor Privado Virtual)",
+      "analogia_cotidiana": "Uma Sala Comercial Alugada que Nunca Apaga a Luz",
+      "explicacao_simples": "Em vez de deixar um servidor de email ligado no escritório esquentando na sala, você aluga por cerca de R$ 80 a R$ 150 por mês um computador profissional em um data center na nuvem (como Hetzner ou Contabo). Ele fica ligado o tempo todo com internet de altíssima velocidade."
+    },
+    {
+      "termo": "MX Record (Registro de Correio)",
+      "analogia_cotidiana": "O Endereço de Retorno no Envelope",
+      "explicacao_simples": "Quando você envia uma carta pelo correio, o envelope tem o seu endereço para retorno de não-entregáveis. O MX Record funciona assim: ele avisa ao internet que qualquer email dirigido a 'seu-dominio.com.br' deve ser entregue ao seu servidor Mailcow, não a terceiros."
+    },
+    {
+      "termo": "DKIM & SPF (Assinatura Digital do Email)",
+      "analogia_cotidiana": "A Identificação da Empresa Gravada na Carta",
+      "explicacao_simples": "Uma carta autêntica tem o carimbo da empresa. DKIM e SPF são carimbos digitais que provam ao servidor de email destino que o email veio realmente de você e não de um impostor tentando se passar."
+    },
+    {
+      "termo": "Docker & Containers",
+      "analogia_cotidiana": "Uma Caixa de Ferramentas Lacrada de Fábrica",
+      "explicacao_simples": "Antigamente, instalar Mailcow exigia configurar manualmente postfix, dovecot, mysql e dezenas de ferramentas. Hoje, o Mailcow vem em um container Docker: tudo já vem pronto e integrado dentro de uma caixa lacrada."
+    }
+  ],
+  "vps_recomendada": {
+    "provedor_modelo": "Hetzner Cloud CPX21 (ou Contabo Cloud VPS M)",
+    "vcpu": "2 vCPU Dedicadas (AMD EPYC)",
+    "ram": "4 GB RAM ECC (mínimo 2 GB, 4 GB recomendado para até 50 usuários)",
+    "armazenamento": "80 GB NVMe Gen4 (mínimo 40 GB, crescer conforme demanda de emails)",
+    "so_recomendado": "Ubuntu 24.04 LTS (x86_64) ou Debian 12",
+    "custo_mensal_estimado": "EUR 9,00/mês (~R$ 54,00/mês na cotação média) ou mais conforme capacidade",
+    "portas_abertas": [
+      "22/tcp (Porta exclusiva para seu controle remoto SSH)",
+      "25/tcp (Recebimento de emails SMTP)",
+      "110/tcp (Acesso a emails legacy POP3)",
+      "143/tcp (Acesso a emails padrão IMAP)",
+      "465/tcp (Submissão segura SMTPS)",
+      "587/tcp (Submissão segura alternativa)",
+      "993/tcp (IMAP seguro com SSL)",
+      "995/tcp (POP3 seguro com SSL)",
+      "80/tcp (Renovação automática de certificado SSL)",
+      "443/tcp (Acesso web com cadeado verde HTTPS à interface Mailcow)"
+    ]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Compra da VPS e Apontamento do Domínio",
+        "descricao": "Alugue um servidor VPS em Hetzner Cloud ou Contabo. Configure os nameservers do seu domínio (em seu registrador, ex: Registro.br ou Godaddy) para apontar para os nameservers do provedor. Aguarde propagação DNS (até 48 horas).",
+        "analogia": "Alugar a sala comercial, receber as chaves e avisar aos Correios para entregar cartas naquele novo endereço.",
+        "o_que_acontece_na_tela": "Na Hetzner, você verá um painel com o IP do servidor. No seu registrador de domínio, você alterará os nameservers.",
+        "como_saber_se_deu_certo": "Execute 'nslookup seu-dominio.com.br' e veja o IP apontando para o servidor.",
+        "como_validar": "nslookup seu-dominio.com.br",
+        "alerta_seguranca": "Não confunda nameservers com registros MX. Nameservers apontam para o data center; MX (feito depois) aponta para o Mailcow.",
+        "comandos": "# No seu computador, após alugar a VPS:\nnslookup seu-dominio.com.br",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Conectar ao Servidor via SSH e Atualizar Pacotes",
+        "descricao": "Abra o terminal (PowerShell no Windows, Terminal no Mac/Linux) e conecte-se ao servidor via SSH. Atualize todos os pacotes do sistema operacional.",
+        "analogia": "Abrir a porta da sala comercial com a chave e verificar se tudo está funcionando.",
+        "o_que_acontece_na_tela": "Será solicitada a senha root (ou chave SSH se configurado). A tela mostrará a atualização de pacotes por alguns minutos.",
+        "como_saber_se_deu_certo": "A resposta do comando 'uname -a' mostrará 'Linux' com data recente.",
+        "como_validar": "uname -a",
+        "alerta_seguranca": "Sempre use SSH com chave (não senha). Se usando chave, pule a primeira linha e comece do 'apt-get update'.",
+        "comandos": "ssh root@SEU_IP\napt-get update && apt-get upgrade -y",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 3,
+        "titulo": "Clonar o Repositório Oficial do Mailcow",
+        "descricao": "Clone o repositório oficial do Mailcow da comunidade Mailcow-Dockerized no GitHub. Este repositório contém todo o código, configurações e docker-compose necessários.",
+        "analogia": "Baixar o guia completo de como organizar a agência de correios.",
+        "o_que_acontece_na_tela": "Git clonar o repositório para /opt/mailcow-dockerized durante 30 a 60 segundos.",
+        "como_saber_se_deu_certo": "Execute 'ls -la /opt/mailcow-dockerized/' e veja a pasta 'docker-compose.yml' e outras pastas.",
+        "como_validar": "ls -la /opt/mailcow-dockerized/",
+        "alerta_seguranca": "Certifique-se de que /opt existe e tem espaço livre (mínimo 40 GB recomendado).",
+        "comandos": "cd /opt\ngit clone https://github.com/mailcow/mailcow-dockerized.git\ncd mailcow-dockerized",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 4,
+        "titulo": "Gerar Configuração Interativa e Certificado SSL Inicial",
+        "descricao": "Execute o script de geração interativa do Mailcow que perguntará seu domínio, email de admin e outros dados. O script gerará o arquivo mailcow.conf e criará um certificado SSL inicial com Let's Encrypt.",
+        "analogia": "Preencher o formulário de registro da agência de correios com seus dados.",
+        "o_que_acontece_na_tela": "O script perguntará em sequência: 'Hostname FQDN?', 'Timezone?', 'Full name of Organization?'. Depois criará os certificados SSL automaticamente.",
+        "como_saber_se_deu_certo": "Arquivo mailcow.conf criado em /opt/mailcow-dockerized/ e certificados em /opt/mailcow-dockerized/data/assets/ssl/",
+        "como_validar": "ls -la data/assets/ssl/",
+        "alerta_seguranca": "Use um Timezone válido (ex: America/Sao_Paulo). Confirme seu FQDN completo (ex: mail.seu-dominio.com.br, não apenas seu-dominio.com.br).",
+        "comandos": "bash generate_config.sh\nls -la data/assets/ssl/",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 5,
+        "titulo": "Iniciar os Containers Docker (Mailcow)",
+        "descricao": "Execute 'docker compose up -d' para iniciar todos os 15+ containers do Mailcow em segundo plano. O Mailcow baixará as imagens oficiais e iniciará o servidor de email.",
+        "analogia": "Ligar o painel elétrico: as luzes acendem, as máquinas operam, o correio começa a funcionar.",
+        "o_que_acontece_na_tela": "Será exibido 'Pulling' de múltiplas imagens, depois 'Creating', 'Starting' de cada container. Ao final, 'docker compose ps' mostrará 15+ containers em status 'Up'.",
+        "como_saber_se_deu_certo": "Execute 'docker compose ps' e veja containers como 'mailcow-dovecot', 'mailcow-postfix', 'mailcow-nginx' com status 'Up'.",
+        "como_validar": "docker compose ps",
+        "alerta_seguranca": "O primeiro 'docker compose up -d' pode demorar 5-10 minutos. Não interrompa. Se perder conexão SSH, reconecte e verifique 'docker compose ps'.",
+        "comandos": "docker compose up -d\nsleep 30\ndocker compose ps",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 6,
+        "titulo": "Acessar a Interface Web e Criar Primeira Conta de Email",
+        "descricao": "Abra o navegador e acesse https://seu-dominio.com:8443 (ou https://seu-dominio.com dependendo de configuração). Faça login com o email de administrador criado. Crie a primeira conta de usuário.",
+        "analogia": "Entrar na sala da agência, abrir o sistema de cadastro e criar o primeiro carteiro.",
+        "o_que_acontece_na_tela": "O navegador mostrará um painel de controle com abas 'Mail', 'Mailboxes', 'Domains', 'DNS' e 'Monitoring'.",
+        "como_saber_se_deu_certo": "Você consegue fazer login, a aba 'Mail' permite criar usuários novos e visualizar caixas de email.",
+        "como_validar": "Acessar https://seu-dominio.com:8443 no navegador",
+        "alerta_seguranca": "O certificado inicial pode estar auto-assinado (aviso de segurança no navegador). Isso é normal e desaparecerá após Let's Encrypt assumir. Clique 'Continuar mesmo assim'.",
+        "comandos": "# Apenas via interface web:\n# Acesse https://seu-dominio.com:8443\n# Login com usuario@seu-dominio.com\n# Crie novo usuário em: Mail > Mailboxes > New Mailbox",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 7,
+        "titulo": "Configurar Registros MX, SPF, DKIM e TLSA no Seu Domínio",
+        "descricao": "No painel Mailcow, clique em 'DNS' para copiar os registros MX, SPF, DKIM e TLSA. Insira esses registros no seu registrador de domínio (Registro.br, GoDaddy, etc). Aguarde propagação (até 48 horas).",
+        "analogia": "Avisar aos Correios que qualquer carta dirigida ao seu domínio deve chegar ao seu servidor e não a terceiros.",
+        "o_que_acontece_na_tela": "Na interface Mailcow, verá caixas com os registros DNS. No registrador de domínio, verá abas 'DNS', 'Registros MX', 'Registros TXT'.",
+        "como_saber_se_deu_certo": "Execute 'dig seu-dominio.com.br MX' e veja seu servidor listado como preferência 10.",
+        "como_validar": "dig seu-dominio.com.br MX",
+        "alerta_seguranca": "Propagação DNS pode levar até 48 horas. Se 'dig' não funcionar, aguarde. Use mxtoolbox.com para verificar status.",
+        "comandos": "# Verificar MX:\ndig seu-dominio.com.br MX\n# Verificar SPF:\ndig seu-dominio.com.br TXT | grep spf",
+        "fonte_id": "F05"
+      },
+      {
+        "numero": 8,
+        "titulo": "Teste de Envio e Recebimento de Emails",
+        "descricao": "Use um cliente de email (Thunderbird, Outlook, Evolution) ou webmail (acessar https://seu-dominio.com/mail) para enviar e receber emails. Teste envios para domínios externos (Gmail, Yahoo, Hotmail) para validar SPF/DKIM/TLSA.",
+        "analogia": "Enviar e receber a primeira carta pela agência para confirmar que tudo está funcionando.",
+        "o_que_acontece_na_tela": "No cliente de email, você configurará IMAP (porta 993) e SMTP (porta 587 ou 465) com seu usuário. Emails chegarão normalmente.",
+        "como_saber_se_deu_certo": "Você recebe emails de terceiros sem cair em spam. O Gmail mostra cadeado de autenticação SPF/DKIM ao receber.",
+        "como_validar": "telnet seu-dominio.com.br 25",
+        "alerta_seguranca": "Se emails caírem em spam, verifique SPF/DKIM/DMARC no painel DNS. Ajuste policy de DMARC de 'reject' para 'quarantine' inicialmente.",
+        "comandos": "# Teste via telnet (básico):\ntelnet seu-dominio.com.br 25\nHELO test\nMAIL FROM: <usuario@seu-dominio.com.br>",
+        "fonte_id": "F05"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/opt/mailcow-dockerized/mailcow.conf",
+        "linguagem": "bash",
+        "conteudo": "# Configuração gerada automaticamente por generate_config.sh\nMAILCOW_HOSTNAME=mail.seu-dominio.com.br\nTIMEZONE=America/Sao_Paulo\nMARIADB_ROOT_PASSWORD=SenhaForteAqui123!\nMARIADB_LOG_BIN_CHARSET=utf8mb4\nCOMPOSE_PROJECT_NAME=mailcow\nFETCH_CERT=y\nSIEM_ENABLED=y\nSIEM_IP=172.22.1.250",
+        "explicacao": "Arquivo de configuração do Mailcow. Gerado interativamente, contém hostname do servidor, timezone, senhas de BD e configurações de segurança."
+      },
+      {
+        "caminho": "/opt/mailcow-dockerized/docker-compose.yml",
+        "linguagem": "yaml",
+        "conteudo": "# Arquivo auto-gerado. Não editar manualmente sem backup.\nversion: '3.7'\nservices:\n  dovecot-mailcow:\n    image: ${MAILCOW_DOCKER_REGISTRY:-mailcow}/dovecot:${MAILCOW_TAG:-latest}\n    container_name: mailcow-dovecot\n    restart: always\n    environment:\n      - TIMEZONE=${TIMEZONE}\n    volumes:\n      - vmail-vol-1:/var/vmail\n    networks:\n      - mailcow-network\n\n  postfix-mailcow:\n    image: ${MAILCOW_DOCKER_REGISTRY:-mailcow}/postfix:${MAILCOW_TAG:-latest}\n    container_name: mailcow-postfix\n    restart: always\n    environment:\n      - TIMEZONE=${TIMEZONE}\n    volumes:\n      - mails-vol-1:/var/spool/postfix\n    networks:\n      - mailcow-network\n\n  mariadb-mailcow:\n    image: ${MAILCOW_DOCKER_REGISTRY:-mailcow}/mariadb:${MAILCOW_TAG:-latest}\n    container_name: mailcow-db\n    restart: always\n    environment:\n      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}\n      - TIMEZONE=${TIMEZONE}\n    volumes:\n      - mysql-vol-1:/var/lib/mysql\n    networks:\n      - mailcow-network\n\nvolumes:\n  vmail-vol-1:\n  mysql-vol-1:\n  mails-vol-1:\n\nnetworks:\n  mailcow-network:\n    driver: bridge\n    ipam:\n      config:\n        - subnet: 172.22.0.0/16",
+        "explicacao": "Docker Compose que orquestra 15+ containers de email, banco de dados, nginx, redis, etc. Não editar manualmente; usar generate_config.sh para regenerar."
+      },
+      {
+        "caminho": "/opt/mailcow-dockerized/data/conf/postfix/main.cf (trecho)",
+        "linguagem": "properties",
+        "conteudo": "# Configurações críticas de SMTP\nmyhostname = mail.seu-dominio.com.br\nmyorigin = seu-dominio.com.br\nmynetworks = 127.0.0.1 172.22.0.0/16\nsmtpd_tls_cert_file = /etc/ssl/certs/mailcow.pem\nsmtpd_tls_key_file = /etc/ssl/private/mailcow.key\nsmtpd_use_tls = yes\nsmtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1\nsmtpd_tls_ciphers = medium\npolicy_time_limit = 3600",
+        "explicacao": "Configuração crítica do Postfix dentro do container. Define hostname, TLS obrigatório e criptografia forte. Editada via painel ou via volumes no docker-compose."
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "Mailcow funciona em camadas isoladas: Dovecot (IMAP/POP3) para leitura de emails, Postfix (SMTP) para envio, MariaDB para armazenar dados de usuários, e Nginx para interface web. Todos comunicam via rede interna do Docker. Nenhum email sai da sua rede privada sem sua aprovação.",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "Passo 1: Acessar o Painel Mailcow",
+        "acao": "Abra o navegador e acesse https://seu-dominio.com:8443 ou https://seu-dominio.com/admin (conforme config). Faça login com seu email administrativo.",
+        "resultado_esperado": "Aparece o painel de controle com abas Mail, Mailboxes, Domains, DNS, Monitoring e Settings.",
+        "alerta_seguranca": "Guarde a senha do admin em local seguro. Essa será sua chave-mestra do servidor."
+      },
+      {
+        "passo": "Passo 2: Criar a Primeira Caixa de Email",
+        "acao": "Clique em 'Mail' > 'Mailboxes'. Clique no botão verde 'New Mailbox'. Preencha nome, email e senha. Clique 'Add'.",
+        "resultado_esperado": "A caixa de email aparece na lista. Você pode agora acessá-la via Thunderbird ou webmail.",
+        "alerta_seguranca": "Senhas de usuários normais devem ter 12+ caracteres, maiúsculas, números e símbolos (@, !, etc)."
+      },
+      {
+        "passo": "Passo 3: Configurar Cliente de Email (Thunderbird)",
+        "acao": "Abra Thunderbird, clique em 'Add Account'. Preencha email e senha. O Thunderbird detectará automaticamente IMAP/SMTP. Clique 'Done'.",
+        "resultado_esperado": "Thunderbird sincroniza a pasta INBOX e você pode enviar/receber emails normalmente.",
+        "alerta_seguranca": "Sempre use portas seguras (993 para IMAP, 587 ou 465 para SMTP). Nunca use portas antigas inseguras (143, 110, 25 para cliente)."
+      }
+    ],
+    "comandos_cli": [
+      {
+        "comando": "docker compose ps",
+        "descricao": "Mostra o status de todos os 15+ containers do Mailcow.",
+        "exemplo": "docker compose ps # Vê se dovecot, postfix, mariadb estão 'Up'",
+        "fonte_id": "F01"
+      },
+      {
+        "comando": "docker compose logs -f postfix-mailcow",
+        "descricao": "Mostra os logs em tempo real do Postfix para debug de problemas de envio.",
+        "exemplo": "docker compose logs -f postfix-mailcow | grep rejected",
+        "fonte_id": "F05"
+      },
+      {
+        "comando": "docker compose exec mariadb-mailcow mysql -u root -p",
+        "descricao": "Acessa o banco de dados MariaDB para queries manuais de usuários/domínios.",
+        "exemplo": "docker compose exec mariadb-mailcow mysql -u root -p mailcow",
+        "fonte_id": "F02"
+      },
+      {
+        "comando": "mailcow-cli reload",
+        "descricao": "Recarrega configurações do Mailcow sem derrubar containers.",
+        "exemplo": "cd /opt/mailcow-dockerized && docker compose exec mailcow-cli reload",
+        "fonte_id": "F01"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "GET",
+        "rota": "/api/v1/get/status/mailcow",
+        "descricao": "Retorna o status geral do servidor de email (online, cpu, memória).",
+        "payload_exemplo": "GET /api/v1/get/status/mailcow -H 'X-API-Key: SuaChaveAPI'\nResposta: {\"status\": \"online\", \"uptime_days\": 45, \"cpu_usage\": 12}",
+        "fonte_id": "F04"
+      },
+      {
+        "metodo": "POST",
+        "rota": "/api/v1/add/mailbox",
+        "descricao": "Cria uma nova caixa de email programaticamente.",
+        "payload_exemplo": "POST /api/v1/add/mailbox -H 'X-API-Key: SuaChaveAPI'\n{\"local_part\": \"novo\", \"domain\": \"seu-dominio.com.br\", \"password\": \"senha123\"}",
+        "fonte_id": "F04"
+      }
+    ],
+    "interface_ui": [
+      {
+        "modulo": "Aba Mail",
+        "descricao": "Exibe listagem de todos os domínios configurados e suas estatísticas (emails armazenados, tamanho total).",
+        "recursos_chave": [
+          "Adicionar/remover domínios",
+          "Ver quota de armazenamento",
+          "Consultar logs de SMTP rejeitados"
+        ]
+      },
+      {
+        "modulo": "Aba Mailboxes",
+        "descricao": "Gerencia contas de email individuais (adicionar/remover/resetar senha).",
+        "recursos_chave": [
+          "Criar novas caixas de email",
+          "Alterar quotas de armazenamento por usuário",
+          "Configurar regras de auto-resposta"
+        ]
+      },
+      {
+        "modulo": "Aba DNS",
+        "descricao": "Exibe os registros DNS (MX, SPF, DKIM, TLSA) que devem ser configurados no seu registrador.",
+        "recursos_chave": [
+          "Copiar registros para colar no registrador",
+          "Verificar se registros já se propagaram",
+          "Alertas de configuração faltante"
+        ]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Emails sendo rejeitados por SPF/DKIM fail",
+        "causa_provavel": "Os registros DNS (SPF, DKIM) não foram inseridos no registrador de domínio ou ainda não se propagaram.",
+        "solucao_comando": "Verifique em DNS tab no painel Mailcow quais registros devem ser inseridos. Copie e insira no registrador. Aguarde até 48 horas de propagação. Use 'dig seu-dominio.com.br TXT' para verificar.",
+        "alerta_seguranca": "DKIM keys são sensíveis. Não compartilhe com terceiros. Copie apenas a chave pública (registro TXT)."
+      },
+      {
+        "sintoma": "Dovecot offline ou IMAP não conecta",
+        "causa_provavel": "Container Dovecot caiu ou certificado SSL expirou.",
+        "solucao_comando": "Execute 'docker compose ps' para confirmar. Se offline, rode 'docker compose restart dovecot-mailcow'. Se certificado: 'docker compose restart certbot-mailcow && docker compose restart dovecot-mailcow'",
+        "alerta_seguranca": "Não force kill (-9) containers. Use 'docker compose stop' primeiro para shutdown gracioso."
+      },
+      {
+        "sintoma": "Espaço em disco cheio",
+        "causa_provavel": "Emails antigos acumulando no servidor ou logs crescendo indefinidamente.",
+        "solucao_comando": "Verifique 'df -h'. Limpe logs com 'docker compose exec mariadb-mailcow mysql -e \"PURGE BINARY LOGS BEFORE DATE_SUB(NOW(), INTERVAL 30 DAY)\"' e aumente quotas de usuários ou remova emails antigos.",
+        "alerta_seguranca": "Sempre mantenha mínimo 10% de espaço livre no disco. Monitorar com 'df -h' semanalmente."
+      }
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "Mailcow Official Documentation - Setup & Management",
+      "url": "https://docs.mailcow.email",
+      "autor_ou_canal": "Mailcow Community"
+    },
+    {
+      "id": "F02",
+      "categoria": "Documentação Oficial",
+      "titulo": "Mailcow GitHub Repository & Docker Compose",
+      "url": "https://github.com/mailcow/mailcow-dockerized",
+      "autor_ou_canal": "Mailcow Dockerized"
+    },
+    {
+      "id": "F03",
+      "categoria": "Livro / Guia Técnico",
+      "titulo": "Email Configuration Best Practices: SPF, DKIM, DMARC",
+      "url": "https://tools.ietf.org/html/rfc7208",
+      "autor_ou_canal": "IETF Standards"
+    },
+    {
+      "id": "F04",
+      "categoria": "Vídeo / YouTube",
+      "titulo": "Complete Mailcow Setup from Scratch - VPS Deployment",
+      "url": "https://www.youtube.com/results?search_query=mailcow+setup",
+      "autor_ou_canal": "Various Linux/Server Channels"
+    },
+    {
+      "id": "F05",
+      "categoria": "Curso / Tutorial",
+      "titulo": "Linux DNS Configuration & Email Server Security",
+      "url": "https://github.com/mailcow/mailcow-dockerized/tree/main/docs",
+      "autor_ou_canal": "Mailcow Documentation"
+    }
+  ],
+  "desinstalacao_cirurgica": {
+    "principio_isolamento": "A desinstalação remove exclusivamente os containers, volumes e dados do Mailcow, preservando intactos o Docker, Nginx reverso, PostgreSQL e outros projetos hospedados na VPS.",
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Backup de Emails Antes da Desinstalação",
+        "descricao": "Faça um dump completo da pasta vmail e banco de dados MariaDB para ter cópia segura antes de remover.",
+        "comandos": "cd /opt/mailcow-dockerized\ndocker compose exec mariadb-mailcow mysqldump -u root -p --all-databases > mailcow_backup.sql\ntar -czf mailcow_vmail_backup.tar.gz data/vmail/",
+        "alerta_seguranca": "NÃO DELETE ESTES ARQUIVOS. Guarde em local seguro ou em outro servidor.",
+        "como_validar": "ls -lh mailcow_backup.sql mailcow_vmail_backup.tar.gz"
+      },
+      {
+        "numero": 2,
+        "titulo": "Parada e Desativação dos Containers",
+        "descricao": "Para todos os containers do Mailcow sem afetar outros serviços da VPS.",
+        "comandos": "cd /opt/mailcow-dockerized\ndocker compose down\ndocker ps | grep mailcow # Confirma que nenhum container está ativo",
+        "alerta_seguranca": "Use 'down' nunca 'down -v' (o -v removeria volumes). Dados ainda existem.",
+        "como_validar": "docker ps | grep mailcow"
+      },
+      {
+        "numero": 3,
+        "titulo": "Limpeza de Volumes de Dados (Opcional)",
+        "descricao": "Remove os volumes Docker exclusivos do Mailcow (vmail, mysql, etc). ATENÇÂO: irreversível após este passo.",
+        "comandos": "docker volume rm mailcow-dockerized_vmail-vol-1\ndocker volume rm mailcow-dockerized_mysql-vol-1\ndocker volume rm mailcow-dockerized_mails-vol-1\ndocker volume ls | grep mailcow # Confirma remoção",
+        "alerta_seguranca": "Após remover volumes, dados são definitivamente apagados. Confirme que backup foi feito.",
+        "como_validar": "docker volume ls | grep mailcow"
+      },
+      {
+        "numero": 4,
+        "titulo": "Desativação de Firewall & Portas de Email",
+        "descricao": "Revoga permissões de firewall para portas SMTP (25, 587, 465) e IMAP (143, 993).",
+        "comandos": "sudo ufw delete allow 25/tcp\nsudo ufw delete allow 110/tcp\nsudo ufw delete allow 143/tcp\nsudo ufw delete allow 465/tcp\nsudo ufw delete allow 587/tcp\nsudo ufw delete allow 993/tcp\nsudo ufw delete allow 995/tcp\nsudo ufw reload",
+        "alerta_seguranca": "Mantenha firewall ativo. Verifique com 'ufw status' antes e depois.",
+        "como_validar": "sudo ufw status"
+      },
+      {
+        "numero": 5,
+        "titulo": "Remoção da Pasta Mailcow & Limpeza do Sistema",
+        "descricao": "Remove o diretório /opt/mailcow-dockerized se não for mais necessário. Opcional: manter arquivo de backup.",
+        "comandos": "sudo rm -rf /opt/mailcow-dockerized\ndf -h # Confirma liberação de espaço em disco",
+        "alerta_seguranca": "Backup já foi feito no Passo 1. Se alterou de ideia, ainda há tempo. Após 'rm -rf', dados são irrecuperáveis.",
+        "como_validar": "ls -la /opt/mailcow-dockerized 2>&1 | grep 'cannot access'"
+      },
+      {
+        "numero": 6,
+        "titulo": "Resetar Registros DNS para Email Antigo (Locaweb)",
+        "descricao": "Se voltar a usar Locaweb Email, altere os registros MX do seu domínio para apontar aos servidores da Locaweb.",
+        "comandos": "# No seu registrador de domínio, altere MX para:\n# Priority 10 -> mail.locaweb.com.br\n# (Consulte painel Locaweb para registros corretos)",
+        "como_validar": "dig seu-dominio.com.br MX"
+      }
+    ],
+    "checklist_saude_vps": [
+      "docker ps # Confirma ausência de containers mailcow",
+      "netstat -tlnp | grep -E '(25|110|143|465|587|993|995)' # Confirma portas liberadas",
+      "df -h # Confirma espaço em disco devolvido",
+      "ufw status | grep -E '(25|143|587|993)' # Confirma remoção de regras firewall"
+    ]
+  }
+}
