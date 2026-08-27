@@ -29,6 +29,7 @@ sys.path.insert(0, str(BASE_DIR / "scripts"))
 
 from compilar_compendio_diamante import compilar_dossie_diamante
 from estado_esteira import registrar_lista_horizontal
+from gerar_relatorio_fluxo1 import gerar_relatorio_tripartite
 
 def gerar_markdown_horizontal(dados: dict) -> str:
     """Gera documentação Markdown densa e técnica com 100% das informações."""
@@ -148,27 +149,30 @@ def compilar_lista_horizontal_tripartite(slug_ou_json: str) -> bool:
         dados = json.load(f)
 
     # Diretório soberano de saída
-    out_bundle = BASE_DIR / "output" / "01-listas-horizontais" / f"list-{slug_limpo}"
-    out_bundle.mkdir(parents=True, exist_ok=True)
+    out_bundle  = BASE_DIR / "output" / "01-listas-horizontais" / f"list-{slug_limpo}"
+    out_materiais = out_bundle / "materiais"
+    out_relatorios = out_bundle / "relatorios"
+    out_materiais.mkdir(parents=True, exist_ok=True)
+    out_relatorios.mkdir(parents=True, exist_ok=True)
     nome_base = f"list-{slug_limpo}"
 
     # 1. HTML Interativo Padrão Diamante R5
     print("⚙️ 1/3 Gerando HTML Interativo Padrão Diamante R5...")
     html_content = compilar_dossie_diamante(dados)
-    html_path = out_bundle / f"{nome_base}.html"
+    html_path = out_materiais / f"{nome_base}.html"
     html_path.write_text(html_content, encoding="utf-8")
     print(f"   ✅ HTML gerado: {html_path.name} ({html_path.stat().st_size} bytes)")
 
     # 2. Markdown Denso Estruturado
     print("⚙️ 2/3 Gerando Markdown Denso Estruturado...")
     md_content = gerar_markdown_horizontal(dados)
-    md_path = out_bundle / f"{nome_base}.md"
+    md_path = out_materiais / f"{nome_base}.md"
     md_path.write_text(md_content, encoding="utf-8")
     print(f"   ✅ Markdown gerado: {md_path.name} ({len(md_content.splitlines())} linhas)")
 
     # 3. PDF Executivo de Alta Resolução via Typst
     print("⚙️ 3/3 Compilando PDF Executivo via Typst...")
-    pdf_path = out_bundle / f"{nome_base}.pdf"
+    pdf_path = out_materiais / f"{nome_base}.pdf"
     try:
         res = subprocess.run(
             [
@@ -192,7 +196,11 @@ def compilar_lista_horizontal_tripartite(slug_ou_json: str) -> bool:
     except Exception as e:
         print(f"   ⚠️ Erro ao compilar Typst: {e}")
 
-    # 4. Registro no SQLite (Regra R11)
+    # 4. Relatório de Execução Tripartite (HTML, MD, PDF) em relatorios/
+    print("📊 4/4 Gerando Relatório de Execução Tripartite...")
+    gerar_relatorio_tripartite(slug_limpo, dados, out_materiais, out_relatorios)
+
+    # 5. Registro no SQLite (Regra R11)
     total_ferramentas = len(dados.get("ferramentas", []))
     registrar_lista_horizontal({
         "slug": slug_limpo,
@@ -200,13 +208,14 @@ def compilar_lista_horizontal_tripartite(slug_ou_json: str) -> bool:
         "total_ferramentas": total_ferramentas,
         "gate_r5": "APROVADO",
         "gate_r18": "APROVADO",
-        "caminho_html": f"output/01-listas-horizontais/list-{slug_limpo}/{nome_base}.html",
-        "caminho_md": f"output/01-listas-horizontais/list-{slug_limpo}/{nome_base}.md",
-        "caminho_pdf": f"output/01-listas-horizontais/list-{slug_limpo}/{nome_base}.pdf"
+        "caminho_html": f"output/01-listas-horizontais/list-{slug_limpo}/materiais/{nome_base}.html",
+        "caminho_md": f"output/01-listas-horizontais/list-{slug_limpo}/materiais/{nome_base}.md",
+        "caminho_pdf": f"output/01-listas-horizontais/list-{slug_limpo}/materiais/{nome_base}.pdf"
     })
     print(f"💾 Lista horizontal persistida com sucesso no SQLite (estado_esteira.db - Regra R11)")
     print(f"🏆 COMPILAÇÃO TRIPARTITE CONCLUÍDA: {out_bundle}\n")
     return True
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Compilador Tripartite de Listas Horizontais (Fluxo 1)")

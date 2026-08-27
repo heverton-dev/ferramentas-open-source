@@ -27,7 +27,6 @@ def auditar_conformidade_r5():
     arquivos_out = []
     for p in padroes:
         arquivos_out.extend(glob.glob(f"output/01-listas-horizontais/**/{p}", recursive=True))
-        arquivos_out.extend(glob.glob(f"output/listas-open-source/{p}"))
     todos_arquivos = sorted(list(set(arquivos_out)))
 
     print("=" * 80)
