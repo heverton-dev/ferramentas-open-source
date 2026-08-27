@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Dossiê Vertical · Haraka (Node.js SMTP Gateway & Email Relay Service) · Arsenal Open Source</title>
+<style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    --paper: #F6F4EF;
+    --surface: #FFFFFF;
+    --surface-2: #FBF9F4;
+    --surface-dark: #0A0F1D;
+    --ink: #1B1E23;
+    --ink-2: #383D45;
+    --muted: #666E7A;
+    --rule: #D8D2C4;
+    --rule-soft: #EAE5D9;
+    --accent: #00875A;
+    --accent-dark: #57D9A3;
+    --accent-soft: #E3FCEF;
+    --accent-soft-dark: #162B22;
+    --green: #00875A;
+    --green-soft: #E3FCEF;
+    --gold: #FFAB00;
+    --gold-soft: #FFF0B3;
+    --flag: #DE350B;
+    --flag-soft: #FFEBE6;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0E121B;
+      --surface: #141924;
+      --surface-2: #1A2130;
+      --ink: #E6E8ED;
+      --ink-2: #B0B5C0;
+      --muted: #7E8695;
+      --rule: #262F40;
+      --rule-soft: #1E2533;
+      --accent: var(--accent-dark);
+      --accent-soft: var(--accent-soft-dark);
+      --green: #57D9A3;
+      --green-soft: #162B22;
+      --gold: #FFC400;
+      --gold-soft: #332600;
+      --flag: #FF7452;
+      --flag-soft: #361B15;
+      --shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  /* SCROLLBAR REFINADA (MAX 4PX & COR ACCENT) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--green);
+  }
+
+  body {
+    margin: 0; padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* HEADER & HERO */
+  header { margin-bottom: 32px; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .back-link:hover { color: var(--accent); }
+  .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+
+  .hero { margin: 20px 0 24px; }
+  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 40px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
+  .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
+
+  .hero-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px; margin: 24px 0 32px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 12px 16px; box-shadow: var(--shadow);
+  }
+  .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+
+  /* CAIXA DE ALVO SAAS */
+  .target-box { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--flag); border-radius: 3px; padding: 18px 20px; margin: 24px 0; }
+  .target-tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--flag); }
+  .target-box h4 { font-family: var(--font-serif); font-size: 21px; margin: 6px 0 8px; color: var(--ink); }
+  .target-box p { margin: 0 0 10px; font-size: 14px; color: var(--ink-2); }
+  .target-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .target-pill { font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); font-weight: 600; }
+
+  /* PILARES */
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 24px 0; }
+  .route { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 20px; }
+  .route.red { border-left: 4px solid var(--flag); }
+  .route.green { border-left: 4px solid var(--green); }
+  .route .tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+  .route.red .tag { color: var(--flag); }
+  .route.green .tag { color: var(--green); }
+  .route h4 { font-family: var(--font-serif); font-size: 19px; margin: 6px 0 8px; color: var(--ink); }
+  .route p { margin: 0; font-size: 14px; color: var(--ink-2); }
+
+  /* SEÇÕES */
+  .sec-head { margin: 36px 0 16px; }
+  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
+  h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
+  .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
+
+  /* BUSCA */
+  .search-wrapper { position: relative; margin: 20px 0 24px; }
+  .search-input { width: 100%; padding: 12px 42px 12px 16px; font-family: var(--font-sans); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); outline: none; box-shadow: var(--shadow); }
+  .search-input:focus { border-color: var(--accent); }
+  .search-icon { position: absolute; right: 14px; top: 12px; width: 20px; height: 20px; fill: var(--muted); pointer-events: none; }
+
+  /* TABELA */
+  .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+  th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
+  tr:last-child td { border-bottom: none; }
+  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
+  td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
+  td.tool a:hover { color: var(--accent); }
+  td.classificacao { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+  td.saas { color: var(--flag); }
+  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
+  td.lic { font-family: var(--mono); font-size: 11px; }
+
+  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO */
+  .ledger { display: flex; flex-direction: column; gap: 24px; }
+  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
+  .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+  .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
+  
+  .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+  .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+
+  .class-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent); color: #FFF; font-weight: 700; }
+  .senior-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
+  .senior-badge.green { background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+  .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
+  .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
+  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+  .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
+
+  .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .entry-section p strong { color: var(--ink); font-weight: 600; }
+
+  /* GRIDS CANÔNICAS */
+  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
+  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
+  .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
+  @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
+  .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
+  .infra-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+  .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
+  pre { margin: 0; padding: 10px 48px 10px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; }
+  code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); line-height: 1.45; }
+  .copy-btn { position: absolute; top: 6px; right: 6px; background: var(--surface); border: 1px solid var(--rule); color: var(--muted); border-radius: 2px; padding: 3px 6px; font-family: var(--mono); font-size: 10px; cursor: pointer; transition: all .15s ease; }
+  .copy-btn:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+  .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
+  .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .repo-btn svg { width: 13px; height: 13px; fill: currentColor; }
+
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 2px; }
+  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; transition: transform .12s ease, border-color .12s ease; }
+  .step-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .step-head { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; }
+  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+  .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+  .step-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+
+  /* NOVA SEÇÃO 5: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES) */
+  .complement-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .complement-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 3px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+  .complement-card.mcp { border-left: 3px solid #7C3AED; }
+  .complement-card.skill { border-left: 3px solid #2563EB; }
+  .complement-card.plugin { border-left: 3px solid #059669; }
+  .complement-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+  .comp-tag { font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; letter-spacing: .06em; }
+  .complement-card.mcp .comp-tag { background: #EDE9FE; color: #7C3AED; }
+  .complement-card.skill .comp-tag { background: #DBEAFE; color: #2563EB; }
+  .complement-card.plugin .comp-tag { background: #D1FAE5; color: #059669; }
+  .comp-title { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--ink); }
+  .comp-code { font-family: var(--mono); font-size: 11px; background: var(--surface); border: 1px solid var(--rule-soft); padding: 3px 6px; border-radius: 2px; color: var(--ink-2); word-break: break-all; margin-top: 2px; }
+  .complement-card p { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--ink-2); }
+
+  /* SEÇÃO DESIGN SYSTEM & WHITE-LABEL */
+  .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
+  .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+  .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+  .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+  .ds-badge.esforco-alto { background: #FFEBE6; color: #DE350B; border: 1px solid #FFBDAD; }
+  .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
+  .ds-badge.wl-ready { background: #EAE6FF; color: #403294; border: 1px solid #C0B6F2; }
+
+  .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+  .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+  .ds-card p strong { color: var(--ink); }
+  .ds-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="header-top">
+      <a class="back-link" href="index.html">← Voltar ao Hub Central</a>
+      <span class="camada-pill">Dossiê Vertical · SaaS em Foco</span>
+    </div>
+
+    <div class="hero">
+      <h1>Dossiê Vertical: 5 Alternativas Open Source para Desmantelar Haraka & Email Gateways Proprietários</h1>
+      <p class="deck">Desmantelamento técnico do Haraka (Node.js SMTP Gateway) e plataformas de envio transacional de email (SendGrid, Postmark, AWS SES). Conheça o Quinteto Soberano Open Source: a ferramenta mais robusta, a mais completa, a mais moderna, a mais leve e a mais simples, cobrindo servidores SMTP/MTA de produção, webmails corporativos com PGP, stacks all-in-one containerizados e gateways ultraleves para microserviços.</p>
+    </div>
+
+    <!-- ALVO SAAS EM FOCO -->
+    <div class="target-box">
+      <span class="target-tag">SaaS em Foco sob Desmantelamento</span>
+      <h4>Haraka (Node.js SMTP Gateway & Email Relay Service) (R$ 6.000 a R$ 120.000/ano (cobrança por milhão de emails, taxas de relay SMTP, custos de IP dedicado e add-ons de compliance))</h4>
+      <p><strong>Principais Limitações:</strong> Dependência de plataforma externa para deliverability, falta de controle sobre reputação de IP, custos escalonados com crescimento de volume e ausência de criptografia end-to-end sob custódia do cliente.</p>
+      <div class="target-pills">
+        <span class="target-pill">⚠️ Riscos de Privacidade: Metadados de emails (remetente, destinatário, timestamps), conteúdo de mensagens, eventos de entrega (bounces, opens, clicks) retidos e processados em datacenters de terceiros sujeitos a leis de países estrangeiros.</span>
+        <span class="target-pill">💸 Modelo: Cobrança por Assento / Recorrente</span>
+        <span class="target-pill">🔒 Nuvem Fechada</span>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="num">5 Motores</div>
+        <div class="lbl">Quinteto Soberano</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">Haraka / SendGrid / Postmark / AWS SES / Mailgun</div>
+        <div class="lbl">SaaS Eliminado</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">R$ 72.000/ano (média corporativa de médio porte)</div>
+        <div class="lbl">Economia Estimada/Ano</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">100% OSI</div>
+        <div class="lbl">Conformidade Aberta</div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="route red">
+        <span class="tag">Rota Frágil (Proprietária)</span>
+        <h4>Rota Frágil (Haraka & Email Gateway Proprietário)</h4>
+        <p>Cobrança por evento de email em moeda estrangeira, dependência total de infraestrutura externa, falta de soberania sobre dados de mensagens e risco de suspensão de conta por algoritmos automáticos de compliance.</p>
+      </div>
+      <div class="route green">
+        <span class="tag">Rota Soberana (Quinteto Open Source)</span>
+        <h4>Rota Soberana (Quinteto Open Source & Email Infrastructure)</h4>
+        <p>Servidores SMTP/MTA próprios rodando em VPS dedicada, gestão autônoma de reputação de IP via SPF/DKIM/DMARC, armazenamento irrevogável de emails e controle total de deliverability sem intermediários.</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="sec-head">
+    <span class="sec-num">Parte 1</span>
+    <h2>Matriz Comparativa do Quinteto Soberano</h2>
+    <p class="sec-note">Classificação das 5 ferramentas que igualam ou superam o Haraka (Node.js SMTP Gateway & Email Relay Service) sob 5 perspectivas de engenharia.</p>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Classificação</th>
+          <th>Ferramenta Soberana</th>
+          <th>Substitui</th>
+          <th>Economia</th>
+          <th>Licença</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rank">01</td>
+          <td class="classificacao">A Mais Robusta</td>
+          <td class="tool"><a href="#card-01"><strong>Postfix (The Workhorse SMTP/MTA Server)</strong></a></td>
+          <td class="saas">Haraka / SendGrid / AWS SES (SMTP Relay Service)</td>
+          <td class="econ">R$ 48.000/ano</td>
+          <td class="lic"><span class="lic-badge">EPL-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">02</td>
+          <td class="classificacao">A Mais Completa</td>
+          <td class="tool"><a href="#card-02"><strong>Mailcow: dockerized (Stack Corporativo All-in-One de E-mail)</strong></a></td>
+          <td class="saas">Haraka + SendGrid + Google Workspace (Mail Stack Completo)</td>
+          <td class="econ">R$ 63.000/ano</td>
+          <td class="lic"><span class="lic-badge">GPL-3.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">03</td>
+          <td class="classificacao">A Mais Moderna</td>
+          <td class="tool"><a href="#card-03"><strong>Mox (Secure Modern Email Server in Go)</strong></a></td>
+          <td class="saas">Haraka / Postmark (Modern Cloud Email Service)</td>
+          <td class="econ">R$ 36.000/ano</td>
+          <td class="lic"><span class="lic-badge">MIT</span></td>
+        </tr>
+        <tr>
+          <td class="rank">04</td>
+          <td class="classificacao">A Mais Leve</td>
+          <td class="tool"><a href="#card-04"><strong>Maddy Mail Server (All-in-One Lightweight Email Stack)</strong></a></td>
+          <td class="saas">Haraka (Lightweight Email Gateway)</td>
+          <td class="econ">R$ 18.000/ano</td>
+          <td class="lic"><span class="lic-badge">GPL-3.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">05</td>
+          <td class="classificacao">A Mais Simples</td>
+          <td class="tool"><a href="#card-05"><strong>OpenSMTPD (Simple & Secure SMTP Server from OpenBSD)</strong></a></td>
+          <td class="saas">Haraka (SMTP Gateway Simples)</td>
+          <td class="econ">R$ 12.000/ano</td>
+          <td class="lic"><span class="lic-badge">ISC</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-head" id="fichas">
+    <span class="sec-num">Parte 2</span>
+    <h2>Fichas Técnicas &amp; Extensões Agênticas (MCPs / Skills)</h2>
+    <p class="sec-note">Detalhamento dos 5 pilares com comandos em Docker e ecossistema de Model Context Protocol (MCP) e Agent Skills.</p>
+  </div>
+
+  <div class="search-wrapper">
+    <input class="search-input" id="search-input" onkeyup="filterTools(this.value)" placeholder="Buscar por ferramenta, classificação, MCP server ou comando..." type="text"/>
+    <svg class="search-icon" viewbox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 14z"></path></svg>
+    <div id="search-count" style="margin-top: 6px; font-size: 12px; color: var(--muted); font-family: var(--mono);"></div >
+  </div>
+
+  <div class="ledger">
+      <article class="entry" id="card-01">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Postfix (The Workhorse SMTP/MTA Server)</h3>
+            <span class="class-badge">A Mais Robusta</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Haraka / SendGrid / AWS SES (SMTP Relay Service)</span>
+            <span class="econ-badge">R$ 48.000/ano</span>
+            <span class="lic-badge">EPL-2.0</span>
+            <span class="kind">Enterprise-Grade SMTP Mail Transfer Agent</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Servidor de correio eletrônico (MTA) mais confiável e estável do planeta: aceita mensagens SMTP, roteia para servidores de destino com retry inteligente, gerencia filas persistentes e implementa políticas de antispam nativas.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em C de altíssimo desempenho com arquitetura modular, suporte nativo a SPF/DKIM/DMARC para autenticação, integração com bancos de dados SQL para virtual_mailbox_maps e aliases dinâmicos.</p>
+            <div class="code-box">
+              <pre><code>docker run -d --name postfix -v /etc/postfix:/etc/postfix -v /var/spool/postfix:/var/spool/postfix -p 25:25 -p 587:587 boky/postfix:latest</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Haraka / SendGrid / AWS SES (SMTP Relay Service)</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 48.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">512 MB RAM / 1 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>O padrão ouro indiscutível de servidores SMTP: qualquer empresa pode dispensar SendGrid e rodar seu próprio MTA com total controle de reputação, IP dedicado e zero taxas por email.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/postfix/postfix" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (postfix/postfix)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Configuração do main.cf</div>
+                <p>Configure o arquivo main.cf com hostname (mail.suaempresa.com.br), redes de confiança, suporte a SASL para autenticação SMTP e políticas anti-relay.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Setup de DKIM e SPF</div>
+                <p>Gere chaves DKIM com OpenDKIM, crie registros DNS SPF/DKIM/DMARC para validação de origem e garantir pontuação 10/10 no mail-tester.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Integração com Dovecot ou Mailcow</div>
+                <p>Combine Postfix com servidor IMAP/POP3 para armazenamento completo de emails e acesso via webmail.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-alto">⚡ Baixo</span>
+                <span class="ds-badge stack-ui">Postfixadmin Web / Adminer SQL</span>
+                <span class="ds-badge stack-ui">White-Label Parcial</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Painel Postfixadmin permite gestão visual de domínios, contas e aliases sem edição de arquivos de configuração.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Excelente: codebase estável desde 1998, compatibilidade reversa garantida, releases de segurança mantidas por decades.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card mcp">
+            <div class="complement-head">
+              <span class="comp-tag">Servidor MCP</span>
+              <span class="comp-title">mcp-postfix-monitor</span>
+            </div>
+            <p>Permite que agentes IA monitorem filas SMTP, alertem sobre bounces críticos e analisem logs de rejeição para diagnóstico de entrega.</p>
+            <div class="comp-code"><code>pip install mcp-postfix-monitoring</code></div>
+          </div>
+          <div class="complement-card skill">
+            <div class="complement-head">
+              <span class="comp-tag">Agent Skill</span>
+              <span class="comp-title">postfix-delivery-audit</span>
+            </div>
+            <p>Skill para auditoria automática de taxa de entrega, análise de erros SMTP 550/421 e recomendações de configuração SPF/DKIM.</p>
+            <div class="comp-code"><code>.agents/skills/postfix-delivery-audit</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-02">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Mailcow: dockerized (Stack Corporativo All-in-One de E-mail)</h3>
+            <span class="class-badge">A Mais Completa</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Haraka + SendGrid + Google Workspace (Mail Stack Completo)</span>
+            <span class="econ-badge">R$ 63.000/ano</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">All-in-One Dockerized Mail Suite (SMTP + IMAP + Webmail + Antispam)</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Suíte corporativa completa de correio em contêineres Docker: MTA (Postfix), servidor IMAP/POP3 (Dovecot), filtro antispam com IA (Rspamd), antivírus (ClamAV), webmail (SOGo), gerenciamento de domínios via painel web e sincronização CalDAV/CardDAV.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Orquestração via Docker Compose com MariaDB, Redis para cache/reputação de IP, Let's Encrypt automático para TLS, DKIM por domínio, integração com AD/LDAP para autenticação corporativa.</p>
+            <div class="code-box">
+              <pre><code>git clone https://github.com/mailcow/mailcow-dockerized && cd mailcow-dockerized && ./generate_config.sh && docker compose up -d</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Haraka + SendGrid + Google Workspace (Mail Stack Completo)</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 63.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">4 GB RAM / 2 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>A solução mais completa para empresas que exigem email corporativo autônomo com webmail, calendário, contatos, antispam inteligente e painel administrativo visual — substitui integralmente Google Workspace + Haraka.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/mailcow/mailcow-dockerized" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (mailcow/mailcow-dockerized)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Provisionamento do Stack Docker</div>
+                <p>Clone o repositório, execute generate_config.sh informando seu hostname (mail.suaempresa.com.br) e levante o stack com docker compose up -d.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Configuração de DNS Corporativo</div>
+                <p>Copie os registros DNS gerados no painel do Mailcow (MX, SPF, DKIM, DMARC) para sua zona DNS para garantir entregabilidade 10/10.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Criação de Domínios e Caixas Postais</div>
+                <p>Acesse https://mail.suaempresa.com.br, provisione domínios ilimitados, crie caixas postais com quotas personalizadas e configure regras de filtro Rspamd por usuário.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-minimo">⚡ Mínimo (Plug & Play)</span>
+                <span class="ds-badge stack-ui">PHP + Bootstrap 5 + SOGo Webmail</span>
+                <span class="ds-badge wl-ready">White-Label Nativo</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Interface SOGo e painel Mailcow permitem white-label com substituição de logotipo, tema corporativo CSS e templates de email de boas-vindas.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Script ./update.sh realiza atualização automática preservando volumes de banco e arquivos de email intactos.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card mcp">
+            <div class="complement-head">
+              <span class="comp-tag">Servidor MCP</span>
+              <span class="comp-title">mailcow-mcp-server</span>
+            </div>
+            <p>Servidor MCP para automação de criação de caixas postais, consulta a quarentena de spam, aliases temporários e relatórios de entregabilidade via agentes IA.</p>
+            <div class="comp-code"><code>npx -y @mailcow/mcp-server</code></div>
+          </div>
+          <div class="complement-card skill">
+            <div class="complement-head">
+              <span class="comp-tag">Agent Skill</span>
+              <span class="comp-title">mailcow-provisioning</span>
+            </div>
+            <p>Skill de onboarding automático de novos domínios corporativos, geração de certificados DKIM e sincronização com Active Directory.</p>
+            <div class="comp-code"><code>.agents/skills/mailcow-provisioning</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-03">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Mox (Secure Modern Email Server in Go)</h3>
+            <span class="class-badge">A Mais Moderna</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Haraka / Postmark (Modern Cloud Email Service)</span>
+            <span class="econ-badge">R$ 36.000/ano</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Modern All-in-One Mail Server (SMTP + IMAP + Webmail)</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Servidor de email moderno escrito em Go com filosofia security-first: SMTP/IMAP/Webmail integrados, DKIM/SPF/DMARC nativos, TLS obrigatório, proteção contra phishing, autenticação 2FA e suporte a DANE para certificados DNSSEC.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Binário único compilado em Go com zero dependências, inicialização automática de certificados ACME, interface web para administração e webmail responsivo, suporte a webhooks para integração com microsserviços.</p>
+            <div class="code-box">
+              <pre><code>docker run -d --name mox -v /data:/data -p 25:25 -p 587:587 -p 993:993 -p 80:80 -p 443:443 mjl/mox:latest</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Haraka / Postmark (Modern Cloud Email Service)</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 36.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">1 GB RAM / 1 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>A alternativa moderna ideal para equipes DevOps que querem email enterprise com segurança-primeiro e zero configuração: inicia em 30 segundos, suporta DANE e possui webmail responsivo integrado.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/mjl-/mox" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (mjl-/mox)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Inicialização Automática</div>
+                <p>Execute o binário mox quickstart mail.suaempresa.com.br e ele gera automaticamente configuração, certificados Let's Encrypt e registros DNS necessários.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Setup de DANE (DNSSEC + Certificados)</div>
+                <p>Configure DNSSEC na sua zona DNS e Mox gerará automaticamente registros TLSA para validação de certificados no destino via DANE (RFC 6698).</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Acesso via Webmail ou IMAP</div>
+                <p>Abra https://mail.suaempresa.com.br para webmail responsivo ou configure cliente Thunderbird/Mail com imap.suaempresa.com.br:993.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-minimo">⚡ Mínimo</span>
+                <span class="ds-badge stack-ui">Go HTML Templates / Responsive Webmail</span>
+                <span class="ds-badge stack-ui">White-Label Parcial</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Webmail minimalista com suporte a customização CSS via injeção de estilo e temas light/dark automáticos.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Excelente: binário único, sem dependências, atualizações drop-in sem reinicialização de banco.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card mcp">
+            <div class="complement-head">
+              <span class="comp-tag">Servidor MCP</span>
+              <span class="comp-title">mcp-mox-mail-admin</span>
+            </div>
+            <p>Servidor MCP para gerenciamento automático de contas, dominios e configurações de DKIM via agentes IA.</p>
+            <div class="comp-code"><code>pip install mcp-mox-administration</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-04">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Maddy Mail Server (All-in-One Lightweight Email Stack)</h3>
+            <span class="class-badge">A Mais Leve</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Haraka (Lightweight Email Gateway)</span>
+            <span class="econ-badge">R$ 18.000/ano</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Minimal All-in-One Email Server (SMTP + IMAP + Filters)</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Servidor de email minimalista e elegante escrito em Go: SMTP/IMAP completos, filtros de email via Sieve, gerenciamento de contas em YAML, suporte a múltiplos domínios e integração com LDAP/SQL.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Configuração declarativa em YAML sem necessidade de editar arquivos complexos, suporte a TLS automático, notificações via webhook para integração com Slack/Discord, logs estruturados em JSON.</p>
+            <div class="code-box">
+              <pre><code>docker run -d --name maddy -v /data:/data -p 25:25 -p 587:587 -p 993:993 foxcpp/maddy:latest</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Haraka (Lightweight Email Gateway)</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 18.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">512 MB RAM / 1 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>A solução ideal para startups e equipes pequenas que precisam de email próprio com configuração declarativa simples: leve, elegante e pronto para produção.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/foxcpp/maddy" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (foxcpp/maddy)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Configuração YAML</div>
+                <p>Crie arquivo config.yaml descrevendo domínios, contas e políticas de rejeição em YAML puro sem sintaxe de scripts.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Execução do Binário</div>
+                <p>Levante o servidor com maddy serve config.yaml e acesse a CLI para criar contas de email sob demanda.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Integração com Microsserviços</div>
+                <p>Configure webhooks HTTP para notificar seu sistema quando emails chegam ou bounceam para automação de workflows.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-minimo">⚡ Mínimo</span>
+                <span class="ds-badge stack-ui">CLI-only (Sem Webmail, use Roundcube separadamente)</span>
+                <span class="ds-badge stack-ui">White-Label Parcial</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Configuração pura em YAML, extensível via plugins de Lua para lógica de roteamento customizada.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Excelente: binário único, atualizações drop-in sem downtime.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Plugin</span>
+              <span class="comp-title">maddy-sieve-filters</span>
+            </div>
+            <p>Filtros de email declarativos no padrão Sieve RFC 5228 para regras automáticas de organização e rejeição de spam.</p>
+            <div class="comp-code"><code>Built-in Sieve support</code></div>
+          </div>
+          <div class="complement-card mcp">
+            <div class="complement-head">
+              <span class="comp-tag">Servidor MCP</span>
+              <span class="comp-title">mcp-maddy-webhook-bridge</span>
+            </div>
+            <p>Bridge para transformar webhooks do Maddy em eventos automáticos capturados por agentes IA.</p>
+            <div class="comp-code"><code>pip install mcp-maddy-webhooks</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-05">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>OpenSMTPD (Simple & Secure SMTP Server from OpenBSD)</h3>
+            <span class="class-badge">A Mais Simples</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Haraka (SMTP Gateway Simples)</span>
+            <span class="econ-badge">R$ 12.000/ano</span>
+            <span class="lic-badge">ISC</span>
+            <span class="kind">Minimal & Secure SMTP Server</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Servidor SMTP ultrasimples e seguro por padrão do projeto OpenBSD: configuração em sintaxe limpa, sem funcionalidades desnecessárias, focado apenas em aceitar e rotear emails com máxima segurança e performance.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em C com auditoria de segurança rigorosa, processo isolado em jail (privilege separation), suporte nativo a TLS 1.3 e autenticação SASL, sintaxe de configuração limpa sem 300 opções.</p>
+            <div class="code-box">
+              <pre><code>docker run -d --name opensmtpd -v /etc/opensmtpd:/etc/opensmtpd -p 25:25 -p 587:587 opensmtpd/opensmtpd:latest</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Haraka (SMTP Gateway Simples)</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 12.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">256 MB RAM / 0.5 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>A escolha dos puristas: OpenSMTPD implementa o protocolo SMTP com total foco em segurança e simplicidade, eliminando bloat e superficialidade de configuração.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/OpenSMTPD/OpenSMTPD" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (OpenSMTPD/OpenSMTPD)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Configuração Limpa</div>
+                <p>Edite /etc/opensmtpd/smtpd.conf com sintaxe declarativa: listen, route, relay rules em poucas linhas.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Setup de TLS</div>
+                <p>Configure caminho para certificado privado e pública de Let's Encrypt para suporte a STARTTLS obrigatório.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Teste com SMTP</div>
+                <p>Envie emails de teste com telnet localhost 25 ou use cliente de email configurando SMTP auth e TLS na porta 587.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-minimo">⚡ Mínimo</span>
+                <span class="ds-badge stack-ui">CLI-only / Configuration File</span>
+                <span class="ds-badge stack-ui">White-Label Parcial</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Configuração puramente textual em sintaxe OpenSMTPD sem interfaces web ou dependências externas.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Perfeita: projeto estável, releases em ciclo previsível, compatibilidade reversa garantida.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card mcp">
+            <div class="complement-head">
+              <span class="comp-tag">Servidor MCP</span>
+              <span class="comp-title">mcp-opensmtpd-stats</span>
+            </div>
+            <p>Monitoramento de fila SMTP, análise de logs e alertas de rejeição via agentes IA.</p>
+            <div class="comp-code"><code>pip install mcp-opensmtpd-monitoring</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Script</span>
+              <span class="comp-title">opensmtpd-relay-monitor</span>
+            </div>
+            <p>Script bash que coleta métricas de fila SMTP e envia relatórios diários via curl para seu sistema de monitoramento.</p>
+            <div class="comp-code"><code>scripts/monitor_opensmtpd_queue.sh</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+  </div>
+
+</div>
+
+
+<script>
+function filterTools(query) {
+  const q = query.toLowerCase().trim();
+  const entries = document.querySelectorAll('.entry');
+  const rows = document.querySelectorAll('.tablewrap tbody tr');
+  let visibleCount = 0;
+
+  entries.forEach(entry => {
+    const text = entry.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      entry.style.display = 'grid';
+      visibleCount++;
+    } else {
+      entry.style.display = 'none';
+    }
+  });
+
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  const countEl = document.getElementById('search-count');
+  if (countEl) {
+    countEl.innerText = q ? `${visibleCount} ferramentas encontradas` : '';
+  }
+}
+
+function copyCode(btn) {
+  const code = btn.parentElement.querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const orig = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => btn.innerText = orig, 1500);
+  });
+}
+</script>
+
+</body>
+</html>

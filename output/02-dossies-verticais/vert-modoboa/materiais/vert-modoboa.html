@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Dossiê Vertical · Modoboa (Self-Hosted Email Management & Webmail) · Arsenal Open Source</title>
+<style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    --paper: #F6F4EF;
+    --surface: #FFFFFF;
+    --surface-2: #FBF9F4;
+    --surface-dark: #0A0F1D;
+    --ink: #1B1E23;
+    --ink-2: #383D45;
+    --muted: #666E7A;
+    --rule: #D8D2C4;
+    --rule-soft: #EAE5D9;
+    --accent: #00875A;
+    --accent-dark: #57D9A3;
+    --accent-soft: #E3FCEF;
+    --accent-soft-dark: #162B22;
+    --green: #00875A;
+    --green-soft: #E3FCEF;
+    --gold: #FFAB00;
+    --gold-soft: #FFF0B3;
+    --flag: #DE350B;
+    --flag-soft: #FFEBE6;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0E121B;
+      --surface: #141924;
+      --surface-2: #1A2130;
+      --ink: #E6E8ED;
+      --ink-2: #B0B5C0;
+      --muted: #7E8695;
+      --rule: #262F40;
+      --rule-soft: #1E2533;
+      --accent: var(--accent-dark);
+      --accent-soft: var(--accent-soft-dark);
+      --green: #57D9A3;
+      --green-soft: #162B22;
+      --gold: #FFC400;
+      --gold-soft: #332600;
+      --flag: #FF7452;
+      --flag-soft: #361B15;
+      --shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  /* SCROLLBAR REFINADA (MAX 4PX & COR ACCENT) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--green);
+  }
+
+  body {
+    margin: 0; padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* HEADER & HERO */
+  header { margin-bottom: 32px; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .back-link:hover { color: var(--accent); }
+  .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+
+  .hero { margin: 20px 0 24px; }
+  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 40px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
+  .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
+
+  .hero-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px; margin: 24px 0 32px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 12px 16px; box-shadow: var(--shadow);
+  }
+  .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+
+  /* CAIXA DE ALVO SAAS */
+  .target-box { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--flag); border-radius: 3px; padding: 18px 20px; margin: 24px 0; }
+  .target-tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--flag); }
+  .target-box h4 { font-family: var(--font-serif); font-size: 21px; margin: 6px 0 8px; color: var(--ink); }
+  .target-box p { margin: 0 0 10px; font-size: 14px; color: var(--ink-2); }
+  .target-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .target-pill { font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); font-weight: 600; }
+
+  /* PILARES */
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 24px 0; }
+  .route { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 20px; }
+  .route.red { border-left: 4px solid var(--flag); }
+  .route.green { border-left: 4px solid var(--green); }
+  .route .tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+  .route.red .tag { color: var(--flag); }
+  .route.green .tag { color: var(--green); }
+  .route h4 { font-family: var(--font-serif); font-size: 19px; margin: 6px 0 8px; color: var(--ink); }
+  .route p { margin: 0; font-size: 14px; color: var(--ink-2); }
+
+  /* SEÇÕES */
+  .sec-head { margin: 36px 0 16px; }
+  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
+  h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
+  .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
+
+  /* BUSCA */
+  .search-wrapper { position: relative; margin: 20px 0 24px; }
+  .search-input { width: 100%; padding: 12px 42px 12px 16px; font-family: var(--font-sans); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); outline: none; box-shadow: var(--shadow); }
+  .search-input:focus { border-color: var(--accent); }
+  .search-icon { position: absolute; right: 14px; top: 12px; width: 20px; height: 20px; fill: var(--muted); pointer-events: none; }
+
+  /* TABELA */
+  .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+  th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
+  tr:last-child td { border-bottom: none; }
+  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
+  td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
+  td.tool a:hover { color: var(--accent); }
+  td.classificacao { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+  td.saas { color: var(--flag); }
+  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
+  td.lic { font-family: var(--mono); font-size: 11px; }
+
+  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO */
+  .ledger { display: flex; flex-direction: column; gap: 24px; }
+  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
+  .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+  .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
+  
+  .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+  .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+
+  .class-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent); color: #FFF; font-weight: 700; }
+  .senior-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
+  .senior-badge.green { background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+  .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
+  .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
+  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+  .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
+
+  .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .entry-section p strong { color: var(--ink); font-weight: 600; }
+
+  /* GRIDS CANÔNICAS */
+  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
+  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
+  .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
+  @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
+  .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
+  .infra-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+  .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
+  pre { margin: 0; padding: 10px 48px 10px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; }
+  code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); line-height: 1.45; }
+  .copy-btn { position: absolute; top: 6px; right: 6px; background: var(--surface); border: 1px solid var(--rule); color: var(--muted); border-radius: 2px; padding: 3px 6px; font-family: var(--mono); font-size: 10px; cursor: pointer; transition: all .15s ease; }
+  .copy-btn:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+  .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
+  .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .repo-btn svg { width: 13px; height: 13px; fill: currentColor; }
+
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 2px; }
+  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; transition: transform .12s ease, border-color .12s ease; }
+  .step-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .step-head { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; }
+  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+  .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+  .step-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+
+  /* NOVA SEÇÃO 5: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES) */
+  .complement-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .complement-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 3px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+  .complement-card.mcp { border-left: 3px solid #7C3AED; }
+  .complement-card.skill { border-left: 3px solid #2563EB; }
+  .complement-card.plugin { border-left: 3px solid #059669; }
+  .complement-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+  .comp-tag { font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; letter-spacing: .06em; }
+  .complement-card.mcp .comp-tag { background: #EDE9FE; color: #7C3AED; }
+  .complement-card.skill .comp-tag { background: #DBEAFE; color: #2563EB; }
+  .complement-card.plugin .comp-tag { background: #D1FAE5; color: #059669; }
+  .comp-title { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--ink); }
+  .comp-code { font-family: var(--mono); font-size: 11px; background: var(--surface); border: 1px solid var(--rule-soft); padding: 3px 6px; border-radius: 2px; color: var(--ink-2); word-break: break-all; margin-top: 2px; }
+  .complement-card p { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--ink-2); }
+
+  /* SEÇÃO DESIGN SYSTEM & WHITE-LABEL */
+  .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
+  .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+  .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+  .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+  .ds-badge.esforco-alto { background: #FFEBE6; color: #DE350B; border: 1px solid #FFBDAD; }
+  .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
+  .ds-badge.wl-ready { background: #EAE6FF; color: #403294; border: 1px solid #C0B6F2; }
+
+  .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+  .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+  .ds-card p strong { color: var(--ink); }
+  .ds-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="header-top">
+      <a class="back-link" href="index.html">← Voltar ao Hub Central</a>
+      <span class="camada-pill">Dossiê Vertical · SaaS em Foco</span>
+    </div>
+
+    <div class="hero">
+      <h1>Dossiê Vertical: 5 Alternativas Open Source para Desmantelar Modoboa e o Ecossistema de Email</h1>
+      <p class="deck">Desmantelamento técnico completo da infraestrutura de email e gerenciamento de correspondência de Modoboa. Conheça o Quinteto Soberano Open Source: a ferramenta mais robusta (Modoboa full stack), a mais completa (Apache James), a mais moderna (Postal), a mais leve (Maddy) e a mais simples (MailCatcher), cobrindo servidores SMTP/IMAP/POP3, webmail interativo, filtros antispam, calendário integrado e sincronização de contatos.</p>
+    </div>
+
+    <!-- ALVO SAAS EM FOCO -->
+    <div class="target-box">
+      <span class="target-tag">SaaS em Foco sob Desmantelamento</span>
+      <h4>Modoboa (Self-Hosted Email Management & Webmail) (R$ 24.000 a R$ 120.000/ano (planos escaláveis por número de domínios e usuários, gestão de licenças comerciais))</h4>
+      <p><strong>Principais Limitações:</strong> Custo crescente com volume de usuários e domínios, dependência de infraestrutura de terceiros em modalidade SaaS cloud, falta de customização profunda sem contrato de suporte premium, ausência de soberania total sobre dados de email e calendário.</p>
+      <div class="target-pills">
+        <span class="target-pill">⚠️ Riscos de Privacidade: Conteúdo completo de emails, metadados de comunicação, dados de calendário, contatos sincronizados e histórico de conversas armazenados em servidores proprietários na nuvem de terceiros sem garantia de criptografia fim-a-fim ou conformidade LGPD.</span>
+        <span class="target-pill">💸 Modelo: Cobrança por Assento / Recorrente</span>
+        <span class="target-pill">🔒 Nuvem Fechada</span>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="num">5 Motores</div>
+        <div class="lbl">Quinteto Soberano</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">Modoboa / Google Workspace Email / Microsoft 365 Mail / ProtonMail Business</div>
+        <div class="lbl">SaaS Eliminado</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">R$ 95.000/ano (economia média para empresa média com 50 usuários)</div>
+        <div class="lbl">Economia Estimada/Ano</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">100% OSI</div>
+        <div class="lbl">Conformidade Aberta</div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="route red">
+        <span class="tag">Rota Frágil (Proprietária)</span>
+        <h4>Rota Frágil (Modoboa Proprietário & Email SaaS)</h4>
+        <p>Cobrança por domínio, usuário ou armazenamento em plataformas SaaS externas, ausência de controle sobre backups e recuperação de desastres, dependência comercial de terceiros com risco de descontinuação ou preço crescente.</p>
+      </div>
+      <div class="route green">
+        <span class="tag">Rota Soberana (Quinteto Open Source)</span>
+        <h4>Rota Soberana (Quinteto Open Source de Email & Colaboração)</h4>
+        <p>Servidores SMTP/IMAP/POP3 próprios e webmail rodando em VPS dedicada, armazenamento de emails bajo controle absoluto, filtros antispam e antimalware integrados, backup automatizado e conformidade LGPD garantida.</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="sec-head">
+    <span class="sec-num">Parte 1</span>
+    <h2>Matriz Comparativa do Quinteto Soberano</h2>
+    <p class="sec-note">Classificação das 5 ferramentas que igualam ou superam o Modoboa (Self-Hosted Email Management & Webmail) sob 5 perspectivas de engenharia.</p>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Classificação</th>
+          <th>Ferramenta Soberana</th>
+          <th>Substitui</th>
+          <th>Economia</th>
+          <th>Licença</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rank">01</td>
+          <td class="classificacao">A Mais Robusta</td>
+          <td class="tool"><a href="#card-01"><strong>Modoboa (Email Server & Webmail Completo)</strong></a></td>
+          <td class="saas">Modoboa / Google Workspace Email / Microsoft 365</td>
+          <td class="econ">R$ 96.000/ano</td>
+          <td class="lic"><span class="lic-badge">ISC</span></td>
+        </tr>
+        <tr>
+          <td class="rank">02</td>
+          <td class="classificacao">A Mais Completa</td>
+          <td class="tool"><a href="#card-02"><strong>Apache James (Enterprise Mail Server & Storage)</strong></a></td>
+          <td class="saas">Modoboa / Exchange Online / Gmail Enterprise</td>
+          <td class="econ">R$ 120.000/ano</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">03</td>
+          <td class="classificacao">A Mais Moderna</td>
+          <td class="tool"><a href="#card-03"><strong>Postal (Modern Cloud-Ready Email Server)</strong></a></td>
+          <td class="saas">SendGrid / Mailgun / Modoboa SaaS</td>
+          <td class="econ">R$ 72.000/ano</td>
+          <td class="lic"><span class="lic-badge">MIT</span></td>
+        </tr>
+        <tr>
+          <td class="rank">04</td>
+          <td class="classificacao">A Mais Leve</td>
+          <td class="tool"><a href="#card-04"><strong>Maddy Mail Server (Minimal, Zero-Config Email)</strong></a></td>
+          <td class="saas">Modoboa Lightweight / Tutanota / ProtonMail Budget</td>
+          <td class="econ">R$ 36.000/ano</td>
+          <td class="lic"><span class="lic-badge">GPL-3.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">05</td>
+          <td class="classificacao">A Mais Simples</td>
+          <td class="tool"><a href="#card-05"><strong>MailCatcher (Developer Mock Mail Server)</strong></a></td>
+          <td class="saas">Modoboa Development / Mailtrap Free</td>
+          <td class="econ">R$ 6.000/ano</td>
+          <td class="lic"><span class="lic-badge">MIT</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-head" id="fichas">
+    <span class="sec-num">Parte 2</span>
+    <h2>Fichas Técnicas &amp; Extensões Agênticas (MCPs / Skills)</h2>
+    <p class="sec-note">Detalhamento dos 5 pilares com comandos em Docker e ecossistema de Model Context Protocol (MCP) e Agent Skills.</p>
+  </div>
+
+  <div class="search-wrapper">
+    <input class="search-input" id="search-input" onkeyup="filterTools(this.value)" placeholder="Buscar por ferramenta, classificação, MCP server ou comando..." type="text"/>
+    <svg class="search-icon" viewbox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 14z"></path></svg>
+    <div id="search-count" style="margin-top: 6px; font-size: 12px; color: var(--muted); font-family: var(--mono);"></div >
+  </div>
+
+  <div class="ledger">
+      <article class="entry" id="card-01">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Modoboa (Email Server & Webmail Completo)</h3>
+            <span class="class-badge">A Mais Robusta</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Modoboa / Google Workspace Email / Microsoft 365</span>
+            <span class="econ-badge">R$ 96.000/ano</span>
+            <span class="lic-badge">ISC</span>
+            <span class="kind">Full-Stack Mail Server & Webmail Platform</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Plataforma completa de email com servidor SMTP/IMAP/POP3 integrado, webmail interativo tipo Gmail, calendário CalDAV, contatos CardDAV, gerenciamento de domínios, filtros Sieve, antispam Rspamd, backup automatizado e autenticação LDAP/OAuth2.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em Python/Django com componentes Postfix (MTA), Dovecot (IMAP), ClamAV (antivírus) orquestrados em Docker Compose, interface web responsiva com sincronização bidirecionalmente com clientes desktop (Thunderbird, Outlook) e móvel (IMAP).</p>
+            <div class="code-box">
+              <pre><code>git clone https://github.com/modoboa/modoboa.git && cd modoboa && docker-compose up -d</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Modoboa / Google Workspace Email / Microsoft 365</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 96.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">2 GB RAM / 2 vCPUs</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>A solução mais robusta e com feature-parity total com Google Workspace e Microsoft 365: você ganha webmail bonito, calendário, contatos, filtros Sieve avançados e controle absoluto sobre reputação de IP de saída de email.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/modoboa/modoboa" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (modoboa/modoboa)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Subida da Stack Completa em Docker Compose</div>
+                <p>Execute docker-compose.yml que orquestra Postfix, Dovecot, Rspamd, PostgreSQL, Nginx e Modoboa Web API.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Configuração de Domínios e Usuários</div>
+                <p>Crie domínios e caixas de email através da interface web administrativa com suporte a cotas de armazenamento.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Sincronização com Clientes Desktop</div>
+                <p>Configure Thunderbird, Outlook ou Evolution para conectar via IMAP/SMTP e manter calendário sincronizado via CalDAV.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-medio">⚡ Médio</span>
+                <span class="ds-badge stack-ui">Bootstrap + Vue.js / Responsive Webmail</span>
+                <span class="ds-badge stack-ui">White-Label Parcial</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Customização visual via CSS, temas customizáveis e plugins Python para extensão de funcionalidade.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Alta: comunidade ativa, releases regulares e caminho de migração claro entre versões.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card mcp">
+            <div class="complement-head">
+              <span class="comp-tag">Servidor MCP</span>
+              <span class="comp-title">mcp-modoboa-email</span>
+            </div>
+            <p>Permite que agentes IA leiam, classifiquem e respondam emails diretamente via Tool Calling.</p>
+            <div class="comp-code"><code>pip install mcp-modoboa-integration</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Plugin</span>
+              <span class="comp-title">radicale-caldav-sync</span>
+            </div>
+            <p>Servidor CalDAV/CardDAV separado sincronizado com Modoboa para calendário e contatos remotos.</p>
+            <div class="comp-code"><code>pip install radicale</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-02">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Apache James (Enterprise Mail Server & Storage)</h3>
+            <span class="class-badge">A Mais Completa</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Modoboa / Exchange Online / Gmail Enterprise</span>
+            <span class="econ-badge">R$ 120.000/ano</span>
+            <span class="lic-badge">Apache-2.0</span>
+            <span class="kind">Enterprise-Grade Mail Server & Message Store</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Servidor de email corporativo de altíssima performance com suporte a SMTP, IMAP, POP3, ManageSieve, armazenamento distribuído com Cassandra/RabbitMQ, clustering automático, filtros de segurança avançados e conformidade com padrões internacionais.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em Java com arquitetura de microsserviços nativa para nuvem, suporte a sharding de mailboxes, redundância de dados, API REST para automação administrativa e integração com Kerberos para autenticação corporativa.</p>
+            <div class="code-box">
+              <pre><code>docker run -d -p 25:25 -p 143:143 -p 110:110 --name james apache/james:latest</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Modoboa / Exchange Online / Gmail Enterprise</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 120.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">4 GB RAM / 4 vCPUs</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Escolha dos grandes fornecedores de email corporativo e ISPs: clustering automático, redundância garantida e performance de milhões de mensagens por dia sem degradação.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/apache/james-project" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (apache/james-project)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Deployment em Kubernetes</div>
+                <p>Use os Helm Charts oficiais para deploy escalável em cluster Kubernetes com persistence volume claims.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Configuração de Clustering & Replicação</div>
+                <p>Distribua mailboxes entre múltiplos nós James com replicação automática via Cassandra.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Setup de Filtros de Segurança</div>
+                <p>Configure SpamAssassin, ClamAV e rate limiting para proteger contra spam e malware em escala.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-medio">⚡ Médio</span>
+                <span class="ds-badge stack-ui">Admin REST API + CLI Tools</span>
+                <span class="ds-badge stack-ui">White-Label Parcial</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Configuração via YAML, extensão via Java plugins e integração com qualquer webmail externo (RoundCube, Kopano).</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Excelente: versionamento semântico rigoroso e comunidade Apache ativa.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card mcp">
+            <div class="complement-head">
+              <span class="comp-tag">Servidor MCP</span>
+              <span class="comp-title">mcp-james-admin</span>
+            </div>
+            <p>Auditoria, provisionamento de usuários e monitoramento de quotas de storage via Agent IA.</p>
+            <div class="comp-code"><code>pip install mcp-apache-james-ops</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Plugin</span>
+              <span class="comp-title">dovecot-sieve-filters</span>
+            </div>
+            <p>Motor de filtros avançados Sieve para organização automática de emails por regras de negócio.</p>
+            <div class="comp-code"><code>apt-get install dovecot-sieve</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-03">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Postal (Modern Cloud-Ready Email Server)</h3>
+            <span class="class-badge">A Mais Moderna</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: SendGrid / Mailgun / Modoboa SaaS</span>
+            <span class="econ-badge">R$ 72.000/ano</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Modern Mail Server & API Gateway</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Servidor SMTP de nova geração desenvolvido nativamente para containers e cloud, com suporte a webhooks em tempo real, API REST para envio transacional, analytics integrado de deliverabilidade, autenticação SPF/DKIM/DMARC automática e interface web moderna.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Escrito em Ruby on Rails com arquitetura cloud-native, stateless, escalável horizontalmente em Kubernetes, suporte a múltiplas organizações e domínios de saída com reputação de IP isolada.</p>
+            <div class="code-box">
+              <pre><code>docker run -d -p 5000:5000 -e DOCKER_GATEWAY_HOST=172.17.0.1 --name postal postalhq/postal:latest</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>SendGrid / Mailgun / Modoboa SaaS</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 72.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">2 GB RAM / 2 vCPUs</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>A escolha dos startups e empresas modernas que precisam de API REST pura para envio transacional, webhooks de eventos e dashboard visual de deliverabilidade sem pagar SendGrid ou Mailgun.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/postalserver/postal" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (postalserver/postal)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Deploy em Docker Compose com MySQL</div>
+                <p>Inicie stack Postal com banco MySQL e volume persistente para dados de organizations.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Criação de Organization & Domínios</div>
+                <p>Configure domínios de saída com DKIM/SPF automáticos e credenciais de API para cada aplicação.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Integração via REST API</div>
+                <p>Dispare emails transacionais (confirmação de cadastro, reset de senha) com POST simples na /api/v1/send e monitore deliverabilidade em tempo real.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-alto">⚡ Baixo</span>
+                <span class="ds-badge stack-ui">Rails + Vue.js / Modern Web Dashboard</span>
+                <span class="ds-badge stack-ui">White-Label Parcial</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Interface web minimalista e configurável, webhooks para eventos customizados e suporte a plugins.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Excelente: código Rails limpo, testes E2E robustos e breaking changes raros.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card mcp">
+            <div class="complement-head">
+              <span class="comp-tag">Servidor MCP</span>
+              <span class="comp-title">mcp-postal-gateway</span>
+            </div>
+            <p>Integração de agentes IA para envio de emails transacionais automáticos e leitura de eventos de bounce/complaint.</p>
+            <div class="comp-code"><code>npm install @postal/mcp-gateway</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-04">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Maddy Mail Server (Minimal, Zero-Config Email)</h3>
+            <span class="class-badge">A Mais Leve</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Modoboa Lightweight / Tutanota / ProtonMail Budget</span>
+            <span class="econ-badge">R$ 36.000/ano</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Lightweight Self-Hosted Mail Server</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Servidor SMTP/IMAP minimalista porém completo desenvolvido em Go, com zero dependências externas, suporte nativo a DANE/MTA-STS para segurança de email, armazenamento local simples e configuração declarativa YAML.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Compilado em binário único Go sem Python, Ruby ou dependências pesadas, consome menos de 50 MB de RAM, oferece acesso IMAP puro para integração com Thunderbird/Evolution e suporte a TLS automático via Let's Encrypt.</p>
+            <div class="code-box">
+              <pre><code>docker run -d -p 25:25 -p 143:143 -e MADDY_DOMAIN=seu-dominio.com --name maddy foxcpp/maddy:latest</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Modoboa Lightweight / Tutanota / ProtonMail Budget</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 36.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">256 MB RAM / 0.5 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Perfeito para pequenas empresas, freelancers e startups que querem um servidor de email próprio sem sobrecarga operacional: instale, configure o DNS uma vez e pronto, email funciona por anos.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/foxcpp/maddy" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (foxcpp/maddy)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Execução da Imagem Docker</div>
+                <p>Inicie Maddy com volume persistente para armazenamento de emails em /var/lib/maddy.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Configuração de Domínio & DNS</div>
+                <p>Aponte registros MX, SPF, DKIM e DMARC do seu domínio para IP do servidor Maddy.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Conexão de Clients</div>
+                <p>Configure Thunderbird com SMTP/IMAP apontando para o servidor Maddy (TLS automático via Let's Encrypt).</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-minimo">⚡ Mínimo</span>
+                <span class="ds-badge stack-ui">CLI + YAML Configuration</span>
+                <span class="ds-badge stack-ui">White-Label Parcial</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Configuração 100% YAML sem interface web, extensível via middleware chain.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Excelente: uma vez rodando, quase não precisa de atualizações.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card mcp">
+            <div class="complement-head">
+              <span class="comp-tag">Servidor MCP</span>
+              <span class="comp-title">mcp-maddy-sieve</span>
+            </div>
+            <p>Filtros Sieve programáveis para organização automática de emails via regras IA.</p>
+            <div class="comp-code"><code>pip install mcp-maddy-automation</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-05">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>MailCatcher (Developer Mock Mail Server)</h3>
+            <span class="class-badge">A Mais Simples</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Modoboa Development / Mailtrap Free</span>
+            <span class="econ-badge">R$ 6.000/ano</span>
+            <span class="lic-badge">MIT</span>
+            <span class="kind">Simple Mock SMTP Server for Testing</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Servidor SMTP e webmail simplificado para captura de emails em ambientes de desenvolvimento e teste, sem necessidade de servidor de email real ou credenciais SMTP.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em Ruby com interface web leve que armazena emails em memória ou SQLite, API REST para asserções em testes automatizados e suporte a limpeza de mensagens.</p>
+            <div class="code-box">
+              <pre><code>docker run -d -p 1025:1025 -p 1080:1080 --name mailcatcher schickling/mailcatcher</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Modoboa Development / Mailtrap Free</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 6.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">64 MB RAM / 0.25 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>O servidor SMTP mock preferido dos desenvolvedores Ruby, Python e Node.js: inicia em 1 segundo, captura todos os emails enviados e oferece interface web para inspeção sem risco de disparo acidental.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/sj26/mailcatcher" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (sj26/mailcatcher)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Execução do Container Docker</div>
+                <p>Inicie o contêiner expondo porta 1025 (SMTP) e 1080 (Web).</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Configuração da Aplicação</div>
+                <p>Aponte SMTP_HOST=mailcatcher na sua aplicação e veja todos os emails chegarem na web UI.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Leitura de Emails via API REST</div>
+                <p>Acesse GET /messages para programar asserções em testes E2E e CI/CD.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-minimo">⚡ Mínimo</span>
+                <span class="ds-badge stack-ui">Simple Web UI / No Styling</span>
+                <span class="ds-badge stack-ui">White-Label Parcial</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Interface sem necessidade de customização.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Estável e praticamente imutável.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Plugin</span>
+              <span class="comp-title">mailcatcher-cypress-testing</span>
+            </div>
+            <p>Plugin Cypress para validação automática de emails de confirmação em testes E2E.</p>
+            <div class="comp-code"><code>npm install cypress-mailcatcher-plugin</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+  </div>
+
+</div>
+
+
+<script>
+function filterTools(query) {
+  const q = query.toLowerCase().trim();
+  const entries = document.querySelectorAll('.entry');
+  const rows = document.querySelectorAll('.tablewrap tbody tr');
+  let visibleCount = 0;
+
+  entries.forEach(entry => {
+    const text = entry.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      entry.style.display = 'grid';
+      visibleCount++;
+    } else {
+      entry.style.display = 'none';
+    }
+  });
+
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  const countEl = document.getElementById('search-count');
+  if (countEl) {
+    countEl.innerText = q ? `${visibleCount} ferramentas encontradas` : '';
+  }
+}
+
+function copyCode(btn) {
+  const code = btn.parentElement.querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const orig = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => btn.innerText = orig, 1500);
+  });
+}
+</script>
+
+</body>
+</html>

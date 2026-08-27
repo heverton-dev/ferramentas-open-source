@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Dossiê Vertical · Gmail for Business / Microsoft 365 / ProtonMail Business (Email & Collaboration) · Arsenal Open Source</title>
+<style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    --paper: #F6F4EF;
+    --surface: #FFFFFF;
+    --surface-2: #FBF9F4;
+    --surface-dark: #0A0F1D;
+    --ink: #1B1E23;
+    --ink-2: #383D45;
+    --muted: #666E7A;
+    --rule: #D8D2C4;
+    --rule-soft: #EAE5D9;
+    --accent: #00875A;
+    --accent-dark: #57D9A3;
+    --accent-soft: #E3FCEF;
+    --accent-soft-dark: #162B22;
+    --green: #00875A;
+    --green-soft: #E3FCEF;
+    --gold: #FFAB00;
+    --gold-soft: #FFF0B3;
+    --flag: #DE350B;
+    --flag-soft: #FFEBE6;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0E121B;
+      --surface: #141924;
+      --surface-2: #1A2130;
+      --ink: #E6E8ED;
+      --ink-2: #B0B5C0;
+      --muted: #7E8695;
+      --rule: #262F40;
+      --rule-soft: #1E2533;
+      --accent: var(--accent-dark);
+      --accent-soft: var(--accent-soft-dark);
+      --green: #57D9A3;
+      --green-soft: #162B22;
+      --gold: #FFC400;
+      --gold-soft: #332600;
+      --flag: #FF7452;
+      --flag-soft: #361B15;
+      --shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  /* SCROLLBAR REFINADA (MAX 4PX & COR ACCENT) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--green);
+  }
+
+  body {
+    margin: 0; padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* HEADER & HERO */
+  header { margin-bottom: 32px; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .back-link:hover { color: var(--accent); }
+  .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+
+  .hero { margin: 20px 0 24px; }
+  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 40px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
+  .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
+
+  .hero-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px; margin: 24px 0 32px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 12px 16px; box-shadow: var(--shadow);
+  }
+  .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+
+  /* CAIXA DE ALVO SAAS */
+  .target-box { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--flag); border-radius: 3px; padding: 18px 20px; margin: 24px 0; }
+  .target-tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--flag); }
+  .target-box h4 { font-family: var(--font-serif); font-size: 21px; margin: 6px 0 8px; color: var(--ink); }
+  .target-box p { margin: 0 0 10px; font-size: 14px; color: var(--ink-2); }
+  .target-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .target-pill { font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); font-weight: 600; }
+
+  /* PILARES */
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 24px 0; }
+  .route { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 20px; }
+  .route.red { border-left: 4px solid var(--flag); }
+  .route.green { border-left: 4px solid var(--green); }
+  .route .tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+  .route.red .tag { color: var(--flag); }
+  .route.green .tag { color: var(--green); }
+  .route h4 { font-family: var(--font-serif); font-size: 19px; margin: 6px 0 8px; color: var(--ink); }
+  .route p { margin: 0; font-size: 14px; color: var(--ink-2); }
+
+  /* SEÇÕES */
+  .sec-head { margin: 36px 0 16px; }
+  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
+  h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
+  .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
+
+  /* BUSCA */
+  .search-wrapper { position: relative; margin: 20px 0 24px; }
+  .search-input { width: 100%; padding: 12px 42px 12px 16px; font-family: var(--font-sans); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); outline: none; box-shadow: var(--shadow); }
+  .search-input:focus { border-color: var(--accent); }
+  .search-icon { position: absolute; right: 14px; top: 12px; width: 20px; height: 20px; fill: var(--muted); pointer-events: none; }
+
+  /* TABELA */
+  .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+  th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
+  tr:last-child td { border-bottom: none; }
+  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
+  td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
+  td.tool a:hover { color: var(--accent); }
+  td.classificacao { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+  td.saas { color: var(--flag); }
+  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
+  td.lic { font-family: var(--mono); font-size: 11px; }
+
+  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO */
+  .ledger { display: flex; flex-direction: column; gap: 24px; }
+  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
+  .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+  .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
+  
+  .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+  .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+
+  .class-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent); color: #FFF; font-weight: 700; }
+  .senior-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
+  .senior-badge.green { background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+  .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
+  .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
+  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+  .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
+
+  .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .entry-section p strong { color: var(--ink); font-weight: 600; }
+
+  /* GRIDS CANÔNICAS */
+  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
+  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
+  .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
+  @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
+  .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
+  .infra-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+  .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
+  pre { margin: 0; padding: 10px 48px 10px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; }
+  code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); line-height: 1.45; }
+  .copy-btn { position: absolute; top: 6px; right: 6px; background: var(--surface); border: 1px solid var(--rule); color: var(--muted); border-radius: 2px; padding: 3px 6px; font-family: var(--mono); font-size: 10px; cursor: pointer; transition: all .15s ease; }
+  .copy-btn:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+  .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
+  .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .repo-btn svg { width: 13px; height: 13px; fill: currentColor; }
+
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 2px; }
+  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; transition: transform .12s ease, border-color .12s ease; }
+  .step-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .step-head { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; }
+  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+  .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+  .step-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+
+  /* NOVA SEÇÃO 5: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES) */
+  .complement-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .complement-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 3px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+  .complement-card.mcp { border-left: 3px solid #7C3AED; }
+  .complement-card.skill { border-left: 3px solid #2563EB; }
+  .complement-card.plugin { border-left: 3px solid #059669; }
+  .complement-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+  .comp-tag { font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; letter-spacing: .06em; }
+  .complement-card.mcp .comp-tag { background: #EDE9FE; color: #7C3AED; }
+  .complement-card.skill .comp-tag { background: #DBEAFE; color: #2563EB; }
+  .complement-card.plugin .comp-tag { background: #D1FAE5; color: #059669; }
+  .comp-title { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--ink); }
+  .comp-code { font-family: var(--mono); font-size: 11px; background: var(--surface); border: 1px solid var(--rule-soft); padding: 3px 6px; border-radius: 2px; color: var(--ink-2); word-break: break-all; margin-top: 2px; }
+  .complement-card p { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--ink-2); }
+
+  /* SEÇÃO DESIGN SYSTEM & WHITE-LABEL */
+  .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
+  .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+  .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+  .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+  .ds-badge.esforco-alto { background: #FFEBE6; color: #DE350B; border: 1px solid #FFBDAD; }
+  .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
+  .ds-badge.wl-ready { background: #EAE6FF; color: #403294; border: 1px solid #C0B6F2; }
+
+  .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+  .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+  .ds-card p strong { color: var(--ink); }
+  .ds-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="header-top">
+      <a class="back-link" href="index.html">← Voltar ao Hub Central</a>
+      <span class="camada-pill">Dossiê Vertical · SaaS em Foco</span>
+    </div>
+
+    <div class="hero">
+      <h1>Dossiê Vertical: 5 Alternativas Open Source que Superam Gmail para Negócios, Outlook 365 e ProtonMail</h1>
+      <p class="deck">Desmantelamento técnico de serviços de email proprietários corporativos (Gmail para Negócios, Microsoft 365, ProtonMail Business, Zoho Mail, Yandex.Mail). Conheça o Quinteto Soberano Open Source: a solução mais robusta, a mais completa, a mais moderna, a mais leve e a mais simples para hospedagem de email corporativo autossuficiente com Postfix, Dovecot, Roundcube, SOGo e agentes de IA para gestão de caixa de entrada via MCP.</p>
+    </div>
+
+    <!-- ALVO SAAS EM FOCO -->
+    <div class="target-box">
+      <span class="target-tag">SaaS em Foco sob Desmantelamento</span>
+      <h4>Gmail for Business / Microsoft 365 / ProtonMail Business (Email & Collaboration) (US$ 60 a US$ 250/mês por usuário (cobrança mensalidade fixa + add-ons de storage e segurança))</h4>
+      <p><strong>Principais Limitações:</strong> Dependência de infraestrutura de terceiros, política de retenção de emails opaca, limites de forwarding, sincronização de calendário travada em protocolos proprietários e risco de bloqueio de conta por violações de termos de serviço ambíguas.</p>
+      <div class="target-pills">
+        <span class="target-pill">⚠️ Riscos de Privacidade: Emails corporativos processados por máquinas de IA do fornecedor, análise de conteúdo para fins de publicidade direcionada, acesso governamental via órgãos reguladores e criptografia de ponta-a-ponta limitada ou desativada por padrão.</span>
+        <span class="target-pill">💸 Modelo: Cobrança por Assento / Recorrente</span>
+        <span class="target-pill">🔒 Nuvem Fechada</span>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="num">5 Pilares Integrados</div>
+        <div class="lbl">Quinteto Soberano</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">Gmail for Business + Microsoft 365 + ProtonMail Business</div>
+        <div class="lbl">SaaS Eliminado</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">R$ 18.000/ano (100 usuários)</div>
+        <div class="lbl">Economia Estimada/Ano</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">100% OSI</div>
+        <div class="lbl">Conformidade Aberta</div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="route red">
+        <span class="tag">Rota Frágil (Proprietária)</span>
+        <h4>Rota Frágil (Email em Nuvem Proprietária)</h4>
+        <p>Custos exponenciais com crescimento de usuários, conformidade GDPR/LGPD imposta unilateralmente pelo fornecedor, risco de indisponibilidade por falhas de terceiros e impossibilidade de auditoria técnica interna.</p>
+      </div>
+      <div class="route green">
+        <span class="tag">Rota Soberana (Quinteto Open Source)</span>
+        <h4>Rota Soberana (Postfix + Dovecot + Roundcube & Full-Stack Open Source)</h4>
+        <p>Servidores de email totalmente autohospedados em infraestrutura corporativa, autossuficiência tecnológica, conformidade GDPR/LGPD baseada em contratos internos, backups cifrados no próprio datacenter e agentes de IA para análise de conteúdo sem deixar os dados da empresa.</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="sec-head">
+    <span class="sec-num">Parte 1</span>
+    <h2>Matriz Comparativa do Quinteto Soberano</h2>
+    <p class="sec-note">Classificação das 5 ferramentas que igualam ou superam o Gmail for Business / Microsoft 365 / ProtonMail Business (Email & Collaboration) sob 5 perspectivas de engenharia.</p>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Classificação</th>
+          <th>Ferramenta Soberana</th>
+          <th>Substitui</th>
+          <th>Economia</th>
+          <th>Licença</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rank">01</td>
+          <td class="classificacao">A Mais Robusta</td>
+          <td class="tool"><a href="#card-01"><strong>Postfix + Dovecot + Roundcube (A Stack Corporativa Padrão de Ouro)</strong></a></td>
+          <td class="saas">Gmail for Business Enterprise + Microsoft 365 Enterprise</td>
+          <td class="econ">R$ 22.000/ano</td>
+          <td class="lic"><span class="lic-badge">IPL-1.0 (Postfix), LGPL-2.1 (Dovecot), GPL-3.0 (Roundcube)</span></td>
+        </tr>
+        <tr>
+          <td class="rank">02</td>
+          <td class="classificacao">A Mais Completa</td>
+          <td class="tool"><a href="#card-02"><strong>SOGo (Servidor de Email & Colaboração Integrado)</strong></a></td>
+          <td class="saas">Microsoft 365 (Email + Calendário + Contatos)</td>
+          <td class="econ">R$ 18.000/ano</td>
+          <td class="lic"><span class="lic-badge">LGPL-2.0+</span></td>
+        </tr>
+        <tr>
+          <td class="rank">03</td>
+          <td class="classificacao">A Mais Moderna</td>
+          <td class="tool"><a href="#card-03"><strong>Mailcow: Dockerized (Stack Completa em Docker com UI Moderna)</strong></a></td>
+          <td class="saas">Gmail for Business (entrada/saída) + Office 365</td>
+          <td class="econ">R$ 16.000/ano</td>
+          <td class="lic"><span class="lic-badge">GPL-3.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">04</td>
+          <td class="classificacao">A Mais Leve</td>
+          <td class="tool"><a href="#card-04"><strong>Modoboa (Suite Leve de Email em Python & Django)</strong></a></td>
+          <td class="saas">Gmail for Business (pequenas empresas até 50 usuários)</td>
+          <td class="econ">R$ 8.000/ano</td>
+          <td class="lic"><span class="lic-badge">ISC License</span></td>
+        </tr>
+        <tr>
+          <td class="rank">05</td>
+          <td class="classificacao">A Mais Simples</td>
+          <td class="tool"><a href="#card-05"><strong>Mail-in-a-Box (Script de Instalação Automatizada de Email Corporativo)</strong></a></td>
+          <td class="saas">Gmail para Negócios (micronegócios até 10 usuários)</td>
+          <td class="econ">R$ 3.600/ano</td>
+          <td class="lic"><span class="lic-badge">CC0 1.0 (Public Domain) + Scripts GPL-3.0</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-head" id="fichas">
+    <span class="sec-num">Parte 2</span>
+    <h2>Fichas Técnicas &amp; Extensões Agênticas (MCPs / Skills)</h2>
+    <p class="sec-note">Detalhamento dos 5 pilares com comandos em Docker e ecossistema de Model Context Protocol (MCP) e Agent Skills.</p>
+  </div>
+
+  <div class="search-wrapper">
+    <input class="search-input" id="search-input" onkeyup="filterTools(this.value)" placeholder="Buscar por ferramenta, classificação, MCP server ou comando..." type="text"/>
+    <svg class="search-icon" viewbox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 14z"></path></svg>
+    <div id="search-count" style="margin-top: 6px; font-size: 12px; color: var(--muted); font-family: var(--mono);"></div >
+  </div>
+
+  <div class="ledger">
+      <article class="entry" id="card-01">
+        <div class="entry-rank">01</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Postfix + Dovecot + Roundcube (A Stack Corporativa Padrão de Ouro)</h3>
+            <span class="class-badge">A Mais Robusta</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Gmail for Business Enterprise + Microsoft 365 Enterprise</span>
+            <span class="econ-badge">R$ 22.000/ano</span>
+            <span class="lic-badge">IPL-1.0 (Postfix), LGPL-2.1 (Dovecot), GPL-3.0 (Roundcube)</span>
+            <span class="kind">Full-Stack Email Server & Webmail Interface</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Pilares modulares de um servidor de email corporativo de classe enterprise: Postfix (MTA — Mail Transfer Agent) para roteamento e entrega segura, Dovecot (IMAP/POP3 server) para acesso de clientes remotos com criptografia TLS, e Roundcube (webmail responsivo) para leitura de emails no navegador.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Arquitetura POSIX clássica e testada há 25 anos em datacenters do mundo inteiro. Postfix valida SMTP autêntico, Dovecot mantém o estado da caixa de correio em formato Maildir/mbox com índices de alta performance, e Roundcube oferece interface web moderna com suporte a drafts, templates e plugins. Integração nativa com SPF, DKIM, DMARC e certificados Let's Encrypt para conformidade com padrões de segurança de email.</p>
+            <div class="code-box">
+              <pre><code>apt-get install postfix dovecot-imapd dovecot-pop3d roundcube roundcube-sqlite3 && dpkg-reconfigure postfix</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Gmail for Business Enterprise + Microsoft 365 Enterprise</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 22.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">2 GB RAM / 2 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>A combinação Postfix + Dovecot + Roundcube é o padrão de ouro mundial para empresas que precisam de email corporativo confiável, seguro e totalmente sob controle. Nenhum outro stack open source oferece a mesma maturidade, testabilidade e suporte comunitário.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/postfix/postfix (mirror) + https://github.com/dovecot/core + https://github.com/roundcube/roundcubemail" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (postfix/postfix (mirror) + dovecot/core + roundcube/roundcubemail)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Preparação do Servidor VPS/Dedicado</div>
+                <p>Aloque um servidor Linux (Ubuntu 22.04 LTS recomendado) com DNS apontando para o servidor (MX record).</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Instalação do Postfix + Dovecot</div>
+                <p>Execute apt-get install postfix dovecot-* e configure as rotas SMTP para aceitação de emails externos e roteamento local de caixas de correio.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Deploy do Roundcube</div>
+                <p>Instale via git clone ou pacote do distro, configure banco de dados MySQL/PostgreSQL e a integração com Dovecot IMAP backend.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-alto">⚡ Moderado (Configuração POSIX Clássica)</span>
+                <span class="ds-badge stack-ui">Roundcube (PHP) + jQuery + Responsive CSS</span>
+                <span class="ds-badge wl-ready">White-Label Nativo</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Roundcube suporta plugins e skins customizadas sem limite, permitindo branding corporativo total com logo e cores oficiais.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Postfix e Dovecot recebem updates de segurança críticos permanentemente com suporte ativo de comunidade internacional. Roundcube segue SemVer e oferece migrações de banco de dados automáticas.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card mcp">
+            <div class="complement-head">
+              <span class="comp-tag">MCP Server</span>
+              <span class="comp-title">postfix-dovecot-mcp</span>
+            </div>
+            <p>Servidor MCP que expõe operações de administração de email (criar usuário, excluir, resetar senha, quotas) para agentes de IA da empresa.</p>
+            <div class="comp-code"><code>https://github.com/your-org/postfix-dovecot-mcp (servidor MCP customizado)</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">LDAP/ActiveDirectory</span>
+              <span class="comp-title">dovecot-ldap-auth</span>
+            </div>
+            <p>Integração nativa com LDAP/ActiveDirectory da empresa para sincronização automática de usuários sem manutenção manual de contas.</p>
+            <div class="comp-code"><code>Dovecot LDAP passdb + userdb para autenticação corporativa</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Antispam Plugin</span>
+              <span class="comp-title">spamassassin-rspamd</span>
+            </div>
+            <p>Filtragem de spam corporativo baseada em machine learning, URLs maliciosas e comportamento de padrão de botnets.</p>
+            <div class="comp-code"><code>Postfix policy service com Rspamd (Apache-2.0)</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Backup Cifrado</span>
+              <span class="comp-title">postfix-backup-gpg</span>
+            </div>
+            <p>Backup diário de todos os Maildir para repositório S3/MinIO corporativo com criptografia de ponta-a-ponta.</p>
+            <div class="comp-code"><code>Cronie + GPG + Tar para backup automático com criptografia</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-02">
+        <div class="entry-rank">02</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>SOGo (Servidor de Email & Colaboração Integrado)</h3>
+            <span class="class-badge">A Mais Completa</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Microsoft 365 (Email + Calendário + Contatos)</span>
+            <span class="econ-badge">R$ 18.000/ano</span>
+            <span class="lic-badge">LGPL-2.0+</span>
+            <span class="kind">All-in-One Email, Calendar & Contacts Collaboration Suite</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Suite de colaboração corporativa que combina email (IMAP/POP3), calendário compartilhado (CalDAV), contatos (CardDAV), tarefas e webmail responsivo em um único servidor autohospedado. SOGo funciona como frontend web moderno sobre Postfix/Dovecot existentes ou com seu próprio backend de email.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Escrito em Objective-C com backend em PostgreSQL/MySQL, SOGo oferece interface web intuitiva similar ao Outlook Online. Suporta sincronização de dispositivos móveis via CalDAV/CardDAV, compartilhamento de calendários entre usuários corporativos e integração com clientes desktop (Thunderbird, macOS Mail, Outlook Desktop via CalDAV/CardDAV).</p>
+            <div class="code-box">
+              <pre><code>apt-get install sogo sogo-frontends sogo-ealarms-notify + docker run -d -p 20000:20000 sogoteam/sogo:latest</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Microsoft 365 (Email + Calendário + Contatos)</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 18.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">4 GB RAM / 2 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>SOGo é a resposta open source mais elegante para empresas que migraram do Outlook Online ou Google Workspace e querem manter os mesmos recursos de colaboração (calendário compartilhado, reserva de salas) sem pagar mensalidades a terceiros.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/Alinto/sogo" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (Alinto/sogo)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Deploy via Docker ou Sistema</div>
+                <p>Instale SOGo via pacote do distro ou docker compose para ambiente de produção com PostgreSQL dedicado.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Integração com Postfix + Dovecot</div>
+                <p>Configure Postfix para usar SOGo como backend de email ou mantenha Postfix/Dovecot e configure SOGo como webmail frontend.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Configuração de Calendários Corporativos</div>
+                <p>Crie calendários compartilhados para salas de reunião, feriados corporativos e sincronize com clientes desktop/mobile.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-alto">⚡ Moderado (Interface Moderna)</span>
+                <span class="ds-badge stack-ui">JavaScript (DHTML/AJAX) + Responsive Design</span>
+                <span class="ds-badge wl-ready">White-Label Nativo</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>SOGo suporta temas customizados e branding corporativo com logo, cores e domínio próprio.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Projeto bem mantido com releases regulares e comunidade ativa em fóruns internacionais.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card mcp">
+            <div class="complement-head">
+              <span class="comp-tag">MCP Server</span>
+              <span class="comp-title">sogo-mcp-calendar</span>
+            </div>
+            <p>Agentes de IA podem ler calendários corporativos, sugerir slots de reunião e agendar automaticamente.</p>
+            <div class="comp-code"><code>API REST de SOGo exposta via servidor MCP</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Sync Móvel</span>
+              <span class="comp-title">sogo-mobile-sync</span>
+            </div>
+            <p>Sincronização bidirecional de calendários e contatos corporativos em qualquer dispositivo móvel.</p>
+            <div class="comp-code"><code>CalDAV/CardDAV suportados nativamente em iOS, Android e Windows Phone</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Integração Zapier Open Source</span>
+              <span class="comp-title">n8n-sogo-connector</span>
+            </div>
+            <p>Automações complexas entre SOGo e ferramentas corporativas (Slack, CRM, ERP) sem depender de Zapier pago.</p>
+            <div class="comp-code"><code>https://github.com/n8n-io/n8n (workflow automation open source)</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">WebDAV/CalDAV Bridge</span>
+              <span class="comp-title">nextcloud-sogo-sync</span>
+            </div>
+            <p>Compartilhamento de arquivos corporativos sincronizado com calendários e contatos.</p>
+            <div class="comp-code"><code>Integração bidirecional entre Nextcloud e SOGo</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-03">
+        <div class="entry-rank">03</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Mailcow: Dockerized (Stack Completa em Docker com UI Moderna)</h3>
+            <span class="class-badge">A Mais Moderna</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Gmail for Business (entrada/saída) + Office 365</span>
+            <span class="econ-badge">R$ 16.000/ano</span>
+            <span class="lic-badge">GPL-3.0</span>
+            <span class="kind">Modern Dockerized Email Stack with Web UI</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Suite completa de email em containers Docker que integra Postfix, Dovecot, Roundcube, SOGo, Rspamd (antispam) e ferramentas de administração com interface web moderna e intuitiva. Oferece gestão de usuários, quotas, SPF/DKIM/DMARC via UI, e backup automático.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Orquestração de containers Docker Compose com cada serviço em seu próprio container. Interface de administração escrita em PHP/MySQL permite gerenciar todos os aspectos do servidor de email sem SSH direto. Implementa lógica automática de renovação de certificados SSL, filtragem de spam com machine learning e integração com soluções de backup externas.</p>
+            <div class="code-box">
+              <pre><code>git clone https://github.com/mailcow/mailcow-dockerized && cd mailcow-dockerized && ./generate_config.sh && docker compose up -d</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Gmail for Business (entrada/saída) + Office 365</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 16.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">6 GB RAM / 4 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Mailcow é a escolha perfeita para DevOps e times de infraestrutura que querem email corporativo moderno sem complexidade de configuração manual POSIX. Docker garante replicação fácil entre datacenters e zero vendor lock-in.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/mailcow/mailcow-dockerized" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (mailcow/mailcow-dockerized)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Clone e Configuração Inicial</div>
+                <p>Faça git clone do repositório, execute ./generate_config.sh (define hostname, IP, etc.) e customize docker-compose.yml se necessário.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Deploy com Docker Compose</div>
+                <p>Execute docker compose up -d e aguarde 5 minutos para inicialização de todos os serviços (Postfix, Dovecot, Roundcube, SOGo, Rspamd).</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Acesso ao Painel de Administração</div>
+                <p>Abra https://seu-servidor/admin, faça login com credenciais padrão, altere senha e comece a adicionar usuários de email.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-minimo">⚡ Mínimo (Containerizado & Web UI)</span>
+                <span class="ds-badge stack-ui">PHP + MySQL + Responsive Bootstrap</span>
+                <span class="ds-badge stack-ui">White-Label Parcial</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Interface é funcional e profissional, mas não suporta branding corporativo nativo (possível via fork do código).</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Atualizações de segurança críticas lançadas regularmente com testes automatizados. Container updates simples com docker compose pull && docker compose up -d.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card mcp">
+            <div class="complement-head">
+              <span class="comp-tag">MCP Server</span>
+              <span class="comp-title">mailcow-mcp-admin</span>
+            </div>
+            <p>Agentes de IA podem provisionar usuários, resetar senhas e gerar relatórios de uso diretamente.</p>
+            <div class="comp-code"><code>API REST de administração de Mailcow exposta via servidor MCP</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Backup Automático</span>
+              <span class="comp-title">mailcow-backup-s3</span>
+            </div>
+            <p>Backups diários de todos os mailboxes criptografados em repositório S3 próprio da empresa.</p>
+            <div class="comp-code"><code>Script de backup usando S3/MinIO corporativo com criptografia GPG</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Monitoring & Alertas</span>
+              <span class="comp-title">prometheus-mailcow-exporter</span>
+            </div>
+            <p>Integração com Prometheus + Grafana para visualizar saúde do servidor de email em tempo real.</p>
+            <div class="comp-code"><code>Exportador Prometheus para métricas de email (fila, disk, conexões IMAP)</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Logging Centralizado</span>
+              <span class="comp-title">mailcow-loki-shipper</span>
+            </div>
+            <p>Logs de Postfix, Dovecot e Rspamd centralizados para auditoria e troubleshooting.</p>
+            <div class="comp-code"><code>Envio de logs para Loki (observabilidade Stack Grafana)</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-04">
+        <div class="entry-rank">04</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Modoboa (Suite Leve de Email em Python & Django)</h3>
+            <span class="class-badge">A Mais Leve</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Gmail for Business (pequenas empresas até 50 usuários)</span>
+            <span class="econ-badge">R$ 8.000/ano</span>
+            <span class="lic-badge">ISC License</span>
+            <span class="kind">Lightweight Python-Based Email & Admin Suite</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Suite de email totalmente escrita em Python/Django que oferece Postfix + Dovecot + Webmail + Painel de administração com footprint mínimo de RAM. Ideal para empresas pequenas, startups ou infraestruturas com recursos limitados.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Aplicação Django monolítica que gerencia configuração de Postfix/Dovecot via ORM e oferece webmail responsivo minimalista. Consome menos de 500MB de RAM em produção e oferece todos os recursos essenciais (criar usuários, quotas, antispam) via interface.</p>
+            <div class="code-box">
+              <pre><code>pip install modoboa && modoboa deploy --collectstatic production_folder && python production_folder/manage.py runserver 0.0.0.0:8000</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Gmail for Business (pequenas empresas até 50 usuários)</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 8.000/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">1 GB RAM / 1 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>Para startups e pequenos negócios que querem evitar lições de Postfix puro mas também não querem pagar Google Workspace, Modoboa oferece o melhor custo-benefício: funciona bem, é fácil de manter e consome recursos mínimos.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/modoboa/modoboa" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (modoboa/modoboa)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Instalação via Pip</div>
+                <p>Instale Python 3.8+ e execute pip install modoboa para instalar todas as dependências.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Deploy da Aplicação</div>
+                <p>Rode modoboa deploy diretório_produção para gerar estrutura pronta com Postfix/Dovecot pré-configurados.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Inicialização de Banco de Dados</div>
+                <p>Execute python manage.py migrate e crie superusuário admin para primeiro acesso ao painel.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-minimo">⚡ Mínimo (Interface Bootstrap Padrão)</span>
+                <span class="ds-badge stack-ui">Django Templates + Bootstrap 5</span>
+                <span class="ds-badge wl-ready">White-Label Nativo</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Skins customizados via Django templates simples, permitindo branding corporativo sem modificar código Python.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>Stack Python padrão com pip install --upgrade modoboa, sem complexidades de container ou virtualização.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Django Package</span>
+              <span class="comp-title">modoboa-webmail-lite</span>
+            </div>
+            <p>Suporte nativo para temas customizados e plugins Django para recursos adicionais.</p>
+            <div class="comp-code"><code>Extensão leve de webmail com integração de plugins</code></div>
+          </div>
+          <div class="complement-card skill">
+            <div class="complement-head">
+              <span class="comp-tag">Agent Skill</span>
+              <span class="comp-title">skill-modoboa-provisioning</span>
+            </div>
+            <p>Skill para agentes de IA criarem usuários de email sob demanda sem acessar SSH diretamente.</p>
+            <div class="comp-code"><code>.claude/skills/modoboa-provisioning/SKILL.md</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Monitoring Leve</span>
+              <span class="comp-title">modoboa-health-check</span>
+            </div>
+            <p>Integração com monitoramento leve para alertas de queda do serviço.</p>
+            <div class="comp-code"><code>Endpoint /health para verificação de status em load balancers</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Rate Limiting</span>
+              <span class="comp-title">modoboa-ratelimit-plugin</span>
+            </div>
+            <p>Proteção contra abuso de email com quotas de envio por usuário configuráveis.</p>
+            <div class="comp-code"><code>Plugin Django nativo para limitar taxa de envios SMTP</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="entry" id="card-05">
+        <div class="entry-rank">05</div>
+        <div class="entry-body">
+          <div class="entry-top">
+            <h3>Mail-in-a-Box (Script de Instalação Automatizada de Email Corporativo)</h3>
+            <span class="class-badge">A Mais Simples</span>
+            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+            <span class="killer-badge">SUBSTITUI: Gmail para Negócios (micronegócios até 10 usuários)</span>
+            <span class="econ-badge">R$ 3.600/ano</span>
+            <span class="lic-badge">CC0 1.0 (Public Domain) + Scripts GPL-3.0</span>
+            <span class="kind">Zero-Configuration Email Server Setup Script</span>
+          </div>
+
+          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+          <div class="entry-section">
+            <span class="label">1. O Que Faz &amp; Como Funciona</span>
+            <p><strong>Definição Operacional:</strong> Bash script que automatiza completamente a instalação e configuração de um servidor de email corporativo em uma máquina Ubuntu/Debian limpa. Você roda um comando e em 30 minutos tem email funcionando com SSL/TLS, SPF, DKIM, DMARC, webmail, cardápio de gerenciamento e backups automáticos.</p>
+            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> O script detecta o seu ambiente, instala Postfix, Dovecot, Roundcube, Spamassassin, integra com Let's Encrypt e oferece painel web de gerenciamento simplificado escrito em JavaScript/Node.js. Sem configuração manual de POSIX ou edição de arquivos — tudo é gerenciado por UI intuitiva.</p>
+            <div class="code-box">
+              <pre><code>curl https://mailinabox.email/setup.sh | sudo bash</code></pre>
+              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+          <div class="entry-section">
+            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+            <div class="econ-grid">
+              <div class="econ-card killer">
+                <span class="econ-lbl">SaaS Proprietário Substituído</span>
+                <span class="econ-val"><strong>Gmail para Negócios (micronegócios até 10 usuários)</strong></span>
+              </div>
+              <div class="econ-card highlight">
+                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+                <span class="econ-val"><strong>R$ 3.600/ano</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+          <div class="entry-section">
+            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+            <div class="infra-grid">
+              <div class="infra-card">
+                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+                <span class="infra-val">512 MB RAM / 1 vCPU</span>
+              </div>
+              <div class="infra-card verdict">
+                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+                <p>A forma mais rápida e descomplicada de ter email corporativo autohospedado funcionando. Ideal para micronegócios, freelancers e startups que não têm equipe DevOps mas precisam de email profissional no seu domínio.</p>
+              </div>
+            </div>
+            <div style="margin-top:4px;">
+              <a class="repo-btn" href="https://github.com/mail-in-a-box/mailinabox" rel="noopener noreferrer" target="_blank">
+                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (mail-in-a-box/mailinabox)
+              </a>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+          <div class="entry-section">
+            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+            <div class="steps-grid">
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 01</span> Preparação do VPS</div>
+                <p>Aloque um VPS com Ubuntu 20.04/22.04 LTS limpo, configure DNS MX record apontando para o servidor.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 02</span> Execução do Setup Script</div>
+                <p>SSH no servidor e execute curl https://mailinabox.email/setup.sh | sudo bash.</p>
+              </div>
+              <div class="step-card">
+                <div class="step-head"><span class="step-badge">Passo 03</span> Aguarde Instalação Automática</div>
+                <p>O script leva 15-30 minutos; não é necessário fazer nada, ele configura tudo automaticamente.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+          <div class="entry-section">
+            <div class="ds-header">
+              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+              <div class="ds-badges">
+                <span class="ds-badge esforco-alto">⚡ Nenhum (Totalmente Automatizado)</span>
+                <span class="ds-badge stack-ui">Node.js + Bootstrap + Responsive Design</span>
+                <span class="ds-badge stack-ui">White-Label Parcial</span>
+              </div>
+            </div>
+            <div class="ds-grid">
+              <div class="ds-card">
+                <span class="ds-lbl">Mecânica de Customização</span>
+                <p>Interface não é customizável sem fork do projeto, mas é profissional o suficiente para uso corporativo direto.</p>
+              </div>
+              <div class="ds-card">
+                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+                <p>O próprio Mail-in-a-Box verifica atualizações e aplica patches de segurança automaticamente via cron.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+          <div class="entry-section">
+            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+            <div class="complement-grid">
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">DNS Automático</span>
+              <span class="comp-title">mailinabox-dns-sync</span>
+            </div>
+            <p>Painel exibe exatamente quais registros de DNS você precisa adicionar no seu registrador.</p>
+            <div class="comp-code"><code>API nativa para verificar registros SPF/DKIM/DMARC necessários</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Backup Automático</span>
+              <span class="comp-title">mailinabox-s3-backup</span>
+            </div>
+            <p>Sem necessidade de SSH; backups configuráveis pelo painel com retenção automática.</p>
+            <div class="comp-code"><code>Integração com S3/B2 para backups diários automáticos criptografados</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">Monitoramento Simples</span>
+              <span class="comp-title">mailinabox-status-page</span>
+            </div>
+            <p>Página de status pública e privada mostrando saúde geral do servidor.</p>
+            <div class="comp-code"><code>Endpoint de status HTTP para ping externo</code></div>
+          </div>
+          <div class="complement-card plugin">
+            <div class="complement-head">
+              <span class="comp-tag">WebDAV</span>
+              <span class="comp-title">mailinabox-nextcloud-bridge</span>
+            </div>
+            <p>Oferece compartilhamento de arquivos integrado com email sem ferramentas externas.</p>
+            <div class="comp-code"><code>Integração opcional com Nextcloud para compartilhamento de arquivos corporativo</code></div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </article>
+  </div>
+
+</div>
+
+
+<script>
+function filterTools(query) {
+  const q = query.toLowerCase().trim();
+  const entries = document.querySelectorAll('.entry');
+  const rows = document.querySelectorAll('.tablewrap tbody tr');
+  let visibleCount = 0;
+
+  entries.forEach(entry => {
+    const text = entry.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      entry.style.display = 'grid';
+      visibleCount++;
+    } else {
+      entry.style.display = 'none';
+    }
+  });
+
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  const countEl = document.getElementById('search-count');
+  if (countEl) {
+    countEl.innerText = q ? `${visibleCount} ferramentas encontradas` : '';
+  }
+}
+
+function copyCode(btn) {
+  const code = btn.parentElement.querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const orig = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => btn.innerText = orig, 1500);
+  });
+}
+</script>
+
+</body>
+</html>

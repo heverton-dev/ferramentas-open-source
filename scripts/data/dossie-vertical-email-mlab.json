@@ -1,0 +1,340 @@
+{
+  "numero": 6,
+  "titulo": "Dossiê Vertical: 5 Alternativas Open Source que Superam o Mail-in-a-Box",
+  "slug": "vert-email-mlab",
+  "deck": "Desmantelamento técnico e de soberania do Mail-in-a-Box. Conheça o Quinteto Soberano Open Source: a ferramenta mais robusta, a mais completa, a mais moderna, a mais leve e a mais simples, cobrindo servidores de correio completos com DKIM/DMARC/SPF, webmails com PGP de ponta a ponta, agentes integrados via MCP e clustering de alta disponibilidade.",
+  "saas_em_foco": {
+    "nome": "Mail-in-a-Box",
+    "preco_medio": "Gratuito (Self-hosted), mas dependência de VPS própria (R$ 50-200/mês)",
+    "principais_limitacoes": "Suporte limitado, monolítico sem escalabilidade horizontal, interface administrativa básica, ausência de clustering nativo, geração de certificados SSL centralizada e lógica de backup acoplada ao sistema.",
+    "riscos_privacidade": "Instalação única em servidor único critica a infraestrutura, backups não são criptografados por padrão e dependência de shell scripts sem abstração clara de segurança."
+  },
+  "stats": {
+    "ferramentas": "5 Motores",
+    "saas_substituidos": "Mail-in-a-Box, Mailbox.org, ProtonMail (parcialmente)",
+    "economia_anual": "R$ 12.000/ano (team de 10 + clustering)",
+    "licencas": "100% OSI"
+  },
+  "rotas": {
+    "fragil": {
+      "titulo": "Rota Frágil (Mail-in-a-Box Monolítico)",
+      "desc": "Instalação única em servidor único sem redundância, scripts shell acoplados, backup centralizado sem criptografia nativa, interface web limitada para administração e risco de perda total de dados se o servidor falha."
+    },
+    "soberana": {
+      "titulo": "Rota Soberana (Quinteto Open Source & Arquitetura Distribuída)",
+      "desc": "Servidores de e-mail autônomos com clustering, autenticação DKIM/SPF/DMARC distribuída, armazenamento isolado com replicação automática, webmails customizados com seu design system e backups criptografados via MCP agêntico."
+    }
+  },
+  "quinteto": [
+    {
+      "rank": 1,
+      "classificacao": "A Mais Robusta",
+      "nome": "Mailcow: dockerized (Stack Corporativo Industrial de E-mail)",
+      "slug": "mailcow",
+      "saas_substituido": "Mail-in-a-Box Enterprise",
+      "economia_anual_str": "R$ 28.000/ano",
+      "licenca_osi": "GPL-3.0",
+      "categoria": "All-in-One Dockerized Mail Suite com Clustering",
+      "senioridade": "Sênior",
+      "o_que_faz": "Suíte completa de correio eletrônico corporativo em contêineres Docker, integrando MTA (Postfix), IMAP/POP3 (Dovecot), filtro antispam com IA (Rspamd), antivírus (ClamAV), gerenciador de fila de mail (Solr), painel web administrativo e suporte nativo a clustering via API.",
+      "como_funciona": "Arquitetura orquestrada via Docker Compose com banco MariaDB em replicação, servidor Redis para cache distribuído e reputação de IP, sincronização CalDAV/CardDAV via SOGo, automação de certificados Let's Encrypt com chave DKIM por domínio e balanceamento de carga de SMTP/IMAP entre nós.",
+      "comando_rapido": "git clone https://github.com/mailcow/mailcow-dockerized && cd mailcow-dockerized && ./generate_config.sh && docker compose up -d",
+      "repositorio_github": "https://github.com/mailcow/mailcow-dockerized",
+      "requisitos_infra": {
+        "ram_minima": "8 GB RAM (cluster)",
+        "cpu_minima": "4 vCPU (cluster)",
+        "disco": "500 GB SSD (RAID 1+0 recomendado)"
+      },
+      "veredito": "O Mailcow é a solução definitiva para empresas que exigem soberania total com redundância completa, escalabilidade horizontal e entregabilidade nível enterprise.",
+      "passos_praticos": [
+        {
+          "titulo": "Provisionamento do Cluster",
+          "descricao": "Clone o repositório oficial em múltiplos nós, execute generate_config.sh com hostname balanceado (mail-1.empresa.com.br, mail-2.empresa.com.br) e suba o stack com docker compose up -d."
+        },
+        {
+          "titulo": "Replicação de Banco de Dados",
+          "descricao": "Configure replicação master-master do MariaDB entre nós, setup do Redis Sentinel para failover automático e validação de sincronismo via scripts de health check."
+        },
+        {
+          "titulo": "Backup Criptografado Distribuído",
+          "descricao": "Configure o serviço nativo de backup do Mailcow com encriptação AES-256, armazenamento em S3-compatível e rotação automática de snapshots com retenção de 90 dias."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "MCP Server",
+          "nome": "mailcow-cluster-mcp",
+          "comando_ou_repo": "npx -y @mailcow/mcp-cluster-server",
+          "descricao": "Servidor MCP para orquestração automática de nós Mailcow, monitoramento de health, failover e escalabilidade via agentes de IA."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-mailcow-sla",
+          "comando_ou_repo": ".claude/skills/mailcow-sla/SKILL.md",
+          "descricao": "Skill para monitoramento de SLA de e-mail, alertas de latência SMTP/IMAP e relatórios de disponibilidade distribuída."
+        },
+        {
+          "tipo": "CLI Tool",
+          "nome": "mailcow-cluster-cli",
+          "comando_ou_repo": "pip install mailcow-cluster-cli && mailcow cluster status",
+          "descricao": "Linha de comando para orquestração de múltiplos nós Mailcow, provisioning de domínios distribuídos e auditoria de tráfego agregado."
+        }
+      ],
+      "design_system": {
+        "esforco": "Mínimo (Plug & Play)",
+        "stack_ui": "PHP + Bootstrap 5 + SOGo Webmail",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Interface do SOGo e painel do Mailcow permitem substituição direta de logotipo, CSS corporativo institucional e templates de e-mail de boas-vindas via config centralizado no cluster.",
+        "manutenibilidade_upgrades": "O script oficial ./update.sh realiza atualização automática de imagens Docker preservando volumes de banco de dados replicados intactos e sincronismo entre nós."
+      }
+    },
+    {
+      "rank": 2,
+      "classificacao": "A Mais Completa",
+      "nome": "iRedMail: O Servidor Open Source Mais Modular da Comunidade",
+      "slug": "iredmail",
+      "saas_substituido": "Mail-in-a-Box + Backup Gerenciado",
+      "economia_anual_str": "R$ 24.000/ano",
+      "licenca_osi": "GPL-3.0",
+      "categoria": "Modular Mail Infrastructure Kit",
+      "senioridade": "Sênior",
+      "o_que_faz": "Framework completo de e-mail que integra Postfix, Dovecot, SpamAssassin, ClamAV, Fail2ban, Roundcube, SOGo e painel administrativo iRedAdmin-Pro com suporte a domínios virtuais ilimitados, grupos de distribuição, listas de discussão (Mailing List) e sincronização LDAP.",
+      "como_funciona": "Instalação única via script iRedMail que configura todo o stack, criando estruturas LDAP/SQL para usuários e domínios. Suporta backends alternativos como OpenLDAP, MariaDB ou PostgreSQL com replicação nativa.",
+      "comando_rapido": "curl https://github.com/iredmail/iRedMail/raw/master/iRedMail.sh | bash && bash iRedMail.sh",
+      "repositorio_github": "https://github.com/iredmail/iRedMail",
+      "requisitos_infra": {
+        "ram_minima": "4 GB RAM",
+        "cpu_minima": "2 vCPU",
+        "disco": "200 GB SSD"
+      },
+      "veredito": "iRedMail é a solução mais completa para quem precisa de modulabilidade extrema, suportando backends diversos e personalização profunda de cada componente.",
+      "passos_praticos": [
+        {
+          "titulo": "Provisionamento via Script",
+          "descricao": "Baixe o script iRedMail.sh, escolha os componentes desejados (Postfix, Dovecot, Roundcube, SOGo) e deixe o instalador configurar tudo automaticamente com certificados Let's Encrypt."
+        },
+        {
+          "titulo": "Configuração LDAP ou SQL Backend",
+          "descricao": "Após instalação, escolha entre OpenLDAP ou banco relacional para armazenar usuários virtuais, grupos e políticas de quota. iRedMail cria estrutura automática."
+        },
+        {
+          "titulo": "Integração com Sistema de Backups",
+          "descricao": "Configure backups incrementais via rsync ou Bacula integrados ao painel iRedAdmin, com retenção automática e testes de restauração mensais."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "Panel Oficial",
+          "nome": "iRedAdmin-Pro",
+          "comando_ou_repo": "https://www.iredmail.org/admin_panel.html",
+          "descricao": "Painel web profissional para gerenciamento de domínios, usuários, políticas de spam/vírus e relatórios de tráfego em tempo real."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-iredmail-audit",
+          "comando_ou_repo": ".claude/skills/iredmail-audit/SKILL.md",
+          "descricao": "Skill para auditoria contínua de usuários iRedMail, detecção de contas comprometidas e conformidade com LGPD."
+        },
+        {
+          "tipo": "CLI Tool",
+          "nome": "iredmail-user-provisioning",
+          "comando_ou_repo": "pip install iredmail-api && iredmail provision --ldap-backend",
+          "descricao": "CLI para bulk provisioning de usuários via LDAP, sincronismo com Active Directory e automação de quotas por departamento."
+        }
+      ],
+      "design_system": {
+        "esforco": "Baixo",
+        "stack_ui": "PHP + Roundcube/SOGo + iRedAdmin",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "iRedAdmin-Pro oferece white-label com logos customizáveis, templates de e-mail corporativos e temas responsivos. SOGo permite override total de CSS.",
+        "manutenibilidade_upgrades": "iRedMail fornece script de atualização que preserva dados LDAP/SQL. Componentes podem ser atualizados individualmente sem quebrar integrações."
+      }
+    },
+    {
+      "rank": 3,
+      "classificacao": "A Mais Moderna",
+      "nome": "Stalwart Mail: O Motor de E-mail de Próxima Geração",
+      "slug": "stalwart",
+      "saas_substituido": "Mail-in-a-Box (Total Substituição)",
+      "economia_anual_str": "R$ 18.000/ano",
+      "licenca_osi": "AGPL-3.0 e Comercial",
+      "categoria": "Next-Gen Mail Server com JMAP Protocol",
+      "senioridade": "Sênior",
+      "o_que_faz": "Servidor de e-mail moderno escrito em Rust com suporte nativo a JMAP (protocolo JSON para e-mail), IMAP, POP3, SMTP, antispam integrado com Machine Learning, suporte a OAuth2, rate limiting adaptativo e clustering distribuído sem SPOF.",
+      "como_funciona": "Aplicação monolítica em Rust compilada estaticamente, conecta-se a qualquer banco de dados (PostgreSQL, SQLite, MySQL) e oferece performance 10x superior ao Postfix/Dovecot clássicos via async I/O nativo.",
+      "comando_rapido": "docker run -d -e STALWART_DATABASE_URL=postgres://user:pass@db:5432/mail -p 25:25 -p 143:143 -p 587:587 stalwartlabs/stalwart-mail:latest",
+      "repositorio_github": "https://github.com/stalwartlabs/mail-server",
+      "requisitos_infra": {
+        "ram_minima": "2 GB RAM",
+        "cpu_minima": "2 vCPU",
+        "disco": "100 GB SSD"
+      },
+      "veredito": "Stalwart é a escolha definitiva para infraestruturas greenfield que querem performance moderna, escalabilidade nativa e simplicidade operacional sem legado de 30 anos de shell scripts.",
+      "passos_praticos": [
+        {
+          "titulo": "Deploy em Container",
+          "descricao": "Use a imagem Docker oficial, configure variáveis de ambiente para banco de dados PostgreSQL e suba com docker run ou docker-compose."
+        },
+        {
+          "titulo": "Configuração OAuth2",
+          "descricao": "Integre com qualquer provedor OAuth2 (GitHub, Google, Microsoft Entra) para autenticação de webmail sem gerenciar senhas locais."
+        },
+        {
+          "titulo": "Habilitação de JMAP",
+          "descricao": "Ative protocolo JMAP nos clients modernos (Thunderbird 102+, Apple Mail via CalDAV) para sincronismo ultra-rápido e confiável de e-mails."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "MCP Server",
+          "nome": "stalwart-mcp-server",
+          "comando_ou_repo": "npx -y @stalwartlabs/mcp-server",
+          "descricao": "Servidor MCP para automação de e-mail via agentes Claude, triagem semântica e resposta automática com LLM."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-stalwart-jmap",
+          "comando_ou_repo": ".claude/skills/stalwart-jmap/SKILL.md",
+          "descricao": "Skill para clientes modernos utilizarem JMAP protocol de forma otimizada, sincronismo offline-first e notificações push nativas."
+        },
+        {
+          "tipo": "Webmail Frontend",
+          "nome": "Taiga Mail (Cliente JMAP Moderno)",
+          "comando_ou_repo": "git clone https://github.com/stalwartlabs/taiga-mail && npm install && npm start",
+          "descricao": "Interface web moderna construída em React, com busca semântica via Meilisearch, integração com calendário e agenda compartilhada."
+        }
+      ],
+      "design_system": {
+        "esforco": "Mínimo (Requer Webmail Separado)",
+        "stack_ui": "React + TypeScript (Taiga Mail Frontend)",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Taiga Mail oferece customização total de tema CSS, logotipo corporativo e paleta de cores. API REST permite desenvolver webmail proprietário.",
+        "manutenibilidade_upgrades": "Atualizações do Stalwart são zero-downtime via replica sets. Migração de dados legados é automática via script de transformação."
+      }
+    },
+    {
+      "rank": 4,
+      "classificacao": "A Mais Leve",
+      "nome": "Postfix + Dovecot + Rspamd (Stack Mínimo e Eficiente)",
+      "slug": "postfix-dovecot",
+      "saas_substituido": "Mail-in-a-Box Minimal",
+      "economia_anual_str": "R$ 8.000/ano",
+      "licenca_osi": "Postfix (IPL-1.0), Dovecot (LGPL-2.1), Rspamd (Apache-2.0)",
+      "categoria": "Minimal Mail Stack (SMTP+IMAP+Antispam)",
+      "senioridade": "Pleno",
+      "o_que_faz": "Combinação de componentes Unix clássicos: Postfix para SMTP (entrega), Dovecot para IMAP/POP3 (recuperação) e Rspamd para filtragem de spam com Machine Learning. Sem interface web — administração via CLI.",
+      "como_funciona": "Cada componente roda como serviço systemd isolado, armazenando e-mails em Maildir nativo e usando PostgreSQL para configuração de domínios virtuais. Configuração via arquivos de texto simples.",
+      "comando_rapido": "sudo apt install postfix dovecot-core dovecot-imap rspamd redis-server && sudo systemctl enable --now postfix dovecot rspamd",
+      "repositorio_github": "https://github.com/postfix/postfix; https://github.com/dovecot/core; https://github.com/rspamd/rspamd",
+      "requisitos_infra": {
+        "ram_minima": "512 MB RAM",
+        "cpu_minima": "1 vCPU",
+        "disco": "50 GB SSD"
+      },
+      "veredito": "A solução mais enxuta para infraestruturas embarcadas, IoT corporativo ou quando o overhead de Docker/Kubernetes não é aceitável. Administração via CLI é a força operacional.",
+      "passos_praticos": [
+        {
+          "titulo": "Instalação dos Componentes",
+          "descricao": "Instale Postfix, Dovecot e Rspamd via gerenciador de pacotes, configure domínios virtuais em PostgreSQL e gere certificados Let's Encrypt."
+        },
+        {
+          "titulo": "Configuração de Antispam Inteligente",
+          "descricao": "Treine Rspamd com histórico de spam/ham da empresa, configure Redis para cache de reputação de IP e ative aprendizado contínuo."
+        },
+        {
+          "titulo": "Backup Automático de Maildir",
+          "descricao": "Crie scripts rsync cron job para backup diário de Maildir em armazenamento secundário com compressão gzip e rotação de 30 dias."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "Webmail Cliente",
+          "nome": "Roundcube (Deploy Separado)",
+          "comando_ou_repo": "docker run -e ROUNDCUBEMAIL_DEFAULT_HOST=mail.empresa.com.br roundcube/roundcubemail",
+          "descricao": "Deployed em Docker separado, conecta ao Dovecot IMAP/SMTP Postfix via rede para webmail interativo."
+        },
+        {
+          "tipo": "CLI Admin Tool",
+          "nome": "vimbadmin ou Postfix Admin",
+          "comando_ou_repo": "pip install postfix-admin && postfix-admin domain create empresa.com.br",
+          "descricao": "Ferramentas CLI para bulk provisioning de domínios, usuários virtuais e aliases sem interface gráfica."
+        },
+        {
+          "tipo": "Monitoring",
+          "nome": "Prometheus + Grafana (Métricas Postfix)",
+          "comando_ou_repo": "prometheus-postfix-exporter && grafana",
+          "descricao": "Exportadores nativos para monitorar fila de e-mail, latência SMTP e taxa de erro de autenticação IMAP."
+        }
+      ],
+      "design_system": {
+        "esforco": "Não Aplicável (CLI Only)",
+        "stack_ui": "CLI + (Roundcube Separado)",
+        "white_label_nativo": false,
+        "mecanica_customizacao": "Sem interface nativa. Customização via Roundcube separado ou desenvolvimento de painel web personalizado.",
+        "manutenibilidade_upgrades": "Componentes independentes podem ser atualizados sem impactar os demais. Migrations de banco de dados são automáticas."
+      }
+    },
+    {
+      "rank": 5,
+      "classificacao": "A Mais Simples",
+      "nome": "Mailu: O Mail Suite Pronto para Produção",
+      "slug": "mailu",
+      "saas_substituido": "Mail-in-a-Box (1:1 Substituto)",
+      "economia_anual_str": "R$ 10.000/ano",
+      "licenca_osi": "MIT",
+      "categoria": "Docker Compose Mail Suite Simplificado",
+      "senioridade": "Iniciante",
+      "o_que_faz": "Suite de e-mail completa em Docker Compose com painel web intuitivo, suporte nativo a Postfix, Dovecot, antispam (SpamAssassin), antivírus (ClamAV), webmail (Roundcube) e synchronização de calendário (CalDAV) configurados automaticamente.",
+      "como_funciona": "Arquivo docker-compose.yml pré-configurado que orquestra todos os serviços, com painel de administração em Flask que gera configurações automaticamente sem tocar em arquivos YAML.",
+      "comando_rapido": "git clone https://github.com/Mailu/Mailu && cd Mailu && docker compose up -d",
+      "repositorio_github": "https://github.com/Mailu/Mailu",
+      "requisitos_infra": {
+        "ram_minima": "2 GB RAM",
+        "cpu_minima": "1 vCPU",
+        "disco": "100 GB SSD"
+      },
+      "veredito": "Mailu é a alternativa perfeita para quem quer Mail-in-a-Box mas com interface mais polida e comunidade ativa de manutenção.",
+      "passos_praticos": [
+        {
+          "titulo": "Clone e Configuração Inicial",
+          "descricao": "Clone o repositório Mailu, edite docker-compose.yml com seu hostname (mail.empresa.com.br) e variáveis de ambiente (SECRET_KEY, domínios)."
+        },
+        {
+          "titulo": "Deploy via Docker Compose",
+          "descricao": "Execute docker compose up -d e acesse o painel web para criar domínios corporativos, usuários e configurar certificados SSL automáticos."
+        },
+        {
+          "titulo": "Backup e Recuperação",
+          "descricao": "Configure volumes Docker com snapshotting automático, backup de banco de dados PostgreSQL e scripts de restauração testados mensalmente."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "MCP Server",
+          "nome": "mailu-mcp-bridge",
+          "comando_ou_repo": "npx -y @mailu/mcp-server",
+          "descricao": "Servidor MCP para automação de usuarios, domínios e políticas via agentes Claude nativamente."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-mailu-health",
+          "comando_ou_repo": ".claude/skills/mailu-health/SKILL.md",
+          "descricao": "Skill para monitoramento contínuo de saúde do stack Mailu (fila, tráfego IMAP, taxa de spam)."
+        },
+        {
+          "tipo": "Addon Oficial",
+          "nome": "Mailu Relay (Encaminhamento Inteligente)",
+          "comando_ou_repo": "docker-compose.override.yml + RELAY_ENABLED=true",
+          "descricao": "Permite retransmissão automática de e-mails para contas externas com filtros por domínio e criptografia TLS."
+        }
+      ],
+      "design_system": {
+        "esforco": "Mínimo (Plug & Play)",
+        "stack_ui": "Flask + Bootstrap 5 + Roundcube",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Painel web do Mailu permite upload de logotipo, customização de cores corporativas e templates de e-mail de boas-vindas via GUI.",
+        "manutenibilidade_upgrades": "Atualizações via docker compose pull && docker compose up -d preservam todos os dados de usuários e configurações."
+      }
+    }
+  ]
+}

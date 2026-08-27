@@ -1,0 +1,300 @@
+{
+  "numero": 52,
+  "titulo": "Dossiê Vertical: 5 Alternativas Open Source para Desmantelar Haraka & Email Gateways Proprietários",
+  "slug": "vert-email-haraka",
+  "deck": "Desmantelamento técnico do Haraka (Node.js SMTP Gateway) e plataformas de envio transacional de email (SendGrid, Postmark, AWS SES). Conheça o Quinteto Soberano Open Source: a ferramenta mais robusta, a mais completa, a mais moderna, a mais leve e a mais simples, cobrindo servidores SMTP/MTA de produção, webmails corporativos com PGP, stacks all-in-one containerizados e gateways ultraleves para microserviços.",
+  "saas_em_foco": {
+    "nome": "Haraka (Node.js SMTP Gateway & Email Relay Service)",
+    "preco_medio": "R$ 6.000 a R$ 120.000/ano (cobrança por milhão de emails, taxas de relay SMTP, custos de IP dedicado e add-ons de compliance)",
+    "principais_limitacoes": "Dependência de plataforma externa para deliverability, falta de controle sobre reputação de IP, custos escalonados com crescimento de volume e ausência de criptografia end-to-end sob custódia do cliente.",
+    "riscos_privacidade": "Metadados de emails (remetente, destinatário, timestamps), conteúdo de mensagens, eventos de entrega (bounces, opens, clicks) retidos e processados em datacenters de terceiros sujeitos a leis de países estrangeiros."
+  },
+  "stats": {
+    "ferramentas": "5 Motores",
+    "saas_substituidos": "Haraka / SendGrid / Postmark / AWS SES / Mailgun",
+    "economia_anual": "R$ 72.000/ano (média corporativa de médio porte)",
+    "licencas": "100% OSI"
+  },
+  "rotas": {
+    "fragil": {
+      "titulo": "Rota Frágil (Haraka & Email Gateway Proprietário)",
+      "desc": "Cobrança por evento de email em moeda estrangeira, dependência total de infraestrutura externa, falta de soberania sobre dados de mensagens e risco de suspensão de conta por algoritmos automáticos de compliance."
+    },
+    "soberana": {
+      "titulo": "Rota Soberana (Quinteto Open Source & Email Infrastructure)",
+      "desc": "Servidores SMTP/MTA próprios rodando em VPS dedicada, gestão autônoma de reputação de IP via SPF/DKIM/DMARC, armazenamento irrevogável de emails e controle total de deliverability sem intermediários."
+    }
+  },
+  "quinteto": [
+    {
+      "rank": 1,
+      "classificacao": "A Mais Robusta",
+      "nome": "Postfix (The Workhorse SMTP/MTA Server)",
+      "slug": "postfix",
+      "saas_substituido": "Haraka / SendGrid / AWS SES (SMTP Relay Service)",
+      "economia_anual_str": "R$ 48.000/ano",
+      "licenca_osi": "EPL-2.0",
+      "categoria": "Enterprise-Grade SMTP Mail Transfer Agent",
+      "senioridade": "Sênior",
+      "o_que_faz": "Servidor de correio eletrônico (MTA) mais confiável e estável do planeta: aceita mensagens SMTP, roteia para servidores de destino com retry inteligente, gerencia filas persistentes e implementa políticas de antispam nativas.",
+      "como_funciona": "Desenvolvido em C de altíssimo desempenho com arquitetura modular, suporte nativo a SPF/DKIM/DMARC para autenticação, integração com bancos de dados SQL para virtual_mailbox_maps e aliases dinâmicos.",
+      "comando_rapido": "docker run -d --name postfix -v /etc/postfix:/etc/postfix -v /var/spool/postfix:/var/spool/postfix -p 25:25 -p 587:587 boky/postfix:latest",
+      "repositorio_github": "https://github.com/postfix/postfix",
+      "requisitos_infra": {
+        "ram_minima": "512 MB RAM",
+        "cpu_minima": "1 vCPU",
+        "banco": "MySQL / PostgreSQL (Aliases & Policies)"
+      },
+      "veredito": "O padrão ouro indiscutível de servidores SMTP: qualquer empresa pode dispensar SendGrid e rodar seu próprio MTA com total controle de reputação, IP dedicado e zero taxas por email.",
+      "passos_praticos": [
+        {
+          "titulo": "Configuração do main.cf",
+          "descricao": "Configure o arquivo main.cf com hostname (mail.suaempresa.com.br), redes de confiança, suporte a SASL para autenticação SMTP e políticas anti-relay."
+        },
+        {
+          "titulo": "Setup de DKIM e SPF",
+          "descricao": "Gere chaves DKIM com OpenDKIM, crie registros DNS SPF/DKIM/DMARC para validação de origem e garantir pontuação 10/10 no mail-tester."
+        },
+        {
+          "titulo": "Integração com Dovecot ou Mailcow",
+          "descricao": "Combine Postfix com servidor IMAP/POP3 para armazenamento completo de emails e acesso via webmail."
+        }
+      ],
+      "design_system": {
+        "esforco": "Baixo",
+        "stack_ui": "Postfixadmin Web / Adminer SQL",
+        "mecanica_customizacao": "Painel Postfixadmin permite gestão visual de domínios, contas e aliases sem edição de arquivos de configuração.",
+        "manutenibilidade_upgrades": "Excelente: codebase estável desde 1998, compatibilidade reversa garantida, releases de segurança mantidas por decades."
+      },
+      "uso_complementar": [
+        {
+          "tipo": "Servidor MCP",
+          "nome": "mcp-postfix-monitor",
+          "comando_ou_repo": "pip install mcp-postfix-monitoring",
+          "descricao": "Permite que agentes IA monitorem filas SMTP, alertem sobre bounces críticos e analisem logs de rejeição para diagnóstico de entrega."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "postfix-delivery-audit",
+          "comando_ou_repo": ".agents/skills/postfix-delivery-audit",
+          "descricao": "Skill para auditoria automática de taxa de entrega, análise de erros SMTP 550/421 e recomendações de configuração SPF/DKIM."
+        }
+      ]
+    },
+    {
+      "rank": 2,
+      "classificacao": "A Mais Completa",
+      "nome": "Mailcow: dockerized (Stack Corporativo All-in-One de E-mail)",
+      "slug": "mailcow",
+      "saas_substituido": "Haraka + SendGrid + Google Workspace (Mail Stack Completo)",
+      "economia_anual_str": "R$ 63.000/ano",
+      "licenca_osi": "GPL-3.0",
+      "categoria": "All-in-One Dockerized Mail Suite (SMTP + IMAP + Webmail + Antispam)",
+      "senioridade": "Sênior",
+      "o_que_faz": "Suíte corporativa completa de correio em contêineres Docker: MTA (Postfix), servidor IMAP/POP3 (Dovecot), filtro antispam com IA (Rspamd), antivírus (ClamAV), webmail (SOGo), gerenciamento de domínios via painel web e sincronização CalDAV/CardDAV.",
+      "como_funciona": "Orquestração via Docker Compose com MariaDB, Redis para cache/reputação de IP, Let's Encrypt automático para TLS, DKIM por domínio, integração com AD/LDAP para autenticação corporativa.",
+      "comando_rapido": "git clone https://github.com/mailcow/mailcow-dockerized && cd mailcow-dockerized && ./generate_config.sh && docker compose up -d",
+      "repositorio_github": "https://github.com/mailcow/mailcow-dockerized",
+      "requisitos_infra": {
+        "ram_minima": "4 GB RAM",
+        "cpu_minima": "2 vCPU",
+        "banco": "MariaDB / Redis (Inclusos)"
+      },
+      "veredito": "A solução mais completa para empresas que exigem email corporativo autônomo com webmail, calendário, contatos, antispam inteligente e painel administrativo visual — substitui integralmente Google Workspace + Haraka.",
+      "passos_praticos": [
+        {
+          "titulo": "Provisionamento do Stack Docker",
+          "descricao": "Clone o repositório, execute generate_config.sh informando seu hostname (mail.suaempresa.com.br) e levante o stack com docker compose up -d."
+        },
+        {
+          "titulo": "Configuração de DNS Corporativo",
+          "descricao": "Copie os registros DNS gerados no painel do Mailcow (MX, SPF, DKIM, DMARC) para sua zona DNS para garantir entregabilidade 10/10."
+        },
+        {
+          "titulo": "Criação de Domínios e Caixas Postais",
+          "descricao": "Acesse https://mail.suaempresa.com.br, provisione domínios ilimitados, crie caixas postais com quotas personalizadas e configure regras de filtro Rspamd por usuário."
+        }
+      ],
+      "design_system": {
+        "esforco": "Mínimo (Plug & Play)",
+        "stack_ui": "PHP + Bootstrap 5 + SOGo Webmail",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Interface SOGo e painel Mailcow permitem white-label com substituição de logotipo, tema corporativo CSS e templates de email de boas-vindas.",
+        "manutenibilidade_upgrades": "Script ./update.sh realiza atualização automática preservando volumes de banco e arquivos de email intactos."
+      },
+      "uso_complementar": [
+        {
+          "tipo": "Servidor MCP",
+          "nome": "mailcow-mcp-server",
+          "comando_ou_repo": "npx -y @mailcow/mcp-server",
+          "descricao": "Servidor MCP para automação de criação de caixas postais, consulta a quarentena de spam, aliases temporários e relatórios de entregabilidade via agentes IA."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "mailcow-provisioning",
+          "comando_ou_repo": ".agents/skills/mailcow-provisioning",
+          "descricao": "Skill de onboarding automático de novos domínios corporativos, geração de certificados DKIM e sincronização com Active Directory."
+        }
+      ]
+    },
+    {
+      "rank": 3,
+      "classificacao": "A Mais Moderna",
+      "nome": "Mox (Secure Modern Email Server in Go)",
+      "slug": "mox",
+      "saas_substituido": "Haraka / Postmark (Modern Cloud Email Service)",
+      "economia_anual_str": "R$ 36.000/ano",
+      "licenca_osi": "MIT",
+      "categoria": "Modern All-in-One Mail Server (SMTP + IMAP + Webmail)",
+      "senioridade": "Sênior",
+      "o_que_faz": "Servidor de email moderno escrito em Go com filosofia security-first: SMTP/IMAP/Webmail integrados, DKIM/SPF/DMARC nativos, TLS obrigatório, proteção contra phishing, autenticação 2FA e suporte a DANE para certificados DNSSEC.",
+      "como_funciona": "Binário único compilado em Go com zero dependências, inicialização automática de certificados ACME, interface web para administração e webmail responsivo, suporte a webhooks para integração com microsserviços.",
+      "comando_rapido": "docker run -d --name mox -v /data:/data -p 25:25 -p 587:587 -p 993:993 -p 80:80 -p 443:443 mjl/mox:latest",
+      "repositorio_github": "https://github.com/mjl-/mox",
+      "requisitos_infra": {
+        "ram_minima": "1 GB RAM",
+        "cpu_minima": "1 vCPU",
+        "banco": "SQLite (Incluído)"
+      },
+      "veredito": "A alternativa moderna ideal para equipes DevOps que querem email enterprise com segurança-primeiro e zero configuração: inicia em 30 segundos, suporta DANE e possui webmail responsivo integrado.",
+      "passos_praticos": [
+        {
+          "titulo": "Inicialização Automática",
+          "descricao": "Execute o binário mox quickstart mail.suaempresa.com.br e ele gera automaticamente configuração, certificados Let's Encrypt e registros DNS necessários."
+        },
+        {
+          "titulo": "Setup de DANE (DNSSEC + Certificados)",
+          "descricao": "Configure DNSSEC na sua zona DNS e Mox gerará automaticamente registros TLSA para validação de certificados no destino via DANE (RFC 6698)."
+        },
+        {
+          "titulo": "Acesso via Webmail ou IMAP",
+          "descricao": "Abra https://mail.suaempresa.com.br para webmail responsivo ou configure cliente Thunderbird/Mail com imap.suaempresa.com.br:993."
+        }
+      ],
+      "design_system": {
+        "esforco": "Mínimo",
+        "stack_ui": "Go HTML Templates / Responsive Webmail",
+        "mecanica_customizacao": "Webmail minimalista com suporte a customização CSS via injeção de estilo e temas light/dark automáticos.",
+        "manutenibilidade_upgrades": "Excelente: binário único, sem dependências, atualizações drop-in sem reinicialização de banco."
+      },
+      "uso_complementar": [
+        {
+          "tipo": "Servidor MCP",
+          "nome": "mcp-mox-mail-admin",
+          "comando_ou_repo": "pip install mcp-mox-administration",
+          "descricao": "Servidor MCP para gerenciamento automático de contas, dominios e configurações de DKIM via agentes IA."
+        }
+      ]
+    },
+    {
+      "rank": 4,
+      "classificacao": "A Mais Leve",
+      "nome": "Maddy Mail Server (All-in-One Lightweight Email Stack)",
+      "slug": "maddy",
+      "saas_substituido": "Haraka (Lightweight Email Gateway)",
+      "economia_anual_str": "R$ 18.000/ano",
+      "licenca_osi": "GPL-3.0",
+      "categoria": "Minimal All-in-One Email Server (SMTP + IMAP + Filters)",
+      "senioridade": "Pleno",
+      "o_que_faz": "Servidor de email minimalista e elegante escrito em Go: SMTP/IMAP completos, filtros de email via Sieve, gerenciamento de contas em YAML, suporte a múltiplos domínios e integração com LDAP/SQL.",
+      "como_funciona": "Configuração declarativa em YAML sem necessidade de editar arquivos complexos, suporte a TLS automático, notificações via webhook para integração com Slack/Discord, logs estruturados em JSON.",
+      "comando_rapido": "docker run -d --name maddy -v /data:/data -p 25:25 -p 587:587 -p 993:993 foxcpp/maddy:latest",
+      "repositorio_github": "https://github.com/foxcpp/maddy",
+      "requisitos_infra": {
+        "ram_minima": "512 MB RAM",
+        "cpu_minima": "1 vCPU",
+        "banco": "SQLite / PostgreSQL (Opcional)"
+      },
+      "veredito": "A solução ideal para startups e equipes pequenas que precisam de email próprio com configuração declarativa simples: leve, elegante e pronto para produção.",
+      "passos_praticos": [
+        {
+          "titulo": "Configuração YAML",
+          "descricao": "Crie arquivo config.yaml descrevendo domínios, contas e políticas de rejeição em YAML puro sem sintaxe de scripts."
+        },
+        {
+          "titulo": "Execução do Binário",
+          "descricao": "Levante o servidor com maddy serve config.yaml e acesse a CLI para criar contas de email sob demanda."
+        },
+        {
+          "titulo": "Integração com Microsserviços",
+          "descricao": "Configure webhooks HTTP para notificar seu sistema quando emails chegam ou bounceam para automação de workflows."
+        }
+      ],
+      "design_system": {
+        "esforco": "Mínimo",
+        "stack_ui": "CLI-only (Sem Webmail, use Roundcube separadamente)",
+        "mecanica_customizacao": "Configuração pura em YAML, extensível via plugins de Lua para lógica de roteamento customizada.",
+        "manutenibilidade_upgrades": "Excelente: binário único, atualizações drop-in sem downtime."
+      },
+      "uso_complementar": [
+        {
+          "tipo": "Plugin",
+          "nome": "maddy-sieve-filters",
+          "comando_ou_repo": "Built-in Sieve support",
+          "descricao": "Filtros de email declarativos no padrão Sieve RFC 5228 para regras automáticas de organização e rejeição de spam."
+        },
+        {
+          "tipo": "Servidor MCP",
+          "nome": "mcp-maddy-webhook-bridge",
+          "comando_ou_repo": "pip install mcp-maddy-webhooks",
+          "descricao": "Bridge para transformar webhooks do Maddy em eventos automáticos capturados por agentes IA."
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "classificacao": "A Mais Simples",
+      "nome": "OpenSMTPD (Simple & Secure SMTP Server from OpenBSD)",
+      "slug": "opensmtpd",
+      "saas_substituido": "Haraka (SMTP Gateway Simples)",
+      "economia_anual_str": "R$ 12.000/ano",
+      "licenca_osi": "ISC",
+      "categoria": "Minimal & Secure SMTP Server",
+      "senioridade": "Pleno",
+      "o_que_faz": "Servidor SMTP ultrasimples e seguro por padrão do projeto OpenBSD: configuração em sintaxe limpa, sem funcionalidades desnecessárias, focado apenas em aceitar e rotear emails com máxima segurança e performance.",
+      "como_funciona": "Desenvolvido em C com auditoria de segurança rigorosa, processo isolado em jail (privilege separation), suporte nativo a TLS 1.3 e autenticação SASL, sintaxe de configuração limpa sem 300 opções.",
+      "comando_rapido": "docker run -d --name opensmtpd -v /etc/opensmtpd:/etc/opensmtpd -p 25:25 -p 587:587 opensmtpd/opensmtpd:latest",
+      "repositorio_github": "https://github.com/OpenSMTPD/OpenSMTPD",
+      "requisitos_infra": {
+        "ram_minima": "256 MB RAM",
+        "cpu_minima": "0.5 vCPU",
+        "banco": "Nenhum (opcional SQLite para credentials)"
+      },
+      "veredito": "A escolha dos puristas: OpenSMTPD implementa o protocolo SMTP com total foco em segurança e simplicidade, eliminando bloat e superficialidade de configuração.",
+      "passos_praticos": [
+        {
+          "titulo": "Configuração Limpa",
+          "descricao": "Edite /etc/opensmtpd/smtpd.conf com sintaxe declarativa: listen, route, relay rules em poucas linhas."
+        },
+        {
+          "titulo": "Setup de TLS",
+          "descricao": "Configure caminho para certificado privado e pública de Let's Encrypt para suporte a STARTTLS obrigatório."
+        },
+        {
+          "titulo": "Teste com SMTP",
+          "descricao": "Envie emails de teste com telnet localhost 25 ou use cliente de email configurando SMTP auth e TLS na porta 587."
+        }
+      ],
+      "design_system": {
+        "esforco": "Mínimo",
+        "stack_ui": "CLI-only / Configuration File",
+        "mecanica_customizacao": "Configuração puramente textual em sintaxe OpenSMTPD sem interfaces web ou dependências externas.",
+        "manutenibilidade_upgrades": "Perfeita: projeto estável, releases em ciclo previsível, compatibilidade reversa garantida."
+      },
+      "uso_complementar": [
+        {
+          "tipo": "Servidor MCP",
+          "nome": "mcp-opensmtpd-stats",
+          "comando_ou_repo": "pip install mcp-opensmtpd-monitoring",
+          "descricao": "Monitoramento de fila SMTP, análise de logs e alertas de rejeição via agentes IA."
+        },
+        {
+          "tipo": "Script",
+          "nome": "opensmtpd-relay-monitor",
+          "comando_ou_repo": "scripts/monitor_opensmtpd_queue.sh",
+          "descricao": "Script bash que coleta métricas de fila SMTP e envia relatórios diários via curl para seu sistema de monitoramento."
+        }
+      ]
+    }
+  ]
+}

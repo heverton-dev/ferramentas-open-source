@@ -1,0 +1,335 @@
+{
+  "numero": 6,
+  "titulo": "Dossiê Vertical: 5 Alternativas Open Source que Superam o Mailu",
+  "slug": "vert-mailu",
+  "deck": "Desmantelamento técnico e de soberania do Mailu. Embora Mailu seja uma distribuição open-source Docker-amigável, este dossiê explora arquiteturas ainda mais robustas, completas, modernas, leves e simples que oferecem maior controle, escalabilidade e integração com ecossistemas corporativos. Conheça o Quinteto Soberano: a ferramenta mais robusta para datacenters enterprise, a mais completa para webmail customizado, a mais moderna para SPA ultrarrápido, a mais leve para VPS frugais e a mais simples para onboarding zero-atrito.",
+  "saas_em_foco": {
+    "nome": "Mailu (Servidor de E-mail Modular em Docker)",
+    "preco_medio": "Gratuito (Self-hosted) | Opcionalmente US$ 10-50/mês em managed hosting",
+    "principais_limitacoes": "Stack monolítico em Docker que encadeia todas as camadas (MTA + IMAP + Webmail), dificultando isolamento de falhas; webmail padrão acoplado (Roundcube/SnappyMail pré-configurados) sem opção de trocar componentes; escalabilidade horizontal limitada; dependência de SQLite por padrão (inadequado para volume >100k caixas).",
+    "riscos_privacidade": "Embora open-source, o Mailu historicamente teve vulnerabilidades em isolamento de container; backup de dados centralizado em estrutura SQLite default sem segmentação nativa de inquilinos."
+  },
+  "stats": {
+    "ferramentas": "5 Stacks Alternativos",
+    "saas_substituidos": "Mailu",
+    "economia_anual": "R$ 6.000-18.000/ano (evitando managed hosting ou upgrades de infraestrutura)",
+    "licencas": "100% OSI"
+  },
+  "rotas": {
+    "fragil": {
+      "titulo": "Rota Monolítica (Mailu Cloud Default)",
+      "desc": "Stack Docker monolítico com acoplamento crítico entre MTA, IMAP e webmail; impossibilidade de escalar componentes independentemente; atualização de um serviço força rebuild de toda a stack."
+    },
+    "soberana": {
+      "titulo": "Rota Desacoplada & Escalável (Quinteto Open Source & Microserviços)",
+      "desc": "Arquiteturas modernas que isolam camadas de transmissão (Postfix/Exim), entrega (Dovecot/Courier), webmail (Roundcube/SnappyMail/Rainloop) e autenticação (LDAP/Radius nativo), permitindo upgrade sem downtime, escalabilidade horizontal e customização profunda de cada componente."
+    }
+  },
+  "quinteto": [
+    {
+      "rank": 1,
+      "classificacao": "A Mais Robusta",
+      "nome": "Mailcow: dockerized (Stack Corporativo Industrial de E-mail)",
+      "slug": "mailcow",
+      "saas_substituido": "Mailu Enterprise + Backup Integrado",
+      "economia_anual_str": "R$ 18.000/ano",
+      "licenca_osi": "GPL-3.0",
+      "categoria": "All-in-One Dockerized Mail Suite Avançada",
+      "senioridade": "Sênior",
+      "o_que_faz": "Suíte industrial de correio eletrônico em contêineres Docker com isolamento superior ao Mailu, integrando MTA (Postfix), IMAP/POP3 (Dovecot), filtro antispam com IA (Rspamd), antivírus (ClamAV), painel administrativo avançado, sincronização CalDAV/CardDAV (SOGo) e dois-fatores TOTP/Yubi.",
+      "como_funciona": "Stack Docker Compose multi-container com banco MariaDB dedicado (não SQLite), servidor Redis para cache e cálculo de reputação, sincronização automática de certificados Let's Encrypt com DKIM por domínio e isolamento de recursos via cgroups por tenant.",
+      "comando_rapido": "git clone https://github.com/mailcow/mailcow-dockerized && cd mailcow-dockerized && ./generate_config.sh && docker compose up -d",
+      "repositorio_github": "https://github.com/mailcow/mailcow-dockerized",
+      "requisitos_infra": {
+        "ram_minima": "6 GB RAM",
+        "cpu_minima": "4 vCPU"
+      },
+      "veredito": "Mailcow é a evolução direta do Mailu. Sem comprometer a facilidade de deploy Docker, adiciona robustez operacional: MariaDB ao invés de SQLite, Rspamd com aprendizado contínuo de spam, isolamento de tenants e logging detalhado de entrega. Escolha para datacenters com SLA.",
+      "passos_praticos": [
+        {
+          "titulo": "Clonagem e Configuração Inicial",
+          "descricao": "Clone o repositório oficial, execute generate_config.sh informando hostname (mail.suaempresa.com.br) e defina variáveis de ambiente para MariaDB root password e tokens de API administrativos."
+        },
+        {
+          "titulo": "Subida do Stack com Persistência",
+          "descricao": "Execute docker compose up -d. Os volumes nomeados mailcow_vmail, mailcow_db e mailcow_redis criam estrutura isolada que sobrevive a reinicializações."
+        },
+        {
+          "titulo": "Registros DNS Críticos",
+          "descricao": "Copie MX, SPF, DKIM (gerado automaticamente) e DMARC para sua zona DNS. O painel do Mailcow traz checker built-in que valida pontuação 10/10 em mail-tester e mxtoolbox."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "MCP Server",
+          "nome": "mailcow-mcp-server",
+          "comando_ou_repo": "npx -y @mailcow/mcp-server",
+          "descricao": "Servidor MCP para agentes de IA consultarem estatísticas de entrega, quarentena de spam e criação automática de contas em bulk."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-mailcow-audit",
+          "comando_ou_repo": ".claude/skills/mailcow-audit/SKILL.md",
+          "descricao": "Skill para auditoria contínua de reputação de IP, detecção de compromisso de conta e relatórios de conformidade LGPD."
+        },
+        {
+          "tipo": "CLI Tool",
+          "nome": "mailcow-cli",
+          "comando_ou_repo": "pip install mailcow-api-cli && mailcow mailbox list --domain empresa.com.br",
+          "descricao": "Ferramenta de linha de comando para automação de provisionamento, limpeza de quarentena e integração com ERP."
+        }
+      ],
+      "design_system": {
+        "esforco": "Mínimo (Plug & Play)",
+        "stack_ui": "PHP 8.x + Bootstrap 5 + SOGo Webmail",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Painel do Mailcow e SOGo Webmail suportam customização de logotipo, CSS corporativo e templates de welcome. Variáveis de ambiente MAILCOW_HOSTNAME e MAILCOW_LOGO_URL permitem white-label automático.",
+        "manutenibilidade_upgrades": "Script official ./update.sh aplica patches e upgrades de imagens Docker mantendo volumes de banco e vmail intactos. Rollback para versão anterior via docker compose down && git checkout versao_anterior."
+      }
+    },
+    {
+      "rank": 2,
+      "classificacao": "A Mais Completa",
+      "nome": "Postfix + Dovecot + Roundcube (Tríade Clássica Customizável)",
+      "slug": "postfix-dovecot-roundcube",
+      "saas_substituido": "Mailu Full Stack",
+      "economia_anual_str": "R$ 15.000/ano",
+      "licenca_osi": "GPL-3.0 + BSD-3-Clause",
+      "categoria": "Modular Unix Mail Stack + Modern Webmail",
+      "senioridade": "Sênior",
+      "o_que_faz": "Combinação clássica de servidores Unix: Postfix (MTA com virtual_alias_domains), Dovecot (IMAP/POP3 com Sieve server-side), integrados com Roundcube (cliente web com drag-drop, PGP/Enigma nativo, suporte LDAP/AD). Cada camada é independente, escalável e auditável.",
+      "como_funciona": "Postfix recebe SMTP, Dovecot armazena via Maildir (not mbox), Roundcube se conecta via IMAP4rev1. Estrutura de autenticação unificada via SASL (PAM/LDAP) ou banco de dados local. Cada componente roda em seu próprio processo, permitindo isolamento de falhas e escala horizontal simples.",
+      "comando_rapido": "apt install postfix dovecot-imapd dovecot-pop3d dovecot-sieve && docker run -d -p 8080:80 roundcube/roundcubemail:latest -e ROUNDCUBEMAIL_DEFAULT_HOST=localhost",
+      "repositorio_github": "Postfix: wietse/postfix | Dovecot: dovecot/core | Roundcube: roundcube/roundcubemail",
+      "requisitos_infra": {
+        "ram_minima": "3 GB RAM",
+        "cpu_minima": "2 vCPU"
+      },
+      "veredito": "Tríade Unix consagrada. Oferece flexibilidade total: escolha seu banco de dados (MySQL/Postgres/SQLite), seu antispam (SpamAssassin, Rspamd ou Amavis), seu armazenamento (Maildir, dbox, mdbox). Roadmap de atualizações mantido há 20+ anos. Para time que quer controle total sobre cada componente.",
+      "passos_praticos": [
+        {
+          "titulo": "Instalação e Configuração do Postfix",
+          "descricao": "Instale Postfix e configure virtual_alias_domains no main.cf apontando para banco de dados MySQL com tabela mailbox (email, password_hash, user, domain). Habilite SASL via dovecot-auth."
+        },
+        {
+          "titulo": "Dovecot para IMAP/Sieve",
+          "descricao": "Configure dovecot.conf para usar Maildir nativo, habilite Sieve para regras server-side, e integre com LDAP corporativo para autenticação centralizada."
+        },
+        {
+          "titulo": "Deploy Roundcube com Plugins",
+          "descricao": "Estenda Roundcube com enigma (PGP), managesieve (filtros), password (troca de senha) e temas responsivos. Customize skins/elastic/styles.css com CSS da empresa."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "Antispam Engine",
+          "nome": "Rspamd + Mail-Filter",
+          "comando_ou_repo": "apt install rspamd && rspamd --version && docker run -d -p 11333:11333 rspamd/rspamd:latest",
+          "descricao": "Engine de antispam moderno que integra com Postfix via socket, oferecendo aprendizado de Bayes local e histórico de reputação."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-postfix-monitor",
+          "comando_ou_repo": ".claude/skills/postfix-monitor/SKILL.md",
+          "descricao": "Skill para monitorar fila de entrega do Postfix, detectar rejeições de DNS/IP e alertar sobre saturation de disco."
+        },
+        {
+          "tipo": "MCP Server",
+          "nome": "dovecot-mcp-server",
+          "comando_ou_repo": "npx -y @dovecot/mcp-server",
+          "descricao": "Conector MCP para consultar quotas de caixa, estatísticas de armazenamento e sincronização de grupos LDAP automaticamente."
+        }
+      ],
+      "design_system": {
+        "esforco": "Mínimo (Plug & Play para Roundcube)",
+        "stack_ui": "PHP (Roundcube) + HTML5 + CSS3 Elastic Skin",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Roundcube permite override total de CSS via skins/elastic/styles.css, customização de logotipo em templates/index.html e substituição de favicon. Postfix e Dovecot são headless; qualquer frontend IMAP/SMTP funciona.",
+        "manutenibilidade_upgrades": "Cada componente é atualizado independentemente. Postfix, Dovecot e Roundcube seguem ciclos de release separados, permitindo upgrade granular sem downtime."
+      }
+    },
+    {
+      "rank": 3,
+      "classificacao": "A Mais Moderna",
+      "nome": "Maddy Mail Server + SnappyMail (Binário Go + SPA Moderno)",
+      "slug": "maddy-snappymail",
+      "saas_substituido": "Mailu Frontend Lento",
+      "economia_anual_str": "R$ 12.000/ano",
+      "licenca_osi": "GPL-3.0 + AGPL-3.0",
+      "categoria": "Next-Gen Binary Mail Server + Modern SPA Webmail",
+      "senioridade": "Sênior",
+      "o_que_faz": "Maddy é servidor de e-mail monolítico escrito em Go que substitui Postfix/Dovecot por binário único compilado estaticamente; SnappyMail é webmail SPA hiper-rápido (fork ativo do RainLoop) com suporte nativo a WebAuthn, 2FA e criptografia PGP. Combinação oferece performance extrema com UX moderna.",
+      "como_funciona": "Maddy centraliza SMTP/IMAP4/Sieve em processo único com mínimo footprint de memória. Armazena mensagens em SQLite/PostgreSQL nativo. SnappyMail conecta via IMAP4rev1 padrão, trazendo interface SPA responsiva. Zero bloatware; ambos cross-compiláveis para ARM, x86-64, RISC-V.",
+      "comando_rapido": "docker run -d -p 25:25 -p 143:143 -p 587:587 -p 993:993 -v maddy_data:/data foxcpp/maddy:latest && docker run -d -p 8888:80 djmaze/snappymail:latest",
+      "repositorio_github": "Maddy: foxcpp/maddy | SnappyMail: the-djmaze/snappymail",
+      "requisitos_infra": {
+        "ram_minima": "1.5 GB RAM",
+        "cpu_minima": "1 vCPU"
+      },
+      "veredito": "Stack modernissímo para startups tech. Maddy é Go puro sem dependências C (sem OpenSSL/zlib hell). SnappyMail é JavaScript moderno que carrega caixas de 10k mensagens instantaneamente. Deploy em VPS de US$ 5/mês com performance idêntica a cloud proprietary.",
+      "passos_praticos": [
+        {
+          "titulo": "Deploy Maddy em Container",
+          "descricao": "Inicie o container Maddy mapeando volumes para persistência de dados. O arquivo maddy.conf padrão já vem configurado; customize hostname e domínios suportados."
+        },
+        {
+          "titulo": "Deploy SnappyMail e Configuração",
+          "descricao": "Inicie SnappyMail acessando /?admin para definir senha mestra. Aponte para o host Maddy nos parâmetros de IMAP (porta 143 ou 993 TLS) e SMTP (587 ou 465)."
+        },
+        {
+          "titulo": "Ativação de WebAuthn",
+          "descricao": "No painel de SnappyMail, abilite autenticação por YubiKey/FIDO2 para two-factor automático e proteção contra phishing corporativo."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-snappy-dispatcher",
+          "comando_ou_repo": ".claude/skills/snappy-dispatcher/SKILL.md",
+          "descricao": "Skill para agentes dispararem newsletters e comunicados internos com confirmação de entrega via API de SnappyMail."
+        },
+        {
+          "tipo": "MCP Server",
+          "nome": "maddy-mcp",
+          "comando_ou_repo": "npx -y @maddy/mcp-server",
+          "descricao": "Conector para agentes consultarem fila de entrega, logs de rejeição SMTP e histórico de autenticação falhada."
+        },
+        {
+          "tipo": "CLI Tool",
+          "nome": "maddyctl",
+          "comando_ou_repo": "maddyctl creds create usuario@empresa.com.br && maddyctl imap-acct list",
+          "descricao": "Utilitário Go para criação massiva de contas, geração de chaves DKIM e auditoria de quotas."
+        }
+      ],
+      "design_system": {
+        "esforco": "Mínimo (Plug & Play)",
+        "stack_ui": "Vanilla JavaScript (SnappyMail) + Modern CSS Variables",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "SnappyMail oferece painel de temas built-in com seletor visual de cores, gradientes, logotipo da empresa e favicon. Customizações salvas em data/themes/custom-corp.json.",
+        "manutenibilidade_upgrades": "Ambos Maddy e SnappyMail são distribuídos como binários Go compilados estaticamente. Upgrade é simples substituição do binário; não há dependências .so ou wheel Python a lidar."
+      }
+    },
+    {
+      "rank": 4,
+      "classificacao": "A Mais Leve",
+      "nome": "Exim + Courier IMAP + Rainloop (Ultraminimalista em ARM)",
+      "slug": "exim-courier-rainloop",
+      "saas_substituido": "Mailu em VPS Frugal",
+      "economia_anual_str": "R$ 6.000/ano",
+      "licenca_osi": "GPL-2.0 + LGPL-2.1 + AGPL-3.0",
+      "categoria": "Lightweight Mail Distribution para Embedded & ARM",
+      "senioridade": "Sênior",
+      "o_que_faz": "Tríade ultraminimalista: Exim (MTA modular com footprint 2MB), Courier IMAP (servidor IMAP leve com suporte POP3 e LDAP nativo), Rainloop (webmail AJAX responsivo, antecessor do SnappyMail, extremamente leve). Roda confortavelmente em Raspberry Pi, Orange Pi ou VPS de 256MB.",
+      "como_funciona": "Exim implementa RFC 5321 (SMTP) com configurabilidade via arquivo de texto simples; Courier armazena via Maildir nativo e suporta quotas. Rainloop é PHP simples (sem composer hell) que se conecta via IMAP4. Cada um é independente e testado há 15+ anos.",
+      "comando_rapido": "apt install exim4 courier-imap rainloop && systemctl start exim4 courier-imap && docker run -d -p 8080:80 -v rainloop_data:/rainloop/data mailserver/rainloop:latest",
+      "repositorio_github": "Exim: Exim/exim | Courier: courier-mta/courier | Rainloop: rainloop/rainloop-webmail",
+      "requisitos_infra": {
+        "ram_minima": "512 MB RAM",
+        "cpu_minima": "1 vCPU ARM"
+      },
+      "veredito": "Para organizações que rodam servidores em orçamento severamente limitado: VPS de US$ 3/mês com 512MB RAM, Raspberry Pi 4, ou Orange Pi. Exim + Courier + Rainloop oferecem entrega confiável sem desperdício. Configuração manual, mas documentação está consolidada em forums Unix.",
+      "passos_praticos": [
+        {
+          "titulo": "Instalação Minimalista",
+          "descricao": "Instale pacotes: apt install exim4 courier-imap. O Exim vem com configurador interativo; escolha modo local delivery com Maildir."
+        },
+        {
+          "titulo": "Deploy Rainloop via Webroot",
+          "descricao": "Baixe Rainloop, descompacte em /var/www/rainloop, configure permissões de pasta data (chmod 755 data), e acesse via localhost:80/rainloop."
+        },
+        {
+          "titulo": "Integração com LDAP Corporativo",
+          "descricao": "Configure Exim e Courier para autenticar contra LDAP (ex: OpenLDAP ou Samba AD). Rainloop obtém users dinamicamente via IMAP4 LDAP-backed."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "SpamFilter",
+          "nome": "SpamAssassin",
+          "comando_ou_repo": "apt install spamassassin spamc && systemctl start spamassassin && exim -C /etc/exim4/exim4.conf.template -v -x",
+          "descricao": "Engine de antispam clássico que integra com Exim via pipe, usando Bayes local e regras regex. Robusto e configurável."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-exim-relay",
+          "comando_ou_repo": ".claude/skills/exim-relay/SKILL.md",
+          "descricao": "Skill para agentes consultarem logs de Exim, detectar falhas de DNS blacklist e gerar relatórios de bounce automático."
+        },
+        {
+          "tipo": "CLI Tool",
+          "nome": "exim-cli-monitor",
+          "comando_ou_repo": "exim -bpu && exim -br | wc -l",
+          "descricao": "Comandos Unix nativos para inspecionar fila de Exim, listar remetentes ativos e purgar mensagens com erro de entrega."
+        }
+      ],
+      "design_system": {
+        "esforco": "Baixo (Webroot Manual)",
+        "stack_ui": "PHP (Rainloop) + AJAX + CSS Responsivo",
+        "white_label_nativo": true,
+        "mecanica_customizacao": "Rainloop permite customização via arquivo config.php: DOMAIN_DEFAULT, TITLE_DEFAULT, LOGO_PATH. CSS override manual em /var/www/rainloop/app/templates/login.html ou via plugin custom.",
+        "manutenibilidade_upgrades": "Exim e Courier atualizam via gerenciador de pacotes do OS. Rainloop é single-archive; upgrade é descompactar nova versão em /var/www/rainloop (backup data/ antes)."
+      }
+    },
+    {
+      "rank": 5,
+      "classificacao": "A Mais Simples",
+      "nome": "OpenSMTPD + doas + Dkhooks (Minimalismo OpenBSD)",
+      "slug": "opensmtpd-openbsd",
+      "saas_substituido": "Mailu Overhead",
+      "economia_anual_str": "R$ 3.000/ano",
+      "licenca_osi": "ISC",
+      "categoria": "Ultraminimal BSD Mail Server + Relay-Only",
+      "senioridade": "Sênior",
+      "o_que_faz": "OpenSMTPD é servidor SMTP ultraminimalista do projeto OpenBSD, focado em segurança (pledge/unveil sandboxing nativo do kernel) e simplicidade. Configurado via arquivo single smtpd.conf (12 linhas típicas), com auditoria nativa de entrega. Ideal para relay-only ou pequenos times.",
+      "como_funciona": "OpenSMTPD recebe SMTP e roteia via rules de filtro simples; não implementa IMAP (relé externo para ISP ou Dovecot remoto). Opcionalmente integra com local delivery Maildir. Cada transação de SMTP é forked em processo isolado com sandbox do kernel OpenBSD (pledge).",
+      "comando_rapido": "pkg install opensmtpd && cp /etc/mail/smtpd.conf.example /etc/mail/smtpd.conf && rcctl start smtpd",
+      "repositorio_github": "https://github.com/opensmtpd/OpenSMTPD",
+      "requisitos_infra": {
+        "ram_minima": "256 MB RAM",
+        "cpu_minima": "1 vCPU ARM/x86"
+      },
+      "veredito": "OpenSMTPD é para arquitetos de segurança pura. Projeto BSD com auditoria de cada linha de código. Ideal para relay corporativo isolado (outgoing SMTP apenas), evitando complexidade total de pilha de e-mail. Para times que querem auditar 100% da surface de ataque criptográfica.",
+      "passos_praticos": [
+        {
+          "titulo": "Instalação em OpenBSD",
+          "descricao": "pkg install opensmtpd; o demônio já vem desabilitado. Copie /etc/mail/smtpd.conf.example e customize table de domínios/usuários via arquivo de banco de dados local."
+        },
+        {
+          "titulo": "Configuração de Relay",
+          "descricao": "Configure regra match com relay-to para encaminhar e-mails internos via ISP SMTP upstream (ex: Gmail SMTP com TLS + auth). Teste com echo 'test' | sendmail -v usuario@empresa.com.br."
+        },
+        {
+          "titulo": "Monitoramento Nativo",
+          "descricao": "OpenSMTPD registra todas as transações em /var/log/maillog. Use grep/tail para auditar rejeições, verificar sender reputation e diagnosticar loops de envio."
+        }
+      ],
+      "uso_complementar": [
+        {
+          "tipo": "Local Delivery",
+          "nome": "procmail + Dovecot Remote",
+          "comando_ou_repo": "pkg install procmail && opensmtpd action local_delivery deliver to mbox; dovecot via SSH para IMAP remoto",
+          "descricao": "Arquitetura híbrida: OpenSMTPD recebe e entrega localmente via procmail; usuários conectam em Dovecot remoto via IMAP SSH para acessar mailbox."
+        },
+        {
+          "tipo": "Agent Skill",
+          "nome": "skill-opensmtpd-audit",
+          "comando_ou_repo": ".claude/skills/opensmtpd-audit/SKILL.md",
+          "descricao": "Skill para agentes parsearem /var/log/maillog, detectarem falhas de autenticação upstream SMTP e alertarem sobre saturation de fila."
+        },
+        {
+          "tipo": "MCP Server",
+          "nome": "opensmtpd-mcp",
+          "comando_ou_repo": "npx -y @opensmtpd/mcp-server",
+          "descricao": "Conector MCP para consultar estatísticas de entrega, listar domínios upstream e atualizar regras de relay sem reloading completo."
+        }
+      ],
+      "design_system": {
+        "esforco": "N/A (Headless / CLI Only)",
+        "stack_ui": "Nenhum (Relay-Only SMTP)",
+        "white_label_nativo": false,
+        "mecanica_customizacao": "OpenSMTPD é headless. Customizações ficam em smtpd.conf (regras de filtragem, mapeamento de domínios, TLS). Para webmail, integre com Dovecot remoto + qualquer cliente web (Roundcube, SnappyMail).",
+        "manutenibilidade_upgrades": "Arquivo single /etc/mail/smtpd.conf; backup antes de edição. Atualizações de pkg install opensmtpd via sistema de pacotes OpenBSD. Zero dependências compartilhadas; upgrade isolado."
+      }
+    }
+  ]
+}
