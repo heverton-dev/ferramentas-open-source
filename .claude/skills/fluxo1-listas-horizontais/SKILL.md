@@ -40,11 +40,12 @@ Se o tema solicitado pelo operador não existir previamente:
    python scripts/compilar_lista_horizontal_tripartite.py --slug <slug>
    ```
 
-### 3. Verificação de Entregas Tripartites:
-Certifique-se de que os três arquivos foram gerados na pasta soberana única `output/01-listas-horizontais/list-<slug>/`:
-- `list-<slug>.html` (Header Hero Stats, busca interativa client-side, Padrão Diamante R5 rigoroso sem `div.cols`);
-- `list-<slug>.md` (Markdown denso com todas as fichas técnicas detalhadas);
-- `list-<slug>.pdf` (Compilação Typst anti-sobreposição).
+### 3. Verificação de Entregas Tripartites e Relatório:
+Certifique-se de que os arquivos foram gerados na pasta soberana única `output/01-listas-horizontais/list-<slug>/`:
+- `materiais/list-<slug>.html` (Header Hero Stats, busca interativa client-side, Padrão Diamante R5 rigoroso sem `div.cols`);
+- `materiais/list-<slug>.md` (Markdown denso com todas as fichas técnicas detalhadas);
+- `materiais/list-<slug>.pdf` (Compilação Typst anti-sobreposição);
+- `relatorios/DD-MM-AAAA-relatorio-execucao-<slug>.{html,md,pdf}` (Relatório Tripartite de Telemetria e Gates).
 
 ### 4. Apresentação ao Usuário:
 Apresente a tabela resumida das ferramentas catalogadas com link direto para os arquivos gerados.
