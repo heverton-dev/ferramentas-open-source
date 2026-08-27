@@ -5,9 +5,10 @@ Valida a integridade de ponta a ponta:
 1. Conformidade de Schema JSON (dossie_vertical.schema.json)
 2. As 5 Classificações Canônicas do Quinteto Soberano (R5-V)
 3. Presença Obrigatória de White-Label e MCPs/Skills
-4. Compilação Tripartite (HTML, MD, Typst PDF)
+4. Compilação Tripartite (HTML, MD, Typst PDF) em materiais/
 5. Persistência Relacional em SQLite (estado_esteira.db - Regra R11)
-6. Paridade Estrita de Espelhos (Regra R18)
+6. Paridade Estrita de Espelhos com subpastas materiais/ e relatorios/ (Regra R18)
+7. Existência do Relatório de Execução Tripartite em relatorios/
 """
 import unittest
 import json
@@ -21,6 +22,9 @@ class TestFluxo2Verticais(unittest.TestCase):
     def setUp(self):
         self.saas_teste = "granola"
         self.data_file = BASE_DIR / "scripts" / "data" / f"dossie-vertical-{self.saas_teste}.json"
+        self.bundle_dir = BASE_DIR / "output" / "02-dossies-verticais" / f"vert-{self.saas_teste}"
+        self.materiais_dir = self.bundle_dir / "materiais"
+        self.relatorios_dir = self.bundle_dir / "relatorios"
         self.db_path = BASE_DIR / "estado_esteira.db"
 
     def test_01_schema_dossie_vertical_valido(self):
@@ -62,13 +66,13 @@ class TestFluxo2Verticais(unittest.TestCase):
             self.assertGreaterEqual(len(q["uso_complementar"]), 1)
 
     def test_04_compilacao_tripartite_gerada(self):
-        """Valida se os 3 formatos (HTML, MD, PDF) foram compilados com tamanho > 0."""
-        bundle_dir = BASE_DIR / "output" / "02-dossies-verticais" / f"vert-{self.saas_teste}"
+        """Valida se os 3 formatos (HTML, MD, PDF) foram compilados em materiais/ com tamanho > 0."""
+        self.assertTrue(self.materiais_dir.exists(), f"Subpasta materiais/ não encontrada em {self.bundle_dir}")
         formatos = ["html", "md", "pdf"]
 
         for fmt in formatos:
-            arquivo = bundle_dir / f"vert-{self.saas_teste}.{fmt}"
-            self.assertTrue(arquivo.exists(), f"Arquivo .{fmt} não encontrado em {bundle_dir}")
+            arquivo = self.materiais_dir / f"vert-{self.saas_teste}.{fmt}"
+            self.assertTrue(arquivo.exists(), f"Arquivo .{fmt} não encontrado em materiais/")
             self.assertGreater(arquivo.stat().st_size, 0, f"Arquivo .{fmt} está vazio.")
 
     def test_05_persistencia_sqlite_r11(self):
@@ -82,11 +86,23 @@ class TestFluxo2Verticais(unittest.TestCase):
         self.assertIn(self.saas_teste, slugs, f"SaaS {self.saas_teste} deve estar registrado no SQLite.")
 
     def test_06_integridade_soberana_r18(self):
-        """Valida a integridade da pasta soberana output/02-dossies-verticais/vert-<saas>/."""
-        bundle_dir = BASE_DIR / "output" / "02-dossies-verticais" / f"vert-{self.saas_teste}"
-        self.assertTrue(bundle_dir.exists(), "Diretório do dossiê vertical soberano deve existir.")
-        arquivos = list(bundle_dir.glob("vert-granola.*"))
-        self.assertGreaterEqual(len(arquivos), 3, "Dossiê vertical soberano deve conter ao menos HTML, MD e PDF.")
+        """Valida a integridade da pasta soberana com subpastas materiais/ e relatorios/."""
+        self.assertTrue(self.bundle_dir.exists(), "Diretório do dossiê vertical soberano deve existir.")
+        self.assertTrue(self.materiais_dir.exists(), "Subpasta materiais/ deve existir.")
+        self.assertTrue(self.relatorios_dir.exists(), "Subpasta relatorios/ deve existir.")
+        arquivos = list(self.materiais_dir.glob("vert-granola.*"))
+        self.assertGreaterEqual(len(arquivos), 3, "Dossiê vertical soberano deve conter ao menos HTML, MD e PDF em materiais/.")
+
+    def test_07_relatorio_execucao_existe(self):
+        """Valida se o relatório de execução tripartite existe em relatorios/."""
+        self.assertTrue(self.relatorios_dir.exists(), "Subpasta relatorios/ deve existir.")
+        relatorios_html = list(self.relatorios_dir.glob("*-relatorio-execucao-*.html"))
+        self.assertGreaterEqual(len(relatorios_html), 1, "Deve existir ao menos 1 arquivo HTML de relatório em relatorios/.")
+
+        for fmt in ["html", "md"]:
+            arquivos = list(self.relatorios_dir.glob(f"*-relatorio-execucao-*.{fmt}"))
+            self.assertGreaterEqual(len(arquivos), 1, f"Relatório .{fmt} ausente em relatorios/")
+            self.assertGreater(arquivos[0].stat().st_size, 500, f"Relatório .{fmt} está vazio.")
 
 if __name__ == "__main__":
     unittest.main()

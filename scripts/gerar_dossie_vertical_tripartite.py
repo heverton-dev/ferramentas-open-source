@@ -14,6 +14,7 @@ import subprocess
 from pathlib import Path
 from compilar_compendio_vertical import compilar_dossie_vertical
 from estado_esteira import registrar_dossie_vertical
+from gerar_relatorio_fluxo2 import gerar_relatorio_tripartite_fluxo2
 
 def console_utf8():
     if sys.platform == "win32":
@@ -98,23 +99,26 @@ def compilar_dossie_vertical_tripartite(saas: str) -> bool:
 
     # Diretórios de saída
     out_bundle = BASE_DIR / "output" / "02-dossies-verticais" / f"vert-{slug}"
-    out_bundle.mkdir(parents=True, exist_ok=True)
+    out_materiais = out_bundle / "materiais"
+    out_relatorios = out_bundle / "relatorios"
+    out_materiais.mkdir(parents=True, exist_ok=True)
+    out_relatorios.mkdir(parents=True, exist_ok=True)
 
     nome_base = f"vert-{slug}"
 
     # 1. HTML Interativo (Padrão Diamante R5-V)
     html_content = compilar_dossie_vertical(dados)
-    (out_bundle / f"{nome_base}.html").write_text(html_content, encoding="utf-8")
+    (out_materiais / f"{nome_base}.html").write_text(html_content, encoding="utf-8")
     print(f"✅ HTML compilado: {nome_base}.html (Padrão Diamante R5-V)")
 
     # 2. Markdown Limpo
     md_content = gerar_markdown_vertical(dados)
-    (out_bundle / f"{nome_base}.md").write_text(md_content, encoding="utf-8")
+    (out_materiais / f"{nome_base}.md").write_text(md_content, encoding="utf-8")
     print(f"✅ Markdown compilado: {nome_base}.md")
 
     # 3. PDF Executivo via Typst (Pandoc Typst Engine anti-sobreposição)
-    pdf_out = out_bundle / f"{nome_base}.pdf"
-    temp_md = out_bundle / f"{nome_base}.md"
+    pdf_out = out_materiais / f"{nome_base}.pdf"
+    temp_md = out_materiais / f"{nome_base}.md"
     try:
         res = subprocess.run(
             [
@@ -138,7 +142,11 @@ def compilar_dossie_vertical_tripartite(saas: str) -> bool:
     except Exception as e:
         print(f"⚠️ Erro ao compilar Typst: {e}")
 
-    # 4. Registro no Banco Relacional SQLite (Regra R11)
+    # 4. Relatório de Execução Tripartite (HTML, MD, PDF) em relatorios/
+    print("📊 Gerando Relatório de Execução Tripartite (Fluxo 2)...")
+    gerar_relatorio_tripartite_fluxo2(slug, dados, out_materiais, out_relatorios)
+
+    # 5. Registro no Banco Relacional SQLite (Regra R11)
     nomes_quinteto = [f"{q['rank']}. {q['nome']} ({q['classificacao']})" for q in dados["quinteto"]]
     saas_info = dados.get("saas_em_foco", {})
     registrar_dossie_vertical({
@@ -149,9 +157,9 @@ def compilar_dossie_vertical_tripartite(saas: str) -> bool:
         "total_ferramentas": len(dados["quinteto"]),
         "gate_r5v": "APROVADO",
         "gate_r18": "APROVADO",
-        "caminho_html": f"output/dossies-verticais/vert-{slug}/vert-{slug}.html",
-        "caminho_md": f"output/dossies-verticais/vert-{slug}/vert-{slug}.md",
-        "caminho_pdf": f"output/dossies-verticais/vert-{slug}/vert-{slug}.pdf"
+        "caminho_html": f"output/02-dossies-verticais/vert-{slug}/materiais/vert-{slug}.html",
+        "caminho_md": f"output/02-dossies-verticais/vert-{slug}/materiais/vert-{slug}.md",
+        "caminho_pdf": f"output/02-dossies-verticais/vert-{slug}/materiais/vert-{slug}.pdf"
     })
     print(f"💾 Estado persistido com sucesso no SQLite (estado_esteira.db - Regra R11)")
 

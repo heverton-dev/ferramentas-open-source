@@ -48,9 +48,10 @@ def executar_fluxo2(saas: str = None) -> bool:
         print("\n" + "="*70)
         print(f"🏆 FLUXO 2 CONCLUÍDO COM SUCESSO PARA '{saas}'!")
         print("📁 Artefatos Tripartites Gerados em:")
-        print(f"   - HTML Interativo: output/02-dossies-verticais/vert-{saas}/vert-{saas}.html")
-        print(f"   - Markdown Limpo:  output/02-dossies-verticais/vert-{saas}/vert-{saas}.md")
-        print(f"   - PDF Typst:       output/02-dossies-verticais/vert-{saas}/vert-{saas}.pdf")
+        print(f"   - HTML Interativo: output/02-dossies-verticais/vert-{saas}/materiais/vert-{saas}.html")
+        print(f"   - Markdown Limpo:  output/02-dossies-verticais/vert-{saas}/materiais/vert-{saas}.md")
+        print(f"   - PDF Typst:       output/02-dossies-verticais/vert-{saas}/materiais/vert-{saas}.pdf")
+        print(f"   - Relatórios:      output/02-dossies-verticais/vert-{saas}/relatorios/")
         print("="*70 + "\n")
         return True
     else:

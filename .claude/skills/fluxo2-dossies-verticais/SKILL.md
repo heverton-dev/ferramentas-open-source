@@ -34,9 +34,10 @@ Esta skill governa o **Desmantelamento Cirúrgico de SaaS Proprietários**, subs
    - Scrollbars de no máximo 4px na cor accent.
 
 4. **Entregas em `output/02-dossies-verticais/vert-<saas>/`:**
-   - `vert-<saas>.html` (Interativo Diamante R5-V);
-   - `vert-<saas>.md` (Markdown executivo);
-   - `vert-<saas>.pdf` (Typst anti-sobreposição).
+   - `materiais/vert-<saas>.html` (Interativo Diamante R5-V);
+   - `materiais/vert-<saas>.md` (Markdown executivo);
+   - `materiais/vert-<saas>.pdf` (Typst anti-sobreposição);
+   - `relatorios/DD-MM-AAAA-relatorio-execucao-<saas>.{html,md,pdf}` (Relatório Tripartite).
 
 5. **Apresentação ao Usuário:**
    Exiba o resumo do Quinteto Soberano com as 5 categorias e links diretos para os artefatos.
