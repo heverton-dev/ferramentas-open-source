@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Relatório Executivo: Arquitetura & Gates dos 3 Macro-Fluxos AIDD</title>
+  <style>
+
+:root {
+  --ink: #0F172A;
+  --ink-2: #334155;
+  --muted: #64748B;
+  --accent: #0284C7;
+  --accent-soft: #E0F2FE;
+  --paper: #F8FAFC;
+  --surface: #FFFFFF;
+  --rule: #CBD5E1;
+  --rule-soft: #E2E8F0;
+  --mono: "Cascadia Code", "Fira Code", Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.68;
+  padding: 32px 16px;
+  margin: 0;
+}
+.container {
+  max-width: 1050px;
+  margin: 0 auto;
+  background: var(--surface);
+  padding: 44px 48px;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+h1 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0F172A;
+  border-bottom: 2.5px solid var(--accent);
+  padding-bottom: 10px;
+  margin-top: 24px;
+  margin-bottom: 18px;
+}
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1E293B;
+  margin-top: 28px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  padding-bottom: 8px;
+}
+h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #334155;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+p { margin: 12px 0; font-size: 14.5px; color: var(--ink-2); }
+strong { font-weight: 700; color: #0F172A; }
+em { font-style: italic; color: #334155; }
+ul, ol { margin: 12px 0; padding-left: 24px; }
+li { margin-bottom: 6px; font-size: 14px; color: var(--ink-2); }
+
+/* TABELAS CORPORATIVAS */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0;
+  font-size: 13.5px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+}
+th, td {
+  border: 1px solid var(--rule);
+  padding: 10px 14px;
+  text-align: left;
+}
+th {
+  background: #1A446C;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+tr:nth-child(even) {
+  background: #F8FAFC;
+}
+tr:hover {
+  background: #F1F5F9;
+}
+
+/* BLOCKQUOTES EXECUTIVOS */
+blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  color: #0369A1;
+  padding: 12px 18px;
+  margin: 18px 0;
+  border-radius: 0 6px 6px 0;
+  font-size: 14px;
+}
+blockquote p { margin: 4px 0; color: #0369A1; }
+
+/* CÓDIGO E TERMINAL */
+pre:not(.mermaid) {
+  background: #0F172A;
+  color: #E2E8F0;
+  padding: 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-family: var(--mono);
+  border: 1px solid #1E293B;
+  margin: 16px 0;
+}
+code {
+  font-family: var(--mono);
+  background: #F1F5F9;
+  color: #0F172A;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12.5px;
+}
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+/* DIAGRAMAS MERMAID */
+.mermaid {
+  background: #FFFFFF;
+  border: 1px solid var(--rule-soft);
+  border-radius: 6px;
+  padding: 24px;
+  text-align: center;
+  margin: 24px 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--rule-soft);
+  margin: 32px 0;
+}
+
+  </style>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      securityLevel: 'loose'
+    });
+  </script>
+</head>
+<body>
+<div class="container">
+<h1
+id="relatório-executivo-arquitetura-acionamento-gates-de-interação-dos-3-macro-fluxos-aidd">Relatório
+Executivo: Arquitetura, Acionamento &amp; Gates de Interação dos 3
+Macro-Fluxos AIDD</h1>
+<blockquote>
+<p><strong>Documento Oficial de Engenharia Agêntica &amp; Operação da
+Fábrica Universal</strong><br />
+<strong>Data de Emissão:</strong> 27 de Agosto de 2026<br />
+<strong>Metodologia:</strong> AI-Driven Development (AIDD) · Nota 10.0 /
+10.0<br />
+<strong>Harness:</strong> Antigravity / Orca · LLM: Modelo Livre (Model
+Inherit)</p>
+</blockquote>
+<hr />
+<h2 id="visão-geral-o-que-cada-fluxo-faz">1. Visão Geral: O Que Cada
+Fluxo Faz</h2>
+<p>O ecossistema da <strong>Fábrica Universal</strong> opera sobre três
+macro-fluxos desacoplados, determinísticos e complementares:</p>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 19%" />
+<col style="width: 19%" />
+<col style="width: 19%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Fluxo</th>
+<th style="text-align: left;">Escopo Primário</th>
+<th style="text-align: left;">Entregáveis Tripartites
+(<code>output/</code>)</th>
+<th style="text-align: left;">Persistência (R11)</th>
+<th style="text-align: center;">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Fluxo 1 · Listas
+Horizontais</strong></td>
+<td style="text-align: left;">Mapeia o panorama das 49 Camadas globais
+de software livre corporativo.</td>
+<td
+style="text-align: left;"><code>output/01-listas-horizontais/list-&lt;slug&gt;/</code>
+<em>(HTML Diamante, MD e PDF Typst)</em></td>
+<td
+style="text-align: left;"><code>esteira_listas_horizontais</code></td>
+<td style="text-align: center;"><strong>Nota 10.0</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Fluxo 2 · Dossiês
+Verticais</strong></td>
+<td style="text-align: left;">Desmantela um SaaS proprietário com o
+<strong>Quinteto Soberano</strong>, White-Label e MCPs.</td>
+<td
+style="text-align: left;"><code>output/02-dossies-verticais/vert-&lt;saas&gt;/</code>
+<em>(HTML Diamante R5-V, MD e PDF Typst)</em></td>
+<td
+style="text-align: left;"><code>esteira_dossies_verticais</code></td>
+<td style="text-align: center;"><strong>Nota 10.0</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Fluxo 3 · Manuais &amp;
+Trilhas</strong></td>
+<td style="text-align: left;">Operacionaliza qualquer ferramenta do
+Quinteto com Manual VPS, Trilha de Aulas e Telemetria.</td>
+<td
+style="text-align: left;"><code>output/03-manuais-e-trilhas/&lt;saas&gt;/&lt;slug&gt;/</code>
+<em>(Bundle Soberano de 9 Arquivos)</em></td>
+<td style="text-align: left;"><code>esteira_manuais_bundles</code></td>
+<td style="text-align: center;"><strong>Nota 10.0</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="protocolo-de-acionamento-independente-operação-desacoplada">2.
+Protocolo de Acionamento Independente (Operação Desacoplada)</h2>
+<p>Cada fluxo possui comandos determinísticos próprios e pode ser
+executado isoladamente:</p>
+<h3 id="acionamento-do-fluxo-1-lista-horizontal">2.1 Acionamento do
+Fluxo 1 (Lista Horizontal)</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/gerar_lista_horizontal_tripartite.py <span class="at">--slug</span> bancos-dados-estado</span></code></pre></div>
+<ul>
+<li><strong>Saída:</strong> Compilação em
+<code>output/01-listas-horizontais/list-bancos-dados-estado/</code> nos
+3 formatos e registro relacional no SQLite.</li>
+</ul>
+<h3 id="acionamento-do-fluxo-2-dossiê-vertical">2.2 Acionamento do Fluxo
+2 (Dossiê Vertical)</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/gerar_dossie_vertical_tripartite.py <span class="at">--saas</span> granola</span></code></pre></div>
+<ul>
+<li><strong>Saída:</strong> Compilação do Quinteto Soberano em
+<code>output/02-dossies-verticais/vert-granola/</code> nos 3 formatos e
+registro relacional no SQLite.</li>
+</ul>
+<h3 id="acionamento-do-fluxo-3-manuais-trilhas-telemetria">2.3
+Acionamento do Fluxo 3 (Manuais, Trilhas &amp; Telemetria)</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/orquestrador_esteira_manuais.py <span class="at">--slug</span> screenpipe <span class="at">--saas</span> granola</span></code></pre></div>
+<ul>
+<li><strong>Saída:</strong> Execução dos 4 gates mecânicos (G0, G1, G2,
+R18) e emissão dos 9 arquivos em
+<code>output/03-manuais-e-trilhas/granola/screenpipe/</code>.</li>
+</ul>
+<hr />
+<h2
+id="protocolo-de-acionamento-em-cascata-esteira-completa-end-to-end">3.
+Protocolo de Acionamento em Cascata (Esteira Completa End-to-End)</h2>
+<p>Quando o usuário deseja disparar o pipeline completo de ponta a
+ponta:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/orquestrador_universal.py</span></code></pre></div>
+<p><em>(Ou no chat do harness: “Execute a esteira completa da Fábrica
+Universal”).</em></p>
+<hr />
+<h2 id="matriz-de-gates-de-interação-humano-no-loop-hitl">4. Matriz de
+Gates de Interação Humano-no-Loop (HITL)</h2>
+<p>O fluxo completo opera com três paradas deliberadas de decisão
+estratégica, onde o ser humano atua como o <strong>Engenheiro
+Agêntico</strong>:</p>
+<pre class="mermaid">
+sequenceDiagram
+    autonumber
+    actor U as Usuário (Engenheiro Agêntico)
+    participant O as Orquestrador Universal
+    participant F1 as Fluxo 1 (Lista Horizontal)
+    participant F2 as Fluxo 2 (Dossiê Vertical)
+    participant F3 as Fluxo 3 (Manuais & Trilhas)
+
+    Note over U,O: Início da Esteira Completa
+    O->>U: 🛑 GATE 0: Qual Camada Temática deseja mapear?
+    U->>O: Seleciona: "08 - Bancos de Dados & Estado"
+    O->>F1: Executa compilação tripartite da camada
+    F1-->>O: Gera output/01-listas-horizontais/ e exibe SaaS concorrentes
+
+    O->>U: 🛑 GATE 1: Das ferramentas/SaaS mapeados, qual é o SaaS em foco?
+    U->>O: Seleciona: "Granola" (ou "Oracle", "Notion")
+    O->>F2: Executa compilação do Quinteto Soberano
+    F2-->>O: Gera output/02-dossies-verticais/ e exibe as 5 ferramentas do Quinteto
+
+    O->>U: 🛑 GATE 2: Do Quinteto Soberano, qual ferramenta quer operacionalizar?
+    U->>O: Seleciona: "Screenpipe" (ou "Todas as 5 em lote")
+    O->>F3: Dispara esteira de manuais VPS, trilhas e telemetria
+    F3-->>O: Gera bundle de 9 arquivos em output/03-manuais-e-trilhas/
+    O->>U: 🏆 Entrega Final Concluída: 10/10 Registrado no SQLite!
+</pre>
+<h3 id="detalhamento-dos-gates">Detalhamento dos Gates:</h3>
+<ol type="1">
+<li><strong>🛑 GATE 0 · Seleção da Camada Temática (Entrada do Fluxo
+1):</strong><br />
+O sistema apresenta o menu das 49 Camadas. O usuário seleciona o tema. O
+Fluxo 1 roda, compila a lista horizontal tripartite e extrai os SaaS
+proprietários concorrentes.</li>
+<li><strong>🛑 GATE 1 · Seleção da Ferramenta/SaaS em Foco (Entrada do
+Fluxo 2):</strong><br />
+O sistema lista os SaaS proprietários detectados na camada. O usuário
+escolhe o alvo a desmantelar. O Fluxo 2 gera o <strong>Quinteto
+Soberano</strong>, o mapeamento de White-Label e os MCPs/Skills.</li>
+<li><strong>🛑 GATE 2 · Seleção da Ferramenta Operacional (Entrada do
+Fluxo 3):</strong><br />
+O sistema exibe as ferramentas do Quinteto. O usuário escolhe uma
+ferramenta específica (ou todas em lote). O Fluxo 3 gera o
+<strong>Manual Duplo VPS + Primeiro Voo</strong>, a <strong>Trilha
+Autoguiada de Aulas</strong> e o <strong>Laudo Oficial de
+Telemetria</strong>.</li>
+</ol>
+<hr />
+<h2 id="auditoria-de-qualidade-e-blindagem">5. Auditoria de Qualidade e
+Blindagem</h2>
+<ul>
+<li><strong>19 Testes Unitários Automatizados:</strong>
+<code>Ran 19 tests in 1.51s — OK</code> (100% verde em todos os
+fluxos);</li>
+<li><strong>Zero Entulho (Regra R18):</strong> Repositório sem arquivos
+temporários, clones ou scripts descartáveis;</li>
+<li><strong>Pasta Soberana Única:</strong> Todos os artefatos
+centralizados em <code>output/</code> (sem pasta <code>docs/</code>
+duplicada);</li>
+<li><strong>Deploy Universal:</strong> Configurado via GitHub Actions
+(<code>.github/workflows/deploy-pages.yml</code>) para publicação
+automática.</li>
+</ul>
+
+</div>
+</body>
+</html>

@@ -122,9 +122,59 @@ services:
 
 - **⚠️ Sintoma:** Demora excessiva na síntese de áudio
   - **Causa:** Falta de aceleração de hardware na inferência acústica.
-  - **Solução:** `python generate_podcast.py --device cpu --threads 4`
+## Parte III: Desinstalação Cirúrgica & Isolamento da VPS (Zero Efeito Colateral)
 
-## Parte III: Referências Bibliográficas Auditadas
+> 🛡️ **Princípio de Isolamento:** A remoção via docker compose down opera estritamente no namespace do projeto open-notebooklm, sem tocar em redes ou volumes de outros contêineres.
+
+### Passo 1: Encerramento do Stack via Docker Compose no Diretório Dedicado
+Executa o down exclusivamente na pasta do Open-NotebookLM, destruindo apenas seus contêineres e redes virtuais.
+
+```bash
+cd /opt/open-notebooklm && docker compose down -v
+```
+
+- ⚠️ **Alerta de Segurança:** Execute o comando DENTRO de /opt/open-notebooklm. Nunca execute comandos globais de remoção.
+- ✅ **Como Validar:** `docker ps | grep open-notebooklm # Não deve retornar contêineres`
+
+### Passo 2: Remoção da Pasta do Repositório e Configurações Locais
+Remove o código-fonte clonado e variáveis de ambiente em /opt/open-notebooklm.
+
+```bash
+cd ~ && sudo rm -rf /opt/open-notebooklm
+```
+
+- ⚠️ **Alerta de Segurança:** Verifique o caminho com 'pwd' antes de executar 'rm -rf'.
+- ✅ **Como Validar:** `ls -d /opt/open-notebooklm 2>/dev/null || echo 'Diretório expurgado'`
+
+### Passo 3: Revogação da Porta 8501 no Firewall
+Fecha o acesso à porta da interface Streamlit do Open-NotebookLM.
+
+```bash
+sudo ufw delete allow 8501/tcp 2>/dev/null || true
+sudo ufw reload
+```
+
+- ⚠️ **Alerta de Segurança:** As portas 80/443 do servidor web principal continuam ativas.
+- ✅ **Como Validar:** `sudo ufw status | grep 8501 # Retorna vazio`
+
+### Passo 4: Remoção do Serviço de Inicialização Automática
+Elimina a inicialização do Docker Compose no boot do Linux.
+
+```bash
+sudo rm -f /etc/systemd/system/open-notebooklm.service
+sudo systemctl daemon-reload
+```
+
+- ⚠️ **Alerta de Segurança:** Atualize a lista do systemd sem reiniciar o servidor.
+- ✅ **Como Validar:** `sudo systemctl is-enabled open-notebooklm 2>/dev/null || echo 'Desativado'`
+
+### Checklist de Saúde da VPS (Outros Projetos)
+
+- [ ] `docker ps # Outros contêineres permanecem online e funcionais`
+- [ ] `ss -tulpn | grep 8501 # Porta da interface web liberada`
+- [ ] `df -h /opt # Confirma espaço recuperado no disco`
+
+## Parte IV: Referências Bibliográficas Auditadas
 
 | ID | Categoria | Título da Obra | Autor / Mantenedor | Link Oficial |
 | :---: | :--- | :--- | :--- | :--- |

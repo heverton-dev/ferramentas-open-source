@@ -103,9 +103,59 @@ Transcrição de áudio em segundos consumindo menos de 200 MB de RAM.
 
 - **⚠️ Sintoma:** Áudio em formato MP3 rejeitado
   - **Causa:** Whisper.cpp requer áudio em formato WAV 16kHz mono.
-  - **Solução:** `ffmpeg -i audio.mp3 -ar 16000 -ac 1 audio.wav`
+## Parte III: Desinstalação Cirúrgica & Isolamento da VPS (Zero Efeito Colateral)
 
-## Parte III: Referências Bibliográficas Auditadas
+> 🛡️ **Princípio de Isolamento:** O whisper.cpp é compilado como binário autocontido em C/C++. A remoção consiste na eliminação dos arquivos executáveis e modelos ggml sem afetar nenhuma biblioteca compartilhada do sistema operacional.
+
+### Passo 1: Parada do Servidor HTTP caso Ativado
+Interrompe a execução do whisper-server se rodando como daemon.
+
+```bash
+sudo systemctl stop whisper-server.service 2>/dev/null || true
+sudo systemctl disable whisper-server.service 2>/dev/null || true
+```
+
+- ⚠️ **Alerta de Segurança:** Ignora se a ferramenta foi usada apenas via linha de comando.
+- ✅ **Como Validar:** `pkill -f whisper-server || true`
+
+### Passo 2: Remoção dos Binários em /usr/local/bin
+Remove os executáveis compilados whisper-cli e whisper-server.
+
+```bash
+sudo rm -f /usr/local/bin/whisper-cli /usr/local/bin/whisper-server
+```
+
+- ⚠️ **Alerta de Segurança:** Remova apenas os binários com prefixo whisper-*. Não toque em outros executáveis da pasta.
+- ✅ **Como Validar:** `which whisper-cli # Retorna vazio`
+
+### Passo 3: Exclusão do Repositório de Compilação e Modelos GGML
+Libera espaço em disco removendo o código-fonte C++ e os arquivos de pesos binários ggml.
+
+```bash
+sudo rm -rf /opt/whisper.cpp
+```
+
+- ⚠️ **Alerta de Segurança:** Garante liberação de até 3GB de modelos salvos.
+- ✅ **Como Validar:** `ls -d /opt/whisper.cpp 2>/dev/null || echo 'Diretório removido'`
+
+### Passo 4: Revogação da Porta 8080 (se aplicável)
+Fecha a porta de rede do servidor HTTP leve do whisper.cpp.
+
+```bash
+sudo ufw delete allow 8080/tcp 2>/dev/null || true
+sudo ufw reload
+```
+
+- ⚠️ **Alerta de Segurança:** Se houver outro serviço utilizando a porta 8080, mantenha a regra.
+- ✅ **Como Validar:** `ss -tulpn | grep 8080 # Retorna vazio`
+
+### Checklist de Saúde da VPS (Outros Projetos)
+
+- [ ] `which whisper-cli # Deve retornar nada`
+- [ ] `ls -la /usr/local/bin # Outros binários continuam intactos`
+- [ ] `free -h # RAM e Swap 100% estabilizados`
+
+## Parte IV: Referências Bibliográficas Auditadas
 
 | ID | Categoria | Título da Obra | Autor / Mantenedor | Link Oficial |
 | :---: | :--- | :--- | :--- | :--- |

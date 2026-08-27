@@ -40,7 +40,7 @@
     fill: rgb("#151A26")
   )
 
-  set par(justify: true, leading: 0.58em)
+  set par(justify: true, leading: 0.58em, spacing: 0.95em)
 
   let brand-dark = rgb("#1A446C")
   let brand-light = rgb("#DCE7F2")

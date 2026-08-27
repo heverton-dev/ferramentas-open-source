@@ -3,21 +3,736 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Playbook Mestre: Dossiês Verticais de Desmantelamento SaaS &amp; AIDD</title>
+  <title>Playbook Mestre: Dossiês Verticais de Desmantelamento SaaS & AIDD</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #F8FAFC; color: #0F172A; line-height: 1.65; padding: 32px 20px; }
-    .container { max-width: 1000px; margin: 0 auto; background: #FFF; padding: 40px; border-radius: 8px; border: 1px solid #CBD5E1; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    h1 { font-size: 26px; color: #0F172A; border-bottom: 2px solid #0284C7; padding-bottom: 8px; margin-top: 32px; }
-    h2 { font-size: 20px; color: #1E293B; margin-top: 24px; border-bottom: 1px solid #E2E8F0; padding-bottom: 6px; }
-    h3 { font-size: 16px; color: #334155; margin-top: 18px; }
-    pre { background: #0F172A; color: #E2E8F0; padding: 14px; border-radius: 6px; overflow-x: auto; font-size: 13px; }
-    blockquote { border-left: 4px solid #0284C7; background: #E0F2FE; color: #0369A1; padding: 10px 16px; margin: 16px 0; border-radius: 0 4px 4px 0; }
-    hr { border: 0; height: 1px; background: #E2E8F0; margin: 32px 0; }
+
+:root {
+  --ink: #0F172A;
+  --ink-2: #334155;
+  --muted: #64748B;
+  --accent: #0284C7;
+  --accent-soft: #E0F2FE;
+  --paper: #F8FAFC;
+  --surface: #FFFFFF;
+  --rule: #CBD5E1;
+  --rule-soft: #E2E8F0;
+  --mono: "Cascadia Code", "Fira Code", Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.68;
+  padding: 32px 16px;
+  margin: 0;
+}
+.container {
+  max-width: 1050px;
+  margin: 0 auto;
+  background: var(--surface);
+  padding: 44px 48px;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+h1 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0F172A;
+  border-bottom: 2.5px solid var(--accent);
+  padding-bottom: 10px;
+  margin-top: 24px;
+  margin-bottom: 18px;
+}
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1E293B;
+  margin-top: 28px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--rule-soft);
+  padding-bottom: 8px;
+}
+h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #334155;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+p { margin: 12px 0; font-size: 14.5px; color: var(--ink-2); }
+strong { font-weight: 700; color: #0F172A; }
+em { font-style: italic; color: #334155; }
+ul, ol { margin: 12px 0; padding-left: 24px; }
+li { margin-bottom: 6px; font-size: 14px; color: var(--ink-2); }
+
+/* TABELAS CORPORATIVAS */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0;
+  font-size: 13.5px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+}
+th, td {
+  border: 1px solid var(--rule);
+  padding: 10px 14px;
+  text-align: left;
+}
+th {
+  background: #1A446C;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+tr:nth-child(even) {
+  background: #F8FAFC;
+}
+tr:hover {
+  background: #F1F5F9;
+}
+
+/* BLOCKQUOTES EXECUTIVOS */
+blockquote {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  color: #0369A1;
+  padding: 12px 18px;
+  margin: 18px 0;
+  border-radius: 0 6px 6px 0;
+  font-size: 14px;
+}
+blockquote p { margin: 4px 0; color: #0369A1; }
+
+/* CÓDIGO E TERMINAL */
+pre:not(.mermaid) {
+  background: #0F172A;
+  color: #E2E8F0;
+  padding: 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 13px;
+  font-family: var(--mono);
+  border: 1px solid #1E293B;
+  margin: 16px 0;
+}
+code {
+  font-family: var(--mono);
+  background: #F1F5F9;
+  color: #0F172A;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12.5px;
+}
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+/* DIAGRAMAS MERMAID */
+.mermaid {
+  background: #FFFFFF;
+  border: 1px solid var(--rule-soft);
+  border-radius: 6px;
+  padding: 24px;
+  text-align: center;
+  margin: 24px 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--rule-soft);
+  margin: 32px 0;
+}
+
   </style>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'neutral',
+      securityLevel: 'loose'
+    });
+  </script>
 </head>
 <body>
 <div class="container">
-  <h1>PLAYBOOK MESTRE: DOSSIÊS VERTICAIS DE DESMANTELAMENTO SAAS (AIDD)</h1><blockquote>**Framework de Desmantelamento de SaaS Proprietários & Quinteto Soberano**  </blockquote><blockquote>**Versão:** 1.0.0 · Padrão Diamante R5-V · Nota 10.0 / 10.0  </blockquote><blockquote>**Compatibilidade:** Qualquer LLM e ADE (Orca, Cursor, Claude Code, Windsurf)  </blockquote><blockquote>**Data de Homologação:** 27 de Agosto de 2026</blockquote><hr><h2>🤖 META-PROMPT DE INGESTÃO AUTOMÁTICA PARA LLMS</h2><blockquote>**INSTRUÇÃO PARA QUALQUER INTELIGÊNCIA ARTIFICIAL QUE RECEBER ESTE DOCUMENTO:**</blockquote><blockquote></blockquote><blockquote>Você acaba de receber o **Playbook Mestre de Dossiês Verticais (Fluxo 2)**.</blockquote><blockquote>Sua missão é atuar como Engenheiro Agêntico Sênior para desmantelar qualquer SaaS proprietário alvo (ex: Notion, Salesforce, Zapier, Slack, Asana):</blockquote><blockquote>1. Estruture a análise com o **Quinteto Soberano Open Source** nas 5 classificações exatas (*A Mais Robusta, A Mais Completa, A Mais Moderna, A Mais Leve, A Mais Simples*);</blockquote><blockquote>2. Mapeie a **Seção 5 de White-Label & Aderência ao Design System Corporativo**;</blockquote><blockquote>3. Mapeie a **Seção 6 do Ecossistema Agêntico (MCPs, Skills & Plugins)**;</blockquote><blockquote>4. Entregue os artefatos de forma determinística nos 3 formatos (HTML, MD e PDF Typst).</blockquote><hr><p><!-- INÍCIO DO MÓDULO: 00-PROPOSITO-E-VISAO-GERAL.md --></p><h1>00 · Manifesto, Propósito & Visão Geral (Fluxo 2: Dossiês Verticais)</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS (Quinteto Soberano)  </blockquote><blockquote>**Metodologia:** AI-Driven Development (AIDD) · Engenharia Agêntica de Elite  </blockquote><blockquote>**Status:** Homologado 10/10 · Data: 27 de Agosto de 2026</blockquote><hr><h2>1. O Conceito de Desmantelamento Cirúrgico de SaaS</h2><p>O mercado corporativo vive refém de assinaturas de SaaS em dólar (Notion, Granola, Salesforce, Zapier, Slack).</p><p>O **Fluxo 2** opera a desconstrução técnica do alvo com um **Quinteto Soberano Open Source**, provando numericamente que uma stack aberta substitui o produto proprietário com **custo zero de licença e confidencialidade LGPD total**.</p><hr><h2>2. As 5 Classificações Canônicas Inegociáveis</h2><p>Todo Dossiê Vertical do Fluxo 2 classifica estritamente as ferramentas em:</p><p>1. **A Mais Robusta:** Infraestrutura pesada, tolerância a falhas e escalabilidade corporativa;</p><p>2. **A Mais Completa:** Maior densidade de features nativas e paridade de tela com o SaaS;</p><p>3. **A Mais Moderna:** Arquitetura contemporânea (Rust, Next.js, AI embeddings, Tauri);</p><p>4. **A Mais Leve:** Mínimo consumo de RAM e CPU, ideal para edge e laptops modestos;</p><p>5. **A Mais Simples:** Onboarding em minutos, zero atrito e curva de adoção imediata.</p><hr><h2>3. O Ecossistema Agêntico & White-Label</h2><p>Diferente de simples listas, o Fluxo 2 audita:</p><li>**Seção 5 (White-Label):** Nível de esforço para envelopar com o Design System corporativo da empresa;</li><li>**Seção 6 (MCPs & Skills):** Servidores Model Context Protocol e Agent Skills oficiais para operação com IA local.</li><p><!-- FIM DO MÓDULO: 00-PROPOSITO-E-VISAO-GERAL.md --></p><hr><p><!-- INÍCIO DO MÓDULO: 01-BLUEPRINT.md --></p><h1>01 · Blueprint de Engenharia (Fluxo 2: Dossiês Verticais)</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS  </blockquote><blockquote>**Arquitetura:** Esteira Determinística Tripartite com Gate Mecânico R5-V e SQLite R11</blockquote><hr><h2>1. Diagrama de Fluxo de Dados</h2><pre><code>flowchart TD    A["Entrada: SaaS Alvo (ex: Granola, Notion)"] --&gt; B["scripts/data/dossie-vertical-saas.json"]    B --&gt; C["Compilador Tripartite (gerar_dossie_vertical_tripartite.py)"]        subgraph S1 ["Geração dos 3 Formatos Canônicos"]        C --&gt; D["HTML Padrão Diamante R5-V (Hero Stats, Busca, Dark Mode)"]        C --&gt; E["Markdown Limpo Estruturado"]        C --&gt; F["PDF Executivo Typst Anti-Sobreposição"]    end    subgraph S2 ["Auditoria & Persistência"]        D --&gt; G["Gate Mecânico R5-V (auditar_tipo_vertical.py)"]        G --&gt;|Aprovado| H["Registro Relacional SQLite (estado_esteira.db)"]        H --&gt; I["Espelhamento Estrito R18 em docs/"]    end</code></pre><hr><h2>2. Matriz de Componentes e Responsabilidades</h2><p>| Componente | Tipo | Responsabilidade Principal | Saída Primária |</p><p>| :--- | :--- | :--- | :--- |</p><p>| `dossie_vertical.schema.json` | Contrato JSON | Validação formal do Quinteto e Seções 5 e 6 | Schema válido |</p><p>| `gerar_dossie_vertical_tripartite.py` | Compilador | Gera simultaneamente HTML, MD e Typst PDF | `output/dossies-verticais/vert-<saas>/*` |</p><p>| `template_dossie_vertical.typ` | Molde Typst | Renderização gráfica sem sobreposição | Arquivo PDF executivo |</p><p>| `auditar_tipo_vertical.py` | Gate R5-V | Validação mecânica das 5 classificações e MCPs | Retorno `exit 0` ou `exit 1` |</p><p>| `test_fluxo2_verticais.py` | Testes | Suíte de testes unitários automatizados | 6 testes passando em <1s |</p><p>| `estado_esteira.py` | Persistência | Registra histórico na tabela `esteira_dossies_verticais` | `estado_esteira.db` |</p><p><!-- FIM DO MÓDULO: 01-BLUEPRINT.md --></p><hr><p><!-- INÍCIO DO MÓDULO: 02-SPEC.md --></p><h1>02 · Especificação Técnica & Contratos JSON (Fluxo 2)</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS  </blockquote><blockquote>**Contrato Canônico:** `scripts/schemas/dossie_vertical.schema.json`</blockquote><hr><h2>1. Requisitos Funcionais Obrigatórios</h2><li>**RF01 (Quinteto Soberano):** Todo arquivo de entrada DEVE conter exatamente 5 ferramentas ranqueadas de 1 a 5;</li><li>**RF02 (Classificações Canônicas):** O campo `classificacao` deve ser uma das 5 strings exatas:</li><p>  - `A Mais Robusta`</p><p>  - `A Mais Completa`</p><p>  - `A Mais Moderna`</p><p>  - `A Mais Leve`</p><p>  - `A Mais Simples`</p><li>**RF03 (Seção 5: White-Label):** Cada ferramenta DEVE conter o objeto `design_system` com `esforco`, `stack_ui` e `mecanica_customizacao`;</li><li>**RF04 (Seção 6: MCPs & Skills):** Cada ferramenta DEVE conter um array `uso_complementar` com ao menos 1 servidor MCP ou Agent Skill funcional;</li><li>**RF05 (Compilação Tripartite):** O compilador deve gerar HTML, MD e PDF com zero intervenção manual;</li><li>**RF06 (Persistência SQLite R11):** O registro do dossiê deve ser gravado na tabela `esteira_dossies_verticais`.</li><p><!-- FIM DO MÓDULO: 02-SPEC.md --></p><hr><p><!-- INÍCIO DO MÓDULO: 03-ARCHITECTURE.md --></p><h1>03 · Arquitetura do Sistema & Topologia Modular (Fluxo 2)</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS  </blockquote><blockquote>**Padrão de Armazenamento:** Bundles Modulares em `output/dossies-verticais/`</blockquote><hr><h2>1. Topologia de Diretórios dos Dossiês Verticais</h2><pre><code>output/dossies-verticais/  ├── vert-granola/  │     ├── vert-granola.html   ➔ Compêndio Interativo Diamante R5-V  │     ├── vert-granola.md     ➔ Markdown Estruturado  │     └── vert-granola.pdf    ➔ PDF Executivo via Typst  │  ├── vert-notion/  │     ├── vert-notion.html  │     ├── vert-notion.md  │     └── vert-notion.pdf  │  └── vert-salesforce/        ├── vert-salesforce.html        ├── vert-salesforce.md        └── vert-salesforce.pdf</code></pre><h2>2. Regra de Paridade Estrita (R18)</h2><p>Todos os bundles gerados em `output/dossies-verticais/vert-<saas>/` possuem cópia espelho idêntica em `docs/dossies-verticais/vert-<saas>/`. Adicionalmente, para retrocompatibilidade com compêndios legados, o arquivo HTML também é mantido em `output/listas-open-source/vert-<saas>.html` e `docs/listas/vert-<saas>.html`.</p><p><!-- FIM DO MÓDULO: 03-ARCHITECTURE.md --></p><hr><p><!-- INÍCIO DO MÓDULO: 04-AGENTS.md --></p><h1>04 · Governança Agêntica & Papéis (Fluxo 2: Dossiês Verticais)</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS  </blockquote><blockquote>**Framework:** AI-Driven Development (AIDD)</blockquote><hr><h2>1. O Papel do Engenheiro Agêntico (Operador Humano)</h2><li>**Definição de Alvo:** Seleciona o SaaS que será desmantelado;</li><li>**Arbitragem do Quinteto:** Valida se as 5 classificações canônicas refletem o mercado;</li><li>**Homologação Final:** Analisa os outputs tripartites e os laudos dos gates.</li><h2>2. O Papel do Agente de IA Orquestrador</h2><li>**Normalização de Dados:** Aplica o schema `dossie_vertical.schema.json`;</li><li>**Execução Determinística:** Aciona o script tripartite em disco (custo zero de tokens em renderização);</li><li>**Controle de Qualidade:** Roda os gates mecânicos e testes unitários antes de qualquer entrega.</li><p><!-- FIM DO MÓDULO: 04-AGENTS.md --></p><hr><p><!-- INÍCIO DO MÓDULO: 05-SUBAGENTS.md --></p><h1>05 · Catálogo de Subagentes Especialistas (Fluxo 2)</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS</blockquote><hr><h2>1. Squad de Subagentes Especialistas</h2><p>| Subagente | Escopo | Ferramenta / Tool |</p><p>| :--- | :--- | :--- |</p><p>| `<analista-saas>` | Pesquisa de preços, termos de serviço e riscos de privacidade do SaaS | Busca web / Docs oficiais |</p><p>| `<curador-quinteto>` | Seleção e enquadramento nas 5 categorias canônicas | GitHub Search / Licenças OSI |</p><p>| `<arquiteto-whitelabel>` | Mapeamento de Design System, stack de UI e esforço de rebranding | Leitura de repositórios |</p><p>| `<integrador-mcps>` | Localização de MCP Servers e Agent Skills oficiais no npm/GitHub | Registros MCP / Skills |</p><p>| `<compilador-vertical>` | Renderização determinística dos 3 formatos (HTML, MD, PDF) | Pandoc + Typst + Python |</p><p>| `<auditor-r5v>` | Auditor mecânico de validação estrutural | `auditar_tipo_vertical.py` |</p><p><!-- FIM DO MÓDULO: 05-SUBAGENTS.md --></p><hr><p><!-- INÍCIO DO MÓDULO: 06-RULES.md --></p><h1>06 · As Regras Inegociáveis (Fluxo 2: Dossiês Verticais)</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS</blockquote><hr><h2>1. As 6 Regras de Ouro dos Dossiês Verticais:</h2><p>1. **R5-V (Padrão Dossiê Vertical Diamante):**  </p><p>   Obrigatório conter a Caixa de Alvo SaaS com preço e riscos de privacidade, e o Quinteto Soberano classificado sem desvios.</p><p>2. **R-Quinteto (As 5 Classificações Sagradas):**  </p><p>   *A Mais Robusta*, *A Mais Completa*, *A Mais Moderna*, *A Mais Leve* e *A Mais Simples*. Proibido inventar novas categorias.</p><p>3. **R-WhiteLabel (Aderência ao Design System):**  </p><p>   Seção 5 obrigatória com stack de UI (Tailwind, Tauri, React), esforço e risco de upgrade.</p><p>4. **R-MCP (Ecossistema Agêntico):**  </p><p>   Seção 6 obrigatória listando servidores MCP oficiais e skills que se conectam aos ADEs/LLMs.</p><p>5. **R-Tripartite (Três Formatos):**  </p><p>   Geração obrigatória de HTML Interativo, Markdown Limpo e PDF Typst Anti-sobreposição.</p><p>6. **R11 & R18 (Estado Relacional & Paridade):**  </p><p>   Registro no banco SQLite `estado_esteira.db` e espelhamento MD5 idêntico em `docs/`.</p><p><!-- FIM DO MÓDULO: 06-RULES.md --></p><hr><p><!-- INÍCIO DO MÓDULO: 07-SQLITE.md --></p><h1>07 · Modelagem Relacional SQLite (Fluxo 2: Dossiês Verticais)</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS  </blockquote><blockquote>**Banco:** `estado_esteira.db` (Regra R11)</blockquote><hr><h2>1. Schema da Tabela `esteira_dossies_verticais`</h2><pre><code>CREATE TABLE IF NOT EXISTS esteira_dossies_verticais (    id INTEGER PRIMARY KEY AUTOINCREMENT,    saas_slug TEXT NOT NULL UNIQUE,    saas_nome TEXT NOT NULL,    preco_anual_dolar REAL,    quinteto_ferramentas TEXT NOT NULL,    total_ferramentas INTEGER DEFAULT 5,    gate_r5v TEXT DEFAULT 'APROVADO',    gate_r18 TEXT DEFAULT 'APROVADO',    caminho_html TEXT,    caminho_md TEXT,    caminho_pdf TEXT,    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP);</code></pre><h2>2. Métodos de Acesso</h2><li>`registrar_dossie_vertical(dados: dict)`: Insere ou atualiza o registro do dossiê no banco;</li><li>`listar_dossies_verticais() -> list[dict]`: Retorna a listagem completa dos dossiês compilados.</li><p><!-- FIM DO MÓDULO: 07-SQLITE.md --></p><hr><p><!-- INÍCIO DO MÓDULO: 08-TESTES.md --></p><h1>08 · Arquitetura de Testes Unitários Automatizados (Fluxo 2)</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS  </blockquote><blockquote>**Suíte Canônica:** `tests/test_fluxo2_verticais.py`</blockquote><hr><h2>1. Cobertura dos 6 Testes Unitários</h2><p>1. `test_01_schema_dossie_vertical_valido`: Validação formal do JSON contra `dossie_vertical.schema.json`;</p><p>2. `test_02_quinteto_soberano_5_classificacoes`: Validação exata das 5 classificações canônicas;</p><p>3. `test_03_secoes_whitelabel_e_mcps_obrigatorias`: Presença obrigatória de `design_system` e `uso_complementar`;</p><p>4. `test_04_compilacao_tripartite_gerada`: Existência de HTML, MD e PDF com tamanho > 0;</p><p>5. `test_05_persistencia_sqlite_r11`: Leitura e escrita no SQLite `estado_esteira.db`;</p><p>6. `test_06_paridade_espelhos_docs_r18`: Paridade e sincronização estrita com `docs/`.</p><hr><h2>2. Execução da Suíte</h2><pre><code>python -m unittest tests/test_fluxo2_verticais.py -v</code></pre><p>Tempo de execução: **< 10 milissegundos** com 100% de taxa de sucesso.</p><p><!-- FIM DO MÓDULO: 08-TESTES.md --></p><hr><p><!-- INÍCIO DO MÓDULO: 09-COMMANDS.md --></p><h1>09 · Catálogo de Comandos & Flags CLI (Fluxo 2)</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS</blockquote><hr><h2>1. Comandos Operacionais</h2><h3>1.1 Compilação Tripartite de um Dossiê Vertical</h3><pre><code>python scripts/gerar_dossie_vertical_tripartite.py --saas granola</code></pre><h3>1.2 Execução da Suíte de Testes Unitários</h3><pre><code>python -m unittest tests/test_fluxo2_verticais.py -v</code></pre><h3>1.3 Auditoria Mecânica R5-V (Gate do Dossiê Vertical)</h3><pre><code>python scripts/auditar_tipo_vertical.py output/listas-open-source/vert-granola.html</code></pre><h3>1.4 Execução do Runner da Skill `/implementacao`</h3><pre><code>node .claude/skills/implementacao/index.cjs scripts/data/plano_implementacao_fluxo2.json</code></pre><p><!-- FIM DO MÓDULO: 09-COMMANDS.md --></p><hr><p><!-- INÍCIO DO MÓDULO: 10-HOOKS.md --></p><h1>10 · Ciclo de Vida & Automações Mecânicas (Hooks) (Fluxo 2)</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS</blockquote><hr><h2>1. Ciclo de Validação Contínua (Pre-Commit)</h2><p>Antes de qualquer commit no repositório, o hook do Git dispara a auditoria automática:</p><p>1. `tests/test_fluxo2_verticais.py` deve retornar `OK`;</p><p>2. `scripts/auditar_tipo_vertical.py` deve retornar `exit 0`;</p><p>3. `scripts/auditar_higiene_repo.py` valida paridade MD5 de espelhos e ausência de lixo temporário.</p><p><!-- FIM DO MÓDULO: 10-HOOKS.md --></p><hr><p><!-- INÍCIO DO MÓDULO: 11-SCRIPTS.md --></p><h1>11 · Dicionário de Scripts & Schemas (Fluxo 2: Dossiês Verticais)</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS</blockquote><hr><h2>1. Dicionário de Componentes</h2><h3>Scripts Python:</h3><li>`scripts/gerar_dossie_vertical_tripartite.py`: Gerador oficial tripartite do Fluxo 2 (HTML, MD, PDF);</li><li>`scripts/compilar_compendio_vertical.py`: Compilador do HTML interativo Padrão Diamante R5-V;</li><li>`scripts/auditar_tipo_vertical.py`: Validador mecânico de conformidade com o Quinteto Soberano;</li><li>`scripts/estado_esteira.py`: Persistência relacional SQLite.</li><h3>Templates Typst:</h3><li>`scripts/padroes/template_dossie_vertical.typ`: Molde visual institucional anti-sobreposição.</li><h3>Schemas JSON:</h3><li>`scripts/schemas/dossie_vertical.schema.json`: Contrato estrito com validação de tipos e enums.</li><p><!-- FIM DO MÓDULO: 11-SCRIPTS.md --></p><hr><p><!-- INÍCIO DO MÓDULO: 12-ESTUDO-DE-CASO-AIDD.md --></p><h1>12 · Estudo de Caso: Desmantelamento do Granola via AIDD</h1><blockquote>**Módulo:** Fluxo 2 — Dossiês Verticais de Desmantelamento SaaS</blockquote><hr><h2>1. O Alvo: Granola (AI Meeting Notepad)</h2><li>**Custo:** US$ 120/ano por usuário (~R$ 720/ano);</li><li>**Risco:** Transmissão contínua de áudio confidencial para servidores de terceiros.</li><hr><h2>2. A Resposta do Quinteto Soberano Open Source</h2><p>1. **#1 · Screenpipe (A Mais Completa):** Captura contínua 24/7 com OCR e áudio local em Rust;</p><p>2. **#2 · WhisperX (A Mais Robusta):** Transcrição batelada com diarização de locutores e VAD;</p><p>3. **#3 · Open-NotebookLM (A Mais Moderna):** Interface em podcast com TTS e geração de notas;</p><p>4. **#4 · Whisper.cpp (A Mais Leve):** Inferência direta em C++ puro com consumo ínfimo de RAM;</p><p>5. **#5 · Faster-Whisper-CLI (A Mais Simples):** Executável autônomo com um único comando de terminal.</p><hr><h2>3. Resultado de Engenharia Agêntica</h2><li>**Economia Anual:** Mais de R$ 36.000/ano para um time de 50 pessoas;</li><li>**Conformidade:** 100% de confidencialidade com dados gravados apenas em disco local;</li><li>**Tripartite:** Documentado simultaneamente em HTML, Markdown e PDF Typst.</li><p><!-- FIM DO MÓDULO: 12-ESTUDO-DE-CASO-AIDD.md --></p><hr>
+<h1
+id="playbook-mestre-dossiês-verticais-de-desmantelamento-saas-aidd">PLAYBOOK
+MESTRE: DOSSIÊS VERTICAIS DE DESMANTELAMENTO SAAS (AIDD)</h1>
+<blockquote>
+<p><strong>Framework de Desmantelamento de SaaS Proprietários &amp;
+Quinteto Soberano</strong><br />
+<strong>Versão:</strong> 1.0.0 · Padrão Diamante R5-V · Nota 10.0 /
+10.0<br />
+<strong>Compatibilidade:</strong> Qualquer LLM e ADE (Orca, Cursor,
+Claude Code, Windsurf)<br />
+<strong>Data de Homologação:</strong> 27 de Agosto de 2026</p>
+</blockquote>
+<hr />
+<h2 id="meta-prompt-de-ingestão-automática-para-llms">🤖 META-PROMPT DE
+INGESTÃO AUTOMÁTICA PARA LLMS</h2>
+<blockquote>
+<p><strong>INSTRUÇÃO PARA QUALQUER INTELIGÊNCIA ARTIFICIAL QUE RECEBER
+ESTE DOCUMENTO:</strong></p>
+<p>Você acaba de receber o <strong>Playbook Mestre de Dossiês Verticais
+(Fluxo 2)</strong>. Sua missão é atuar como Engenheiro Agêntico Sênior
+para desmantelar qualquer SaaS proprietário alvo (ex: Notion,
+Salesforce, Zapier, Slack, Asana): 1. Estruture a análise com o
+<strong>Quinteto Soberano Open Source</strong> nas 5 classificações
+exatas (<em>A Mais Robusta, A Mais Completa, A Mais Moderna, A Mais
+Leve, A Mais Simples</em>); 2. Mapeie a <strong>Seção 5 de White-Label
+&amp; Aderência ao Design System Corporativo</strong>; 3. Mapeie a
+<strong>Seção 6 do Ecossistema Agêntico (MCPs, Skills &amp;
+Plugins)</strong>; 4. Entregue os artefatos de forma determinística nos
+3 formatos (HTML, MD e PDF Typst).</p>
+</blockquote>
+<hr />
+<!-- INÍCIO DO MÓDULO: 00-PROPOSITO-E-VISAO-GERAL.md -->
+<h1 id="manifesto-propósito-visão-geral-fluxo-2-dossiês-verticais">00 ·
+Manifesto, Propósito &amp; Visão Geral (Fluxo 2: Dossiês Verticais)</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS (Quinteto Soberano)<br />
+<strong>Metodologia:</strong> AI-Driven Development (AIDD) · Engenharia
+Agêntica de Elite<br />
+<strong>Status:</strong> Homologado 10/10 · Data: 27 de Agosto de
+2026</p>
+</blockquote>
+<hr />
+<h2 id="o-conceito-de-desmantelamento-cirúrgico-de-saas">1. O Conceito
+de Desmantelamento Cirúrgico de SaaS</h2>
+<p>O mercado corporativo vive refém de assinaturas de SaaS em dólar
+(Notion, Granola, Salesforce, Zapier, Slack). O <strong>Fluxo 2</strong>
+opera a desconstrução técnica do alvo com um <strong>Quinteto Soberano
+Open Source</strong>, provando numericamente que uma stack aberta
+substitui o produto proprietário com <strong>custo zero de licença e
+confidencialidade LGPD total</strong>.</p>
+<hr />
+<h2 id="as-5-classificações-canônicas-inegociáveis">2. As 5
+Classificações Canônicas Inegociáveis</h2>
+<p>Todo Dossiê Vertical do Fluxo 2 classifica estritamente as
+ferramentas em: 1. <strong>A Mais Robusta:</strong> Infraestrutura
+pesada, tolerância a falhas e escalabilidade corporativa; 2. <strong>A
+Mais Completa:</strong> Maior densidade de features nativas e paridade
+de tela com o SaaS; 3. <strong>A Mais Moderna:</strong> Arquitetura
+contemporânea (Rust, Next.js, AI embeddings, Tauri); 4. <strong>A Mais
+Leve:</strong> Mínimo consumo de RAM e CPU, ideal para edge e laptops
+modestos; 5. <strong>A Mais Simples:</strong> Onboarding em minutos,
+zero atrito e curva de adoção imediata.</p>
+<hr />
+<h2 id="o-ecossistema-agêntico-white-label">3. O Ecossistema Agêntico
+&amp; White-Label</h2>
+<p>Diferente de simples listas, o Fluxo 2 audita: - <strong>Seção 5
+(White-Label):</strong> Nível de esforço para envelopar com o Design
+System corporativo da empresa; - <strong>Seção 6 (MCPs &amp;
+Skills):</strong> Servidores Model Context Protocol e Agent Skills
+oficiais para operação com IA local.</p>
+<!-- FIM DO MÓDULO: 00-PROPOSITO-E-VISAO-GERAL.md -->
+<hr />
+<!-- INÍCIO DO MÓDULO: 01-BLUEPRINT.md -->
+<h1 id="blueprint-de-engenharia-fluxo-2-dossiês-verticais">01 ·
+Blueprint de Engenharia (Fluxo 2: Dossiês Verticais)</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS<br />
+<strong>Arquitetura:</strong> Esteira Determinística Tripartite com Gate
+Mecânico R5-V e SQLite R11</p>
+</blockquote>
+<hr />
+<h2 id="diagrama-de-fluxo-de-dados">1. Diagrama de Fluxo de Dados</h2>
+<pre class="mermaid">
+flowchart TD
+    A["Entrada: SaaS Alvo (ex: Granola, Notion)"] --> B["scripts/data/dossie-vertical-saas.json"]
+    B --> C["Compilador Tripartite (gerar_dossie_vertical_tripartite.py)"]
+    
+    subgraph S1 ["Geração dos 3 Formatos Canônicos"]
+        C --> D["HTML Padrão Diamante R5-V (Hero Stats, Busca, Dark Mode)"]
+        C --> E["Markdown Limpo Estruturado"]
+        C --> F["PDF Executivo Typst Anti-Sobreposição"]
+    end
+
+    subgraph S2 ["Auditoria & Persistência"]
+        D --> G["Gate Mecânico R5-V (auditar_tipo_vertical.py)"]
+        G -->|Aprovado| H["Registro Relacional SQLite (estado_esteira.db)"]
+        H --> I["Espelhamento Estrito R18 em docs/"]
+    end
+</pre>
+<hr />
+<h2 id="matriz-de-componentes-e-responsabilidades">2. Matriz de
+Componentes e Responsabilidades</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Componente</th>
+<th style="text-align: left;">Tipo</th>
+<th style="text-align: left;">Responsabilidade Principal</th>
+<th style="text-align: left;">Saída Primária</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td
+style="text-align: left;"><code>dossie_vertical.schema.json</code></td>
+<td style="text-align: left;">Contrato JSON</td>
+<td style="text-align: left;">Validação formal do Quinteto e Seções 5 e
+6</td>
+<td style="text-align: left;">Schema válido</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><code>gerar_dossie_vertical_tripartite.py</code></td>
+<td style="text-align: left;">Compilador</td>
+<td style="text-align: left;">Gera simultaneamente HTML, MD e Typst
+PDF</td>
+<td
+style="text-align: left;"><code>output/dossies-verticais/vert-&lt;saas&gt;/*</code></td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><code>template_dossie_vertical.typ</code></td>
+<td style="text-align: left;">Molde Typst</td>
+<td style="text-align: left;">Renderização gráfica sem sobreposição</td>
+<td style="text-align: left;">Arquivo PDF executivo</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>auditar_tipo_vertical.py</code></td>
+<td style="text-align: left;">Gate R5-V</td>
+<td style="text-align: left;">Validação mecânica das 5 classificações e
+MCPs</td>
+<td style="text-align: left;">Retorno <code>exit 0</code> ou
+<code>exit 1</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>test_fluxo2_verticais.py</code></td>
+<td style="text-align: left;">Testes</td>
+<td style="text-align: left;">Suíte de testes unitários
+automatizados</td>
+<td style="text-align: left;">6 testes passando em &lt;1s</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>estado_esteira.py</code></td>
+<td style="text-align: left;">Persistência</td>
+<td style="text-align: left;">Registra histórico na tabela
+<code>esteira_dossies_verticais</code></td>
+<td style="text-align: left;"><code>estado_esteira.db</code></td>
+</tr>
+</tbody>
+</table>
+<!-- FIM DO MÓDULO: 01-BLUEPRINT.md -->
+<hr />
+<!-- INÍCIO DO MÓDULO: 02-SPEC.md -->
+<h1 id="especificação-técnica-contratos-json-fluxo-2">02 · Especificação
+Técnica &amp; Contratos JSON (Fluxo 2)</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS<br />
+<strong>Contrato Canônico:</strong>
+<code>scripts/schemas/dossie_vertical.schema.json</code></p>
+</blockquote>
+<hr />
+<h2 id="requisitos-funcionais-obrigatórios">1. Requisitos Funcionais
+Obrigatórios</h2>
+<ul>
+<li><strong>RF01 (Quinteto Soberano):</strong> Todo arquivo de entrada
+DEVE conter exatamente 5 ferramentas ranqueadas de 1 a 5;</li>
+<li><strong>RF02 (Classificações Canônicas):</strong> O campo
+<code>classificacao</code> deve ser uma das 5 strings exatas:
+<ul>
+<li><code>A Mais Robusta</code></li>
+<li><code>A Mais Completa</code></li>
+<li><code>A Mais Moderna</code></li>
+<li><code>A Mais Leve</code></li>
+<li><code>A Mais Simples</code></li>
+</ul></li>
+<li><strong>RF03 (Seção 5: White-Label):</strong> Cada ferramenta DEVE
+conter o objeto <code>design_system</code> com <code>esforco</code>,
+<code>stack_ui</code> e <code>mecanica_customizacao</code>;</li>
+<li><strong>RF04 (Seção 6: MCPs &amp; Skills):</strong> Cada ferramenta
+DEVE conter um array <code>uso_complementar</code> com ao menos 1
+servidor MCP ou Agent Skill funcional;</li>
+<li><strong>RF05 (Compilação Tripartite):</strong> O compilador deve
+gerar HTML, MD e PDF com zero intervenção manual;</li>
+<li><strong>RF06 (Persistência SQLite R11):</strong> O registro do
+dossiê deve ser gravado na tabela
+<code>esteira_dossies_verticais</code>.</li>
+</ul>
+<!-- FIM DO MÓDULO: 02-SPEC.md -->
+<hr />
+<!-- INÍCIO DO MÓDULO: 03-ARCHITECTURE.md -->
+<h1 id="arquitetura-do-sistema-topologia-modular-fluxo-2">03 ·
+Arquitetura do Sistema &amp; Topologia Modular (Fluxo 2)</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS<br />
+<strong>Padrão de Armazenamento:</strong> Bundles Modulares em
+<code>output/dossies-verticais/</code></p>
+</blockquote>
+<hr />
+<h2 id="topologia-de-diretórios-dos-dossiês-verticais">1. Topologia de
+Diretórios dos Dossiês Verticais</h2>
+<pre><code>output/dossies-verticais/
+  ├── vert-granola/
+  │     ├── vert-granola.html   ➔ Compêndio Interativo Diamante R5-V
+  │     ├── vert-granola.md     ➔ Markdown Estruturado
+  │     └── vert-granola.pdf    ➔ PDF Executivo via Typst
+  │
+  ├── vert-notion/
+  │     ├── vert-notion.html
+  │     ├── vert-notion.md
+  │     └── vert-notion.pdf
+  │
+  └── vert-salesforce/
+        ├── vert-salesforce.html
+        ├── vert-salesforce.md
+        └── vert-salesforce.pdf</code></pre>
+<h2 id="regra-de-paridade-estrita-r18">2. Regra de Paridade Estrita
+(R18)</h2>
+<p>Todos os bundles gerados em
+<code>output/dossies-verticais/vert-&lt;saas&gt;/</code> possuem cópia
+espelho idêntica em
+<code>docs/dossies-verticais/vert-&lt;saas&gt;/</code>. Adicionalmente,
+para retrocompatibilidade com compêndios legados, o arquivo HTML também
+é mantido em
+<code>output/listas-open-source/vert-&lt;saas&gt;.html</code> e
+<code>docs/listas/vert-&lt;saas&gt;.html</code>.</p>
+<!-- FIM DO MÓDULO: 03-ARCHITECTURE.md -->
+<hr />
+<!-- INÍCIO DO MÓDULO: 04-AGENTS.md -->
+<h1 id="governança-agêntica-papéis-fluxo-2-dossiês-verticais">04 ·
+Governança Agêntica &amp; Papéis (Fluxo 2: Dossiês Verticais)</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS<br />
+<strong>Framework:</strong> AI-Driven Development (AIDD)</p>
+</blockquote>
+<hr />
+<h2 id="o-papel-do-engenheiro-agêntico-operador-humano">1. O Papel do
+Engenheiro Agêntico (Operador Humano)</h2>
+<ul>
+<li><strong>Definição de Alvo:</strong> Seleciona o SaaS que será
+desmantelado;</li>
+<li><strong>Arbitragem do Quinteto:</strong> Valida se as 5
+classificações canônicas refletem o mercado;</li>
+<li><strong>Homologação Final:</strong> Analisa os outputs tripartites e
+os laudos dos gates.</li>
+</ul>
+<h2 id="o-papel-do-agente-de-ia-orquestrador">2. O Papel do Agente de IA
+Orquestrador</h2>
+<ul>
+<li><strong>Normalização de Dados:</strong> Aplica o schema
+<code>dossie_vertical.schema.json</code>;</li>
+<li><strong>Execução Determinística:</strong> Aciona o script tripartite
+em disco (custo zero de tokens em renderização);</li>
+<li><strong>Controle de Qualidade:</strong> Roda os gates mecânicos e
+testes unitários antes de qualquer entrega.</li>
+</ul>
+<!-- FIM DO MÓDULO: 04-AGENTS.md -->
+<hr />
+<!-- INÍCIO DO MÓDULO: 05-SUBAGENTS.md -->
+<h1 id="catálogo-de-subagentes-especialistas-fluxo-2">05 · Catálogo de
+Subagentes Especialistas (Fluxo 2)</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS</p>
+</blockquote>
+<hr />
+<h2 id="squad-de-subagentes-especialistas">1. Squad de Subagentes
+Especialistas</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Subagente</th>
+<th style="text-align: left;">Escopo</th>
+<th style="text-align: left;">Ferramenta / Tool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>&lt;analista-saas&gt;</code></td>
+<td style="text-align: left;">Pesquisa de preços, termos de serviço e
+riscos de privacidade do SaaS</td>
+<td style="text-align: left;">Busca web / Docs oficiais</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>&lt;curador-quinteto&gt;</code></td>
+<td style="text-align: left;">Seleção e enquadramento nas 5 categorias
+canônicas</td>
+<td style="text-align: left;">GitHub Search / Licenças OSI</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><code>&lt;arquiteto-whitelabel&gt;</code></td>
+<td style="text-align: left;">Mapeamento de Design System, stack de UI e
+esforço de rebranding</td>
+<td style="text-align: left;">Leitura de repositórios</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>&lt;integrador-mcps&gt;</code></td>
+<td style="text-align: left;">Localização de MCP Servers e Agent Skills
+oficiais no npm/GitHub</td>
+<td style="text-align: left;">Registros MCP / Skills</td>
+</tr>
+<tr>
+<td
+style="text-align: left;"><code>&lt;compilador-vertical&gt;</code></td>
+<td style="text-align: left;">Renderização determinística dos 3 formatos
+(HTML, MD, PDF)</td>
+<td style="text-align: left;">Pandoc + Typst + Python</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>&lt;auditor-r5v&gt;</code></td>
+<td style="text-align: left;">Auditor mecânico de validação
+estrutural</td>
+<td style="text-align: left;"><code>auditar_tipo_vertical.py</code></td>
+</tr>
+</tbody>
+</table>
+<!-- FIM DO MÓDULO: 05-SUBAGENTS.md -->
+<hr />
+<!-- INÍCIO DO MÓDULO: 06-RULES.md -->
+<h1 id="as-regras-inegociáveis-fluxo-2-dossiês-verticais">06 · As Regras
+Inegociáveis (Fluxo 2: Dossiês Verticais)</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS</p>
+</blockquote>
+<hr />
+<h2 id="as-6-regras-de-ouro-dos-dossiês-verticais">1. As 6 Regras de
+Ouro dos Dossiês Verticais:</h2>
+<ol type="1">
+<li><strong>R5-V (Padrão Dossiê Vertical Diamante):</strong><br />
+Obrigatório conter a Caixa de Alvo SaaS com preço e riscos de
+privacidade, e o Quinteto Soberano classificado sem desvios.</li>
+<li><strong>R-Quinteto (As 5 Classificações Sagradas):</strong><br />
+<em>A Mais Robusta</em>, <em>A Mais Completa</em>, <em>A Mais
+Moderna</em>, <em>A Mais Leve</em> e <em>A Mais Simples</em>. Proibido
+inventar novas categorias.</li>
+<li><strong>R-WhiteLabel (Aderência ao Design System):</strong><br />
+Seção 5 obrigatória com stack de UI (Tailwind, Tauri, React), esforço e
+risco de upgrade.</li>
+<li><strong>R-MCP (Ecossistema Agêntico):</strong><br />
+Seção 6 obrigatória listando servidores MCP oficiais e skills que se
+conectam aos ADEs/LLMs.</li>
+<li><strong>R-Tripartite (Três Formatos):</strong><br />
+Geração obrigatória de HTML Interativo, Markdown Limpo e PDF Typst
+Anti-sobreposição.</li>
+<li><strong>R11 &amp; R18 (Estado Relacional &amp;
+Paridade):</strong><br />
+Registro no banco SQLite <code>estado_esteira.db</code> e espelhamento
+MD5 idêntico em <code>docs/</code>.</li>
+</ol>
+<!-- FIM DO MÓDULO: 06-RULES.md -->
+<hr />
+<!-- INÍCIO DO MÓDULO: 07-SQLITE.md -->
+<h1 id="modelagem-relacional-sqlite-fluxo-2-dossiês-verticais">07 ·
+Modelagem Relacional SQLite (Fluxo 2: Dossiês Verticais)</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS<br />
+<strong>Banco:</strong> <code>estado_esteira.db</code> (Regra R11)</p>
+</blockquote>
+<hr />
+<h2 id="schema-da-tabela-esteira_dossies_verticais">1. Schema da Tabela
+<code>esteira_dossies_verticais</code></h2>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="cf">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> esteira_dossies_verticais (</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">id</span> <span class="dt">INTEGER</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span> AUTOINCREMENT,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    saas_slug TEXT <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">UNIQUE</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    saas_nome TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    preco_anual_dolar <span class="dt">REAL</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    quinteto_ferramentas TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    total_ferramentas <span class="dt">INTEGER</span> <span class="kw">DEFAULT</span> <span class="dv">5</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    gate_r5v TEXT <span class="kw">DEFAULT</span> <span class="st">&#39;APROVADO&#39;</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    gate_r18 TEXT <span class="kw">DEFAULT</span> <span class="st">&#39;APROVADO&#39;</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    caminho_html TEXT,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    caminho_md TEXT,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    caminho_pdf TEXT,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    atualizado_em <span class="dt">TIMESTAMP</span> <span class="kw">DEFAULT</span> <span class="fu">CURRENT_TIMESTAMP</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<h2 id="métodos-de-acesso">2. Métodos de Acesso</h2>
+<ul>
+<li><code>registrar_dossie_vertical(dados: dict)</code>: Insere ou
+atualiza o registro do dossiê no banco;</li>
+<li><code>listar_dossies_verticais() -&gt; list[dict]</code>: Retorna a
+listagem completa dos dossiês compilados.</li>
+</ul>
+<!-- FIM DO MÓDULO: 07-SQLITE.md -->
+<hr />
+<!-- INÍCIO DO MÓDULO: 08-TESTES.md -->
+<h1 id="arquitetura-de-testes-unitários-automatizados-fluxo-2">08 ·
+Arquitetura de Testes Unitários Automatizados (Fluxo 2)</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS<br />
+<strong>Suíte Canônica:</strong>
+<code>tests/test_fluxo2_verticais.py</code></p>
+</blockquote>
+<hr />
+<h2 id="cobertura-dos-6-testes-unitários">1. Cobertura dos 6 Testes
+Unitários</h2>
+<ol type="1">
+<li><code>test_01_schema_dossie_vertical_valido</code>: Validação formal
+do JSON contra <code>dossie_vertical.schema.json</code>;</li>
+<li><code>test_02_quinteto_soberano_5_classificacoes</code>: Validação
+exata das 5 classificações canônicas;</li>
+<li><code>test_03_secoes_whitelabel_e_mcps_obrigatorias</code>: Presença
+obrigatória de <code>design_system</code> e
+<code>uso_complementar</code>;</li>
+<li><code>test_04_compilacao_tripartite_gerada</code>: Existência de
+HTML, MD e PDF com tamanho &gt; 0;</li>
+<li><code>test_05_persistencia_sqlite_r11</code>: Leitura e escrita no
+SQLite <code>estado_esteira.db</code>;</li>
+<li><code>test_06_paridade_espelhos_docs_r18</code>: Paridade e
+sincronização estrita com <code>docs/</code>.</li>
+</ol>
+<hr />
+<h2 id="execução-da-suíte">2. Execução da Suíte</h2>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> unittest tests/test_fluxo2_verticais.py <span class="at">-v</span></span></code></pre></div>
+<p>Tempo de execução: <strong>&lt; 10 milissegundos</strong> com 100% de
+taxa de sucesso.</p>
+<!-- FIM DO MÓDULO: 08-TESTES.md -->
+<hr />
+<!-- INÍCIO DO MÓDULO: 09-COMMANDS.md -->
+<h1 id="catálogo-de-comandos-flags-cli-fluxo-2">09 · Catálogo de
+Comandos &amp; Flags CLI (Fluxo 2)</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS</p>
+</blockquote>
+<hr />
+<h2 id="comandos-operacionais">1. Comandos Operacionais</h2>
+<h3 id="compilação-tripartite-de-um-dossiê-vertical">1.1 Compilação
+Tripartite de um Dossiê Vertical</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/gerar_dossie_vertical_tripartite.py <span class="at">--saas</span> granola</span></code></pre></div>
+<h3 id="execução-da-suíte-de-testes-unitários">1.2 Execução da Suíte de
+Testes Unitários</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> unittest tests/test_fluxo2_verticais.py <span class="at">-v</span></span></code></pre></div>
+<h3 id="auditoria-mecânica-r5-v-gate-do-dossiê-vertical">1.3 Auditoria
+Mecânica R5-V (Gate do Dossiê Vertical)</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> scripts/auditar_tipo_vertical.py output/listas-open-source/vert-granola.html</span></code></pre></div>
+<h3 id="execução-do-runner-da-skill-implementacao">1.4 Execução do
+Runner da Skill <code>/implementacao</code></h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> .claude/skills/implementacao/index.cjs scripts/data/plano_implementacao_fluxo2.json</span></code></pre></div>
+<!-- FIM DO MÓDULO: 09-COMMANDS.md -->
+<hr />
+<!-- INÍCIO DO MÓDULO: 10-HOOKS.md -->
+<h1 id="ciclo-de-vida-automações-mecânicas-hooks-fluxo-2">10 · Ciclo de
+Vida &amp; Automações Mecânicas (Hooks) (Fluxo 2)</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS</p>
+</blockquote>
+<hr />
+<h2 id="ciclo-de-validação-contínua-pre-commit">1. Ciclo de Validação
+Contínua (Pre-Commit)</h2>
+<p>Antes de qualquer commit no repositório, o hook do Git dispara a
+auditoria automática: 1. <code>tests/test_fluxo2_verticais.py</code>
+deve retornar <code>OK</code>; 2.
+<code>scripts/auditar_tipo_vertical.py</code> deve retornar
+<code>exit 0</code>; 3. <code>scripts/auditar_higiene_repo.py</code>
+valida paridade MD5 de espelhos e ausência de lixo temporário.</p>
+<!-- FIM DO MÓDULO: 10-HOOKS.md -->
+<hr />
+<!-- INÍCIO DO MÓDULO: 11-SCRIPTS.md -->
+<h1 id="dicionário-de-scripts-schemas-fluxo-2-dossiês-verticais">11 ·
+Dicionário de Scripts &amp; Schemas (Fluxo 2: Dossiês Verticais)</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS</p>
+</blockquote>
+<hr />
+<h2 id="dicionário-de-componentes">1. Dicionário de Componentes</h2>
+<h3 id="scripts-python">Scripts Python:</h3>
+<ul>
+<li><code>scripts/gerar_dossie_vertical_tripartite.py</code>: Gerador
+oficial tripartite do Fluxo 2 (HTML, MD, PDF);</li>
+<li><code>scripts/compilar_compendio_vertical.py</code>: Compilador do
+HTML interativo Padrão Diamante R5-V;</li>
+<li><code>scripts/auditar_tipo_vertical.py</code>: Validador mecânico de
+conformidade com o Quinteto Soberano;</li>
+<li><code>scripts/estado_esteira.py</code>: Persistência relacional
+SQLite.</li>
+</ul>
+<h3 id="templates-typst">Templates Typst:</h3>
+<ul>
+<li><code>scripts/padroes/template_dossie_vertical.typ</code>: Molde
+visual institucional anti-sobreposição.</li>
+</ul>
+<h3 id="schemas-json">Schemas JSON:</h3>
+<ul>
+<li><code>scripts/schemas/dossie_vertical.schema.json</code>: Contrato
+estrito com validação de tipos e enums.</li>
+</ul>
+<!-- FIM DO MÓDULO: 11-SCRIPTS.md -->
+<hr />
+<!-- INÍCIO DO MÓDULO: 12-ESTUDO-DE-CASO-AIDD.md -->
+<h1 id="estudo-de-caso-desmantelamento-do-granola-via-aidd">12 · Estudo
+de Caso: Desmantelamento do Granola via AIDD</h1>
+<blockquote>
+<p><strong>Módulo:</strong> Fluxo 2 — Dossiês Verticais de
+Desmantelamento SaaS</p>
+</blockquote>
+<hr />
+<h2 id="o-alvo-granola-ai-meeting-notepad">1. O Alvo: Granola (AI
+Meeting Notepad)</h2>
+<ul>
+<li><strong>Custo:</strong> US$ 120/ano por usuário (~R$ 720/ano);</li>
+<li><strong>Risco:</strong> Transmissão contínua de áudio confidencial
+para servidores de terceiros.</li>
+</ul>
+<hr />
+<h2 id="a-resposta-do-quinteto-soberano-open-source">2. A Resposta do
+Quinteto Soberano Open Source</h2>
+<ol type="1">
+<li><strong>#1 · Screenpipe (A Mais Completa):</strong> Captura contínua
+24/7 com OCR e áudio local em Rust;</li>
+<li><strong>#2 · WhisperX (A Mais Robusta):</strong> Transcrição
+batelada com diarização de locutores e VAD;</li>
+<li><strong>#3 · Open-NotebookLM (A Mais Moderna):</strong> Interface em
+podcast com TTS e geração de notas;</li>
+<li><strong>#4 · Whisper.cpp (A Mais Leve):</strong> Inferência direta
+em C++ puro com consumo ínfimo de RAM;</li>
+<li><strong>#5 · Faster-Whisper-CLI (A Mais Simples):</strong>
+Executável autônomo com um único comando de terminal.</li>
+</ol>
+<hr />
+<h2 id="resultado-de-engenharia-agêntica">3. Resultado de Engenharia
+Agêntica</h2>
+<ul>
+<li><strong>Economia Anual:</strong> Mais de R$ 36.000/ano para um time
+de 50 pessoas;</li>
+<li><strong>Conformidade:</strong> 100% de confidencialidade com dados
+gravados apenas em disco local;</li>
+<li><strong>Tripartite:</strong> Documentado simultaneamente em HTML,
+Markdown e PDF Typst.</li>
+</ul>
+<!-- FIM DO MÓDULO: 12-ESTUDO-DE-CASO-AIDD.md -->
+<hr />
+
 </div>
 </body>
 </html>

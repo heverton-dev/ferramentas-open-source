@@ -30,7 +30,11 @@
     "armazenamento": "160 GB NVMe",
     "so_recomendado": "Ubuntu 24.04 LTS",
     "custo_mensal_estimado": "EUR 14,00/mês (~R$ 84,00/mês)",
-    "portas_abertas": ["22/tcp (SSH)", "80/tcp (HTTP)", "443/tcp (HTTPS)"]
+    "portas_abertas": [
+      "22/tcp (SSH)",
+      "80/tcp (HTTP)",
+      "443/tcp (HTTPS)"
+    ]
   },
   "instalacao_producao": {
     "passos": [
@@ -130,7 +134,11 @@
       {
         "modulo": "Podcast Studio UI",
         "descricao": "Interface gráfica Gradio para upload de atas e pré-escuta de vozes.",
-        "recursos_chave": ["Seletor de vozes", "Editor de roteiro", "Player de áudio"]
+        "recursos_chave": [
+          "Seletor de vozes",
+          "Editor de roteiro",
+          "Player de áudio"
+        ]
       }
     ],
     "troubleshooting": [
@@ -177,5 +185,47 @@
       "url": "https://github.com/SWivid/F5-TTS",
       "autor_ou_canal": "F5-TTS Open Community"
     }
-  ]
+  ],
+  "desinstalacao_cirurgica": {
+    "principio_isolamento": "A remoção via docker compose down opera estritamente no namespace do projeto open-notebooklm, sem tocar em redes ou volumes de outros contêineres.",
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Encerramento do Stack via Docker Compose no Diretório Dedicado",
+        "descricao": "Executa o down exclusivamente na pasta do Open-NotebookLM, destruindo apenas seus contêineres e redes virtuais.",
+        "comandos": "cd /opt/open-notebooklm && docker compose down -v",
+        "alerta_seguranca": "Execute o comando DENTRO de /opt/open-notebooklm. Nunca execute comandos globais de remoção.",
+        "como_validar": "docker ps | grep open-notebooklm # Não deve retornar contêineres"
+      },
+      {
+        "numero": 2,
+        "titulo": "Remoção da Pasta do Repositório e Configurações Locais",
+        "descricao": "Remove o código-fonte clonado e variáveis de ambiente em /opt/open-notebooklm.",
+        "comandos": "cd ~ && sudo rm -rf /opt/open-notebooklm",
+        "alerta_seguranca": "Verifique o caminho com 'pwd' antes de executar 'rm -rf'.",
+        "como_validar": "ls -d /opt/open-notebooklm 2>/dev/null || echo 'Diretório expurgado'"
+      },
+      {
+        "numero": 3,
+        "titulo": "Revogação da Porta 8501 no Firewall",
+        "descricao": "Fecha o acesso à porta da interface Streamlit do Open-NotebookLM.",
+        "comandos": "sudo ufw delete allow 8501/tcp 2>/dev/null || true\nsudo ufw reload",
+        "alerta_seguranca": "As portas 80/443 do servidor web principal continuam ativas.",
+        "como_validar": "sudo ufw status | grep 8501 # Retorna vazio"
+      },
+      {
+        "numero": 4,
+        "titulo": "Remoção do Serviço de Inicialização Automática",
+        "descricao": "Elimina a inicialização do Docker Compose no boot do Linux.",
+        "comandos": "sudo rm -f /etc/systemd/system/open-notebooklm.service\nsudo systemctl daemon-reload",
+        "alerta_seguranca": "Atualize a lista do systemd sem reiniciar o servidor.",
+        "como_validar": "sudo systemctl is-enabled open-notebooklm 2>/dev/null || echo 'Desativado'"
+      }
+    ],
+    "checklist_saude_vps": [
+      "docker ps # Outros contêineres permanecem online e funcionais",
+      "ss -tulpn | grep 8501 # Porta da interface web liberada",
+      "df -h /opt # Confirma espaço recuperado no disco"
+    ]
+  }
 }

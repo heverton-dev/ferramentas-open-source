@@ -40,7 +40,11 @@
     "armazenamento": "160 GB NVMe Gen4",
     "so_recomendado": "Ubuntu 24.04 LTS (x86_64)",
     "custo_mensal_estimado": "EUR 14,00/mês (~R$ 84,00/mês na cotação média)",
-    "portas_abertas": ["22/tcp (Porta exclusiva para o seu controle remoto SSH)", "80/tcp (Renovação automática do certificado de segurança)", "443/tcp (Acesso web com cadeado verde HTTPS)"]
+    "portas_abertas": [
+      "22/tcp (Porta exclusiva para o seu controle remoto SSH)",
+      "80/tcp (Renovação automática do certificado de segurança)",
+      "443/tcp (Acesso web com cadeado verde HTTPS)"
+    ]
   },
   "instalacao_producao": {
     "passos": [
@@ -192,12 +196,20 @@
       {
         "modulo": "Linha do Tempo Visual de Reuniões",
         "descricao": "Exibe os encontros do seu dia organizados por horários, com a transcrição completa e identificação de quem falou.",
-        "recursos_chave": ["Player de áudio sincronizado com o texto", "Filtro rápido por data", "Botão de exportar ata em Word/Markdown com 1 clique"]
+        "recursos_chave": [
+          "Player de áudio sincronizado com o texto",
+          "Filtro rápido por data",
+          "Botão de exportar ata em Word/Markdown com 1 clique"
+        ]
       },
       {
         "modulo": "Barra de Busca Inteligente",
         "descricao": "Permite encontrar conversas antigas mesmo que você não lembre a palavra exata (busca por intenção).",
-        "recursos_chave": ["Filtro por participante", "Busca em português nativo", "Exibição do contexto da conversa"]
+        "recursos_chave": [
+          "Filtro por participante",
+          "Busca em português nativo",
+          "Exibição do contexto da conversa"
+        ]
       }
     ],
     "troubleshooting": [
@@ -254,5 +266,47 @@
       "url": "https://github.com/mediar-ai/screenpipe/tree/main/infra",
       "autor_ou_canal": "Screenpipe DevOps & Community"
     }
-  ]
+  ],
+  "desinstalacao_cirurgica": {
+    "principio_isolamento": "A desinstalação remove exclusivamente o container, volume e serviço do Screenpipe, preservando intactos o Docker, Nginx, PostgreSQL e outros projetos hospedados na VPS.",
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Parada e Desativação do Serviço Dedicado no Systemd",
+        "descricao": "Interrompe o processo do Screenpipe sem enviar sinal de encerramento para nenhum outro serviço da VPS.",
+        "comandos": "sudo systemctl stop screenpipe.service\nsudo systemctl disable screenpipe.service",
+        "alerta_seguranca": "NÃO utilize 'systemctl stop docker' nem mate processos em lote. Apenas o serviço dedicado é desligado.",
+        "como_validar": "sudo systemctl is-active screenpipe # Retorna 'inactive'"
+      },
+      {
+        "numero": 2,
+        "titulo": "Remoção Isolada de Contêiner e Volume de Dados",
+        "descricao": "Remove cirurgicamente apenas o container nomeado e seu volume de captura de áudio/telas.",
+        "comandos": "docker rm -f screenpipe 2>/dev/null || true\ndocker volume rm screenpipe_data 2>/dev/null || true",
+        "alerta_seguranca": "JAMAIS execute 'docker system prune -a'. Isso apagaria contêineres e imagens de outros sistemas em produção.",
+        "como_validar": "docker ps -a --filter name=screenpipe # Retorna lista vazia"
+      },
+      {
+        "numero": 3,
+        "titulo": "Revogação da Porta da API no Firewall (UFW)",
+        "descricao": "Fecha exclusivamente a porta 3030 no firewall sem interferir nas portas web (80/443) ou SSH (22).",
+        "comandos": "sudo ufw delete allow 3030/tcp 2>/dev/null || true\nsudo ufw reload",
+        "alerta_seguranca": "Mantenha o firewall ativo e verifique as regras com 'ufw status' antes e depois.",
+        "como_validar": "sudo ufw status | grep 3030 # Não deve constar na lista de portas ativas"
+      },
+      {
+        "numero": 4,
+        "titulo": "Expurgo de Binários e Arquivos de Unidade",
+        "descricao": "Remove os arquivos de execução locais e recarrega as definições do systemd.",
+        "comandos": "sudo rm -f /usr/local/bin/screenpipe /etc/systemd/system/screenpipe.service\nsudo systemctl daemon-reload",
+        "alerta_seguranca": "Não execute 'apt autoremove' sem verificar os pacotes; a remoção é estritamente manual e isolada.",
+        "como_validar": "which screenpipe # Não deve encontrar o binário"
+      }
+    ],
+    "checklist_saude_vps": [
+      "ss -tulpn | grep 3030 # Confirma liberação imediata da porta 3030",
+      "docker ps # Confirma que contêineres de banco e outros apps continuam 'Up'",
+      "free -h # Confirma devolução de memória RAM para o sistema operacional"
+    ]
+  }
 }

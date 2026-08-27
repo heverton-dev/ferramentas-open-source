@@ -11,6 +11,7 @@
   primeiro_voo: (),
   comandos_cli: (),
   troubleshooting: (),
+  desinstalacao: (),
   referencias: ()
 ) = {
   set page(
@@ -37,7 +38,7 @@
     fill: rgb("#151A26")
   )
 
-  set par(justify: true, leading: 0.58em)
+  set par(justify: true, leading: 0.58em, spacing: 0.95em)
 
   let brand-dark = rgb("#1A446C")
   let brand-light = rgb("#DCE7F2")
@@ -173,8 +174,62 @@
     )).flatten()
   )
 
+  if desinstalacao != () [
+    #v(8pt)
+    #pagebreak()
+    [== Parte IV: Desinstalação Cirúrgica & Isolamento da VPS (Zero Efeito Colateral)]
+    #v(3pt)
+    #block(
+      fill: rgb("#EFF6FF"),
+      inset: 8pt,
+      radius: 4pt,
+      stroke: 0.8pt + brand-accent,
+      width: 100%,
+      [
+        #text(weight: "bold", fill: brand-dark)[🛡️ Princípio de Isolamento da VPS:] \
+        #text(8.5pt, fill: rgb("#1E293B"))[#desinstalacao.principio_isolamento]
+      ]
+    )
+    #v(4pt)
+    #for p in desinstalacao.passos [
+      #block(
+        fill: surface,
+        inset: 7pt,
+        radius: 4pt,
+        stroke: 0.5pt + border-color,
+        width: 100%,
+        [
+          #text(weight: "bold", fill: brand-accent)[Passo #p.numero · #p.titulo] \
+          #text(8.5pt)[#p.descricao] \
+          #v(2pt)
+          #block(fill: rgb("#0F172A"), inset: 5pt, radius: 3pt, width: 100%)[
+            #text(fill: rgb("#34D399"), font: "Courier New", size: 7.5pt)[#p.comandos]
+          ]
+          #v(1pt)
+          #text(7.5pt, fill: rgb("#B45309"))[⚠️ *Alerta de Segurança:* #p.alerta_seguranca] \
+          #text(7.5pt, fill: rgb("#047857"))[✅ *Como Validar:* #p.como_validar]
+        ]
+      )
+      #v(3pt)
+    ]
+    #v(4pt)
+    #block(
+      fill: rgb("#F0FDF4"),
+      inset: 8pt,
+      radius: 4pt,
+      stroke: 0.8pt + brand-green,
+      width: 100%,
+      [
+        #text(weight: "bold", fill: rgb("#065F46"))[🩺 Checklist de Saúde da VPS (Outros Projetos):] \
+        #for c in desinstalacao.checklist_saude_vps [
+          - #text(8pt, font: "Courier New", fill: rgb("#1E293B"))[#c]
+        ]
+      ]
+    )
+  ]
+
   v(6pt)
-  [== Parte IV: Referências Bibliográficas Auditadas]
+  [== Parte V: Referências Bibliográficas Auditadas]
   v(3pt)
 
   table(

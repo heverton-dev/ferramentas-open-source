@@ -33,7 +33,7 @@
   hyphenate: true
 )
 
-#set par(justify: true, leading: 0.52em)
+#set par(justify: true, leading: 0.58em, spacing: 0.95em)
 
 // Macros auxiliares do Pandoc
 #let horizontalrule = line(length: 100%, stroke: 0.5pt + rgb("#CBD5E1"))
@@ -55,7 +55,7 @@
   v(4pt)
 }
 
-// Configuração Rígida de Tabelas Anti-Sobreposição
+// Configuração Rígida de Tabelas Anti-Sobreposição (Padrão Diamante R5)
 #show table.cell: it => {
   set text(size: 6.8pt, hyphenate: true)
   set par(justify: false, leading: 0.4em)

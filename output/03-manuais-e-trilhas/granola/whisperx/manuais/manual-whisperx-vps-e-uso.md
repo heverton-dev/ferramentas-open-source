@@ -157,9 +157,61 @@ services:
 
 - **⚠️ Sintoma:** Erro 'CUDA out of memory' durante a diarização
   - **Causa:** Áudios longos (>1h) com lote de batch size excessivo.
-  - **Solução:** `whisperx audio.mp3 --batch_size 4 --compute_type int8`
+## Parte III: Desinstalação Cirúrgica & Isolamento da VPS (Zero Efeito Colateral)
 
-## Parte III: Referências Bibliográficas Auditadas
+> 🛡️ **Princípio de Isolamento:** O WhisperX opera em ambiente virtual Python dedicado (/opt/whisperx-venv). Sua remoção limpa modelos cacheados sem alterar a versão do Python do sistema nem pacotes de outras aplicações.
+
+### Passo 1: Parada do Serviço de API FastAPI WhisperX
+Interrompe a API de transcrição dedicada, desalocando instantaneamente a memória VRAM da placa de vídeo.
+
+```bash
+sudo systemctl stop whisperx.service
+sudo systemctl disable whisperx.service
+```
+
+- ⚠️ **Alerta de Segurança:** Não encerre o driver NVIDIA nem mate processos globais da GPU.
+- ✅ **Como Validar:** `sudo systemctl is-active whisperx # Retorna 'inactive'`
+
+### Passo 2: Exclusão do Ambiente Virtual Dedicado e Modelos
+Remove a pasta da venv isolada e os pesos do modelo Faster-Whisper/VAD baixados no cache.
+
+```bash
+sudo rm -rf /opt/whisperx-venv
+rm -rf ~/.cache/huggingface/hub/models--Systran--faster-whisper*
+```
+
+- ⚠️ **Alerta de Segurança:** A exclusão atinge apenas a pasta /opt/whisperx-venv. Nenhuma biblioteca do sistema é afetada.
+- ✅ **Como Validar:** `ls -d /opt/whisperx-venv 2>/dev/null || echo 'Venv removida com sucesso'`
+
+### Passo 3: Revogação da Porta 8000 no Firewall
+Fecha o acesso externo à porta da API do WhisperX.
+
+```bash
+sudo ufw delete allow 8000/tcp 2>/dev/null || true
+sudo ufw reload
+```
+
+- ⚠️ **Alerta de Segurança:** Se outro microsserviço utilizar a porta 8000, certifique-se de fechar apenas se exclusivo.
+- ✅ **Como Validar:** `ss -tulpn | grep 8000 # Deve retornar vazio`
+
+### Passo 4: Remoção do Serviço no Systemd
+Elimina o arquivo .service e atualiza o gerenciador de inicialização.
+
+```bash
+sudo rm -f /etc/systemd/system/whisperx.service
+sudo systemctl daemon-reload
+```
+
+- ⚠️ **Alerta de Segurança:** Não remova outros arquivos em /etc/systemd/system/.
+- ✅ **Como Validar:** `sudo systemctl status whisperx # Deve retornar 'Unit whisperx.service could not be found.'`
+
+### Checklist de Saúde da VPS (Outros Projetos)
+
+- [ ] `nvidia-smi # Confirma desalocação total de memória de vídeo na GPU`
+- [ ] `python3 --version # Python do sistema continua 100% íntegro`
+- [ ] `ss -tulpn | grep 8000 # Porta 8000 liberada`
+
+## Parte IV: Referências Bibliográficas Auditadas
 
 | ID | Categoria | Título da Obra | Autor / Mantenedor | Link Oficial |
 | :---: | :--- | :--- | :--- | :--- |

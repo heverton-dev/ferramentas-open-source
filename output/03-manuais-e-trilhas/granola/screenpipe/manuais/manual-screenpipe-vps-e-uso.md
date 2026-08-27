@@ -203,17 +203,65 @@ seu-dominio-empresa.com {
 
 - **⚠️ Sintoma:** O áudio está gravando, mas as palavras demoram para aparecer
   - **Causa:** O servidor está usando o modelo grande (large-v3) em um processador sem aceleração suficiente.
-  - **Solução:** `Altere para o modelo médio com o comando: screenpipe --audio-transcription-engine whisper-medium`
-
 - **⚠️ Sintoma:** Aparece a mensagem 'Port 3030 already in use'
   - **Causa:** Já existe outra cópia do Screenpipe rodando em segundo plano.
-  - **Solução:** `Finalize o processo antigo com: pkill -f screenpipe && screenpipe`
-
 - **⚠️ Sintoma:** A página web não abre no navegador
   - **Causa:** O firewall do servidor ainda não liberou as portas web.
-  - **Solução:** `Rode no servidor: ufw allow 80/tcp && ufw allow 443/tcp && ufw reload`
+## Parte III: Desinstalação Cirúrgica & Isolamento da VPS (Zero Efeito Colateral)
 
-## Parte III: Referências Bibliográficas Auditadas
+> 🛡️ **Princípio de Isolamento:** A desinstalação remove exclusivamente o container, volume e serviço do Screenpipe, preservando intactos o Docker, Nginx, PostgreSQL e outros projetos hospedados na VPS.
+
+### Passo 1: Parada e Desativação do Serviço Dedicado no Systemd
+Interrompe o processo do Screenpipe sem enviar sinal de encerramento para nenhum outro serviço da VPS.
+
+```bash
+sudo systemctl stop screenpipe.service
+sudo systemctl disable screenpipe.service
+```
+
+- ⚠️ **Alerta de Segurança:** NÃO utilize 'systemctl stop docker' nem mate processos em lote. Apenas o serviço dedicado é desligado.
+- ✅ **Como Validar:** `sudo systemctl is-active screenpipe # Retorna 'inactive'`
+
+### Passo 2: Remoção Isolada de Contêiner e Volume de Dados
+Remove cirurgicamente apenas o container nomeado e seu volume de captura de áudio/telas.
+
+```bash
+docker rm -f screenpipe 2>/dev/null || true
+docker volume rm screenpipe_data 2>/dev/null || true
+```
+
+- ⚠️ **Alerta de Segurança:** JAMAIS execute 'docker system prune -a'. Isso apagaria contêineres e imagens de outros sistemas em produção.
+- ✅ **Como Validar:** `docker ps -a --filter name=screenpipe # Retorna lista vazia`
+
+### Passo 3: Revogação da Porta da API no Firewall (UFW)
+Fecha exclusivamente a porta 3030 no firewall sem interferir nas portas web (80/443) ou SSH (22).
+
+```bash
+sudo ufw delete allow 3030/tcp 2>/dev/null || true
+sudo ufw reload
+```
+
+- ⚠️ **Alerta de Segurança:** Mantenha o firewall ativo e verifique as regras com 'ufw status' antes e depois.
+- ✅ **Como Validar:** `sudo ufw status | grep 3030 # Não deve constar na lista de portas ativas`
+
+### Passo 4: Expurgo de Binários e Arquivos de Unidade
+Remove os arquivos de execução locais e recarrega as definições do systemd.
+
+```bash
+sudo rm -f /usr/local/bin/screenpipe /etc/systemd/system/screenpipe.service
+sudo systemctl daemon-reload
+```
+
+- ⚠️ **Alerta de Segurança:** Não execute 'apt autoremove' sem verificar os pacotes; a remoção é estritamente manual e isolada.
+- ✅ **Como Validar:** `which screenpipe # Não deve encontrar o binário`
+
+### Checklist de Saúde da VPS (Outros Projetos)
+
+- [ ] `ss -tulpn | grep 3030 # Confirma liberação imediata da porta 3030`
+- [ ] `docker ps # Confirma que contêineres de banco e outros apps continuam 'Up'`
+- [ ] `free -h # Confirma devolução de memória RAM para o sistema operacional`
+
+## Parte IV: Referências Bibliográficas Auditadas
 
 | ID | Categoria | Título da Obra | Autor / Mantenedor | Link Oficial |
 | :---: | :--- | :--- | :--- | :--- |

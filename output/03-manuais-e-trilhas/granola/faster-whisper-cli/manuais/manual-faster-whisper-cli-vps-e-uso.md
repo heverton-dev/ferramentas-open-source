@@ -104,9 +104,57 @@ for s in segments:
 
 - **⚠️ Sintoma:** Erro de ffmpeg não encontrado
   - **Causa:** Falta do binário FFmpeg no PATH do sistema.
-  - **Solução:** `apt-get install -y ffmpeg`
+## Parte III: Desinstalação Cirúrgica & Isolamento da VPS (Zero Efeito Colateral)
 
-## Parte III: Referências Bibliográficas Auditadas
+> 🛡️ **Princípio de Isolamento:** Instalado via pipx ou venv isolada, não possui dependências cruzadas com outros serviços da VPS. Sua remoção é limpa e imediata.
+
+### Passo 1: Desinstalação do Pacote via Pipx / Pip
+Remove a instalação isolada do CLI do Faster-Whisper.
+
+```bash
+pipx uninstall faster-whisper 2>/dev/null || pip uninstall -y faster-whisper
+```
+
+- ⚠️ **Alerta de Segurança:** Se instalado via pipx, remove apenas o ambiente virtual dedicado da ferramenta.
+- ✅ **Como Validar:** `which faster-whisper # Não deve retornar caminho`
+
+### Passo 2: Remoção de Modelos CTranslate2 Cacheados
+Libera espaço em disco eliminando os modelos baixados pelo HuggingFace Hub.
+
+```bash
+rm -rf ~/.cache/huggingface/hub/models--guillaumekln--faster-whisper*
+```
+
+- ⚠️ **Alerta de Segurança:** Não apague a pasta ~/.cache/ inteira, apenas a pasta de modelos do faster-whisper.
+- ✅ **Como Validar:** `ls ~/.cache/huggingface/hub/models--guillaumekln* 2>/dev/null || echo 'Cache limpo'`
+
+### Passo 3: Remoção de Scripts Auxiliares de Automação
+Remove scripts bash criados pelo operador para transcrição de pastas.
+
+```bash
+sudo rm -f /usr/local/bin/transcrever-lote.sh
+```
+
+- ⚠️ **Alerta de Segurança:** Remove apenas o script dedicado criado durante o treinamento.
+- ✅ **Como Validar:** `which transcrever-lote.sh 2>/dev/null || echo 'Script removido'`
+
+### Passo 4: Limpeza de Arquivos Temporários de Áudio
+Garante que arquivos WAV temporários gerados durante testes sejam expurgados.
+
+```bash
+rm -rf /tmp/faster-whisper* /tmp/*.wav 2>/dev/null || true
+```
+
+- ⚠️ **Alerta de Segurança:** Remove apenas arquivos da pasta temporária.
+- ✅ **Como Validar:** `ls /tmp/faster-whisper* 2>/dev/null || echo 'Temporários limpos'`
+
+### Checklist de Saúde da VPS (Outros Projetos)
+
+- [ ] `which faster-whisper # Confirma que não está no PATH`
+- [ ] `python3 -m pip list # Confirma integridade dos pacotes globais do Python`
+- [ ] `nvidia-smi # GPU livre para outros processos da VPS`
+
+## Parte IV: Referências Bibliográficas Auditadas
 
 | ID | Categoria | Título da Obra | Autor / Mantenedor | Link Oficial |
 | :---: | :--- | :--- | :--- | :--- |

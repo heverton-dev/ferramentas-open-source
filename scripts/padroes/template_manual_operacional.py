@@ -382,6 +382,42 @@ def renderizar_manual_html(dados: dict) -> str:
         </div>
         """)
 
+    # Desinstalação Cirúrgica
+    desinst_html = []
+    if dados.get("desinstalacao_cirurgica"):
+        d = dados["desinstalacao_cirurgica"]
+        desinst_html.append(f"""
+        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
+          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
+          <p style="margin:0; font-size:13.5px; color:#1E293B;">{d['principio_isolamento']}</p>
+        </div>
+        """)
+        for p in d["passos"]:
+            desinst_html.append(f"""
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo {p['numero']}</span>
+                <span class="step-title">{p['titulo']}</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">{p['descricao']}</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>{p['comandos']}</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> {p['alerta_seguranca']}</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>{p['como_validar']}</code></div>
+            </div>
+            """)
+        checklist_items = "".join([f"<li style='margin-bottom:6px;'><code>{c}</code></li>" for c in d["checklist_saude_vps"]])
+        desinst_html.append(f"""
+        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
+          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
+          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
+            {checklist_items}
+          </ul>
+        </div>
+        """)
+
     # Bibliografia
     refs_rows = []
     for r in dados["referencias_bibliograficas"]:
@@ -454,6 +490,7 @@ def renderizar_manual_html(dados: dict) -> str:
       <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
       <a href="#manual-api">🌐 Endpoints de API</a>
       <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
+      <a href="#desinstalacao">🛡️ Desinstalação Cirúrgica VPS</a>
       <a href="#bibliografia">📚 Referências Bibliográficas</a>
     </div>
   </div>
@@ -548,6 +585,15 @@ def renderizar_manual_html(dados: dict) -> str:
       <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
     </div>
     {''.join(trouble_html)}
+  </div>
+
+  <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
+  <div class="section-card" id="desinstalacao">
+    <div class="section-header">
+      <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
+      <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
+    </div>
+    {''.join(desinst_html)}
   </div>
 
   <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->

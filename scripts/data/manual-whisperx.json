@@ -35,7 +35,11 @@
     "armazenamento": "160 GB NVMe Gen4",
     "so_recomendado": "Ubuntu 24.04 LTS (x86_64)",
     "custo_mensal_estimado": "EUR 14,00/mês (~R$ 84,00/mês)",
-    "portas_abertas": ["22/tcp (SSH)", "80/tcp (HTTP)", "443/tcp (HTTPS)"]
+    "portas_abertas": [
+      "22/tcp (SSH)",
+      "80/tcp (HTTP)",
+      "443/tcp (HTTPS)"
+    ]
   },
   "instalacao_producao": {
     "passos": [
@@ -161,7 +165,11 @@
       {
         "modulo": "Visualizador de Diarização",
         "descricao": "Interface web de ondas de áudio com faixas coloridas para cada participante da reunião.",
-        "recursos_chave": ["Edição de nomes dos locutores", "Exportação em PDF/VTT", "Player com busca por locutor"]
+        "recursos_chave": [
+          "Edição de nomes dos locutores",
+          "Exportação em PDF/VTT",
+          "Player com busca por locutor"
+        ]
       }
     ],
     "troubleshooting": [
@@ -208,5 +216,47 @@
       "url": "https://github.com/m-bain/whisperX/blob/main/README.md",
       "autor_ou_canal": "WhisperX DevOps Community"
     }
-  ]
+  ],
+  "desinstalacao_cirurgica": {
+    "principio_isolamento": "O WhisperX opera em ambiente virtual Python dedicado (/opt/whisperx-venv). Sua remoção limpa modelos cacheados sem alterar a versão do Python do sistema nem pacotes de outras aplicações.",
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Parada do Serviço de API FastAPI WhisperX",
+        "descricao": "Interrompe a API de transcrição dedicada, desalocando instantaneamente a memória VRAM da placa de vídeo.",
+        "comandos": "sudo systemctl stop whisperx.service\nsudo systemctl disable whisperx.service",
+        "alerta_seguranca": "Não encerre o driver NVIDIA nem mate processos globais da GPU.",
+        "como_validar": "sudo systemctl is-active whisperx # Retorna 'inactive'"
+      },
+      {
+        "numero": 2,
+        "titulo": "Exclusão do Ambiente Virtual Dedicado e Modelos",
+        "descricao": "Remove a pasta da venv isolada e os pesos do modelo Faster-Whisper/VAD baixados no cache.",
+        "comandos": "sudo rm -rf /opt/whisperx-venv\nrm -rf ~/.cache/huggingface/hub/models--Systran--faster-whisper*",
+        "alerta_seguranca": "A exclusão atinge apenas a pasta /opt/whisperx-venv. Nenhuma biblioteca do sistema é afetada.",
+        "como_validar": "ls -d /opt/whisperx-venv 2>/dev/null || echo 'Venv removida com sucesso'"
+      },
+      {
+        "numero": 3,
+        "titulo": "Revogação da Porta 8000 no Firewall",
+        "descricao": "Fecha o acesso externo à porta da API do WhisperX.",
+        "comandos": "sudo ufw delete allow 8000/tcp 2>/dev/null || true\nsudo ufw reload",
+        "alerta_seguranca": "Se outro microsserviço utilizar a porta 8000, certifique-se de fechar apenas se exclusivo.",
+        "como_validar": "ss -tulpn | grep 8000 # Deve retornar vazio"
+      },
+      {
+        "numero": 4,
+        "titulo": "Remoção do Serviço no Systemd",
+        "descricao": "Elimina o arquivo .service e atualiza o gerenciador de inicialização.",
+        "comandos": "sudo rm -f /etc/systemd/system/whisperx.service\nsudo systemctl daemon-reload",
+        "alerta_seguranca": "Não remova outros arquivos em /etc/systemd/system/.",
+        "como_validar": "sudo systemctl status whisperx # Deve retornar 'Unit whisperx.service could not be found.'"
+      }
+    ],
+    "checklist_saude_vps": [
+      "nvidia-smi # Confirma desalocação total de memória de vídeo na GPU",
+      "python3 --version # Python do sistema continua 100% íntegro",
+      "ss -tulpn | grep 8000 # Porta 8000 liberada"
+    ]
+  }
 }

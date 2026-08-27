@@ -30,7 +30,9 @@
     "armazenamento": "40 GB SSD",
     "so_recomendado": "Ubuntu 24.04 LTS",
     "custo_mensal_estimado": "EUR 4,00/mês (~R$ 24,00/mês)",
-    "portas_abertas": ["22/tcp (SSH)"]
+    "portas_abertas": [
+      "22/tcp (SSH)"
+    ]
   },
   "instalacao_producao": {
     "passos": [
@@ -132,7 +134,11 @@
       {
         "modulo": "CLI & Plugin Obsidian",
         "descricao": "Transcrição direta para notas Markdown no Obsidian sem nuvem.",
-        "recursos_chave": ["Hotkeys de gravação", "Transcrição offline", "Zero consumo de bateria"]
+        "recursos_chave": [
+          "Hotkeys de gravação",
+          "Transcrição offline",
+          "Zero consumo de bateria"
+        ]
       }
     ],
     "troubleshooting": [
@@ -179,5 +185,47 @@
       "url": "https://github.com/ggerganov/whisper.cpp/tree/master/examples",
       "autor_ou_canal": "Whisper.cpp Community Maintainers"
     }
-  ]
+  ],
+  "desinstalacao_cirurgica": {
+    "principio_isolamento": "O whisper.cpp é compilado como binário autocontido em C/C++. A remoção consiste na eliminação dos arquivos executáveis e modelos ggml sem afetar nenhuma biblioteca compartilhada do sistema operacional.",
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Parada do Servidor HTTP caso Ativado",
+        "descricao": "Interrompe a execução do whisper-server se rodando como daemon.",
+        "comandos": "sudo systemctl stop whisper-server.service 2>/dev/null || true\nsudo systemctl disable whisper-server.service 2>/dev/null || true",
+        "alerta_seguranca": "Ignora se a ferramenta foi usada apenas via linha de comando.",
+        "como_validar": "pkill -f whisper-server || true"
+      },
+      {
+        "numero": 2,
+        "titulo": "Remoção dos Binários em /usr/local/bin",
+        "descricao": "Remove os executáveis compilados whisper-cli e whisper-server.",
+        "comandos": "sudo rm -f /usr/local/bin/whisper-cli /usr/local/bin/whisper-server",
+        "alerta_seguranca": "Remova apenas os binários com prefixo whisper-*. Não toque em outros executáveis da pasta.",
+        "como_validar": "which whisper-cli # Retorna vazio"
+      },
+      {
+        "numero": 3,
+        "titulo": "Exclusão do Repositório de Compilação e Modelos GGML",
+        "descricao": "Libera espaço em disco removendo o código-fonte C++ e os arquivos de pesos binários ggml.",
+        "comandos": "sudo rm -rf /opt/whisper.cpp",
+        "alerta_seguranca": "Garante liberação de até 3GB de modelos salvos.",
+        "como_validar": "ls -d /opt/whisper.cpp 2>/dev/null || echo 'Diretório removido'"
+      },
+      {
+        "numero": 4,
+        "titulo": "Revogação da Porta 8080 (se aplicável)",
+        "descricao": "Fecha a porta de rede do servidor HTTP leve do whisper.cpp.",
+        "comandos": "sudo ufw delete allow 8080/tcp 2>/dev/null || true\nsudo ufw reload",
+        "alerta_seguranca": "Se houver outro serviço utilizando a porta 8080, mantenha a regra.",
+        "como_validar": "ss -tulpn | grep 8080 # Retorna vazio"
+      }
+    ],
+    "checklist_saude_vps": [
+      "which whisper-cli # Deve retornar nada",
+      "ls -la /usr/local/bin # Outros binários continuam intactos",
+      "free -h # RAM e Swap 100% estabilizados"
+    ]
+  }
 }

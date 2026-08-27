@@ -315,6 +315,7 @@
       <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
       <a href="#manual-api">🌐 Endpoints de API</a>
       <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
+      <a href="#desinstalacao">🛡️ Desinstalação Cirúrgica VPS</a>
       <a href="#bibliografia">📚 Referências Bibliográficas</a>
     </div>
   </div>
@@ -691,6 +692,87 @@ Resposta: {"status": "healthy", "uptime_sec": 3600}</pre></td>
           <div class="trouble-symptom">⚠️ Sintoma: A página web não abre no navegador</div>
           <div class="trouble-cause">Causa Provável: O firewall do servidor ainda não liberou as portas web.</div>
           <div>Solução Prática: <code class="trouble-fix">Rode no servidor: ufw allow 80/tcp && ufw allow 443/tcp && ufw reload</code></div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
+  <div class="section-card" id="desinstalacao">
+    <div class="section-header">
+      <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
+      <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
+    </div>
+    
+        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
+          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
+          <p style="margin:0; font-size:13.5px; color:#1E293B;">A desinstalação remove exclusivamente o container, volume e serviço do Screenpipe, preservando intactos o Docker, Nginx, PostgreSQL e outros projetos hospedados na VPS.</p>
+        </div>
+        
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 1</span>
+                <span class="step-title">Parada e Desativação do Serviço Dedicado no Systemd</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Interrompe o processo do Screenpipe sem enviar sinal de encerramento para nenhum outro serviço da VPS.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo systemctl stop screenpipe.service
+sudo systemctl disable screenpipe.service</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> NÃO utilize 'systemctl stop docker' nem mate processos em lote. Apenas o serviço dedicado é desligado.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo systemctl is-active screenpipe # Retorna 'inactive'</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 2</span>
+                <span class="step-title">Remoção Isolada de Contêiner e Volume de Dados</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove cirurgicamente apenas o container nomeado e seu volume de captura de áudio/telas.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>docker rm -f screenpipe 2>/dev/null || true
+docker volume rm screenpipe_data 2>/dev/null || true</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> JAMAIS execute 'docker system prune -a'. Isso apagaria contêineres e imagens de outros sistemas em produção.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>docker ps -a --filter name=screenpipe # Retorna lista vazia</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 3</span>
+                <span class="step-title">Revogação da Porta da API no Firewall (UFW)</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Fecha exclusivamente a porta 3030 no firewall sem interferir nas portas web (80/443) ou SSH (22).</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo ufw delete allow 3030/tcp 2>/dev/null || true
+sudo ufw reload</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Mantenha o firewall ativo e verifique as regras com 'ufw status' antes e depois.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo ufw status | grep 3030 # Não deve constar na lista de portas ativas</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 4</span>
+                <span class="step-title">Expurgo de Binários e Arquivos de Unidade</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove os arquivos de execução locais e recarrega as definições do systemd.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo rm -f /usr/local/bin/screenpipe /etc/systemd/system/screenpipe.service
+sudo systemctl daemon-reload</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Não execute 'apt autoremove' sem verificar os pacotes; a remoção é estritamente manual e isolada.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>which screenpipe # Não deve encontrar o binário</code></div>
+            </div>
+            
+        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
+          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
+          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
+            <li style='margin-bottom:6px;'><code>ss -tulpn | grep 3030 # Confirma liberação imediata da porta 3030</code></li><li style='margin-bottom:6px;'><code>docker ps # Confirma que contêineres de banco e outros apps continuam 'Up'</code></li><li style='margin-bottom:6px;'><code>free -h # Confirma devolução de memória RAM para o sistema operacional</code></li>
+          </ul>
         </div>
         
   </div>

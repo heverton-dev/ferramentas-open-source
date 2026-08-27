@@ -90,9 +90,22 @@ def gerar_markdown_manual(dados: dict) -> str:
     for t in dados["manual_uso_exaustivo"]["troubleshooting"]:
         linhas.append(f"- **⚠️ Sintoma:** {t['sintoma']}")
         linhas.append(f"  - **Causa:** {t['causa_provavel']}")
-        linhas.append(f"  - **Solução:** `{t['solucao_comando']}`\n")
+    linhas.append("## Parte III: Desinstalação Cirúrgica & Isolamento da VPS (Zero Efeito Colateral)\n")
+    if dados.get("desinstalacao_cirurgica"):
+        d = dados["desinstalacao_cirurgica"]
+        linhas.append(f"> 🛡️ **Princípio de Isolamento:** {d['principio_isolamento']}\n")
+        for p in d["passos"]:
+            linhas.append(f"### Passo {p['numero']}: {p['titulo']}")
+            linhas.append(f"{p['descricao']}\n")
+            linhas.append(f"```bash\n{p['comandos']}\n```\n")
+            linhas.append(f"- ⚠️ **Alerta de Segurança:** {p['alerta_seguranca']}")
+            linhas.append(f"- ✅ **Como Validar:** `{p['como_validar']}`\n")
+        linhas.append("### Checklist de Saúde da VPS (Outros Projetos)\n")
+        for c in d["checklist_saude_vps"]:
+            linhas.append(f"- [ ] `{c}`")
+        linhas.append("")
 
-    linhas.append("## Parte III: Referências Bibliográficas Auditadas\n")
+    linhas.append("## Parte IV: Referências Bibliográficas Auditadas\n")
     linhas.append("| ID | Categoria | Título da Obra | Autor / Mantenedor | Link Oficial |")
     linhas.append("| :---: | :--- | :--- | :--- | :--- |")
     for r in dados["referencias_bibliograficas"]:
@@ -151,6 +164,30 @@ def gerar_typst_codigo(dados: dict) -> str:
           autor_ou_canal: "{r['autor_ou_canal']}"
         )""")
 
+    desinstalacao_typ = []
+    if dados.get("desinstalacao_cirurgica"):
+        d = dados["desinstalacao_cirurgica"]
+        passos_d_typ = []
+        for p in d["passos"]:
+            passos_d_typ.append(f"""(
+              numero: {p['numero']},
+              titulo: "{p['titulo'].replace('\"', '\\\"')}",
+              descricao: "{p['descricao'].replace('\"', '\\\"')}",
+              comandos: "{p['comandos'].replace('\"', '\\\"').replace(chr(10), '\\n')}",
+              alerta_seguranca: "{p['alerta_seguranca'].replace('\"', '\\\"')}",
+              como_validar: "{p['como_validar'].replace('\"', '\\\"')}"
+            )""")
+        passos_d_str = f"({', '.join(passos_d_typ)}, )"
+        chk_items = [f'"{c.replace(chr(34), chr(92)+chr(34))}"' for c in d["checklist_saude_vps"]]
+        chk_str = f"({', '.join(chk_items)}, )"
+        desinstalacao_str = f"""(
+          principio_isolamento: "{d['principio_isolamento'].replace('\"', '\\\"')}",
+          passos: {passos_d_str},
+          checklist_saude_vps: {chk_str}
+        )"""
+    else:
+        desinstalacao_str = "()"
+
     nivelamento_str = f"({', '.join(nivelamento_typ)}, )" if nivelamento_typ else "()"
     passos_str = f"({', '.join(passos_typ)}, )" if passos_typ else "()"
     primeiro_voo_str = f"({', '.join(primeiro_voo_typ)}, )" if primeiro_voo_typ else "()"
@@ -171,6 +208,7 @@ def gerar_typst_codigo(dados: dict) -> str:
   passos: {passos_str},
   primeiro_voo: {primeiro_voo_str},
   comandos_cli: {cli_str},
+  desinstalacao: {desinstalacao_str},
   referencias: {refs_str}
 )
 """

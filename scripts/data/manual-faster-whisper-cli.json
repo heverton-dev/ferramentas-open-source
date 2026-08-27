@@ -30,7 +30,9 @@
     "armazenamento": "40 GB SSD",
     "so_recomendado": "Ubuntu 24.04 LTS",
     "custo_mensal_estimado": "EUR 4,00/mês (~R$ 24,00/mês)",
-    "portas_abertas": ["22/tcp (SSH)"]
+    "portas_abertas": [
+      "22/tcp (SSH)"
+    ]
   },
   "instalacao_producao": {
     "passos": [
@@ -120,7 +122,11 @@
       {
         "modulo": "CLI Pura",
         "descricao": "Sem interface engessada; integração total com qualquer frontend via terminal ou pipe.",
-        "recursos_chave": ["Zero overhead", "Scripts bash", "Saídas limpas em JSON/TXT"]
+        "recursos_chave": [
+          "Zero overhead",
+          "Scripts bash",
+          "Saídas limpas em JSON/TXT"
+        ]
       }
     ],
     "troubleshooting": [
@@ -167,5 +173,47 @@
       "url": "https://github.com/danielmiessler/fabric",
       "autor_ou_canal": "Daniel Miessler"
     }
-  ]
+  ],
+  "desinstalacao_cirurgica": {
+    "principio_isolamento": "Instalado via pipx ou venv isolada, não possui dependências cruzadas com outros serviços da VPS. Sua remoção é limpa e imediata.",
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Desinstalação do Pacote via Pipx / Pip",
+        "descricao": "Remove a instalação isolada do CLI do Faster-Whisper.",
+        "comandos": "pipx uninstall faster-whisper 2>/dev/null || pip uninstall -y faster-whisper",
+        "alerta_seguranca": "Se instalado via pipx, remove apenas o ambiente virtual dedicado da ferramenta.",
+        "como_validar": "which faster-whisper # Não deve retornar caminho"
+      },
+      {
+        "numero": 2,
+        "titulo": "Remoção de Modelos CTranslate2 Cacheados",
+        "descricao": "Libera espaço em disco eliminando os modelos baixados pelo HuggingFace Hub.",
+        "comandos": "rm -rf ~/.cache/huggingface/hub/models--guillaumekln--faster-whisper*",
+        "alerta_seguranca": "Não apague a pasta ~/.cache/ inteira, apenas a pasta de modelos do faster-whisper.",
+        "como_validar": "ls ~/.cache/huggingface/hub/models--guillaumekln* 2>/dev/null || echo 'Cache limpo'"
+      },
+      {
+        "numero": 3,
+        "titulo": "Remoção de Scripts Auxiliares de Automação",
+        "descricao": "Remove scripts bash criados pelo operador para transcrição de pastas.",
+        "comandos": "sudo rm -f /usr/local/bin/transcrever-lote.sh",
+        "alerta_seguranca": "Remove apenas o script dedicado criado durante o treinamento.",
+        "como_validar": "which transcrever-lote.sh 2>/dev/null || echo 'Script removido'"
+      },
+      {
+        "numero": 4,
+        "titulo": "Limpeza de Arquivos Temporários de Áudio",
+        "descricao": "Garante que arquivos WAV temporários gerados durante testes sejam expurgados.",
+        "comandos": "rm -rf /tmp/faster-whisper* /tmp/*.wav 2>/dev/null || true",
+        "alerta_seguranca": "Remove apenas arquivos da pasta temporária.",
+        "como_validar": "ls /tmp/faster-whisper* 2>/dev/null || echo 'Temporários limpos'"
+      }
+    ],
+    "checklist_saude_vps": [
+      "which faster-whisper # Confirma que não está no PATH",
+      "python3 -m pip list # Confirma integridade dos pacotes globais do Python",
+      "nvidia-smi # GPU livre para outros processos da VPS"
+    ]
+  }
 }

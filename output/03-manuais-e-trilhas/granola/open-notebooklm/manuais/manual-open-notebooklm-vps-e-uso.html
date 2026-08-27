@@ -315,6 +315,7 @@
       <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
       <a href="#manual-api">🌐 Endpoints de API</a>
       <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
+      <a href="#desinstalacao">🛡️ Desinstalação Cirúrgica VPS</a>
       <a href="#bibliografia">📚 Referências Bibliográficas</a>
     </div>
   </div>
@@ -555,6 +556,85 @@ docker compose logs -f --tail 30</code></pre>
           <div class="trouble-symptom">⚠️ Sintoma: Demora excessiva na síntese de áudio</div>
           <div class="trouble-cause">Causa Provável: Falta de aceleração de hardware na inferência acústica.</div>
           <div>Solução Prática: <code class="trouble-fix">python generate_podcast.py --device cpu --threads 4</code></div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
+  <div class="section-card" id="desinstalacao">
+    <div class="section-header">
+      <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
+      <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
+    </div>
+    
+        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
+          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
+          <p style="margin:0; font-size:13.5px; color:#1E293B;">A remoção via docker compose down opera estritamente no namespace do projeto open-notebooklm, sem tocar em redes ou volumes de outros contêineres.</p>
+        </div>
+        
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 1</span>
+                <span class="step-title">Encerramento do Stack via Docker Compose no Diretório Dedicado</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Executa o down exclusivamente na pasta do Open-NotebookLM, destruindo apenas seus contêineres e redes virtuais.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>cd /opt/open-notebooklm && docker compose down -v</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Execute o comando DENTRO de /opt/open-notebooklm. Nunca execute comandos globais de remoção.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>docker ps | grep open-notebooklm # Não deve retornar contêineres</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 2</span>
+                <span class="step-title">Remoção da Pasta do Repositório e Configurações Locais</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove o código-fonte clonado e variáveis de ambiente em /opt/open-notebooklm.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>cd ~ && sudo rm -rf /opt/open-notebooklm</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Verifique o caminho com 'pwd' antes de executar 'rm -rf'.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>ls -d /opt/open-notebooklm 2>/dev/null || echo 'Diretório expurgado'</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 3</span>
+                <span class="step-title">Revogação da Porta 8501 no Firewall</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Fecha o acesso à porta da interface Streamlit do Open-NotebookLM.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo ufw delete allow 8501/tcp 2>/dev/null || true
+sudo ufw reload</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> As portas 80/443 do servidor web principal continuam ativas.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo ufw status | grep 8501 # Retorna vazio</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 4</span>
+                <span class="step-title">Remoção do Serviço de Inicialização Automática</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Elimina a inicialização do Docker Compose no boot do Linux.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo rm -f /etc/systemd/system/open-notebooklm.service
+sudo systemctl daemon-reload</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Atualize a lista do systemd sem reiniciar o servidor.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo systemctl is-enabled open-notebooklm 2>/dev/null || echo 'Desativado'</code></div>
+            </div>
+            
+        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
+          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
+          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
+            <li style='margin-bottom:6px;'><code>docker ps # Outros contêineres permanecem online e funcionais</code></li><li style='margin-bottom:6px;'><code>ss -tulpn | grep 8501 # Porta da interface web liberada</code></li><li style='margin-bottom:6px;'><code>df -h /opt # Confirma espaço recuperado no disco</code></li>
+          </ul>
         </div>
         
   </div>

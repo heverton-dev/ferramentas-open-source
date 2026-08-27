@@ -32,7 +32,7 @@
   hyphenate: true
 )
 
-#set par(justify: true, leading: 0.52em)
+#set par(justify: true, leading: 0.58em, spacing: 0.95em)
 
 // Títulos
 #show heading.where(level: 1): it => {
@@ -46,7 +46,7 @@
   v(5pt)
 }
 
-// Configuração Rígida de Tabelas Anti-Sobreposição
+// Configuração Rígida de Tabelas Anti-Sobreposição (Padrão Diamante R5-V)
 #show table.cell: it => {
   set text(size: 6.8pt, hyphenate: true)
   set par(justify: false, leading: 0.4em)
