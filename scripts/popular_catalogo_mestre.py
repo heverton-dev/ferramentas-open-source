@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 POPULADOR & PARSER DO CATÁLOGO MESTRE CANÔNICO (SQLITE R11)
 Varre determinísticamente 100% dos bundles de output/ e extrai:
@@ -31,12 +31,36 @@ from estado_esteira import (
     obter_estatisticas_catalogo
 )
 
+# Dicionário de Aliases Canônicos para Desduplicação Inteligente
+ALIASES_CANONICOS = {
+    "waha-plus": "waha",
+    "waha-http": "waha",
+    "waha-whatsapp-http-api-gateway": "waha",
+    "whisper.cpp": "whisper-cpp",
+    "whisper_cpp": "whisper-cpp",
+    "faster-whisper": "faster-whisper-cli",
+    "open-notebook-lm": "open-notebooklm",
+    "open_notebooklm": "open-notebooklm",
+    "typebot.io": "typebot",
+    "n8n.io": "n8n",
+    "supabase-oss": "supabase",
+    "chatwoot-ce": "chatwoot",
+    "posthog-ce": "posthog",
+    "minio-oss": "minio",
+    "appflowy-io": "appflowy",
+    "affine-pro": "affine",
+    "mail-in-a-box": "mailinabox",
+    "postfix-e-dovecot": "postfix-dovecot",
+    "screenpipe-desktop": "screenpipe"
+}
+
 def normalizar_slug(nome: str) -> str:
     slug = nome.lower().strip()
     slug = re.sub(r'[\(\)\[\]\{\}\'\"\,\.\:\/\+\#]', '', slug)
     slug = re.sub(r'[\s\_]+', '-', slug)
     slug = re.sub(r'-+', '-', slug).strip('-')
-    return slug[:40]
+    slug = slug[:40]
+    return ALIASES_CANONICOS.get(slug, slug)
 
 def ingerir_listas_horizontais():
     print("\n📦 Ingerindo Listas Horizontais (Fluxo 1)...")
