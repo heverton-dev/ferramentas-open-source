@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Camada 38 · Edge AI & On-Device Inference · Dossiê Executivo</title>
+<style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    --paper: #F6F4EF;
+    --surface: #FFFFFF;
+    --surface-2: #FBF9F4;
+    --surface-dark: #0A0F1D;
+    --ink: #1B1E23;
+    --ink-2: #383D45;
+    --muted: #666E7A;
+    --rule: #D8D2C4;
+    --rule-soft: #EAE5D9;
+    --accent: #00875A;
+    --accent-dark: #57D9A3;
+    --accent-soft: #E3FCEF;
+    --accent-soft-dark: #162B22;
+    --green: #00875A;
+    --green-soft: #E3FCEF;
+    --gold: #FFAB00;
+    --gold-soft: #FFF0B3;
+    --flag: #DE350B;
+    --flag-soft: #FFEBE6;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0E121B;
+      --surface: #141924;
+      --surface-2: #1A2130;
+      --ink: #E6E8ED;
+      --ink-2: #B0B5C0;
+      --muted: #7E8695;
+      --rule: #262F40;
+      --rule-soft: #1E2533;
+      --accent: var(--accent-dark);
+      --accent-soft: var(--accent-soft-dark);
+      --green: #57D9A3;
+      --green-soft: #162B22;
+      --gold: #FFC400;
+      --gold-soft: #332600;
+      --flag: #FF7452;
+      --flag-soft: #361B15;
+      --shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  * {   }
+  
+  
+  
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    margin: 0; padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  header { margin-bottom: 32px; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .back-link:hover { color: var(--accent); }
+  .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+
+  .hero { margin: 20px 0 24px; }
+  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 42px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: justify; text-justify: inter-word; }
+  .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
+
+  .hero-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px; margin: 24px 0 32px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 12px 16px; box-shadow: var(--shadow);
+  }
+  .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 24px 0; }
+  .route { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 20px; }
+  .route.red { border-left: 4px solid var(--flag); }
+  .route.green { border-left: 4px solid var(--green); }
+  .route .tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+  .route.red .tag { color: var(--flag); }
+  .route.green .tag { color: var(--green); }
+  .route h4 { font-family: var(--font-serif); font-size: 19px; margin: 6px 0 8px; color: var(--ink); }
+  .route p { margin: 0; font-size: 14px; color: var(--ink-2); }
+
+  .sec-head { margin: 36px 0 16px; }
+  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
+  h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
+  .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
+
+  .search-wrapper { position: relative; margin: 20px 0 16px; }
+  .search-input { width: 100%; padding: 12px 16px 12px 42px; font-family: var(--font-sans); font-size: 14px; background: var(--surface); color: var(--ink); border: 1px solid var(--rule); border-radius: 4px; box-shadow: var(--shadow); outline: none; transition: border-color .15s ease; }
+  .search-input:focus { border-color: var(--accent); }
+  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; fill: var(--muted); pointer-events: none; }
+
+  .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+  th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
+  tr:last-child td { border-bottom: none; }
+  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
+  td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
+  td.tool a:hover { color: var(--accent); }
+  td.saas { color: var(--flag); }
+  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
+  td.cat { font-size: 12px; color: var(--muted); }
+  td.lic { font-family: var(--mono); font-size: 11px; }
+
+  .ledger { display: flex; flex-direction: column; gap: 24px; }
+  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease; }
+  .entry:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
+  
+  .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+
+  .senior-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
+  .senior-badge.green { background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+  .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
+  .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
+  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+  .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
+
+  .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); text-align: justify; text-justify: inter-word; }
+
+  .code-block { position: relative; background: var(--surface-dark); color: #E6E8ED; padding: 12px 14px; border-radius: 3px; font-family: var(--mono); font-size: 12.5px; overflow-x: auto; margin-top: 4px; }
+  .code-block code { font-family: inherit; }
+  .copy-btn { position: absolute; top: 6px; right: 6px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #FFF; font-family: var(--mono); font-size: 10px; padding: 2px 6px; border-radius: 2px; cursor: pointer; }
+  .copy-btn:hover { background: var(--accent); border-color: var(--accent); }
+
+  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
+  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-card .card-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .econ-card .card-val { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 2px; }
+  .infra-item { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 8px 10px; }
+  .infra-item .lbl { font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); display: block; margin-bottom: 2px; }
+  .infra-item .val { font-size: 12.5px; font-weight: 600; color: var(--ink); }
+
+  .verdict-box { background: color-mix(in srgb, var(--accent-soft) 35%, var(--surface)); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 0 2px 2px 0; margin-top: 6px; }
+  .verdict-box .lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); font-weight: 700; display: block; margin-bottom: 2px; }
+  .verdict-box p { font-size: 13.5px; line-height: 1.5; color: var(--ink); margin: 0; }
+
+  .how-to-use-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 4px; }
+  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 3px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+  .step-card .step-num { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; }
+  .step-card .step-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .step-card p { font-size: 12px; line-height: 1.45; color: var(--ink-2); margin: 0; }
+
+
+  
+  * {
+    
+    
+  }
+  
+  
+  
+  
+
+
+  /* SCROLLBAR REFINADA (MAX 4PX & COR ACCENT) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--green);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="header-top">
+      <a class="back-link" href="index.html">← Voltar ao Hub Central</a>
+      <span class="camada-pill">Camada 38 · Arsenal Open Source</span>
+    </div>
+
+    <div class="hero">
+      <h1>Camada 38 · Edge AI & On-Device Inference</h1>
+      <p class="deck">Como rodar LLMs, visão computacional e transcrição de áudio 100% offline em smartphones, tablets, Raspberry Pi e NPUs de borda com zero latência, zero consumo de dados móveis e zero custos de APIs em nuvem.</p>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="num">20</div>
+        <div class="lbl">Ferramentas Mapeadas</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">20+</div>
+        <div class="lbl">SaaS Substituídos</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">R$ 48.000+</div>
+        <div class="lbl">Economia Estimada/Ano</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">100% OSI</div>
+        <div class="lbl">Conformidade OSI</div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="route red">
+        <span class="tag">Rota Frágil (Proprietária)</span>
+        <h4>Rota Frágil (Lock-in Proprietário)</h4>
+        <p>Preços sobem anualmente, telemetria compulsória e dependência crítica de nuvens fechadas.</p>
+      </div>
+      <div class="route green">
+        <span class="tag">Rota Soberana (Open Source)</span>
+        <h4>Rota Soberana (Open Source)</h4>
+        <p>Custo zero de licença por usuário, dados sob custódia local e total conformidade com a LGPD.</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="sec-head">
+    <span class="sec-num">Parte 1</span>
+    <h2>Matriz Comparativa de Ferramentas</h2>
+    <p class="sec-note">Tabela consolidada com todas as 20 ferramentas, licenças e custos comparados.</p>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Ferramenta</th>
+          <th>SaaS Substituído</th>
+          <th>Economia</th>
+          <th>Categoria</th>
+          <th>Licença</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rank">01</td>
+          <td class="tool"><a href="#o-motor-oficial-da-meta-para-pytorch-em-mobile-npu">O Motor Oficial da Meta para PyTorch em Mobile & NPU</a></td>
+          <td class="saas">APIs em Nuvem (OpenAI / Anthropic)</td>
+          <td class="econ">Runtime Mobile PyTorch</td>
+          <td class="cat">100% Redução de Custos de Nuvem</td>
+          <td class="lic"><span class="lic-badge">BSD-3-Clause</span></td>
+        </tr>
+        <tr>
+          <td class="rank">02</td>
+          <td class="tool"><a href="#device">Device</a></td>
+          <td class="saas">APIs de Visão Computacional em Nuvem</td>
+          <td class="econ">Visão & Gestos On-Device</td>
+          <td class="cat">100% Gratuito / Zero API</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">03</td>
+          <td class="tool"><a href="#framework-de-machine-learning-nativo-para-apple-silicon">Framework de Machine Learning Nativo para Apple Silicon</a></td>
+          <td class="saas">CUDA / Endpoints Remotos no Mac</td>
+          <td class="econ">ML para Apple Silicon</td>
+          <td class="cat">Máxima Performance M1/M2/M3/M4</td>
+          <td class="lic"><span class="lic-badge">MIT</span></td>
+        </tr>
+        <tr>
+          <td class="rank">04</td>
+          <td class="tool"><a href="#infer-ncia-de-llms-em-c-c-puro-para-qualquer-hardware">Inferência de LLMs em C/C++ Puro para Qualquer Hardware</a></td>
+          <td class="saas">Endpoints de LLM Remotos Pagos</td>
+          <td class="econ">Inferência de LLMs em C++</td>
+          <td class="cat">Zero Custo de Tokens</td>
+          <td class="lic"><span class="lic-badge">MIT</span></td>
+        </tr>
+        <tr>
+          <td class="rank">05</td>
+          <td class="tool"><a href="#device-para-ios-e-macos">Device para iOS e macOS</a></td>
+          <td class="saas">OpenAI Whisper API ($ 0.006/min)</td>
+          <td class="econ">Speech-to-Text On-Device</td>
+          <td class="cat">-$ 5.000 / ano</td>
+          <td class="lic"><span class="lic-badge">MIT</span></td>
+        </tr>
+        <tr>
+          <td class="rank">06</td>
+          <td class="tool"><a href="#motor-de-execu-o-multiplataforma-de-modelos-de-ia">Motor de Execução Multiplataforma de Modelos de IA</a></td>
+          <td class="saas">Runtimes Fechados de Fabricante</td>
+          <td class="econ">Cross-Platform AI Runtime</td>
+          <td class="cat">Zero Dependência</td>
+          <td class="lic"><span class="lic-badge">MIT</span></td>
+        </tr>
+        <tr>
+          <td class="rank">07</td>
+          <td class="tool"><a href="#o-motor-leve-de-deep-learning-para-android-iot">O Motor Leve de Deep Learning para Android & IoT</a></td>
+          <td class="saas">APIs Móveis Proprietárias</td>
+          <td class="econ">Mobile Deep Learning</td>
+          <td class="cat">Zero Custo</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">08</td>
+          <td class="tool"><a href="#framework-de-infer-ncia-neural-em-c-da-tencent">Framework de Inferência Neural em C++ da Tencent</a></td>
+          <td class="saas">SDKs Fechados de IA Mobile</td>
+          <td class="econ">High-Performance Mobile Neural</td>
+          <td class="cat">Alta Performance</td>
+          <td class="lic"><span class="lic-badge">BSD-3-Clause</span></td>
+        </tr>
+        <tr>
+          <td class="rank">09</td>
+          <td class="tool"><a href="#motor-leve-de-deep-learning-para-dispositivos-da-alibaba">Motor Leve de Deep Learning para Dispositivos da Alibaba</a></td>
+          <td class="saas">Motores Proprietários Fechados</td>
+          <td class="econ">Lightweight Deep Learning</td>
+          <td class="cat">Leve e Rápido</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">10</td>
+          <td class="tool"><a href="#compilador-universal-de-llms-para-qualquer-gpu-e-npu">Compilador Universal de LLMs para Qualquer GPU e NPU</a></td>
+          <td class="saas">APIs de Nuvem para Web/Mobile</td>
+          <td class="econ">LLM Compiler</td>
+          <td class="cat">Zero Custo de Servidor</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">11</td>
+          <td class="tool"><a href="#llms-executando-100-no-navegador-via-webgpu">LLMs Executando 100% no Navegador via WebGPU</a></td>
+          <td class="saas">Chamadas de API de IA no Frontend</td>
+          <td class="econ">Browser In-Memory LLM</td>
+          <td class="cat">Zero Backend Server</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">12</td>
+          <td class="tool"><a href="#modelos-de-ia-em-javascript-no-navegador-e-node-js">Modelos de IA em JavaScript no Navegador e Node.js</a></td>
+          <td class="saas">APIs de Embeddings / Hugging Face</td>
+          <td class="econ">Client-Side Transformers</td>
+          <td class="cat">100% Client-Side</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">13</td>
+          <td class="tool"><a href="#reconhecimento-e-s-ntese-de-voz-offline-multiplataforma">Reconhecimento e Síntese de Voz Offline Multiplataforma</a></td>
+          <td class="saas">Google Cloud Speech-to-Text</td>
+          <td class="econ">Speech STT & TTS Offline</td>
+          <td class="cat">-$ 12.000 / ano</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">14</td>
+          <td class="tool"><a href="#plataforma-de-desenvolvimento-de-ml-para-embarcados">Plataforma de Desenvolvimento de ML para Embarcados</a></td>
+          <td class="saas">AWS IoT Greengrass ML</td>
+          <td class="econ">TinyML & IoT</td>
+          <td class="cat">-$ 20.000 / ano</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">15</td>
+          <td class="tool"><a href="#compilador-de-deep-learning-de-ponta-a-ponta">Compilador de Deep Learning de Ponta a Ponta</a></td>
+          <td class="saas">Compiladores Proprietários de GPU</td>
+          <td class="econ">Deep Learning Compiler</td>
+          <td class="cat">Incalculável</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">16</td>
+          <td class="tool"><a href="#detec-o-de-objetos-em-tempo-real-sem-nms">Detecção de Objetos em Tempo Real sem NMS</a></td>
+          <td class="saas">Google Vision API</td>
+          <td class="econ">Object Detection Real-Time</td>
+          <td class="cat">-$ 15.000 / ano</td>
+          <td class="lic"><span class="lic-badge">AGPLv3</span></td>
+        </tr>
+        <tr>
+          <td class="rank">17</td>
+          <td class="tool"><a href="#toolkit-de-otimiza-o-e-deploy-de-ia-em-hardware-intel">Toolkit de Otimização e Deploy de IA em Hardware Intel</a></td>
+          <td class="saas">Intel Closed Toolkits</td>
+          <td class="econ">Hardware Acceleration (Intel)</td>
+          <td class="cat">Zero Royalties</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">18</td>
+          <td class="tool"><a href="#toolkit-de-acelera-o-de-npu-para-placas-arm-rockchip">Toolkit de Aceleração de NPU para Placas ARM Rockchip</a></td>
+          <td class="saas">SDKs Fechados de NPU</td>
+          <td class="econ">NPU ARM Acceleration</td>
+          <td class="cat">Soberania Total</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+        <tr>
+          <td class="rank">19</td>
+          <td class="tool"><a href="#biblioteca-tensorial-em-c-puro-para-aprendizado-de-m-quina">Biblioteca Tensorial em C Puro para Aprendizado de Máquina</a></td>
+          <td class="saas">Bibliotecas BLAS Proprietárias</td>
+          <td class="econ">Tensor Library em C</td>
+          <td class="cat">Incalculável</td>
+          <td class="lic"><span class="lic-badge">MIT</span></td>
+        </tr>
+        <tr>
+          <td class="rank">20</td>
+          <td class="tool"><a href="#kit-de-deploy-r-pido-de-ia-da-baidu-para-dispositivos-de-borda">Kit de Deploy Rápido de IA da Baidu para Dispositivos de Borda</a></td>
+          <td class="saas">Triton Server em Edge</td>
+          <td class="econ">Edge Deployment Kit</td>
+          <td class="cat">Zero Licença</td>
+          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-head" id="fichas">
+    <span class="sec-num">Parte 2</span>
+    <h2>Fichas Técnicas &amp; Guias de Adoção</h2>
+    <p class="sec-note">Detalhamento técnico, comandos de execução rápida, análise de infraestrutura e passos práticos.</p>
+  </div>
+
+  <div class="search-wrapper">
+    <input class="search-input" id="search-input" onkeyup="filterTools(this.value)" placeholder="Buscar ferramenta, SaaS substituído, licença ou tecnologia..." type="text"/>
+    <svg class="search-icon" viewbox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
+    <div id="search-count" style="margin-top: 6px; font-size: 12px; color: var(--muted); font-family: var(--mono);"></div>
+  </div>
+
+  <div class="ledger">
+    <div class="entry" id="o-motor-oficial-da-meta-para-pytorch-em-mobile-npu">
+      <div class="entry-rank">01</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>O Motor Oficial da Meta para PyTorch em Mobile & NPU</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: APIs em Nuvem (OpenAI / Anthropic)</span>
+          <span class="econ-badge">Economia: Runtime Mobile PyTorch</span>
+          <span class="lic-badge">BSD-3-Clause</span>
+          <span class="kind">100% Redução de Custos de Nuvem</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Runtime ultra-compacto e modular do ecossistema PyTorch projetado para executar modelos de IA generativa e visão diretamente em smartphones e chips NPU.</p>
+          <p><strong>Como funciona:</strong> Runtime ultra-compacto e modular do ecossistema PyTorch projetado para executar modelos de IA generativa e visão diretamente em smartphones e chips NPU.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>git clone https://github.com/pytorch/executorch.git
+./install_executorch.sh</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">APIs em Nuvem (OpenAI / Anthropic)</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Runtime Mobile PyTorch</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/o-motor-oficial-da-meta-para-pytorch-em-mobile-npu" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir APIs em Nuvem (OpenAI / Anthropic) com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="device">
+      <div class="entry-rank">02</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Device</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: APIs de Visão Computacional em Nuvem</span>
+          <span class="econ-badge">Economia: Visão & Gestos On-Device</span>
+          <span class="lic-badge">Apache-2.0</span>
+          <span class="kind">100% Gratuito / Zero API</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Executa modelos de visão computacional em tempo real (rastreamento de mãos, malha facial de 468 pontos, pose corporal, segmentação) diretamente no dispositivo.</p>
+          <p><strong>Como funciona:</strong> Executa modelos de visão computacional em tempo real (rastreamento de mãos, malha facial de 468 pontos, pose corporal, segmentação) diretamente no dispositivo.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>pip install mediapipe
+import mediapipe as mp</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">APIs de Visão Computacional em Nuvem</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Visão & Gestos On-Device</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/device" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir APIs de Visão Computacional em Nuvem com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="framework-de-machine-learning-nativo-para-apple-silicon">
+      <div class="entry-rank">03</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Framework de Machine Learning Nativo para Apple Silicon</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: CUDA / Endpoints Remotos no Mac</span>
+          <span class="econ-badge">Economia: ML para Apple Silicon</span>
+          <span class="lic-badge">MIT</span>
+          <span class="kind">Máxima Performance M1/M2/M3/M4</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Framework de aprendizado de máquina desenvolvido pela Apple para treinar e rodar modelos de IA aproveitando a arquitetura de memória unificada dos chips M1/M2/M3/M4.</p>
+          <p><strong>Como funciona:</strong> Framework de aprendizado de máquina desenvolvido pela Apple para treinar e rodar modelos de IA aproveitando a arquitetura de memória unificada dos chips M1/M2/M3/M4.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>pip install mlx-lm
+python -m mlx_lm.generate --model mistralai/Mistral-7B-Instruct-v0.2 --prompt 'Olá!'</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">CUDA / Endpoints Remotos no Mac</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">ML para Apple Silicon</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/framework-de-machine-learning-nativo-para-apple-silicon" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir CUDA / Endpoints Remotos no Mac com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="infer-ncia-de-llms-em-c-c-puro-para-qualquer-hardware">
+      <div class="entry-rank">04</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Inferência de LLMs em C/C++ Puro para Qualquer Hardware</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: Endpoints de LLM Remotos Pagos</span>
+          <span class="econ-badge">Economia: Inferência de LLMs em C++</span>
+          <span class="lic-badge">MIT</span>
+          <span class="kind">Zero Custo de Tokens</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Executa grandes modelos de linguagem (Llama 3, DeepSeek, Qwen) em formato quantizado GGUF em processadores comuns, placas ARM e GPUs com máxima velocidade.</p>
+          <p><strong>Como funciona:</strong> Executa grandes modelos de linguagem (Llama 3, DeepSeek, Qwen) em formato quantizado GGUF em processadores comuns, placas ARM e GPUs com máxima velocidade.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>./llama-cli -m modelo.gguf -p 'Explique a relatividade' -n 128</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">Endpoints de LLM Remotos Pagos</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Inferência de LLMs em C++</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/infer-ncia-de-llms-em-c-c-puro-para-qualquer-hardware" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir Endpoints de LLM Remotos Pagos com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="device-para-ios-e-macos">
+      <div class="entry-rank">05</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Device para iOS e macOS</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: OpenAI Whisper API ($ 0.006/min)</span>
+          <span class="econ-badge">Economia: Speech-to-Text On-Device</span>
+          <span class="lic-badge">MIT</span>
+          <span class="kind">-$ 5.000 / ano</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Executa o modelo Whisper de transcrição de voz diretamente no hardware Apple com otimização específica para o Apple Neural Engine (ANE).</p>
+          <p><strong>Como funciona:</strong> Executa o modelo Whisper de transcrição de voz diretamente no hardware Apple com otimização específica para o Apple Neural Engine (ANE).</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>swift package add https://github.com/argmaxinc/WhisperKit</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">OpenAI Whisper API ($ 0.006/min)</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Speech-to-Text On-Device</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/device-para-ios-e-macos" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir OpenAI Whisper API ($ 0.006/min) com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="motor-de-execu-o-multiplataforma-de-modelos-de-ia">
+      <div class="entry-rank">06</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Motor de Execução Multiplataforma de Modelos de IA</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: Runtimes Fechados de Fabricante</span>
+          <span class="econ-badge">Economia: Cross-Platform AI Runtime</span>
+          <span class="lic-badge">MIT</span>
+          <span class="kind">Zero Dependência</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Executa modelos treinados em qualquer framework (PyTorch, TensorFlow, Scikit-Learn) em dispositivos Android, iOS e Windows com binários reduzidos.</p>
+          <p><strong>Como funciona:</strong> Executa modelos treinados em qualquer framework (PyTorch, TensorFlow, Scikit-Learn) em dispositivos Android, iOS e Windows com binários reduzidos.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>npm install onnxruntime-react-native</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">Runtimes Fechados de Fabricante</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Cross-Platform AI Runtime</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/motor-de-execu-o-multiplataforma-de-modelos-de-ia" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir Runtimes Fechados de Fabricante com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="o-motor-leve-de-deep-learning-para-android-iot">
+      <div class="entry-rank">07</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>O Motor Leve de Deep Learning para Android & IoT</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: APIs Móveis Proprietárias</span>
+          <span class="econ-badge">Economia: Mobile Deep Learning</span>
+          <span class="lic-badge">Apache-2.0</span>
+          <span class="kind">Zero Custo</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> A evolução moderna do TensorFlow Lite mantida pelo Google para inferência de alta velocidade em dispositivos móveis, microcontroladores e sistemas embarcados.</p>
+          <p><strong>Como funciona:</strong> A evolução moderna do TensorFlow Lite mantida pelo Google para inferência de alta velocidade em dispositivos móveis, microcontroladores e sistemas embarcados.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>pip install litert</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">APIs Móveis Proprietárias</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Mobile Deep Learning</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/o-motor-leve-de-deep-learning-para-android-iot" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir APIs Móveis Proprietárias com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="framework-de-infer-ncia-neural-em-c-da-tencent">
+      <div class="entry-rank">08</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Framework de Inferência Neural em C++ da Tencent</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: SDKs Fechados de IA Mobile</span>
+          <span class="econ-badge">Economia: High-Performance Mobile Neural</span>
+          <span class="lic-badge">BSD-3-Clause</span>
+          <span class="kind">Alta Performance</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Motor de inferência de redes neurais ultra-otimizado para processadores ARM de celulares, sem dependências externas e com inicialização instantânea.</p>
+          <p><strong>Como funciona:</strong> Motor de inferência de redes neurais ultra-otimizado para processadores ARM de celulares, sem dependências externas e com inicialização instantânea.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>git clone https://github.com/Tencent/ncnn.git
+mkdir build && cd build && cmake .. && make</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">SDKs Fechados de IA Mobile</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">High-Performance Mobile Neural</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/framework-de-infer-ncia-neural-em-c-da-tencent" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir SDKs Fechados de IA Mobile com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="motor-leve-de-deep-learning-para-dispositivos-da-alibaba">
+      <div class="entry-rank">09</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Motor Leve de Deep Learning para Dispositivos da Alibaba</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: Motores Proprietários Fechados</span>
+          <span class="econ-badge">Economia: Lightweight Deep Learning</span>
+          <span class="lic-badge">Apache-2.0</span>
+          <span class="kind">Leve e Rápido</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Motor de inferência de alto rendimento desenvolvido para suportar os aplicativos de compras massivos da Alibaba, com foco em eficiência energética.</p>
+          <p><strong>Como funciona:</strong> Motor de inferência de alto rendimento desenvolvido para suportar os aplicativos de compras massivos da Alibaba, com foco em eficiência energética.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>pip install MNN</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">Motores Proprietários Fechados</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Lightweight Deep Learning</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/motor-leve-de-deep-learning-para-dispositivos-da-alibaba" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir Motores Proprietários Fechados com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="compilador-universal-de-llms-para-qualquer-gpu-e-npu">
+      <div class="entry-rank">10</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Compilador Universal de LLMs para Qualquer GPU e NPU</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: APIs de Nuvem para Web/Mobile</span>
+          <span class="econ-badge">Economia: LLM Compiler</span>
+          <span class="lic-badge">Apache-2.0</span>
+          <span class="kind">Zero Custo de Servidor</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Compila modelos de linguagem para rodar nativamente em qualquer placa gráfica ou chip móvel (Vulkan, Metal, WebGPU, OpenCL, CUDA).</p>
+          <p><strong>Como funciona:</strong> Compila modelos de linguagem para rodar nativamente em qualquer placa gráfica ou chip móvel (Vulkan, Metal, WebGPU, OpenCL, CUDA).</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>pip install mlc-llm
+mlc_llm chat HF://mlc-ai/Llama-3-8B-Instruct-q4f16_1-MLC</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">APIs de Nuvem para Web/Mobile</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">LLM Compiler</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/compilador-universal-de-llms-para-qualquer-gpu-e-npu" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir APIs de Nuvem para Web/Mobile com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="llms-executando-100-no-navegador-via-webgpu">
+      <div class="entry-rank">11</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>LLMs Executando 100% no Navegador via WebGPU</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: Chamadas de API de IA no Frontend</span>
+          <span class="econ-badge">Economia: Browser In-Memory LLM</span>
+          <span class="lic-badge">Apache-2.0</span>
+          <span class="kind">Zero Backend Server</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Permite que páginas da web executem modelos de linguagem completos direto na GPU do computador do usuário via WebGPU, sem instalar nada.</p>
+          <p><strong>Como funciona:</strong> Permite que páginas da web executem modelos de linguagem completos direto na GPU do computador do usuário via WebGPU, sem instalar nada.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>npm install @mlc-ai/web-llm
+import { CreateMLCEngine } from '@mlc-ai/web-llm';</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">Chamadas de API de IA no Frontend</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Browser In-Memory LLM</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/llms-executando-100-no-navegador-via-webgpu" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir Chamadas de API de IA no Frontend com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="modelos-de-ia-em-javascript-no-navegador-e-node-js">
+      <div class="entry-rank">12</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Modelos de IA em JavaScript no Navegador e Node.js</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: APIs de Embeddings / Hugging Face</span>
+          <span class="econ-badge">Economia: Client-Side Transformers</span>
+          <span class="lic-badge">Apache-2.0</span>
+          <span class="kind">100% Client-Side</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Implementação funcional da biblioteca Transformers da Hugging Face em JavaScript puro, rodando embeddings, tradução, OCR e classificação no cliente.</p>
+          <p><strong>Como funciona:</strong> Implementação funcional da biblioteca Transformers da Hugging Face em JavaScript puro, rodando embeddings, tradução, OCR e classificação no cliente.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>npm install @xenova/transformers
+import { pipeline } from '@xenova/transformers';
+const pipe = await pipeline('feature-extraction');</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">APIs de Embeddings / Hugging Face</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Client-Side Transformers</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/modelos-de-ia-em-javascript-no-navegador-e-node-js" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir APIs de Embeddings / Hugging Face com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="reconhecimento-e-s-ntese-de-voz-offline-multiplataforma">
+      <div class="entry-rank">13</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Reconhecimento e Síntese de Voz Offline Multiplataforma</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: Google Cloud Speech-to-Text</span>
+          <span class="econ-badge">Economia: Speech STT & TTS Offline</span>
+          <span class="lic-badge">Apache-2.0</span>
+          <span class="kind">-$ 12.000 / ano</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Fornece motores completos de transcrição de voz (STT), síntese de áudio (TTS) e detecção de palavras de ativação (wake-word) 100% offline.</p>
+          <p><strong>Como funciona:</strong> Fornece motores completos de transcrição de voz (STT), síntese de áudio (TTS) e detecção de palavras de ativação (wake-word) 100% offline.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>pip install sherpa-onnx</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">Google Cloud Speech-to-Text</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Speech STT & TTS Offline</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/reconhecimento-e-s-ntese-de-voz-offline-multiplataforma" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir Google Cloud Speech-to-Text com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="plataforma-de-desenvolvimento-de-ml-para-embarcados">
+      <div class="entry-rank">14</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Plataforma de Desenvolvimento de ML para Embarcados</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: AWS IoT Greengrass ML</span>
+          <span class="econ-badge">Economia: TinyML & IoT</span>
+          <span class="lic-badge">Apache-2.0</span>
+          <span class="kind">-$ 20.000 / ano</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Facilita a coleta de dados de sensores, treinamento e deploy de modelos de TinyML diretamente em microcontroladores (Arduino, ESP32, STM32).</p>
+          <p><strong>Como funciona:</strong> Facilita a coleta de dados de sensores, treinamento e deploy de modelos de TinyML diretamente em microcontroladores (Arduino, ESP32, STM32).</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>npm install -g edge-impulse-cli</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">AWS IoT Greengrass ML</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">TinyML & IoT</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/plataforma-de-desenvolvimento-de-ml-para-embarcados" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir AWS IoT Greengrass ML com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="compilador-de-deep-learning-de-ponta-a-ponta">
+      <div class="entry-rank">15</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Compilador de Deep Learning de Ponta a Ponta</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: Compiladores Proprietários de GPU</span>
+          <span class="econ-badge">Economia: Deep Learning Compiler</span>
+          <span class="lic-badge">Apache-2.0</span>
+          <span class="kind">Incalculável</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Compila e otimiza grafos de redes neurais para qualquer arquitetura de hardware (CPUs, GPUs x86/ARM e aceleradores customizados).</p>
+          <p><strong>Como funciona:</strong> Compila e otimiza grafos de redes neurais para qualquer arquitetura de hardware (CPUs, GPUs x86/ARM e aceleradores customizados).</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>pip install apache-tvm</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">Compiladores Proprietários de GPU</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Deep Learning Compiler</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/compilador-de-deep-learning-de-ponta-a-ponta" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir Compiladores Proprietários de GPU com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="detec-o-de-objetos-em-tempo-real-sem-nms">
+      <div class="entry-rank">16</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Detecção de Objetos em Tempo Real sem NMS</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: Google Vision API</span>
+          <span class="econ-badge">Economia: Object Detection Real-Time</span>
+          <span class="lic-badge">AGPLv3</span>
+          <span class="kind">-$ 15.000 / ano</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Detecta dezenas de objetos simultaneamente em streams de vídeo com velocidade ultra-alta eliminando o gargalo de pós-processamento NMS.</p>
+          <p><strong>Como funciona:</strong> Detecta dezenas de objetos simultaneamente em streams de vídeo com velocidade ultra-alta eliminando o gargalo de pós-processamento NMS.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>pip install ultralytics
+yolo predict model=yolov10n.pt source='camera.mp4'</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">Google Vision API</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Object Detection Real-Time</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/detec-o-de-objetos-em-tempo-real-sem-nms" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir Google Vision API com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="toolkit-de-otimiza-o-e-deploy-de-ia-em-hardware-intel">
+      <div class="entry-rank">17</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Toolkit de Otimização e Deploy de IA em Hardware Intel</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: Intel Closed Toolkits</span>
+          <span class="econ-badge">Economia: Hardware Acceleration (Intel)</span>
+          <span class="lic-badge">Apache-2.0</span>
+          <span class="kind">Zero Royalties</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Maximiza o desempenho de modelos de IA em processadores Intel (Core, Xeon), GPUs integradas e novas NPUs Intel Core Ultra.</p>
+          <p><strong>Como funciona:</strong> Maximiza o desempenho de modelos de IA em processadores Intel (Core, Xeon), GPUs integradas e novas NPUs Intel Core Ultra.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>pip install openvino
+import openvino as ov</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">Intel Closed Toolkits</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Hardware Acceleration (Intel)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/toolkit-de-otimiza-o-e-deploy-de-ia-em-hardware-intel" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir Intel Closed Toolkits com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="toolkit-de-acelera-o-de-npu-para-placas-arm-rockchip">
+      <div class="entry-rank">18</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Toolkit de Aceleração de NPU para Placas ARM Rockchip</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: SDKs Fechados de NPU</span>
+          <span class="econ-badge">Economia: NPU ARM Acceleration</span>
+          <span class="lic-badge">Apache-2.0</span>
+          <span class="kind">Soberania Total</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Permite rodar modelos de deep learning e LLMs quantizados direto na NPU dedicada de placas como Orange Pi 5 e chips Rockchip RK3588.</p>
+          <p><strong>Como funciona:</strong> Permite rodar modelos de deep learning e LLMs quantizados direto na NPU dedicada de placas como Orange Pi 5 e chips Rockchip RK3588.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>pip install rknn-toolkit2</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">SDKs Fechados de NPU</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">NPU ARM Acceleration</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/toolkit-de-acelera-o-de-npu-para-placas-arm-rockchip" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir SDKs Fechados de NPU com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="biblioteca-tensorial-em-c-puro-para-aprendizado-de-m-quina">
+      <div class="entry-rank">19</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Biblioteca Tensorial em C Puro para Aprendizado de Máquina</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: Bibliotecas BLAS Proprietárias</span>
+          <span class="econ-badge">Economia: Tensor Library em C</span>
+          <span class="lic-badge">MIT</span>
+          <span class="kind">Incalculável</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> Biblioteca minimalista de tensores em C puro que gerencia memória e operações matemáticas para inferência de modelos de bilhões de parâmetros.</p>
+          <p><strong>Como funciona:</strong> Biblioteca minimalista de tensores em C puro que gerencia memória e operações matemáticas para inferência de modelos de bilhões de parâmetros.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>git clone https://github.com/ggerganov/ggml.git
+mkdir build && cd build && cmake .. && make</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">Bibliotecas BLAS Proprietárias</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Tensor Library em C</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/biblioteca-tensorial-em-c-puro-para-aprendizado-de-m-quina" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir Bibliotecas BLAS Proprietárias com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="entry" id="kit-de-deploy-r-pido-de-ia-da-baidu-para-dispositivos-de-borda">
+      <div class="entry-rank">20</div>
+      <div class="entry-body">
+        <div class="entry-top">
+          <h3>Kit de Deploy Rápido de IA da Baidu para Dispositivos de Borda</h3>
+          <span class="senior-badge green">Pleno</span>
+          <span class="killer-badge">Substitui: Triton Server em Edge</span>
+          <span class="econ-badge">Economia: Edge Deployment Kit</span>
+          <span class="lic-badge">Apache-2.0</span>
+          <span class="kind">Zero Licença</span>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">1. O Que Faz &amp; Como Funciona</span>
+          <p><strong>O que faz:</strong> SDK de deploy completo que suporta mais de 160 modelos populares de visão, OCR e NLP com integração pronta para Android, iOS, Linux e Windows.</p>
+          <p><strong>Como funciona:</strong> SDK de deploy completo que suporta mais de 160 modelos populares de visão, OCR e NLP com integração pronta para Android, iOS, Linux e Windows.</p>
+          <div class="code-block">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <code>pip install fastdeploy-python</code>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">2. Análise Econômica &amp; ROI</span>
+          <div class="econ-grid">
+            <div class="econ-card killer">
+              <span class="card-lbl">SaaS Eliminado</span>
+              <span class="card-val">Triton Server em Edge</span>
+            </div>
+            <div class="econ-card highlight">
+              <span class="card-lbl">Economia Estimada</span>
+              <span class="card-val">Edge Deployment Kit</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">3. Requisitos de Infraestrutura &amp; Veredito</span>
+          <div class="infra-grid">
+            <div class="infra-item">
+              <span class="lbl">Consumo de Memória</span>
+              <span class="val">2 GB RAM</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Processamento</span>
+              <span class="val">2 vCPU</span>
+            </div>
+            <div class="infra-item">
+              <span class="lbl">Repositório Oficial</span>
+              <span class="val"><a href="https://github.com/topics/kit-de-deploy-r-pido-de-ia-da-baidu-para-dispositivos-de-borda" target="_blank" rel="noopener">GitHub</a></span>
+            </div>
+          </div>
+          <div class="verdict-box">
+            <span class="lbl">Veredito do Arquiteto</span>
+            <p>Excelente alternativa open-source para substituir Triton Server em Edge com soberania e estabilidade comprovada.</p>
+          </div>
+        </div>
+
+        <div class="entry-section">
+          <span class="label">4. Como Usar no Dia a Dia</span>
+          <div class="how-to-use-grid">
+            <div class="step-card">
+              <span class="step-num">[1] Passo 1</span>
+              <p>1 Configuração</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[2] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-num">[3] Operação no Dia a Dia</span>
+              <p>Execução e integração contínua na esteira de produtividade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<script>
+function filterTools(query) {
+  const q = query.toLowerCase().trim();
+  const entries = document.querySelectorAll('.entry');
+  const rows = document.querySelectorAll('.tablewrap tbody tr');
+  let visibleCount = 0;
+
+  entries.forEach(entry => {
+    const text = entry.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      entry.style.display = 'grid';
+      visibleCount++;
+    } else {
+      entry.style.display = 'none';
+    }
+  });
+
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  const countEl = document.getElementById('search-count');
+  if (countEl) {
+    countEl.innerText = q ? `${visibleCount} ferramentas encontradas` : '';
+  }
+}
+
+function copyCode(btn) {
+  const code = btn.parentElement.querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const orig = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => btn.innerText = orig, 1500);
+  });
+}
+</script>
+
+</body>
+</html>

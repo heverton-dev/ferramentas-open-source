@@ -88,33 +88,26 @@ def compilar_trilha(slug: str) -> bool:
     with open(data_file, "r", encoding="utf-8") as f:
         dados = json.load(f)
 
-    out_dir = BASE_DIR / "output" / slug / "trilhas"
-    docs_dir = BASE_DIR / "docs" / slug / "trilhas"
+    out_dir = BASE_DIR / "output" / "03-manuais-e-trilhas" / "granola" / slug / "trilhas"
     out_dir.mkdir(parents=True, exist_ok=True)
-    docs_dir.mkdir(parents=True, exist_ok=True)
 
     # 1. HTML Autocontido
     html_content = renderizar_trilha_html(dados)
     html_out = out_dir / f"trilha-{slug}-aprendizado.html"
-    html_docs = docs_dir / f"trilha-{slug}-aprendizado.html"
     html_out.write_text(html_content, encoding="utf-8")
-    html_docs.write_text(html_content, encoding="utf-8")
-    print(f"✅ HTML compilado: {html_out.name} (espelhado em docs/trilhas/)")
+    print(f"✅ HTML compilado: {html_out.name}")
 
     # 2. Markdown
     md_content = gerar_markdown_trilha(dados)
     md_out = out_dir / f"trilha-{slug}-aprendizado.md"
-    md_docs = docs_dir / f"trilha-{slug}-aprendizado.md"
     md_out.write_text(md_content, encoding="utf-8")
-    md_docs.write_text(md_content, encoding="utf-8")
-    print(f"✅ Markdown compilado: {md_out.name} (espelhado em docs/trilhas/)")
+    print(f"✅ Markdown compilado: {md_out.name}")
 
     # 3. PDF via Typst
     typ_content = gerar_typst_trilha(dados)
     typ_temp = out_dir / f"trilha-{slug}-aprendizado.typ"
     typ_temp.write_text(typ_content, encoding="utf-8")
     pdf_out = out_dir / f"trilha-{slug}-aprendizado.pdf"
-    pdf_docs = docs_dir / f"trilha-{slug}-aprendizado.pdf"
 
     try:
         res = subprocess.run(
@@ -123,9 +116,8 @@ def compilar_trilha(slug: str) -> bool:
             capture_output=True,
             text=True
         )
-        if res.returncode == 0 and pdf_out.exists():
-            pdf_docs.write_bytes(pdf_out.read_bytes())
-            print(f"✅ PDF Executivo compilado via Typst: {pdf_out.name} (espelhado em docs/trilhas/)")
+        if res.returncode == 0:
+            print(f"✅ PDF Executivo compilado via Typst: {pdf_out.name}")
         else:
             print(f"⚠️ Aviso na compilação Typst da trilha: {res.stderr}")
     except Exception as e:

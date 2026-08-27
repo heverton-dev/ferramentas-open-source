@@ -97,40 +97,23 @@ def compilar_dossie_vertical_tripartite(saas: str) -> bool:
     dados = json.loads(data_file.read_text(encoding="utf-8"))
 
     # Diretórios de saída
-    out_bundle = BASE_DIR / "output" / "dossies-verticais" / f"vert-{slug}"
-    docs_bundle = BASE_DIR / "docs" / "dossies-verticais" / f"vert-{slug}"
-    out_legacy = BASE_DIR / "output" / "listas-open-source"
-    docs_legacy = BASE_DIR / "docs" / "listas"
-
+    out_bundle = BASE_DIR / "output" / "02-dossies-verticais" / f"vert-{slug}"
     out_bundle.mkdir(parents=True, exist_ok=True)
-    docs_bundle.mkdir(parents=True, exist_ok=True)
-    out_legacy.mkdir(parents=True, exist_ok=True)
-    docs_legacy.mkdir(parents=True, exist_ok=True)
 
     nome_base = f"vert-{slug}"
 
     # 1. HTML Interativo (Padrão Diamante R5-V)
     html_content = compilar_dossie_vertical(dados)
     (out_bundle / f"{nome_base}.html").write_text(html_content, encoding="utf-8")
-    (docs_bundle / f"{nome_base}.html").write_text(html_content, encoding="utf-8")
-    (out_legacy / f"{nome_base}.html").write_text(html_content, encoding="utf-8")
-    (docs_legacy / f"{nome_base}.html").write_text(html_content, encoding="utf-8")
     print(f"✅ HTML compilado: {nome_base}.html (Padrão Diamante R5-V)")
 
     # 2. Markdown Limpo
     md_content = gerar_markdown_vertical(dados)
     (out_bundle / f"{nome_base}.md").write_text(md_content, encoding="utf-8")
-    (docs_bundle / f"{nome_base}.md").write_text(md_content, encoding="utf-8")
-    (out_legacy / f"{nome_base}.md").write_text(md_content, encoding="utf-8")
-    (docs_legacy / f"{nome_base}.md").write_text(md_content, encoding="utf-8")
     print(f"✅ Markdown compilado: {nome_base}.md")
 
     # 3. PDF Executivo via Typst (Pandoc Typst Engine anti-sobreposição)
     pdf_out = out_bundle / f"{nome_base}.pdf"
-    pdf_docs = docs_bundle / f"{nome_base}.pdf"
-    pdf_legacy_out = out_legacy / f"{nome_base}.pdf"
-    pdf_legacy_docs = docs_legacy / f"{nome_base}.pdf"
-
     temp_md = out_bundle / f"{nome_base}.md"
     try:
         res = subprocess.run(
@@ -149,9 +132,6 @@ def compilar_dossie_vertical_tripartite(saas: str) -> bool:
             errors="replace"
         )
         if res.returncode == 0 and pdf_out.exists():
-            pdf_docs.write_bytes(pdf_out.read_bytes())
-            pdf_legacy_out.write_bytes(pdf_out.read_bytes())
-            pdf_legacy_docs.write_bytes(pdf_out.read_bytes())
             print(f"✅ PDF compilado via Typst: {nome_base}.pdf ({pdf_out.stat().st_size} bytes)")
         else:
             print(f"⚠️ Aviso na compilação do Typst: {res.stderr}")

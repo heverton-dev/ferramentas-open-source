@@ -63,7 +63,7 @@ class TestFluxo2Verticais(unittest.TestCase):
 
     def test_04_compilacao_tripartite_gerada(self):
         """Valida se os 3 formatos (HTML, MD, PDF) foram compilados com tamanho > 0."""
-        bundle_dir = BASE_DIR / "output" / "dossies-verticais" / f"vert-{self.saas_teste}"
+        bundle_dir = BASE_DIR / "output" / "02-dossies-verticais" / f"vert-{self.saas_teste}"
         formatos = ["html", "md", "pdf"]
 
         for fmt in formatos:
@@ -81,13 +81,12 @@ class TestFluxo2Verticais(unittest.TestCase):
         slugs = [d["saas_slug"] for d in dossies]
         self.assertIn(self.saas_teste, slugs, f"SaaS {self.saas_teste} deve estar registrado no SQLite.")
 
-    def test_06_paridade_espelhos_docs_r18(self):
-        """Valida paridade estrita de arquivos entre output/ e docs/ para o dossiê vertical."""
-        out_file = BASE_DIR / "output" / "dossies-verticais" / f"vert-{self.saas_teste}" / f"vert-{self.saas_teste}.html"
-        doc_file = BASE_DIR / "docs" / "dossies-verticais" / f"vert-{self.saas_teste}" / f"vert-{self.saas_teste}.html"
-
-        self.assertTrue(out_file.exists() and doc_file.exists(), "Arquivos HTML de espelho devem existir.")
-        self.assertEqual(out_file.stat().st_size, doc_file.stat().st_size, "Tamanho entre output/ e docs/ deve ser idêntico.")
+    def test_06_integridade_soberana_r18(self):
+        """Valida a integridade da pasta soberana output/02-dossies-verticais/vert-<saas>/."""
+        bundle_dir = BASE_DIR / "output" / "02-dossies-verticais" / f"vert-{self.saas_teste}"
+        self.assertTrue(bundle_dir.exists(), "Diretório do dossiê vertical soberano deve existir.")
+        arquivos = list(bundle_dir.glob("vert-granola.*"))
+        self.assertGreaterEqual(len(arquivos), 3, "Dossiê vertical soberano deve conter ao menos HTML, MD e PDF.")
 
 if __name__ == "__main__":
     unittest.main()

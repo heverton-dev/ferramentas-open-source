@@ -184,33 +184,26 @@ def compilar_manual(slug: str) -> bool:
     with open(data_file, "r", encoding="utf-8") as f:
         dados = json.load(f)
 
-    out_dir = BASE_DIR / "output" / slug / "manuais"
-    docs_dir = BASE_DIR / "docs" / slug / "manuais"
+    out_dir = BASE_DIR / "output" / "03-manuais-e-trilhas" / "granola" / slug / "manuais"
     out_dir.mkdir(parents=True, exist_ok=True)
-    docs_dir.mkdir(parents=True, exist_ok=True)
 
     # 1. HTML
     html_content = renderizar_manual_html(dados)
     html_out = out_dir / f"manual-{slug}-vps-e-uso.html"
-    html_docs = docs_dir / f"manual-{slug}-vps-e-uso.html"
     html_out.write_text(html_content, encoding="utf-8")
-    html_docs.write_text(html_content, encoding="utf-8")
-    print(f"✅ HTML compilado: {html_out.name} (espelhado em docs/manuais/)")
+    print(f"✅ HTML compilado: {html_out.name}")
 
     # 2. Markdown
     md_content = gerar_markdown_manual(dados)
     md_out = out_dir / f"manual-{slug}-vps-e-uso.md"
-    md_docs = docs_dir / f"manual-{slug}-vps-e-uso.md"
     md_out.write_text(md_content, encoding="utf-8")
-    md_docs.write_text(md_content, encoding="utf-8")
-    print(f"✅ Markdown compilado: {md_out.name} (espelhado em docs/manuais/)")
+    print(f"✅ Markdown compilado: {md_out.name}")
 
     # 3. PDF via Typst
     typ_content = gerar_typst_codigo(dados)
     typ_temp = out_dir / f"manual-{slug}-vps-e-uso.typ"
     typ_temp.write_text(typ_content, encoding="utf-8")
     pdf_out = out_dir / f"manual-{slug}-vps-e-uso.pdf"
-    pdf_docs = docs_dir / f"manual-{slug}-vps-e-uso.pdf"
 
     try:
         res = subprocess.run(
@@ -219,14 +212,14 @@ def compilar_manual(slug: str) -> bool:
             capture_output=True,
             text=True
         )
-        if res.returncode == 0 and pdf_out.exists():
-            pdf_docs.write_bytes(pdf_out.read_bytes())
-            print(f"✅ PDF Executivo compilado via Typst: {pdf_out.name} (espelhado em docs/manuais/)")
+        if res.returncode == 0:
+            print(f"✅ PDF compilado via Typst: {pdf_out.name}")
         else:
-            print(f"⚠️ Aviso na compilação Typst: {res.stderr}")
+            print(f"⚠️ Erro ao compilar PDF: {res.stderr}")
     except Exception as e:
-        print(f"⚠️ Erro ao invocar Typst: {e}")
+        print(f"⚠️ Exceção Typst: {e}")
 
+    # Remove o .typ temporário
     if typ_temp.exists():
         typ_temp.unlink()
 

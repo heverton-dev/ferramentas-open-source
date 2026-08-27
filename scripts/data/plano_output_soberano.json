@@ -1,0 +1,44 @@
+{
+  "plan_id": "impl-2026-08-27-output-soberano",
+  "title": "Certificação da Nova Arquitetura Soberana em output/ e Deploy Automático",
+  "phases": [
+    {
+      "id": "impl",
+      "name": "Verificação Estrutural Soberana",
+      "task": {
+        "command": "python -c \"import os; assert os.path.exists('output/01-listas-horizontais') and os.path.exists('output/02-dossies-verticais') and os.path.exists('output/03-manuais-e-trilhas')\"",
+        "timeout_ms": 10000,
+        "expected_outputs": [
+          "output/01-listas-horizontais",
+          "output/02-dossies-verticais",
+          "output/03-manuais-e-trilhas"
+        ]
+      }
+    },
+    {
+      "id": "test",
+      "name": "Suíte Integrada de 19 Testes Unitários",
+      "task": {
+        "test_command": "python -m unittest tests/test_fluxo1_listas.py tests/test_fluxo2_verticais.py tests/test_esteira_manuais.py -v",
+        "coverage_min": 100,
+        "timeout_ms": 20000
+      }
+    },
+    {
+      "id": "validate",
+      "name": "Auditoria de Higiene Soberana R18 (Sem docs/)",
+      "task": {
+        "gate_command": "python scripts/auditar_higiene_repo.py",
+        "timeout_ms": 10000
+      }
+    },
+    {
+      "id": "verify",
+      "name": "Validação de Sintaxe Global",
+      "task": {
+        "verify_command": "python tests/test-syntax.py",
+        "timeout_ms": 10000
+      }
+    }
+  ]
+}

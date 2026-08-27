@@ -64,34 +64,35 @@ alwaysApply: true
 - **R14 (Caminhos curtos):** nomes de pasta/arquivo gerados respeitam o MAX_PATH do Windows (260 chars). Preferir slug curto a título por extenso.
 - **R15 (Segredos):** nenhuma credencial em arquivo versionado. O hook `pre-commit` bloqueia o commit se detectar padrão de segredo no diff staged.
 - **R16 (Pós-implementação — nunca commitar vermelho):** APÓS TODA nova implementação: (1) rodar a suíte de testes necessária; (2) **100%** -> commit + push; (3) **<100%** -> analisar a falha, corrigir o código, re-testar até 100%. Nunca commitar suíte vermelha; nunca contornar o teste para fazê-lo passar.
-- **R17 (Integridade de Repositórios & Validação de URLs):** toda ferramenta catalogada DEVE possuir licença OSI explícita, identificação do SaaS substituído e URL de repositório válida.
-- **R18 (Higiene Contínua, Zero Entulho & Sincronização Estrita):** regra inegociável de pureza: (1) **Zero Arquivos Temporários:** nenhum script descartável (`temp_*`, `fix_*`, `.bak`, `.tmp`) pode permanecer no repositório. (2) **Paridade Estrita de Espelhos:** qualquer compêndio em `output/listas-open-source/` DEVE ter paridade de hash MD5 idêntica em `docs/listas/`. (3) O hook `pre-commit` bloqueia qualquer tentativa de commitar com divergência de espelho ou lixo temporário (`exit 1`).
+- **R17 (Integridade de Repositórios & Validação de URLs):** toda ferramenta catalogada DEVE possuir licença OSI explícita, identificação do SaaS substituído e URL de repositório válida. Proibição absoluta de scripts de auto-forking de repositórios no GitHub para evitar sanções de conta.
+- **R18 (Higiene Soberana, Zero Entulho & Pasta Única output/):** regra inegociável de pureza: (1) **Zero Arquivos Temporários:** nenhum script descartável (`temp_*`, `fix_*`, `.bak`, `.tmp`) pode permanecer no repositório. (2) **Soberania de output/:** todos os artefatos de entrega vivem unificados nas 3 pastas mestras (`01-listas-horizontais/`, `02-dossies-verticais/`, `03-manuais-e-trilhas/`). A pasta `docs/` foi abolida para eliminar duplicação e peso desnecessário no Git. (3) **Deploy Direto:** publicação web configurada via GitHub Actions diretamente a partir de `output/`. O hook `pre-commit` bloqueia qualquer tentativa de commitar lixo temporário (`exit 1`).
 
 ## 2. Squad & Especialistas
 
 - `<pesquisador-open-source>`: Coleta determinística de metadados, licenças e repositórios.
 - `<redator-diamante>`: Geração de fichas no Padrão Dossiê Executivo (R5).
-- `<auditor-r18>`: Validador de integridade de espelhos e ausência de entulho.
+- `<auditor-r18>`: Validador de integridade soberana de output/ e ausência de entulho.
 - `<orquestrador-harness>`: Gerenciador de links multi-IDE e gates mecânicos.
 
 ## 3. Servidores MCP
 
 Declarados em `.mcp.json` na raiz:
 - `db_state_esteira` (SQLite) — Estado persistente da esteira (R11).
-- `file_validator` — Auditor criptográfico de integridade e espelhos (R18).
+- `file_validator` — Auditor criptográfico de integridade e higiene (R18).
 
 ## 4. Templates de Saída
 
 - `scripts/padroes/template_dossie_executivo.py`: Molde canônico em HTML/CSS para os 49 compêndios.
+- `scripts/padroes/template_playbook_aidd.typ`: Molde canônico institucional em Typst anti-sobreposição.
 - `scripts/schemas/`: Schemas JSON para estruturação de dados de ferramentas e relatórios.
 
 ## 5. Fluxo Operacional da Fábrica Universal
 
 O fluxo canônico para cada camada ou módulo do projeto:
 1. **Fase 1 (Mapeamento & Auditoria):** Coleta determinística de ferramentas, validação de licença OSI e definição de SaaS substituídos.
-2. **Fase 2 (Produção Diamante):** Geração do compêndio HTML autocontido com Hero Stats, tabela fluida, 4 seções por card e 3 mini-cards de passos práticos.
-3. **Fase 2.5 (Auditoria Mecânica):** Execução dos gates `auditar_r5_dossie.py`, `auditar_higiene_repo.py` e `auditar_todas_camadas.py`.
-4. **Fase 3 (Sincronização & Custódia):** `python scripts/limpar_entulho.py` (garante paridade entre `output/` e `docs/`) ➡️ Commit ➡️ Sincronização dos forks no GitHub.
+2. **Fase 2 (Produção Diamante Tripartite):** Geração do compêndio nos 3 formatos (HTML Interativo, Markdown Limpo e PDF Typst Anti-Sobreposição).
+3. **Fase 2.5 (Auditoria Mecânica):** Execução dos gates `auditar_r5_dossie.py`, `auditar_tipo_vertical.py` e `auditar_higiene_repo.py`.
+4. **Fase 3 (Persistência & Custódia):** Registro relacional no SQLite (`estado_esteira.db`) ➡️ Commit sem entulho ➡️ Deploy automático via GitHub Action a partir de `output/`.
 
 ## 6. Portabilidade Multi-IDE
 

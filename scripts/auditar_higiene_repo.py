@@ -57,46 +57,36 @@ def auditar_entulho_scripts():
 
 def auditar_paridade_espelhos():
     erros = []
-    out_files = set(os.listdir(OUTPUT_DIR))
-    doc_files = set(os.listdir(DOCS_DIR))
+    base_output = os.path.join(BASE_DIR, "output")
+    if not os.path.exists(base_output):
+        erros.append("Diretório output/ soberano não encontrado.")
+        return erros
 
-    # Verificar arquivos faltantes
-    faltando_em_docs = out_files - doc_files
-    faltando_em_out = doc_files - out_files
-
-    for f in faltando_em_docs:
-        erros.append(f"Arquivo presente em output/ mas ausente em docs/: {f}")
-    for f in faltando_em_out:
-        erros.append(f"Arquivo presente em docs/ mas ausente em output/: {f}")
-
-    # Verificar paridade de hash nos arquivos comuns
-    comuns = out_files.intersection(doc_files)
-    for f in comuns:
-        p_out = os.path.join(OUTPUT_DIR, f)
-        p_doc = os.path.join(DOCS_DIR, f)
-        if os.path.isfile(p_out) and os.path.isfile(p_doc):
-            h_out = calcular_hash(p_out)
-            h_doc = calcular_hash(p_doc)
-            if h_out != h_doc:
-                erros.append(f"Divergência de conteúdo (hash) no espelho: {f}")
+    # Valida presença das 3 pastas mestras
+    pastas_obrigatorias = ["01-listas-horizontais", "02-dossies-verticais", "03-manuais-e-trilhas"]
+    for p in pastas_obrigatorias:
+        p_path = os.path.join(base_output, p)
+        if not os.path.isdir(p_path):
+            erros.append(f"Pasta mestra obrigatória ausente em output/: {p}")
 
     return erros
 
 def auditar_taxonomia_nomenclaturas():
     erros = []
-    PREFIXOS_VALIDOS = (r"^list-", r"^vert-", r"^tco-", r"^guia-", r"^index\.html$", r"^README\.md$")
+    PREFIXOS_VALIDOS = (r"^list-", r"^vert-", r"^tco-", r"^guia-", r"^index", r"^README", r"^livro-", r"^manual-")
     
-    arquivos = os.listdir(OUTPUT_DIR)
-    nomes_vistos = set()
+    if os.path.exists(OUTPUT_DIR):
+        arquivos = os.listdir(OUTPUT_DIR)
+        nomes_vistos = set()
 
-    for arq in arquivos:
-        valido = any(re.match(p, arq) for p in PREFIXOS_VALIDOS)
-        if not valido:
-            erros.append(f"Arquivo fora da taxonomia padrão (use list-, vert-, tco- ou guia-): {arq}")
+        for arq in arquivos:
+            valido = any(re.match(p, arq) for p in PREFIXOS_VALIDOS)
+            if not valido:
+                erros.append(f"Arquivo fora da taxonomia padrão em output/listas-open-source/: {arq}")
 
-        if arq.lower() in nomes_vistos:
-            erros.append(f"Arquivo duplicado ou colisão de case: {arq}")
-        nomes_vistos.add(arq.lower())
+            if arq.lower() in nomes_vistos:
+                erros.append(f"Arquivo duplicado ou colisão de case: {arq}")
+            nomes_vistos.add(arq.lower())
 
     return erros
 

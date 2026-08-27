@@ -71,7 +71,7 @@ class TestEsteiraManuais(unittest.TestCase):
 
     def test_04_arquivos_tripartites_gerados(self):
         """Valida se manuais e trilhas foram gerados nos 3 formatos com tamanho > 0."""
-        out_dir = BASE_DIR / "output" / self.slug_teste
+        out_dir = BASE_DIR / "output" / "03-manuais-e-trilhas" / self.saas_teste / self.slug_teste
         formatos = ["html", "md", "pdf"]
 
         for fmt in formatos:
@@ -85,7 +85,7 @@ class TestEsteiraManuais(unittest.TestCase):
 
     def test_05_relatorio_telemetria_tripartite(self):
         """Valida se o relatório de telemetria tripartite foi gerado corretamente."""
-        rel_dir = BASE_DIR / "output" / self.slug_teste / "relatorios"
+        rel_dir = BASE_DIR / "output" / "03-manuais-e-trilhas" / self.saas_teste / self.slug_teste / "relatorios"
         self.assertTrue(rel_dir.exists(), "Pasta relatorios não encontrada.")
 
         arquivos_rel = list(rel_dir.glob("*-relatorio-execucao-*.html"))
@@ -117,7 +117,7 @@ class TestEsteiraManuais(unittest.TestCase):
             "gate_g2": "APROVADO",
             "gate_r18": "APROVADO",
             "total_arquivos": 9,
-            "caminho_bundle": "output/teste-unitario-ci/"
+            "caminho_bundle": "output/03-manuais-e-trilhas/granola/teste-unitario-ci/"
         }
 
         registrar_bundle_esteira(teste_data)
@@ -133,7 +133,7 @@ class TestEsteiraManuais(unittest.TestCase):
 
     def test_07_topologia_pastas_modular_9_arquivos(self):
         """Valida que a ferramenta tem rigorosamente 9 arquivos (3 em cada subpasta)."""
-        out_dir = BASE_DIR / "output" / self.slug_teste
+        out_dir = BASE_DIR / "output" / "03-manuais-e-trilhas" / self.saas_teste / self.slug_teste
         manuais = list((out_dir / "manuais").glob("*.*"))
         trilhas = list((out_dir / "trilhas").glob("*.*"))
         relatorios = list((out_dir / "relatorios").glob("*.*"))
@@ -142,15 +142,12 @@ class TestEsteiraManuais(unittest.TestCase):
         self.assertEqual(len(trilhas), 3, f"Trilhas deve ter 3 arquivos (tem {len(trilhas)})")
         self.assertEqual(len(relatorios), 3, f"Relatórios deve ter 3 arquivos (tem {len(relatorios)})")
 
-    def test_08_paridade_espelho_docs_r18(self):
-        """Valida que o espelho docs/<slug>/ possui a mesma quantidade de arquivos que output/."""
-        out_dir = BASE_DIR / "output" / self.slug_teste
-        docs_dir = BASE_DIR / "docs" / self.slug_teste
-
-        out_files = {p.relative_to(out_dir) for p in out_dir.rglob("*.*") if p.is_file()}
-        docs_files = {p.relative_to(docs_dir) for p in docs_dir.rglob("*.*") if p.is_file()}
-
-        self.assertEqual(out_files, docs_files, "Os arquivos entre output/ e docs/ devem ter paridade idêntica.")
+    def test_08_integridade_soberana_r18(self):
+        """Valida a integridade da pasta soberana output/03-manuais-e-trilhas/granola/<slug>/."""
+        out_dir = BASE_DIR / "output" / "03-manuais-e-trilhas" / self.saas_teste / self.slug_teste
+        self.assertTrue(out_dir.exists(), "Diretório soberano da ferramenta deve existir.")
+        todos_arquivos = list(out_dir.rglob("*.*"))
+        self.assertEqual(len(todos_arquivos), 9, "O bundle soberano da ferramenta deve conter exatamente 9 arquivos.")
 
 if __name__ == "__main__":
     unittest.main()

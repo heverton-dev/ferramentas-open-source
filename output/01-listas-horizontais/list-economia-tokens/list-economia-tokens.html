@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Camada 01 · Eficiência de Contexto, Cache &amp; Destilação · Dossiê Executivo</title>
+<style>
+  :root {
+    --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    --paper: #F6F4EF;
+    --surface: #FFFFFF;
+    --surface-2: #FBF9F4;
+    --surface-dark: #0A0F1D;
+    --ink: #1B1E23;
+    --ink-2: #383D45;
+    --muted: #666E7A;
+    --rule: #D8D2C4;
+    --rule-soft: #EAE5D9;
+    --accent: #00875A;
+    --accent-dark: #57D9A3;
+    --accent-soft: #E3FCEF;
+    --accent-soft-dark: #162B22;
+    --green: #00875A;
+    --green-soft: #E3FCEF;
+    --gold: #FFAB00;
+    --gold-soft: #FFF0B3;
+    --flag: #DE350B;
+    --flag-soft: #FFEBE6;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0E121B;
+      --surface: #141924;
+      --surface-2: #1A2130;
+      --ink: #E6E8ED;
+      --ink-2: #B0B5C0;
+      --muted: #7E8695;
+      --rule: #262F40;
+      --rule-soft: #1E2533;
+      --accent: var(--accent-dark);
+      --accent-soft: var(--accent-soft-dark);
+      --green: #57D9A3;
+      --green-soft: #162B22;
+      --gold: #FFC400;
+      --gold-soft: #332600;
+      --flag: #FF7452;
+      --flag-soft: #361B15;
+      --shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    margin: 0; padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* HEADER & HERO STATS */
+  header { margin-bottom: 32px; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .back-link:hover { color: var(--accent); }
+  .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+
+  .hero { margin: 20px 0 24px; }
+  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 42px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: justify; text-justify: inter-word; }
+  .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
+
+  .hero-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px; margin: 24px 0 32px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 12px 16px; box-shadow: var(--shadow);
+  }
+  .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+
+  /* PILARES */
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 24px 0; }
+  .route { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 20px; }
+  .route.red { border-left: 4px solid var(--flag); }
+  .route.green { border-left: 4px solid var(--green); }
+  .route .tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+  .route.red .tag { color: var(--flag); }
+  .route.green .tag { color: var(--green); }
+  .route h4 { font-family: var(--font-serif); font-size: 19px; margin: 6px 0 8px; color: var(--ink); }
+  .route p { margin: 0; font-size: 14px; color: var(--ink-2); }
+
+  /* SEÇÕES */
+  .sec-head { margin: 36px 0 16px; }
+  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
+  h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
+  .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
+
+  /* TABELA FLUIDA */
+  .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+  th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
+  tr:last-child td { border-bottom: none; }
+  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
+  td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
+  td.tool a:hover { color: var(--accent); }
+  td.saas { color: var(--flag); }
+  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
+  td.cat { font-size: 12px; color: var(--muted); }
+  td.lic { font-family: var(--mono); font-size: 11px; }
+
+  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO (LARGURA TOTAL) */
+  .ledger { display: flex; flex-direction: column; gap: 24px; }
+  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease; }
+  .entry:hover { border-color: var(--accent); }
+  .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
+  
+  .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+  .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+
+  .senior-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
+  .senior-badge.green { background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+  .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
+  .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
+  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+  .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
+
+  .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .entry-section p strong { color: var(--ink); font-weight: 600; }
+
+  /* GRIDS */
+  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
+  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
+  .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
+  @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
+  .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
+  .infra-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+  .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
+  pre { margin: 0; padding: 10px 48px 10px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; }
+  code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); line-height: 1.45; }
+  .copy-btn { position: absolute; top: 6px; right: 6px; background: var(--surface); border: 1px solid var(--rule); color: var(--muted); border-radius: 2px; padding: 3px 6px; font-family: var(--mono); font-size: 10px; cursor: pointer; }
+  .copy-btn:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+  .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; }
+  .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .repo-btn svg { width: 13px; height: 13px; fill: currentColor; }
+
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 2px; }
+  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .step-head { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; }
+  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+  .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+  .step-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+
+  footer { border-top: 1px solid var(--rule); padding-top: 16px; margin-top: 40px; display: flex; flex-direction: column; gap: 8px; }
+  footer p { margin: 0; font-size: 13px; color: var(--muted); }
+
+  /* PADRÃO DIAMANTE IMPECCABLE */
+  h1 { text-align: justify; text-justify: inter-word; }
+  .deck { text-align: justify; text-justify: inter-word; max-width: 100%; }
+  .entry { transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease; }
+  .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+  .step-card { transition: transform .12s ease, border-color .12s ease; }
+  .step-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .code-box { position: relative; }
+  .copy-btn { transition: all .15s ease; cursor: pointer; }
+  .copy-btn:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+  table tr { transition: background .12s ease; }
+  table tbody tr:hover { background: var(--surface-2); }
+
+  
+  * {
+    
+    
+  }
+  
+  
+  
+  
+
+
+  /* SCROLLBAR REFINADA (MAX 4PX & COR ACCENT) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--green);
+  }
+
+</style>
+<script>
+function copyCode(btn) {
+  const code = btn.previousElementSibling.innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const originalText = btn.innerText;
+    btn.innerText = 'Copiado!';
+    btn.style.color = 'var(--green)';
+    setTimeout(() => {
+      btn.innerText = originalText;
+      btn.style.color = '';
+    }, 2000);
+  }).catch(() => {
+    btn.innerText = 'Erro';
+  });
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="header-top">
+<a class="back-link" href="index.html">← Voltar ao Hub Central</a>
+<span class="camada-pill">Camada 01</span>
+</div>
+<div class="hero">
+<h1>Economia de Tokens, Compressão de Contexto &amp; Roteamento Local</h1>
+<p class="deck">Otimizadores de contexto, empacotadores determinísticos, memórias de prefixo e <strong>skills de disciplina agêntica para reduzir até 95% do consumo de tokens</strong> sem perder a precisão do código.</p>
+</div>
+<div class="hero-stats">
+<div class="stat-card"><div class="num">20</div><div class="lbl">Tecnologias Auditadas</div></div>
+<div class="stat-card"><div class="num">100%</div><div class="lbl">Open-Source &amp; Soberano</div></div>
+<div class="stat-card"><div class="num">Até 95%</div><div class="lbl">Economia de Custos</div></div>
+<div class="stat-card"><div class="num">0 Lock-in</div><div class="lbl">Independência Total</div></div>
+</div>
+</header>
+<section>
+<div class="sec-head">
+<span class="sec-num">Parte 1 · Diagnóstico Estratégico</span>
+<h2>A transição da dependência para a soberania</h2>
+</div>
+<div class="grid2">
+<div class="route red">
+<span class="tag">O Risco Proprietário</span>
+<h4>O Custo Oculto da Janela Inflada</h4>
+<p>Alimentar LLMs com repositórios inteiros sem filtragem esgota a janela de contexto de 5 horas em minutos e quebra o raciocínio do modelo.</p>
+</div>
+<div class="route green">
+<span class="tag">A Solução Aberta</span>
+<h4>Compressão Assimétrica &amp; Cache</h4>
+<p>Empacote apenas a árvore de símbolos (AST) e mantenha os system prompts congelados para obter 90% de desconto no Prompt Caching nativo.</p>
+</div>
+</div>
+</section>
+<section>
+<div class="sec-head">
+<span class="sec-num">Parte 2 · O Panorama Geral</span>
+<h2>O inventário completo da camada</h2>
+<p class="sec-note">Tabela comparativa direta: ferramenta, o software proprietário substituído, economia média e licença.</p>
+</div>
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Ferramenta</th>
+<th>Substitui o SaaS Pago</th>
+<th>Economia Declarada</th>
+<th>Categoria</th>
+<th>Licença</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="rank">01</td>
+<td class="tool"><a href="#card-01">Repomix</a></td>
+<td class="saas">Copiar e colar arquivos manualmente no chat</td>
+<td class="econ">-85% de tokens em exploração de código</td>
+<td class="cat">Context Packer</td>
+<td class="lic">MIT</td>
+</tr>
+<tr>
+<td class="rank">02</td>
+<td class="tool"><a href="#card-02">Skill: caveman</a></td>
+<td class="saas">Pensamento prolixo de IA no bloco de raciocínio</td>
+<td class="econ">-82% de tokens em raciocínio interno (CoT)</td>
+<td class="cat">Agentic Reasoning Skill</td>
+<td class="lic">MIT / Core Skill</td>
+</tr>
+<tr>
+<td class="rank">03</td>
+<td class="tool"><a href="#card-03">Skill: headroom</a></td>
+<td class="saas">Leitura de 500 linhas de logs de compilação</td>
+<td class="econ">-97% de tokens em logs de terminal</td>
+<td class="cat">Log Compressor Skill</td>
+<td class="lic">MIT / Core Skill</td>
+</tr>
+<tr>
+<td class="rank">04</td>
+<td class="tool"><a href="#card-04">Skill: lean-ctx</a></td>
+<td class="saas">Visualização cega de arquivos inteiros de 2.000 linhas</td>
+<td class="econ">-90% de tokens em leitura de código</td>
+<td class="cat">Context Slicing Skill</td>
+<td class="lic">MIT / Core Skill</td>
+</tr>
+<tr>
+<td class="rank">05</td>
+<td class="tool"><a href="#card-05">Skill: rtk-memory</a></td>
+<td class="saas">Reenvio de system prompts alterados</td>
+<td class="econ">-90% no custo de tokens de entrada (Cache Hit)</td>
+<td class="cat">Prompt Caching Optimizer</td>
+<td class="lic">MIT / Core Skill</td>
+</tr>
+<tr>
+<td class="rank">06</td>
+<td class="tool"><a href="#card-06">Skill: pre-flight-check</a></td>
+<td class="saas">Correção de sintaxe via LLM</td>
+<td class="econ">-100% de tokens em checagem de sintaxe</td>
+<td class="cat">Deterministic Validator</td>
+<td class="lic">MIT / Core Skill</td>
+</tr>
+<tr>
+<td class="rank">07</td>
+<td class="tool"><a href="#card-07">Aider Repo Map Engine</a></td>
+<td class="saas">Envio de código integral para contexto</td>
+<td class="econ">-80% de tokens de contexto em monorepos</td>
+<td class="cat">AST Graph Compressor</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">08</td>
+<td class="tool"><a href="#card-08">ccusage</a></td>
+<td class="saas">Surpresas na fatura da API no fim do mês</td>
+<td class="econ">Controle 100% visível de rate limits e custos</td>
+<td class="cat">Token Telemetry CLI</td>
+<td class="lic">MIT</td>
+</tr>
+<tr>
+<td class="rank">09</td>
+<td class="tool"><a href="#card-09">LiteLLM Proxy &amp; Caching</a></td>
+<td class="saas">Chamadas duplicadas para OpenAI/Anthropic</td>
+<td class="econ">-40% no custo de prompts idênticos</td>
+<td class="cat">LLM Gateway &amp; Cache</td>
+<td class="lic">MIT</td>
+</tr>
+<tr>
+<td class="rank">10</td>
+<td class="tool"><a href="#card-10">vLLM PagedAttention</a></td>
+<td class="saas">Fragmentação de memória de GPU em inferência</td>
+<td class="econ">Até 4x mais throughput de tokens/segundo</td>
+<td class="cat">KV Cache Engine</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">11</td>
+<td class="tool"><a href="#card-11">SGLang RadixAttention</a></td>
+<td class="saas">Recálculo de prefixos de prompts repetidos</td>
+<td class="econ">-70% de latência em squads multi-agentes</td>
+<td class="cat">Prefix Tree Cache</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">12</td>
+<td class="tool"><a href="#card-12">GPTCache</a></td>
+<td class="saas">Reconsultas semânticas à API paga</td>
+<td class="econ">-50% de requisições redundantes de busca/FAQ</td>
+<td class="cat">Semantic Cache</td>
+<td class="lic">MIT</td>
+</tr>
+<tr>
+<td class="rank">13</td>
+<td class="tool"><a href="#card-13">Tiktoken</a></td>
+<td class="saas">Estimativas incorretas de palavras x tokens</td>
+<td class="econ">Precisão de 100% no cálculo de contexto</td>
+<td class="cat">Fast Tokenizer</td>
+<td class="lic">MIT</td>
+</tr>
+<tr>
+<td class="rank">14</td>
+<td class="tool"><a href="#card-14">TensorRT-LLM In-Flight Batching</a></td>
+<td class="saas">Inércia em lotes de inferência</td>
+<td class="econ">Duplica a eficiência de hardware em servidores</td>
+<td class="cat">Inference Optimization</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">15</td>
+<td class="tool"><a href="#card-15">Prompt-Compressor (LLMLingua)</a></td>
+<td class="saas">Envio de prompts longos com palavras vazias</td>
+<td class="econ">-40% a -60% no tamanho de prompts longos</td>
+<td class="cat">Prompt Compression</td>
+<td class="lic">MIT</td>
+</tr>
+<tr>
+<td class="rank">16</td>
+<td class="tool"><a href="#card-16">FastChat Context Truncator</a></td>
+<td class="saas">Travamentos por estouro de histórico</td>
+<td class="econ">Zero crashes por janelas excedidas</td>
+<td class="cat">Multi-Turn Manager</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">17</td>
+<td class="tool"><a href="#card-17">BitNet b1.58 1-bit Engine</a></td>
+<td class="saas">Pesos FP16 pesados em memória</td>
+<td class="econ">-80% de consumo de energia e RAM</td>
+<td class="cat">Ultra-Quantization</td>
+<td class="lic">MIT</td>
+</tr>
+<tr>
+<td class="rank">18</td>
+<td class="tool"><a href="#card-18">Unsloth Inference Engine</a></td>
+<td class="saas">Inferência lenta de modelos fine-tunados</td>
+<td class="econ">2x mais rápido com 70% menos VRAM</td>
+<td class="cat">Fine-Tuned Fast Engine</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">19</td>
+<td class="tool"><a href="#card-19">Token-Economy Git Hooks</a></td>
+<td class="saas">Atualização manual de snapshots de projeto</td>
+<td class="econ">Atualização em &lt; 1s sem travar o Git</td>
+<td class="cat">Automated Context Hook</td>
+<td class="lic">MIT</td>
+</tr>
+<tr>
+<td class="rank">20</td>
+<td class="tool"><a href="#card-20">Ast-Grep (AST Pattern Engine)</a></td>
+<td class="saas">Refatorações de código gastando tokens de LLM</td>
+<td class="econ">-100% de tokens em refatorações estruturais</td>
+<td class="cat">AST Search &amp; Replace</td>
+<td class="lic">MIT</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section>
+<div class="sec-head">
+<span class="sec-num">Parte 3 · Dossiê Técnico das Ferramentas</span>
+<h2>Fichas técnicas individuais de arquitetura</h2>
+<p class="sec-note">Análise profunda de cada tecnologia: o que faz, como funciona por baixo dos panos, como usar e veredito.</p>
+</div>
+<div class="ledger">
+<article class="entry" id="card-01">
+<div class="entry-rank">01</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>Repomix</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Copiar e colar arquivos manualmente no chat</span>
+<span class="econ-badge">-85% de tokens em exploração de código</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">Context Packer</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Empacota repositórios inteiros em um único arquivo XML/Markdown estruturado, aplicando contagem de tokens e filtros de exclusão inteligentes.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Lê a árvore Git, respeita o `.gitignore`, calcula a contagem de tokens de cada arquivo via Tiktoken e remove comentários/arquivos binários desnecessários.</p>
+<div class="code-box">
+<pre><code>npx repomix --style xml --output repomix-output.xml</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Copiar e colar arquivos manualmente no chat</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-85% de tokens em exploração de código</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">Node.js / &lt; 50 MB RAM</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>O padrão ouro de empacotamento para alimentar Claude Code, Cursor e ChatGPT sem estourar contexto.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://repomix.com" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (repomix.com)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Na raiz do projeto, configure o <code>repomix.config.json</code>.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Execute o comando acima para gerar o snapshot.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>O agente lê a arquitetura inteira em uma única chamada de contexto com 85% menos tokens.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-02">
+<div class="entry-rank">02</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>Skill: caveman</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Pensamento prolixo de IA no bloco de raciocínio</span>
+<span class="econ-badge">-82% de tokens em raciocínio interno (CoT)</span>
+<span class="lic-badge">MIT / Core Skill</span>
+<span class="kind">Agentic Reasoning Skill</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Força o agente a pensar em estilo telegráfico no bloco <code>&lt;thought&gt;</code>, eliminando preâmbulos e repetições inúteis.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Instrui a LLM via system prompt a cortar artigos, pronomes e saudações no raciocínio interno, indo direto ao ponto em 3 a 5 linhas técnicas.</p>
+<div class="code-box">
+<pre><code># Regra: 'Frases telegráficas, sem artigos, sem repetição do prompt do usuário'</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Pensamento prolixo de IA no bloco de raciocínio</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-82% de tokens em raciocínio interno (CoT)</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">0 MB RAM / Guardrail de prompt</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Corta o lixo do raciocínio interno sem reduzir 1% da qualidade do código gerado.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/Heverton-web/token-economy-core" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/Heverton-web/token-economy-core)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Ative a skill <code>caveman</code> em <code>.claude/skills/caveman/</code>.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Toda interação com o modelo passa a ter raciocínio enxuto.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Aumenta a velocidade de resposta e reduz o consumo de tokens de saída.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-03">
+<div class="entry-rank">03</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>Skill: headroom</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Leitura de 500 linhas de logs de compilação</span>
+<span class="econ-badge">-97% de tokens em logs de terminal</span>
+<span class="lic-badge">MIT / Core Skill</span>
+<span class="kind">Log Compressor Skill</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Interrompe a leitura de saídas gigantescas de terminal, truncando logs de compilação para no máximo 7 linhas (3 topo + 4 fim).</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Filtra pipes de stdout/stderr de testes e linters: extrai apenas o traceback do erro real e oculta linhas redundantes de progresso.</p>
+<div class="code-box">
+<pre><code># Regra: 'Logs de build &gt; 7 linhas -&gt; comprimir (3 topo + 4 fim)'</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Leitura de 500 linhas de logs de compilação</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-97% de tokens em logs de terminal</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">0 MB RAM / Filtro de stream</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Evita que erros de teste inundem o contexto e expulsem instruções de governança anteriores.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/Heverton-web/token-economy-core" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/Heverton-web/token-economy-core)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>O agente executa suítes de teste (pytest, cargo test, npm test).</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Em caso de falha, o headroom comprime a saída antes de alimentar a LLM.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>O agente corrige o bug gastando 100 tokens em vez de 4.000 tokens.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-04">
+<div class="entry-rank">04</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>Skill: lean-ctx</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Visualização cega de arquivos inteiros de 2.000 linhas</span>
+<span class="econ-badge">-90% de tokens em leitura de código</span>
+<span class="lic-badge">MIT / Core Skill</span>
+<span class="kind">Context Slicing Skill</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Obriga o agente a localizar o trecho com <code>grep</code> antes de ler e fazer leituras fatiadas por intervalo de linhas.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Impõe a regra comportamental: proibido ler arquivos completos sem necessidade; usar <code>view_file</code> especificando <code>StartLine</code> e <code>EndLine</code>.</p>
+<div class="code-box">
+<pre><code># Regra: 'Grep antes de read. Limitar leitura por intervalo de linhas exato'</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Visualização cega de arquivos inteiros de 2.000 linhas</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-90% de tokens em leitura de código</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">0 MB RAM / Comportamento agêntico</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Leituras parciais são o maior multiplicador de velocidade em projetos legados grandes.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/Heverton-web/token-economy-core" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/Heverton-web/token-economy-core)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>O agente usa <code>grep_search</code> para achar a linha da função.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Executa <code>view_file(StartLine=45, EndLine=70)</code>.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Aplica a alteração cirúrgica consumindo menos de 200 tokens.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-05">
+<div class="entry-rank">05</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>Skill: rtk-memory</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Reenvio de system prompts alterados</span>
+<span class="econ-badge">-90% no custo de tokens de entrada (Cache Hit)</span>
+<span class="lic-badge">MIT / Core Skill</span>
+<span class="kind">Prompt Caching Optimizer</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Mantém o system prompt estático e delega o aprendizado dinâmico para um arquivo em disco (<code>RTK-SCRATCHPAD.md</code>).</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Evita mutações dinâmicas no cabeçalho do prompt, garantindo que os primeiros 4.000 tokens permaneçam 100% idênticos entre chamadas.</p>
+<div class="code-box">
+<pre><code># Regra: 'Aprendizados de sessões anteriores vivem em RTK-SCRATCHPAD.md'</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Reenvio de system prompts alterados</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-90% no custo de tokens de entrada (Cache Hit)</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">Armazenamento em arquivo Markdown</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Mudanças de 1 caractere no system prompt invalidam todo o cache de prefixo da API.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/Heverton-web/token-economy-core" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/Heverton-web/token-economy-core)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Quando o agente aprende uma regra nova, appenda no <code>RTK-SCRATCHPAD.md</code>.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>As regras centrais permanecem intocadas.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Ativa o desconto de Prompt Caching de 90% da Anthropic e OpenAI.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-06">
+<div class="entry-rank">06</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>Skill: pre-flight-check</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Correção de sintaxe via LLM</span>
+<span class="econ-badge">-100% de tokens em checagem de sintaxe</span>
+<span class="lic-badge">MIT / Core Skill</span>
+<span class="kind">Deterministic Validator</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Valida sintaxe Python, JSON, YAML e Markdown via compiladores locais antes de qualquer commit ou envio de prompt.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Roda `py_compile`, `json.loads` e `yamllint` localmente com `exit 0/1`. Se houver erro, barra o fluxo antes de gastar tokens com a LLM.</p>
+<div class="code-box">
+<pre><code>python -m py_compile scripts/*.py</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Correção de sintaxe via LLM</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-100% de tokens em checagem de sintaxe</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">Execução local em Python (&lt; 10ms)</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Se um script resolve com custo zero, você nunca deve gastar uma chamada de LLM.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/Heverton-web/token-economy-core" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/Heverton-web/token-economy-core)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>O agente termina de escrever uma função.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>O hook `pre-commit` dispara o `pre-flight-check` localmente.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Erros de indentação são pegos na máquina sem custo de IA.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-07">
+<div class="entry-rank">07</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>Aider Repo Map Engine</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Envio de código integral para contexto</span>
+<span class="econ-badge">-80% de tokens de contexto em monorepos</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">AST Graph Compressor</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Cria um mapa compacto do repositório baseado em PageRank e árvore sintática Tree-sitter com assinaturas de métodos.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Analisa o grafo de chamadas do código, identifica as classes mais importantes e gera um resumo compacto de assinaturas de funções.</p>
+<div class="code-box">
+<pre><code>aider --model ollama/qwen2.5-coder:7b --map-tokens 1024</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Envio de código integral para contexto</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-80% de tokens de contexto em monorepos</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">Tree-sitter nativo / ~40 MB RAM</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Permite que modelos de 7B resolvam bugs em projetos de 100.000 linhas.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://aider.chat" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (aider.chat)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Inicie o Aider no repositório.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>O Aider calcula o repo map dinâmico de 1.024 tokens.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>O modelo entende todo o projeto sem ler os arquivos completos.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-08">
+<div class="entry-rank">08</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>ccusage</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Surpresas na fatura da API no fim do mês</span>
+<span class="econ-badge">Controle 100% visível de rate limits e custos</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">Token Telemetry CLI</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Audita o consumo de tokens em tempo real, monitora a janela de 5 horas e exibe o faturamento consolidado por modelo e agente.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Lê os logs locais dos harnesses (Claude Code, OpenCode, Codex, Gemini CLI) e extrai métricas de tokens de entrada, saída, cache e custo em USD.</p>
+<div class="code-box">
+<pre><code>npx --yes ccusage@latest blocks --active</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Surpresas na fatura da API no fim do mês</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>Controle 100% visível de rate limits e custos</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">Node.js / Python CLI</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Você não pode otimizar o que não consegue medir com precisão milimétrica.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/ccusage" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/ccusage)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>No terminal do projeto, execute o comando acima.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Veja a porcentagem consumida da janela de 5 horas e tempo de reset.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Identifique imediatamente scripts gastões antes que estourem o limite.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-09">
+<div class="entry-rank">09</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>LiteLLM Proxy &amp; Caching</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Chamadas duplicadas para OpenAI/Anthropic</span>
+<span class="econ-badge">-40% no custo de prompts idênticos</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">LLM Gateway &amp; Cache</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Gateway unificado de 100+ LLMs com cache semântico e exato em Redis, balanceamento de carga e fallback automático.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Intercepta chamadas HTTP no padrão OpenAI, calcula o hash do prompt e retorna do cache Redis em &lt; 5ms sem acionar a API remota.</p>
+<div class="code-box">
+<pre><code>pip install litellm &amp;&amp; litellm --port 8000</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Chamadas duplicadas para OpenAI/Anthropic</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-40% no custo de prompts idênticos</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">Python / Redis / ~80 MB RAM</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Reduz a latência de chamadas frequentes de 1.500ms para menos de 5ms.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/BerriAI/litellm" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/BerriAI/litellm)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Suba o LiteLLM localmente apontando para Redis.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Aponte seus agentes para <code>http://localhost:8000</code>.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Consultas repetidas retornam instantaneamente a custo zero.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-10">
+<div class="entry-rank">10</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>vLLM PagedAttention</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Fragmentação de memória de GPU em inferência</span>
+<span class="econ-badge">Até 4x mais throughput de tokens/segundo</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">KV Cache Engine</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Motor de inferência local que gerencia o cache de Chaves/Valores (KV Cache) como memória virtual paginada de SO.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Elimina a pré-alocação rígida de memória de contexto: divide os tensores de atenção em páginas dinâmicas, permitindo 100% de uso da VRAM.</p>
+<div class="code-box">
+<pre><code>vllm serve Qwen/Qwen2.5-Coder-7B-Instruct --gpu-memory-utilization 0.9</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Fragmentação de memória de GPU em inferência</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>Até 4x mais throughput de tokens/segundo</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">GPU NVIDIA / CUDA / 8GB+ VRAM</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>O motor que viabilizou o serviço de inferência em escala industrial no mundo open-source.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://vllm.ai" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (vllm.ai)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Inicie o servidor vLLM na sua máquina com GPU.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Sirva múltiplos agentes locais em paralelo.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Sem estourar VRAM por fragmentação de contexto.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-11">
+<div class="entry-rank">11</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>SGLang RadixAttention</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Recálculo de prefixos de prompts repetidos</span>
+<span class="econ-badge">-70% de latência em squads multi-agentes</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">Prefix Tree Cache</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Runtime de execução rápida de LLMs com reaproveitamento de árvore de prefixos (Radix Tree) em memória de GPU.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Mantém o cache KV estruturado em árvore. Quando vários agentes compartilham o mesmo system prompt, o SGLang reutiliza o cálculo do primeiro.</p>
+<div class="code-box">
+<pre><code>python -m sglang.launch_server --model-path Qwen/Qwen2.5-Coder-7B-Instruct</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Recálculo de prefixos de prompts repetidos</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-70% de latência em squads multi-agentes</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">GPU NVIDIA / 8GB+ VRAM</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Multiplica a velocidade de execução de squads multi-agentes no mesmo hardware.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://sgl-project.github.io" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (sgl-project.github.io)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Suba o SGLang para orquestrar seus subagentes.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Envie 4 prompts com o mesmo cabeçalho de regras.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>O primeiro processa e os outros 3 executam com tempo de resposta quase instantâneo.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-12">
+<div class="entry-rank">12</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>GPTCache</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Reconsultas semânticas à API paga</span>
+<span class="econ-badge">-50% de requisições redundantes de busca/FAQ</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">Semantic Cache</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Cache semântico que identifica se a pergunta atual é semanticamente equivalente a uma já respondida anteriormente.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Converte a pergunta em embedding via modelo local (MiniLM), busca no banco vetorial (Faiss) e retorna a resposta se a similaridade &gt; 0.92.</p>
+<div class="code-box">
+<pre><code>pip install gptcache</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Reconsultas semânticas à API paga</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-50% de requisições redundantes de busca/FAQ</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">Python / Faiss / ~100 MB RAM</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Economiza milhares de dólares em bots de atendimento e pipelines de FAQ.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/zilliztech/GPTCache" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/zilliztech/GPTCache)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Integre o GPTCache ao redor do seu cliente LLM.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Usuários que perguntam a mesma coisa de formas diferentes recebem a resposta do cache local.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Zero custo de tokens para perguntas recorrentes.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-13">
+<div class="entry-rank">13</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>Tiktoken</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Estimativas incorretas de palavras x tokens</span>
+<span class="econ-badge">Precisão de 100% no cálculo de contexto</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">Fast Tokenizer</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> O tokenizador BPE ultra-rápido da OpenAI escrito em Rust com bindings para Python, 10x mais rápido que bibliotecas antigas.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Executa tokenização nativa em código de máquina, permitindo contar tokens de 1 milhão de caracteres em menos de 2 milissegundos.</p>
+<div class="code-box">
+<pre><code>pip install tiktoken</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Estimativas incorretas de palavras x tokens</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>Precisão de 100% no cálculo de contexto</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">Rust nativo / ~10 MB RAM</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Indispensável para nunca receber erro de 'context_length_exceeded' da API.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/openai/tiktoken" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/openai/tiktoken)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p><code>import tiktoken; enc = tiktoken.get_encoding('cl100k_base')</code>.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p><code>num_tokens = len(enc.encode(meu_texto))</code>.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Fatie o prompt exatamente no limite máximo antes de enviar.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-14">
+<div class="entry-rank">14</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>TensorRT-LLM In-Flight Batching</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Inércia em lotes de inferência</span>
+<span class="econ-badge">Duplica a eficiência de hardware em servidores</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">Inference Optimization</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Compilador de grafos de inferência da NVIDIA com quantização FP8/INT4 e batching em tempo real por token.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Permite que novas requisições entrem no lote de GPU sem esperar que as requisições anteriores terminem de gerar todo o texto.</p>
+<div class="code-box">
+<pre><code>trtllm-build --checkpoint_dir ./model_ckpt --output_dir ./engine</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Inércia em lotes de inferência</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>Duplica a eficiência de hardware em servidores</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">GPU NVIDIA Ada / Hopper / Ampere</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>A tecnologia usada pelos maiores provedores de cloud para baratear custos de inferência.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/NVIDIA/TensorRT-LLM" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/NVIDIA/TensorRT-LLM)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Compile seu modelo de código (ex: DeepSeek-Coder) em engine TensorRT.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Sirva via Triton Inference Server.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Obtenha a máxima taxa de tokens/segundo possível na sua placa de vídeo.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-15">
+<div class="entry-rank">15</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>Prompt-Compressor (LLMLingua)</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Envio de prompts longos com palavras vazias</span>
+<span class="econ-badge">-40% a -60% no tamanho de prompts longos</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">Prompt Compression</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Comprime prompts longos usando modelos de linguagem pequenos (SLMs) para calcular a perplexidade de cada token e remover os redundantes.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Avalia o valor informacional de cada palavra: remove preposições e conectivos desnecessários preservando 98% da semântica original.</p>
+<div class="code-box">
+<pre><code>pip install llmlingua</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Envio de prompts longos com palavras vazias</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-40% a -60% no tamanho de prompts longos</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">Python / SLM local (Llama-3-1B) / 2GB RAM</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Criado pela Microsoft Research para viabilizar RAG com milhares de documentos.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/microsoft/LLMLingua" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/microsoft/LLMLingua)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p><code>from llmlingua import PromptCompressor</code>.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Comprima documentos recuperados por RAG antes de enviar ao Claude/GPT.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Reduza a fatura e aumente a precisão ao eliminar ruído.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-16">
+<div class="entry-rank">16</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>FastChat Context Truncator</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Travamentos por estouro de histórico</span>
+<span class="econ-badge">Zero crashes por janelas excedidas</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">Multi-Turn Manager</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Gerenciador de janelas de conversação que resume ou descarta turnos antigos mantendo o system prompt original intacto.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Aplica estratégias de FIFO com preservação de nós críticos: mantém o primeiro turno e os N últimos turnos, resumindo o meio da conversa.</p>
+<div class="code-box">
+<pre><code>pip install fschat</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Travamentos por estouro de histórico</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>Zero crashes por janelas excedidas</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">Python puro / 15 MB RAM</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Garante estabilidade para assistentes que rodam continuamente por dias.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/lm-sys/FastChat" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/lm-sys/FastChat)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Integre o conversation manager ao seu bot.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Em conversas com mais de 50 mensagens, o truncator mantém o contexto dentro do limite seguro.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>A conversa continua fluida para sempre.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-17">
+<div class="entry-rank">17</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>BitNet b1.58 1-bit Engine</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Pesos FP16 pesados em memória</span>
+<span class="econ-badge">-80% de consumo de energia e RAM</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">Ultra-Quantization</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Arquitetura e runtime de inferência onde os pesos são ternários (-1, 0, 1), eliminando multiplicações matriciais pesadas por somas simples.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Substitui operações de ponto flutuante por adição de inteiros puros, permitindo rodar LLMs de 7B em CPUs comuns com 2GB de RAM a 30 tokens/s.</p>
+<div class="code-box">
+<pre><code>git clone https://github.com/microsoft/BitNet &amp;&amp; cd BitNet &amp;&amp; make</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Pesos FP16 pesados em memória</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-80% de consumo de energia e RAM</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">CPU x86/ARM / 2GB RAM</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>O futuro da computação de IA em dispositivos de borda e economia energética.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/microsoft/BitNet" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/microsoft/BitNet)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Compile o runtime BitNet em C++.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Execute modelos 1-bit em notebooks sem GPU.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Custo de eletricidade e hardware reduzido a níveis de Raspberry Pi.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-18">
+<div class="entry-rank">18</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>Unsloth Inference Engine</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Inferência lenta de modelos fine-tunados</span>
+<span class="econ-badge">2x mais rápido com 70% menos VRAM</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">Fine-Tuned Fast Engine</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Kernels Triton customizados e otimizados manualmente para execução rápida de Llama 3, Mistral, Qwen e DeepSeek.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Reescreve os passos de backpropagation e forward pass em CUDA/Triton nativo, eliminando alocações intermediárias de tensores.</p>
+<div class="code-box">
+<pre><code>pip install unsloth</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Inferência lenta de modelos fine-tunados</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>2x mais rápido com 70% menos VRAM</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">GPU NVIDIA / 6GB+ VRAM</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>A ferramenta que permitiu treinar modelos de ponta em placas de vídeo modestas.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://unsloth.ai" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (unsloth.ai)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Treine ou carregue seu modelo com Unsloth.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Exporte para GGUF ou sirva via vLLM.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Máxima economia no treino e na inferência.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-19">
+<div class="entry-rank">19</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>Token-Economy Git Hooks</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Atualização manual de snapshots de projeto</span>
+<span class="econ-badge">Atualização em &lt; 1s sem travar o Git</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">Automated Context Hook</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Hooks assíncronos de `post-commit` que disparam a atualização incremental do snapshot do Repomix em segundo plano.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Ao commitar, o hook dispara um subprocess desanexado (`Start-Process` no Windows / `nohup` no Linux) que regenera o snapshot sem atrasar o terminal.</p>
+<div class="code-box">
+<pre><code>powershell .token-economy/scripts/setup-links.ps1</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Atualização manual de snapshots de projeto</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>Atualização em &lt; 1s sem travar o Git</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">Shell / PowerShell script</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Garante que os agentes de IA sempre leiam o estado mais recente do código sem intervenção.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://github.com/Heverton-web/token-economy-core" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (github.com/Heverton-web/token-economy-core)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Instale o submódulo em qualquer projeto.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Faça um commit no Git.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>O arquivo `repomix-output.xml` é atualizado sozinho em segundo plano.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+<article class="entry" id="card-20">
+<div class="entry-rank">20</div>
+<div class="entry-body">
+<div class="entry-top">
+<h3>Ast-Grep (AST Pattern Engine)</h3>
+<span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+<span class="killer-badge">SUBSTITUI: Refatorações de código gastando tokens de LLM</span>
+<span class="econ-badge">-100% de tokens em refatorações estruturais</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">AST Search &amp; Replace</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p><strong>Definição Operacional:</strong> Ferramenta de linha de comando para busca e substituição de padrões de código baseada em árvore sintática (AST), sem regex quebrada.</p>
+<p><strong>Mecânica Interna &amp; Arquitetura:</strong> Parseia o código com Tree-sitter, localiza nós estruturais (ex: 'todas as chamadas a `var`') e substitui em 500 arquivos em 10 milissegundos.</p>
+<div class="code-box">
+<pre><code>ast-grep --pattern 'var $A = $B' --rewrite 'const $A = $B'</code></pre>
+<button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">SaaS Proprietário Substituído</span>
+<span class="econ-val"><strong>Refatorações de código gastando tokens de LLM</strong></span>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">Economia Declarada &amp; ROI</span>
+<span class="econ-val"><strong>-100% de tokens em refatorações estruturais</strong></span>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+<span class="infra-val">Rust nativo / &lt; 15 MB RAM</span>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">Por Que é Ouro / Veredito</span>
+<p>Refatoração estrutural é trabalho de compilador AST determinístico, não de LLM probabilística.</p>
+</div>
+</div>
+<div style="margin-top:4px;">
+<a class="repo-btn" href="https://ast-grep.github.io" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Acessar Repositório Oficial no GitHub (ast-grep.github.io)
+              </a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 01</span> Fluxo</div>
+<p>Instale via <code>cargo install ast-grep</code>.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 02</span> Fluxo</div>
+<p>Aplique refatorações em lote no repositório.</p>
+</div>
+<div class="step-card">
+<div class="step-head"><span class="step-badge">Passo 03</span> Fluxo</div>
+<p>Economize dezenas de milhares de tokens deixando a IA fazer apenas a lógica complexa.</p>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+</section>
+<footer>
+<p><strong>Compêndio de Soberania Tecnológica Open-Source · Fábrica Universal</strong></p>
+<p>Padrão Dossiê Executivo · Documentação auditada e livre de dependências proprietárias.</p>
+</footer>
+</div>
+
+<script>
+function filtrarFichasLocais() {
+  const query = document.getElementById('filtroFichasInput').value.toLowerCase().trim();
+  const entries = document.querySelectorAll('.entry');
+  let count = 0;
+
+  entries.forEach(entry => {
+    const text = entry.textContent.toLowerCase();
+    if (query === '' || text.includes(query)) {
+      entry.style.display = 'grid';
+      count++;
+    } else {
+      entry.style.display = 'none';
+    }
+  });
+
+  const counter = document.getElementById('contadorFichas');
+  if (counter) {
+    counter.innerHTML = `Exibindo <b>${count}</b> de <b>${entries.length}</b> fichas`;
+  }
+}
+</script>
+</body>
+</html>

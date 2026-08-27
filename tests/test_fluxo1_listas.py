@@ -28,7 +28,7 @@ class TestFluxo1Listas(unittest.TestCase):
 
     def test_02_compilacao_tripartite_bundle(self):
         """Valida se os 3 formatos (HTML, MD, PDF) foram gerados no bundle modular."""
-        bundle_dir = BASE_DIR / "output" / "listas-tematicas" / f"list-{self.slug_teste}"
+        bundle_dir = BASE_DIR / "output" / "01-listas-horizontais" / f"list-{self.slug_teste}"
         formatos = ["html", "md", "pdf"]
 
         for fmt in formatos:
@@ -51,13 +51,12 @@ class TestFluxo1Listas(unittest.TestCase):
         slugs = [l["slug"] for l in listas]
         self.assertIn(self.slug_teste, slugs, f"Lista {self.slug_teste} deve estar registrada no SQLite.")
 
-    def test_05_paridade_espelhos_docs_r18(self):
-        """Valida paridade estrita entre output/ e docs/ para a lista temática."""
-        out_file = BASE_DIR / "output" / "listas-tematicas" / f"list-{self.slug_teste}" / f"list-{self.slug_teste}.html"
-        doc_file = BASE_DIR / "docs" / "listas-tematicas" / f"list-{self.slug_teste}" / f"list-{self.slug_teste}.html"
-
-        self.assertTrue(out_file.exists() and doc_file.exists(), "Arquivos HTML de espelho devem existir.")
-        self.assertEqual(out_file.stat().st_size, doc_file.stat().st_size, "Tamanho entre output/ e docs/ deve ser idêntico.")
+    def test_05_integridade_soberana_r18(self):
+        """Valida a integridade da pasta soberana output/01-listas-horizontais/list-<slug>/."""
+        bundle_dir = BASE_DIR / "output" / "01-listas-horizontais" / f"list-{self.slug_teste}"
+        self.assertTrue(bundle_dir.exists(), "Diretório soberano da lista horizontal deve existir.")
+        arquivos = list(bundle_dir.glob("list-bancos-dados-estado.*"))
+        self.assertGreaterEqual(len(arquivos), 3, "Lista horizontal soberana deve conter ao menos HTML, MD e PDF.")
 
 if __name__ == "__main__":
     unittest.main()

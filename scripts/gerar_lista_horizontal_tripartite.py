@@ -97,27 +97,21 @@ def compilar_lista_horizontal_tripartite(slug: str) -> bool:
     md_content = "\n".join(linhas_md)
 
     # Diretórios de saída
-    out_bundle = BASE_DIR / "output" / "listas-tematicas" / f"list-{slug}"
-    docs_bundle = BASE_DIR / "docs" / "listas-tematicas" / f"list-{slug}"
-
+    out_bundle = BASE_DIR / "output" / "01-listas-horizontais" / f"list-{slug}"
     out_bundle.mkdir(parents=True, exist_ok=True)
-    docs_bundle.mkdir(parents=True, exist_ok=True)
 
     nome_base = f"list-{slug}"
 
     # Salva HTML no Bundle
     (out_bundle / f"{nome_base}.html").write_text(html_content, encoding="utf-8")
-    (docs_bundle / f"{nome_base}.html").write_text(html_content, encoding="utf-8")
     print(f"✅ HTML integrado ao bundle: {nome_base}.html")
 
     # Salva Markdown no Bundle
     (out_bundle / f"{nome_base}.md").write_text(md_content, encoding="utf-8")
-    (docs_bundle / f"{nome_base}.md").write_text(md_content, encoding="utf-8")
     print(f"✅ Markdown compilado: {nome_base}.md")
 
     # Compila PDF via Typst
     pdf_out = out_bundle / f"{nome_base}.pdf"
-    pdf_docs = docs_bundle / f"{nome_base}.pdf"
     temp_md = out_bundle / f"{nome_base}.md"
 
     try:
@@ -137,7 +131,6 @@ def compilar_lista_horizontal_tripartite(slug: str) -> bool:
             errors="replace"
         )
         if res.returncode == 0 and pdf_out.exists():
-            pdf_docs.write_bytes(pdf_out.read_bytes())
             print(f"✅ PDF compilado via Typst: {nome_base}.pdf ({pdf_out.stat().st_size} bytes)")
         else:
             print(f"⚠️ Aviso na compilação Typst: {res.stderr}")

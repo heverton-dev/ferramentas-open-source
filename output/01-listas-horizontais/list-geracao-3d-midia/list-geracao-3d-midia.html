@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Substitutos Open-Source para KairoGen &amp; Meshy AI — Geração 3D &amp; Orquestração de Mídia Soberana</title>
+<style>
+  * {   box-sizing: border-box; }
+  
+  
+  
+
+  :root {
+    --paper:#ECEEF2; --surface:#F8F9FC; --surface-2:#DFE3EB;
+    --ink:#151A26; --ink-2:#3B4457; --muted:#68738A;
+    --rule:#C7CEDB; --rule-soft:#DADFE8;
+    --accent:#7A3E1D; --accent-soft:#F5EBE4;
+    --gold:#7A5410; --gold-soft:#EFE5CE;
+    --flag:#8E2436; --flag-soft:#F0D9DD;
+    --green:#1B5E3B; --green-soft:#D8EFE2;
+    --shadow: 0 1px 0 rgba(21,26,38,.05), 0 8px 24px -18px rgba(21,26,38,.45);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#0E1118; --surface:#161A24; --surface-2:#1F2531;
+      --ink:#E3E7F0; --ink-2:#B3BCCC; --muted:#8391A8;
+      --rule:#2A3142; --rule-soft:#222836;
+      --accent:#E89568; --accent-soft:#331D12;
+      --gold:#D6A44E; --gold-soft:#332810;
+      --flag:#E0788C; --flag-soft:#3A1A21;
+      --green:#6BC48F; --green-soft:#122B1C;
+      --shadow: 0 1px 0 rgba(0,0,0,.3), 0 8px 24px -18px rgba(0,0,0,.9);
+    }
+  }
+
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1060px; margin:0 auto; padding:clamp(28px,5vw,64px) clamp(18px,4vw,40px) 96px; display:flex; flex-direction:column; gap:clamp(40px,6vw,72px); }
+
+  /* HEADER EXECUTIVO COM ALINHAMENTO JUSTIFICADO */
+  header { display:flex; flex-direction:column; gap:24px; padding-bottom:12px; border-bottom:1px solid var(--rule); }
+  .header-top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; color:var(--muted); text-decoration:none; padding:4px 8px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); transition:all .15s ease; }
+  .back-link:hover { color:var(--accent); border-color:var(--accent); background:var(--accent-soft); text-decoration:none; }
+  .eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
+  .layer-badge { background:var(--accent); color:var(--paper); padding:3px 8px; border-radius:2px; font-weight:700; font-size:10.5px; letter-spacing:.08em; }
+
+  h1 { font-family:var(--serif); font-weight:600; font-size:clamp(36px,7vw,64px); line-height:1.08; letter-spacing:-.02em; margin:0; color:var(--ink); text-align:justify; text-justify:inter-word; }
+  .deck { font-family:var(--serif); font-size:clamp(17px,2.2vw,21px); line-height:1.55; color:var(--ink-2); max-width:100%; margin:0; text-align:justify; text-justify:inter-word; }
+  .deck strong { color:var(--ink); font-weight:600; }
+
+  /* HERO STATS BAR */
+  .hero-stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-top:4px; }
+  .stat-card { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:12px 16px; display:flex; flex-direction:column; gap:4px; box-shadow:var(--shadow); }
+  .stat-card .stat-val { font-family:var(--mono); font-size:20px; font-weight:700; color:var(--accent); line-height:1.1; }
+  .stat-card .stat-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .stat-card.good .stat-val { color:var(--green); }
+  
+  /* QUICK JUMP ANCHORS */
+  .header-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:2px; }
+  .jump-btn { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11.5px; padding:6px 12px; border-radius:2px; border:1px solid var(--rule); background:var(--surface); color:var(--ink-2); text-decoration:none; transition:all .15s ease; }
+  .jump-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); text-decoration:none; }
+  .jump-btn.primary { background:var(--accent-soft); border-color:color-mix(in srgb, var(--accent) 40%, transparent); color:var(--accent); font-weight:600; }
+
+  section { display:flex; flex-direction:column; gap:22px; }
+  .sec-head { display:flex; flex-direction:column; gap:8px; border-top:2px solid var(--ink); padding-top:14px; }
+  .sec-head.flagged { border-top-color:var(--flag); }
+  .sec-head.warm { border-top-color:var(--gold); }
+  .sec-num { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .sec-head.flagged .sec-num { color:var(--flag); }
+  .sec-head.warm .sec-num { color:var(--gold); }
+  h2 { font-family:var(--serif); font-weight:600; font-size:clamp(26px,4vw,36px); line-height:1.1; letter-spacing:-.015em; margin:0; text-wrap:balance; }
+  .sec-note { margin:0; color:var(--ink-2); max-width:100%; font-size:15.5px; }
+
+  .routes { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+  .route { background:var(--surface); border:1px solid var(--rule); border-radius:3px; padding:18px 20px; display:flex; flex-direction:column; gap:10px; }
+  .route.official { border-left:3px solid var(--accent); }
+  .route.gray { border-left:3px solid var(--green); }
+  .route h4 { font-family:var(--serif); font-size:21px; font-weight:600; margin:0; }
+  .route .tag { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; }
+  .route.official .tag { color:var(--accent); }
+  .route.gray .tag { color:var(--green); }
+  .route p { margin:0; font-size:14.5px; color:var(--ink-2); }
+
+  /* TABELA FLUIDA SEM SCROLL */
+  .tablewrap { border:1px solid var(--rule); border-radius:3px; background:var(--surface); width:100%; overflow:hidden; }
+  table { border-collapse:collapse; width:100%; font-size:13.5px; table-layout:auto; }
+  thead th { text-align:left; font-family:var(--mono); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding:10px 12px; border-bottom:1px solid var(--rule); }
+  tbody td { padding:10px 12px; border-bottom:1px solid var(--rule-soft); vertical-align:middle; }
+  tbody tr:last-child td { border-bottom:0; }
+  td.rank { font-family:var(--mono); color:var(--muted); font-variant-numeric:tabular-nums; width:36px; text-align:center; }
+  td.tool { font-weight:600; color:var(--ink); font-size:14px; }
+  td.saas, td.killer { font-family:var(--mono); font-size:11.5px; color:var(--flag); text-decoration:line-through; font-weight:600; line-height:1.35; }
+  td.econ { font-family:var(--mono); font-size:11.5px; color:var(--green); font-weight:600; line-height:1.35; }
+  td.cat { font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); line-height:1.35; font-weight:600; }
+  td.lic { font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.35; }
+
+  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO (LARGURA TOTAL) */
+  .ledger { display:flex; flex-direction:column; gap:28px; }
+  .entry { background:var(--surface); border:1px solid var(--rule); border-radius:3px; box-shadow:var(--shadow); display:grid; grid-template-columns:64px 1fr; transition:border-color .15s ease; }
+  .entry:hover { border-color:var(--accent); }
+  .entry-rank { font-family:var(--mono); font-size:22px; font-variant-numeric:tabular-nums; color:var(--accent); background:var(--accent-soft); display:flex; align-items:flex-start; justify-content:center; padding:20px 0; border-right:1px solid var(--rule); border-radius:2px 0 0 2px; }
+  
+  .entry-body { padding:20px 24px 22px; display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+  /* CABEÇALHO PADRONIZADO COM BADGES */
+  .entry-top { display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; }
+  .entry-top h3 { width:100%; margin:0 0 4px 0; font-family:var(--serif); font-weight:600; font-size:25px; line-height:1.15; letter-spacing:-.01em; color:var(--ink); }
+
+  .senior-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; font-weight:700; }
+  .senior-badge.green { background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+  .senior-badge.gold { background:var(--gold-soft); color:var(--gold); border:1px solid color-mix(in srgb, var(--gold) 35%, transparent); }
+  .senior-badge.flag { background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); }
+
+  .killer-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--flag-soft); color:var(--flag); border:1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight:600; }
+  .econ-badge { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--green-soft); color:var(--green); border:1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight:600; }
+  .lic-badge { font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:2px; background:var(--accent-soft); color:var(--accent); border:1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space:nowrap; }
+  .kind { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600; padding:3px 6px; border:1px solid var(--rule-soft); border-radius:2px; background:var(--surface-2); }
+
+  /* SEÇÕES VERTICAIS DO CARD (LARGURA TOTAL) */
+  .entry-section { display:flex; flex-direction:column; gap:8px; width:100%; padding-top:14px; border-top:1px dashed var(--rule-soft); }
+  .entry-section .label { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+  .entry-section p { margin:0; font-size:15px; line-height:1.55; color:var(--ink-2); }
+  .entry-section p strong { color:var(--ink); font-weight:600; }
+
+  /* ANÁLISE ECONÔMICA GRID */
+  .econ-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; margin-top:4px; }
+  .econ-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .econ-card.highlight { border-left:3px solid var(--green); background:color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left:3px solid var(--flag); background:color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .econ-val { font-size:14px; line-height:1.45; color:var(--ink); }
+  .econ-val strong { color:var(--ink); font-weight:600; }
+
+  /* REQUISITOS DE INFRAESTRUTURA GRID */
+  .infra-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-top:4px; }
+  .infra-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .infra-card.verdict { border-left:3px solid var(--gold); background:color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column:span 2; }
+  @media (max-width:760px) { .infra-card.verdict { grid-column:span 1; } }
+  .infra-lbl { font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:600; }
+  .infra-val { font-family:var(--mono); font-size:13.5px; font-weight:600; color:var(--accent); line-height:1.4; }
+  .infra-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
+
+  /* CODE BOX FULL-WIDTH */
+  .code-box { position:relative; display:flex; flex-direction:column; width:100%; margin-top:4px; }
+  pre { margin:0; padding:12px 52px 12px 14px; background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; overflow-x:auto; }
+  code { font-family:var(--mono); font-size:13px; color:var(--ink); line-height:1.5; }
+  .copy-btn { position:absolute; top:8px; right:8px; background:var(--surface); border:1px solid var(--rule); color:var(--muted); border-radius:2px; padding:4px 8px; font-family:var(--mono); font-size:10.5px; cursor:pointer; transition:all .15s ease; }
+  .copy-btn:hover { background:var(--accent-soft); color:var(--accent); border-color:var(--accent); }
+
+  /* BOTÃO REPOSITÓRIO GITHUB */
+  .repo-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:var(--mono); font-size:12px; padding:8px 12px; border:1px solid var(--rule); border-radius:2px; background:var(--surface); color:var(--ink); text-decoration:none; transition:all .15s ease; width:fit-content; }
+  .repo-btn:hover { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); text-decoration:none; }
+  .repo-btn svg { width:14px; height:14px; fill:currentColor; }
+
+  /* STEPS GRID (COMO USAR NO DIA A DIA) */
+  .steps-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; margin-top:2px; }
+  .step-card { background:var(--surface-2); border:1px solid var(--rule-soft); border-radius:2px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+  .step-head { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; }
+  .step-badge { background:var(--accent); color:var(--paper); border-radius:2px; padding:1px 6px; font-size:10px; font-weight:700; }
+  .step-card p { margin:0; font-size:13.5px; line-height:1.45; color:var(--ink-2); }
+  .step-card code { font-family:var(--mono); font-size:12px; background:var(--surface); padding:1px 5px; border-radius:2px; border:1px solid var(--rule-soft); color:var(--ink); }
+
+  .reject { border:1px solid var(--rule); border-left:3px solid var(--flag); background:var(--surface); border-radius:3px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
+  .reject h4 { font-family:var(--serif); font-size:20px; font-weight:600; margin:0; }
+  .reject p { margin:0; font-size:14.5px; color:var(--ink-2); }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+
+  footer { border-top:1px solid var(--rule); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
+  footer p { margin:0; font-size:13.5px; color:var(--muted); max-width:100%; }
+
+  /* PADRÃO DIAMANTE IMPECCABLE */
+  h1 { text-align: justify; text-justify: inter-word; }
+  .deck { text-align: justify; text-justify: inter-word; max-width: 100%; }
+  .entry { transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease; }
+  .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+  .step-card { transition: transform .12s ease, border-color .12s ease; }
+  .step-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .code-box { position: relative; }
+  .copy-btn { transition: all .15s ease; cursor: pointer; }
+  .copy-btn:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+  table tr { transition: background .12s ease; }
+  table tbody tr:hover { background: var(--surface-2); }
+
+  
+  * {
+    
+    
+  }
+  
+  
+  
+  
+
+
+  /* SCROLLBAR REFINADA (MAX 4PX & COR ACCENT) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--green);
+  }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="header-top">
+<a class="back-link" href="index.html">
+<span>←</span>
+<span>Voltar ao Hub Central</span>
+</a>
+<div class="eyebrow">
+<span class="layer-badge">Camada 31</span>
+<span>Engenharia &amp; Autonomia Técnica</span>
+<span>·</span>
+<span>Curadoria Soberana</span>
+</div>
+</div>
+<h1>Substitutos Open-Source para KairoGen &amp; Meshy AI</h1>
+<p class="deck">Arsenal definitivo para <strong>orquestração de imagem/vídeo (MCP/Headless) e síntese 3D (Text-to-3D, Image-to-3D, Malhas &amp; Splats)</strong>: substitua agregadores proprietários de créditos e plataformas 3D fechadas por pipelines locais 100% autodirigidos em GPU própria.</p>
+<!-- HERO STATS BAR -->
+<div class="hero-stats">
+<div class="stat-card">
+<div class="stat-val">10</div>
+<div class="stat-lbl">Tecnologias Auditadas</div>
+</div>
+<div class="stat-card good">
+<div class="stat-val">100%</div>
+<div class="stat-lbl">Soberania &amp; Zero Lock-in</div>
+</div>
+<div class="stat-card">
+<div class="stat-val">OSI Standard</div>
+<div class="stat-lbl">Licenças de Código Aberto</div>
+</div>
+<div class="stat-card good">
+<div class="stat-val">-$ 30k a $ 150k</div>
+<div class="stat-lbl">Economia TCO Anual Estimada</div>
+</div>
+</div>
+<!-- QUICK ACTIONS -->
+<div class="header-actions">
+<a class="jump-btn" href="#tabela">
+<span>📊</span>
+<span>Matriz Comparativa</span>
+</a>
+<a class="jump-btn primary" href="#fichas">
+<span>⚡</span>
+<span>Fichas Técnicas &amp; Passo a Passo</span>
+</a>
+</div>
+</header>
+<section>
+<div class="sec-head">
+<span class="sec-num">Parte 1 · A Equação da Soberania</span>
+<h2>A armadilha dos créditos e intermediários proprietários</h2>
+<p class="sec-note">Plataformas SaaS de agregação e serviços fechados de IA 3D cobram margens exorbitantes sobre modelos abertos, vendem cotas diárias de créditos e trancam os seus assets em servidores de terceiros.</p>
+</div>
+<div class="routes">
+<div class="route official">
+<span class="tag">O Custo Fechado</span>
+<h4>O Pedágio de KairoGen &amp; Meshy AI</h4>
+<p>KairoGen (planos de créditos recorrentes para disparar modelos de vídeo e imagem) e Meshy AI ($ 20 a $ 60/mês por 1.000 a 4.000 créditos com filas de espera para gerar malhas 3D). Custos que escalam rapidamente sem qualquer propriedade do motor de inferência.</p>
+</div>
+<div class="route gray">
+<span class="tag">A Solução Aberta</span>
+<h4>Inferência Local &amp; Protocolos Abertos (MCP / REST)</h4>
+<p>ComfyUI com backend headless e nós MCP substitui completamente qualquer hub agregador. Modelos como Microsoft TRELLIS, Hunyuan3D-2.0, TripoSR e InstantMesh geram modelos 3D com texturas PBR e geometria limpa direto na sua GPU local ou servidor dedicado.</p>
+</div>
+</div>
+</section>
+<section id="tabela">
+<div class="sec-head">
+<span class="sec-num">Parte 2 · O Panorama Geral</span>
+<h2>O inventário completo de substitutos</h2>
+<p class="sec-note">Tabela comparativa direta: ferramenta, o software/SaaS proprietário substituído, economia média e licença oficial.</p>
+</div>
+<div class="tablewrap">
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Ferramenta</th>
+<th>Substitui o SaaS Pago</th>
+<th>Economia Declarada</th>
+<th>Categoria</th>
+<th>Licença</th>
+</tr>
+</thead>
+<tbody>
+<!-- Substitutos KairoGen -->
+<tr>
+<td class="rank">01</td>
+<td class="tool">ComfyUI + ComfyUI-Manager</td>
+<td class="saas">KairoGen / Runway / Midjourney API ($ 30-$ 120/mês)</td>
+<td class="econ">-$ 360 a $ 1.440 / ano</td>
+<td class="cat">Modular Media Engine / MCP</td>
+<td class="lic">GPL-3.0</td>
+</tr>
+<tr>
+<td class="rank">02</td>
+<td class="tool">Open WebUI + Pipelines</td>
+<td class="saas">KairoGen Hub / Poe / Dify Pro ($ 20-$ 99/mês)</td>
+<td class="econ">-$ 240 a $ 1.188 / ano</td>
+<td class="cat">Multi-Model UI &amp; MCP Gateway</td>
+<td class="lic">Open WebUI (MIT)</td>
+</tr>
+<tr>
+<td class="rank">03</td>
+<td class="tool">Pinokio</td>
+<td class="saas">KairoGen Desktop / SaaS Aggregators ($ 29/mês)</td>
+<td class="econ">-$ 348 / ano por workstation</td>
+<td class="cat">Autonomous AI Browser &amp; Orchestrator</td>
+<td class="lic">GPL-3.0</td>
+</tr>
+<tr>
+<td class="rank">04</td>
+<td class="tool">FastVideo / CogVideoX / Wan2.1</td>
+<td class="saas">KairoGen Video / Kling / Sora / Luma ($ 49-$ 199/mês)</td>
+<td class="econ">-$ 588 a $ 2.388 / ano</td>
+<td class="cat">High-Def Video Generation</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<!-- Substitutos Meshy AI -->
+<tr>
+<td class="rank">05</td>
+<td class="tool">TRELLIS 3D (Microsoft)</td>
+<td class="saas">Meshy AI Pro ($ 24-$ 60/mês) / Rodin 3D</td>
+<td class="econ">-$ 288 a $ 720 / ano</td>
+<td class="cat">Structured Image-to-3D (.glb &amp; Splats)</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">06</td>
+<td class="tool">Hunyuan3D 2.0 (Tencent)</td>
+<td class="saas">Meshy AI Studio / Tripo3D Commercial ($ 60/mês)</td>
+<td class="econ">-$ 720 / ano por modelador</td>
+<td class="cat">High-Res Text/Image-to-3D &amp; PBR</td>
+<td class="lic">Tencent Open Source</td>
+</tr>
+<tr>
+<td class="rank">07</td>
+<td class="tool">TripoSR (Stability AI)</td>
+<td class="saas">Meshy AI Fast Engine / Kaedim ($ 150/mês)</td>
+<td class="econ">-$ 1.800 / ano por desenvolvedor</td>
+<td class="cat">Sub-Second 3D Reconstruction</td>
+<td class="lic">MIT</td>
+</tr>
+<tr>
+<td class="rank">08</td>
+<td class="tool">InstantMesh (TencentARC)</td>
+<td class="saas">Meshy AI Mesh Generator ($ 30/mês)</td>
+<td class="econ">-$ 360 / ano por artista</td>
+<td class="cat">Multi-View Diffusion to 3D Mesh</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">09</td>
+<td class="tool">Nerfstudio / gsplat</td>
+<td class="saas">Luma Interactive / CSM 3D ($ 40/mês)</td>
+<td class="econ">-$ 480 / ano</td>
+<td class="cat">3D Gaussian Splatting &amp; NeRFs</td>
+<td class="lic">Apache-2.0</td>
+</tr>
+<tr>
+<td class="rank">10</td>
+<td class="tool">Blender + SD-Blender AI Pipeline</td>
+<td class="saas">Meshy Pro Toolkit / Maya AI Plugin ($ 250/mês)</td>
+<td class="econ">-$ 3.000 / ano por estúdio</td>
+<td class="cat">Full 3D DCC, Rigging &amp; Generative Nodes</td>
+<td class="lic">GPL-3.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="fichas">
+<div class="sec-head">
+<span class="sec-num">Parte 3 · O Inventário Técnico de Elite</span>
+<h2>Aprofundamento de Engenharia &amp; Quickstarts</h2>
+<p class="sec-note">Auditoria técnica minuciosa de cada motor aberto, comandos de instalação determinísticos e arquitetura interna.</p>
+</div>
+
+<div class="fichas-search-bar" style="margin: 20px 0 28px; background: var(--surface); border: 1px solid var(--rule); border-radius: 4px; padding: 14px 18px; display: flex; gap: 12px; align-items: center; box-shadow: var(--shadow);">
+<svg fill="none" height="18" stroke="currentColor" stroke-width="2" style="color:var(--muted); flex-shrink:0;" viewbox="0 0 24 24" width="18"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
+<input id="filtroFichasInput" onkeyup="filtrarFichasLocais()" placeholder="Filtrar fichas técnicas desta camada (digite o nome da ferramenta, SaaS substituído ou comando)..." style="flex:1; background:var(--paper); border:1px solid var(--rule); border-radius:3px; padding:10px 14px; font-size:14px; font-family:var(--sans); color:var(--ink); outline:none;" type="text"/>
+<span id="contadorFichas" style="font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap;">Exibindo todas as fichas</span>
+</div>
+<div class="ledger">
+<!-- ComfyUI + ComfyUI-Manager -->
+<div class="entry">
+<div class="entry-rank">01</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>Comfyui + comfyui-manager · Modular Media Engine / MCP &amp; Headless API</h3>
+<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+<span class="killer-badge">Substitui: KairoGen / Runway / Midjourney API</span>
+<span class="econ-badge">Economia: -$ 360 a $ 1.440 / ano</span>
+<span class="lic-badge">GPL-3.0</span>
+<span class="kind">Modular Media Engine / MCP &amp; Headless API</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>O mais avançado motor de geração visual do mundo baseado em grafos acíclicos dirigidos. Permite orquestrar difusão de tensores para imagem (Flux.1, SDXL, SD3.5) e vídeo (CogVideoX, Wan2.1, LivePortrait, AnimateDiff) com execução headless via REST/WebSocket ou MCP.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>git clone https://github.com/comfyanonymous/ComfyUI
+cd ComfyUI &amp;&amp; pip install -r requirements.txt
+python main.py --listen 0.0.0.0 --port 8188</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">KairoGen / Runway / Midjourney API</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 360 a $ 1.440 / ano · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Modular Media Engine / MCP &amp; Headless API</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://github.com/comfyanonymous/ComfyUI" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: github.com/comfyanonymous/ComfyUI ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Instale e configure o <code>Comfyui + comfyui-manager</code> na infraestrutura local.</p>
+</div>
+</div>
+</div>
+</div></div><!-- Open WebUI + Pipelines (MCP Engine) -->
+<div class="entry">
+<div class="entry-rank">02</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>Open webui + pipelines (mcp engine) · Multi-Model UI &amp; MCP Gateway</h3>
+<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+<span class="killer-badge">Substitui: KairoGen Hub / Poe / Dify Pro</span>
+<span class="econ-badge">Economia: -$ 240 a $ 1.188 / ano</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">Multi-Model UI &amp; MCP Gateway</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Interface auto-hospedada completa e extensível para chat, agentes autônomos, geração de imagens e chamadas de ferramentas multimídia via Ollama, vLLM e pipelines customizados.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway \
+  -v open-webui:/app/backend/data --name open-webui \
+  ghcr.io/open-webui/open-webui:main</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">KairoGen Hub / Poe / Dify Pro</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 240 a $ 1.188 / ano · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">1 vCPU · 512 MB a 1 GB RAM · Container Docker</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Multi-Model UI &amp; MCP Gateway</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://github.com/open-webui/open-webui" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: github.com/open-webui/open-webui ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Instale e configure o <code>Open webui + pipelines (mcp engine)</code> na infraestrutura local.</p>
+</div>
+</div>
+</div>
+</div></div><!-- Pinokio -->
+<div class="entry">
+<div class="entry-rank">03</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>Pinokio · Autonomous AI Browser &amp; Orchestrator</h3>
+<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+<span class="killer-badge">Substitui: KairoGen Desktop / SaaS Aggregators</span>
+<span class="econ-badge">Economia: -$ 348 / ano por workstation</span>
+<span class="lic-badge">GPL-3.0</span>
+<span class="kind">Autonomous AI Browser &amp; Orchestrator</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Navegador e gerenciador de aplicações de IA autônomo que instala, compila ambientes virtuais (Conda/Torch) e executa qualquer repositório de mídia aberta em 1 clique.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code># Baixe o instalador oficial multiplataforma (Windows/Linux/Mac)
+# Ou clone e execute via Node:
+git clone https://github.com/pinokiocomputer/pinokio.git
+cd pinokio &amp;&amp; npm install &amp;&amp; npm start</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">KairoGen Desktop / SaaS Aggregators</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 348 / ano por workstation · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Autonomous AI Browser &amp; Orchestrator</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://github.com/pinokiocomputer/pinokio" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: github.com/pinokiocomputer/pinokio ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Instale e configure o <code>Pinokio</code> na infraestrutura local.</p>
+</div>
+</div>
+</div>
+</div></div><!-- FastVideo / CogVideoX / Wan2.1 -->
+<div class="entry">
+<div class="entry-rank">04</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>Fastvideo / cogvideox / wan2.1 · High-Def Video Generation Framework</h3>
+<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+<span class="killer-badge">Substitui: KairoGen Video / Kling / Sora / Luma</span>
+<span class="econ-badge">Economia: -$ 588 a $ 2.388 / ano</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">High-Def Video Generation Framework</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Modelos e aceleradores de ponta para geração de vídeos de alta definição (Text-to-Video e Image-to-Video) executando localmente sem marcas d'água nem limites de segundos.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>pip install diffusers transformers accelerate sentencepiece
+# Executar via Diffusers pipeline com quantização FP8</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">KairoGen Video / Kling / Sora / Luma</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 588 a $ 2.388 / ano · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>High-Def Video Generation Framework</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://github.com/THUDM/CogVideo" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: github.com/THUDM/CogVideo ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Instale e configure o <code>Fastvideo / cogvideox / wan2.1</code> na infraestrutura local.</p>
+</div>
+</div>
+</div>
+</div></div><!-- TRELLIS 3D (Microsoft) -->
+<div class="entry">
+<div class="entry-rank">05</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>Trellis 3d (microsoft) · Structured Image-to-3D (.glb, Radiance Fields &amp; 3DGS)</h3>
+<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+<span class="killer-badge">Substitui: Meshy AI Pro ($ 24-$ 60/mês) / Rodin 3D</span>
+<span class="econ-badge">Economia: -$ 288 a $ 720 / ano</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">Structured Image-to-3D (.glb, Radiance Fields &amp; 3DGS)</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>O modelo aberto mais avançado do mundo para síntese 3D a partir de uma única imagem. Produz simultaneamente malhas poligonais limpas (`.glb`), 3D Gaussian Splats e campos de radiância neurais de alta fidelidade.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>git clone https://github.com/microsoft/TRELLIS.git
+cd TRELLIS &amp;&amp; pip install -r requirements.txt
+python app.py</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Meshy AI Pro ($ 24-$ 60/mês) / Rodin 3D</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 288 a $ 720 / ano · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Structured Image-to-3D (.glb, Radiance Fields &amp; 3DGS)</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://github.com/microsoft/TRELLIS" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: github.com/microsoft/TRELLIS ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Instale e configure o <code>Trellis 3d (microsoft)</code> na infraestrutura local.</p>
+</div>
+</div>
+</div>
+</div></div><!-- Hunyuan3D 2.0 (Tencent) -->
+<div class="entry">
+<div class="entry-rank">06</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>Hunyuan3d 2.0 (tencent) · High-Resolution Text/Image-to-3D &amp; PBR Texturing</h3>
+<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+<span class="killer-badge">Substitui: Meshy AI Studio / Tripo3D Commercial</span>
+<span class="econ-badge">Economia: -$ 720 / ano por modelador</span>
+<span class="lic-badge">Tencent Open Source License</span>
+<span class="kind">High-Resolution Text/Image-to-3D &amp; PBR Texturing</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Sistema completo de síntese 3D de alta fidelidade a partir de descrições textuais ou imagens, gerando malhas poligonais com mapas de textura e iluminação PBR de qualidade industrial.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>git clone https://github.com/Tencent/Hunyuan3D-2.git
+cd Hunyuan3D-2 &amp;&amp; pip install -r requirements.txt
+python app.py</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Meshy AI Studio / Tripo3D Commercial</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 720 / ano por modelador · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Binário compilado local · &lt; 30 MB RAM sob demanda</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>High-Resolution Text/Image-to-3D &amp; PBR Texturing</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://github.com/Tencent/Hunyuan3D-2" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: github.com/Tencent/Hunyuan3D-2 ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Instale e configure o <code>Hunyuan3d 2.0 (tencent)</code> na infraestrutura local.</p>
+</div>
+</div>
+</div>
+</div></div><!-- TripoSR (Stability AI & Tripo3D) -->
+<div class="entry">
+<div class="entry-rank">07</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>Triposr (stability ai &amp; tripo3d) · Sub-Second 3D Reconstruction Model</h3>
+<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+<span class="killer-badge">Substitui: Meshy AI Fast Engine / Kaedim</span>
+<span class="econ-badge">Economia: -$ 1.800 / ano por desenvolvedor</span>
+<span class="lic-badge">MIT</span>
+<span class="kind">Sub-Second 3D Reconstruction Model</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>O modelo de reconstrução 3D mais rápido e leve do ecossistema aberto. Transforma uma única imagem 2D em malha 3D completa com textura em menos de 0.5 segundo em GPU comum.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>git clone https://github.com/VAST-AI-Research/TripoSR.git
+cd TripoSR &amp;&amp; pip install -r requirements.txt
+python run.py examples/chair.png --output-dir output/</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Meshy AI Fast Engine / Kaedim</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 1.800 / ano por desenvolvedor · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Sub-Second 3D Reconstruction Model</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://github.com/VAST-AI-Research/TripoSR" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: github.com/VAST-AI-Research/TripoSR ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Instale e configure o <code>Triposr (stability ai &amp; tripo3d)</code> na infraestrutura local.</p>
+</div>
+</div>
+</div>
+</div></div><!-- InstantMesh (TencentARC) -->
+<div class="entry">
+<div class="entry-rank">08</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>Instantmesh (tencentarc) · Multi-View Diffusion to 3D Mesh</h3>
+<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+<span class="killer-badge">Substitui: Meshy AI Mesh Generator</span>
+<span class="econ-badge">Economia: -$ 360 / ano por artista</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">Multi-View Diffusion to 3D Mesh</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>Geração de modelos 3D com geometria consistente e topologia livre de deformações a partir de imagens únicas em menos de 10 segundos.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>git clone https://github.com/TencentARC/InstantMesh.git
+cd InstantMesh &amp;&amp; pip install -r requirements.txt
+python run.py configs/instant-mesh-large.yaml examples/hat.png --save_video</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Meshy AI Mesh Generator</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 360 / ano por artista · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Multi-View Diffusion to 3D Mesh</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://github.com/TencentARC/InstantMesh" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: github.com/TencentARC/InstantMesh ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Instale e configure o <code>Instantmesh (tencentarc)</code> na infraestrutura local.</p>
+</div>
+</div>
+</div>
+</div></div><!-- Nerfstudio & gsplat (3DGS) -->
+<div class="entry">
+<div class="entry-rank">09</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>Nerfstudio &amp; gsplat (3dgs) · 3D Gaussian Splatting &amp; Radiance Fields</h3>
+<span class="senior-badge green">👨‍💻 Nível: Júnior / Iniciante</span>
+<span class="killer-badge">Substitui: Luma Interactive / CSM 3D</span>
+<span class="econ-badge">Economia: -$ 480 / ano</span>
+<span class="lic-badge">Apache-2.0</span>
+<span class="kind">3D Gaussian Splatting &amp; Radiance Fields</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>O ecossistema padrão da indústria acadêmica e open-source para captura, treinamento e renderização volumétrica em tempo real com 3D Gaussian Splatting e NeRFs.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code>pip install nerfstudio
+ns-process-data video --data video.mp4 --output-dir data/meu-objeto
+ns-train splatfacto --data data/meu-objeto</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Luma Interactive / CSM 3D</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 480 / ano · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>3D Gaussian Splatting &amp; Radiance Fields</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://github.com/nerfstudio-project/nerfstudio" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: github.com/nerfstudio-project/nerfstudio ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Instale e configure o <code>Nerfstudio &amp; gsplat (3dgs)</code> na infraestrutura local.</p>
+</div>
+</div>
+</div>
+</div></div><!-- Blender + Pipelines Neurais Abertos -->
+<div class="entry">
+<div class="entry-rank">10</div>
+<div class="entry-body">
+<!-- CABEÇALHO & BADGES -->
+<div class="entry-top">
+<h3>Blender + pipelines neurais abertos · Full 3D DCC, Auto-Rigging &amp; Generative Nodes</h3>
+<span class="senior-badge gold">👨‍💻 Nível: Pleno / Backend</span>
+<span class="killer-badge">Substitui: Meshy Pro Toolkit / Maya AI Plugin ($ 250/mês)</span>
+<span class="econ-badge">Economia: -$ 3.000 / ano por estúdio</span>
+<span class="lic-badge">GPL-3.0</span>
+<span class="kind">Full 3D DCC, Auto-Rigging &amp; Generative Nodes</span>
+</div>
+<!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+<div class="entry-section">
+<span class="label">1. O Que Faz &amp; Como Funciona</span>
+<p>A mais respeitada suíte 3D soberana do planeta integrada a add-ons abertos de inteligência artificial para retopologia automática, rigging, texturização via difusão e renderização Cycles/Eevee.</p>
+<p>Processamento nativo integrado a pipelines e esteiras de automação corporativa.</p>
+<div class="code-box">
+<pre><code># Instalação via gerenciador de pacotes nativo do sistema
+# Ubuntu/Debian: sudo apt install blender
+# Arch Linux: sudo pacman -S blender
+# Windows via Winget: winget install BlenderFoundation.Blender</code></pre>
+<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent.trim());this.textContent='Copiado!';setTimeout(()=&gt;this.textContent='Copiar',1500)">Copiar</button>
+</div>
+</div>
+<!-- SEÇÃO 2: ANÁLISE ECONÔMICA & SUBSTITUIÇÃO DE SAAS -->
+<div class="entry-section">
+<span class="label">2. Análise Econômica &amp; Substituição de Soluções Proprietárias</span>
+<div class="econ-grid">
+<div class="econ-card killer">
+<span class="econ-lbl">💸 Produtos Proprietários Substituídos</span>
+<div class="econ-val">Meshy Pro Toolkit / Maya AI Plugin ($ 250/mês)</div>
+</div>
+<div class="econ-card highlight">
+<span class="econ-lbl">💰 Economia Real Estimada no TCO</span>
+<div class="econ-val"><strong>-$ 3.000 / ano por estúdio · Redução drástica de custos recorrentes</strong></div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & ECOSSISTEMA -->
+<div class="entry-section">
+<span class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito</span>
+<div class="infra-grid">
+<div class="infra-card">
+<span class="infra-lbl">🖥️ Infraestrutura Recomendada</span>
+<div class="infra-val">Biblioteca leve · Zero Runtime adicional</div>
+</div>
+<div class="infra-card">
+<span class="infra-lbl">🔗 Ecossistema &amp; Padrões</span>
+<p><code>Full 3D DCC, Auto-Rigging &amp; Generative Nodes</code> · Padrões Abertos OSI</p>
+</div>
+<div class="infra-card verdict">
+<span class="infra-lbl">🏆 Veredito do Arquiteto</span>
+<p><strong>Por que adotar:</strong> Componente essencial para garantir soberania e redução de dependência de fornecedores externos.</p>
+</div>
+</div>
+<div style="margin-top:6px;">
+<a class="repo-btn" href="https://www.blender.org" rel="noopener" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"></path></svg>
+<span>Repositório Oficial &amp; Código-Fonte: blender.org ↗</span>
+</a>
+</div>
+</div>
+<!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+<div class="entry-section">
+<span class="label">4. Como Usar no Dia a Dia (Passo a Passo Prático)</span>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-head"><span class="step-badge">1</span> Configuração</div>
+<p>Instale e configure o <code>Blender + pipelines neurais abertos</code> na infraestrutura local.</p>
+</div>
+</div>
+</div>
+</div></div></div>
+</section>
+<section>
+<div class="sec-head flagged">
+<span class="sec-num">Parte 4 · Critérios de Rejeição</span>
+<h2>O que ficou de fora e por que foi descartado</h2>
+<p class="sec-note">Auditoria rigorosa de governança: ferramentas comerciais com open-washing, cotas camufladas ou dependência de nuvem proprietária.</p>
+</div>
+<div class="grid2">
+<div class="reject">
+<h4>1. KairoGen Cloud &amp; Ferramentas SaaS de Créditos</h4>
+<p><strong>Motivo da Rejeição:</strong> Modelo puramente comercial baseado em revenda de tokens de terceiros com margens infladas, sem código-fonte auditável e sem garantia de continuidade operacional.</p>
+</div>
+<div class="reject">
+<h4>2. Meshy AI &amp; Rodin Web (Fechados)</h4>
+<p><strong>Motivo da Rejeição:</strong> Filas artificiais de espera, cobrança recorrente por malha gerada, bloqueio de exportação em resoluções altas sem plano Pro e perda total de soberania sobre os dados 3D.</p>
+</div>
+<div class="reject">
+<h4>3. CSM (Common Sense Machines) / Luma Cloud API</h4>
+<p><strong>Motivo da Rejeição:</strong> APIs proprietárias com precificação opaca por chamada e termos de serviço que permitem o uso dos seus prompts e imagens para treinar modelos concorrentes.</p>
+</div>
+<div class="reject">
+<h4>4. Repositórios Abandonados &amp; Modelos com Restrição "Non-Commercial"</h4>
+<p><strong>Motivo da Rejeição:</strong> Projetos com licenças restritivas do tipo CC-BY-NC ou repositórios de artigos acadêmicos sem código de inferência utilizável em esteiras de produção real.</p>
+</div>
+</div>
+</section>
+<footer>
+<p>Compêndio auditado de acordo com as diretrizes de governança da Fábrica Universal. Todos os projetos foram verificados quanto a maturidade de código, licenças abertas oficiais e viabilidade em produção soberana.</p>
+<div class="srcs">
+<span>Open Source Initiative (OSI)</span>
+<span>Linux Foundation</span>
+<span>Free Software Foundation (FSF)</span>
+<span>Hugging Face Open Weights</span>
+</div>
+</footer>
+</div>
+</body>
+</html>

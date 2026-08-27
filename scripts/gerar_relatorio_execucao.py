@@ -322,30 +322,25 @@ def renderizar_typst_relatorio(d: dict) -> str:
 """
 
 def gerar_relatorio_execucao(slug: str, dados_telemetria: dict) -> bool:
+    saas_origem = dados_telemetria.get("saas_origem", "granola")
     data_str = dados_telemetria["data_execucao"]
     nome_base = f"{data_str}-relatorio-execucao-{slug}"
-
-    out_rel = BASE_DIR / "output" / slug / "relatorios"
-    docs_rel = BASE_DIR / "docs" / slug / "relatorios"
+    out_rel = BASE_DIR / "output" / "03-manuais-e-trilhas" / saas_origem / slug / "relatorios"
     out_rel.mkdir(parents=True, exist_ok=True)
-    docs_rel.mkdir(parents=True, exist_ok=True)
 
     # 1. HTML
     html_content = renderizar_html_relatorio(dados_telemetria)
     (out_rel / f"{nome_base}.html").write_text(html_content, encoding="utf-8")
-    (docs_rel / f"{nome_base}.html").write_text(html_content, encoding="utf-8")
 
     # 2. Markdown
     md_content = renderizar_markdown_relatorio(dados_telemetria)
     (out_rel / f"{nome_base}.md").write_text(md_content, encoding="utf-8")
-    (docs_rel / f"{nome_base}.md").write_text(md_content, encoding="utf-8")
 
     # 3. PDF Typst
     typ_content = renderizar_typst_relatorio(dados_telemetria)
     temp_typ = out_rel / f"{nome_base}.typ"
     temp_typ.write_text(typ_content, encoding="utf-8")
     pdf_out = out_rel / f"{nome_base}.pdf"
-    pdf_docs = docs_rel / f"{nome_base}.pdf"
 
     try:
         res = subprocess.run(
@@ -354,9 +349,7 @@ def gerar_relatorio_execucao(slug: str, dados_telemetria: dict) -> bool:
             capture_output=True,
             text=True
         )
-        if res.returncode == 0 and pdf_out.exists():
-            pdf_docs.write_bytes(pdf_out.read_bytes())
-        else:
+        if res.returncode != 0:
             print(f"⚠️ Aviso na compilação do relatório em PDF via Typst: {res.stderr}")
     except Exception as e:
         print(f"⚠️ Erro ao compilar relatório Typst: {e}")
