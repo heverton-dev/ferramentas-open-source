@@ -88,7 +88,8 @@ def compilar_trilha(slug: str) -> bool:
     with open(data_file, "r", encoding="utf-8") as f:
         dados = json.load(f)
 
-    out_dir = BASE_DIR / "output" / "03-manuais-e-trilhas" / "granola" / slug / "trilhas"
+    saas = dados.get("saas_origem", "granola")
+    out_dir = BASE_DIR / "output" / "03-manuais-e-trilhas" / saas / slug / "trilhas"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # 1. HTML Autocontido

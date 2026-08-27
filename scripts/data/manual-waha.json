@@ -1,0 +1,308 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "WAHA (WhatsApp HTTP API Gateway)",
+  "slug": "waha",
+  "saas_origem": "twilio",
+  "versao": "0.43.0",
+  "licenca_osi": "Apache-2.0",
+  "tempo_estimado_setup": "30 min (Conhecimento intermediário de Docker)",
+  "nivelamento_conceitual": [
+    {
+      "termo": "WhatsApp Web Socket Bridge",
+      "analogia_cotidiana": "O Porteiro que Atende Mensagens",
+      "explicacao_simples": "WAHA conecta à sessão WhatsApp Web de um número e monitora todas as mensagens. Quando uma chega, ele avisa seu sistema via webhook. É como ter um porteiro que escreve um bilhete cada vez que alguém chama."
+    },
+    {
+      "termo": "Webhook para Entrega & Recebimento",
+      "analogia_cotidiana": "O Carteiro que Bate na Porta",
+      "explicacao_simples": "Quando WAHA recebe uma mensagem ou quando um envio é confirmado, ele bate na porta do seu servidor (via POST HTTP) com os dados. Seu backend não precisa ficar perguntando, ele só recebe a notificação."
+    },
+    {
+      "termo": "Múltiplas Sessões WhatsApp",
+      "analogia_cotidiana": "Múltiplos Números de WhatsApp",
+      "explicacao_simples": "Um mesmo servidor WAHA pode gerenciar 10, 100 ou 1.000 números diferentes. Cada número é independente com sua própria autenticação e sessão."
+    }
+  ],
+  "vps_recomendada": {
+    "provedor_modelo": "Hetzner Cloud CPX21 ou Linode Nanode",
+    "vcpu": "2 vCPU Dedicadas",
+    "ram": "4 GB RAM",
+    "armazenamento": "80 GB SSD NVMe",
+    "so_recomendado": "Ubuntu 24.04 LTS",
+    "custo_mensal_estimado": "EUR 6,00/mês (~R$ 36,00)",
+    "portas_abertas": [
+      "22/tcp (SSH)",
+      "80/tcp (HTTP redirect)",
+      "443/tcp (HTTPS - Webhooks)"
+    ]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Hardening & Firewall (UFW)",
+        "descricao": "Configurar acesso restrito à VPS com apenas portas essenciais.",
+        "analogia": "Trancar o prédio e deixar apenas a guarita.",
+        "o_que_acontece_na_tela": "Mensagem 'Firewall is active and enabled'.",
+        "como_saber_se_deu_certo": "ufw status mostra portas 22, 80, 443 como ALLOW.",
+        "comandos": "ufw default deny incoming\nufw default allow outgoing\nufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp\nufw --force enable",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Instalação de Docker & Docker Compose",
+        "descricao": "Preparar o motor de containers.",
+        "analogia": "Montar a bancada de trabalho.",
+        "o_que_acontece_na_tela": "Pacotes instalados sem erro.",
+        "como_saber_se_deu_certo": "docker --version retorna Docker 27+.",
+        "comandos": "apt-get update && apt-get install -y docker.io docker-compose-v2\nusermod -aG docker $USER",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 3,
+        "titulo": "Criação de Diretórios de Volumes",
+        "descricao": "Preparar pastas persistentes para sessões e logs.",
+        "analogia": "Criar gavetas para guardar dados.",
+        "o_que_acontece_na_tela": "Diretórios criados sem erro.",
+        "como_saber_se_deu_certo": "ls -d /opt/waha/{sessions,logs} existem.",
+        "comandos": "mkdir -p /opt/waha/{sessions,logs,backups}\ncd /opt/waha",
+        "fonte_id": "F03"
+      },
+      {
+        "numero": 4,
+        "titulo": "Deploy com Docker Compose",
+        "descricao": "Levantamento da stack (WAHA + Redis + Caddy).",
+        "analogia": "Ligar as máquinas.",
+        "o_que_acontece_na_tela": "Containers iniciando com logs coloridos.",
+        "como_saber_se_deu_certo": "docker compose ps mostra 3 containers em status Up.",
+        "comandos": "export WAHA_API_KEY=$(openssl rand -base64 32)\ndocker compose up -d\ndocker compose ps",
+        "fonte_id": "F04"
+      },
+      {
+        "numero": 5,
+        "titulo": "Pareamento via QR Code & Teste de Conexão",
+        "descricao": "Conectar número WhatsApp ao gateway.",
+        "analogia": "Reconhecer o telefone.",
+        "o_que_acontece_na_tela": "QR Code aparece após segundos.",
+        "como_saber_se_deu_certo": "Status da sessão muda para 'CONNECTED'.",
+        "comandos": "curl -X POST http://localhost:3000/api/sessions/default/start | jq\n# Escanear QR Code com WhatsApp",
+        "fonte_id": "F05"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/opt/waha/docker-compose.yml",
+        "linguagem": "yaml",
+        "conteudo": "version: '3.8'\nservices:\n  waha:\n    image: devlikeapro/waha:latest\n    container_name: waha-api\n    restart: unless-stopped\n    ports:\n      - '3000:3000'\n      - '5000:5000'\n    environment:\n      WHATSAPP_API_KEY: ${WAHA_API_KEY}\n      DEBUG: waha:*\n      NODE_ENV: production\n    volumes:\n      - waha_sessions:/app/.sessions\n      - waha_logs:/app/logs\n    networks:\n      - waha_net\n  redis:\n    image: redis:7-alpine\n    restart: unless-stopped\n    ports:\n      - '6379:6379'\n    volumes:\n      - redis_data:/data\n    networks:\n      - waha_net\n  caddy:\n    image: caddy:2-alpine\n    restart: unless-stopped\n    ports:\n      - '80:80'\n      - '443:443'\n    volumes:\n      - ./Caddyfile:/etc/caddy/Caddyfile\n      - caddy_data:/data\n      - caddy_config:/config\n    networks:\n      - waha_net\nvolumes:\n  waha_sessions:\n  waha_logs:\n  redis_data:\n  caddy_data:\n  caddy_config:\nnetworks:\n  waha_net:\n    driver: bridge",
+        "explicacao": "Stack completa com WAHA, Redis e Caddy para proxy HTTPS."
+      },
+      {
+        "caminho": "/opt/waha/Caddyfile",
+        "linguagem": "caddyfile",
+        "conteudo": "whatsapp.seu-dominio.com {\n  encode gzip\n  header {\n    Strict-Transport-Security \"max-age=31536000\"\n    X-Content-Type-Options nosniff\n  }\n  reverse_proxy localhost:5000 {\n    header_uri X-Real-IP {http.request.remote.host}\n  }\n  rate_limit /api/sendText 100 100\n}",
+        "explicacao": "Proxy reverso com SSL automático e rate limiting anti-spam."
+      },
+      {
+        "caminho": "/opt/waha/.env",
+        "linguagem": "bash",
+        "conteudo": "WAHA_API_KEY=seu-chave-api-de-32-caracteres-aqui\nWAHA_PORT=5000\nREDIS_HOST=redis\nREDIS_PORT=6379\nNODE_ENV=production",
+        "explicacao": "Variáveis de ambiente para autenticação e config."
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "WAHA é um gateway HTTP que fica sempre conectado a um número WhatsApp. Mensagens entrantes geram webhooks para seu backend. Mensagens saintes vão via POST /api/sendText. Tudo é criptografado pelo WhatsApp (E2E), WAHA não armazena conteúdo, apenas metadados de entrega.",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "Passo 1: Acessar Dashboard",
+        "acao": "Abra http://localhost:3000 para ver interface de sessões.",
+        "resultado_esperado": "Página de dashboard com botão 'Start Session'."
+      },
+      {
+        "passo": "Passo 2: Iniciar Sessão & Parear",
+        "acao": "Clique em 'Start Session'. QR Code aparecerá. Scaneie com seu WhatsApp.",
+        "resultado_esperado": "Status muda para 'CONNECTED' em 5-10 segundos."
+      },
+      {
+        "passo": "Passo 3: Enviar Mensagem de Teste",
+        "acao": "Execute: curl -X POST http://localhost:5000/api/sendText -H 'X-API-Key: seu-token' -H 'Content-Type: application/json' -d '{\"chatId\": \"5511988776655@c.us\", \"text\": \"Olá!\"}'",
+        "resultado_esperado": "Resposta JSON com messageId. Mensagem chega no WhatsApp."
+      },
+      {
+        "passo": "Passo 4: Configurar Webhook",
+        "acao": "No WAHA, configure seu endpoint POST para receber eventos de mensagens.",
+        "resultado_esperado": "Quando alguém envia mensagem, seu backend recebe webhook."
+      }
+    ],
+    "comandos_cli": [
+      {
+        "comando": "docker compose ps",
+        "descricao": "Ver status dos containers.",
+        "exemplo": "docker compose ps",
+        "fonte_id": "F01"
+      },
+      {
+        "comando": "docker compose logs -f waha",
+        "descricao": "Ver logs em tempo real do WAHA.",
+        "exemplo": "docker compose logs -f waha --tail=50",
+        "fonte_id": "F02"
+      },
+      {
+        "comando": "docker compose restart waha",
+        "descricao": "Reiniciar container WAHA.",
+        "exemplo": "docker compose restart waha",
+        "fonte_id": "F03"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "POST",
+        "rota": "/api/sendText",
+        "descricao": "Envia mensagem de texto.",
+        "payload_exemplo": "POST /api/sendText -H 'X-API-Key: token' -d '{\"chatId\": \"5511988776655@c.us\", \"text\": \"Olá!\"}'",
+        "fonte_id": "F04"
+      },
+      {
+        "metodo": "POST",
+        "rota": "/api/sendMedia",
+        "descricao": "Envia imagem, vídeo ou documento.",
+        "payload_exemplo": "POST /api/sendMedia -H 'X-API-Key: token' -d '{\"chatId\": \"5511988776655@c.us\", \"media\": {\"url\": \"https://...\", \"type\": \"image\"}}'",
+        "fonte_id": "F05"
+      },
+      {
+        "metodo": "GET",
+        "rota": "/api/me",
+        "descricao": "Retorna dados do número conectado.",
+        "payload_exemplo": "GET /api/me -H 'X-API-Key: token'",
+        "fonte_id": "F06"
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Sessão desconecta aleatoramente",
+        "causa_provavel": "WhatsApp Web marcou a sessão como inativa.",
+        "solucao_comando": "docker compose restart waha && sleep 3 && curl -s http://localhost:3000/api/sessions/default | jq"
+      },
+      {
+        "sintoma": "Webhook não está recebendo mensagens",
+        "causa_provavel": "URL do webhook está incorreta ou backend não responde.",
+        "solucao_comando": "docker compose logs waha | grep webhook && curl -v seu-webhook-url"
+      },
+      {
+        "sintoma": "Mensagens não marcam como 'delivered'",
+        "causa_provavel": "Rate limiting ou fila congestionada.",
+        "solucao_comando": "docker compose exec waha redis-cli DBSIZE && aumentar delays em config"
+      },
+      {
+        "sintoma": "QR Code não aparece",
+        "causa_provavel": "Sessão anterior ainda ativa.",
+        "solucao_comando": "curl -X DELETE http://localhost:3000/api/sessions/default && docker compose restart waha"
+      },
+      {
+        "sintoma": "Erro 401 Unauthorized",
+        "causa_provavel": "API Key ausente ou inválida.",
+        "solucao_comando": "Adicionar -H 'X-API-Key: $WAHA_API_KEY' em todas as requisições"
+      }
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "WAHA Official GitHub Repository & API Docs",
+      "url": "https://github.com/devlikeapro/waha",
+      "autor_ou_canal": "DevLike ApPro (WAHA Core Team)"
+    },
+    {
+      "id": "F02",
+      "categoria": "Documentação Oficial",
+      "titulo": "WAHA Docker Hub & Container Registry",
+      "url": "https://hub.docker.com/r/devlikeapro/waha",
+      "autor_ou_canal": "DevLike ApPro"
+    },
+    {
+      "id": "F03",
+      "categoria": "Framework",
+      "titulo": "Docker Compose Official Documentation",
+      "url": "https://docs.docker.com/compose/",
+      "autor_ou_canal": "Docker Inc."
+    },
+    {
+      "id": "F04",
+      "categoria": "Framework",
+      "titulo": "Caddy Web Server & Reverse Proxy",
+      "url": "https://caddyserver.com/docs/",
+      "autor_ou_canal": "Caddy Community"
+    },
+    {
+      "id": "F05",
+      "categoria": "Best Practices",
+      "titulo": "WhatsApp Business API & Compliance",
+      "url": "https://www.whatsapp.com/business/",
+      "autor_ou_canal": "Meta Platforms Inc."
+    }
+  ],
+  "desinstalacao_cirurgica": {
+    "titulo": "Desinstalação Cirúrgica: Remover Twilio & Migrar para WAHA",
+    "objetivo": "Remover todas as dependências Twilio e garantir zero downtime.",
+    "principio_isolamento": "A desinstalação remove exclusivamente as credenciais Twilio, endpoints de webhook e configurações da aplicação, preservando intactos os dados de mensagens já recebidas, histórico e infraestrutura de WAHA.",
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Auditoria de Integrações Twilio",
+        "descricao": "Encontrar todas as referências a Twilio no código.",
+        "comandos": "grep -r 'twilio\\|Twilio\\|TWILIO' . --include='*.py' --include='*.js' --include='*.env*'",
+        "alerta_seguranca": "NÃO remova arquivo nenhum ainda. Esta é apenas uma auditoria.",
+        "como_validar": "Listar todos os arquivos que contêm referências a Twilio"
+      },
+      {
+        "numero": 2,
+        "titulo": "Backup de Histórico",
+        "descricao": "Exportar logs de mensagens Twilio antes de desativar.",
+        "comandos": "# Login no console Twilio e exporte o histórico de mensagens via API ou web UI",
+        "alerta_seguranca": "Mantenha backups em local seguro e encriptado.",
+        "como_validar": "Arquivo twilio_backup.json com histórico completo gerado"
+      },
+      {
+        "numero": 3,
+        "titulo": "Ativar WAHA em Paralelo (Blue-Green)",
+        "descricao": "WAHA e Twilio rodando simultaneamente por 24-48h de teste.",
+        "comandos": "# Configurar router/switch em aplicação para tentar WAHA primeiro, fallback para Twilio",
+        "alerta_seguranca": "Monitore ambos os sistemas durante este período. Não desligue Twilio ainda.",
+        "como_validar": "Ambos os sistemas processando 100% das mensagens sem erro"
+      },
+      {
+        "numero": 4,
+        "titulo": "Redirecionar Webhooks Entrantes",
+        "descricao": "Webhooks de entrada mudam de Twilio para WAHA.",
+        "comandos": "# Alterar config: webhook_url = https://seu-dominio.com/api/webhooks ao invés de https://twilio.webhook...",
+        "alerta_seguranca": "Valide que todos os webhooks estão sendo recebidos antes de prosseguir.",
+        "como_validar": "curl seu-webhook-url e verificar que recebe dados de WAHA"
+      },
+      {
+        "numero": 5,
+        "titulo": "Remover Credenciais Twilio do .env",
+        "descricao": "Deletar TWILIO_* das variáveis de ambiente.",
+        "comandos": "unset TWILIO_ACCOUNT_SID TWILIO_AUTH_TOKEN\ngrep -v TWILIO .env > .env.new && mv .env.new .env",
+        "alerta_seguranca": "Não execute este passo sem confirmar que WAHA está 100% funcional.",
+        "como_validar": "grep TWILIO .env # Não retorna nada"
+      },
+      {
+        "numero": 6,
+        "titulo": "Downgrade & Shutdown de Twilio",
+        "descricao": "Reduzir plano Twilio para free tier e aguardar período de retenção.",
+        "comandos": "# Acessar console Twilio > Account > Billing > Downgrade Account",
+        "alerta_seguranca": "Twilio pode levar até 30 dias para processar o downgrade. Fique atento a cobranças.",
+        "como_validar": "Console Twilio exibir 'Free Account' sem cobranças futuras"
+      }
+    ],
+    "checklist_saude_vps": [
+      "docker compose ps # Confirma que WAHA está 'Up'",
+      "docker compose logs waha | tail -20 # Verifica erros recentes",
+      "curl -s http://localhost:3000/api/me | jq # Confirma sessão WhatsApp conectada",
+      "curl -s https://seu-dominio.com/health | jq # Valida saúde geral da API",
+      "docker stats # Confirma uso de CPU/memória dentro do esperado"
+    ]
+  }
+}
+
