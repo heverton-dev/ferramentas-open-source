@@ -1,3 +1,11 @@
+---
+name: implementacao
+description: >
+  Orquestrador determinístico de implementação com ciclo Implementa, Testa, Valida, Verifica.
+license: MIT
+version: 1.0.0
+---
+
 # /implementacao Skill — Multi-Phase Token-Optimized Implementation
 
 Orquestrador determinístico de implementação com ciclo **Implementa → Testa → Valida → Verifica**.

@@ -1,0 +1,74 @@
+{
+  "phase_id": "phase-001",
+  "title": "Schema Validation Implementation",
+  "description": "Implement and validate JSON schema for content pipeline. Ensure all gates pass and documentation is updated.",
+  "tests": [
+    "npm test -- --testNamePattern='schema.*validation'",
+    "python scripts/auditar_todas_camadas.py",
+    "node scripts/executor.js --spec executor-example.json --cache cache/exec.json"
+  ],
+  "files": [
+    "scripts/schemas/implementation-plan.json",
+    "scripts/padroes/script-template.py",
+    "CLAUDE.md"
+  ],
+  "tasks": [
+    {
+      "task_id": "task-001",
+      "name": "Load phase spec",
+      "action": "create",
+      "target_path": "phase-data.json",
+      "acceptance_criteria": [
+        "File exists",
+        "Valid JSON"
+      ]
+    },
+    {
+      "task_id": "task-002",
+      "name": "Cache context",
+      "action": "execute",
+      "target_path": "cache/executor-cache.json",
+      "acceptance_criteria": [
+        "Cache loaded or created",
+        "Previous context available"
+      ]
+    },
+    {
+      "task_id": "task-003",
+      "name": "Build optimized prompt",
+      "action": "execute",
+      "target_path": null,
+      "acceptance_criteria": [
+        "Prompt <= 500 chars",
+        "No fluff (3-5 lines core + files)"
+      ]
+    },
+    {
+      "task_id": "task-004",
+      "name": "Call subagent",
+      "action": "execute",
+      "target_path": null,
+      "acceptance_criteria": [
+        "Subagent responds",
+        "Result JSON valid"
+      ]
+    },
+    {
+      "task_id": "task-005",
+      "name": "Return changes JSON",
+      "action": "create",
+      "target_path": "result.json",
+      "acceptance_criteria": [
+        "changes.files_modified >= 0",
+        "changes.tests_passed >= 0",
+        "status in [success, error]"
+      ]
+    }
+  ],
+  "success_criteria": [
+    "executor.js successfully forks subagent",
+    "Context cached and reused",
+    "Result JSON well-formed and complete"
+  ],
+  "gate_before_next": true
+}

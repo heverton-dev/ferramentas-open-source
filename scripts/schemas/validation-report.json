@@ -1,0 +1,558 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Validation Report Schema",
+  "description": "Saída Estruturada de Testes e Validação de Gates Mecânicos",
+  "type": "object",
+  "required": [
+    "report_metadata",
+    "summary",
+    "test_suites",
+    "gate_results",
+    "quality_metrics"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "report_metadata": {
+      "type": "object",
+      "required": [
+        "report_id",
+        "timestamp",
+        "plan_id",
+        "phase_number",
+        "executor",
+        "environment"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "report_id": {
+          "type": "string",
+          "pattern": "^report-[a-z0-9]{12}$",
+          "description": "ID único do relatório"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Quando o relatório foi gerado (ISO 8601)"
+        },
+        "plan_id": {
+          "type": "string",
+          "pattern": "^plan-[a-z0-9]{8}$",
+          "description": "Referência ao plano de implementação"
+        },
+        "phase_number": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Fase validada"
+        },
+        "executor": {
+          "type": "string",
+          "description": "Agente/script que executou os testes"
+        },
+        "environment": {
+          "type": "object",
+          "required": [
+            "os",
+            "python_version"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "os": {
+              "type": "string",
+              "enum": [
+                "linux",
+                "macos",
+                "windows"
+              ]
+            },
+            "python_version": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$"
+            },
+            "git_commit": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}$",
+              "description": "Commit SHA-1 do repositório"
+            },
+            "branch": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9/_-]+$"
+            }
+          }
+        },
+        "duration_seconds": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Tempo total de execução em segundos"
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "overall_status",
+        "total_tests",
+        "passed",
+        "failed",
+        "skipped",
+        "success_rate_percent"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "overall_status": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "fail",
+            "partial",
+            "error",
+            "skipped"
+          ],
+          "description": "Status geral da validação"
+        },
+        "total_tests": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total de testes executados"
+        },
+        "passed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Número de testes aprovados"
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Número de testes falhados"
+        },
+        "skipped": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Número de testes pulados"
+        },
+        "errors": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Número de erros críticos"
+        },
+        "success_rate_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Taxa de sucesso em percentual"
+        },
+        "summary_text": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Resumo textual dos resultados"
+        }
+      }
+    },
+    "test_suites": {
+      "type": "array",
+      "description": "Suítes de teste executadas",
+      "minItems": 0,
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": [
+          "suite_id",
+          "suite_name",
+          "test_count",
+          "status",
+          "tests"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "suite_id": {
+            "type": "string",
+            "pattern": "^suite-[a-z0-9]{8}$"
+          },
+          "suite_name": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 120,
+            "description": "Nome da suíte de testes"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Descrição do escopo da suíte"
+          },
+          "test_framework": {
+            "type": "string",
+            "enum": [
+              "pytest",
+              "unittest",
+              "custom",
+              "bash-script",
+              "json-schema"
+            ],
+            "description": "Framework usado para execução"
+          },
+          "test_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total de testes nesta suíte"
+          },
+          "passed": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "failed": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "skipped": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "partial",
+              "error"
+            ]
+          },
+          "duration_seconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "tests": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "required": [
+                "test_id",
+                "test_name",
+                "status",
+                "duration_ms"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "test_id": {
+                  "type": "string",
+                  "pattern": "^test-[a-z0-9]{8}$"
+                },
+                "test_name": {
+                  "type": "string",
+                  "minLength": 5,
+                  "maxLength": 150,
+                  "description": "Nome do teste individual"
+                },
+                "description": {
+                  "type": "string",
+                  "maxLength": 300,
+                  "description": "O que este teste valida"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pass",
+                    "fail",
+                    "skip",
+                    "error"
+                  ]
+                },
+                "duration_ms": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Tempo de execução em milissegundos"
+                },
+                "assertion": {
+                  "type": "string",
+                  "description": "Asserção testada (exemplo: 'exit_code == 0')"
+                },
+                "actual_value": {
+                  "description": "Valor atual observado (qualquer tipo)"
+                },
+                "expected_value": {
+                  "description": "Valor esperado (qualquer tipo)"
+                },
+                "error_message": {
+                  "type": "string",
+                  "description": "Mensagem de erro se status=fail"
+                },
+                "stack_trace": {
+                  "type": "string",
+                  "description": "Stack trace completo (se aplicável)"
+                },
+                "artifacts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "artifact_type",
+                      "path"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "artifact_type": {
+                        "type": "string",
+                        "enum": [
+                          "screenshot",
+                          "log",
+                          "trace",
+                          "diff",
+                          "output"
+                        ]
+                      },
+                      "path": {
+                        "type": "string",
+                        "description": "Caminho relativo ao artefato"
+                      },
+                      "size_bytes": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    }
+                  },
+                  "description": "Artefatos capturados durante o teste"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "gate_results": {
+      "type": "array",
+      "description": "Resultados de execução dos gates (R9)",
+      "minItems": 0,
+      "maxItems": 15,
+      "items": {
+        "type": "object",
+        "required": [
+          "gate_id",
+          "gate_name",
+          "status",
+          "exit_code",
+          "blocking"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "gate_id": {
+            "type": "string",
+            "pattern": "^gate-[a-z0-9]{6}$"
+          },
+          "gate_name": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 100
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "timeout",
+              "skipped",
+              "error"
+            ]
+          },
+          "exit_code": {
+            "type": "integer",
+            "minimum": -1,
+            "maximum": 255,
+            "description": "Código de saída (0=sucesso, 1=falha, -1=timeout)"
+          },
+          "blocking": {
+            "type": "boolean",
+            "description": "Se este gate bloqueia execução"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration_seconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Saída padrão (últimas 2000 chars)"
+          },
+          "stderr": {
+            "type": "string",
+            "description": "Saída de erro (últimas 2000 chars)"
+          },
+          "validation_checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "check_name",
+                "status"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "check_name": {
+                  "type": "string",
+                  "description": "Nome da verificação realizada"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pass",
+                    "fail",
+                    "warn"
+                  ]
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Detalhes da verificação"
+                }
+              }
+            }
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "description": "Recomendações se status=fail"
+          }
+        }
+      }
+    },
+    "quality_metrics": {
+      "type": "object",
+      "required": [
+        "code_coverage_percent",
+        "schema_compliance_percent"
+      ],
+      "additionalProperties": false,
+      "description": "Métricas de qualidade da validação",
+      "properties": {
+        "code_coverage_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Cobertura de código dos testes (%)"
+        },
+        "schema_compliance_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Conformidade com schemas JSON (%)"
+        },
+        "lint_issues": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Número de problemas de lint encontrados"
+        },
+        "type_check_warnings": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Avisos de type-checking (mypy, pyright, etc)"
+        },
+        "security_scan_issues": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Problemas de segurança detectados"
+        },
+        "performance_degradation_percent": {
+          "type": "number",
+          "minimum": -100,
+          "maximum": 100,
+          "description": "Degradação percentual vs baseline (negativo = melhoria)"
+        },
+        "database_integrity_check": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "fail",
+            "warning",
+            "skipped"
+          ],
+          "description": "Status de integridade do BD (R11)"
+        },
+        "idempotency_verified": {
+          "type": "boolean",
+          "description": "Reexecução mantém estado consistente (R10)"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "description": "Artefatos gerados durante validação",
+      "additionalProperties": false,
+      "properties": {
+        "test_logs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "log_name",
+              "path"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "log_name": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "size_mb": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "coverage_report_path": {
+          "type": "string",
+          "description": "Caminho para relatório de cobertura HTML"
+        },
+        "junit_xml_path": {
+          "type": "string",
+          "description": "Caminho para arquivo JUnit XML"
+        },
+        "performance_profile_path": {
+          "type": "string",
+          "description": "Caminho para profile de performance"
+        }
+      }
+    },
+    "recommendations": {
+      "type": "object",
+      "description": "Recomendações baseadas nos resultados",
+      "additionalProperties": false,
+      "properties": {
+        "proceed_to_next_phase": {
+          "type": "boolean",
+          "description": "Pode prosseguir para próxima fase?"
+        },
+        "blocking_issues": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "description": "Problemas que impedem progresso"
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "description": "Avisos não-bloqueantes"
+        },
+        "suggested_actions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "description": "Ações sugeridas para melhoria"
+        }
+      }
+    }
+  }
+}

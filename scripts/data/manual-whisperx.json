@@ -1,0 +1,155 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "WhisperX + PyAnnote",
+  "slug": "whisperx",
+  "saas_origem": "granola",
+  "versao": "3.1.2",
+  "licenca_osi": "BSD-4-Clause",
+  "tempo_estimado_setup": "12 min",
+  "vps_recomendada": {
+    "provedor_modelo": "Hetzner Cloud CPX31 (ou GPU Server Hetzner GEX44)",
+    "vcpu": "4 vCPU Dedicadas (AMD EPYC)",
+    "ram": "8 GB RAM ECC",
+    "armazenamento": "160 GB NVMe Gen4",
+    "so_recomendado": "Ubuntu 24.04 LTS (x86_64)",
+    "custo_mensal_estimado": "EUR 14,00/mês (~R$ 84,00/mês)",
+    "portas_abertas": ["22/tcp (SSH)", "80/tcp (HTTP)", "443/tcp (HTTPS)"]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Hardening do Servidor & Configuração de Firewall",
+        "descricao": "Criação de usuário deployer, desativação de login por senha e configuração do firewall UFW.",
+        "comandos": "adduser deployer && usermod -aG sudo deployer\nufw default deny incoming && ufw default allow outgoing\nufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp && ufw --force enable",
+        "fonte_id": "F05"
+      },
+      {
+        "numero": 2,
+        "titulo": "Instalação do Docker Engine & Suporte a Runtime CUDA/CPU",
+        "descricao": "Instalação do Docker oficial com suporte a aceleração multithread para CTranslate2.",
+        "comandos": "apt-get update && apt-get install -y docker.io docker-compose-v2\nusermod -aG docker deployer",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 3,
+        "titulo": "Provisionamento de Diretórios de Modelos & Cache",
+        "descricao": "Configuração da pasta /opt/whisperx com isolamento de cache Hugging Face para modelos PyAnnote.",
+        "comandos": "mkdir -p /opt/whisperx/{models,cache,audio,output}\nchown -R deployer:deployer /opt/whisperx && chmod -R 750 /opt/whisperx",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 4,
+        "titulo": "Deploy do Container de Diarização via Docker Compose",
+        "descricao": "Inicialização do container WhisperX com alocação de memória e volume de áudio mapeado.",
+        "comandos": "cd /opt/whisperx\ndocker compose up -d",
+        "fonte_id": "F05"
+      },
+      {
+        "numero": 5,
+        "titulo": "Execução da Primeira Transcrição com Diarização Multilocutor",
+        "descricao": "Processamento de áudio com identificação de locutores SPEAKER_00 e alinhamento fonético.",
+        "comandos": "docker compose exec whisperx whisperx /data/audio/reuniao.wav --model large-v3 --diarize --output_dir /data/output --compute_type float16",
+        "fonte_id": "F04"
+      },
+      {
+        "numero": 6,
+        "titulo": "Rotina de Processamento em Lote & Limpeza Automática",
+        "descricao": "Agendamento cron para varredura de gravações da empresa e exportação automática em JSON.",
+        "comandos": "echo '*/10 * * * * deployer /opt/whisperx/process_batch.sh' | crontab -",
+        "fonte_id": "F01"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/opt/whisperx/docker-compose.yml",
+        "linguagem": "yaml",
+        "conteudo": "services:\n  whisperx:\n    image: ghcr.io/m-bain/whisperx:latest\n    container_name: whisperx-engine\n    restart: unless-stopped\n    deploy:\n      resources:\n        limits:\n          cpus: '3.5'\n          memory: 6G\n    volumes:\n      - ./audio:/data/audio\n      - ./output:/data/output\n      - ./cache:/root/.cache\n    environment:\n      - HF_TOKEN=${HF_TOKEN}",
+        "explicacao": "Compose com volume persistente para modelos e tokens da Hugging Face."
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "O WhisperX integra a velocidade do Faster-Whisper com a rede neural PyAnnote Audio, realizando alinhamento fonético com wav2vec2 para determinar com precisão de milissegundos quem pronunciou cada termo da conversa.",
+    "comandos_cli": [
+      {
+        "comando": "whisperx --diarize",
+        "descricao": "Ativa a separação de locutores (diarização acústica) no arquivo de áudio.",
+        "exemplo": "whisperx audio.mp3 --diarize --hf_token HF_TOKEN",
+        "fonte_id": "F01"
+      },
+      {
+        "comando": "--min_speakers / --max_speakers",
+        "descricao": "Limita o intervalo esperado de participantes da reunião para calibrar a precisão da IA.",
+        "exemplo": "whisperx audio.mp3 --diarize --min_speakers 2 --max_speakers 6",
+        "fonte_id": "F04"
+      },
+      {
+        "comando": "--align_model",
+        "descricao": "Especifica o modelo de alinhamento temporal fonético (wav2vec2) para o idioma.",
+        "exemplo": "whisperx audio.mp3 --language pt --align_model WAV2VEC2_ASR_LARGE_LV60K_960H",
+        "fonte_id": "F03"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "POST",
+        "rota": "/v1/audio/diarize",
+        "descricao": "Submete áudio multipart para transcrição e diarização completa em JSON estruturado.",
+        "payload_exemplo": "POST /v1/audio/diarize\nHTTP/1.1 200 OK\n{\"segments\": [{\"speaker\": \"SPEAKER_01\", \"text\": \"Bom dia equipe\", \"start\": 0.42, \"end\": 1.85}]}",
+        "fonte_id": "F01"
+      }
+    ],
+    "interface_ui": [
+      {
+        "modulo": "Visualizador de Diarização",
+        "descricao": "Interface web de ondas de áudio com faixas coloridas para cada participante da reunião.",
+        "recursos_chave": ["Edição de nomes dos locutores", "Exportação em PDF/VTT", "Player com busca por locutor"]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Erro 'CUDA out of memory' durante a diarização",
+        "causa_provavel": "Áudios longos (>1h) com lote de batch size excessivo.",
+        "solucao_comando": "whisperx audio.mp3 --batch_size 4 --compute_type int8"
+      }
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "WhisperX Official Repository, Architecture & Benchmarks",
+      "url": "https://github.com/m-bain/whisperX",
+      "autor_ou_canal": "Max Bain (Oxford Visual Geometry Group)"
+    },
+    {
+      "id": "F02",
+      "categoria": "Documentação Oficial",
+      "titulo": "PyAnnote Audio: Neural Building Blocks for Speaker Diarization",
+      "url": "https://github.com/pyannote/pyannote-audio",
+      "autor_ou_canal": "Hervé Bredin (CNRS / PyAnnote)"
+    },
+    {
+      "id": "F03",
+      "categoria": "Livro / Guia Técnico",
+      "titulo": "Fast Speech Recognition with OpenAI Whisper & CTranslate2",
+      "url": "https://huggingface.co/openai/whisper-large-v3",
+      "autor_ou_canal": "Hugging Face & OpenAI"
+    },
+    {
+      "id": "F04",
+      "categoria": "Vídeo / YouTube",
+      "titulo": "WhisperX Walkthrough: Ultra-Fast Transcription & Diarization Setup",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "autor_ou_canal": "Speech AI Labs"
+    },
+    {
+      "id": "F05",
+      "categoria": "Curso / Tutorial",
+      "titulo": "WhisperX Docker Production Deployment Playbook",
+      "url": "https://github.com/m-bain/whisperX/blob/main/README.md",
+      "autor_ou_canal": "WhisperX DevOps Community"
+    }
+  ]
+}

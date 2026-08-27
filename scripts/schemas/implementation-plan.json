@@ -1,0 +1,430 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Implementation Plan Schema",
+  "description": "Estrutura de Plano de Ação Determinístico para Esteira de Manufatura",
+  "type": "object",
+  "required": [
+    "metadata",
+    "phases",
+    "dependencies",
+    "gates",
+    "rollback"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "plan_id",
+        "version",
+        "created_at",
+        "target_component",
+        "owner",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "pattern": "^plan-[a-z0-9]{8}$",
+          "description": "Identificador único do plano (prefixo plan-)"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do plano (semver)"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp de criação ISO 8601"
+        },
+        "target_component": {
+          "type": "string",
+          "enum": [
+            "schema-generation",
+            "content-pipeline",
+            "validation-gates",
+            "documentation",
+            "infrastructure",
+            "tooling"
+          ],
+          "description": "Componente alvo da implementação"
+        },
+        "owner": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Proprietário responsável (slug)"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "approved",
+            "in-progress",
+            "completed",
+            "rolled-back"
+          ],
+          "description": "Estado atual do plano"
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low"
+          ],
+          "description": "Prioridade de execução"
+        },
+        "estimated_duration_hours": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 168,
+          "description": "Duração estimada em horas"
+        }
+      }
+    },
+    "phases": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "description": "Fases sequenciais do plano",
+      "items": {
+        "type": "object",
+        "required": [
+          "phase_number",
+          "title",
+          "description",
+          "tasks",
+          "success_criteria"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "phase_number": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20,
+            "description": "Número sequencial da fase"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 80,
+            "description": "Título descritivo da fase"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 500,
+            "description": "Descrição detalhada"
+          },
+          "tasks": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
+            "items": {
+              "type": "object",
+              "required": [
+                "task_id",
+                "name",
+                "action",
+                "acceptance_criteria"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "task_id": {
+                  "type": "string",
+                  "pattern": "^task-[0-9a-z]{6}$",
+                  "description": "ID único da tarefa"
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 5,
+                  "maxLength": 120,
+                  "description": "Nome da tarefa"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "create",
+                    "modify",
+                    "delete",
+                    "validate",
+                    "execute",
+                    "review",
+                    "deploy",
+                    "rollback",
+                    "document",
+                    "test"
+                  ],
+                  "description": "Tipo de ação"
+                },
+                "target_path": {
+                  "type": "string",
+                  "description": "Caminho do arquivo/recurso alvo (opcional)"
+                },
+                "dependencies": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^task-[0-9a-z]{6}$"
+                  },
+                  "description": "IDs de tarefas das quais esta depende"
+                },
+                "acceptance_criteria": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 10,
+                  "items": {
+                    "type": "string",
+                    "minLength": 5
+                  },
+                  "description": "Critérios de aceitação (verificáveis)"
+                },
+                "estimated_minutes": {
+                  "type": "integer",
+                  "minimum": 5,
+                  "maximum": 480,
+                  "description": "Tempo estimado em minutos"
+                }
+              }
+            }
+          },
+          "success_criteria": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 5,
+            "items": {
+              "type": "string",
+              "minLength": 10
+            },
+            "description": "Critérios globais de sucesso da fase"
+          },
+          "gate_before_next": {
+            "type": "boolean",
+            "default": true,
+            "description": "Exigir gate de validação antes de próxima fase"
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "description": "Dependências externas e internas",
+      "additionalProperties": false,
+      "properties": {
+        "external_tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "version_constraint"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Nome da ferramenta"
+              },
+              "version_constraint": {
+                "type": "string",
+                "pattern": "^[>=~^0-9.]+$",
+                "description": "Restrição de versão (semver)"
+              }
+            }
+          }
+        },
+        "internal_modules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9/_.-]+$"
+          },
+          "description": "Módulos internos requeridos"
+        },
+        "data_sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "source_type",
+              "location"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "source_type": {
+                "type": "string",
+                "enum": [
+                  "database",
+                  "file",
+                  "api",
+                  "cache"
+                ]
+              },
+              "location": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "description": "Gates de validação mecânica (R9)",
+      "minItems": 1,
+      "maxItems": 15,
+      "items": {
+        "type": "object",
+        "required": [
+          "gate_id",
+          "gate_name",
+          "trigger_phase",
+          "validation_script",
+          "expected_exit_code",
+          "blocking"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "gate_id": {
+            "type": "string",
+            "pattern": "^gate-[a-z0-9]{6}$"
+          },
+          "gate_name": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 100,
+            "description": "Nome descritivo do gate"
+          },
+          "description": {
+            "type": "string",
+            "description": "O que o gate valida"
+          },
+          "trigger_phase": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Número da fase que dispara este gate"
+          },
+          "validation_script": {
+            "type": "string",
+            "description": "Caminho do script de validação (bash ou python)"
+          },
+          "expected_exit_code": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "description": "Código de saída esperado (0=sucesso, 1=falha)"
+          },
+          "timeout_seconds": {
+            "type": "integer",
+            "minimum": 10,
+            "maximum": 3600,
+            "default": 300
+          },
+          "blocking": {
+            "type": "boolean",
+            "description": "Se true, falha bloqueia execução (R9)"
+          },
+          "on_failure_action": {
+            "type": "string",
+            "enum": [
+              "halt",
+              "warn",
+              "escalate",
+              "retry"
+            ],
+            "default": "halt"
+          },
+          "retry_count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "default": 0
+          }
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "strategy"
+      ],
+      "additionalProperties": false,
+      "description": "Estratégia de rollback para idempotência (R10)",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "none",
+            "snapshot",
+            "git-revert",
+            "state-reset",
+            "custom-script"
+          ],
+          "description": "Estratégia de reversão"
+        },
+        "checkpoint_path": {
+          "type": "string",
+          "description": "Caminho para snapshot/backup"
+        },
+        "rollback_script": {
+          "type": "string",
+          "description": "Script customizado de rollback (se strategy=custom-script)"
+        },
+        "data_retention_days": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 90,
+          "default": 7,
+          "description": "Dias para manter dados de backup"
+        }
+      }
+    },
+    "notifications": {
+      "type": "object",
+      "description": "Notificações durante execução",
+      "additionalProperties": false,
+      "properties": {
+        "slack_channel": {
+          "type": "string",
+          "pattern": "^#?[a-z0-9_-]{1,80}$"
+        },
+        "email_recipients": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "webhook_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL para webhook de notificação"
+        },
+        "notify_on": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "phase_start",
+              "phase_complete",
+              "gate_pass",
+              "gate_fail",
+              "escalation",
+              "rollback"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

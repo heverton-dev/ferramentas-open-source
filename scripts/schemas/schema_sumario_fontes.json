@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SumarioFontesPesquisa",
+  "type": "object",
+  "required": [
+    "produto_foco",
+    "slug",
+    "saas_origem",
+    "data_coleta",
+    "total_fontes",
+    "fontes"
+  ],
+  "properties": {
+    "produto_foco": { "type": "string" },
+    "slug": { "type": "string" },
+    "saas_origem": { "type": "string" },
+    "repositorio_github": { "type": "string", "format": "uri" },
+    "data_coleta": { "type": "string" },
+    "total_fontes": { "type": "integer", "minimum": 1 },
+    "fontes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "categoria",
+          "titulo",
+          "url",
+          "status_http",
+          "topicos",
+          "trechos_chave"
+        ],
+        "properties": {
+          "id": { "type": "string", "pattern": "^F[0-9]{2,3}$" },
+          "categoria": {
+            "enum": [
+              "documentacao_oficial",
+              "livro_ebook",
+              "youtube",
+              "curso_tutorial"
+            ]
+          },
+          "titulo": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "status_http": { "type": "integer" },
+          "autor_ou_canal": { "type": "string" },
+          "duracao_ou_paginas": { "type": "string" },
+          "topicos": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "trechos_chave": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["topico", "conteudo", "ancora_ou_minutagem"],
+              "properties": {
+                "topico": { "type": "string" },
+                "conteudo": { "type": "string" },
+                "ancora_ou_minutagem": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,763 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Escalation Report Schema",
+  "description": "Relatório de Escalação Automática para Humano — Problemas não-solucionáveis por agentes",
+  "type": "object",
+  "required": [
+    "escalation_metadata",
+    "incident",
+    "context",
+    "analysis",
+    "action_items",
+    "communication"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "escalation_metadata": {
+      "type": "object",
+      "required": [
+        "escalation_id",
+        "timestamp",
+        "severity",
+        "priority",
+        "status",
+        "triggered_by"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "escalation_id": {
+          "type": "string",
+          "pattern": "^esc-[a-z0-9]{12}$",
+          "description": "ID único da escalação"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Quando a escalação foi gerada (ISO 8601)"
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low",
+            "info"
+          ],
+          "description": "Severidade do problema"
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "p0-immediate",
+            "p1-urgent",
+            "p2-high",
+            "p3-normal",
+            "p4-low"
+          ],
+          "description": "Prioridade de atendimento"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "open",
+            "acknowledged",
+            "in-progress",
+            "waiting-for-input",
+            "resolved",
+            "cancelled"
+          ],
+          "description": "Estado atual da escalação"
+        },
+        "triggered_by": {
+          "type": "string",
+          "description": "Agente/script que disparou a escalação"
+        },
+        "related_plan_id": {
+          "type": "string",
+          "pattern": "^plan-[a-z0-9]{8}$",
+          "description": "Plano de implementação relacionado (se houver)"
+        },
+        "related_validation_report_id": {
+          "type": "string",
+          "pattern": "^report-[a-z0-9]{12}$",
+          "description": "Relatório de validação que disparou (se houver)"
+        }
+      }
+    },
+    "incident": {
+      "type": "object",
+      "required": [
+        "title",
+        "description",
+        "error_type",
+        "affected_component"
+      ],
+      "additionalProperties": false,
+      "description": "Descrição do incidente/problema",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 150,
+          "description": "Título conciso do problema"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 2000,
+          "description": "Descrição detalhada do que aconteceu"
+        },
+        "error_type": {
+          "type": "string",
+          "enum": [
+            "validation-failure",
+            "gate-blocking",
+            "data-corruption",
+            "permission-denied",
+            "timeout",
+            "resource-exhaustion",
+            "external-dependency-failure",
+            "rollback-failure",
+            "unknown-error",
+            "policy-violation",
+            "manual-intervention-required"
+          ],
+          "description": "Classificação do erro"
+        },
+        "affected_component": {
+          "type": "string",
+          "enum": [
+            "schema-generation",
+            "content-pipeline",
+            "validation-gates",
+            "documentation",
+            "infrastructure",
+            "tooling",
+            "database",
+            "git-operations",
+            "external-api",
+            "unknown"
+          ],
+          "description": "Componente afetado"
+        },
+        "phase_number": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Fase em que o erro ocorreu"
+        },
+        "task_id": {
+          "type": "string",
+          "pattern": "^task-[0-9a-z]{6}$",
+          "description": "Tarefa específica que falhou"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "required": [
+        "environment",
+        "state_snapshot"
+      ],
+      "additionalProperties": false,
+      "description": "Contexto de reprodução do problema",
+      "properties": {
+        "environment": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "os": {
+              "type": "string",
+              "enum": [
+                "linux",
+                "macos",
+                "windows"
+              ]
+            },
+            "os_version": {
+              "type": "string"
+            },
+            "python_version": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$"
+            },
+            "git_commit": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}$",
+              "description": "Commit SHA-1 em que o erro ocorreu"
+            },
+            "git_branch": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9/_-]+$"
+            },
+            "working_directory": {
+              "type": "string",
+              "description": "Diretório de trabalho"
+            }
+          }
+        },
+        "state_snapshot": {
+          "type": "object",
+          "description": "Snapshot do estado no momento do erro",
+          "additionalProperties": false,
+          "properties": {
+            "database_state": {
+              "type": "string",
+              "enum": [
+                "healthy",
+                "corrupted",
+                "locked",
+                "missing",
+                "unknown"
+              ],
+              "description": "Estado do BD (R11)"
+            },
+            "file_system_state": {
+              "type": "string",
+              "enum": [
+                "healthy",
+                "permission-issue",
+                "disk-full",
+                "integrity-check-fail",
+                "unknown"
+              ]
+            },
+            "recent_changes": {
+              "type": "array",
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "required": [
+                  "file_path",
+                  "timestamp",
+                  "operation"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "file_path": {
+                    "type": "string"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "operation": {
+                    "type": "string",
+                    "enum": [
+                      "create",
+                      "modify",
+                      "delete",
+                      "rename"
+                    ]
+                  }
+                }
+              },
+              "description": "Últimas mudanças no repositório"
+            },
+            "resource_usage": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "memory_percent": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "disk_percent": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "cpu_percent": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            }
+          }
+        },
+        "reproduction_steps": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "string",
+            "minLength": 10
+          },
+          "description": "Passos para reproduzir o erro (passo-a-passo)"
+        }
+      }
+    },
+    "analysis": {
+      "type": "object",
+      "required": [
+        "root_cause_analysis",
+        "agent_attempts",
+        "why_escalated"
+      ],
+      "additionalProperties": false,
+      "description": "Análise do problema realizada por agentes",
+      "properties": {
+        "root_cause_analysis": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hypothesis": {
+              "type": "string",
+              "maxLength": 500,
+              "description": "Hipótese da causa raiz"
+            },
+            "confidence_level": {
+              "type": "string",
+              "enum": [
+                "very-high",
+                "high",
+                "medium",
+                "low",
+                "uncertain"
+              ]
+            },
+            "supporting_evidence": {
+              "type": "array",
+              "maxItems": 20,
+              "items": {
+                "type": "string",
+                "maxLength": 300
+              },
+              "description": "Evidências que suportam a hipótese"
+            },
+            "contradicting_evidence": {
+              "type": "array",
+              "maxItems": 10,
+              "items": {
+                "type": "string",
+                "maxLength": 300
+              },
+              "description": "Evidências que contradizem a hipótese"
+            }
+          }
+        },
+        "agent_attempts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "description": "Tentativas de resolução por agentes",
+          "items": {
+            "type": "object",
+            "required": [
+              "attempt_number",
+              "agent_name",
+              "action_taken",
+              "result",
+              "timestamp"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "attempt_number": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "agent_name": {
+                "type": "string",
+                "description": "Nome/ID do agente que tentou"
+              },
+              "action_taken": {
+                "type": "string",
+                "maxLength": 300,
+                "description": "O que o agente fez"
+              },
+              "result": {
+                "type": "string",
+                "enum": [
+                  "success",
+                  "partial-success",
+                  "failed",
+                  "timeout"
+                ],
+                "description": "Resultado da tentativa"
+              },
+              "reason_for_failure": {
+                "type": "string",
+                "maxLength": 300,
+                "description": "Por que falhou (se result != success)"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "logs": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "Logs relevantes (ultimas 2000 chars)"
+              }
+            }
+          }
+        },
+        "why_escalated": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 500,
+          "description": "Por que não foi possível resolver automaticamente"
+        },
+        "knowledge_gaps": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": "Conhecimentos/permissões que faltam aos agentes"
+        }
+      }
+    },
+    "action_items": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "description": "Ações esperadas do humano",
+      "items": {
+        "type": "object",
+        "required": [
+          "action_id",
+          "title",
+          "description",
+          "category",
+          "urgency"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "action_id": {
+            "type": "string",
+            "pattern": "^action-[a-z0-9]{8}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 100,
+            "description": "Título da ação"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 500,
+            "description": "Descrição detalhada do que fazer"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "investigation",
+              "manual-fix",
+              "permission-grant",
+              "data-recovery",
+              "rollback",
+              "infrastructure",
+              "vendor-contact",
+              "documentation-update",
+              "policy-decision",
+              "architecture-review"
+            ],
+            "description": "Categoria da ação"
+          },
+          "urgency": {
+            "type": "string",
+            "enum": [
+              "immediate",
+              "asap",
+              "24-hours",
+              "week",
+              "backlog"
+            ]
+          },
+          "skills_required": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 50
+            },
+            "description": "Habilidades necessárias (ex: DevOps, DBA, etc)"
+          },
+          "estimated_effort_hours": {
+            "type": "number",
+            "minimum": 0.25,
+            "maximum": 40
+          },
+          "success_criteria": {
+            "type": "array",
+            "maxItems": 5,
+            "items": {
+              "type": "string",
+              "maxLength": 150
+            },
+            "description": "Como saber que foi resolvido"
+          },
+          "risks_if_not_done": {
+            "type": "array",
+            "maxItems": 5,
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "description": "Riscos de não fazer nada"
+          }
+        }
+      }
+    },
+    "communication": {
+      "type": "object",
+      "required": [
+        "notification_targets",
+        "message_urgency"
+      ],
+      "additionalProperties": false,
+      "description": "Informações de comunicação",
+      "properties": {
+        "notification_targets": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "primary_contact": {
+              "type": "object",
+              "required": [
+                "type",
+                "value"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "email",
+                    "slack",
+                    "pagerduty",
+                    "sms",
+                    "webhook"
+                  ]
+                },
+                "value": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Nome da pessoa/channel"
+                }
+              }
+            },
+            "secondary_contacts": {
+              "type": "array",
+              "maxItems": 5,
+              "items": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "email",
+                      "slack",
+                      "pagerduty",
+                      "sms"
+                    ]
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "team_channel": {
+              "type": "string",
+              "description": "Canal Slack ou grupo de distribuição"
+            },
+            "incident_tracking_url": {
+              "type": "string",
+              "format": "uri",
+              "description": "URL para rastreador de incidentes (Jira, GitHub Issues, etc)"
+            }
+          }
+        },
+        "message_urgency": {
+          "type": "string",
+          "enum": [
+            "immediate-page",
+            "urgent-alert",
+            "high-priority-email",
+            "normal-notification",
+            "informational"
+          ],
+          "description": "Como comunicar (página, alerta, email, etc)"
+        },
+        "message_template": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Template de mensagem pré-composta"
+        },
+        "escalation_chain": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": [
+              "level",
+              "delay_minutes",
+              "contact"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "level": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              "delay_minutes": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1440
+              },
+              "contact": {
+                "type": "string",
+                "description": "Próxima pessoa na cadeia se sem resposta"
+              },
+              "method": {
+                "type": "string",
+                "enum": [
+                  "email",
+                  "slack",
+                  "sms",
+                  "phone",
+                  "pagerduty"
+                ]
+              }
+            }
+          },
+          "description": "Cadeia de escalação automática se sem resposta"
+        }
+      }
+    },
+    "attachments": {
+      "type": "object",
+      "description": "Arquivos e artefatos anexados",
+      "additionalProperties": false,
+      "properties": {
+        "error_logs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "filename",
+              "path"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "filename": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "size_mb": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "database_dump": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "size_mb": {
+              "type": "number"
+            },
+            "format": {
+              "type": "string",
+              "enum": [
+                "sqlite3",
+                "sql",
+                "json"
+              ]
+            }
+          }
+        },
+        "git_diff": {
+          "type": "string",
+          "maxLength": 5000,
+          "description": "Diff do git (últimos 5000 chars)"
+        },
+        "screenshots": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "type": "string"
+          },
+          "description": "Paths para capturas de tela (se aplicável)"
+        },
+        "additional_files": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "required": [
+              "filename",
+              "path"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "filename": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "followup": {
+      "type": "object",
+      "description": "Informações de acompanhamento",
+      "additionalProperties": false,
+      "properties": {
+        "expected_resolution_deadline": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Quando se espera que seja resolvido"
+        },
+        "auto_recheck_after_hours": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 168,
+          "description": "Verificação automática após N horas"
+        },
+        "on_human_resolution": {
+          "type": "string",
+          "enum": [
+            "auto-retry-plan",
+            "notify-agent",
+            "mark-complete",
+            "manual-verification-required"
+          ],
+          "description": "O que fazer quando humano resolver"
+        },
+        "post_incident_review_required": {
+          "type": "boolean",
+          "default": true,
+          "description": "Necessário retrospectiva post-mortem"
+        }
+      }
+    }
+  }
+}

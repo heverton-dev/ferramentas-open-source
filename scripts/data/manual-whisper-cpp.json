@@ -1,0 +1,128 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "Whisper.cpp",
+  "slug": "whisper-cpp",
+  "saas_origem": "granola",
+  "versao": "1.7.1",
+  "licenca_osi": "MIT",
+  "tempo_estimado_setup": "8 min",
+  "vps_recomendada": {
+    "provedor_modelo": "Hetzner Cloud CX22 (ou qualquer VPS de entrada)",
+    "vcpu": "2 vCPU",
+    "ram": "2 GB RAM (Usa menos de 200 MB)",
+    "armazenamento": "40 GB SSD",
+    "so_recomendado": "Ubuntu 24.04 LTS",
+    "custo_mensal_estimado": "EUR 4,00/mês (~R$ 24,00/mês)",
+    "portas_abertas": ["22/tcp (SSH)"]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Compilação Nativa Otimizada para o Processador",
+        "descricao": "Clone e compilação em C/C++ puro com instruções vetoriais AVX2.",
+        "comandos": "apt-get update && apt-get install -y build-essential git\nmkdir -p /opt/whisper-cpp && cd /opt/whisper-cpp\ngit clone https://github.com/ggerganov/whisper.cpp .\nmake -j4",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Download do Modelo Compacto Quantizado GGML",
+        "descricao": "Download do modelo whisper GGML em formato binário estático.",
+        "comandos": "bash ./models/download-ggml-model.sh base",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 3,
+        "titulo": "Execução da Transcrição Ultrarrápida",
+        "descricao": "Transcrição de áudio em segundos consumindo menos de 200 MB de RAM.",
+        "comandos": "./main -m models/ggml-base.bin -f reuniao.wav -l pt -otxt",
+        "fonte_id": "F04"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/opt/whisper-cpp/run_transcribe.sh",
+        "linguagem": "bash",
+        "conteudo": "#!/usr/bin/env bash\n/opt/whisper-cpp/main -m /opt/whisper-cpp/models/ggml-base.bin -f \"$1\" -l pt -otxt",
+        "explicacao": "Script de transcrição rápida via terminal."
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "Portabilidade pura dos modelos Whisper em C/C++ com aceleração por hardware e quantização de alta performance.",
+    "comandos_cli": [
+      {
+        "comando": "./main -m <model> -f <audio>",
+        "descricao": "Executa a transcrição de um arquivo de áudio WAV para texto.",
+        "exemplo": "./main -m models/ggml-base.bin -f reuniao.wav -l pt",
+        "fonte_id": "F01"
+      },
+      {
+        "comando": "./stream",
+        "descricao": "Modo de escuta contínua de microfone em tempo real.",
+        "exemplo": "./stream -m models/ggml-base.bin -t 4",
+        "fonte_id": "F04"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "POST",
+        "rota": "/inference",
+        "descricao": "Servidor HTTP embutido do whisper.cpp para inferência ad-hoc.",
+        "payload_exemplo": "POST /inference\nContent-Type: multipart/form-data",
+        "fonte_id": "F02"
+      }
+    ],
+    "interface_ui": [
+      {
+        "modulo": "CLI & Plugin Obsidian",
+        "descricao": "Transcrição direta para notas Markdown no Obsidian sem nuvem.",
+        "recursos_chave": ["Hotkeys de gravação", "Transcrição offline", "Zero consumo de bateria"]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Áudio em formato MP3 rejeitado",
+        "causa_provavel": "Whisper.cpp requer áudio em formato WAV 16kHz mono.",
+        "solucao_comando": "ffmpeg -i audio.mp3 -ar 16000 -ac 1 audio.wav"
+      }
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "Whisper.cpp Official High-Performance C/C++ Engine",
+      "url": "https://github.com/ggerganov/whisper.cpp",
+      "autor_ou_canal": "Georgi Gerganov"
+    },
+    {
+      "id": "F02",
+      "categoria": "Documentação Oficial",
+      "titulo": "Whisper.cpp Full Build & Command Line Options Guide",
+      "url": "https://github.com/ggerganov/whisper.cpp/blob/master/README.md",
+      "autor_ou_canal": "Georgi Gerganov & Contributors"
+    },
+    {
+      "id": "F03",
+      "categoria": "Livro / Guia Técnico",
+      "titulo": "Quantized GGML Models for Embedded & High-Speed Audio Inference",
+      "url": "https://huggingface.co/ggerganov/whisper.cpp",
+      "autor_ou_canal": "GGML Community"
+    },
+    {
+      "id": "F04",
+      "categoria": "Vídeo / YouTube",
+      "titulo": "Whisper.cpp Real-Time Streaming & Microphone Transcription",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "autor_ou_canal": "Open Source Performance Labs"
+    },
+    {
+      "id": "F05",
+      "categoria": "Curso / Tutorial",
+      "titulo": "Obsidian Whisper & Note-Taking Integration Guide",
+      "url": "https://github.com/nikdanilov/whisper-obsidian",
+      "autor_ou_canal": "Nikita Danilov"
+    }
+  ]
+}

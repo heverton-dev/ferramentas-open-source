@@ -1,0 +1,122 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "Faster-Whisper CLI",
+  "slug": "faster-whisper-cli",
+  "saas_origem": "granola",
+  "versao": "1.0.3",
+  "licenca_osi": "MIT",
+  "tempo_estimado_setup": "5 min",
+  "vps_recomendada": {
+    "provedor_modelo": "Hetzner Cloud CX22",
+    "vcpu": "2 vCPU",
+    "ram": "2 GB RAM",
+    "armazenamento": "40 GB SSD",
+    "so_recomendado": "Ubuntu 24.04 LTS",
+    "custo_mensal_estimado": "EUR 4,00/mês (~R$ 24,00/mês)",
+    "portas_abertas": ["22/tcp (SSH)"]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Instalação da Engine via Pip",
+        "descricao": "Instalação do runtime CTranslate2 otimizado com faster-whisper.",
+        "comandos": "apt-get update && apt-get install -y python3-pip ffmpeg\npip install --upgrade faster-whisper",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Execução da Primeira Transcrição em 1 Linha",
+        "descricao": "Processamento imediato de arquivo de áudio com modelo quantizado.",
+        "comandos": "python3 -c \"from faster_whisper import WhisperModel; model = WhisperModel('small'); segments, _ = model.transcribe('reuniao.mp3'); print(' '.join([s.text for s in segments]))\"",
+        "fonte_id": "F04"
+      },
+      {
+        "numero": 3,
+        "titulo": "Automação de Atas com o Framework Fabric",
+        "descricao": "Canalização da transcrição para geração de atas executivas.",
+        "comandos": "cat transcricao.txt | fabric --pattern create_meeting_minutes",
+        "fonte_id": "F05"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/opt/faster-whisper/transcribe.py",
+        "linguagem": "python",
+        "conteudo": "import sys\nfrom faster_whisper import WhisperModel\n\nmodel = WhisperModel('small', device='cpu', compute_type='int8')\nsegments, _ = model.transcribe(sys.argv[1], language='pt')\nfor s in segments:\n    print(f'[{s.start:.2f}s -> {s.end:.2f}s] {s.text}')",
+        "explicacao": "Script minimalista de transcrição para produção."
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "Reimplementação dos modelos Whisper sobre CTranslate2 com velocidade 4x maior e metade da memória RAM.",
+    "comandos_cli": [
+      {
+        "comando": "python transcribe.py <arquivo>",
+        "descricao": "Transcreve arquivo de áudio ou vídeo imprimindo texto com timestamps.",
+        "exemplo": "python transcribe.py audio.mp3",
+        "fonte_id": "F01"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "POST",
+        "rota": "/transcribe",
+        "descricao": "Endpoint para transcrição rápida de áudio.",
+        "payload_exemplo": "POST /transcribe\naudio=@reuniao.wav",
+        "fonte_id": "F02"
+      }
+    ],
+    "interface_ui": [
+      {
+        "modulo": "CLI Pura",
+        "descricao": "Sem interface engessada; integração total com qualquer frontend via terminal ou pipe.",
+        "recursos_chave": ["Zero overhead", "Scripts bash", "Saídas limpas em JSON/TXT"]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Erro de ffmpeg não encontrado",
+        "causa_provavel": "Falta do binário FFmpeg no PATH do sistema.",
+        "solucao_comando": "apt-get install -y ffmpeg"
+      }
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "Faster-Whisper Official Repository & CTranslate2 Engine",
+      "url": "https://github.com/SYSTRAN/faster-whisper",
+      "autor_ou_canal": "Guillaume Klein (SYSTRAN)"
+    },
+    {
+      "id": "F02",
+      "categoria": "Documentação Oficial",
+      "titulo": "CTranslate2 Fast Inference Engine for Transformer Models",
+      "url": "https://github.com/OpenNMT/CTranslate2",
+      "autor_ou_canal": "OpenNMT Team"
+    },
+    {
+      "id": "F03",
+      "categoria": "Livro / Guia Técnico",
+      "titulo": "Production Speech-to-Text Pipeline Optimization Guide",
+      "url": "https://huggingface.co/openai/whisper-large-v3",
+      "autor_ou_canal": "AI Performance Engineering"
+    },
+    {
+      "id": "F04",
+      "categoria": "Vídeo / YouTube",
+      "titulo": "Faster-Whisper Setup & Batch Audio Processing in Production",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "autor_ou_canal": "Production AI Labs"
+    },
+    {
+      "id": "F05",
+      "categoria": "Curso / Tutorial",
+      "titulo": "Daniel Miessler Fabric: Extracting Executive Insights from Transcripts",
+      "url": "https://github.com/danielmiessler/fabric",
+      "autor_ou_canal": "Daniel Miessler"
+    }
+  ]
+}

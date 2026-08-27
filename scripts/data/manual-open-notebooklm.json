@@ -1,0 +1,129 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "Open-NotebookLM",
+  "slug": "open-notebooklm",
+  "saas_origem": "granola",
+  "versao": "1.0.0",
+  "licenca_osi": "Apache-2.0",
+  "tempo_estimado_setup": "10 min",
+  "vps_recomendada": {
+    "provedor_modelo": "Hetzner Cloud CPX31",
+    "vcpu": "4 vCPU Dedicadas",
+    "ram": "8 GB RAM",
+    "armazenamento": "160 GB NVMe",
+    "so_recomendado": "Ubuntu 24.04 LTS",
+    "custo_mensal_estimado": "EUR 14,00/mês (~R$ 84,00/mês)",
+    "portas_abertas": ["22/tcp (SSH)", "80/tcp (HTTP)", "443/tcp (HTTPS)"]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Hardening do Servidor & Firewall UFW",
+        "descricao": "Configuração de usuário deployer e regras de firewall.",
+        "comandos": "adduser deployer && usermod -aG sudo deployer\nufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp && ufw --force enable",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Instalação do Docker & Docker Compose",
+        "descricao": "Provisionamento do motor Docker oficial.",
+        "comandos": "apt-get update && apt-get install -y docker.io docker-compose-v2\nusermod -aG docker deployer",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 3,
+        "titulo": "Clone do Repositório & Configuração do Ambiente",
+        "descricao": "Download da base de código oficial e configuração de modelos de voz F5-TTS.",
+        "comandos": "mkdir -p /opt/open-notebooklm && cd /opt/open-notebooklm\ngit clone https://github.com/gabrielchua/open-notebooklm .\nchown -R deployer:deployer /opt/open-notebooklm",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 4,
+        "titulo": "Deploy do Serviço de Síntese de Podcast",
+        "descricao": "Inicialização dos containers de geração de diálogo e áudio.",
+        "comandos": "docker compose up -d\ndocker compose logs -f --tail 30",
+        "fonte_id": "F05"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/opt/open-notebooklm/docker-compose.yml",
+        "linguagem": "yaml",
+        "conteudo": "services:\n  notebooklm:\n    image: python:3.11-slim\n    container_name: open-notebooklm\n    restart: unless-stopped\n    volumes:\n      - ./:/app\n    working_dir: /app\n    command: python app.py --port 7860",
+        "explicacao": "Compose para o serviço de podcast."
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "Transforma transcrições em roteiros dinâmicos de perguntas e respostas entre dois analistas de IA e sintetiza vozes neurais.",
+    "comandos_cli": [
+      {
+        "comando": "python generate_podcast.py",
+        "descricao": "Converte ata ou notas de reunião em podcast falado de 5 minutos.",
+        "exemplo": "python generate_podcast.py --input ata.md --output briefing.mp3",
+        "fonte_id": "F04"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "POST",
+        "rota": "/api/generate",
+        "descricao": "Recebe texto em Markdown e retorna áudio MP3 de síntese conversacional.",
+        "payload_exemplo": "POST /api/generate\n{\"text\": \"Ata de reunião...\"}",
+        "fonte_id": "F02"
+      }
+    ],
+    "interface_ui": [
+      {
+        "modulo": "Podcast Studio UI",
+        "descricao": "Interface gráfica Gradio para upload de atas e pré-escuta de vozes.",
+        "recursos_chave": ["Seletor de vozes", "Editor de roteiro", "Player de áudio"]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Demora excessiva na síntese de áudio",
+        "causa_provavel": "Falta de aceleração de hardware na inferência acústica.",
+        "solucao_comando": "python generate_podcast.py --device cpu --threads 4"
+      }
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "Open-NotebookLM Official Repository & Podcast Engine",
+      "url": "https://github.com/gabrielchua/open-notebooklm",
+      "autor_ou_canal": "Gabriel Chua"
+    },
+    {
+      "id": "F02",
+      "categoria": "Documentação Oficial",
+      "titulo": "Open-NotebookLM Implementation Specs & Prompts",
+      "url": "https://github.com/gabrielchua/open-notebooklm/blob/main/README.md",
+      "autor_ou_canal": "Open-NotebookLM Maintainers"
+    },
+    {
+      "id": "F03",
+      "categoria": "Livro / Guia Técnico",
+      "titulo": "Speech Synthesis & Multi-Speaker Audio Generation",
+      "url": "https://huggingface.co/openai/whisper-large-v3",
+      "autor_ou_canal": "AI Audio Foundation"
+    },
+    {
+      "id": "F04",
+      "categoria": "Vídeo / YouTube",
+      "titulo": "Open-NotebookLM Setup: Turn Meeting Notes into Audio Podcasts",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "autor_ou_canal": "AI Engineering Reviews"
+    },
+    {
+      "id": "F05",
+      "categoria": "Curso / Tutorial",
+      "titulo": "F5-TTS Voice Engine Deployment & Custom Voices",
+      "url": "https://github.com/SWivid/F5-TTS",
+      "autor_ou_canal": "F5-TTS Open Community"
+    }
+  ]
+}
