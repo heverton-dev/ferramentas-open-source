@@ -90,18 +90,18 @@ Declarados em `.mcp.json` na raiz:
 
 A esteira opera sob 3 Macro-Fluxos desacoplados com 4 Skills Universais e Runners CLI:
 
-1. **Fluxo 1 · Listas Horizontais (49 Camadas):**
+1. **Fluxo 1 · Listas Horizontais (49 Camadas & Temas Livres):**
    - *Skill / Chat:* `.agents/skills/fluxo1-listas-horizontais/` ➔ `/fluxo1 [slug]`
    - *CLI:* `python scripts/run_fluxo1.py --slug <slug>`
-   - *Entrega:* `output/01-listas-horizontais/list-<slug>/` (HTML, MD, PDF Typst)
+   - *Entrega:* `output/01-listas-horizontais/list-<slug>/` (`materiais/` [HTML R5, MD, PDF] + `relatorios/` [HTML, MD, PDF])
 2. **Fluxo 2 · Dossiês Verticais & Quinteto Soberano:**
    - *Skill / Chat:* `.agents/skills/fluxo2-dossies-verticais/` ➔ `/fluxo2 [saas]`
    - *CLI:* `python scripts/run_fluxo2.py --saas <saas>`
-   - *Entrega:* `output/02-dossies-verticais/vert-<saas>/` (HTML R5-V, MD, PDF Typst)
+   - *Entrega:* `output/02-dossies-verticais/vert-<saas>/` (`materiais/` [HTML R5-V, MD, PDF] + `relatorios/` [HTML, MD, PDF])
 3. **Fluxo 3 · Esteira de Engenharia, Manuais VPS & Trilhas:**
    - *Skill / Chat:* `.agents/skills/fluxo3-manuais-e-trilhas/` ➔ `/fluxo3 [ferramenta] [saas]`
    - *CLI:* `python scripts/run_fluxo3.py --ferramenta <slug> --saas <saas>`
-   - *Entrega:* `output/03-manuais-e-trilhas/<saas>/<ferramenta>/` (Manual com Desinstalação Cirúrgica & Trilha 5 Aulas)
+   - *Entrega:* `output/03-manuais-e-trilhas/<saas>/<ferramenta>/` (`manuais/`, `trilhas/` e `relatorios/` com 9 arquivos)
 4. **Pipeline Total Integrado (Cascata dos 3 Fluxos com 3 Gates de Decisão):**
    - *Skill / Chat:* `.agents/skills/fluxo-total-aidd/` ➔ `/fluxo-total`
    - *CLI:* `python scripts/run_fluxo_total.py`
