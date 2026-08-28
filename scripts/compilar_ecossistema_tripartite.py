@@ -37,6 +37,9 @@ sys.path.insert(0, str(BASE_DIR / "scripts"))
 
 from estado_esteira import registrar_ecossistema
 
+def sanitizar_typ(txt: str) -> str:
+  return str(txt).replace('[', '(').replace(']', ')').replace('$', '\\$').replace('#', '\\#').replace('_', '\\_').replace('(*.', '(wildcard.').replace('*.', 'wildcard.')
+
 CSS_CANONICO_DIAMANTE = """
  :root {
   --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
@@ -2783,12 +2786,120 @@ O Engenheiro Agêntico não executa comandos manuais repetitivos: ele orquestra 
 - **Servidores MCP:** `@modelcontextprotocol/server-ssh` e `@modelcontextprotocol/server-docker` configurados em `agents-config/.mcp.json`.
 """
 
+  # Compilação do Livro-Texto do Engenheiro Agêntico (HTML, MD e PDF Typst)
+  with open(dir_agentic / "LIVRO-TEXTO-ENGENHEIRO-AGENTICO.html", "w", encoding="utf-8") as f_pl:
+    f_pl.write(html_playbook)
+  with open(dir_agentic / "LIVRO-TEXTO-ENGENHEIRO-AGENTICO.md", "w", encoding="utf-8") as f_pl:
+    f_pl.write(md_playbook)
   with open(dir_agentic / "PLAYBOOK-ENGENHEIRO-AGENTICO.html", "w", encoding="utf-8") as f_pl:
     f_pl.write(html_playbook)
   with open(dir_agentic / "PLAYBOOK-ENGENHEIRO-AGENTICO.md", "w", encoding="utf-8") as f_pl:
     f_pl.write(md_playbook)
 
-  print(f"  Camada 06 (Playbook do Engenheiro Agêntico, Prompts Mestres e Configs MCP) gerada com sucesso!")
+  # Compilação do Livro-Texto Agêntico em PDF Typst
+  typ_agentic = f"""
+#set page(
+  paper: "a4",
+  margin: (x: 1.5cm, top: 2.2cm, bottom: 2.0cm),
+  header: align(center)[
+    #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[
+      Fábrica Universal AIDD · Livro-Texto do Engenheiro Agêntico (Padrão Diamante R5-E)
+    ]
+  ],
+  footer: [
+    #set par(leading: 0.65em)
+    #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[
+      #grid(
+        columns: (1fr, 1fr),
+        [Livro-Texto do Engenheiro Agêntico · {sanitizar_typ(dados.get('nome_ecossistema'))}],
+        align(right)[Fábrica Universal AIDD]
+      )
+    ]
+  ]
+)
+
+#set text(
+  font: "Liberation Serif",
+  size: 9.5pt,
+  fill: rgb("#1b1e23"),
+  lang: "pt"
+)
+
+#set par(
+  justify: true,
+  leading: 0.55em,
+  first-line-indent: 0pt
+)
+
+#show heading: set text(fill: rgb("#0f172a"), font: "Liberation Sans")
+#show heading.where(level: 1): it => {{
+  v(14pt, weak: true)
+  text(size: 16pt, weight: "bold")[#it.body]
+  v(8pt, weak: true)
+}}
+#show heading.where(level: 2): it => {{
+  v(10pt, weak: true)
+  text(size: 12pt, weight: "bold", fill: rgb("#00875a"))[#it.body]
+  v(6pt, weak: true)
+}}
+
+#align(center)[
+  #v(20pt)
+  #text(size: 22pt, weight: "bold", fill: rgb("#0f172a"))[LIVRO-TEXTO DO ENGENHEIRO AGÊNTICO]
+  #v(8pt)
+  #text(size: 12pt, style: "italic", fill: rgb("#475569"))[Orquestração Autônoma de Infraestrutura Soberana com Agentes de IA, Termius e Uptime Kuma]
+  #v(6pt)
+  #text(size: 10pt, weight: "bold", fill: rgb("#00875a"))[Suíte Alvo: {sanitizar_typ(dados.get('nome_ecossistema'))} · Substitui {sanitizar_typ(dados.get('saas_substituido'))}]
+  #v(20pt)
+]
+
+= Capítulo 01: Filosofia da Engenharia Agêntica
+A Engenharia Agêntica substitui a execução manual e suscetível a erros por um modelo declarativo onde o engenheiro fornece Prompts Mestres e Servidores MCP para que agentes de inteligência artificial (Claude Code, Cursor, Antigravity, OpenCode, Windsurf) realizem o provisionamento, deploy, configuração de certificados TLS e testes de integridade em produção.
+
+= Capítulo 02: Gestão Remota Segura com Termius
+- *Par de Chaves Ed25519:* Acesso SSH criptografado de alta performance com desativação total de login por senha no arquivo `/etc/ssh/sshd_config`;
+- *SFTP Integrado:* Manipulação e auditoria de arquivos de ambiente `.env`, manifestos Docker Compose e chaves de backup;
+- *Túneis SSH Seguros (Local Port Forwarding):* Conexão a bancos PostgreSQL (`5432`), Redis (`6379`) e painéis internos sem expor portas no firewall público.
+
+= Capítulo 03: Observabilidade em Tempo Real com Uptime Kuma
+- *Monitoramento Contínuo 24/7:* Verificação de HTTP 200 nos subdomínios da suíte, portas TCP e expiração de certificados TLS;
+- *Alertas Instantâneos:* Roteamento automático de incidentes via Webhook para Mattermost e WhatsApp;
+- *Status Page Corporativa:* Painel visual de transparência operacional para a diretoria e clientes.
+
+= Capítulo 04: Os 4 Prompts Mestres de Execução
+== Prompt Mestre 01: Provisionamento & Hardening da VPS
+```bash
+{p1_vps}
+```
+
+#pagebreak()
+== Prompt Mestre 02: Deploy do Cluster All-in-One Compose
+```bash
+{p2_cluster}
+```
+
+== Prompt Mestre 03: Configuração do Uptime Kuma & Alertas
+```bash
+{p3_monitor}
+```
+
+== Prompt Mestre 04: Smoke Tests & Validação de DRP
+```bash
+{p4_smoke}
+```
+"""
+  typ_ag_path = dir_agentic / "LIVRO-TEXTO-ENGENHEIRO-AGENTICO.typ"
+  with open(typ_ag_path, "w", encoding="utf-8") as f_typ_ag:
+    f_typ_ag.write(typ_agentic)
+
+  pdf_ag_path = dir_agentic / "LIVRO-TEXTO-ENGENHEIRO-AGENTICO.pdf"
+  try:
+    subprocess.run(["typst", "compile", str(typ_ag_path), str(pdf_ag_path)], capture_output=True, text=True, check=True)
+    print(f"  Livro-Texto do Engenheiro Agêntico em PDF compilado com sucesso: {pdf_ag_path.name}")
+  except Exception as e:
+    print(f"  Typst compilação agêntica falhou ou aviso: {e}")
+
+  print(f"  Camada 06 (Livro-Texto do Engenheiro Agêntico em HTML, MD e PDF) gerada com sucesso!")
 
   # 8. Registro no SQLite (Regra R11)
   try:
