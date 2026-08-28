@@ -262,6 +262,14 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
     deploy = dados.get("deploy_consolidado", {})
     econ = dados.get("analise_economica_global", {})
 
+    detalhe_econ = econ.get("detalhamento_por_grupo", [])
+    tabela_econ_md = ""
+    if detalhe_econ:
+        tabela_econ_md = "\n### Demonstrativo de TCO Desmembrado por Grupo Funcional\n\n| Grupo / Frente de Negócio | SaaS de Referência | Custo SaaS Anual | Custo VPS Alocado | Economia Líquida | Economia (%) |\n| :--- | :--- | :---: | :---: | :---: | :---: |\n"
+        for dg in detalhe_econ:
+            tabela_econ_md += f"| **{dg.get('grupo')}** | {dg.get('saas_referencia')} | `{dg.get('custo_saas_anual')}` | `{dg.get('custo_vps_alocado')}` | **{dg.get('economia_anual_liquida')}** | **{dg.get('percentual_economia')}** |\n"
+        tabela_econ_md += "\n"
+
     linhas = [
         f"# {titulo}",
         f"",
@@ -270,14 +278,16 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
         f"",
         f"---",
         f"",
-        f"## 1. Visão Executiva & TCO Global",
+        f"## 1. Visão Executiva & Demonstrativo Financeiro de TCO",
         f"",
+        f"### Consolidado Global da Suíte",
         f"- **Macro-SaaS Substituído:** {saas_sub}",
         f"- **Custo SaaS Estimado:** {econ.get('custo_saas_anual', 'N/A')}",
         f"- **Custo da Infraestrutura Soberana:** {econ.get('custo_vps_anual', 'N/A')}",
         f"- **Economia Líquida Anual:** {econ.get('economia_anual_liquida', 'N/A')}",
         f"- **Payback Estimado:** {econ.get('roi_meses', 'N/A')}",
         f"",
+        f"{tabela_econ_md}",
         f"---",
         f"",
         f"## 2. Pilares Funcionais & Frentes de Negócio",
@@ -444,6 +454,43 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
         for idx, passo in enumerate(deploy.get("passos_deploy", []), 1)
     ])
 
+    # Desmembramento Financeiro por Grupo
+    detalhe_econ = econ.get("detalhamento_por_grupo", [])
+    tabela_tco_grupos = ""
+    if detalhe_econ:
+        linhas_tco_grupos = "".join([
+            f"""
+            <tr>
+              <td><strong>{dg.get('grupo')}</strong></td>
+              <td class="saas">{dg.get('saas_referencia')}</td>
+              <td class="killer">{dg.get('custo_saas_anual')}</td>
+              <td>{dg.get('custo_vps_alocado')}</td>
+              <td class="econ">{dg.get('economia_anual_liquida')}</td>
+              <td><span class="econ-badge">{dg.get('percentual_economia')}</span></td>
+            </tr>
+            """
+            for dg in detalhe_econ
+        ])
+        tabela_tco_grupos = f"""
+        <div class="tablewrap" style="margin-top: 16px; margin-bottom: 20px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Grupo / Frente de Negócio</th>
+                <th>SaaS de Referência</th>
+                <th>Custo SaaS Anual</th>
+                <th>Custo VPS Alocado</th>
+                <th>Economia Líquida Anual</th>
+                <th>Economia (%)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {linhas_tco_grupos}
+            </tbody>
+          </table>
+        </div>
+        """
+
     html = f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -475,23 +522,23 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
 
   <div class="sec-head">
     <div class="sec-info">
-      <span class="sec-num">Seção 01 · Demonstrativo Financeiro Consolidado</span>
-      <h2>Análise de TCO Global &amp; Payback</h2>
-      <p class="sec-note">Comparativo financeiro da suíte corporativa proprietária versus infraestrutura aberta autônoma.</p>
+      <span class="sec-num">Seção 01 · Demonstrativo Financeiro de TCO Desmembrado</span>
+      <h2>Análise de TCO por Grupo &amp; Payback Consolidado</h2>
+      <p class="sec-note">Comparativo financeiro detalhado por frente de negócio (Marketing, CRM, Comunicação) versus infraestrutura aberta autônoma.</p>
     </div>
   </div>
 
   <div class="tco-banner">
     <div class="tco-col">
-      <div class="tco-lbl">Custo SaaS Proprietário</div>
+      <div class="tco-lbl">Custo SaaS Total (3 Grupos)</div>
       <div class="tco-val killer">{econ.get('custo_saas_anual', 'R$ 114.000/ano')}</div>
     </div>
     <div class="tco-col">
-      <div class="tco-lbl">Custo VPS Soberana</div>
+      <div class="tco-lbl">Custo VPS Soberana Total</div>
       <div class="tco-val">{econ.get('custo_vps_anual', 'R$ 4.200/ano')}</div>
     </div>
     <div class="tco-col">
-      <div class="tco-lbl">Economia Líquida Anual</div>
+      <div class="tco-lbl">Economia Líquida Total</div>
       <div class="tco-val highlight">{econ.get('economia_anual_liquida', 'R$ 109.800/ano')}</div>
     </div>
     <div class="tco-col">
@@ -499,6 +546,8 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
       <div class="tco-val highlight">{econ.get('roi_meses', '14 dias')}</div>
     </div>
   </div>
+
+  {tabela_tco_grupos}
 
   <div class="sec-head">
     <div class="sec-info">
@@ -628,6 +677,24 @@ def gerar_typst_ecossistema(dados: dict) -> str:
     econ_liq = sanitizar_typ(econ.get('economia_anual_liquida', ''))
     roi = sanitizar_typ(econ.get('roi_meses', ''))
 
+    detalhe_econ = econ.get("detalhamento_por_grupo", [])
+    linhas_tco_typ = ""
+    if detalhe_econ:
+        linhas_tco_typ = """
+=== Demonstrativo de TCO Desmembrado por Grupo Funcional
+#table(
+  columns: (2.5fr, 2.5fr, 1.8fr, 1.8fr, 1.8fr),
+  fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
+  stroke: 0.5pt + rgb("#e2e8f0"),
+  inset: 4.5pt,
+  [*Grupo Funcional*], [*SaaS de Referência*], [*Custo SaaS*], [*Custo VPS*], [*Economia Líq.*],
+"""
+        for dg in detalhe_econ:
+            linhas_tco_typ += f"  [*{dg.get('grupo')}*], [{dg.get('saas_referencia')}], [{sanitizar_typ(dg.get('custo_saas_anual'))}], [{sanitizar_typ(dg.get('custo_vps_alocado'))}], [*{sanitizar_typ(dg.get('economia_anual_liquida'))}*],\n"
+        linhas_tco_typ += ")\n#v(8pt)\n"
+        # Escapa as chaves para não colidir com a f-string
+        linhas_tco_typ = linhas_tco_typ.replace('{ rgb("#f1f5f9") }', '{{ rgb("#f1f5f9") }}').replace('{ none }', '{{ none }}')
+
     typst = f"""#set page(
   paper: "a4",
   margin: (x: 1.5cm, y: 1.8cm),
@@ -667,18 +734,20 @@ def gerar_typst_ecossistema(dados: dict) -> str:
 
 #v(8pt)
 
-== 1. Demonstrativo Financeiro Consolidado (TCO Global)
+== 1. Demonstrativo Financeiro de TCO Desmembrado & Consolidado
 
 #table(
   columns: (2.5fr, 2.5fr, 2.5fr, 2.5fr),
   fill: rgb("#f8fafc"),
   stroke: 0.5pt + rgb("#cbd5e1"),
   inset: 6pt,
-  [*Custo SaaS Anual*], [*Custo VPS Soberana*], [*Economia Líquida*], [*Payback*],
+  [*Custo SaaS Total*], [*Custo VPS Total*], [*Economia Líquida*], [*Payback*],
   [{custo_saas}], [{custo_vps}], [*{econ_liq}*], [{roi}]
 )
 
 #v(8pt)
+
+{linhas_tco_typ}
 
 == 2. Análise Detalhada por Grupos de Negócio
 

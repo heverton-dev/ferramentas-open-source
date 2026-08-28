@@ -37,18 +37,33 @@
 
 #v(8pt)
 
-== 1. Demonstrativo Financeiro Consolidado (TCO Global)
+== 1. Demonstrativo Financeiro de TCO Desmembrado & Consolidado
 
 #table(
   columns: (2.5fr, 2.5fr, 2.5fr, 2.5fr),
   fill: rgb("#f8fafc"),
   stroke: 0.5pt + rgb("#cbd5e1"),
   inset: 6pt,
-  [*Custo SaaS Anual*], [*Custo VPS Soberana*], [*Economia Líquida*], [*Payback*],
+  [*Custo SaaS Total*], [*Custo VPS Total*], [*Economia Líquida*], [*Payback*],
   [R\$ 114.000/ano (RD Marketing Pro R\$ 42k + RD CRM 10 vendedores R\$ 36k + RD Conversas 10 atendentes R\$ 36k)], [R\$ 4.200/ano (VPS 8 vCPU / 16 GB RAM a R\$ 350/mês)], [*R\$ 109.800/ano (Economia Líquida de 96.3%)*], [Payback positivo em apenas 14 dias de operação unificada.]
 )
 
 #v(8pt)
+
+
+=== Demonstrativo de TCO Desmembrado por Grupo Funcional
+#table(
+  columns: (2.5fr, 2.5fr, 1.8fr, 1.8fr, 1.8fr),
+  fill: (x, y) => if y == 0 {{ rgb("#f1f5f9") }} else {{ none }},
+  stroke: 0.5pt + rgb("#e2e8f0"),
+  inset: 4.5pt,
+  [*Grupo Funcional*], [*SaaS de Referência*], [*Custo SaaS*], [*Custo VPS*], [*Economia Líq.*],
+  [*Grupo 1: Marketing & Nutrição*], [RD Station Marketing (Plano Pro - 50k leads)], [R\$ 42.000/ano], [R\$ 1.440/ano (Fraqueza de ~3 vCPU / 6 GB RAM)], [*R\$ 40.560/ano*],
+  [*Grupo 2: Pipeline Comercial & CRM*], [RD Station CRM (Plano Avançado - 10 licenças)], [R\$ 36.000/ano], [R\$ 1.440/ano (Fraqueza de ~3 vCPU / 6 GB RAM)], [*R\$ 34.560/ano*],
+  [*Grupo 3: Atendimento & WhatsApp*], [RD Station Conversas / Tallos (10 operadores)], [R\$ 36.000/ano], [R\$ 1.320/ano (Fraqueza de ~2 vCPU / 4 GB RAM)], [*R\$ 34.680/ano*],
+)
+#v(8pt)
+
 
 == 2. Análise Detalhada por Grupos de Negócio
 

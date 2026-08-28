@@ -5,13 +5,24 @@
 
 ---
 
-## 1. Visão Executiva & TCO Global
+## 1. Visão Executiva & Demonstrativo Financeiro de TCO
 
+### Consolidado Global da Suíte
 - **Macro-SaaS Substituído:** RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier)
 - **Custo SaaS Estimado:** R$ 114.000/ano (RD Marketing Pro R$ 42k + RD CRM 10 vendedores R$ 36k + RD Conversas 10 atendentes R$ 36k)
 - **Custo da Infraestrutura Soberana:** R$ 4.200/ano (VPS 8 vCPU / 16 GB RAM a R$ 350/mês)
 - **Economia Líquida Anual:** R$ 109.800/ano (Economia Líquida de 96.3%)
 - **Payback Estimado:** Payback positivo em apenas 14 dias de operação unificada.
+
+
+### Demonstrativo de TCO Desmembrado por Grupo Funcional
+
+| Grupo / Frente de Negócio | SaaS de Referência | Custo SaaS Anual | Custo VPS Alocado | Economia Líquida | Economia (%) |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **Grupo 1: Marketing & Nutrição** | RD Station Marketing (Plano Pro - 50k leads) | `R$ 42.000/ano` | `R$ 1.440/ano (Fraqueza de ~3 vCPU / 6 GB RAM)` | **R$ 40.560/ano** | **96.5%** |
+| **Grupo 2: Pipeline Comercial & CRM** | RD Station CRM (Plano Avançado - 10 licenças) | `R$ 36.000/ano` | `R$ 1.440/ano (Fraqueza de ~3 vCPU / 6 GB RAM)` | **R$ 34.560/ano** | **96.0%** |
+| **Grupo 3: Atendimento & WhatsApp** | RD Station Conversas / Tallos (10 operadores) | `R$ 36.000/ano` | `R$ 1.320/ano (Fraqueza de ~2 vCPU / 4 GB RAM)` | **R$ 34.680/ano** | **96.3%** |
+
 
 ---
 
