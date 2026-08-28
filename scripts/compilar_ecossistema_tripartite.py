@@ -310,6 +310,9 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
             linhas.append(f"| {f['rank']} | **{f['nome']}** | {f['saas_substituido_direto']} | {f['racional_escolha']} | **{f['economia_anual_str']}** | `{f['licenca_osi']}` |")
         linhas.append("")
 
+    guia = dados.get("guia_modularidade_e_expansao", {})
+    stack_detalhe = deploy.get("composicao_stack_detalhada", [])
+
     linhas.extend([
         f"---",
         f"",
@@ -326,24 +329,67 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
         f"",
         f"---",
         f"",
-        f"## 4. Deploy Consolidado All-in-One",
+        f"## 4. Deploy All-in-One: Orquestração Unificada (Docker Compose)",
         f"",
-        f"**Dimensionamento de Hardware:**",
+        f"> **Topologia & Segurança de Rede:** {deploy.get('arquitetura_rede_seguranca', '')}",
+        f"",
+        f"### Composição Detalhada da Stack de Infraestrutura",
+        f""
+    ])
+
+    for s in stack_detalhe:
+        linhas.extend([
+            f"- **{s.get('servico')}** (`{s.get('imagem_docker')}`):",
+            f"  - *Papel:* {s.get('papel_na_stack')}",
+            f"  - *Por que foi escolhido:* {s.get('racional_escolha')}",
+            f"  - *Portas & Exposição:* {s.get('portas_expostas')}",
+            f"  - *Persistência:* `{s.get('persistencia')}`",
+            f""
+        ])
+
+    linhas.extend([
+        f"**Dimensionamento de Hardware Total:**",
         f"- RAM Recomendada: {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')}",
         f"- CPU Recomendada: {deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')}",
         f"- Armazenamento: {deploy.get('requisitos_hardware_totais', {}).get('armazenamento_minimo')}",
         f"",
-        f"### Exemplo de Docker Compose Unificado",
+        f"### Arquivo `docker-compose.yml` Consolidado",
         f"```yaml",
         f"{deploy.get('docker_compose_exemplo', '')}",
         f"```",
         f"",
-        f"### Passos de Instalação",
+        f"### Passos de Instalação e Subida",
         f""
     ])
 
     for idx, passo in enumerate(deploy.get("passos_deploy", []), 1):
         linhas.append(f"{idx}. **{passo.get('titulo')}:** {passo.get('descricao')}")
+
+    linhas.extend([
+        f"",
+        f"---",
+        f"",
+        f"## 5. Guia de Modularidade, Expansão & Hot-Swap de Ferramentas",
+        f"",
+        f"> **Filosofia de Arquitetura Desacoplada (Loose Coupling):**  ",
+        f"> {guia.get('filosofia_modular', '')}",
+        f"",
+        f"### Como Adicionar uma Nova Ferramenta ao Ecossistema",
+        f"{guia.get('passo_a_passo_adicionar_ferramenta', '')}",
+        f"",
+        f"### Como Substituir uma Ferramenta em Produção (Hot-Swap sem Downtime)",
+        f"{guia.get('passo_a_passo_substituir_hotswap', '')}",
+        f"",
+        f"### Como Remover um Módulo com Segurança",
+        f"{guia.get('passo_a_passo_remover_ferramenta', '')}",
+        f"",
+        f"### Estudo de Caso Prático: {guia.get('exemplo_caso_pratico_hotswap', {}).get('cenario', '')}",
+        f"- **1. Isolamento:** {guia.get('exemplo_caso_pratico_hotswap', {}).get('passo_1_isolamento')}",
+        f"- **2. Novo Serviço:** {guia.get('exemplo_caso_pratico_hotswap', {}).get('passo_2_novo_servico')}",
+        f"- **3. Chaveamento no n8n:** {guia.get('exemplo_caso_pratico_hotswap', {}).get('passo_3_chaveamento_n8n')}",
+        f"- **4. Resultado Final:** {guia.get('exemplo_caso_pratico_hotswap', {}).get('passo_4_resultado')}",
+        f""
+    ])
 
     return "\n".join(linhas) + "\n"
 
@@ -502,6 +548,39 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
         </div>
         """
 
+    guia = dados.get("guia_modularidade_e_expansao", {})
+    stack_detalhe = deploy.get("composicao_stack_detalhada", [])
+    
+    stack_cards_html = "".join([
+        f"""
+        <div class="integ-card" style="margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <h4 style="margin: 0; color: var(--ink);">{s.get('servico')}</h4>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 2px;">{s.get('imagem_docker')}</code>
+          </div>
+          <p><strong>Papel na Stack:</strong> {s.get('papel_na_stack')}</p>
+          <p style="margin-top: 4px;"><strong>Por que foi escolhido:</strong> {s.get('racional_escolha')}</p>
+          <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted);">
+            <span>🔌 {s.get('portas_expostas')}</span>
+            <span>💾 {s.get('persistencia')}</span>
+          </div>
+        </div>
+        """
+        for s in stack_detalhe
+    ])
+
+    passos_add_html = "".join([
+        f"""
+        <div class="step-card">
+          <div class="step-head">{p_add.get('etapa')}</div>
+          <p>{p_add.get('descricao')}</p>
+        </div>
+        """
+        for p_add in guia.get("passos_adicionar_ferramenta", [])
+    ])
+
+    caso_pratico = guia.get("exemplo_caso_pratico_hotswap", {})
+
     html = f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -632,17 +711,63 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
   <div class="sec-head">
     <div class="sec-info">
       <span class="sec-num">Seção 05 · Deploy All-in-One</span>
-      <h2>Orquestração Unificada (Docker Compose)</h2>
-      <p class="sec-note">Provisionamento em VPS corporativa única ({deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')}).</p>
+      <h2>Orquestração Unificada (Docker Compose) &amp; Anatomia da Stack</h2>
+      <p class="sec-note">Provisionamento consolidado em VPS ({deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')}).</p>
     </div>
   </div>
 
+  <div class="racional-box" style="margin-bottom: 16px;">
+    <p><strong>🛡️ Segurança e Topologia de Rede:</strong> {deploy.get('arquitetura_rede_seguranca')}</p>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">Composição dos Serviços de Infraestrutura</h3>
+  {stack_cards_html}
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 12px; color: var(--ink);">Arquivo docker-compose.yml Completo</h3>
   <div class="code-box" style="margin-bottom: 16px;">
     <pre><code>{deploy.get('docker_compose_exemplo')}</code></pre>
   </div>
 
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">Passos de Subida do Ambiente</h3>
   <div class="steps-grid">
     {passos_cards}
+  </div>
+
+  <div class="sec-head" style="margin-top: 48px;">
+    <div class="sec-info">
+      <span class="sec-num">Seção 06 · Guia de Modularidade &amp; Hot-Swap</span>
+      <h2>Adição, Substituição &amp; Remoção de Módulos</h2>
+      <p class="sec-note">Como personalizar o ecossistema e trocar ferramentas sem quebrar o cluster nem interromper a operação.</p>
+    </div>
+  </div>
+
+  <div class="racional-box" style="margin-bottom: 20px;">
+    <p><strong>🧩 Princípio de Acoplamento Fraco:</strong> {guia.get('filosofia_modular')}</p>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">1. Protocolo de Inserção de Novas Ferramentas</h3>
+  <div class="steps-grid">
+    {passos_add_html}
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 12px; color: var(--ink);">2. Protocolo de Hot-Swap (Substituição de Ferramenta sem Downtime)</h3>
+  <div class="integ-card" style="margin-bottom: 16px;">
+    <p style="white-space: pre-line;">{guia.get('passo_a_passo_substituir_hotswap')}</p>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 12px; color: var(--ink);">3. Protocolo de Remoção Segura de Serviços</h3>
+  <div class="integ-card" style="margin-bottom: 16px;">
+    <p style="white-space: pre-line;">{guia.get('passo_a_passo_remover_ferramenta')}</p>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 12px; color: var(--ink);">4. Estudo de Caso Prático: {caso_pratico.get('cenario')}</h3>
+  <div class="entry" style="grid-template-columns: 1fr;">
+    <div class="entry-body">
+      <p><strong>1. Isolamento Operacional:</strong> {caso_pratico.get('passo_1_isolamento')}</p>
+      <p><strong>2. Início do Novo Contêiner:</strong> <code>{caso_pratico.get('passo_2_novo_servico')}</code></p>
+      <p><strong>3. Chaveamento no n8n:</strong> {caso_pratico.get('passo_3_chaveamento_n8n')}</p>
+      <p style="color: var(--green); font-weight: 600;"><strong>4. Veredito Final:</strong> {caso_pratico.get('passo_4_resultado')}</p>
+    </div>
   </div>
 
 </div>
@@ -772,9 +897,18 @@ def gerar_typst_ecossistema(dados: dict) -> str:
 
 #v(8pt)
 
-== 4. Deploy All-in-One & Dimensionamento
+== 4. Deploy All-in-One & Composição da Stack
 
 - *Hardware Recomendado:* {deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('armazenamento_minimo')}
+- *Isolamento de Rede:* Rede Docker `ecosystem_net` com portas 80/443 públicas via Traefik v3.
+
+#v(6pt)
+
+== 5. Guia de Modularidade & Hot-Swap de Serviços
+
+- *Acoplamento Fraco:* Todos os módulos dialogam via webhooks no n8n e autenticação OIDC no Keycloak.
+- *Inserção de Nova Ferramenta:* Declare o contêiner no `docker-compose.override.yml`, conecte à rede `ecosystem_net` e configure labels do Traefik.
+- *Hot-Swap de Ferramenta:* Suba o novo serviço em paralelo, aponte os nós no n8n e altere a rota no Traefik com zero downtime.
 """
     return typst
 

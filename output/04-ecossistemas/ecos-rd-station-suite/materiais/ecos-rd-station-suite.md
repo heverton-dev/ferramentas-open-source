@@ -83,14 +83,48 @@
 
 ---
 
-## 4. Deploy Consolidado All-in-One
+## 4. Deploy All-in-One: Orquestração Unificada (Docker Compose)
 
-**Dimensionamento de Hardware:**
+> **Topologia & Segurança de Rede:** A infraestrutura opera sobre uma rede bridge isolada do Docker (`ecosystem_net`). Apenas o reverse proxy Traefik expõe as portas públicas 80 (HTTP com redirect) e 443 (HTTPS TLS automático via ACME/Let's Encrypt). Todas as ferramentas (Mautic, Twenty, Chatwoot, Evolution, n8n, Keycloak e PostgreSQL) comunicam-se exclusivamente pela rede interna através de seus nomes DNS de serviço (ex: `http://chatwoot:3000`, `postgres:5432`), eliminando vetores de ataque externos e exposição de portas desnecessárias.
+
+### Composição Detalhada da Stack de Infraestrutura
+
+- **Traefik Proxy v3** (`traefik:v3.0`):
+  - *Papel:* Ingress Controller & Reverse Proxy com TLS automático
+  - *Por que foi escolhido:* Descobre contêineres dinamicamente via labels do Docker sem necessidade de recarregar Nginx manualmente. Emite certificados SSL Let's Encrypt para múltiplos subdomínios corporativos.
+  - *Portas & Exposição:* 80:80 (HTTP) e 443:443 (HTTPS)
+  - *Persistência:* `Volume `/letsencrypt/acme.json` para certificados`
+
+- **Keycloak SSO** (`quay.io/keycloak/keycloak:latest`):
+  - *Papel:* Provedor Central de Identidade (IdP) & Single Sign-On (OIDC/SAML)
+  - *Por que foi escolhido:* Elimina silos de senhas: os colaboradores usam a mesma credencial corporativa para acessar o CRM (Twenty), o Atendimento (Chatwoot), as Landing Pages (Directus) e a Automação (Mautic).
+  - *Portas & Exposição:* Apenas rede interna (exposto via Traefik em `sso.empresa.com.br`)
+  - *Persistência:* `PostgreSQL corporativo compartilhado`
+
+- **n8n Automation** (`n8nio/n8n:latest`):
+  - *Papel:* Barramento de Eventos & Orquestração Assíncrona de Dados
+  - *Por que foi escolhido:* Funciona como a 'cola' do ecossistema. Substitui o Zapier/Make com interface visual no-code, processando webhooks e roteando leads do Typebot para o Mautic, CRM e WhatsApp sem código customizado.
+  - *Portas & Exposição:* Apenas rede interna (exposto via Traefik em `n8n.empresa.com.br`)
+  - *Persistência:* `Volume `/data/.n8n` ou PostgreSQL`
+
+- **Cluster PostgreSQL** (`postgres:16-alpine`):
+  - *Papel:* Banco de Dados Relacional Consolidado
+  - *Por que foi escolhido:* Instância única otimizada com bancos lógicos dedicados (`db_mautic`, `db_twenty`, `db_chatwoot`, `db_keycloak`, `db_n8n`), reduzindo drasticamente o consumo de memória RAM na VPS.
+  - *Portas & Exposição:* Nenhuma porta pública (porta 5432 restrita à rede `ecosystem_net`)
+  - *Persistência:* `Volume de dados `/var/lib/postgresql/data` com política diária de pg_dump`
+
+- **Redis Cache & Queue** (`redis:7-alpine`):
+  - *Papel:* Fila de Mensageria em Memória & Sessões WebSockets
+  - *Por que foi escolhido:* Gerencia as filas de alta velocidade do Chatwoot (atendimento em tempo real), Evolution API (sessões Baileys do WhatsApp) e n8n (execuções em background).
+  - *Portas & Exposição:* Nenhuma porta pública (porta 6379 restrita à rede `ecosystem_net`)
+  - *Persistência:* `Volume persistente `/data` (AOF habilitado)`
+
+**Dimensionamento de Hardware Total:**
 - RAM Recomendada: 16 GB RAM
 - CPU Recomendada: 8 vCPU
 - Armazenamento: 120 GB NVMe SSD
 
-### Exemplo de Docker Compose Unificado
+### Arquivo `docker-compose.yml` Consolidado
 ```yaml
 version: '3.8'
 
@@ -110,6 +144,7 @@ services:
       - '443:443'
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      - './letsencrypt:/letsencrypt'
     networks:
       - ecosystem_net
 
@@ -119,6 +154,11 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=SegredoForte2026
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.keycloak.rule=Host(`sso.suaempresa.com.br`)'
+      - 'traefik.http.routers.keycloak.entrypoints=websecure'
+      - 'traefik.http.routers.keycloak.tls.certresolver=myresolver'
     networks:
       - ecosystem_net
 
@@ -127,32 +167,90 @@ services:
     environment:
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_HOST=n8n.suaempresa.com.br
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.n8n.rule=Host(`n8n.suaempresa.com.br`)'
+      - 'traefik.http.routers.n8n.entrypoints=websecure'
+      - 'traefik.http.routers.n8n.tls.certresolver=myresolver'
     networks:
       - ecosystem_net
 
   mautic:
     image: mautic/mautic:latest
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.mautic.rule=Host(`mkt.suaempresa.com.br`)'
+      - 'traefik.http.routers.mautic.entrypoints=websecure'
+      - 'traefik.http.routers.mautic.tls.certresolver=myresolver'
     networks:
       - ecosystem_net
 
   twenty:
     image: twentyhq/twenty:latest
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.twenty.rule=Host(`crm.suaempresa.com.br`)'
+      - 'traefik.http.routers.twenty.entrypoints=websecure'
+      - 'traefik.http.routers.twenty.tls.certresolver=myresolver'
     networks:
       - ecosystem_net
 
   chatwoot:
     image: chatwoot/chatwoot:latest
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.chatwoot.rule=Host(`chat.suaempresa.com.br`)'
+      - 'traefik.http.routers.chatwoot.entrypoints=websecure'
+      - 'traefik.http.routers.chatwoot.tls.certresolver=myresolver'
     networks:
       - ecosystem_net
 
   evolution-api:
     image: atendai/evolution-api:v2.1.0
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.evolution.rule=Host(`wa.suaempresa.com.br`)'
+      - 'traefik.http.routers.evolution.entrypoints=websecure'
+      - 'traefik.http.routers.evolution.tls.certresolver=myresolver'
     networks:
       - ecosystem_net
 ```
 
-### Passos de Instalação
+### Passos de Instalação e Subida
 
 1. **Provisionamento do Host:** Contrate uma VPS de 8 vCPU / 16 GB RAM com Ubuntu 22.04 LTS e instale Docker Engine e Docker Compose.
 2. **Configuração de DNS Wildcard:** Crie uma entrada DNS tipo A apontando `*.suaempresa.com.br` para o IP público da VPS.
 3. **Subida do Cluster Integrado:** Execute `docker compose up -d` na pasta do ecossistema e acesse os painéis com certificados SSL automáticos.
+
+---
+
+## 5. Guia de Modularidade, Expansão & Hot-Swap de Ferramentas
+
+> **Filosofia de Arquitetura Desacoplada (Loose Coupling):**  
+> A arquitetura foi projetada sob o princípio de Acoplamento Fraco (Loose Coupling). Nenhuma ferramenta conversa com outra de forma proprietária rígida. Todas as trocas de informação ocorrem através de Webhooks padronizados no barramento n8n e autenticação federada via OpenID Connect no Keycloak. Isso significa que qualquer componente da stack pode ser inserido, substituído ou removido como um bloco de Lego, sem afetar o funcionamento dos outros serviços.
+
+### Como Adicionar uma Nova Ferramenta ao Ecossistema
+1. Adicionar o contêiner no `docker-compose.override.yml` conectado à rede `ecosystem_net`;
+2. Definir as labels do Traefik para gerar SSL automático no novo subdomínio;
+3. Criar base de dados dedicada no Postgres compartilhado;
+4. Conectar os webhooks de entrada e saída no n8n.
+
+### Como Substituir uma Ferramenta em Produção (Hot-Swap sem Downtime)
+1. Subir o Novo Serviço em Paralelo: Inicie o novo contêiner em um subdomínio temporário (ex: `novo-mkt.empresa.com.br`) na mesma rede `ecosystem_net`;
+2. Replicar os Fluxos no n8n: Crie uma versão paralela do workflow no n8n apontando para a nova ferramenta;
+3. Migração de Dados: Exporte os contatos/histórico do serviço antigo e importe no novo;
+4. Virada de Rota no Traefik: Altere a label do Traefik no `docker-compose.yml` para que o subdomínio principal (`mkt.empresa.com.br`) passe a apontar para o novo contêiner;
+5. Descomissionamento Seguro: Desligue o contêiner antigo com `docker compose stop <servico_antigo>` e preserve o volume de backup.
+
+### Como Remover um Módulo com Segurança
+1. Desative os nós correspondentes no n8n para evitar erros de webhooks não respondidos;
+2. Remova as labels do Traefik para liberar a rota pública;
+3. Execute `docker compose stop <servico>` e `docker compose rm <servico>`;
+4. Mantenha os volumes de dados arquivados em storage secundário para histórico.
+
+### Estudo de Caso Prático: Substituição do Mautic por outra ferramenta de automação (ex: Activepieces ou Novu)
+- **1. Isolamento:** O Twenty CRM e o Chatwoot não conversam diretamente com o Mautic; eles conversam com o n8n. Logo, o CRM e o WhatsApp continuam operando 100% normalmente.
+- **2. Novo Serviço:** Sobe-se o novo contêiner no `docker-compose.override.yml` com a label `traefik.http.routers.automacao.rule=Host('automacao.empresa.com.br')`.
+- **3. Chaveamento no n8n:** No n8n, substitui-se o nó 'Mautic: Create Lead' pelo nó 'Activepieces: Trigger Flow'. Nenhuma linha de código ou configuração nos outros módulos precisa ser alterada.
+- **4. Resultado Final:** A migração ocorre com ZERO impacto para vendedores no CRM e ZERO impacto para operadores no Chatwoot.
+

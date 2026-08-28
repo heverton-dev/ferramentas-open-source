@@ -193,6 +193,13 @@ def validar_ecossistema(dados: Dict[str, Any]) -> Tuple[bool, List[str]]:
     deploy = dados.get("deploy_consolidado", {})
     if not deploy.get("docker_compose_exemplo") or not deploy.get("passos_deploy"):
         erros.append("Deploy Consolidado: 'docker_compose_exemplo' e 'passos_deploy' são obrigatórios.")
+    if not deploy.get("composicao_stack_detalhada"):
+        erros.append("Deploy Consolidado: 'composicao_stack_detalhada' é obrigatório.")
+
+    guia = dados.get("guia_modularidade_e_expansao", {})
+    for cg in ["filosofia_modular", "passo_a_passo_adicionar_ferramenta", "passo_a_passo_substituir_hotswap", "passo_a_passo_remover_ferramenta", "exemplo_caso_pratico_hotswap"]:
+        if cg not in guia or not guia[cg]:
+            erros.append(f"Guia de Modularidade: Campo obrigatório '{cg}' ausente ou vazio.")
 
     return len(erros) == 0, erros
 

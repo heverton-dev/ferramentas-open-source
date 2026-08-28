@@ -1115,11 +1115,84 @@
   <div class="sec-head">
     <div class="sec-info">
       <span class="sec-num">Seção 05 · Deploy All-in-One</span>
-      <h2>Orquestração Unificada (Docker Compose)</h2>
-      <p class="sec-note">Provisionamento em VPS corporativa única (8 vCPU / 16 GB RAM).</p>
+      <h2>Orquestração Unificada (Docker Compose) &amp; Anatomia da Stack</h2>
+      <p class="sec-note">Provisionamento consolidado em VPS (8 vCPU / 16 GB RAM).</p>
     </div>
   </div>
 
+  <div class="racional-box" style="margin-bottom: 16px;">
+    <p><strong>🛡️ Segurança e Topologia de Rede:</strong> A infraestrutura opera sobre uma rede bridge isolada do Docker (`ecosystem_net`). Apenas o reverse proxy Traefik expõe as portas públicas 80 (HTTP com redirect) e 443 (HTTPS TLS automático via ACME/Let's Encrypt). Todas as ferramentas (Mautic, Twenty, Chatwoot, Evolution, n8n, Keycloak e PostgreSQL) comunicam-se exclusivamente pela rede interna através de seus nomes DNS de serviço (ex: `http://chatwoot:3000`, `postgres:5432`), eliminando vetores de ataque externos e exposição de portas desnecessárias.</p>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">Composição dos Serviços de Infraestrutura</h3>
+  
+        <div class="integ-card" style="margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <h4 style="margin: 0; color: var(--ink);">Traefik Proxy v3</h4>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 2px;">traefik:v3.0</code>
+          </div>
+          <p><strong>Papel na Stack:</strong> Ingress Controller & Reverse Proxy com TLS automático</p>
+          <p style="margin-top: 4px;"><strong>Por que foi escolhido:</strong> Descobre contêineres dinamicamente via labels do Docker sem necessidade de recarregar Nginx manualmente. Emite certificados SSL Let's Encrypt para múltiplos subdomínios corporativos.</p>
+          <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted);">
+            <span>🔌 80:80 (HTTP) e 443:443 (HTTPS)</span>
+            <span>💾 Volume `/letsencrypt/acme.json` para certificados</span>
+          </div>
+        </div>
+        
+        <div class="integ-card" style="margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <h4 style="margin: 0; color: var(--ink);">Keycloak SSO</h4>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 2px;">quay.io/keycloak/keycloak:latest</code>
+          </div>
+          <p><strong>Papel na Stack:</strong> Provedor Central de Identidade (IdP) & Single Sign-On (OIDC/SAML)</p>
+          <p style="margin-top: 4px;"><strong>Por que foi escolhido:</strong> Elimina silos de senhas: os colaboradores usam a mesma credencial corporativa para acessar o CRM (Twenty), o Atendimento (Chatwoot), as Landing Pages (Directus) e a Automação (Mautic).</p>
+          <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted);">
+            <span>🔌 Apenas rede interna (exposto via Traefik em `sso.empresa.com.br`)</span>
+            <span>💾 PostgreSQL corporativo compartilhado</span>
+          </div>
+        </div>
+        
+        <div class="integ-card" style="margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <h4 style="margin: 0; color: var(--ink);">n8n Automation</h4>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 2px;">n8nio/n8n:latest</code>
+          </div>
+          <p><strong>Papel na Stack:</strong> Barramento de Eventos & Orquestração Assíncrona de Dados</p>
+          <p style="margin-top: 4px;"><strong>Por que foi escolhido:</strong> Funciona como a 'cola' do ecossistema. Substitui o Zapier/Make com interface visual no-code, processando webhooks e roteando leads do Typebot para o Mautic, CRM e WhatsApp sem código customizado.</p>
+          <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted);">
+            <span>🔌 Apenas rede interna (exposto via Traefik em `n8n.empresa.com.br`)</span>
+            <span>💾 Volume `/data/.n8n` ou PostgreSQL</span>
+          </div>
+        </div>
+        
+        <div class="integ-card" style="margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <h4 style="margin: 0; color: var(--ink);">Cluster PostgreSQL</h4>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 2px;">postgres:16-alpine</code>
+          </div>
+          <p><strong>Papel na Stack:</strong> Banco de Dados Relacional Consolidado</p>
+          <p style="margin-top: 4px;"><strong>Por que foi escolhido:</strong> Instância única otimizada com bancos lógicos dedicados (`db_mautic`, `db_twenty`, `db_chatwoot`, `db_keycloak`, `db_n8n`), reduzindo drasticamente o consumo de memória RAM na VPS.</p>
+          <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted);">
+            <span>🔌 Nenhuma porta pública (porta 5432 restrita à rede `ecosystem_net`)</span>
+            <span>💾 Volume de dados `/var/lib/postgresql/data` com política diária de pg_dump</span>
+          </div>
+        </div>
+        
+        <div class="integ-card" style="margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <h4 style="margin: 0; color: var(--ink);">Redis Cache & Queue</h4>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 2px;">redis:7-alpine</code>
+          </div>
+          <p><strong>Papel na Stack:</strong> Fila de Mensageria em Memória & Sessões WebSockets</p>
+          <p style="margin-top: 4px;"><strong>Por que foi escolhido:</strong> Gerencia as filas de alta velocidade do Chatwoot (atendimento em tempo real), Evolution API (sessões Baileys do WhatsApp) e n8n (execuções em background).</p>
+          <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted);">
+            <span>🔌 Nenhuma porta pública (porta 6379 restrita à rede `ecosystem_net`)</span>
+            <span>💾 Volume persistente `/data` (AOF habilitado)</span>
+          </div>
+        </div>
+        
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 12px; color: var(--ink);">Arquivo docker-compose.yml Completo</h3>
   <div class="code-box" style="margin-bottom: 16px;">
     <pre><code>version: '3.8'
 
@@ -1139,6 +1212,7 @@ services:
       - '443:443'
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      - './letsencrypt:/letsencrypt'
     networks:
       - ecosystem_net
 
@@ -1148,6 +1222,11 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=SegredoForte2026
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.keycloak.rule=Host(`sso.suaempresa.com.br`)'
+      - 'traefik.http.routers.keycloak.entrypoints=websecure'
+      - 'traefik.http.routers.keycloak.tls.certresolver=myresolver'
     networks:
       - ecosystem_net
 
@@ -1156,32 +1235,122 @@ services:
     environment:
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_HOST=n8n.suaempresa.com.br
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.n8n.rule=Host(`n8n.suaempresa.com.br`)'
+      - 'traefik.http.routers.n8n.entrypoints=websecure'
+      - 'traefik.http.routers.n8n.tls.certresolver=myresolver'
     networks:
       - ecosystem_net
 
   mautic:
     image: mautic/mautic:latest
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.mautic.rule=Host(`mkt.suaempresa.com.br`)'
+      - 'traefik.http.routers.mautic.entrypoints=websecure'
+      - 'traefik.http.routers.mautic.tls.certresolver=myresolver'
     networks:
       - ecosystem_net
 
   twenty:
     image: twentyhq/twenty:latest
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.twenty.rule=Host(`crm.suaempresa.com.br`)'
+      - 'traefik.http.routers.twenty.entrypoints=websecure'
+      - 'traefik.http.routers.twenty.tls.certresolver=myresolver'
     networks:
       - ecosystem_net
 
   chatwoot:
     image: chatwoot/chatwoot:latest
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.chatwoot.rule=Host(`chat.suaempresa.com.br`)'
+      - 'traefik.http.routers.chatwoot.entrypoints=websecure'
+      - 'traefik.http.routers.chatwoot.tls.certresolver=myresolver'
     networks:
       - ecosystem_net
 
   evolution-api:
     image: atendai/evolution-api:v2.1.0
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.evolution.rule=Host(`wa.suaempresa.com.br`)'
+      - 'traefik.http.routers.evolution.entrypoints=websecure'
+      - 'traefik.http.routers.evolution.tls.certresolver=myresolver'
     networks:
       - ecosystem_net</code></pre>
   </div>
 
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">Passos de Subida do Ambiente</h3>
   <div class="steps-grid">
     <div class="step-card"><div class="step-head"><span class="step-badge">01</span> Provisionamento do Host</div><p>Contrate uma VPS de 8 vCPU / 16 GB RAM com Ubuntu 22.04 LTS e instale Docker Engine e Docker Compose.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">02</span> Configuração de DNS Wildcard</div><p>Crie uma entrada DNS tipo A apontando `*.suaempresa.com.br` para o IP público da VPS.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">03</span> Subida do Cluster Integrado</div><p>Execute `docker compose up -d` na pasta do ecossistema e acesse os painéis com certificados SSL automáticos.</p></div>
+  </div>
+
+  <div class="sec-head" style="margin-top: 48px;">
+    <div class="sec-info">
+      <span class="sec-num">Seção 06 · Guia de Modularidade &amp; Hot-Swap</span>
+      <h2>Adição, Substituição &amp; Remoção de Módulos</h2>
+      <p class="sec-note">Como personalizar o ecossistema e trocar ferramentas sem quebrar o cluster nem interromper a operação.</p>
+    </div>
+  </div>
+
+  <div class="racional-box" style="margin-bottom: 20px;">
+    <p><strong>🧩 Princípio de Acoplamento Fraco:</strong> A arquitetura foi projetada sob o princípio de Acoplamento Fraco (Loose Coupling). Nenhuma ferramenta conversa com outra de forma proprietária rígida. Todas as trocas de informação ocorrem através de Webhooks padronizados no barramento n8n e autenticação federada via OpenID Connect no Keycloak. Isso significa que qualquer componente da stack pode ser inserido, substituído ou removido como um bloco de Lego, sem afetar o funcionamento dos outros serviços.</p>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">1. Protocolo de Inserção de Novas Ferramentas</h3>
+  <div class="steps-grid">
+    
+        <div class="step-card">
+          <div class="step-head">1. Definição do Serviço no Docker Compose</div>
+          <p>Adicione o novo serviço ao arquivo `docker-compose.override.yml` (evitando alterar o arquivo principal). Vincule-o obrigatoriamente à rede `ecosystem_net` e defina as labels do Traefik para roteamento sob o subdomínio desejado (ex: `forms.suaempresa.com.br`).</p>
+        </div>
+        
+        <div class="step-card">
+          <div class="step-head">2. Provisionamento do Banco de Dados</div>
+          <p>Caso a ferramenta necessite de persistência relacional, crie uma base de dados dedicada no cluster PostgreSQL existente (`CREATE DATABASE db_nova_ferramenta;`) em vez de subir outro contêiner de banco.</p>
+        </div>
+        
+        <div class="step-card">
+          <div class="step-head">3. Conexão ao Barramento de Eventos (n8n)</div>
+          <p>Configure o webhook de saída da nova ferramenta apontando para um endpoint de gatilho no n8n (`http://n8n:5678/webhook/novo-evento`), integrando-a instantaneamente ao CRM e WhatsApp.</p>
+        </div>
+        
+        <div class="step-card">
+          <div class="step-head">4. Federação de Identidade no Keycloak (Opcional)</div>
+          <p>Se a ferramenta suportar OIDC/OAuth2, crie um novo Client no realm corporativo do Keycloak para que a equipe utilize a mesma credencial de login.</p>
+        </div>
+        
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 12px; color: var(--ink);">2. Protocolo de Hot-Swap (Substituição de Ferramenta sem Downtime)</h3>
+  <div class="integ-card" style="margin-bottom: 16px;">
+    <p style="white-space: pre-line;">1. Subir o Novo Serviço em Paralelo: Inicie o novo contêiner em um subdomínio temporário (ex: `novo-mkt.empresa.com.br`) na mesma rede `ecosystem_net`;
+2. Replicar os Fluxos no n8n: Crie uma versão paralela do workflow no n8n apontando para a nova ferramenta;
+3. Migração de Dados: Exporte os contatos/histórico do serviço antigo e importe no novo;
+4. Virada de Rota no Traefik: Altere a label do Traefik no `docker-compose.yml` para que o subdomínio principal (`mkt.empresa.com.br`) passe a apontar para o novo contêiner;
+5. Descomissionamento Seguro: Desligue o contêiner antigo com `docker compose stop <servico_antigo>` e preserve o volume de backup.</p>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 12px; color: var(--ink);">3. Protocolo de Remoção Segura de Serviços</h3>
+  <div class="integ-card" style="margin-bottom: 16px;">
+    <p style="white-space: pre-line;">1. Desative os nós correspondentes no n8n para evitar erros de webhooks não respondidos;
+2. Remova as labels do Traefik para liberar a rota pública;
+3. Execute `docker compose stop <servico>` e `docker compose rm <servico>`;
+4. Mantenha os volumes de dados arquivados em storage secundário para histórico.</p>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 12px; color: var(--ink);">4. Estudo de Caso Prático: Substituição do Mautic por outra ferramenta de automação (ex: Activepieces ou Novu)</h3>
+  <div class="entry" style="grid-template-columns: 1fr;">
+    <div class="entry-body">
+      <p><strong>1. Isolamento Operacional:</strong> O Twenty CRM e o Chatwoot não conversam diretamente com o Mautic; eles conversam com o n8n. Logo, o CRM e o WhatsApp continuam operando 100% normalmente.</p>
+      <p><strong>2. Início do Novo Contêiner:</strong> <code>Sobe-se o novo contêiner no `docker-compose.override.yml` com a label `traefik.http.routers.automacao.rule=Host('automacao.empresa.com.br')`.</code></p>
+      <p><strong>3. Chaveamento no n8n:</strong> No n8n, substitui-se o nó 'Mautic: Create Lead' pelo nó 'Activepieces: Trigger Flow'. Nenhuma linha de código ou configuração nos outros módulos precisa ser alterada.</p>
+      <p style="color: var(--green); font-weight: 600;"><strong>4. Veredito Final:</strong> A migração ocorre com ZERO impacto para vendedores no CRM e ZERO impacto para operadores no Chatwoot.</p>
+    </div>
   </div>
 
 </div>

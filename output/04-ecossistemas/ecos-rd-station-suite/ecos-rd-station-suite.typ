@@ -133,6 +133,15 @@
 
 #v(8pt)
 
-== 4. Deploy All-in-One & Dimensionamento
+== 4. Deploy All-in-One & Composição da Stack
 
 - *Hardware Recomendado:* 8 vCPU / 16 GB RAM / 120 GB NVMe SSD
+- *Isolamento de Rede:* Rede Docker `ecosystem_net` com portas 80/443 públicas via Traefik v3.
+
+#v(6pt)
+
+== 5. Guia de Modularidade & Hot-Swap de Serviços
+
+- *Acoplamento Fraco:* Todos os módulos dialogam via webhooks no n8n e autenticação OIDC no Keycloak.
+- *Inserção de Nova Ferramenta:* Declare o contêiner no `docker-compose.override.yml`, conecte à rede `ecosystem_net` e configure labels do Traefik.
+- *Hot-Swap de Ferramenta:* Suba o novo serviço em paralelo, aponte os nós no n8n e altere a rota no Traefik com zero downtime.
