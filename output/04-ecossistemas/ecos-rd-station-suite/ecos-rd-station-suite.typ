@@ -3,7 +3,7 @@
   margin: (x: 1.8cm, top: 2.2cm, bottom: 2.2cm),
   header: align(center)[
     #set par(leading: 0.65em)
-    #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[FÁBRICA UNIVERSAL AIDD · LIVRO-TEXTO DE MACRO-ECOSSISTEMA SOBERANO (PADRÃO DIAMANTE R5-E)]
+    #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[Fábrica Universal AIDD · Livro-Texto de Macro-Ecossistema Soberano (Padrão Diamante R5-E)]
   ],
   footer: [
     #set par(leading: 0.65em)
