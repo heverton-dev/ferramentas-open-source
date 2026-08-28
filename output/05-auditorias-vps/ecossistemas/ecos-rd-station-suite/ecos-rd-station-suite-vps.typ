@@ -26,94 +26,208 @@
 ]
 
 #v(1em)
-== 1. Sumario Executivo & Diagnostico de Headroom da VPS
+**Alvo:** Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)
 
-A VPS de producao possui *12 vCPUs* e *47.05 GB de memoria RAM*, operando com folga substancial (*~43.99 GB de memoria livre*). A incorporacao do alvo demanda *4 vCPUs* e *6.5 GB de RAM*, preservando a estabilidade das aplicacoes existentes (Mautic, Evolution, n8n).
+**Data da Auditoria:** 28/08/2026
 
-#table(
-  columns: (1.4fr, 1fr, 1fr, 1fr, 1fr),
-  fill: (col, row) => if row == 0 { rgb("1e293b") } else { none },
-  stroke: 0.5pt + rgb("cbd5e1"),
-  align: (left, center, center, center, center),
-  [#text(fill: white, weight: "bold")[Recurso]],
-  [#text(fill: white, weight: "bold")[Total]],
-  [#text(fill: white, weight: "bold")[Ocupado]],
-  [#text(fill: white, weight: "bold")[Demanda]],
-  [#text(fill: white, weight: "bold")[Status]],
-  [Processamento], [12 vCPUs], [~1.5 vCPUs], [4 vCPUs], [APROVADO],
-  [Memoria RAM], [47.05 GB], [~3.06 GB], [6.5 GB], [APROVADO],
-  [Orquestracao], [Docker Swarm], [17 Cntrs], [Namespace], [APROVADO],
-  [Ingress TLS], [Traefik], [Rede Overlay], [Let's Encrypt], [APROVADO]
-)
+**Veredito Tecnico:** **TOTALMENTE VIAVEL (100% HOMOLOGADO)** (Score: 100/100)
 
-#v(1em)
-== 2. Matriz de Compatibilidade e Avaliacao de Risco Zero
+**Host da VPS:** `painel.vpsconexao.org` (Docker Swarm)
 
-1. *Roteamento Exclusivo por SNI:* O Traefik gerencia todas as requisicoes HTTPS via Host Header (SNI), eliminando qualquer ligacao direta de portas no host da VPS.
-2. *Namespace de Volumes Isolados:* Todos os dados persistentes sao armazenados em volumes Docker dedicados (`ecos-rd-station-suite_*`), impedindo sobrescrita de bancos de dados legados.
-3. *Rede Overlay Unificada:* Comunicacao via rede `network_conexao` existente sem necessidade de reinicializacao de servicos ativos.
+**Garantia de Isolamento:** Risco Zero · 100% de Preservacao das Aplicacoes em Producao
 
-#v(1em)
-== 3. Analise Financeira e TCO na VPS Existente
 
-- *Custo Proprietario Estimado (SaaS Equivalente):* R\$ 1.200,00 / mes (R\$ 14.400,00 / ano).
-- *Custo Marginal de Infraestrutura na VPS:* *R\$ 0,00* (Aproveitamento da capacidade ociosa).
-- *Economia Liquida Anual:* *R\$ 14.400,00 (100% de Payback Imediato)*.
-- *Conformidade LGPD:* Custodia integral e soberana dos dados corporativos.
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
 
-#pagebreak()
+== Sumario Executivo do Livro Mestre
+- **Parte I · Guias Executivos & Viabilidade Estrategica**
+- Capitulo 01: Dossie de Auditoria de Hardware e Headroom
+- Capitulo 02: Matriz de Compatibilidade e Avaliacao de Risco Zero
+- Capitulo 03: Analise Financeira, TCO e Economia na VPS Existente
+- **Parte II · Guias de Engenharia & Infraestrutura**
+- Capitulo 04: Stack Compose Swarm de Producao Integrada
+- Capitulo 05: Roteiro de Configuracao de DNS, SPF, DKIM e DMARC
+- Capitulo 06: Mapa de Topologia de Redes, Ingress e Volumes Persistentes
+- **Parte III · Playbooks de Instalacao & Operacao**
+- Capitulo 07: Playbook de Implantacao Cirurgica via Portainer UI
+- Capitulo 08: Guia de Configuracao Pos-Deploy e Integracao entre Apps
+- Capitulo 09: Protocolo de Monitoramento e Health Checks no Uptime Kuma
+- **Parte IV · Playbooks de Desinstalacao & Governanca**
+- Capitulo 10: Manual de Desinstalacao Atomica e Rollback Instantaneo
+- Capitulo 11: Script de Expurgo Seguro de Volumes e Higiene de Disco
+- Capitulo 12: Checklist de Validacao de Saude Pos-Rollback
 
-== 4. Matriz de Servicos e Subdominios Propostos
-
-#table(
-  columns: (1.5fr, 2fr, 1.2fr, 1.2fr),
-  fill: (col, row) => if row == 0 { rgb("1e293b") } else { none },
-  stroke: 0.5pt + rgb("cbd5e1"),
-  align: (left, left, center, center),
-  [#text(fill: white, weight: "bold")[Servico]],
-  [#text(fill: white, weight: "bold")[URL de Acesso Seguro]],
-  [#text(fill: white, weight: "bold")[Roteamento]],
-  [#text(fill: white, weight: "bold")[Rede Swarm]],
-  [Campaigns Service], [https://campaigns.vpsconexao.org], [Traefik SNI], [Rede network_conexao],
-  [Crm Service], [https://crm.vpsconexao.org], [Traefik SNI], [Rede network_conexao],
-  [Chat Service], [https://chat.vpsconexao.org], [Traefik SNI], [Rede network_conexao],
-  [Wpp Service], [https://wpp.vpsconexao.org], [Traefik SNI], [Rede network_conexao],
-  [News Service], [https://news.vpsconexao.org], [Traefik SNI], [Rede network_conexao],
-
-)
-
-#v(1em)
-== 5. Roteiro de Apontamentos DNS e Seguranca de E-mail
-
-#table(
-  columns: (2fr, 0.8fr, 1.5fr, 1.2fr),
-  fill: (col, row) => if row == 0 { rgb("1e293b") } else { none },
-  stroke: 0.5pt + rgb("cbd5e1"),
-  align: (left, center, left, center),
-  [#text(fill: white, weight: "bold")[Host / Subdominio]],
-  [#text(fill: white, weight: "bold")[Tipo]],
-  [#text(fill: white, weight: "bold")[Destino / Valor]],
-  [#text(fill: white, weight: "bold")[Proxy Status]],
-  [campaigns.vpsconexao.org], [A], [IP da VPS], [DNS Only],
-  [crm.vpsconexao.org], [A], [IP da VPS], [DNS Only],
-  [chat.vpsconexao.org], [A], [IP da VPS], [DNS Only],
-  [wpp.vpsconexao.org], [A], [IP da VPS], [DNS Only],
-  [news.vpsconexao.org], [A], [IP da VPS], [DNS Only],
-
-)
-
-#v(1em)
-== 6. Playbook de Implantacao e Operacao via Portainer
-
-1. Acesse o painel: `https://painel.vpsconexao.org`.
-2. Navegue em *Stacks* > *+ Add stack* e defina o nome `ecos-rd-station-suite`.
-3. Cole o conteudo da Stack Compose oficial e clique em *Deploy the stack*.
-4. Aguarde a emissao automatica do certificado SSL via Traefik.
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
 
 #pagebreak()
+= PARTE I · GUIAS EXECUTIVOS & VIABILIDADE ESTRATÉGICA
+**Alvo de Incorporacao:** Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)
 
-== 7. Stack Compose Swarm de Producao (All-in-One)
+**Data da Auditoria:** 28/08/2026
 
+**Veredito Tecnico:** **TOTALMENTE VIAVEL (100% HOMOLOGADO)** (Score: 100/100)
+
+**Host Auditado:** `painel.vpsconexao.org` (Docker Swarm Ativo)
+
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 1. Diagnostico de Capacidade e Headroom da VPS
+#table(
+  columns: (1fr, 1fr, 1fr, 1fr, 1fr, 1fr),
+  fill: (col, row) => if row == 0 { rgb("1e293b") } else { none },
+  stroke: 0.5pt + rgb("cbd5e1"),
+  align: (left),
+  [#text(fill: white, weight: "bold")[Dimens?o de Hardware]],
+  [#text(fill: white, weight: "bold")[Capacidade Total]],
+  [#text(fill: white, weight: "bold")[Ocupacao Atual (Est.)]],
+  [#text(fill: white, weight: "bold")[Disponivel (Headroom)]],
+  [#text(fill: white, weight: "bold")[Requisito da Stack]],
+  [#text(fill: white, weight: "bold")[Veredito]],
+  [Processamento (vCPU)],
+  [12 vCPUs],
+  [~1.5 vCPUs],
+  [~10.3 vCPUs],
+  [4 vCPUs],
+  [APROVADO],
+  [Memoria RAM Global],
+  [47.05 GB],
+  [~3.06 GB],
+  [~43.99 GB],
+  [6.5 GB],
+  [APROVADO],
+  [Modo de Orquestracao],
+  [Docker Swarm],
+  [17 containers ativos],
+  [Nos: 1 Manager],
+  [Swarm Nativo],
+  [APROVADO],
+  [Ingress & Roteamento TLS],
+  [Traefik],
+  [Certresolver: `letsencryptresolver`],
+  [Rede: `network_conexao`],
+  [Roteamento SNI],
+  [APROVADO],
+)
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 2. Parecer Tecnico de Viabilidade e Tolerancia a Carga
+
+=== 2.1 Recomendacoes Estruturais e Oportunidades
+- Memoria RAM abundante: 43.99 GB livres para suportar a carga de 6.5 GB com alta folga.
+- Capacidade de processamento adequada: 12 vCPUs totais no servidor.
+- Zero conflito de portas de host detectado. Roteamento 100% via Traefik e subdominios.
+- Proxy reverso Traefik detectado com certresolver 'letsencryptresolver' e rede 'network_conexao'. Integracao direta sem criar novos proxies.
+
+=== 2.2 Alertas de Seguranca e Limites de Carga
+- Nenhum impedimento t?cnico detectado na VPS.
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 3. Matriz de Subdominios e Roteamento de Ingress
+#table(
+  columns: (1fr, 1fr, 1fr, 1fr),
+  fill: (col, row) => if row == 0 { rgb("1e293b") } else { none },
+  stroke: 0.5pt + rgb("cbd5e1"),
+  align: (left),
+  [#text(fill: white, weight: "bold")[Servico / Componente]],
+  [#text(fill: white, weight: "bold")[Papel Operacional]],
+  [#text(fill: white, weight: "bold")[Subdominio de Acesso]],
+  [#text(fill: white, weight: "bold")[Metodo de Roteamento]],
+  [Campaigns Service],
+  [Componente da Stack Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)],
+  [`https://campaigns.vpsconexao.org`],
+  [Roteamento Traefik SNI],
+  [Crm Service],
+  [Componente da Stack Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)],
+  [`https://crm.vpsconexao.org`],
+  [Roteamento Traefik SNI],
+  [Chat Service],
+  [Componente da Stack Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)],
+  [`https://chat.vpsconexao.org`],
+  [Roteamento Traefik SNI],
+  [Wpp Service],
+  [Componente da Stack Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)],
+  [`https://wpp.vpsconexao.org`],
+  [Roteamento Traefik SNI],
+  [News Service],
+  [Componente da Stack Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)],
+  [`https://news.vpsconexao.org`],
+  [Roteamento Traefik SNI],
+)
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+**Garantia de Isolamento:** 100% de Preservacao do Ecossistema em Producao
+
+**Alvo:** Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk) | **Data:** 28/08/2026
+
+
+== 1. Principio do Isolamento Estrito
+A incorporacao e classificada como **Risco Zero** devido a 3 fatores deterministicos:
+
++ **Roteamento Exclusivo por SNI:** O Traefik roteia o trafego baseado nos nomes de dominio, sem vincular portas no no fisico.
++ **Namespace de Volumes Isolados:** Todos os volumes utilizam prefixos exclusivos (`workspace_*` ou `ecos-rd-station-suite_*`).
++ **Rede Overlay Unificada:** Conexao direta a rede `network_conexao` existente sem necessidade de reiniciar containers existentes.
+
+== 2. Matriz de Risco por Componente
+#table(
+  columns: (1fr, 1fr, 1fr),
+  fill: (col, row) => if row == 0 { rgb("1e293b") } else { none },
+  stroke: 0.5pt + rgb("cbd5e1"),
+  align: (left),
+  [#text(fill: white, weight: "bold")[Componente Ativo]],
+  [#text(fill: white, weight: "bold")[Impacto Esperado]],
+  [#text(fill: white, weight: "bold")[Medida Preventiva]],
+  [Mautic CRM],
+  [Zero Interferencia],
+  [Redes e bancos independentes],
+  [Evolution API],
+  [Zero Interferencia],
+  [Nenhuma colisao de portas ou credenciais],
+  [n8n Workflow],
+  [Zero Interferencia],
+  [Pode consumir webhooks dos novos servicos],
+  [PostgreSQL Global],
+  [Zero Interferencia],
+  [Novo banco PostgreSQL dedicado na stack],
+)
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+**Objetivo:** Eliminacao de custos recorrentes em SaaS atraves do reaproveitamento da VPS atual.
+
+
+== 1. Comparativo de Custo Proprietario vs. Soberano
+- **Custo SaaS Estimado (Google Workspace / Microsoft 365 para 15 usuarios):** R\$ 1.200,00 / mes (R\$ 14.400,00 / ano).
+- **Custo Adicional de Infraestrutura na VPS:** **R\$ 0,00** (a VPS ja possui capacidade e headroom ociosos).
+- **Economia Liquida Anual:** **R\$ 14.400,00 (100% de Payback Imediato)**.
+
+== 2. Vantagens Estrategicas
+- Custodia integral de dados (LGPD compliant).
+- Sem limites artificiais de armazenamento alem do disco fisico da VPS.
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+#pagebreak()
+= PARTE II · GUIAS DE ENGENHARIA & INFRAESTRUTURA
+
+== Capitulo 04: Stack Swarm de Producao Oficial (YAML)
 ```yaml
 version: '3.8'
 
@@ -150,36 +264,277 @@ volumes:
 
 ```
 
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 1. Apontamentos de Zona DNS (Registros A)
+Cadastre na sua zona de DNS (Cloudflare, Registro.br ou Route53):
+
+#table(
+  columns: (1fr, 1fr, 1fr, 1fr),
+  fill: (col, row) => if row == 0 { rgb("1e293b") } else { none },
+  stroke: 0.5pt + rgb("cbd5e1"),
+  align: (left),
+  [#text(fill: white, weight: "bold")[Subdominio / Host]],
+  [#text(fill: white, weight: "bold")[Tipo]],
+  [#text(fill: white, weight: "bold")[Destino / Valor]],
+  [#text(fill: white, weight: "bold")[Observacao]],
+  [`campaigns.vpsconexao.org`],
+  [A],
+  [IP da VPS],
+  [DNS Only (Nuvem Cinza inicial)],
+  [`crm.vpsconexao.org`],
+  [A],
+  [IP da VPS],
+  [DNS Only (Nuvem Cinza inicial)],
+  [`chat.vpsconexao.org`],
+  [A],
+  [IP da VPS],
+  [DNS Only (Nuvem Cinza inicial)],
+  [`wpp.vpsconexao.org`],
+  [A],
+  [IP da VPS],
+  [DNS Only (Nuvem Cinza inicial)],
+  [`news.vpsconexao.org`],
+  [A],
+  [IP da VPS],
+  [DNS Only (Nuvem Cinza inicial)],
+)
+
+== 2. Registros para Servidor de E-mail (Se Aplicavel)
+- **Registro MX:** `mail.vpsconexao.org` -> Prioridade 10
+- **Registro TXT (SPF):** `v=spf1 mx a:mail.vpsconexao.org ~all`
+- **Registro TXT (DMARC):** `_dmarc.vpsconexao.org` -> `v=DMARC1; p=quarantine; rua=mailto:admin@vpsconexao.org`
+- **Registro TXT (DKIM):** Gerado automaticamente no painel web do servidor de e-mail.
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 1. Fluxo de Requisicao e Ingress Traefik
++ Requisicao HTTPS chega na porta **443** do no manager da VPS.
++ Traefik inspeciona o cabecalho **Host (SNI)** da requisicao.
++ Certificado TLS e verificado/emitido automaticamente via **letsencryptresolver**.
++ Trafego e roteado internamente pela rede overlay **network_conexao** ate o container de destino na porta interna designada.
+
+== 2. Tabela de Volumes Persistentes
+Todos os dados persistentes vivem em volumes Docker gerenciados com alta velocidade:
+
+- Dados de banco de dados e arquivos de usuarios residem em `/var/lib/docker/volumes/`.
+- Permissoes internas de escrita isoladas por UID/GID dos containers.
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
 #pagebreak()
+= PARTE III · PLAYBOOKS DE INSTALAÇÃO & OPERAÇÃO
+**Alvo:** Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)
 
-== 8. Protocolo de Monitoramento no Uptime Kuma
+**P?blico-Alvo:** Gestores, Consultores e Engenheiros de TI
 
-Cadastre as sondas HTTP(s) no painel do Uptime Kuma (`https://monitor.vpsconexao.org`):
-- *Tipo:* HTTP(s) Monitor.
-- *URL Principal:* `https://campaigns.vpsconexao.org`.
-- *Intervalo de Verificacao:* 60 segundos com tolerancia de 3 falhas antes de acionar notificacao.
-- *Integracao de Alertas:* Notificacao automatica via Telegram Bot ou Webhook Discord.
+**Tempo Estimado de Execucao:** 5 a 10 minutos
 
-#v(1em)
-== 9. Manual de Desinstalacao Atomica e Rollback
+**Garantia Arquitetural:** Zero interferencia nas aplicacoes existentes (`mautic`, `evolution`, `n8n`, `mysql`, `postgres`)
 
-Caso seja necessario reverter a instalacao sem tocar nas outras aplicacoes:
-1. *Via Portainer:* Selecione a stack `ecos-rd-station-suite` e clique em *Delete this stack*.
-2. *Via Terminal SSH:*
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 1. Entendendo a Arquitetura Cirurgica (Para N?o-Tecnicos)
+Pense na sua VPS como um **edificio corporativo de alta seguran?a**. As aplicacoes em produ??o (como seu CRM Mautic, o n8n e o Evolution API) j? ocupam salas estruturadas nesse edificio.
+
+A **instala??o cir?rgica** significa abrir uma nova sala independente para a nova su?te de ferramentas, com seus proprios arm?rios e cofres (volumes dedicados e banco isolado), conectando-se apenas ao **corredor central** (a rede `network_conexao`) e ? **portaria central com identificacao automatica** (o Traefik existente).
+
+Nenhuma sala existente ? tocada, nenhum dado ? exposto e nenhuma porta ? alterada.
+
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 2. Fase 1: Apontamento de DNS no seu Provedor
+Antes de subir a stack, acesse o painel de controle do seu dom?nio (Cloudflare, Registro.br, Hostinger ou AWS Route53) e crie os apontamentos do tipo **A**:
+
+- Registro A: `campaigns.vpsconexao.org` -> IP da VPS
+- Registro A: `crm.vpsconexao.org` -> IP da VPS
+- Registro A: `chat.vpsconexao.org` -> IP da VPS
+- Registro A: `wpp.vpsconexao.org` -> IP da VPS
+- Registro A: `news.vpsconexao.org` -> IP da VPS
+> **Nota:** Se estiver utilizando Cloudflare, certifique-se de que a nuvem esteja inicialmente cinza (DNS Only) ou laranja com SSL/TLS configurado em modo **Full (Strict)**.
+
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 3. Fase 2: Implantacao da Stack no Painel Portainer
+Siga o roteiro passo a passo:
+
++ Acesse o seu painel de controle: `https://painel.vpsconexao.org`.
++ Fa?a login com suas credenciais de administrador.
++ No menu lateral esquerdo, clique em **Stacks**.
++ Clique no bot?o azul superior **+ Add stack**.
++ No campo **Name**, digite exatamente: `ecos-rd-station-suite`.
++ Na caixa de texto do **Web editor**, cole o conte?do integral do arquivo `02-stack-integrada-portainer.yml`.
+7. Role a p?gina at? o rodap? e clique no bot?o **Deploy the stack**.
+
+8. O Swarm baixar? as imagens oficiais, criar? os volumes nomeados e registrar? os novos subdom?nios no Traefik.
+
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 4. Fase 3: Wizard de Primeiro Acesso e Configuracao
+Aguarde 60 a 90 segundos para a emissao automatica do certificado TLS Let's Encrypt. Em seguida, acesse as URLs:
+
+- `https://campaigns.vpsconexao.org`
+- `https://crm.vpsconexao.org`
+- `https://chat.vpsconexao.org`
+- `https://wpp.vpsconexao.org`
+- `https://news.vpsconexao.org`
+
+=== Procedimento para o Ecossistema Google Workspace (Se Aplic?vel):
++ **Configuracao do Nextcloud (`https://drive.vpsconexao.org`):**
+- Crie o usu?rio administrador e senha.
+- O banco de dados PostgreSQL j? estar? configurado automaticamente via vari?veis de ambiente.
++ **Integra??o do ONLYOFFICE com Nextcloud:**
+- Acesse o Nextcloud com usu?rio administrador, v? em **Aplicativos** e ative o app **ONLYOFFICE**.
+- Em **Configura??es de Administracao** > **ONLYOFFICE**, defina:
+- Endere?o do Servidor: `https://office.vpsconexao.org`
+- Chave Secreta (JWT): `OnlyOfficeSecretKey2026_SecureToken!`
+- Endere?o interno do Nextcloud: `http://workspace_nextcloud:80`
+- Clique em **Salvar**. A edi??o colaborativa de documentos estar? 100% operacional.
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 5. Fase 4: Cadastro de Monitoramento no Uptime Kuma
+No painel do seu Uptime Kuma j? em execu??o (`https://monitor.vpsconexao.org`):
+
++ Clique em **Adicionar Novo Monitor**.
++ Tipo de Monitor: **HTTP(s)**.
++ Cadastre a URL de cada subdom?nio com intervalo de verifica??o de **60 segundos**.
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 1. Configuracao Inicial do Hub
+- Acesse o subdominio principal e cadastre o usuario administrador inicial.
+- O banco PostgreSQL ja esta conectado automaticamente via Compose.
+
+== 2. Integracao entre Componentes
+- Acesse as configuracoes de administracao e vincule os tokens de seguranca (JWT) e conexoes de API.
+- Teste a edicao de documentos e a sincronizacao de arquivos em tempo real.
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 1. Configuracao de Sondas HTTP(s)
+Para cada servico da stack, cadastre uma sonda no seu Uptime Kuma (`https://monitor.vpsconexao.org`):
+
++ **Tipo de Monitor:** HTTP(s).
++ **Nome:** `Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk) - App Principal`.
++ **URL:** `https://campaigns.vpsconexao.org`.
++ **Intervalo de Checagem:** 60 segundos.
++ **Notificacoes:** Configure alerta via Telegram, Discord ou e-mail.
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+#pagebreak()
+= PARTE IV · PLAYBOOKS DE DESINSTALAÇÃO & GOVERNANÇA
+**Alvo:** Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)
+
+**Garantia de Isolamento:** 100% de preservacao dos demais containers da VPS
+
+**Tempo de Execucao:** Menos de 10 segundos
+
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 1. Principios de Seguranca e Isolamento
+Todos os recursos criados para o alvo `Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)` foram encapsulados no namespace `ecos-rd-station-suite`.
+
+A remo??o da stack desconecta os servicos da rede `network_conexao` e revoga os roteadores do Traefik de forma atomica.
+
+**Mautic, Evolution, n8n, MySQL, PostgreSQL global e Portainer continuam operando normalmente sem nenhuma interrupcao.**
+
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 2. Procedimento 1: Remocao via Painel Portainer (Interface Gr?fica)
++ Acesse: `https://painel.vpsconexao.org`.
++ Clique em **Stacks** no menu lateral esquerdo.
++ Localize a stack `ecos-rd-station-suite` e marque a caixa de sele??o ao lado dela.
++ Clique no bot?o vermelho **Delete this stack**.
++ Confirme a exclusao na janela pop-up.
++ Em menos de 10 segundos, todos os containers serao finalizados e as rotas web desligadas.
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 3. Procedimento 2: Remocao via Linha de Comando (CLI / SSH)
+Caso prefira executar via terminal SSH ou Termius:
+
 ```bash
+# 1. Remover a stack do Docker Swarm
 docker stack rm ecos-rd-station-suite
+
+# 2. Aguardar 10 segundos para finalizacao completa dos processos
+sleep 10
+
+# 3. Verificar que as demais stacks continuam 100% operacionais
+docker stack ls
+docker service ls
 ```
-Todos os servicos e rotas associados serao finalizados em menos de 10 segundos.
 
-#v(1em)
-== 10. Script de Expurgo Seguro de Volumes e Checklist Final
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
 
-Para remover permanentemente os volumes apos o rollback:
+== 4. Limpeza Opcional de Volumes Persistentes (Liberacao de Disco)
+Se voc? n?o planeja restaurar a aplica??o e deseja liberar espa?o em disco:
+
+```bash
+# Listar e remover apenas os volumes exclusivos da stack removida
+docker volume ls --filter name=ecos-rd-station-suite -q | xargs -r docker volume rm
+```
+*(Nenhum volume do Mautic, n8n, PostgreSQL global ou MySQL sera afetado).*
+
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 1. Expurgo Seguro de Volumes
+Execute via terminal SSH apenas se desejar apagar definitivamente todos os dados da stack e liberar espaco:
+
 ```bash
 docker volume ls --filter name=ecos-rd-station-suite_ -q | xargs -r docker volume rm
 ```
+*(Nenhum volume de outras stacks sera tocado).*
 
-*Checklist de Governanca Pos-Operacao:*
-- [x] Validar que `docker service ls` exibe apenas servicos estaveis.
-- [x] Testar conexao e operacao do Mautic, n8n e Evolution API.
-- [x] Confirmar liberacao de recursos no dashboard do Portainer.
+
+#v(0.5em)
+#line(length: 100%, stroke: 0.5pt + rgb("cbd5e1"))
+#v(0.5em)
+
+== 1. Verificacao de Integridade
+Apos executar o rollback, valide no terminal da VPS:
+
++ `docker service ls` -> Confirme que apenas os servicos pre-existentes estao ativos.
++ `docker stack ls` -> Confirme que a stack `ecos-rd-station-suite` foi removida.
++ Teste o acesso ao Mautic, n8n e Evolution API para certificar 100% de disponibilidade.

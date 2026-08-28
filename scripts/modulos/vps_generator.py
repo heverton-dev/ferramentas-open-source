@@ -462,160 +462,8 @@ Apos executar o rollback, valide no terminal da VPS:
         with open(os.path.join(dir_livro, "LIVRO-AUDITORIA-E-INCORPORACAO-VPS.html"), "w", encoding="utf-8") as f:
             f.write(livro_html)
 
-        # 7. Compilação Typst PDF Completo do Livro Mestre
-        stack_typ_raw = stack_yml.replace('\\', '\\\\').replace('$', '\\$').replace('[', '(').replace(']', ')')
-        dns_rows_typ = ""
-        for sub in subdomains:
-            dns_rows_typ += f"  [{sub}.{self.base_domain}], [A], [IP da VPS], [DNS Only],\n"
-
-        sub_rows_typ = ""
-        for sub in subdomains:
-            sub_rows_typ += f"  [{sub.capitalize()} Service], [https://{sub}.{self.base_domain}], [Traefik SNI], [Rede {net}],\n"
-
-        typ_code = f"""#set page(
-  paper: "a4",
-  margin: (x: 2cm, y: 2.2cm),
-  header: align(right)[#text(size: 8pt, fill: rgb("64748b"))[Auditoria & Engenharia de VPS · Arsenal Open Source]],
-  footer: align(center)[#text(size: 8pt, fill: rgb("64748b"))[Arsenal Open Source · Fabrica Universal · Soberania Tecnologica]]
-)
-#set text(font: "Liberation Sans", size: 9.5pt, lang: "pt")
-#set par(justify: true, leading: 0.65em)
-
-#align(center)[
-  #block(
-    fill: rgb("0f172a"),
-    inset: 2.2em,
-    radius: 0.5em,
-    width: 100%,
-    [
-      #text(size: 10pt, fill: rgb("38bdf8"), weight: "bold")[LIVRO MESTRE · AUDITORIA & ENGENHARIA DE VPS]\\n
-      #v(0.4em)
-      #text(size: 20pt, fill: rgb("ffffff"), weight: "bold")[{prof['name'].replace('[', '').replace(']', '')}]\\n
-      #v(0.4em)
-      #text(size: 10pt, fill: rgb("94a3b8"))[Data: {data_str} · Host: painel.{self.base_domain}]\\n
-      #v(0.4em)
-      #text(size: 11pt, fill: rgb("34d399"), weight: "bold")[VEREDITO: {v['status']} (SCORE {v['score']}/100)]
-    ]
-  )
-]
-
-#v(1em)
-== 1. Sumario Executivo & Diagnostico de Headroom da VPS
-
-A VPS de producao possui *{hw['total_cpu']} vCPUs* e *{hw['total_mem_gb']} GB de memoria RAM*, operando com folga substancial (*~{v['free_ram_gb']} GB de memoria livre*). A incorporacao do alvo demanda *{v['req_cpu']} vCPUs* e *{v['req_ram_gb']} GB de RAM*, preservando a estabilidade das aplicacoes existentes (Mautic, Evolution, n8n).
-
-#table(
-  columns: (1.4fr, 1fr, 1fr, 1fr, 1fr),
-  fill: (col, row) => if row == 0 {{ rgb("1e293b") }} else {{ none }},
-  stroke: 0.5pt + rgb("cbd5e1"),
-  align: (left, center, center, center, center),
-  [#text(fill: white, weight: "bold")[Recurso]],
-  [#text(fill: white, weight: "bold")[Total]],
-  [#text(fill: white, weight: "bold")[Ocupado]],
-  [#text(fill: white, weight: "bold")[Demanda]],
-  [#text(fill: white, weight: "bold")[Status]],
-  [Processamento], [{hw['total_cpu']} vCPUs], [~1.5 vCPUs], [{v['req_cpu']} vCPUs], [APROVADO],
-  [Memoria RAM], [{hw['total_mem_gb']} GB], [~{hw['est_mem_used_gb']} GB], [{v['req_ram_gb']} GB], [APROVADO],
-  [Orquestracao], [Docker Swarm], [17 Cntrs], [Namespace], [APROVADO],
-  [Ingress TLS], [Traefik], [Rede Overlay], [Let's Encrypt], [APROVADO]
-)
-
-#v(1em)
-== 2. Matriz de Compatibilidade e Avaliacao de Risco Zero
-
-1. *Roteamento Exclusivo por SNI:* O Traefik gerencia todas as requisicoes HTTPS via Host Header (SNI), eliminando qualquer ligacao direta de portas no host da VPS.
-2. *Namespace de Volumes Isolados:* Todos os dados persistentes sao armazenados em volumes Docker dedicados (`{slug}_*`), impedindo sobrescrita de bancos de dados legados.
-3. *Rede Overlay Unificada:* Comunicacao via rede `{net}` existente sem necessidade de reinicializacao de servicos ativos.
-
-#v(1em)
-== 3. Analise Financeira e TCO na VPS Existente
-
-- *Custo Proprietario Estimado (SaaS Equivalente):* R\\$ 1.200,00 / mes (R\\$ 14.400,00 / ano).
-- *Custo Marginal de Infraestrutura na VPS:* *R\\$ 0,00* (Aproveitamento da capacidade ociosa).
-- *Economia Liquida Anual:* *R\\$ 14.400,00 (100% de Payback Imediato)*.
-- *Conformidade LGPD:* Custodia integral e soberana dos dados corporativos.
-
-#pagebreak()
-
-== 4. Matriz de Servicos e Subdominios Propostos
-
-#table(
-  columns: (1.5fr, 2fr, 1.2fr, 1.2fr),
-  fill: (col, row) => if row == 0 {{ rgb("1e293b") }} else {{ none }},
-  stroke: 0.5pt + rgb("cbd5e1"),
-  align: (left, left, center, center),
-  [#text(fill: white, weight: "bold")[Servico]],
-  [#text(fill: white, weight: "bold")[URL de Acesso Seguro]],
-  [#text(fill: white, weight: "bold")[Roteamento]],
-  [#text(fill: white, weight: "bold")[Rede Swarm]],
-{sub_rows_typ}
-)
-
-#v(1em)
-== 5. Roteiro de Apontamentos DNS e Seguranca de E-mail
-
-#table(
-  columns: (2fr, 0.8fr, 1.5fr, 1.2fr),
-  fill: (col, row) => if row == 0 {{ rgb("1e293b") }} else {{ none }},
-  stroke: 0.5pt + rgb("cbd5e1"),
-  align: (left, center, left, center),
-  [#text(fill: white, weight: "bold")[Host / Subdominio]],
-  [#text(fill: white, weight: "bold")[Tipo]],
-  [#text(fill: white, weight: "bold")[Destino / Valor]],
-  [#text(fill: white, weight: "bold")[Proxy Status]],
-{dns_rows_typ}
-)
-
-#v(1em)
-== 6. Playbook de Implantacao e Operacao via Portainer
-
-1. Acesse o painel: `https://painel.{self.base_domain}`.
-2. Navegue em *Stacks* > *+ Add stack* e defina o nome `{slug}`.
-3. Cole o conteudo da Stack Compose oficial e clique em *Deploy the stack*.
-4. Aguarde a emissao automatica do certificado SSL via Traefik.
-
-#pagebreak()
-
-== 7. Stack Compose Swarm de Producao (All-in-One)
-
-```yaml
-{stack_typ_raw}
-```
-
-#pagebreak()
-
-== 8. Protocolo de Monitoramento no Uptime Kuma
-
-Cadastre as sondas HTTP(s) no painel do Uptime Kuma (`https://monitor.{self.base_domain}`):
-- *Tipo:* HTTP(s) Monitor.
-- *URL Principal:* `https://{subdomains[0]}.{self.base_domain}`.
-- *Intervalo de Verificacao:* 60 segundos com tolerancia de 3 falhas antes de acionar notificacao.
-- *Integracao de Alertas:* Notificacao automatica via Telegram Bot ou Webhook Discord.
-
-#v(1em)
-== 9. Manual de Desinstalacao Atomica e Rollback
-
-Caso seja necessario reverter a instalacao sem tocar nas outras aplicacoes:
-1. *Via Portainer:* Selecione a stack `{slug}` e clique em *Delete this stack*.
-2. *Via Terminal SSH:*
-```bash
-docker stack rm {slug}
-```
-Todos os servicos e rotas associados serao finalizados em menos de 10 segundos.
-
-#v(1em)
-== 10. Script de Expurgo Seguro de Volumes e Checklist Final
-
-Para remover permanentemente os volumes apos o rollback:
-```bash
-docker volume ls --filter name={slug}_ -q | xargs -r docker volume rm
-```
-
-*Checklist de Governanca Pos-Operacao:*
-- [x] Validar que `docker service ls` exibe apenas servicos estaveis.
-- [x] Testar conexao e operacao do Mautic, n8n e Evolution API.
-- [x] Confirmar liberacao de recursos no dashboard do Portainer.
-"""
+        # 7. Compilação Typst PDF Integral do Livro Mestre
+        typ_code = self._build_typst_document(livro_md, prof, v, hw, data_str, slug)
         typ_path = os.path.join(self.output_dir, f"{slug}-vps.typ")
         pdf_path = os.path.join(dir_livro, "LIVRO-AUDITORIA-E-INCORPORACAO-VPS.pdf")
         with open(typ_path, "w", encoding="utf-8") as f:
@@ -633,6 +481,116 @@ docker volume ls --filter name={slug}_ -q | xargs -r docker volume rm
             os.path.join(dir_livro, "LIVRO-AUDITORIA-E-INCORPORACAO-VPS.md"),
             os.path.join(dir_livro, "LIVRO-AUDITORIA-E-INCORPORACAO-VPS.pdf")
         ]
+
+    def _build_typst_document(self, md_content, prof, v, hw, data_str, slug):
+        header_typ = f"""#set page(
+  paper: "a4",
+  margin: (x: 2cm, y: 2.2cm),
+  header: align(right)[#text(size: 8pt, fill: rgb("64748b"))[Auditoria & Engenharia de VPS · Arsenal Open Source]],
+  footer: align(center)[#text(size: 8pt, fill: rgb("64748b"))[Arsenal Open Source · Fabrica Universal · Soberania Tecnologica]]
+)
+#set text(font: "Liberation Sans", size: 9.5pt, lang: "pt")
+#set par(justify: true, leading: 0.65em)
+
+#align(center)[
+  #block(
+    fill: rgb("0f172a"),
+    inset: 2.2em,
+    radius: 0.5em,
+    width: 100%,
+    [
+      #text(size: 10pt, fill: rgb("38bdf8"), weight: "bold")[LIVRO MESTRE · AUDITORIA & ENGENHARIA DE VPS]\\n
+      #v(0.4em)
+      #text(size: 20pt, fill: rgb("ffffff"), weight: "bold")[{prof['name'].replace('[', '(').replace(']', ')')}]\\n
+      #v(0.4em)
+      #text(size: 10pt, fill: rgb("94a3b8"))[Data: {data_str} · Host: painel.{self.base_domain}]\\n
+      #v(0.4em)
+      #text(size: 11pt, fill: rgb("34d399"), weight: "bold")[VEREDITO: {v['status']} (SCORE {v['score']}/100)]
+    ]
+  )
+]
+
+#v(1em)
+"""
+        lines = md_content.split('\n')
+        typ_body = []
+        in_code = False
+        code_lang = "yaml"
+        code_lines = []
+        in_table = False
+        table_rows = []
+
+        for line in lines:
+            if line.strip().startswith('```'):
+                if in_code:
+                    in_code = False
+                    raw_code = "\n".join(code_lines).replace('\\', '\\\\')
+                    typ_body.append(f"```{code_lang}\n{raw_code}\n```\n")
+                    code_lines = []
+                else:
+                    in_code = True
+                    code_lang = line.strip()[3:].strip() or "yaml"
+                    code_lines = []
+                continue
+
+            if in_code:
+                code_lines.append(line)
+                continue
+
+            if line.strip().startswith('|') and '|' in line[1:]:
+                if not in_table:
+                    in_table = True
+                    table_rows = []
+                if ':---' in line:
+                    continue
+                parts = [p.strip() for p in line.strip().split('|')[1:-1]]
+                table_rows.append(parts)
+                continue
+            else:
+                if in_table:
+                    in_table = False
+                    if table_rows:
+                        num_cols = len(table_rows[0])
+                        col_spec = ", ".join(["1fr"] * num_cols)
+                        t_str = f"#table(\n  columns: ({col_spec}),\n  fill: (col, row) => if row == 0 {{ rgb(\"1e293b\") }} else {{ none }},\n  stroke: 0.5pt + rgb(\"cbd5e1\"),\n  align: (left),\n"
+                        for th in table_rows[0]:
+                            safe_th = th.replace('[', '(').replace(']', ')').replace('$', '\\$')
+                            t_str += f"  [#text(fill: white, weight: \"bold\")[{safe_th}]],\n"
+                        for r in table_rows[1:]:
+                            for td in r:
+                                safe_td = td.replace('[', '(').replace(']', ')').replace('$', '\\$').replace('*', '')
+                                t_str += f"  [{safe_td}],\n"
+                        t_str += ")\n"
+                        typ_body.append(t_str)
+                    table_rows = []
+
+            if line.startswith('# PARTE '):
+                typ_body.append(f"\n#pagebreak()\n= {line[2:].strip()}\n")
+                continue
+            elif line.startswith('# '):
+                # Titulo principal ignorado pois ja esta na capa
+                continue
+            elif line.startswith('## '):
+                typ_body.append(f"\n== {line[3:].strip()}\n")
+                continue
+            elif line.startswith('### '):
+                typ_body.append(f"\n=== {line[4:].strip()}\n")
+                continue
+            elif line.strip() == '---':
+                typ_body.append("\n#v(0.5em)\n#line(length: 100%, stroke: 0.5pt + rgb(\"cbd5e1\"))\n#v(0.5em)\n")
+                continue
+
+            if line.strip():
+                clean_l = line.strip().replace('$', '\\$')
+                if clean_l.startswith('- '):
+                    typ_body.append(f"- {clean_l[2:]}\n")
+                elif clean_l.startswith('1. ') or clean_l.startswith('2. ') or clean_l.startswith('3. ') or clean_l.startswith('4. ') or clean_l.startswith('5. ') or clean_l.startswith('6. '):
+                    typ_body.append(f"+ {clean_l[3:]}\n")
+                else:
+                    typ_body.append(f"{clean_l}\n\n")
+
+        return header_typ + "".join(typ_body)
+
 
     def generate_consolidated_report(self, multi_decision_data, root_output_dir):
         cumul = multi_decision_data["cumulative"]
