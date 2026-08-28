@@ -224,8 +224,36 @@
  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
  .entry-section p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
 
- .code-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 2px; padding: 12px; font-family: var(--mono); font-size: 12px; overflow-x: auto; color: var(--ink); position: relative; }
+ .code-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 2px; padding: 16px; font-family: var(--mono); font-size: 12px; overflow-x: auto; color: var(--ink); position: relative; }
  .code-box pre { margin: 0; font-family: inherit; }
+ pre { position: relative; }
+ .copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+ }
+ .copy-btn:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+ }
+ .copy-btn.copied {
+  background: var(--green);
+  color: #FFFFFF;
+  border-color: var(--green);
+ }
 
  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 4px; }
  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
@@ -427,6 +455,43 @@ document.addEventListener('DOMContentLoaded', () => {
   sAgents.addEventListener('input', updateTcoCalculator);
   updateTcoCalculator();
  }
+
+ // Injeção automática do botão de cópia em todos os blocos de código e comandos
+ const codeBlocks = document.querySelectorAll('pre, .code-box');
+ codeBlocks.forEach((block) => {
+  if (block.querySelector('.copy-btn')) return;
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.type = 'button';
+  btn.innerText = 'Copiar';
+  btn.setAttribute('aria-label', 'Copiar código');
+  
+  btn.addEventListener('click', async (e) => {
+   e.stopPropagation();
+   const codeElem = block.querySelector('code') || block;
+   // Pega o texto limpo sem o próprio botão
+   const textToCopy = Array.from(codeElem.childNodes)
+     .filter(node => !node.classList || !node.classList.contains('copy-btn'))
+     .map(node => node.textContent)
+     .join('')
+     .trim();
+
+   try {
+    await navigator.clipboard.writeText(textToCopy);
+    btn.innerText = 'Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+     btn.innerText = 'Copiar';
+     btn.classList.remove('copied');
+    }, 2000);
+   } catch (err) {
+    console.error('Falha ao copiar:', err);
+   }
+  });
+
+  block.style.position = 'relative';
+  block.appendChild(btn);
+ });
 });
 </script>
 
