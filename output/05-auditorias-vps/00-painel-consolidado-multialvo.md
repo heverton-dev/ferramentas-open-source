@@ -2,7 +2,7 @@
 
 **Destino da Infraestrutura:** VPS de Produ??o (`painel.vpsconexao.org`)  
 **Data da Auditoria:** 28/08/2026  
-**Veredito Global Conjunto:** **CONJUNTO VIAVEL COM ADAPTA??ES** (Score Medio/Global: 70/100)  
+**Veredito Global Conjunto:** **CONJUNTO INVIAVEL SIMULTANEAMENTE** (Score Medio/Global: 20/100)  
 **Nivel de Risco Operacional:** Risco Zero ? Isolamento Total por Namespaces no Docker Swarm
 
 ---
@@ -11,8 +11,8 @@
 
 | Metrica de Infraestrutura | Capacidade Total | Demanda Cumulativa | Headroom Livre Disponivel | Status de Seguranca |
 | :--- | :--- | :--- | :--- | :--- |
-| **Capacidade de Processamento** | 12 vCPUs | 27.5 vCPUs | **~-17.2 vCPUs Livres** | [ALERTA] Alta Carga |
-| **Memoria RAM Global** | 47.05 GB | 37.0 GB | **~7.0 GB Livres** | [APROVADO] Ampla Folga |
+| **Capacidade de Processamento** | 12 vCPUs | 35.0 vCPUs | **~-24.7 vCPUs Livres** | [ALERTA] Alta Carga |
+| **Memoria RAM Global** | 47.05 GB | 46.5 GB | **~-2.5 GB Livres** | [REPROVADO] Memoria Insuficiente |
 | **Orquestrador de Containers** | Docker Swarm (1 N?) | 17 Containers Ativos | Nos: 1 Manager | [APROVADO] Roteamento SNI |
 | **Ingress & Roteamento TLS** | Traefik v2/v3 | Rede Overlay `network_conexao` | Certresolver ACME | [APROVADO] SSL Autom?tico |
 
@@ -36,6 +36,11 @@ Abaixo est? o balan?o individual de viabilidade para todas as ferramentas e ecos
 | **10** | **Zitadel Identity Management** | Gest?o de Identidade e Single Sign-On (SSO) | 1.5 vCPUs | 1.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
 | **11** | **Chatwoot Omnichannel** | Atendimento e Helpdesk Multicanal | 1.5 vCPUs | 1.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
 | **12** | **NocoDB** | Banco de Dados No-Code e Planilhas Inteligentes | 1.0 vCPUs | 1.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **13** | **AnythingLLM Enterprise** | Workspace RAG e Chat Corporativo com LLMs Privadas | 1.5 vCPUs | 2.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **14** | **Khoj AI Assistant** | Assistente IA Pessoal e Motor de Busca Semantico | 1.5 vCPUs | 2.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **15** | **Open Notebook** | Laboratorio e Bloco de Notas para Pesquisa e Sintese | 1.0 vCPUs | 1.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **16** | **Podcastfy Studio** | Motor de Conversao de Documentos em Podcasts com IA | 1.5 vCPUs | 1.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **17** | **RAGFlow DeepDoc Engine** | Engine Corporativo de Extracao RAG e OCR Avancado | 2.0 vCPUs | 3.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
 
 
 ---

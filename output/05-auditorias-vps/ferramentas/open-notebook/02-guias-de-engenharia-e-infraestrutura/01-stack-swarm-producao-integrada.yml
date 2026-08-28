@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  open-notebook_app:
+    image: open-notebook:latest
+    networks:
+      - network_conexao
+    volumes:
+      - open-notebook_data:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_conexao"
+        - "traefik.http.routers.open-notebook.rule=Host(`notes.vpsconexao.org`)"
+        - "traefik.http.routers.open-notebook.entrypoints=websecure"
+        - "traefik.http.routers.open-notebook.tls=true"
+        - "traefik.http.routers.open-notebook.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.open-notebook.loadbalancer.server.port=80"
+        - "traefik.http.services.open-notebook.loadbalancer.passHostHeader=true"
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+
+networks:
+  network_conexao:
+    external: true
+
+volumes:
+  open-notebook_data:

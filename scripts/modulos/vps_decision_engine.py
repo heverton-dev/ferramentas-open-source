@@ -124,6 +124,46 @@ class VPSDecisionEngine:
             "host_ports": [],
             "subdomains": ["nocodb"],
             "role": "Banco de Dados No-Code e Planilhas Inteligentes"
+        },
+        "anything-llm": {
+            "name": "AnythingLLM Enterprise",
+            "req_cpu": 1.5,
+            "req_ram_gb": 2.0,
+            "host_ports": [],
+            "subdomains": ["ai"],
+            "role": "Workspace RAG e Chat Corporativo com LLMs Privadas"
+        },
+        "khoj": {
+            "name": "Khoj AI Assistant",
+            "req_cpu": 1.5,
+            "req_ram_gb": 2.0,
+            "host_ports": [],
+            "subdomains": ["search"],
+            "role": "Assistente IA Pessoal e Motor de Busca Semantico"
+        },
+        "open-notebook": {
+            "name": "Open Notebook",
+            "req_cpu": 1.0,
+            "req_ram_gb": 1.0,
+            "host_ports": [],
+            "subdomains": ["notes"],
+            "role": "Laboratorio e Bloco de Notas para Pesquisa e Sintese"
+        },
+        "podcastfy": {
+            "name": "Podcastfy Studio",
+            "req_cpu": 1.5,
+            "req_ram_gb": 1.5,
+            "host_ports": [],
+            "subdomains": ["audio"],
+            "role": "Motor de Conversao de Documentos em Podcasts com IA"
+        },
+        "ragflow": {
+            "name": "RAGFlow DeepDoc Engine",
+            "req_cpu": 2.0,
+            "req_ram_gb": 3.0,
+            "host_ports": [],
+            "subdomains": ["rag"],
+            "role": "Engine Corporativo de Extracao RAG e OCR Avancado"
         }
     }
 
