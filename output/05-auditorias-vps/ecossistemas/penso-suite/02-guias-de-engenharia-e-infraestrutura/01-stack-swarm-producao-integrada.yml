@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  penso-suite_app:
+    image: penso-suite:latest
+    networks:
+      - network_conexao
+    volumes:
+      - penso-suite_data:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_conexao"
+        - "traefik.http.routers.penso-suite.rule=Host(`app.vpsconexao.org`)"
+        - "traefik.http.routers.penso-suite.entrypoints=websecure"
+        - "traefik.http.routers.penso-suite.tls=true"
+        - "traefik.http.routers.penso-suite.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.penso-suite.loadbalancer.server.port=80"
+        - "traefik.http.services.penso-suite.loadbalancer.passHostHeader=true"
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 5120M
+
+networks:
+  network_conexao:
+    external: true
+
+volumes:
+  penso-suite_data:
