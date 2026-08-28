@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Grupo 2: Pipeline Comercial, CRM & Contratos · Suíte do Ecossistema Soberano</title>
+<style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    --paper: #F6F4EF;
+    --surface: #FFFFFF;
+    --surface-2: #FBF9F4;
+    --surface-dark: #0A0F1D;
+    --ink: #1B1E23;
+    --ink-2: #383D45;
+    --muted: #666E7A;
+    --rule: #D8D2C4;
+    --rule-soft: #EAE5D9;
+    --accent: #00875A;
+    --accent-dark: #57D9A3;
+    --accent-soft: #E3FCEF;
+    --accent-soft-dark: #162B22;
+    --green: #00875A;
+    --green-soft: #E3FCEF;
+    --gold: #FFAB00;
+    --gold-soft: #FFF0B3;
+    --flag: #DE350B;
+    --flag-soft: #FFEBE6;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0E121B;
+      --surface: #141924;
+      --surface-2: #1A2130;
+      --ink: #E6E8ED;
+      --ink-2: #B0B5C0;
+      --muted: #7E8695;
+      --rule: #262F40;
+      --rule-soft: #1E2533;
+      --accent: var(--accent-dark);
+      --accent-soft: var(--accent-soft-dark);
+      --green: #57D9A3;
+      --green-soft: #162B22;
+      --gold: #FFC400;
+      --gold-soft: #332600;
+      --flag: #FF7452;
+      --flag-soft: #361B15;
+      --shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  body {
+    margin: 0;
+    padding: 40px 20px;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 48px;
+    box-shadow: var(--shadow);
+  }
+
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 32px;
+    margin-bottom: 36px;
+  }
+
+  .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 38px;
+    line-height: 1.15;
+    margin: 0 0 12px 0;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: var(--ink);
+  }
+
+  .deck {
+    font-size: 16px;
+    color: var(--ink-2);
+    margin: 0 0 24px 0;
+    line-height: 1.55;
+    max-width: 95%;
+  }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    border-top: 1px solid var(--rule-soft);
+    padding-top: 20px;
+    margin-top: 20px;
+  }
+
+  .stat-card {
+    background: var(--surface-2);
+    border: 1px solid var(--rule-soft);
+    border-radius: 2px;
+    padding: 12px 14px;
+  }
+
+  .stat-lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .stat-val {
+    font-family: var(--mono);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .stat-val.highlight { color: var(--green); }
+  .stat-val.alert { color: var(--flag); }
+
+  .racional-box {
+    background: var(--surface-2);
+    border-left: 3px solid var(--accent);
+    padding: 14px 18px;
+    margin: 20px 0;
+    font-size: 14px;
+    color: var(--ink-2);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .sec-head {
+    margin: 44px 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .sec-info { flex: 1; }
+  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: .08em; }
+  .sec-head h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0 0 0; color: var(--ink); font-weight: 600; }
+  .sec-note { font-size: 13.5px; color: var(--muted); margin-top: 4px; }
+  .pilar-subtotal-badge { font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 4px 10px; background: var(--green-soft); color: var(--green); border-radius: 2px; border: 1px solid var(--green); }
+
+  /* TABELA MATRIX */
+  .tablewrap { width: 100%; overflow-x: auto; margin: 20px 0 32px 0; border: 1px solid var(--rule); border-radius: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead { background: var(--surface-2); border-bottom: 1px solid var(--rule); }
+  th { text-align: left; padding: 10px 14px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface-2); }
+  td.rank { font-family: var(--mono); font-weight: 700; color: var(--muted); font-size: 12px; }
+  td.saas { color: var(--flag); font-weight: 600; }
+  td.econ { font-family: var(--mono); font-weight: 700; color: var(--green); }
+  td.killer { color: var(--flag); font-weight: 700; font-family: var(--mono); }
+
+  /* CARDS DE FERRAMENTAS */
+  .ledger { display: flex; flex-direction: column; gap: 24px; margin-top: 24px; }
+  .entry { display: grid; grid-template-columns: 48px 1fr; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); padding: 24px; box-shadow: var(--shadow); }
+  .entry-rank { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--muted); padding-top: 2px; }
+  .entry-body { display: flex; flex-direction: column; gap: 16px; }
+  .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+
+  .persona-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+  .pilar-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--gold-soft); color: #8A6100; border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent); font-weight: 700; white-space: nowrap; }
+  .killer-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; white-space: nowrap; }
+  .econ-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; white-space: nowrap; }
+  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule-soft); font-weight: 600; white-space: nowrap; }
+
+  .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .entry-section p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+
+  .code-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 2px; padding: 12px; font-family: var(--mono); font-size: 12px; overflow-x: auto; color: var(--ink); position: relative; }
+  .code-box pre { margin: 0; font-family: inherit; }
+
+  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 4px; }
+  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .econ-card.killer { border-left: 3px solid var(--flag); }
+  .econ-card.savings { border-left: 3px solid var(--green); }
+  .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .econ-val { font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--ink); }
+
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 4px; }
+  .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .infra-card.verdict { border-left: 3px solid var(--accent); grid-column: 1 / -1; }
+  .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .infra-val { font-size: 13px; color: var(--ink-2); font-weight: 500; }
+
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 6px; }
+  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .step-head { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: var(--accent); text-transform: uppercase; }
+  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+  .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+
+  .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
+  .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+  .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+  .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+  .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
+
+  .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+  .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+  .mcp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .mcp-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+  .mcp-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+  .mcp-pill { font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase; padding: 1px 6px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); }
+  .mcp-name { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--ink); }
+  .mcp-card p { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.4; }
+  .mcp-cmd { font-family: var(--mono); font-size: 11px; background: var(--surface); padding: 3px 6px; border-radius: 2px; border: 1px solid var(--rule-soft); color: var(--ink); word-break: break-all; }
+
+  .integration-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin: 16px 0; }
+  .integ-card { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 3px; padding: 16px; box-shadow: var(--shadow); }
+  .integ-card h4 { font-family: var(--font-serif); font-size: 18px; margin: 0 0 8px; color: var(--ink); }
+  .integ-card p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+
+  .tco-banner { background: var(--surface); border: 1px solid var(--green); border-radius: 3px; padding: 20px; margin: 20px 0; box-shadow: var(--shadow); display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .tco-col .tco-lbl { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+  .tco-col .tco-val { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--ink); }
+  .tco-col .tco-val.highlight { color: var(--green); }
+  .tco-col .tco-val.killer { color: var(--flag); }
+
+  /* CALCULADORA INTERATIVA TCO */
+  .calc-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 4px; padding: 24px; margin: 20px 0; box-shadow: var(--shadow); }
+  .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 20px; }
+  .calc-slider-group label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .calc-slider-group input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+  .calc-results { background: var(--surface); border: 1px solid var(--green); border-radius: 3px; padding: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+  /* BLUEPRINTS & TIMELINE */
+  .blueprint-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .timeline-card { background: var(--surface-2); border-left: 4px solid var(--accent); padding: 16px; margin-bottom: 12px; border-radius: 0 3px 3px 0; }
+  .timeline-card h4 { margin: 0 0 6px; font-family: var(--font-serif); font-size: 17px; color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+    <a href="../00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.html" style="font-family: var(--mono); font-size: 11.5px; color: var(--accent); text-decoration: none; font-weight: 700;">← Voltar ao Livro-Texto Completo</a>
+    <span class="persona-badge">Pilar 02</span>
+  </div>
+  <header style="border-bottom: 1px solid var(--rule); padding-bottom: 20px; margin-bottom: 24px;">
+    <div class="meta">
+      <span>Fascículo Especializado · Fábrica Universal AIDD</span>
+      <span>28/08/2026</span>
+    </div>
+    <h1 style="font-size: 30px; margin-bottom: 6px;">Grupo 2: Pipeline Comercial, CRM & Contratos</h1>
+    <p class="deck" style="font-size: 14.5px; margin-bottom: 0;">Arsenal do Quinteto Soberano para RD Station CRM (Plano Avançado para Equipes de Vendas) · Subtotal: R$ 36.000/ano</p>
+  </header>
+  
+  <div class="ledger">
+            <article class="entry" id="twenty">
+              <div class="entry-rank">01</div>
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3>Twenty · CRM Moderno Aberto & Gestão de Funil Comercial</h3>
+                  <span class="persona-badge">Persona: Moderna</span>
+                  <span class="killer-badge">Substitui: RD Station CRM (Módulo de Pipeline Kanban, Oportunidades & Tarefas)</span>
+                  <span class="econ-badge">R$ 24.000/ano (Equipe de 10 vendedores)</span>
+                  <span class="lic-badge">AGPL-3.0</span>
+                </div>
+                <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Gerencia oportunidades em funil Kanban com sincronização de e-mail e notas em tempo real. Arquitetura reativa em TypeScript, React, NestJS e PostgreSQL com GraphQL nativo.</p><div class="code-box"><pre><code>git clone https://github.com/twentyhq/twenty && cd twenty && docker compose up -d</code></pre></div></div>
+                <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">RD Station CRM (Módulo de Pipeline Kanban, Oportunidades & Tarefas)</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 24.000/ano (Equipe de 10 vendedores)</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Arquitetura reativa ultrarrápida em React/TypeScript com sincronização bidirecional de e-mails, campos customizados ilimitados e experiência de usuário moderna superior a CRMs legados.</p></div></div></div>
+                <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">4 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">O CRM open source mais moderno do mundo, com padrão de usabilidade equivalente ou superior a SaaS como Notion e HubSpot.</p></div></div></div>
+                <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Modelagem de Funis</div><p>Configure as etapas do funil (Prospecção, Qualificação, Demonstração, Negociação e Fechamento).</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Sincronização de E-mail</div><p>Conecte contas IMAP/SMTP dos vendedores para registro automático de trocas de mensagens na timeline.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Campos Customizados</div><p>Adicione campos de CNPJ, segmento e valor de contrato com validação de formato.</p></div></div></div>
+                <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Interface moderna com suporte a logotipo da empresa e modo escuro/claro nativo.</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+                <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">@twentyhq/twenty-mcp</span></div><p>Permite que assistentes de vendas consultem e atualizem oportunidades no Twenty via IA.</p><div class="mcp-cmd"><code>npx -y @twentyhq/twenty-mcp</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-crm-deal-analyst</span></div><p>Analisa negócios parados no pipeline e sugere ações de reativação para vendedores.</p><div class="mcp-cmd"><code>.claude/skills/crm-deal-analyst/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">twenty-cli</span></div><p>CLI para gestão de migrações e extensões de banco.</p><div class="mcp-cmd"><code>yarn twenty db:migrate</code></div></div></div></div>
+              </div>
+            </article>
+            
+            <article class="entry" id="espocrm">
+              <div class="entry-rank">02</div>
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3>EspoCRM · Motor de Regras Corporativas B2B & Workflows</h3>
+                  <span class="persona-badge">Persona: Robusta</span>
+                  <span class="killer-badge">Substitui: RD Station CRM (Módulos Corporativos Avançados & Múltiplos Pipelines)</span>
+                  <span class="econ-badge">R$ 18.000/ano</span>
+                  <span class="lic-badge">GPL-3.0</span>
+                </div>
+                <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Permite modelar entidades customizadas e fluxos BPM para grandes operações comerciais. PHP/MySQL com construtor no-code de layouts e entidades relacionais.</p><div class="code-box"><pre><code>docker run -d -p 8081:80 --name espocrm espocrm/espocrm</code></pre></div></div>
+                <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">RD Station CRM (Módulos Corporativos Avançados & Múltiplos Pipelines)</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 18.000/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Mecanismo BPM no-code maduro para operações B2B que necessitam de regras de aprovação de desconto e múltiplos pipelines simultâneos por linha de produto.</p></div></div></div>
+                <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">2 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">A ferramenta mais sólida para empresas que necessitam de regras rígidas de segurança, permissões granulares e processos BPM.</p></div></div></div>
+                <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Definição de Papéis (ACL)</div><p>Crie níveis de permissão onde vendedores veem apenas suas contas e gerentes veem o consolidado.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Automação de Tarefas</div><p>Crie fluxos que distribuem leads automaticamente por round-robin ou região geográfica.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Relatórios Dinâmicos</div><p>Gere relatórios tabulares e gráficos de conversão por canal de aquisição.</p></div></div></div>
+                <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Totalmente personalizável pelo painel de administração (logo, cores, fontes e disposição de campos).</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+                <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">espocrm-mcp-server</span></div><p>Servidor MCP para integração de dados comerciais complexos com LLMs.</p><div class="mcp-cmd"><code>npx -y espocrm-mcp</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-b2b-lead-routing</span></div><p>Roteamento inteligente de leads corporativos baseado em regras financeiras.</p><div class="mcp-cmd"><code>.claude/skills/b2b-lead-routing/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">espocrm-console</span></div><p>Executor de jobs em background para sincronização corporativa.</p><div class="mcp-cmd"><code>php command.php run-job</code></div></div></div></div>
+              </div>
+            </article>
+            
+            <article class="entry" id="suitecrm">
+              <div class="entry-rank">03</div>
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3>SuiteCRM · Suíte Completa Enterprise para Grandes Operações de Vendas</h3>
+                  <span class="persona-badge">Persona: Completa</span>
+                  <span class="killer-badge">Substitui: Salesforce Sales Cloud / SugarCRM Enterprise</span>
+                  <span class="econ-badge">R$ 36.000/ano</span>
+                  <span class="lic-badge">AGPL-3.0</span>
+                </div>
+                <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Centraliza todo o ciclo de vida do cliente: da prospecção ao faturamento e suporte técnico. PHP/Symfony com arquitetura robusta e banco relacional MySQL/Postgres.</p><div class="code-box"><pre><code>docker run -d -p 8080:80 --name suitecrm suitecrm/suitecrm</code></pre></div></div>
+                <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">Salesforce Sales Cloud / SugarCRM Enterprise</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 36.000/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">A alternativa open source mais madura e completa do mercado corporativo, possuindo módulos nativos de catálogo de produtos, cálculo de impostos e emissão de propostas.</p></div></div></div>
+                <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">4 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">Para empresas que precisam de todas as funcionalidades de um ERP/CRM corporativo integrado em uma só plataforma.</p></div></div></div>
+                <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Catálogo de Produtos</div><p>Cadastre tabela de preços, SKUs e regras de desconto por volume.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Emissão de Orçamento</div><p>Gere PDFs de cotações comerciais detalhadas diretamente na tela da oportunidade.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Gestão de Contratos</div><p>Acompanhe renovações automáticas de contratos recorrentes e alertas de expiração.</p></div></div></div>
+                <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Tema SuiteP com suporte a upload de marca corporativa e alteração da paleta de cores primária e secundária.</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+                <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">suitecrm-mcp</span></div><p>Consulta de inventário e emissão de propostas via agentes de IA.</p><div class="mcp-cmd"><code>npx -y suitecrm-mcp-server</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-quote-generator</span></div><p>Gera cotações automáticas a partir de mensagens trocadas com o lead.</p><div class="mcp-cmd"><code>.claude/skills/quote-gen/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">suitecrm-cli</span></div><p>Instalador automatizado de pacotes e extensões.</p><div class="mcp-cmd"><code>bin/console suitecrm:app:install</code></div></div></div></div>
+              </div>
+            </article>
+            
+            <article class="entry" id="documenso">
+              <div class="entry-rank">04</div>
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3>Documenso · Assinatura Eletrônica Soberana de Contratos e Propostas</h3>
+                  <span class="persona-badge">Persona: Leve</span>
+                  <span class="killer-badge">Substitui: Clicksign / DocuSign / Módulo de Propostas Comerciais</span>
+                  <span class="econ-badge">R$ 18.000/ano</span>
+                  <span class="lic-badge">AGPL-3.0</span>
+                </div>
+                <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Gera links de assinatura digital com trilha de auditoria e carimbo do tempo criptográfico. Backend em TypeScript sobre PostgreSQL com geração de hashes SHA-256 dos documentos.</p><div class="code-box"><pre><code>git clone https://github.com/documenso/documenso && cd documenso && docker compose up -d</code></pre></div></div>
+                <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">Clicksign / DocuSign / Módulo de Propostas Comerciais</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 18.000/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Garante soberania jurídica dos documentos com trilha de auditoria criptográfica e registro de IPs, sem impor limites de contratos assinados por mês.</p></div></div></div>
+                <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">2 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">Elimina 100% das cobranças punitivas por documento assinado mantendo validade jurídica plena sob a MP 2.200-2/2001.</p></div></div></div>
+                <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Upload do PDF</div><p>Envie o modelo de contrato gerado pela equipe comercial.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Posicionamento dos Campos</div><p>Arraste os campos de assinatura, CPF, data e rubrica no documento.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Disparo & Trilha</div><p>Envie o link para o cliente e receba o PDF assinado com certificado criptográfico.</p></div></div></div>
+                <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Customização completa de emails de disparo, página de assinatura com logo da empresa e domínio próprio.</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+                <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">documenso-mcp</span></div><p>Geração e disparo de contratos para assinatura através de comandos de agentes de IA.</p><div class="mcp-cmd"><code>npx -y documenso-mcp</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-contract-auditor</span></div><p>Audita cláusulas contratuais antes do envio para assinatura.</p><div class="mcp-cmd"><code>.claude/skills/contract-auditor/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">documenso-cli</span></div><p>Criação de templates via linha de comando.</p><div class="mcp-cmd"><code>documenso template create ./contrato.pdf</code></div></div></div></div>
+              </div>
+            </article>
+            
+            <article class="entry" id="cal-com">
+              <div class="entry-rank">05</div>
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3>Cal.com · Agendamento Automatizado de Demonstrações Comerciais</h3>
+                  <span class="persona-badge">Persona: Simples</span>
+                  <span class="killer-badge">Substitui: RD Station CRM (Agendamentos) / Calendly Integrado</span>
+                  <span class="econ-badge">R$ 12.000/ano</span>
+                  <span class="lic-badge">AGPL-3.0</span>
+                </div>
+                <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Disponibiliza links de agendamento conectados à agenda dos vendedores com distribuição round-robin. Next.js e Prisma com sincronização com Google Calendar, Outlook e CalDAV.</p><div class="code-box"><pre><code>git clone https://github.com/calcom/cal.com && cd cal.com && docker compose up -d</code></pre></div></div>
+                <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">RD Station CRM (Agendamentos) / Calendly Integrado</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 12.000/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Suporte a distribuição round-robin entre múltiplos corretores/vendedores, integração direta com CalDAV, Google e Outlook e total personalização sob domínio próprio.</p></div></div></div>
+                <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">2 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">A solução definitiva de agendamento: fácil de usar, elegante para o cliente e com total privacidade corporativa.</p></div></div></div>
+                <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Conexão de Calendários</div><p>Vincule a agenda dos vendedores corporativos (Google, Microsoft 365 ou Nextcloud).</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Definição de Tipos de Reunião</div><p>Configure reuniões de Demonstração (30 min) e Reunião de Fechamento (45 min).</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Link no Chat/E-mail</div><p>Insira o link na assinatura de e-mail e nos fluxos automáticos do Chatwoot/WhatsApp.</p></div></div></div>
+                <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Páginas públicas de agendamento 100% white-label sob subdomínio institucional (ex: `agenda.empresa.com.br`).</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+                <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">@calcom/mcp-server</span></div><p>Permite que assistentes de IA agendem reuniões diretamente na conversa com o lead.</p><div class="mcp-cmd"><code>npx -y @calcom/mcp-server</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-auto-scheduler</span></div><p>Negocia horários disponíveis no WhatsApp e conclui o agendamento.</p><div class="mcp-cmd"><code>.claude/skills/auto-scheduler/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">calcom-cli</span></div><p>Inicialização rápida de ambientes corporativos.</p><div class="mcp-cmd"><code>yarn calcom db-seed</code></div></div></div></div>
+              </div>
+            </article>
+            </div>
+  
+  <footer style="margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--rule-soft); display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 11px; color: var(--muted);">
+    <span>Suíte do Ecossistema Soberano · Padrão Diamante R5-E</span>
+    <a href="../00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.html" style="color: var(--accent); text-decoration: none; font-weight: 700;">Ver Livro Completo ↗</a>
+  </footer>
+</div>
+
+<script>
+function filterTools(query) {
+  const q = query.toLowerCase().trim();
+  const entries = document.querySelectorAll('.entry');
+  const rows = document.querySelectorAll('.tablewrap tbody tr');
+  let visibleCount = 0;
+
+  entries.forEach(entry => {
+    const text = entry.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      entry.style.display = 'grid';
+      visibleCount++;
+    } else {
+      entry.style.display = 'none';
+    }
+  });
+
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  const countEl = document.getElementById('search-count');
+  if (countEl) {
+    countEl.innerText = `${visibleCount} ferramentas encontradas`;
+  }
+}
+
+function updateTcoCalculator() {
+  const leads = parseInt(document.getElementById('slider-leads').value, 10);
+  const sellers = parseInt(document.getElementById('slider-sellers').value, 10);
+  const agents = parseInt(document.getElementById('slider-agents').value, 10);
+
+  document.getElementById('val-leads').innerText = leads.toLocaleString('pt-BR') + ' leads';
+  document.getElementById('val-sellers').innerText = sellers + ' vendedores';
+  document.getElementById('val-agents').innerText = agents + ' atendentes';
+
+  // Cálculos SaaS estimados (RD Marketing escalonado + RD CRM por licença + RD Conversas por operador)
+  const custoMkt = (leads <= 10000) ? 14400 : (leads <= 50000) ? 42000 : (leads <= 100000) ? 78000 : 130000;
+  const custoCrm = sellers * 3600;
+  const custoChat = agents * 3600;
+  const saasTotal = custoMkt + custoCrm + custoChat;
+
+  // Custo VPS Soberana (Cluster Unificado 8 vCPU / 16 GB RAM)
+  const custoVps = 4200;
+  const economiaLiquida = saasTotal - custoVps;
+  const economiaPct = ((economiaLiquida / saasTotal) * 100).toFixed(1);
+
+  document.getElementById('calc-saas-total').innerText = 'R$ ' + saasTotal.toLocaleString('pt-BR') + '/ano';
+  document.getElementById('calc-vps-total').innerText = 'R$ ' + custoVps.toLocaleString('pt-BR') + '/ano';
+  document.getElementById('calc-savings-total').innerText = 'R$ ' + economiaLiquida.toLocaleString('pt-BR') + '/ano (' + economiaPct + '%)';
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('✅ Código copiado para a área de transferência!');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('busca-ferramentas');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => filterTools(e.target.value));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+  }
+
+  const sLeads = document.getElementById('slider-leads');
+  const sSellers = document.getElementById('slider-sellers');
+  const sAgents = document.getElementById('slider-agents');
+  if (sLeads && sSellers && sAgents) {
+    sLeads.addEventListener('input', updateTcoCalculator);
+    sSellers.addEventListener('input', updateTcoCalculator);
+    sAgents.addEventListener('input', updateTcoCalculator);
+    updateTcoCalculator();
+  }
+});
+</script>
+
+</body>
+</html>

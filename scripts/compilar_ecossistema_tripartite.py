@@ -1522,6 +1522,44 @@ def gerar_typst_ecossistema(dados: dict) -> str:
 """
     return typ
 
+def renderizar_fasciculo_html(titulo: str, subtitulo: str, tag: str, conteudo_body: str) -> str:
+    return f"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>{titulo} · Suíte do Ecossistema Soberano</title>
+<style>
+{CSS_CANONICO_DIAMANTE}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+    <a href="../00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.html" style="font-family: var(--mono); font-size: 11.5px; color: var(--accent); text-decoration: none; font-weight: 700;">← Voltar ao Livro-Texto Completo</a>
+    <span class="persona-badge">{tag}</span>
+  </div>
+  <header style="border-bottom: 1px solid var(--rule); padding-bottom: 20px; margin-bottom: 24px;">
+    <div class="meta">
+      <span>Fascículo Especializado · Fábrica Universal AIDD</span>
+      <span>{datetime.date.today().strftime('%d/%m/%Y')}</span>
+    </div>
+    <h1 style="font-size: 30px; margin-bottom: 6px;">{titulo}</h1>
+    <p class="deck" style="font-size: 14.5px; margin-bottom: 0;">{subtitulo}</p>
+  </header>
+  
+  {conteudo_body}
+  
+  <footer style="margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--rule-soft); display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 11px; color: var(--muted);">
+    <span>Suíte do Ecossistema Soberano · Padrão Diamante R5-E</span>
+    <a href="../00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.html" style="color: var(--accent); text-decoration: none; font-weight: 700;">Ver Livro Completo ↗</a>
+  </footer>
+</div>
+{JS_CANONICO_DIAMANTE}
+</body>
+</html>
+"""
+
 def compilar_ecossistema_tripartite(slug: str):
     json_path = BASE_DIR / "scripts" / "data" / f"ecos-{slug}.json"
     if not json_path.exists():
@@ -1530,40 +1568,194 @@ def compilar_ecossistema_tripartite(slug: str):
         print(f"❌ Erro: Arquivo de dados do ecossistema não encontrado: {json_path}")
         sys.exit(1)
 
-    print(f"\n🚀 Compilando Dossiê de Macro-Ecossistema Tripartite: 'ecos-{slug}'")
+    print(f"\n🚀 Compilando Suíte do Macro-Ecossistema Tripartite: 'ecos-{slug}'")
     with open(json_path, "r", encoding="utf-8") as f:
         dados = json.load(f)
 
     out_dir = BASE_DIR / "output" / "04-ecossistemas" / f"ecos-{slug}"
+    
+    # Pastas da Arquitetura Modular
+    dir_livro = out_dir / "00-livro-mestre-compilado"
+    dir_exec = out_dir / "01-guias-executivos-e-estrategicos"
+    dir_eng = out_dir / "02-guias-de-engenharia-e-infraestrutura"
+    dir_ops = out_dir / "03-guias-de-integracao-e-operacao"
+    dir_pilares = out_dir / "04-arsenal-dos-pilares"
     mat_dir = out_dir / "materiais"
-    mat_dir.mkdir(parents=True, exist_ok=True)
+    
+    for d in [dir_livro, dir_exec, dir_eng, dir_ops, dir_pilares, mat_dir]:
+        d.mkdir(parents=True, exist_ok=True)
 
-    # 1. HTML
-    html_content = gerar_html_ecossistema_diamante(dados)
-    html_path = mat_dir / f"ecos-{slug}.html"
-    with open(html_path, "w", encoding="utf-8") as f:
-        f.write(html_content)
-    print(f"   ✅ HTML Diamante R5-E gerado: {html_path.name} ({len(html_content.encode('utf-8'))} bytes)")
+    # 1. LIVRO COMPLETO (HTML, Markdown, PDF)
+    html_livro = gerar_html_ecossistema_diamante(dados)
+    md_livro = gerar_markdown_ecossistema(dados)
+    typ_livro = gerar_typst_ecossistema(dados)
 
-    # 2. Markdown
-    md_content = gerar_markdown_ecossistema(dados)
-    md_path = mat_dir / f"ecos-{slug}.md"
-    with open(md_path, "w", encoding="utf-8") as f:
-        f.write(md_content)
-    print(f"   ✅ Markdown gerado: {md_path.name} ({len(md_content.splitlines())} linhas)")
-
-    # 3. Typst / PDF
-    typ_content = gerar_typst_ecossistema(dados)
+    # Salva no Livro Mestre
+    with open(dir_livro / "LIVRO-ECOSSISTEMA-COMPLETO.html", "w", encoding="utf-8") as f:
+        f.write(html_livro)
+    with open(dir_livro / "LIVRO-ECOSSISTEMA-COMPLETO.md", "w", encoding="utf-8") as f:
+        f.write(md_livro)
+    
     typ_path = out_dir / f"ecos-{slug}.typ"
-    pdf_path = mat_dir / f"ecos-{slug}.pdf"
     with open(typ_path, "w", encoding="utf-8") as f:
-        f.write(typ_content)
-
+        f.write(typ_livro)
+    
+    pdf_livro_path = dir_livro / "LIVRO-ECOSSISTEMA-COMPLETO.pdf"
     try:
-        res = subprocess.run(["typst", "compile", str(typ_path), str(pdf_path)], capture_output=True, text=True, check=True)
-        print(f"   ✅ PDF Typst compilado: {pdf_path.name}")
+        subprocess.run(["typst", "compile", str(typ_path), str(pdf_livro_path)], capture_output=True, text=True, check=True)
+        print(f"   ✅ Livro-Texto Completo em PDF compilado: {pdf_livro_path.name}")
     except Exception as e:
-        print(f"   ⚠️ Typst não encontrado ou falha na compilação do PDF: {e}")
+        print(f"   ⚠️ Typst não encontrado ou falha no PDF: {e}")
+
+    # Salva espelho canônico em materiais/ (para compatibilidade R11)
+    with open(mat_dir / f"ecos-{slug}.html", "w", encoding="utf-8") as f:
+        f.write(html_livro)
+    with open(mat_dir / f"ecos-{slug}.md", "w", encoding="utf-8") as f:
+        f.write(md_livro)
+    if pdf_livro_path.exists():
+        import shutil
+        shutil.copy2(pdf_livro_path, mat_dir / f"ecos-{slug}.pdf")
+
+    print(f"   ✅ 00. Livro Mestre Compilado gerado com sucesso!")
+
+    # 2. FASCÍCULOS 01: EXECUTIVOS & ESTRATÉGICOS
+    # 01. Dossiê Financeiro TCO
+    econ = dados.get("analise_economica_global", {})
+    body_tco = f"""
+    <div class="tco-banner">
+      <div class="tco-col"><div class="tco-lbl">Custo SaaS Anual</div><div class="tco-val killer">{econ.get('custo_saas_anual')}</div></div>
+      <div class="tco-col"><div class="tco-lbl">Custo VPS Soberana</div><div class="tco-val">{econ.get('custo_vps_anual')}</div></div>
+      <div class="tco-col"><div class="tco-lbl">Economia Líquida</div><div class="tco-val highlight">{econ.get('economia_anual_liquida')}</div></div>
+      <div class="tco-col"><div class="tco-lbl">Payback Estimado</div><div class="tco-val highlight">{econ.get('roi_meses')}</div></div>
+    </div>
+    <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">🧮 Simulação Interativa</h3>
+    <div class="calc-box">
+      <div class="calc-grid">
+        <div class="calc-slider-group"><label><span>Base de Leads</span> <strong id="val-leads" style="color: var(--accent);">50.000 leads</strong></label><input type="range" id="slider-leads" min="5000" max="200000" step="5000" value="50000"></div>
+        <div class="calc-slider-group"><label><span>Vendedores</span> <strong id="val-sellers" style="color: var(--accent);">10 vendedores</strong></label><input type="range" id="slider-sellers" min="1" max="50" step="1" value="10"></div>
+        <div class="calc-slider-group"><label><span>Atendentes WhatsApp</span> <strong id="val-agents" style="color: var(--accent);">10 atendentes</strong></label><input type="range" id="slider-agents" min="1" max="50" step="1" value="10"></div>
+      </div>
+      <div class="calc-results">
+        <div><div class="stat-lbl">Custo SaaS Atual</div><div class="stat-val alert" id="calc-saas-total">R$ 114.000/ano</div></div>
+        <div><div class="stat-lbl">Custo VPS Própria</div><div class="stat-val" id="calc-vps-total">R$ 4.200/ano</div></div>
+        <div><div class="stat-lbl">Economia no Caixa</div><div class="stat-val highlight" id="calc-savings-total">R$ 109.800/ano (96.3%)</div></div>
+      </div>
+    </div>
+    """
+    with open(dir_exec / "01-dossie-financeiro-tco-e-calculadora.html", "w", encoding="utf-8") as f:
+        f.write(renderizar_fasciculo_html("Dossiê Financeiro de TCO & Calculadora", "Análise de ROI, Payback e Desmantelamento de Licenças SaaS", "Financeiro & CFO", body_tco))
+
+    # 02. Matriz Geral do Quinteto
+    pilares = dados.get("pilares", [])
+    linhas_tab = ""
+    grank = 1
+    for p in pilares:
+        for f_item in p.get("ferramentas", []):
+            c_simp = simplificar_classificacao(f_item.get('classificacao', ''))
+            linhas_tab += f"<tr><td class='rank'>{grank:02d}</td><td><strong>{p.get('nome_pilar').split(':')[0]}</strong></td><td>{c_simp}</td><td><strong>{f_item['nome']}</strong></td><td class='saas'>{f_item['saas_substituido_direto']}</td><td class='econ'>{f_item['economia_anual_str']}</td><td><a href='{f_item['repositorio_github']}' target='_blank' style='color: var(--accent); font-family: var(--mono); font-size: 11px; text-decoration: none; font-weight: 700;'>GitHub ↗</a></td></tr>"
+            grank += 1
+    body_matriz = f"""
+    <div style="margin: 16px 0 12px;"><input type="text" id="busca-ferramentas" placeholder="Buscar ferramenta..." style="width: 100%; padding: 10px 14px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface-2); color: var(--ink);"></div>
+    <div class="tablewrap"><table><thead><tr><th>#</th><th>Grupo</th><th>Classificação</th><th>Ferramenta</th><th>Substitui</th><th>Economia</th><th>Código</th></tr></thead><tbody>{linhas_tab}</tbody></table></div>
+    """
+    with open(dir_exec / "02-matriz-geral-e-quinteto-soberano.html", "w", encoding="utf-8") as f:
+        f.write(renderizar_fasciculo_html("Matriz Geral do Quinteto Soberano", "Visão Consolidada das 15 Ferramentas Open Source dos 3 Grupos", "Estratégico", body_matriz))
+
+    # 03. Cronograma 30 Dias
+    body_cron = "".join([f'<div class="timeline-card"><div style="display: flex; justify-content: space-between;"><h4>{c.get("semana")} · {c.get("fase")}</h4><span class="persona-badge">Etapa</span></div><p style="font-size: 13.5px; margin: 4px 0 6px;">{c.get("atividades")}</p><div style="font-family: var(--mono); font-size: 12px; color: var(--green); font-weight: 700;">🎯 Marco: {c.get("marco_entrega")}</div></div>' for c in dados.get("cronograma_implantacao_30_dias", [])])
+    with open(dir_exec / "03-cronograma-de-implantacao-30-dias.html", "w", encoding="utf-8") as f:
+        f.write(renderizar_fasciculo_html("Cronograma Executivo de Implementação em 30 Dias", "Roadmap Semana a Semana para Virada de Chave sem Downtime", "Gestão de Projetos", body_cron))
+
+    # 3. FASCÍCULOS 02: ENGENHARIA & INFRAESTRUTURA
+    deploy = dados.get("deploy_consolidado", {})
+    body_deploy = f"""
+    <div class="racional-box"><p><strong>🛡️ Rede &amp; Segurança:</strong> {deploy.get('arquitetura_rede_seguranca')}</p></div>
+    <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 10px;">Arquivo docker-compose.yml Completo</h3>
+    <div class="code-box" style="margin-bottom: 20px;"><pre><code>{deploy.get('docker_compose_exemplo')}</code></pre></div>
+    <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 10px;">Passos de Subida</h3>
+    <div class="steps-grid">{''.join([f'<div class="step-card"><div class="step-head"><span class="step-badge">0{idx}</span> {passo.get("titulo")}</div><p>{passo.get("descricao")}</p></div>' for idx, passo in enumerate(deploy.get("passos_deploy", []), 1)])}</div>
+    """
+    with open(dir_eng / "04-manual-deploy-all-in-one-docker-compose.html", "w", encoding="utf-8") as f:
+        f.write(renderizar_fasciculo_html("Manual de Deploy All-in-One", "Orquestração Unificada da Stack em Docker Compose para VPS", "DevOps & Infra", body_deploy))
+
+    guia = dados.get("guia_modularidade_e_expansao", {})
+    body_lego = f"""
+    <div class="racional-box"><p><strong>🧩 Princípio das Tomadas:</strong> {guia.get('filosofia_modular')}</p></div>
+    <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 10px;">1. Adicionar Nova Ferramenta</h3>
+    <div class="steps-grid">{''.join([f'<div class="step-card"><div class="step-head">{p_add.get("etapa")}</div><p>{p_add.get("descricao")}</p></div>' for p_add in guia.get("passos_adicionar_ferramenta", [])])}</div>
+    <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px;">2. Hot-Swap (Troca sem Parar a Operação)</h3>
+    <div class="integ-card"><p style="white-space: pre-line;">{guia.get('passo_a_passo_substituir_hotswap')}</p></div>
+    <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px;">3. Remoção Segura</h3>
+    <div class="integ-card"><p style="white-space: pre-line;">{guia.get('passo_a_passo_remover_ferramenta')}</p></div>
+    """
+    with open(dir_eng / "05-guia-modularidade-e-hot-swap-lego.html", "w", encoding="utf-8") as f:
+        f.write(renderizar_fasciculo_html("Guia de Modularidade & Hot-Swap", "Protocolo para Adicionar, Trocar e Remover Serviços sem Quebrar o Cluster", "Engenharia", body_lego))
+
+    mon = dados.get("monitoramento_e_saude_vps", {})
+    body_mon = f"""
+    <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 16px 0 10px;">Comandos de Diagnóstico em 1 Clique</h3>
+    {''.join([f'<div style="display: flex; justify-content: space-between; padding: 8px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; margin-bottom: 6px;"><code>{c.get("comando")}</code><span style="font-size: 12.5px; color: var(--muted);">{c.get("finalidade")}</span></div>' for c in mon.get("comandos_diagnostico_1clique", [])])}
+    <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px;">Métricas Críticas de Alerta</h3>
+    <div class="integration-grid">{''.join([f'<div class="stat-card"><div class="stat-lbl">{met.get("metrica")}</div><div style="font-family: var(--mono); font-size: 12px; color: var(--flag); font-weight: 700;">{met.get("limite_alerta")}</div><p style="margin: 0; font-size: 12px; color: var(--ink-2);"><strong>Ação:</strong> {met.get("acao_recomendada")}</p></div>' for met in mon.get("metricas_alerta", [])])}</div>
+    """
+    with open(dir_eng / "06-painel-monitoramento-e-health-check.html", "w", encoding="utf-8") as f:
+        f.write(renderizar_fasciculo_html("Painel de Monitoramento & Health Check", "Diagnóstico Operacional em Tempo Real e Gestão de Incidentes", "Operações TI", body_mon))
+
+    # 4. FASCÍCULOS 03: INTEGRAÇÃO & OPERAÇÃO
+    body_blueprints = "".join([f'<div class="blueprint-card"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><h4>{bp.get("nome")}</h4><span class="persona-badge">JSON Pronto</span></div><p style="font-size: 13.5px; margin: 0 0 10px;">{bp.get("descricao")}</p><div class="code-box"><pre><code>{bp.get("json_blueprint")}</code></pre></div></div>' for bp in dados.get("blueprints_n8n", [])])
+    with open(dir_ops / "07-blueprints-n8n-e-orquestracao-eventos.html", "w", encoding="utf-8") as f:
+        f.write(renderizar_fasciculo_html("Blueprints n8n & Orquestração de Eventos", "Templates de Automação em JSON Prontos para Importação Instantânea", "Automação / Ops", body_blueprints))
+
+    body_mig = "".join([f'<div class="integ-card" style="margin-bottom: 14px;"><h4>{m.get("modulo")}</h4><p><strong>O que migrar:</strong> {m.get("o_que_migrar")}</p><div class="steps-grid" style="margin: 10px 0;">{"".join([f"<div class=\"step-card\"><div class=\"step-head\">Etapa {idx}</div><p>{p}</p></div>" for idx, p in enumerate(m.get("passos", []), 1)])}</div><div style="background: var(--flag-soft); border-left: 3px solid var(--flag); padding: 8px 12px; font-size: 12.5px; color: var(--flag);"><strong>⚠️ Atenção:</strong> {m.get("cuidados")}</div></div>' for m in dados.get("guia_migracao_dados", [])])
+    with open(dir_ops / "08-roteiro-migracao-dados-de-saas.html", "w", encoding="utf-8") as f:
+        f.write(renderizar_fasciculo_html("Roteiro Prático de Migração de Dados", "Passo a Passo para Exportar do SaaS e Importar na Stack Soberana", "Migração de Dados", body_mig))
+
+    seg = dados.get("seguranca_backup_lgpd", {})
+    body_seg = f"""
+    <div class="racional-box"><p><strong>🛡️ Política 3-2-1:</strong> {seg.get('arquitetura_backup_321')}</p></div>
+    <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 10px;">Script de Backup Diário Criptografado</h3>
+    <div class="code-box" style="margin-bottom: 20px;"><pre><code>{seg.get('script_backup_diario')}</code></pre></div>
+    <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px;">Checklist de Conformidade LGPD</h3>
+    {''.join([f'<div class="stat-card" style="margin-bottom: 8px;"><div style="display: flex; justify-content: space-between;"><strong>{chk.get("item")}</strong><span class="econ-badge" style="font-size: 9.5px;">Conforme</span></div><p style="margin: 0; font-size: 12.5px;">{chk.get("status")}</p></div>' for chk in seg.get("checklist_conformidade_lgpd", [])])}
+    """
+    with open(dir_ops / "09-seguranca-backup-321-e-conformidade-lgpd.html", "w", encoding="utf-8") as f:
+        f.write(renderizar_fasciculo_html("Segurança, Backup 3-2-1 & LGPD", "Governança Corporativa de Dados e Script Automatizado de Proteção", "DPO & Compliance", body_seg))
+
+    # 5. FASCÍCULOS 04: ARSENAL DOS PILARES (INDIVIDUAIS)
+    for p_idx, p in enumerate(pilares, 1):
+        entries_single_pilar = ""
+        for f_item in p.get("ferramentas", []):
+            c_simp = simplificar_classificacao(f_item.get('classificacao', ''))
+            passos_html = "".join([f'<div class="step-card"><div class="step-head"><span class="step-badge">{idx}</span> {passo.get("titulo")}</div><p>{passo.get("descricao")}</p></div>' for idx, passo in enumerate(f_item.get("passos_praticos", []), 1)])
+            ds = f_item.get("design_system", {})
+            mcp_html = "".join([f'<div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">{m.get("tipo")}</span><span class="mcp-name">{m.get("nome")}</span></div><p>{m.get("descricao")}</p><div class="mcp-cmd"><code>{m.get("comando_ou_repo")}</code></div></div>' for m in f_item.get("uso_complementar", [])])
+            
+            entries_single_pilar += f"""
+            <article class="entry" id="{f_item['slug']}">
+              <div class="entry-rank">{f_item['rank']:02d}</div>
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3>{f_item['nome']} · {f_item['subtitulo']}</h3>
+                  <span class="persona-badge">Persona: {c_simp}</span>
+                  <span class="killer-badge">Substitui: {f_item['saas_substituido_direto']}</span>
+                  <span class="econ-badge">{f_item['economia_anual_str']}</span>
+                  <span class="lic-badge">{f_item['licenca_osi']}</span>
+                </div>
+                <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>{f_item['o_que_faz']} {f_item['como_funciona']}</p><div class="code-box"><pre><code>{f_item['comando_rapido']}</code></pre></div></div>
+                <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">{f_item['saas_substituido_direto']}</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">{f_item['economia_anual_str']}</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">{f_item['racional_escolha']}</p></div></div></div>
+                <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">{f_item.get('requisitos_infra', {}).get('ram_minima', '1 GB')}</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>{f_item.get('requisitos_infra', {}).get('docker_image', 'oficial')}</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">{f_item.get('veredito')}</p></div></div></div>
+                <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid">{passos_html}</div></div>
+                <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>{ds.get('mecanica_customizacao')}</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>{ds.get('manutenibilidade_tema')}</p></div></div></div>
+                <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid">{mcp_html}</div></div>
+              </div>
+            </article>
+            """
+        
+        pilar_slug = p.get("pilar_id", f"pilar-0{p_idx}")
+        with open(dir_pilares / f"{pilar_slug}.html", "w", encoding="utf-8") as f:
+            f.write(renderizar_fasciculo_html(f"{p.get('nome_pilar')}", f"Arsenal do Quinteto Soberano para {p.get('modulo_saas_alvo')} · Subtotal: {p.get('subtotal_economia_anual')}", f"Pilar 0{p_idx}", f'<div class="ledger">{entries_single_pilar}</div>'))
+
+    print(f"   ✅ Todos os 10 Fascículos Especializados e Pilares individuais foram compilados com sucesso!")
 
     # 4. Registro no SQLite (Regra R11)
     try:
@@ -1575,15 +1767,15 @@ def compilar_ecossistema_tripartite(slug: str):
             "total_pilares": dados.get("stats", {}).get("total_pilares", len(dados.get("pilares", []))),
             "total_ferramentas": dados.get("stats", {}).get("total_ferramentas", sum(len(p.get("ferramentas", [])) for p in dados.get("pilares", []))),
             "economia_anual_liquida": dados.get("analise_economica_global", {}).get("economia_anual_liquida", ""),
-            "caminho_html": f"output/04-ecossistemas/ecos-{slug}/materiais/ecos-{slug}.html",
-            "caminho_md": f"output/04-ecossistemas/ecos-{slug}/materiais/ecos-{slug}.md",
-            "caminho_pdf": f"output/04-ecossistemas/ecos-{slug}/materiais/ecos-{slug}.pdf"
+            "caminho_html": f"output/04-ecossistemas/ecos-{slug}/00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.html",
+            "caminho_md": f"output/04-ecossistemas/ecos-{slug}/00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.md",
+            "caminho_pdf": f"output/04-ecossistemas/ecos-{slug}/00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.pdf"
         })
-        print(f"💾 Ecossistema persistido com sucesso no SQLite (estado_esteira.db - Regra R11)")
+        print(f"💾 Suíte do Ecossistema persistida com sucesso no SQLite (estado_esteira.db - Regra R11)")
     except Exception as e:
         print(f"⚠️ Erro ao registrar ecossistema no SQLite: {e}")
 
-    print(f"🏆 COMPILAÇÃO TRIPARTITE CONCLUÍDA: {out_dir}")
+    print(f"🏆 COMPILAÇÃO TRIPARTITE DA SUÍTE CONCLUÍDA: {out_dir}")
     return True
 
 def main():

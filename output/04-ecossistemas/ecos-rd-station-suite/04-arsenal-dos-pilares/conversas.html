@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Grupo 3: Atendimento Omnichannel & WhatsApp · Suíte do Ecossistema Soberano</title>
+<style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    --paper: #F6F4EF;
+    --surface: #FFFFFF;
+    --surface-2: #FBF9F4;
+    --surface-dark: #0A0F1D;
+    --ink: #1B1E23;
+    --ink-2: #383D45;
+    --muted: #666E7A;
+    --rule: #D8D2C4;
+    --rule-soft: #EAE5D9;
+    --accent: #00875A;
+    --accent-dark: #57D9A3;
+    --accent-soft: #E3FCEF;
+    --accent-soft-dark: #162B22;
+    --green: #00875A;
+    --green-soft: #E3FCEF;
+    --gold: #FFAB00;
+    --gold-soft: #FFF0B3;
+    --flag: #DE350B;
+    --flag-soft: #FFEBE6;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0E121B;
+      --surface: #141924;
+      --surface-2: #1A2130;
+      --ink: #E6E8ED;
+      --ink-2: #B0B5C0;
+      --muted: #7E8695;
+      --rule: #262F40;
+      --rule-soft: #1E2533;
+      --accent: var(--accent-dark);
+      --accent-soft: var(--accent-soft-dark);
+      --green: #57D9A3;
+      --green-soft: #162B22;
+      --gold: #FFC400;
+      --gold-soft: #332600;
+      --flag: #FF7452;
+      --flag-soft: #361B15;
+      --shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  body {
+    margin: 0;
+    padding: 40px 20px;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 48px;
+    box-shadow: var(--shadow);
+  }
+
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 32px;
+    margin-bottom: 36px;
+  }
+
+  .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 38px;
+    line-height: 1.15;
+    margin: 0 0 12px 0;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: var(--ink);
+  }
+
+  .deck {
+    font-size: 16px;
+    color: var(--ink-2);
+    margin: 0 0 24px 0;
+    line-height: 1.55;
+    max-width: 95%;
+  }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    border-top: 1px solid var(--rule-soft);
+    padding-top: 20px;
+    margin-top: 20px;
+  }
+
+  .stat-card {
+    background: var(--surface-2);
+    border: 1px solid var(--rule-soft);
+    border-radius: 2px;
+    padding: 12px 14px;
+  }
+
+  .stat-lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .stat-val {
+    font-family: var(--mono);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .stat-val.highlight { color: var(--green); }
+  .stat-val.alert { color: var(--flag); }
+
+  .racional-box {
+    background: var(--surface-2);
+    border-left: 3px solid var(--accent);
+    padding: 14px 18px;
+    margin: 20px 0;
+    font-size: 14px;
+    color: var(--ink-2);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .sec-head {
+    margin: 44px 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .sec-info { flex: 1; }
+  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: .08em; }
+  .sec-head h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0 0 0; color: var(--ink); font-weight: 600; }
+  .sec-note { font-size: 13.5px; color: var(--muted); margin-top: 4px; }
+  .pilar-subtotal-badge { font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 4px 10px; background: var(--green-soft); color: var(--green); border-radius: 2px; border: 1px solid var(--green); }
+
+  /* TABELA MATRIX */
+  .tablewrap { width: 100%; overflow-x: auto; margin: 20px 0 32px 0; border: 1px solid var(--rule); border-radius: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead { background: var(--surface-2); border-bottom: 1px solid var(--rule); }
+  th { text-align: left; padding: 10px 14px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface-2); }
+  td.rank { font-family: var(--mono); font-weight: 700; color: var(--muted); font-size: 12px; }
+  td.saas { color: var(--flag); font-weight: 600; }
+  td.econ { font-family: var(--mono); font-weight: 700; color: var(--green); }
+  td.killer { color: var(--flag); font-weight: 700; font-family: var(--mono); }
+
+  /* CARDS DE FERRAMENTAS */
+  .ledger { display: flex; flex-direction: column; gap: 24px; margin-top: 24px; }
+  .entry { display: grid; grid-template-columns: 48px 1fr; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); padding: 24px; box-shadow: var(--shadow); }
+  .entry-rank { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--muted); padding-top: 2px; }
+  .entry-body { display: flex; flex-direction: column; gap: 16px; }
+  .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+
+  .persona-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+  .pilar-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--gold-soft); color: #8A6100; border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent); font-weight: 700; white-space: nowrap; }
+  .killer-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; white-space: nowrap; }
+  .econ-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; white-space: nowrap; }
+  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule-soft); font-weight: 600; white-space: nowrap; }
+
+  .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .entry-section p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+
+  .code-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 2px; padding: 12px; font-family: var(--mono); font-size: 12px; overflow-x: auto; color: var(--ink); position: relative; }
+  .code-box pre { margin: 0; font-family: inherit; }
+
+  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 4px; }
+  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .econ-card.killer { border-left: 3px solid var(--flag); }
+  .econ-card.savings { border-left: 3px solid var(--green); }
+  .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .econ-val { font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--ink); }
+
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 4px; }
+  .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .infra-card.verdict { border-left: 3px solid var(--accent); grid-column: 1 / -1; }
+  .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .infra-val { font-size: 13px; color: var(--ink-2); font-weight: 500; }
+
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 6px; }
+  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .step-head { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: var(--accent); text-transform: uppercase; }
+  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+  .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+
+  .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
+  .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+  .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+  .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+  .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
+
+  .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+  .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+  .mcp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .mcp-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+  .mcp-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+  .mcp-pill { font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase; padding: 1px 6px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); }
+  .mcp-name { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--ink); }
+  .mcp-card p { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.4; }
+  .mcp-cmd { font-family: var(--mono); font-size: 11px; background: var(--surface); padding: 3px 6px; border-radius: 2px; border: 1px solid var(--rule-soft); color: var(--ink); word-break: break-all; }
+
+  .integration-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin: 16px 0; }
+  .integ-card { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 3px; padding: 16px; box-shadow: var(--shadow); }
+  .integ-card h4 { font-family: var(--font-serif); font-size: 18px; margin: 0 0 8px; color: var(--ink); }
+  .integ-card p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+
+  .tco-banner { background: var(--surface); border: 1px solid var(--green); border-radius: 3px; padding: 20px; margin: 20px 0; box-shadow: var(--shadow); display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .tco-col .tco-lbl { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+  .tco-col .tco-val { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--ink); }
+  .tco-col .tco-val.highlight { color: var(--green); }
+  .tco-col .tco-val.killer { color: var(--flag); }
+
+  /* CALCULADORA INTERATIVA TCO */
+  .calc-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 4px; padding: 24px; margin: 20px 0; box-shadow: var(--shadow); }
+  .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 20px; }
+  .calc-slider-group label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .calc-slider-group input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+  .calc-results { background: var(--surface); border: 1px solid var(--green); border-radius: 3px; padding: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+  /* BLUEPRINTS & TIMELINE */
+  .blueprint-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .timeline-card { background: var(--surface-2); border-left: 4px solid var(--accent); padding: 16px; margin-bottom: 12px; border-radius: 0 3px 3px 0; }
+  .timeline-card h4 { margin: 0 0 6px; font-family: var(--font-serif); font-size: 17px; color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+    <a href="../00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.html" style="font-family: var(--mono); font-size: 11.5px; color: var(--accent); text-decoration: none; font-weight: 700;">← Voltar ao Livro-Texto Completo</a>
+    <span class="persona-badge">Pilar 03</span>
+  </div>
+  <header style="border-bottom: 1px solid var(--rule); padding-bottom: 20px; margin-bottom: 24px;">
+    <div class="meta">
+      <span>Fascículo Especializado · Fábrica Universal AIDD</span>
+      <span>28/08/2026</span>
+    </div>
+    <h1 style="font-size: 30px; margin-bottom: 6px;">Grupo 3: Atendimento Omnichannel & WhatsApp</h1>
+    <p class="deck" style="font-size: 14.5px; margin-bottom: 0;">Arsenal do Quinteto Soberano para RD Station Conversas (Antigo Tallos / Módulos de Mensageria) · Subtotal: R$ 36.000/ano</p>
+  </header>
+  
+  <div class="ledger">
+            <article class="entry" id="chatwoot">
+              <div class="entry-rank">01</div>
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3>Chatwoot · Central de Atendimento Omnicanal & Livechat Colaborativo</h3>
+                  <span class="persona-badge">Persona: Completa</span>
+                  <span class="killer-badge">Substitui: RD Station Conversas (Painel de Atendimento Multiatendente)</span>
+                  <span class="econ-badge">R$ 36.000/ano (10 operadores)</span>
+                  <span class="lic-badge">MIT</span>
+                </div>
+                <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Centraliza conversas de clientes, distribui tickets e permite notas internas entre atendentes. Ruby on Rails com WebSockets e Vue.js para mensageria em tempo real.</p><div class="code-box"><pre><code>git clone https://github.com/chatwoot/chatwoot && cd chatwoot && docker compose up -d</code></pre></div></div>
+                <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">RD Station Conversas (Painel de Atendimento Multiatendente)</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 36.000/ano (10 operadores)</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Software líder global em suporte omnicanal aberto, eliminando a cobrança por licença de atendente e fornecendo relatórios completos de CSAT e tempo de primeira resposta.</p></div></div></div>
+                <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">4 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">A plataforma mais completa do mercado aberto para atendimento humano, com relatórios gerenciais e SLAs avançados.</p></div></div></div>
+                <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Criação de Caixas de Entrada</div><p>Cadastre os canais de WhatsApp corporativo, Livechat do site e Instagram Direct.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Divisão por Equipes</div><p>Crie equipes de Suporte Técnico, Vendas e Financeiro com distribuição automática de tickets.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Respostas Rápidas</div><p>Cadastre macros de texto para agilizar as respostas mais comuns dos atendentes.</p></div></div></div>
+                <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Permite customizar logotipo, cores do widget de chat, nome da empresa e domínio institucional.</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+                <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">chatwoot-mcp</span></div><p>Servidor MCP para agentes de IA lerem tickets e sugerirem respostas aos operadores humanos.</p><div class="mcp-cmd"><code>npx -y chatwoot-mcp-server</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-sentiment-analyst</span></div><p>Analisa o sentimento do cliente em tempo real no Chatwoot e alerta supervisores.</p><div class="mcp-cmd"><code>.claude/skills/sentiment-analyst/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">chatwoot-ctl</span></div><p>Gerenciamento de contas e instâncias via terminal.</p><div class="mcp-cmd"><code>bundle exec rails runner 'Account.all'</code></div></div></div></div>
+              </div>
+            </article>
+            
+            <article class="entry" id="evolution-api">
+              <div class="entry-rank">02</div>
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3>Evolution API · Gateway Profissional de WhatsApp Baileys com Webhooks</h3>
+                  <span class="persona-badge">Persona: Robusta</span>
+                  <span class="killer-badge">Substitui: RD Station Conversas (Conectores Proprietários Z-API / Gupshup)</span>
+                  <span class="econ-badge">R$ 18.000/ano</span>
+                  <span class="lic-badge">Apache-2.0</span>
+                </div>
+                <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Recebe e envia mensagens, mídias e áudios de WhatsApp via endpoints REST. Node.js e TypeScript com gerenciamento de sessões em Redis e Postgres.</p><div class="code-box"><pre><code>docker run -d -p 8080:8080 --name evolution-api atendai/evolution-api:v2.1.0</code></pre></div></div>
+                <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">RD Station Conversas (Conectores Proprietários Z-API / Gupshup)</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 18.000/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">API brasileira madura com suporte a múltiplas instâncias simultâneas, conversão automática de áudios em formato compatível e integração nativa de 1 clique com o Chatwoot.</p></div></div></div>
+                <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">2 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">O conector WhatsApp mais estável do ecossistema nacional, suportando milhares de mensagens diárias com alta resiliência.</p></div></div></div>
+                <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Geração de QR Code</div><p>Crie uma instância via API e leia o QR Code com o aplicativo WhatsApp Business.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Conexão com Chatwoot</div><p>Ative a flag nativa do Chatwoot para sincronizar mensagens bidirecionais instantâneas.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Configuração de Webhooks</div><p>Aponte os webhooks de mensagens recebidas para o n8n para acionamento de IA.</p></div></div></div>
+                <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Opera como serviço de backend invisível sob domínio próprio da empresa (ex: `api-wa.empresa.com.br`).</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+                <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">evolution-api-mcp</span></div><p>Permite que agentes LLM enviem mensagens e mídias de WhatsApp de forma autônoma.</p><div class="mcp-cmd"><code>npx -y evolution-api-mcp</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-wa-audio-transcriber</span></div><p>Transcreve áudios recebidos no WhatsApp e envia o resumo ao vendedor.</p><div class="mcp-cmd"><code>.claude/skills/wa-transcriber/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">evolution-cli</span></div><p>Criação programática de novas instâncias de WhatsApp.</p><div class="mcp-cmd"><code>curl -X POST https://wa.empresa/instance/create</code></div></div></div></div>
+              </div>
+            </article>
+            
+            <article class="entry" id="typebot">
+              <div class="entry-rank">03</div>
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3>Typebot · Construtor Visual de Fluxos de Triagem & Qualificação</h3>
+                  <span class="persona-badge">Persona: Moderna</span>
+                  <span class="killer-badge">Substitui: RD Station Conversas (Chatbots de Triagem) / Landbot</span>
+                  <span class="econ-badge">R$ 14.400/ano</span>
+                  <span class="lic-badge">AGPL-3.0</span>
+                </div>
+                <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Cria chatbots conversacionais interativos para qualificação de leads antes do humano. Editor visual drag-and-drop com blocos lógicos e integração nativa com IA e webhooks.</p><div class="code-box"><pre><code>docker run -d -p 3001:3000 --name typebot baptistearno/typebot-builder:latest</code></pre></div></div>
+                <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">RD Station Conversas (Chatbots de Triagem) / Landbot</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 14.400/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Melhor construtor visual de fluxos conversacionais do mercado, com suporte a variáveis, ramificações condicionais e integração nativa com modelos de IA para atendimento automático.</p></div></div></div>
+                <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">2 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">A melhor experiência de criação de robôs conversacionais: fluida, moderna e sem necessidade de conhecimento em programação.</p></div></div></div>
+                <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Desenho do Fluxo</div><p>Adicione blocos de perguntas, coleta de e-mail, telefone e opções de múltipla escolha.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Nó de Inteligência Artificial</div><p>Integre o nó OpenAI/Anthropic para responder dúvidas sobre produtos com base em arquivos PDF.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Transbordo Humano</div><p>Insira o bloco Chatwoot para transferir a conversa para um atendente quando o lead solicitar.</p></div></div></div>
+                <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Customização completa de fontes, avatares, cores de balões e plano de fundo no construtor visual.</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+                <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">typebot-mcp</span></div><p>Permite que agentes analisem as respostas de formulários e conversem com leads.</p><div class="mcp-cmd"><code>npx -y typebot-mcp-server</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-bot-flow-optimizer</span></div><p>Analisa taxa de abandono nas perguntas do bot e otimiza as mensagens.</p><div class="mcp-cmd"><code>.claude/skills/bot-optimizer/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">typebot-export</span></div><p>Exportação de fluxos em formato JSON para controle de versão.</p><div class="mcp-cmd"><code>typebot export --id flow-lead-qualification</code></div></div></div></div>
+              </div>
+            </article>
+            
+            <article class="entry" id="waha">
+              <div class="entry-rank">04</div>
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3>WAHA · Gateway Headless Secundário de Alta Disponibilidade</h3>
+                  <span class="persona-badge">Persona: Leve</span>
+                  <span class="killer-badge">Substitui: RD Station Notificações WhatsApp / Twilio Messaging</span>
+                  <span class="econ-badge">R$ 12.000/ano</span>
+                  <span class="lic-badge">Apache-2.0</span>
+                </div>
+                <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Fornece API HTTP estável para automações de sistema sem interferir na fila de atendimento humano. Sessões Chromium headless em contêiner Docker isolado.</p><div class="code-box"><pre><code>docker run -d -p 3000:3000 --name waha devlikeapro/waha</code></pre></div></div>
+                <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">RD Station Notificações WhatsApp / Twilio Messaging</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 12.000/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Solução headless ultra-estável em contêiner isolado para garantir que mensagens transacionais de sistema sejam enviadas mesmo em caso de sobrecarga da fila de atendimento.</p></div></div></div>
+                <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">2 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">Essencial para garantir que alertas de segurança e notificações financeiras não disputem fila com atendimentos humanos.</p></div></div></div>
+                <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Inicialização</div><p>Suba o contêiner WAHA apontando para uma porta interna isolada.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Autenticação</div><p>Escaneie o QR Code via endpoint `/api/sessions/start`.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Disparo Transacional</div><p>Envie alertas de cobrança e lembretes de reunião via chamadas REST no n8n.</p></div></div></div>
+                <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Serviço totalmente desacoplado operando sob API interna.</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+                <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">waha-mcp</span></div><p>Interface MCP para disparos transacionais de alta confiabilidade.</p><div class="mcp-cmd"><code>npx -y waha-mcp-server</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-wa-delivery-checker</span></div><p>Verifica status de entrega e leitura de notificações críticas.</p><div class="mcp-cmd"><code>.claude/skills/delivery-checker/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">waha-cli</span></div><p>Disparo direto de mensagens de terminal.</p><div class="mcp-cmd"><code>curl -X POST https://waha.empresa/api/sendText</code></div></div></div></div>
+              </div>
+            </article>
+            
+            <article class="entry" id="papercups">
+              <div class="entry-rank">05</div>
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3>Papercups · Livechat & Suporte Direto sem Burocracia</h3>
+                  <span class="persona-badge">Persona: Simples</span>
+                  <span class="killer-badge">Substitui: Intercom / Crisp / Chat Básico do RD</span>
+                  <span class="econ-badge">R$ 10.800/ano</span>
+                  <span class="lic-badge">MIT</span>
+                </div>
+                <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Fornece chat ao vivo para clientes conversarem com a equipe diretamente pelo navegador. Backend em Elixir/Phoenix (alta concorrência) com frontend em React.</p><div class="code-box"><pre><code>docker run -d -p 4000:4000 --name papercups papercups/papercups:latest</code></pre></div></div>
+                <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">Intercom / Crisp / Chat Básico do RD</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 10.800/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Widget de chat leve em React com painel simples e sem dependências pesadas, ideal para suporte ágil.</p></div></div></div>
+                <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">1 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">A solução mais direta e leve para quem precisa apenas de um chat corporativo elegante no site sem excesso de menus.</p></div></div></div>
+                <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Cópia do Script</div><p>Copie o código JS do widget e cole no rodapé do site corporativo.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Definição de Cores</div><p>Defina a cor primária e mensagem de boas-vindas do atendente.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Atendimento</div><p>Responda mensagens de visitantes diretamente pelo dashboard web ou aplicativo.</p></div></div></div>
+                <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Total customização visual do widget flutuante (título, subtítulo, avatar e cor hexadecimal).</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+                <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">papercups-mcp</span></div><p>Consulta de conversas de livechat em tempo real por agentes.</p><div class="mcp-cmd"><code>npx -y papercups-mcp</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-livechat-responder</span></div><p>Responde dúvidas de produtos no chat ao vivo do site.</p><div class="mcp-cmd"><code>.claude/skills/livechat-responder/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">papercups-cli</span></div><p>Extração de histórico de conversas.</p><div class="mcp-cmd"><code>curl -X GET https://chat.empresa/api/v1/conversations</code></div></div></div></div>
+              </div>
+            </article>
+            </div>
+  
+  <footer style="margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--rule-soft); display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 11px; color: var(--muted);">
+    <span>Suíte do Ecossistema Soberano · Padrão Diamante R5-E</span>
+    <a href="../00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.html" style="color: var(--accent); text-decoration: none; font-weight: 700;">Ver Livro Completo ↗</a>
+  </footer>
+</div>
+
+<script>
+function filterTools(query) {
+  const q = query.toLowerCase().trim();
+  const entries = document.querySelectorAll('.entry');
+  const rows = document.querySelectorAll('.tablewrap tbody tr');
+  let visibleCount = 0;
+
+  entries.forEach(entry => {
+    const text = entry.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      entry.style.display = 'grid';
+      visibleCount++;
+    } else {
+      entry.style.display = 'none';
+    }
+  });
+
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  const countEl = document.getElementById('search-count');
+  if (countEl) {
+    countEl.innerText = `${visibleCount} ferramentas encontradas`;
+  }
+}
+
+function updateTcoCalculator() {
+  const leads = parseInt(document.getElementById('slider-leads').value, 10);
+  const sellers = parseInt(document.getElementById('slider-sellers').value, 10);
+  const agents = parseInt(document.getElementById('slider-agents').value, 10);
+
+  document.getElementById('val-leads').innerText = leads.toLocaleString('pt-BR') + ' leads';
+  document.getElementById('val-sellers').innerText = sellers + ' vendedores';
+  document.getElementById('val-agents').innerText = agents + ' atendentes';
+
+  // Cálculos SaaS estimados (RD Marketing escalonado + RD CRM por licença + RD Conversas por operador)
+  const custoMkt = (leads <= 10000) ? 14400 : (leads <= 50000) ? 42000 : (leads <= 100000) ? 78000 : 130000;
+  const custoCrm = sellers * 3600;
+  const custoChat = agents * 3600;
+  const saasTotal = custoMkt + custoCrm + custoChat;
+
+  // Custo VPS Soberana (Cluster Unificado 8 vCPU / 16 GB RAM)
+  const custoVps = 4200;
+  const economiaLiquida = saasTotal - custoVps;
+  const economiaPct = ((economiaLiquida / saasTotal) * 100).toFixed(1);
+
+  document.getElementById('calc-saas-total').innerText = 'R$ ' + saasTotal.toLocaleString('pt-BR') + '/ano';
+  document.getElementById('calc-vps-total').innerText = 'R$ ' + custoVps.toLocaleString('pt-BR') + '/ano';
+  document.getElementById('calc-savings-total').innerText = 'R$ ' + economiaLiquida.toLocaleString('pt-BR') + '/ano (' + economiaPct + '%)';
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('✅ Código copiado para a área de transferência!');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('busca-ferramentas');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => filterTools(e.target.value));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+  }
+
+  const sLeads = document.getElementById('slider-leads');
+  const sSellers = document.getElementById('slider-sellers');
+  const sAgents = document.getElementById('slider-agents');
+  if (sLeads && sSellers && sAgents) {
+    sLeads.addEventListener('input', updateTcoCalculator);
+    sSellers.addEventListener('input', updateTcoCalculator);
+    sAgents.addEventListener('input', updateTcoCalculator);
+    updateTcoCalculator();
+  }
+});
+</script>
+
+</body>
+</html>
