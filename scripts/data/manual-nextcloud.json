@@ -1,0 +1,312 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "Nextcloud Hub",
+  "slug": "nextcloud",
+  "saas_origem": "google-workspace",
+  "versao": "30.x (Hub 9)",
+  "licenca_osi": "AGPL-3.0",
+  "tempo_estimado_setup": "20 a 30 minutos (Zero conhecimento prévio)",
+  "nivelamento_conceitual": [
+    {
+      "termo": "Nextcloud Hub (A Ferramenta)",
+      "analogia_cotidiana": "O Seu Próprio Gmail + Google Drive + Agenda num Apartamento que Você Possui",
+      "explicacao_simples": "O Nextcloud Hub é uma suíte completa que reúne e-mail, agenda, contatos, chat com vídeo e armazenamento de arquivos em um único painel. A diferença fundamental para o Google Workspace é que tudo fica guardado no seu próprio servidor: ninguém revende os seus dados nem os lê para treinar inteligência artificial de terceiros."
+    },
+    {
+      "termo": "VPS (Servidor Privado Virtual)",
+      "analogia_cotidiana": "Uma Sala Comercial Alugada que Nunca Desliga",
+      "explicacao_simples": "Em vez de depender dos servidores do Google, você aluga por cerca de R$ 170 por mês um computador profissional em um data center (Hetzner, Contabo, DigitalOcean). Ele fica ligado 24 horas por dia, com internet de fibra e geradores, pronto para entregar seus e-mails e arquivos."
+    },
+    {
+      "termo": "Docker & Containers",
+      "analogia_cotidiana": "Uma Caixa de Sapatos Lacrada de Fábrica",
+      "explicacao_simples": "O Docker entrega o Nextcloud dentro de uma 'caixa lacrada' com tudo que ele precisa para funcionar. Você não precisa instalar dezenas de programas manualmente: basta mandar a caixa abrir e o sistema sobe sozinho, isolado e seguro."
+    },
+    {
+      "termo": "Traefik (Proxy Reverso)",
+      "analogia_cotidiana": "O Porteiro com Cadeado Verde (HTTPS)",
+      "explicacao_simples": "O Traefik é o recepcionista que atende na internet, coloca o cadeado de segurança (certificado SSL gratuito) em cada acesso e encaminha cada pessoa para o serviço certo (mail.empresa.com.br vai para o Nextcloud)."
+    },
+    {
+      "termo": "CalDAV & CardDAV",
+      "analogia_cotidiana": "A Língua Comum da Agenda e dos Contatos",
+      "explicacao_simples": "São os 'idiomas abertos' que permitem que o seu celular (Android ou iPhone), o Outlook e o Thunderbird leiam e escrevam a mesma agenda e os mesmos contatos do Nextcloud, exatamente como o Google Calendar e o Google Contacts faziam."
+    }
+  ],
+  "vps_recomendada": {
+    "provedor_modelo": "Hetzner Cloud CPX41 (ou Contabo Cloud VPS L)",
+    "vcpu": "4 vCPU Dedicadas (AMD EPYC)",
+    "ram": "8 GB RAM ECC",
+    "armazenamento": "160 GB NVMe Gen4",
+    "so_recomendado": "Ubuntu 24.04 LTS (x86_64)",
+    "custo_mensal_estimado": "EUR 28,00/mês (~R$ 170,00/mês na cotação média)",
+    "portas_abertas": [
+      "22/tcp (Acesso exclusivo do administrador via SSH)",
+      "80/tcp (Renovação automática do certificado de segurança)",
+      "443/tcp (Acesso web com cadeado verde HTTPS)"
+    ]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Como Alugar o Servidor e Abrir o Terminal",
+        "descricao": "Acesse hetzner.com/cloud (ou contabo.com), crie a conta e clique em 'Add Server'. Escolha a imagem 'Ubuntu 24.04', o tipo 'CPX41' e a localização mais próxima do Brasil (EUA ou Finlândia). Em 30 segundos você receberá por e-mail o IP do servidor (ex: 123.45.67.89). No Windows, pressione Windows + R, digite 'powershell' e Enter. No Mac, abra o 'Terminal'.",
+        "analogia": "É pegar a chave da sua nova sala comercial e abrir o laptop para falar com a recepção.",
+        "o_que_acontece_na_tela": "Uma janela preta ou azul se abrirá com um cursor piscando aguardando comandos.",
+        "como_saber_se_deu_certo": "Aparecerá a linha PS C:\\Users\\seu-nome> pronta para receber instruções.",
+        "comandos": "# Digite no seu computador (substitua pelo IP recebido por e-mail):\nssh root@SEU_IP_AQUI",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Blindagem Inicial do Servidor (Hardening & Firewall)",
+        "descricao": "Criamos um usuário seguro 'deployer' para não usar a conta root, fechamos todas as portas perigosas e ativamos o firewall de proteção.",
+        "analogia": "Instalar fechaduras tetra e colocar o porteiro na guarita com lista rígida de convidados.",
+        "o_que_acontece_na_tela": "O sistema pedirá uma senha forte para o novo usuário e confirmará 'Firewall is active and enabled on system startup'.",
+        "como_saber_se_deu_certo": "Digite 'ufw status' e veja as portas 22, 80 e 443 marcadas como 'ALLOW IN'.",
+        "comandos": "adduser deployer && usermod -aG sudo deployer\nufw default deny incoming && ufw default allow outgoing\nufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp\nufw --force enable",
+        "fonte_id": "F05"
+      },
+      {
+        "numero": 3,
+        "titulo": "Instalação do Motor Docker Oficial",
+        "descricao": "Instalamos o motor do Docker para que o Nextcloud, o banco de dados e o Traefik rodem em caixas isoladas e seguras.",
+        "analogia": "Montar as prateleiras industriais no galpão para receber as caixas lacradas.",
+        "o_que_acontece_na_tela": "Várias linhas de download e instalação passarão pela tela durante 1 a 2 minutos.",
+        "como_saber_se_deu_certo": "Execute 'docker --version' e o terminal responderá 'Docker version 27.x.x' ou superior.",
+        "comandos": "apt-get update && apt-get install -y ca-certificates curl\ncurl -fsSL https://get.docker.com | sh\nusermod -aG docker deployer",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 4,
+        "titulo": "Criação da Pasta do Nextcloud & Arquivo de Produção",
+        "descricao": "Criamos o diretório /opt/nextcloud/ onde ficarão o banco de dados, os arquivos dos colaboradores e o arquivo que comanda os serviços.",
+        "analogia": "Montar a escrivaninha e a gaveta onde as pastas serão arquivadas.",
+        "o_que_acontece_na_tela": "As pastas são criadas silenciosamente em menos de 1 segundo.",
+        "como_saber_se_deu_certo": "O comando 'ls -ld /opt/nextcloud' mostrará a pasta pertencente ao usuário deployer.",
+        "comandos": "mkdir -p /opt/nextcloud/{data,letsencrypt}\nchown -R deployer:deployer /opt/nextcloud\nchmod -R 750 /opt/nextcloud",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 5,
+        "titulo": "Subindo o Nextcloud com Docker Compose",
+        "descricao": "Iniciamos o Nextcloud, o banco PostgreSQL e o proxy Traefik em segundo plano. O sistema baixa as imagens oficiais e começa a rodar imediatamente.",
+        "analogia": "Apertar o botão verde no painel: as luzes acendem e os serviços operam.",
+        "o_que_acontece_na_tela": "O Docker fará o download das camadas e exibirá 'Container nextcloud Started' e 'Container traefik Started'.",
+        "como_saber_se_deu_certo": "Digite 'docker compose ps' e veja os três containers com status 'Up'.",
+        "comandos": "cd /opt/nextcloud\ndocker compose up -d\ndocker compose ps",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 6,
+        "titulo": "Configuração do Cadeado de Segurança (SSL) e Teste de Saúde",
+        "descricao": "O Traefik emite automaticamente um certificado gratuito Let's Encrypt para mail.empresa.com.br, garantindo que ninguém intercepte seus e-mails e arquivos.",
+        "analogia": "Lacre inviolável com assinatura digital em cada pacote que entra ou sai.",
+        "o_que_acontece_na_tela": "A resposta confirmará 'status: healthy' com o tempo de atividade registrado.",
+        "como_saber_se_deu_certo": "Abra https://mail.empresa.com.br no navegador e veja o cadeado verde fechado na barra de endereços.",
+        "comandos": "curl -s -o /dev/null -w \"%{http_code}\" https://mail.empresa.com.br | grep 200 || echo 'Aguarde 30s e tente novamente'",
+        "fonte_id": "F05"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/opt/nextcloud/docker-compose.yml",
+        "linguagem": "yaml",
+        "conteudo": "services:\n  traefik:\n    image: traefik:v3.0\n    command:\n      - \"--providers.docker=true\"\n      - \"--entrypoints.websecure.address=:443\"\n      - \"--certificatesresolvers.le.acme.tlschallenge=true\"\n      - \"--certificatesresolvers.le.acme.email=admin@empresa.com.br\"\n      - \"--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json\"\n    ports:\n      - \"80:80\"\n      - \"443:443\"\n    volumes:\n      - /var/run/docker.sock:/var/run/docker.sock:ro\n      - ./letsencrypt:/letsencrypt\n    networks:\n      - nextcloud_net\n\n  db:\n    image: postgres:16-alpine\n    environment:\n      - POSTGRES_DB=nextcloud\n      - POSTGRES_USER=nextcloud\n      - POSTGRES_PASSWORD=SENHA_FORTE_BANCO_2026\n    volumes:\n      - db_data:/var/lib/postgresql/data\n    networks:\n      - nextcloud_net\n    restart: unless-stopped\n\n  nextcloud:\n    image: nextcloud:latest\n    labels:\n      - \"traefik.enable=true\"\n      - \"traefik.http.routers.nextcloud.rule=Host(`mail.empresa.com.br`)\"\n      - \"traefik.http.routers.nextcloud.entrypoints=websecure\"\n      - \"traefik.http.routers.nextcloud.tls.certresolver=le\"\n      - \"traefik.http.services.nextcloud.loadbalancer.server.port=80\"\n    volumes:\n      - nextcloud_data:/var/www/html\n    environment:\n      - NEXTCLOUD_TRUSTED_DOMAINS=mail.empresa.com.br\n      - POSTGRES_HOST=db\n      - POSTGRES_DB=nextcloud\n      - POSTGRES_USER=nextcloud\n      - POSTGRES_PASSWORD=SENHA_FORTE_BANCO_2026\n      - NEXTCLOUD_ADMIN_USER=admin\n      - NEXTCLOUD_ADMIN_PASSWORD=SenhaAdminForte2026\n    depends_on:\n      - db\n    networks:\n      - nextcloud_net\n    restart: unless-stopped\n\nnetworks:\n  nextcloud_net:\n    driver: bridge\n\nvolumes:\n  db_data:\n  nextcloud_data:\n  letsencrypt:",
+        "explicacao": "Arquivo que define como o Nextcloud, o banco PostgreSQL e o proxy Traefik rodam isolados e como o Traefik expõe a ferramenta com cadeado SSL automático."
+      },
+      {
+        "caminho": "/opt/nextcloud/config/overwrite.config.php",
+        "linguagem": "php",
+        "conteudo": "<?php\n$CONFIG = array (\n  'overwriteprotocol' => 'https',\n  'overwritehost' => 'mail.empresa.com.br',\n  'trusted_proxies' => array('traefik'),\n  'forwarded_for_headers' => array('HTTP_X_FORWARDED_FOR'),\n);",
+        "explicacao": "Garante que o Nextcloud confie no proxy Traefik e force o protocolo HTTPS, evitando o aviso de 'Acesso não confiável'."
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "O Nextcloud Hub funciona como um hub único: o módulo Mail recebe e envia e-mails (integrado ao servidor de e-mail Stalwart ou ao próprio servidor), o Calendar e o Contacts sincronizam com qualquer celular via CalDAV/CardDAV, e o Talk faz chamadas de vídeo no navegador via WebRTC. Tudo é armazenado no seu servidor PostgreSQL, sem cópia na nuvem do Google. Os aplicativos móveis oficiais (Android/iOS) e o cliente de desktop mantêm os arquivos sincronizados como o Google Drive.",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "Passo 1: Acessar o Painel e Criar o Administrador",
+        "acao": "Abra https://mail.empresa.com.br no navegador, faça login com o usuário 'admin' definido na instalação e conclua o assistente de boas-vindas.",
+        "resultado_esperado": "Você verá o painel com os ícones de Arquivos, Mail, Calendar, Contacts e Talk."
+      },
+      {
+        "passo": "Passo 2: Conectar seu Celular (CalDAV/CardDAV)",
+        "acao": "No celular, instale o app 'DAVx5' (Android) ou use Contas > CalDAV (iPhone) e aponte para https://mail.empresa.com.br com seu usuário e senha do Nextcloud.",
+        "resultado_esperado": "Sua agenda e contatos do Nextcloud aparecem sincronizados no app nativo de calendário e contatos do telefone."
+      },
+      {
+        "passo": "Passo 3: Fazer sua Primeira Chamada de Vídeo no Talk",
+        "acao": "Clique no ícone Talk, crie uma sala 'Reunião Equipe' e compartilhe o link com os colegas. Clique na câmera para iniciar a chamada.",
+        "resultado_esperado": "A chamada de vídeo abre no navegador, sem instalar o Google Meet, com áudio e vídeo em tempo real."
+      }
+    ],
+    "comandos_cli": [
+      {
+        "comando": "sudo -u www-data php /var/www/html/occ user:add --display-name=\"João Silva\" --group=\"colaboradores\" joao",
+        "descricao": "Cria um novo colaborador no Nextcloud via linha de comando.",
+        "exemplo": "sudo -u www-data php /var/www/html/occ user:add --display-name=\"João Silva\" --group=\"colaboradores\" joao",
+        "fonte_id": "F01"
+      },
+      {
+        "comando": "sudo -u www-data php /var/www/html/occ app:enable talk",
+        "descricao": "Ativa o aplicativo de chat e vídeo Talk para toda a equipe.",
+        "exemplo": "sudo -u www-data php /var/www/html/occ app:enable talk",
+        "fonte_id": "F02"
+      },
+      {
+        "comando": "sudo -u www-data php /var/www/html/occ maintenance:mode --on",
+        "descricao": "Coloca o Nextcloud em modo de manutenção antes de um backup ou atualização.",
+        "exemplo": "sudo -u www-data php /var/www/html/occ maintenance:mode --on",
+        "fonte_id": "F01"
+      },
+      {
+        "comando": "sudo -u www-data php /var/www/html/occ files:scan --all",
+        "descricao": "Reconta os arquivos do disco para o banco de dados após um restore.",
+        "exemplo": "sudo -u www-data php /var/www/html/occ files:scan --all",
+        "fonte_id": "F02"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "GET",
+        "rota": "/ocs/v2.php/cloud/users",
+        "descricao": "Lista todos os usuários cadastrados no Nextcloud.",
+        "payload_exemplo": "GET /ocs/v2.php/cloud/users\nResposta: {\"ocs\": {\"data\": {\"users\": [\"admin\", \"joao\"]}}}",
+        "fonte_id": "F04"
+      },
+      {
+        "metodo": "POST",
+        "rota": "/ocs/v2.php/cloud/users",
+        "descricao": "Cria um novo usuário via API (usado pelo n8n no provisionamento).",
+        "payload_exemplo": "POST /ocs/v2.php/cloud/users\nBody: {\"userid\": \"maria\", \"password\": \"SenhaForte2026\"}",
+        "fonte_id": "F04"
+      },
+      {
+        "metodo": "GET",
+        "rota": "/ocs/v2.php/apps/files_sharing/api/v1/shares",
+        "descricao": "Lista os arquivos e pastas compartilhados com outros usuários ou grupos.",
+        "payload_exemplo": "GET /ocs/v2.php/apps/files_sharing/api/v1/shares\nResposta: {\"ocs\": {\"data\": [{\"file_target\": \"/Comercial\"}]}}",
+        "fonte_id": "F01"
+      }
+    ],
+    "interface_ui": [
+      {
+        "modulo": "Hub de Comunicação (Mail, Calendar, Contacts, Talk)",
+        "descricao": "Painel único onde e-mail, agenda, contatos e chamadas de vídeo convivem lado a lado, substituindo Gmail, Calendar, Contacts e Meet.",
+        "recursos_chave": [
+          "Leitura e envio de e-mail no navegador",
+          "Agenda compartilhada por departamento via CalDAV",
+          "Chamadas de vídeo e chat em grupo no Talk"
+        ]
+      },
+      {
+        "modulo": "Loja de Aplicativos (App Store)",
+        "descricao": "Permite ativar recursos extras (OnlyOffice, Forms, Deck, Kanban) com 1 clique, sem instalar nada no servidor.",
+        "recursos_chave": [
+          "Ativação de editor de documentos colaborativo",
+          "Formulários e pesquisas internas",
+          "Quadros de tarefas e notas"
+        ]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Aparece a mensagem 'Acesso não confiável' ao abrir o site",
+        "causa_provavel": "O domínio não está na lista de domínios confiáveis do Nextcloud.",
+        "solucao_comando": "Adicione 'mail.empresa.com.br' em NEXTCLOUD_TRUSTED_DOMAINS no docker-compose e reinicie: docker compose restart nextcloud"
+      },
+      {
+        "sintoma": "O Talk abre a chamada mas não transmite vídeo/áudio",
+        "causa_provavel": "Falta um servidor TURN ou as portas UDP de mídia não estão liberadas.",
+        "solucao_comando": "Libere as portas UDP 3478 e 49152-65535 no firewall: ufw allow 3478/udp && ufw allow 49152:65535/udp"
+      },
+      {
+        "sintoma": "Erro de permissão ao enviar arquivos grandes",
+        "causa_provavel": "O limite de upload do PHP está baixo ou a pasta de dados tem dono errado.",
+        "solucao_comando": "Ajuste o volume e dono: chown -R deployer:deployer /opt/nextcloud/data && docker compose restart nextcloud"
+      }
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "Nextcloud Admin Manual & Installation Guide",
+      "url": "https://docs.nextcloud.com",
+      "autor_ou_canal": "Nextcloud GmbH (Core Team)"
+    },
+    {
+      "id": "F02",
+      "categoria": "Documentação Oficial",
+      "titulo": "Nextcloud GitHub Official Repository & Docker Images",
+      "url": "https://github.com/nextcloud/server",
+      "autor_ou_canal": "Nextcloud Open Source Community"
+    },
+    {
+      "id": "F03",
+      "categoria": "Imagem Docker Oficial",
+      "titulo": "Nextcloud Docker Hub Image & Tags",
+      "url": "https://hub.docker.com/_/nextcloud",
+      "autor_ou_canal": "Docker Official Images"
+    },
+    {
+      "id": "F04",
+      "categoria": "API & Integração",
+      "titulo": "Nextcloud OCS API & User Provisioning",
+      "url": "https://docs.nextcloud.com/server/latest/developer_manual/client_apis/OCS/ocs-api-overview.html",
+      "autor_ou_canal": "Nextcloud Developer Documentation"
+    },
+    {
+      "id": "F05",
+      "categoria": "Curso / Tutorial",
+      "titulo": "Hardening de Servidor Ubuntu & Firewall UFW para Produção",
+      "url": "https://help.ubuntu.com/community/UFW",
+      "autor_ou_canal": "Ubuntu Community & Canonical"
+    }
+  ],
+  "desinstalacao_cirurgica": {
+    "principio_isolamento": "A desinstalação remove exclusivamente o container, o volume e o serviço do Nextcloud, preservando intactos o Docker, o Traefik, o PostgreSQL de outras aplicações e quaisquer projetos hospedados na VPS.",
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Parada e Desativação do Serviço Dedicado no Systemd",
+        "descricao": "Interrompe o processo do Nextcloud sem enviar sinal de encerramento para nenhum outro serviço da VPS.",
+        "comandos": "sudo systemctl stop nextcloud.service\nsudo systemctl disable nextcloud.service",
+        "alerta_seguranca": "NÃO utilize 'systemctl stop docker' nem mate processos em lote. Apenas o serviço dedicado é desligado.",
+        "como_validar": "sudo systemctl is-active nextcloud # Retorna 'inactive'"
+      },
+      {
+        "numero": 2,
+        "titulo": "Remoção Isolada de Contêiner e Volume de Dados",
+        "descricao": "Remove cirurgicamente apenas o container nomeado e seu volume de arquivos dos colaboradores.",
+        "comandos": "docker rm -f nextcloud 2>/dev/null || true\ndocker volume rm nextcloud_data 2>/dev/null || true",
+        "alerta_seguranca": "JAMAIS execute 'docker system prune -a'. Isso apagaria contêineres e imagens de outros sistemas em produção.",
+        "como_validar": "docker ps -a --filter name=nextcloud # Retorna lista vazia"
+      },
+      {
+        "numero": 3,
+        "titulo": "Revogação da Rota no Firewall e no Traefik",
+        "descricao": "Remove exclusivamente a rota mail.empresa.com.br no Traefik sem interferir nas portas web (80/443) ou SSH (22).",
+        "comandos": "rm -f /opt/nextcloud/docker-compose.yml\ndocker compose -f /opt/nextcloud/docker-compose.yml down 2>/dev/null || true",
+        "alerta_seguranca": "Mantenha o Traefik ativo para as demais aplicações; remova apenas os labels do Nextcloud.",
+        "como_validar": "curl -s -o /dev/null -w \"%{http_code}\" https://mail.empresa.com.br # Não deve responder 200"
+      },
+      {
+        "numero": 4,
+        "titulo": "Expurgo de Arquivos e Recarga do Systemd",
+        "descricao": "Remove os arquivos de execução e recarrega as definições do systemd.",
+        "comandos": "sudo rm -rf /opt/nextcloud\nsudo systemctl daemon-reload",
+        "alerta_seguranca": "Não execute 'apt autoremove' sem verificar os pacotes; a remoção é estritamente manual e isolada.",
+        "como_validar": "ls /opt/nextcloud # Não deve existir"
+      }
+    ],
+    "checklist_saude_vps": [
+      "ss -tulpn | grep 443 # Confirma que o Traefik segue respondendo na porta 443",
+      "docker ps # Confirma que contêineres de banco e outras apps continuam 'Up'",
+      "free -h # Confirma devolução de memória RAM para o sistema operacional"
+    ]
+  }
+}

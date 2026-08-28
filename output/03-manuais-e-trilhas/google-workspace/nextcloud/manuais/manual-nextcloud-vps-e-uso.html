@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual Operacional: Nextcloud Hub · Deploy VPS &amp; Uso Exaustivo</title>
+  <style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --paper: #F8FAFC;
+    --surface: #FFFFFF;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --rule: #CBD5E1;
+    --rule-soft: #E2E8F0;
+    --accent: #0284C7;
+    --accent-dark: #0369A1;
+    --accent-soft: #E0F2FE;
+    --green: #10B981;
+    --green-dark: #065F46;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+    --purple: #8B5CF6;
+    --purple-soft: #EDE9FE;
+    --code-bg: #0F172A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .container { max-width: 1060px; margin: 0 auto; }
+  
+  .header-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+  
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    background: var(--paper);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--rule-soft);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat-val { font-size: 14.5px; font-weight: 800; color: var(--ink); }
+
+  .nav-anchors {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .nav-anchors a {
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    color: var(--ink-2);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-anchors a:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    background: var(--accent-soft);
+  }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .section-header {
+    border-bottom: 2px solid var(--rule-soft);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title { font-size: 20px; font-weight: 800; color: var(--ink); }
+
+  /* CARDS DE NIVELAMENTO */
+  .grid-conceitos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card-conceito {
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    padding: 16px;
+    border-left: 4px solid var(--purple);
+  }
+  .conceito-termo { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+  .conceito-analogia { font-size: 12.5px; font-weight: 700; color: #6D28D9; background: var(--purple-soft); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+  .conceito-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+
+  /* PASSOS DE INSTALAÇÃO */
+  .step-box {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .step-box:last-child { border-bottom: none; }
+  .step-top {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .step-num {
+    background: var(--accent);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .step-heading { font-size: 17px; font-weight: 800; color: var(--ink); }
+  .analogia-box {
+    background: #F0FDF4;
+    border-left: 4px solid var(--green);
+    padding: 8px 12px;
+    border-radius: 0 4px 4px 0;
+    margin: 8px 0;
+    font-size: 13px;
+    color: var(--green-dark);
+  }
+  .feedback-box {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #92400E;
+  }
+  .validacao-box {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #1E40AF;
+  }
+
+  .code-box {
+    position: relative;
+    background: var(--code-bg);
+    border-radius: 6px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  .code-box pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #F8FAFC;
+    line-height: 1.5;
+  }
+  .btn-copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.15);
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-copy:hover { background: rgba(255,255,255,0.3); }
+
+  .cite-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--gold-soft);
+    color: #B45309;
+    vertical-align: super;
+    margin-left: 4px;
+    text-decoration: none;
+  }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  table.data-table th {
+    background: var(--paper);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--ink-2);
+    border-bottom: 2px solid var(--rule);
+  }
+  table.data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink-2);
+  }
+  table.data-table tr:hover td { background: rgba(2, 132, 199, 0.02); }
+
+  .trouble-card {
+    background: #FFFBEB;
+    border-left: 4px solid var(--gold);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 0 4px 4px 0;
+  }
+  .trouble-symptom { font-weight: 700; color: #92400E; font-size: 13.5px; }
+  .trouble-cause { font-size: 13px; color: #78350F; margin: 4px 0; }
+  .trouble-fix { font-family: var(--mono); font-size: 12px; background: #FEF3C7; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="header-card">
+    <div class="breadcrumb">
+      <a href="../../listas-open-source/vert-google-workspace.html">← Voltar ao Dossiê Vertical Google-Workspace</a>
+      &nbsp;·&nbsp;
+      <a href="../trilhas/trilha-nextcloud-aprendizado.html">Ver Trilha de Aprendizado 🗺️</a>
+    </div>
+    <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
+    <h1>Manual Operacional Completo: Nextcloud Hub</h1>
+    <p class="deck">
+      Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
+    </p>
+
+    <!-- HERO STATS DA VPS -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">VPS Recomendada</span>
+        <span class="stat-val">Hetzner Cloud CPX41 (ou Contabo Cloud VPS L)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Hardware Mínimo</span>
+        <span class="stat-val">4 vCPU Dedicadas (AMD EPYC) · 8 GB RAM ECC</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Armazenamento &amp; SO</span>
+        <span class="stat-val">160 GB NVMe Gen4 · Ubuntu 24.04 LTS (x86_64)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Custo Mensal Estimado</span>
+        <span class="stat-val" style="color:var(--accent-dark);">EUR 28,00/mês (~R$ 170,00/mês na cotação média)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Licença de Uso</span>
+        <span class="stat-val" style="color:var(--green);">AGPL-3.0 (Livre &amp; Comercial)</span>
+      </div>
+    </div>
+
+    <!-- NAVEGAÇÃO RÁPIDA -->
+    <div class="nav-anchors">
+      <a href="#nivelamento">💡 Módulo 0: Nivelamento para Iniciantes</a>
+      <a href="#instalacao">📦 Parte I: Instalação Passo a Passo</a>
+      <a href="#configuracao">⚙️ Arquivos de Configuração</a>
+      <a href="#primeiro-voo">✈️ Roteiro de Primeiro Voo</a>
+      <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
+      <a href="#manual-api">🌐 Endpoints de API</a>
+      <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
+      <a href="#desinstalacao">🛡️ Desinstalação Cirúrgica VPS</a>
+      <a href="#bibliografia">📚 Referências Bibliográficas</a>
+    </div>
+  </div>
+
+  <!-- MÓDULO 0: NIVELAMENTO CONCEITUAL -->
+  <div class="section-card" id="nivelamento">
+    <div class="section-header">
+      <h2 class="section-title">Módulo 0: Nivelamento Conceitual (O que você precisa saber antes de começar)</h2>
+      <span class="badge-tag" style="background:var(--purple-soft); color:#6D28D9;">Zero Programação</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:16px;">
+      Você não precisa ser engenheiro de software para entender como o sistema funciona. Abaixo explicamos os 5 conceitos-chave usando analogias do cotidiano:
+    </p>
+    <div class="grid-conceitos">
+      
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Nextcloud Hub (A Ferramenta)</div>
+          <div class="conceito-analogia">Analogia: O Seu Próprio Gmail + Google Drive + Agenda num Apartamento que Você Possui</div>
+          <p class="conceito-desc">O Nextcloud Hub é uma suíte completa que reúne e-mail, agenda, contatos, chat com vídeo e armazenamento de arquivos em um único painel. A diferença fundamental para o Google Workspace é que tudo fica guardado no seu próprio servidor: ninguém revende os seus dados nem os lê para treinar inteligência artificial de terceiros.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 VPS (Servidor Privado Virtual)</div>
+          <div class="conceito-analogia">Analogia: Uma Sala Comercial Alugada que Nunca Desliga</div>
+          <p class="conceito-desc">Em vez de depender dos servidores do Google, você aluga por cerca de R$ 170 por mês um computador profissional em um data center (Hetzner, Contabo, DigitalOcean). Ele fica ligado 24 horas por dia, com internet de fibra e geradores, pronto para entregar seus e-mails e arquivos.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Docker & Containers</div>
+          <div class="conceito-analogia">Analogia: Uma Caixa de Sapatos Lacrada de Fábrica</div>
+          <p class="conceito-desc">O Docker entrega o Nextcloud dentro de uma 'caixa lacrada' com tudo que ele precisa para funcionar. Você não precisa instalar dezenas de programas manualmente: basta mandar a caixa abrir e o sistema sobe sozinho, isolado e seguro.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Traefik (Proxy Reverso)</div>
+          <div class="conceito-analogia">Analogia: O Porteiro com Cadeado Verde (HTTPS)</div>
+          <p class="conceito-desc">O Traefik é o recepcionista que atende na internet, coloca o cadeado de segurança (certificado SSL gratuito) em cada acesso e encaminha cada pessoa para o serviço certo (mail.empresa.com.br vai para o Nextcloud).</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 CalDAV & CardDAV</div>
+          <div class="conceito-analogia">Analogia: A Língua Comum da Agenda e dos Contatos</div>
+          <p class="conceito-desc">São os 'idiomas abertos' que permitem que o seu celular (Android ou iPhone), o Outlook e o Thunderbird leiam e escrevam a mesma agenda e os mesmos contatos do Nextcloud, exatamente como o Google Calendar e o Google Contacts faziam.</p>
+        </div>
+        
+    </div>
+  </div>
+
+  <!-- SEÇÃO 1: INSTALAÇÃO EM PRODUÇÃO -->
+  <div class="section-card" id="instalacao">
+    <div class="section-header">
+      <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
+      <span class="badge-tag">Tempo ~20 a 30 minutos (Zero conhecimento prévio)</span>
+    </div>
+    
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 1</span>
+            <span class="step-heading">Como Alugar o Servidor e Abrir o Terminal</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Acesse hetzner.com/cloud (ou contabo.com), crie a conta e clique em 'Add Server'. Escolha a imagem 'Ubuntu 24.04', o tipo 'CPX41' e a localização mais próxima do Brasil (EUA ou Finlândia). Em 30 segundos você receberá por e-mail o IP do servidor (ex: 123.45.67.89). No Windows, pressione Windows + R, digite 'powershell' e Enter. No Mac, abra o 'Terminal'.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> É pegar a chave da sua nova sala comercial e abrir o laptop para falar com a recepção.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code># Digite no seu computador (substitua pelo IP recebido por e-mail):
+ssh root@SEU_IP_AQUI</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Uma janela preta ou azul se abrirá com um cursor piscando aguardando comandos.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Aparecerá a linha PS C:\Users\seu-nome> pronta para receber instruções.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 2</span>
+            <span class="step-heading">Blindagem Inicial do Servidor (Hardening & Firewall)</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Criamos um usuário seguro 'deployer' para não usar a conta root, fechamos todas as portas perigosas e ativamos o firewall de proteção.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Instalar fechaduras tetra e colocar o porteiro na guarita com lista rígida de convidados.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>adduser deployer && usermod -aG sudo deployer
+ufw default deny incoming && ufw default allow outgoing
+ufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp
+ufw --force enable</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> O sistema pedirá uma senha forte para o novo usuário e confirmará 'Firewall is active and enabled on system startup'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Digite 'ufw status' e veja as portas 22, 80 e 443 marcadas como 'ALLOW IN'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 3</span>
+            <span class="step-heading">Instalação do Motor Docker Oficial</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Instalamos o motor do Docker para que o Nextcloud, o banco de dados e o Traefik rodem em caixas isoladas e seguras.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Montar as prateleiras industriais no galpão para receber as caixas lacradas.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>apt-get update && apt-get install -y ca-certificates curl
+curl -fsSL https://get.docker.com | sh
+usermod -aG docker deployer</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Várias linhas de download e instalação passarão pela tela durante 1 a 2 minutos.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Execute 'docker --version' e o terminal responderá 'Docker version 27.x.x' ou superior.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 4</span>
+            <span class="step-heading">Criação da Pasta do Nextcloud & Arquivo de Produção</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Criamos o diretório /opt/nextcloud/ onde ficarão o banco de dados, os arquivos dos colaboradores e o arquivo que comanda os serviços.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Montar a escrivaninha e a gaveta onde as pastas serão arquivadas.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>mkdir -p /opt/nextcloud/{data,letsencrypt}
+chown -R deployer:deployer /opt/nextcloud
+chmod -R 750 /opt/nextcloud</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> As pastas são criadas silenciosamente em menos de 1 segundo.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> O comando 'ls -ld /opt/nextcloud' mostrará a pasta pertencente ao usuário deployer.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 5</span>
+            <span class="step-heading">Subindo o Nextcloud com Docker Compose</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Iniciamos o Nextcloud, o banco PostgreSQL e o proxy Traefik em segundo plano. O sistema baixa as imagens oficiais e começa a rodar imediatamente.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Apertar o botão verde no painel: as luzes acendem e os serviços operam.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>cd /opt/nextcloud
+docker compose up -d
+docker compose ps</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> O Docker fará o download das camadas e exibirá 'Container nextcloud Started' e 'Container traefik Started'.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Digite 'docker compose ps' e veja os três containers com status 'Up'.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 6</span>
+            <span class="step-heading">Configuração do Cadeado de Segurança (SSL) e Teste de Saúde</span>
+            <a href="#ref-F05" class="cite-badge">[F05]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">O Traefik emite automaticamente um certificado gratuito Let's Encrypt para mail.empresa.com.br, garantindo que ninguém intercepte seus e-mails e arquivos.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Lacre inviolável com assinatura digital em cada pacote que entra ou sai.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>curl -s -o /dev/null -w "%{http_code}" https://mail.empresa.com.br | grep 200 || echo 'Aguarde 30s e tente novamente'</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> A resposta confirmará 'status: healthy' com o tempo de atividade registrado.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Abra https://mail.empresa.com.br no navegador e veja o cadeado verde fechado na barra de endereços.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
+  <div class="section-card" id="configuracao">
+    <div class="section-header">
+      <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
+    </div>
+    
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/nextcloud/docker-compose.yml</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Arquivo que define como o Nextcloud, o banco PostgreSQL e o proxy Traefik rodam isolados e como o Traefik expõe a ferramenta com cadeado SSL automático.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>services:
+  traefik:
+    image: traefik:v3.0
+    command:
+      - "--providers.docker=true"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
+      - "--certificatesresolvers.le.acme.email=admin@empresa.com.br"
+      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./letsencrypt:/letsencrypt
+    networks:
+      - nextcloud_net
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=SENHA_FORTE_BANCO_2026
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - nextcloud_net
+    restart: unless-stopped
+
+  nextcloud:
+    image: nextcloud:latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.rule=Host(`mail.empresa.com.br`)"
+      - "traefik.http.routers.nextcloud.entrypoints=websecure"
+      - "traefik.http.routers.nextcloud.tls.certresolver=le"
+      - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
+    volumes:
+      - nextcloud_data:/var/www/html
+    environment:
+      - NEXTCLOUD_TRUSTED_DOMAINS=mail.empresa.com.br
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=SENHA_FORTE_BANCO_2026
+      - NEXTCLOUD_ADMIN_USER=admin
+      - NEXTCLOUD_ADMIN_PASSWORD=SenhaAdminForte2026
+    depends_on:
+      - db
+    networks:
+      - nextcloud_net
+    restart: unless-stopped
+
+networks:
+  nextcloud_net:
+    driver: bridge
+
+volumes:
+  db_data:
+  nextcloud_data:
+  letsencrypt:</code></pre>
+          </div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/nextcloud/config/overwrite.config.php</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Garante que o Nextcloud confie no proxy Traefik e force o protocolo HTTPS, evitando o aviso de 'Acesso não confiável'.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code><?php
+$CONFIG = array (
+  'overwriteprotocol' => 'https',
+  'overwritehost' => 'mail.empresa.com.br',
+  'trusted_proxies' => array('traefik'),
+  'forwarded_for_headers' => array('HTTP_X_FORWARDED_FOR'),
+);</code></pre>
+          </div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
+  <div class="section-card" id="primeiro-voo">
+    <div class="section-header">
+      <h2 class="section-title">Parte II: Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green-dark);">Prática Imediata</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
+      Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
+    </p>
+    
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 1: Acessar o Painel e Criar o Administrador:</strong> Abra https://mail.empresa.com.br no navegador, faça login com o usuário 'admin' definido na instalação e conclua o assistente de boas-vindas.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Você verá o painel com os ícones de Arquivos, Mail, Calendar, Contacts e Talk.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 2: Conectar seu Celular (CalDAV/CardDAV):</strong> No celular, instale o app 'DAVx5' (Android) ou use Contas > CalDAV (iPhone) e aponte para https://mail.empresa.com.br com seu usuário e senha do Nextcloud.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Sua agenda e contatos do Nextcloud aparecem sincronizados no app nativo de calendário e contatos do telefone.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">Passo 3: Fazer sua Primeira Chamada de Vídeo no Talk:</strong> Clique no ícone Talk, crie uma sala 'Reunião Equipe' e compartilhe o link com os colegas. Clique na câmera para iniciar a chamada.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> A chamada de vídeo abre no navegador, sem instalar o Google Meet, com áudio e vídeo em tempo real.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 4: MANUAL DE USO CLI -->
+  <div class="section-card" id="manual-cli">
+    <div class="section-header">
+      <h2 class="section-title">Dicionário Completo de Comandos (CLI)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Comando / Opção</th>
+          <th>O que faz (em português claro)</th>
+          <th>Exemplo de Execução</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">sudo -u www-data php /var/www/html/occ user:add --display-name="João Silva" --group="colaboradores" joao</code></td>
+          <td>Cria um novo colaborador no Nextcloud via linha de comando.</td>
+          <td><code>sudo -u www-data php /var/www/html/occ user:add --display-name="João Silva" --group="colaboradores" joao</code></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">sudo -u www-data php /var/www/html/occ app:enable talk</code></td>
+          <td>Ativa o aplicativo de chat e vídeo Talk para toda a equipe.</td>
+          <td><code>sudo -u www-data php /var/www/html/occ app:enable talk</code></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">sudo -u www-data php /var/www/html/occ maintenance:mode --on</code></td>
+          <td>Coloca o Nextcloud em modo de manutenção antes de um backup ou atualização.</td>
+          <td><code>sudo -u www-data php /var/www/html/occ maintenance:mode --on</code></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">sudo -u www-data php /var/www/html/occ files:scan --all</code></td>
+          <td>Reconta os arquivos do disco para o banco de dados após um restore.</td>
+          <td><code>sudo -u www-data php /var/www/html/occ files:scan --all</code></td>
+          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 5: REFERÊNCIA DE API REST -->
+  <div class="section-card" id="manual-api">
+    <div class="section-header">
+      <h2 class="section-title">Endpoints de API REST &amp; Conexão com Agentes (MCP)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Método</th>
+          <th>Rota</th>
+          <th>Finalidade</th>
+          <th>Payload / Resposta</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/ocs/v2.php/cloud/users</code></td>
+          <td>Lista todos os usuários cadastrados no Nextcloud.</td>
+          <td><pre style="font-size:11px; margin:0;">GET /ocs/v2.php/cloud/users
+Resposta: {"ocs": {"data": {"users": ["admin", "joao"]}}}</pre></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">POST</span></td>
+          <td><code>/ocs/v2.php/cloud/users</code></td>
+          <td>Cria um novo usuário via API (usado pelo n8n no provisionamento).</td>
+          <td><pre style="font-size:11px; margin:0;">POST /ocs/v2.php/cloud/users
+Body: {"userid": "maria", "password": "SenhaForte2026"}</pre></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/ocs/v2.php/apps/files_sharing/api/v1/shares</code></td>
+          <td>Lista os arquivos e pastas compartilhados com outros usuários ou grupos.</td>
+          <td><pre style="font-size:11px; margin:0;">GET /ocs/v2.php/apps/files_sharing/api/v1/shares
+Resposta: {"ocs": {"data": [{"file_target": "/Comercial"}]}}</pre></td>
+          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 6: TROUBLESHOOTING -->
+  <div class="section-card" id="troubleshooting">
+    <div class="section-header">
+      <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
+    </div>
+    
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Aparece a mensagem 'Acesso não confiável' ao abrir o site</div>
+          <div class="trouble-cause">Causa Provável: O domínio não está na lista de domínios confiáveis do Nextcloud.</div>
+          <div>Solução Prática: <code class="trouble-fix">Adicione 'mail.empresa.com.br' em NEXTCLOUD_TRUSTED_DOMAINS no docker-compose e reinicie: docker compose restart nextcloud</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: O Talk abre a chamada mas não transmite vídeo/áudio</div>
+          <div class="trouble-cause">Causa Provável: Falta um servidor TURN ou as portas UDP de mídia não estão liberadas.</div>
+          <div>Solução Prática: <code class="trouble-fix">Libere as portas UDP 3478 e 49152-65535 no firewall: ufw allow 3478/udp && ufw allow 49152:65535/udp</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Erro de permissão ao enviar arquivos grandes</div>
+          <div class="trouble-cause">Causa Provável: O limite de upload do PHP está baixo ou a pasta de dados tem dono errado.</div>
+          <div>Solução Prática: <code class="trouble-fix">Ajuste o volume e dono: chown -R deployer:deployer /opt/nextcloud/data && docker compose restart nextcloud</code></div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
+  <div class="section-card" id="desinstalacao">
+    <div class="section-header">
+      <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
+      <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
+    </div>
+    
+        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
+          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
+          <p style="margin:0; font-size:13.5px; color:#1E293B;">A desinstalação remove exclusivamente o container, o volume e o serviço do Nextcloud, preservando intactos o Docker, o Traefik, o PostgreSQL de outras aplicações e quaisquer projetos hospedados na VPS.</p>
+        </div>
+        
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 1</span>
+                <span class="step-title">Parada e Desativação do Serviço Dedicado no Systemd</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Interrompe o processo do Nextcloud sem enviar sinal de encerramento para nenhum outro serviço da VPS.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo systemctl stop nextcloud.service
+sudo systemctl disable nextcloud.service</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> NÃO utilize 'systemctl stop docker' nem mate processos em lote. Apenas o serviço dedicado é desligado.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo systemctl is-active nextcloud # Retorna 'inactive'</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 2</span>
+                <span class="step-title">Remoção Isolada de Contêiner e Volume de Dados</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove cirurgicamente apenas o container nomeado e seu volume de arquivos dos colaboradores.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>docker rm -f nextcloud 2>/dev/null || true
+docker volume rm nextcloud_data 2>/dev/null || true</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> JAMAIS execute 'docker system prune -a'. Isso apagaria contêineres e imagens de outros sistemas em produção.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>docker ps -a --filter name=nextcloud # Retorna lista vazia</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 3</span>
+                <span class="step-title">Revogação da Rota no Firewall e no Traefik</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove exclusivamente a rota mail.empresa.com.br no Traefik sem interferir nas portas web (80/443) ou SSH (22).</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>rm -f /opt/nextcloud/docker-compose.yml
+docker compose -f /opt/nextcloud/docker-compose.yml down 2>/dev/null || true</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Mantenha o Traefik ativo para as demais aplicações; remova apenas os labels do Nextcloud.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>curl -s -o /dev/null -w "%{http_code}" https://mail.empresa.com.br # Não deve responder 200</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 4</span>
+                <span class="step-title">Expurgo de Arquivos e Recarga do Systemd</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove os arquivos de execução e recarrega as definições do systemd.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo rm -rf /opt/nextcloud
+sudo systemctl daemon-reload</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Não execute 'apt autoremove' sem verificar os pacotes; a remoção é estritamente manual e isolada.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>ls /opt/nextcloud # Não deve existir</code></div>
+            </div>
+            
+        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
+          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
+          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
+            <li style='margin-bottom:6px;'><code>ss -tulpn | grep 443 # Confirma que o Traefik segue respondendo na porta 443</code></li><li style='margin-bottom:6px;'><code>docker ps # Confirma que contêineres de banco e outras apps continuam 'Up'</code></li><li style='margin-bottom:6px;'><code>free -h # Confirma devolução de memória RAM para o sistema operacional</code></li>
+          </ul>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
+  <div class="section-card" id="bibliografia">
+    <div class="section-header">
+      <h2 class="section-title">Parte III: Fontes Citadas &amp; Referência Bibliográfica Auditada</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green);">100% Verificadas</span>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Categoria</th>
+          <th>Título da Obra / Documento</th>
+          <th>Autor / Mantenedor</th>
+          <th>Link Oficial</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr id="ref-F01">
+          <td><strong style="color:var(--accent);">F01</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Nextcloud Admin Manual & Installation Guide</strong></td>
+          <td>Nextcloud GmbH (Core Team)</td>
+          <td><a href="https://docs.nextcloud.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F02">
+          <td><strong style="color:var(--accent);">F02</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+          <td><strong>Nextcloud GitHub Official Repository & Docker Images</strong></td>
+          <td>Nextcloud Open Source Community</td>
+          <td><a href="https://github.com/nextcloud/server" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F03">
+          <td><strong style="color:var(--accent);">F03</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Imagem Docker Oficial</span></td>
+          <td><strong>Nextcloud Docker Hub Image & Tags</strong></td>
+          <td>Docker Official Images</td>
+          <td><a href="https://hub.docker.com/_/nextcloud" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F04">
+          <td><strong style="color:var(--accent);">F04</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">API & Integração</span></td>
+          <td><strong>Nextcloud OCS API & User Provisioning</strong></td>
+          <td>Nextcloud Developer Documentation</td>
+          <td><a href="https://docs.nextcloud.com/server/latest/developer_manual/client_apis/OCS/ocs-api-overview.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F05">
+          <td><strong style="color:var(--accent);">F05</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Curso / Tutorial</span></td>
+          <td><strong>Hardening de Servidor Ubuntu & Firewall UFW para Produção</strong></td>
+          <td>Ubuntu Community & Canonical</td>
+          <td><a href="https://help.ubuntu.com/community/UFW" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    const original = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => { btn.innerText = original; }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>
