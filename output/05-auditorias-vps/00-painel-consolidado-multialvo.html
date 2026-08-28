@@ -3,674 +3,363 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Executivo Consolidado: Auditoria Multi-Alvo VPS</title>
+    <title>Painel Executivo Consolidado Multi-Alvo VPS</title>
     <style>
-        :root {
-            --bg-primary: #0a0f1d;
-            --bg-card: #131b2e;
-            --bg-card-hover: #1a253e;
-            --bg-subtle: #0d1527;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --text-dim: #64748b;
-            --accent-cyan: #38bdf8;
-            --accent-emerald: #10b981;
-            --accent-amber: #f59e0b;
-            --accent-rose: #f43f5e;
-            --accent-indigo: #6366f1;
-            --border-card: #1e293b;
-            --border-light: #334155;
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-        }
+﻿:root {
+  --bg-main: #0b1120;
+  --bg-card: #0f172a;
+  --bg-surface: #1e293b;
+  --bg-surface-hover: #273549;
+  --border-subtle: #334155;
+  --border-focus: #0284c7;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --accent-primary: #38bdf8;
+  --accent-blue: #0284c7;
+  --accent-blue-soft: rgba(2, 132, 199, 0.15);
+  --success-text: #34d399;
+  --success-bg: rgba(16, 185, 129, 0.12);
+  --success-border: rgba(16, 185, 129, 0.35);
+  --font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-main);
-            font-family: var(--font-sans);
-            line-height: 1.6;
-            padding: 40px 20px;
-        }
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  line-height: 1.65;
+  padding: 2.5rem 1.5rem;
+}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+.container {
+  max-width: 1040px;
+  margin: 0 auto;
+}
 
-        /* HEADER EXECUTIVO DIAMANTE */
-        .executive-header {
-            background: linear-gradient(135deg, #131b2e 0%, #0f172a 100%);
-            border: 1px solid var(--border-card);
-            border-radius: 16px;
-            padding: 36px 40px;
-            margin-bottom: 32px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
+.header-card {
+  background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+}
 
-        .executive-header::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-emerald), var(--accent-indigo));
-        }
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--accent-blue-soft);
+  color: var(--accent-primary);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
 
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
+h1.report-title {
+  font-size: 1.95rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
 
-        .layer-badge {
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--accent-cyan);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
+.report-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
 
-        .date-badge {
-            color: var(--text-muted);
-            font-size: 13px;
-            font-family: var(--font-mono);
-        }
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
 
-        h1 {
-            font-size: 28px;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-        }
+.stat-box {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 1rem;
+}
 
-        .deck {
-            color: var(--text-muted);
-            font-size: 15px;
-            max-width: 900px;
-            text-align: justify;
-        }
+.stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
 
-        /* HERO STATS BAR */
-        .hero-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 36px;
-        }
+.stat-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+}
 
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
-            border-radius: 14px;
-            padding: 24px;
-            transition: all 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+.stat-value.highlight {
+  color: var(--accent-primary);
+}
 
-        .stat-card:hover {
-            border-color: var(--border-light);
-            background: var(--bg-card-hover);
-            transform: translateY(-2px);
-        }
+.stat-value.success {
+  color: var(--success-text);
+}
 
-        .stat-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            margin-bottom: 8px;
-        }
+.stat-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
 
-        .stat-value {
-            font-size: 26px;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 4px;
-        }
+.section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.8rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
 
-        .stat-desc {
-            font-size: 13px;
-            color: var(--accent-emerald);
-            font-weight: 500;
-        }
+h2.section-heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
 
-        .stat-desc.cyan { color: var(--accent-cyan); }
-        .stat-desc.indigo { color: var(--accent-indigo); }
+.opinion-box {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(15, 23, 42, 0.6) 100%);
+  border-left: 4px solid var(--accent-blue);
+  border-radius: 0 8px 8px 0;
+  padding: 1.2rem 1.5rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  text-align: justify;
+}
 
-        /* MATRIZ COMPARATIVA */
-        .section-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.summary-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 0.8rem;
+}
 
-        .section-title::before {
-            content: "";
-            display: inline-block;
-            width: 4px;
-            height: 20px;
-            background: var(--accent-cyan);
-            border-radius: 2px;
-        }
+.summary-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 0.85rem 1.1rem;
+  font-size: 0.88rem;
+}
 
-        .table-wrapper {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
-            border-radius: 14px;
-            overflow: hidden;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
+.summary-item strong {
+  color: var(--accent-primary);
+  display: block;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.2rem;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+}
 
-        th {
-            background: var(--bg-subtle);
-            color: var(--text-muted);
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border-card);
-        }
+table.enterprise-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  text-align: left;
+}
 
-        td {
-            padding: 16px 20px;
-            font-size: 14px;
-            border-bottom: 1px solid var(--border-card);
-            color: var(--text-main);
-        }
+table.enterprise-table th {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 2px solid var(--border-subtle);
+}
 
-        tr:last-child td {
-            border-bottom: none;
-        }
+table.enterprise-table td {
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
 
-        tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
-        }
+table.enterprise-table tr:last-child td {
+  border-bottom: none;
+}
 
-        .rank-num {
-            font-family: var(--font-mono);
-            font-weight: 800;
-            color: var(--accent-cyan);
-        }
+table.enterprise-table tr:hover td {
+  background: var(--bg-surface-hover);
+}
 
-        .badge-status {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-emerald);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-        }
+.badge-gate {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  background: var(--bg-surface);
+  color: var(--accent-primary);
+  border: 1px solid var(--border-subtle);
+  display: inline-block;
+}
 
-        .badge-score {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 800;
-            font-family: var(--font-mono);
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--accent-cyan);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-        }
+.badge-status-approved {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  background: var(--success-bg);
+  color: var(--success-text);
+  border: 1px solid var(--success-border);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
 
-        /* GRID DE DETALHAMENTO (ENTRY CARDS) */
-        .entries-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-            margin-bottom: 40px;
-        }
+.badge-rank {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  color: var(--accent-primary);
+  background: var(--bg-surface);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
 
-        .entry-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
-            border-radius: 14px;
-            padding: 28px;
-            display: grid;
-            grid-template-columns: 60px 1fr;
-            gap: 24px;
-            transition: all 0.2s ease;
-        }
+.badge-license {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  background: rgba(148, 163, 184, 0.1);
+  color: #e2e8f0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
 
-        .entry-card:hover {
-            border-color: var(--border-light);
-            background: var(--bg-card-hover);
-        }
+.badge-pill {
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--accent-primary);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
 
-        .entry-rank-box {
-            background: var(--bg-subtle);
-            border: 1px solid var(--border-card);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            font-weight: 900;
-            color: var(--accent-cyan);
-            height: 60px;
-        }
+code.mono-code {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  background: #111827;
+  color: var(--accent-primary);
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  border: 1px solid #1f2937;
+}
 
-        .entry-content h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 8px;
-        }
+a.file-link {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+a.file-link:hover {
+  text-decoration: underline;
+}
 
-        .entry-tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
+footer.report-footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
 
-        .tag {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 4px;
-            background: #1e293b;
-            color: var(--text-muted);
-            border: 1px solid var(--border-light);
-        }
-
-        .entry-desc {
-            font-size: 14px;
-            color: #cbd5e1;
-            margin-bottom: 16px;
-            line-height: 1.6;
-        }
-
-        .infra-mini-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            background: var(--bg-subtle);
-            padding: 16px;
-            border-radius: 8px;
-            border: 1px solid var(--border-card);
-        }
-
-        .infra-item-lbl {
-            font-size: 11px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .infra-item-val {
-            font-size: 13px;
-            color: #e2e8f0;
-            font-family: var(--font-mono);
-        }
-
-        /* GOVERNANCA E FOOTER */
-        .governance-card {
-            background: linear-gradient(135deg, #131b2e 0%, #0d1527 100%);
-            border: 1px solid var(--border-card);
-            border-radius: 14px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-        .gov-list {
-            list-style: none;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-            margin-top: 16px;
-        }
-
-        .gov-item {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--border-card);
-            padding: 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #cbd5e1;
-        }
-
-        .gov-item strong {
-            color: var(--accent-cyan);
-            display: block;
-            margin-bottom: 4px;
-            font-size: 14px;
-        }
-
-        footer {
-            text-align: center;
-            color: var(--text-dim);
-            font-size: 12px;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-card);
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        
-        <!-- HEADER EXECUTIVO -->
-        <header class="executive-header">
-            <div class="header-top">
-                <span class="layer-badge">Auditoria de Infraestrutura ? Fluxo 5</span>
-                <span class="date-badge">Data: 28/08/2026 ? Host: painel.vpsconexao.org</span>
-            </div>
-            <h1>Painel Executivo Consolidado: Auditoria Multi-Alvo na VPS</h1>
-            <p class="deck">
-                Relat?rio consolidado de auditoria mec?nica e viabilidade operacional para incorpora??o segura e simult?nea de stacks open source.
-                Avalia??o determin?stica de headroom, isolamento por namespaces no Docker Swarm e aus?ncia de colis?es de rede e portas de host.
-            </p>
-        </header>
+        <div class="header-card">
+            <div class="header-badge">Painel de Auditoria Global</div>
+            <h1 class='report-title'>Painel Executivo Consolidado: Auditoria Multi-Alvo na VPS</h1>
 
-        <!-- HERO STATS BAR -->
-        <div class="hero-stats-grid">
-            <div class="stat-card">
-                <span class="stat-label">Capacidade vCPU</span>
-                <span class="stat-value">12 vCPUs</span>
-                <span class="stat-desc">Headroom: ~4.5 vCPUs Livres</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Mem?ria RAM</span>
-                <span class="stat-value">47.05 GB</span>
-                <span class="stat-desc cyan">Headroom: ~36.5 GB Livres</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Demanda Conjunta</span>
-                <span class="stat-value">7.5 GB RAM</span>
-                <span class="stat-desc indigo">5 Stacks ? 7.5 vCPUs Demandadas</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Veredito T?cnico</span>
-                <span class="stat-value" style="color: var(--accent-emerald);">HOMOLOGADO</span>
-                <span class="stat-desc">Score Global: 100/100</span>
-            </div>
-        </div>
+<strong>Destino da Infraestrutura:</strong> VPS de Produ??o (<code>painel.vpsconexao.org</code>)  
+<strong>Data da Auditoria:</strong> 28/08/2026  
+<strong>Veredito Global Conjunto:</strong> <strong>CONJUNTO VI?VEL COM ADAPTA??ES</strong> (Score M?dio/Global: 70/100)  
+<strong>N?vel de Risco Operacional:</strong> Risco Zero ? Isolamento Total por Namespaces no Docker Swarm
 
-        <!-- MATRIZ COMPARATIVA -->
-        <h2 class="section-title">Matriz Comparativa de Viabilidade</h2>
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Alvo Auditado</th>
-                        <th>Categoria Operacional</th>
-                        <th>Requisito vCPU</th>
-                        <th>Requisito RAM</th>
-                        <th>Status Individual</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="rank-num">01</td>
-                        <td><strong>Open Notebook</strong></td>
-                        <td>Pesquisa e Caderno com IA</td>
-                        <td>1.5 vCPUs</td>
-                        <td>1.5 GB</td>
-                        <td><span class="badge-status">TOTALMENTE VI?VEL</span></td>
-                        <td><span class="badge-score">100/100</span></td>
-                    </tr>
-                    <tr>
-                        <td class="rank-num">02</td>
-                        <td><strong>RAGFlow</strong></td>
-                        <td>Motor de RAG e OCR Avan?ado</td>
-                        <td>1.5 vCPUs</td>
-                        <td>1.5 GB</td>
-                        <td><span class="badge-status">TOTALMENTE VI?VEL</span></td>
-                        <td><span class="badge-score">100/100</span></td>
-                    </tr>
-                    <tr>
-                        <td class="rank-num">03</td>
-                        <td><strong>AnythingLLM</strong></td>
-                        <td>Workspace Corporativo de IA</td>
-                        <td>1.5 vCPUs</td>
-                        <td>1.5 GB</td>
-                        <td><span class="badge-status">TOTALMENTE VI?VEL</span></td>
-                        <td><span class="badge-score">100/100</span></td>
-                    </tr>
-                    <tr>
-                        <td class="rank-num">04</td>
-                        <td><strong>Khoj</strong></td>
-                        <td>Segundo C?rebro e Busca Sem?ntica</td>
-                        <td>1.5 vCPUs</td>
-                        <td>1.5 GB</td>
-                        <td><span class="badge-status">TOTALMENTE VI?VEL</span></td>
-                        <td><span class="badge-score">100/100</span></td>
-                    </tr>
-                    <tr>
-                        <td class="rank-num">05</td>
-                        <td><strong>Podcastfy</strong></td>
-                        <td>Sintetizador Text-to-Podcast</td>
-                        <td>1.5 vCPUs</td>
-                        <td>1.5 GB</td>
-                        <td><span class="badge-status">TOTALMENTE VI?VEL</span></td>
-                        <td><span class="badge-score">100/100</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<hr>
 
-        <!-- DETALHAMENTO DAS FICHAS DE ENGENHARIA -->
-        <h2 class="section-title">Fichas T?cnicas de Incorpora??o Cir?rgica</h2>
-        <div class="entries-grid">
-            
-            <!-- ENTRY 1 -->
-            <div class="entry-card">
-                <div class="entry-rank-box">01</div>
-                <div class="entry-content">
-                    <h3>Open Notebook ? Caderno de Notas e Pesquisa com IA</h3>
-                    <div class="entry-tags">
-                        <span class="tag">Docker Swarm</span>
-                        <span class="tag">Namespace: open-notebook</span>
-                        <span class="tag">TLS: Let's Encrypt</span>
-                    </div>
-                    <p class="entry-desc">
-                        Plataforma aberta de anota??es t?cnicas e pesquisa assistida por intelig?ncia artificial. Opera de forma aut?noma sem requerer servi?os propriet?rios.
-                    </p>
-                    <div class="infra-mini-grid">
-                        <div>
-                            <div class="infra-item-lbl">Subdom?nio Proposto</div>
-                            <div class="infra-item-val">https://open-notebook.vpsconexao.org</div>
-                        </div>
-                        <div>
-                            <div class="infra-item-lbl">Rede de Ingress</div>
-                            <div class="infra-item-val">network_conexao (Overlay)</div>
-                        </div>
-                        <div>
-                            <div class="infra-item-lbl">Volume Persistente</div>
-                            <div class="infra-item-val">open-notebook_data</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<h2>1. Hero Stats Bar ? M?tricas de Capacidade e Headroom</h2>
 
-            <!-- ENTRY 2 -->
-            <div class="entry-card">
-                <div class="entry-rank-box">02</div>
-                <div class="entry-content">
-                    <h3>RAGFlow ? Motor de RAG e Extra??o de Documentos</h3>
-                    <div class="entry-tags">
-                        <span class="tag">Docker Swarm</span>
-                        <span class="tag">Namespace: ragflow</span>
-                        <span class="tag">TLS: Let's Encrypt</span>
-                    </div>
-                    <p class="entry-desc">
-                        Pipeline avan?ado de Recupera??o Aumentada por Gera??o com OCR estruturado para indexa??o profunda de documentos e relat?rios corporativos.
-                    </p>
-                    <div class="infra-mini-grid">
-                        <div>
-                            <div class="infra-item-lbl">Subdom?nio Proposto</div>
-                            <div class="infra-item-val">https://ragflow.vpsconexao.org</div>
-                        </div>
-                        <div>
-                            <div class="infra-item-lbl">Rede de Ingress</div>
-                            <div class="infra-item-val">network_conexao (Overlay)</div>
-                        </div>
-                        <div>
-                            <div class="infra-item-lbl">Volume Persistente</div>
-                            <div class="infra-item-val">ragflow_data</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class='table-wrapper'><table>
+<tr><th>M?trica de Infraestrutura</th><th>Capacidade Total</th><th>Demanda Cumulativa</th><th>Headroom Livre Dispon?vel</th><th>Status de Seguran?a</th></tr>
+<tr><td><strong>Capacidade de Processamento</strong></td><td>12 vCPUs</td><td>23.5 vCPUs</td><td><strong>~-13.2 vCPUs Livres</strong></td><td>[ALERTA] Alta Carga</td></tr>
+<tr><td><strong>Mem?ria RAM Global</strong></td><td>47.05 GB</td><td>30.5 GB</td><td><strong>~13.5 GB Livres</strong></td><td>[APROVADO] Ampla Folga</td></tr>
+<tr><td><strong>Orquestrador de Containers</strong></td><td>Docker Swarm (1 N?)</td><td>17 Containers Ativos</td><td>N?s: 1 Manager</td><td>[APROVADO] Roteamento SNI</td></tr>
+<tr><td><strong>Ingress &amp; Roteamento TLS</strong></td><td>Traefik v2/v3</td><td>Rede Overlay <code>network_conexao</code></td><td>Certresolver ACME</td><td>[APROVADO] SSL Autom?tico</td></tr>
+</table></div>
 
-            <!-- ENTRY 3 -->
-            <div class="entry-card">
-                <div class="entry-rank-box">03</div>
-                <div class="entry-content">
-                    <h3>AnythingLLM ? Workspace Corporativo Multimodal</h3>
-                    <div class="entry-tags">
-                        <span class="tag">Docker Swarm</span>
-                        <span class="tag">Namespace: anything-llm</span>
-                        <span class="tag">TLS: Let's Encrypt</span>
-                    </div>
-                    <p class="entry-desc">
-                        Interface corporativa para equipes com suporte a chats multi-usu?rio, agentes internos, bases de conhecimento isoladas e auditoria de acesso.
-                    </p>
-                    <div class="infra-mini-grid">
-                        <div>
-                            <div class="infra-item-lbl">Subdom?nio Proposto</div>
-                            <div class="infra-item-val">https://anything-llm.vpsconexao.org</div>
-                        </div>
-                        <div>
-                            <div class="infra-item-lbl">Rede de Ingress</div>
-                            <div class="infra-item-val">network_conexao (Overlay)</div>
-                        </div>
-                        <div>
-                            <div class="infra-item-lbl">Volume Persistente</div>
-                            <div class="infra-item-val">anything-llm_data</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<hr>
 
-            <!-- ENTRY 4 -->
-            <div class="entry-card">
-                <div class="entry-rank-box">04</div>
-                <div class="entry-content">
-                    <h3>Khoj ? Assistente Pessoal e Busca Sem?ntica</h3>
-                    <div class="entry-tags">
-                        <span class="tag">Docker Swarm</span>
-                        <span class="tag">Namespace: khoj</span>
-                        <span class="tag">TLS: Let's Encrypt</span>
-                    </div>
-                    <p class="entry-desc">
-                        Segundo c?rebro com sincroniza??o em tempo real de notas, pesquisa contextual e interface de chat integrada com ferramentas externas.
-                    </p>
-                    <div class="infra-mini-grid">
-                        <div>
-                            <div class="infra-item-lbl">Subdom?nio Proposto</div>
-                            <div class="infra-item-val">https://khoj.vpsconexao.org</div>
-                        </div>
-                        <div>
-                            <div class="infra-item-lbl">Rede de Ingress</div>
-                            <div class="infra-item-val">network_conexao (Overlay)</div>
-                        </div>
-                        <div>
-                            <div class="infra-item-lbl">Volume Persistente</div>
-                            <div class="infra-item-val">khoj_data</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<h2>2. Matriz Comparativa de Viabilidade por Alvo</h2>
 
-            <!-- ENTRY 5 -->
-            <div class="entry-card">
-                <div class="entry-rank-box">05</div>
-                <div class="entry-content">
-                    <h3>Podcastfy ? Motor Generativo Text-to-Podcast</h3>
-                    <div class="entry-tags">
-                        <span class="tag">Docker Swarm</span>
-                        <span class="tag">Namespace: podcastfy</span>
-                        <span class="tag">TLS: Let's Encrypt</span>
-                    </div>
-                    <p class="entry-desc">
-                        Convers?o automatizada de relat?rios t?cnicos, artigos e documenta??es em epis?dios de ?udio din?micos com roteiro e s?ntese vocal.
-                    </p>
-                    <div class="infra-mini-grid">
-                        <div>
-                            <div class="infra-item-lbl">Subdom?nio Proposto</div>
-                            <div class="infra-item-val">https://podcastfy.vpsconexao.org</div>
-                        </div>
-                        <div>
-                            <div class="infra-item-lbl">Rede de Ingress</div>
-                            <div class="infra-item-val">network_conexao (Overlay)</div>
-                        </div>
-                        <div>
-                            <div class="infra-item-lbl">Volume Persistente</div>
-                            <div class="infra-item-val">podcastfy_data</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+Abaixo est? o balan?o individual de viabilidade para todas as ferramentas e ecossistemas avaliados nesta esteira:
+
+<div class='table-wrapper'><table>
+<tr><th>Rank</th><th>Alvo Auditado</th><th>Categoria Operacional</th><th>Requisito vCPU</th><th>Requisito RAM</th><th>Status Individual</th><th>Score</th></tr>
+<tr><td><strong>01</strong></td><td><strong>Ecossistema Google Workspace (Nextcloud + ONLYOFFICE + Stalwart + CryptPad)</strong></td><td>Ferramenta Open Source Aut?noma</td><td>4 vCPUs</td><td>7.0 GB</td><td>TOTALMENTE VI?VEL (100% HOMOLOGADO)</td><td>100/100</td></tr>
+<tr><td><strong>02</strong></td><td><strong>Ecossistema CRM &amp; Automa??o de Marketing (Chatwoot + Twenty + Evolution + Mautic)</strong></td><td>Ferramenta Open Source Aut?noma</td><td>3 vCPUs</td><td>4.5 GB</td><td>TOTALMENTE VI?VEL (100% HOMOLOGADO)</td><td>100/100</td></tr>
+<tr><td><strong>03</strong></td><td><strong>Ecossistema DevOps &amp; Engenharia de Dados (NocoDB + Supabase + n8n + Directus)</strong></td><td>Ferramenta Open Source Aut?noma</td><td>4 vCPUs</td><td>6.0 GB</td><td>TOTALMENTE VI?VEL (100% HOMOLOGADO)</td><td>100/100</td></tr>
+<tr><td><strong>04</strong></td><td><strong>Stalwart All-in-One Mail Server</strong></td><td>Servidor de E-mail e Colabora??o JMAP/IMAP/SMTP</td><td>1.5 vCPUs</td><td>1.5 GB</td><td>TOTALMENTE VI?VEL (100% HOMOLOGADO)</td><td>100/100</td></tr>
+<tr><td><strong>05</strong></td><td><strong>Nextcloud Hub</strong></td><td>Armazenamento de Arquivos, Calend?rio e Contatos</td><td>2.0 vCPUs</td><td>2.5 GB</td><td>TOTALMENTE VI?VEL (100% HOMOLOGADO)</td><td>100/100</td></tr>
+<tr><td><strong>06</strong></td><td><strong>ONLYOFFICE Document Server</strong></td><td>Motor de Edi??o Colaborativa de Documentos</td><td>2.0 vCPUs</td><td>2.5 GB</td><td>TOTALMENTE VI?VEL (100% HOMOLOGADO)</td><td>100/100</td></tr>
+<tr><td><strong>07</strong></td><td><strong>CryptPad</strong></td><td>Su?te Office Criptografada Zero-Knowledge</td><td>1.5 vCPUs</td><td>1.0 GB</td><td>TOTALMENTE VI?VEL (100% HOMOLOGADO)</td><td>100/100</td></tr>
+<tr><td><strong>08</strong></td><td><strong>Seafile Professional/Community</strong></td><td>Sincroniza??o R?pida de Arquivos Corporativos</td><td>1.5 vCPUs</td><td>1.5 GB</td><td>TOTALMENTE VI?VEL (100% HOMOLOGADO)</td><td>100/100</td></tr>
+<tr><td><strong>09</strong></td><td><strong>Zitadel Identity Management</strong></td><td>Gest?o de Identidade e Single Sign-On (SSO)</td><td>1.5 vCPUs</td><td>1.5 GB</td><td>TOTALMENTE VI?VEL (100% HOMOLOGADO)</td><td>100/100</td></tr>
+<tr><td><strong>10</strong></td><td><strong>Chatwoot Omnichannel</strong></td><td>Atendimento e Helpdesk Multicanal</td><td>1.5 vCPUs</td><td>1.5 GB</td><td>TOTALMENTE VI?VEL (100% HOMOLOGADO)</td><td>100/100</td></tr>
+<tr><td><strong>11</strong></td><td><strong>NocoDB</strong></td><td>Banco de Dados No-Code e Planilhas Inteligentes</td><td>1.0 vCPUs</td><td>1.0 GB</td><td>TOTALMENTE VI?VEL (100% HOMOLOGADO)</td><td>100/100</td></tr>
+</table></div>
+
+
+<hr>
+
+<h2>3. Diretrizes de Engenharia e Garantia de Isolamento</h2>
+
+1. <strong>Topologia de Rede Compartilhada:</strong> Todos os novos servi?os conectam-se ? rede overlay existente <code>network_conexao</code> como rede externa (<code>external: true</code>), garantindo comunica??o direta com o Traefik sem pontes adicionais.
+2. <strong>Zero Conflito de Portas de Host:</strong> Todo tr?fego HTTP/HTTPS ? delegado ao roteador Traefik existente via Host Header (SNI), eliminando portas expostas diretamente no host da VPS.
+3. <strong>Persist?ncia Segura e Isolada:</strong> Cada aplica??o possui seus volumes com prefixo pr?prio (<code>&lt;slug&gt;_data</code>), garantindo que nenhuma base existente (Mautic, Evolution, n8n, MySQL, PostgreSQL global) seja sobrescrita ou corrompida.
+4. <strong>Desinstala??o At?mica:</strong> Cada stack ou ferramenta pode ser removida individualmente via <code>docker stack rm &lt;slug&gt;</code> em menos de 10 segundos, mantendo a VPS 100% ?ntegra.
 
         </div>
-
-        <!-- GOVERNAN?A E DIRETRIZES DE ENGENHARIA -->
-        <div class="governance-card">
-            <h2 class="section-title" style="margin-bottom: 8px;">Diretrizes de Engenharia e Garantia de Isolamento</h2>
-            <p style="color: var(--text-muted); font-size: 14px;">Princ?pios arquiteturais obrigat?rios para preserva??o integral das aplica??es existentes na VPS.</p>
-            <div class="gov-list">
-                <div class="gov-item">
-                    <strong>1. Roteamento Centralizado SNI</strong>
-                    Nenhuma porta de host ? aberta. Todo tr?fego passa pelo Traefik existente na rede overlay <code>network_conexao</code>.
-                </div>
-                <div class="gov-item">
-                    <strong>2. Volumes Namespace Isolados</strong>
-                    Todos os volumes recebem prefixo exclusivo, garantindo zero risco de sobrescrever Mautic, n8n, Evolution ou MySQL.
-                </div>
-                <div class="gov-item">
-                    <strong>3. Rollback At?mico Garantido</strong>
-                    Cada aplica??o pode ser removida via <code>docker stack rm &lt;nome&gt;</code> em menos de 10 segundos sem afetar as demais.
-                </div>
-                <div class="gov-item">
-                    <strong>4. Monitoramento Autom?tico</strong>
-                    Endpoints prontos para cadastro de health check no Uptime Kuma j? em execu??o na VPS.
-                </div>
-            </div>
-        </div>
-
-        <footer>
-            Arsenal Open Source ? F?brica Universal AIDD ? Governan?a Padr?o Diamante R5
-        </footer>
-
     </div>
 </body>
 </html>

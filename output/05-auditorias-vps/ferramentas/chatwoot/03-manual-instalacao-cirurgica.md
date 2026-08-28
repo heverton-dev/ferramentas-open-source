@@ -1,43 +1,68 @@
-# Manual de Instala??o Cir?rgica no Portainer
+# Manual de Instala??o Cir?rgica no Portainer & Playbook de Opera??o
 
 **Alvo:** Chatwoot Omnichannel  
 **P?blico-Alvo:** Gestores, Consultores e Engenheiros de TI  
-**Tempo Estimado de Execu??o:** 5 a 10 minutos
+**Tempo Estimado de Execu??o:** 5 a 10 minutos  
+**Garantia Arquitetural:** Zero interfer?ncia nas aplica??es existentes (`mautic`, `evolution`, `n8n`, `mysql`, `postgres`)
 
 ---
 
-## 1. Entendendo o Processo (Para N?o-T?cnicos)
+## 1. Entendendo a Arquitetura Cir?rgica (Para N?o-T?cnicos)
 
-Pense na sua VPS como um **edif?cio corporativo**. As aplica??es existentes (Mautic, n8n, Evolution) j? ocupam algumas salas desse edif?cio.
-A **instala??o cir?rgica** significa alugar novas salas para a nova su?te de ferramentas, com sua pr?pria mob?lia e fechaduras (volumes e banco de dados dedicados), usando apenas o **corredor central compartilhado** (a rede `network_conexao`) e a **portaria central** (o Traefik existente).
-Nenhuma sala existente ? tocada ou alterada.
-
----
-
-## 2. Passo 1: Configura??o do DNS do Dom?nio
-
-Acesse a zona de DNS do seu provedor (Cloudflare, Registro.br, Hostinger ou AWS Route53) e adicione os seguintes registros do tipo **A**:
-
-- `chat.vpsconexao.org` -> Tipo A -> IP da VPS
+Pense na sua VPS como um **edif?cio corporativo de alta seguran?a**. As aplica??es em produ??o (como seu CRM Mautic, o n8n e o Evolution API) j? ocupam salas estruturadas nesse edif?cio.
+A **instala??o cir?rgica** significa abrir uma nova sala independente para a nova su?te de ferramentas, com seus pr?prios arm?rios e cofres (volumes dedicados e banco isolado), conectando-se apenas ao **corredor central** (a rede `network_conexao`) e ? **portaria central com identifica??o autom?tica** (o Traefik existente).
+Nenhuma sala existente ? tocada, nenhum dado ? exposto e nenhuma porta ? alterada.
 
 ---
 
-## 3. Passo 2: Implanta??o da Stack no Portainer
+## 2. Fase 1: Apontamento de DNS no seu Provedor
 
-1. Abra seu navegador e acesse: `https://painel.vpsconexao.org`.
+Antes de subir a stack, acesse o painel de controle do seu dom?nio (Cloudflare, Registro.br, Hostinger ou AWS Route53) e crie os apontamentos do tipo **A**:
+
+- Registro A: `chat.vpsconexao.org` -> IP da VPS
+
+> **Nota:** Se estiver utilizando Cloudflare, certifique-se de que a nuvem esteja inicialmente cinza (DNS Only) ou laranja com SSL/TLS configurado em modo **Full (Strict)**.
+
+---
+
+## 3. Fase 2: Implanta??o da Stack no Painel Portainer
+
+Siga o roteiro passo a passo:
+
+1. Acesse o seu painel de controle: `https://painel.vpsconexao.org`.
 2. Fa?a login com suas credenciais de administrador.
 3. No menu lateral esquerdo, clique em **Stacks**.
-4. Clique no bot?o azul **+ Add stack**.
-5. No campo **Name**, digite: `chatwoot`.
-6. Na caixa **Web editor**, cole o conte?do integral do arquivo `02-stack-integrada-portainer.yml`.
-7. Role at? o rodap? da p?gina e clique em **Deploy the stack**.
-8. O Portainer iniciar? o download seguro das imagens e inicializar? os servi?os na rede Swarm.
+4. Clique no bot?o azul superior **+ Add stack**.
+5. No campo **Name**, digite exatamente: `chatwoot`.
+6. Na caixa de texto do **Web editor**, cole o conte?do integral do arquivo `02-stack-integrada-portainer.yml`.
+7. Role a p?gina at? o rodap? e clique no bot?o **Deploy the stack**.
+8. O Swarm baixar? as imagens oficiais, criar? os volumes nomeados e registrar? os novos subdom?nios no Traefik.
 
 ---
 
-## 4. Passo 3: Valida??o e Testes de Sa?de (Health Check)
+## 4. Fase 3: Wizard de Primeiro Acesso e Configura??o
 
-Aguarde cerca de 90 segundos para a emiss?o autom?tica dos certificados SSL Let's Encrypt.
-Em seguida, abra as URLs no navegador para validar o acesso:
+Aguarde 60 a 90 segundos para a emiss?o autom?tica do certificado TLS Let's Encrypt. Em seguida, acesse as URLs:
 
-- https://chat.vpsconexao.org
+- `https://chat.vpsconexao.org`
+
+### Procedimento para o Ecossistema Google Workspace (Se Aplic?vel):
+1. **Configura??o do Nextcloud (`https://drive.vpsconexao.org`):**
+   - Crie o usu?rio administrador e senha.
+   - O banco de dados PostgreSQL j? estar? configurado automaticamente via vari?veis de ambiente.
+2. **Integra??o do ONLYOFFICE com Nextcloud:**
+   - Acesse o Nextcloud com usu?rio administrador, v? em **Aplicativos** e ative o app **ONLYOFFICE**.
+   - Em **Configura??es de Administra??o** > **ONLYOFFICE**, defina:
+     - Endere?o do Servidor: `https://office.vpsconexao.org`
+     - Chave Secreta (JWT): `OnlyOfficeSecretKey2026_SecureToken!`
+     - Endere?o interno do Nextcloud: `http://workspace_nextcloud:80`
+   - Clique em **Salvar**. A edi??o colaborativa de documentos estar? 100% operacional.
+
+---
+
+## 5. Fase 4: Cadastro de Monitoramento no Uptime Kuma
+
+No painel do seu Uptime Kuma j? em execu??o (`https://monitor.vpsconexao.org`):
+1. Clique em **Adicionar Novo Monitor**.
+2. Tipo de Monitor: **HTTP(s)**.
+3. Cadastre a URL de cada subdom?nio com intervalo de verifica??o de **60 segundos**.
