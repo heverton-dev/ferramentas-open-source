@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  zitadel_app:
+    image: zitadel:latest
+    networks:
+      - network_conexao
+    volumes:
+      - zitadel_data:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_conexao"
+        - "traefik.http.routers.zitadel.rule=Host(`sso.vpsconexao.org`)"
+        - "traefik.http.routers.zitadel.entrypoints=websecure"
+        - "traefik.http.routers.zitadel.tls=true"
+        - "traefik.http.routers.zitadel.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.zitadel.loadbalancer.server.port=80"
+        - "traefik.http.services.zitadel.loadbalancer.passHostHeader=true"
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1536M
+
+networks:
+  network_conexao:
+    external: true
+
+volumes:
+  zitadel_data:
