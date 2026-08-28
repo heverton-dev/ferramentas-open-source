@@ -653,7 +653,27 @@
     "requisitos_hardware_totais": {
       "ram_total_recomendada": "16 GB RAM",
       "cpu_total_recomendada": "8 vCPU",
-      "armazenamento_minimo": "120 GB NVMe SSD"
+      "armazenamento_minimo": "160-240 GB NVMe SSD"
+    },
+    "vps_ideal_especificacao": {
+      "perfil_recomendado": "8 vCPU Dedicated Cloud / 16 GB RAM ECC / 160-240 GB NVMe SSD / Link 1 Gbps / Ubuntu 24.04 LTS x86_64",
+      "por_que_desta_configuracao": "Garante estabilidade absoluta para os 9 contêineres rodando em simultâneo com isolamento de processos, prevenindo gargalos de I/O em banco de dados e eliminando o risco do OOM Killer durante picos de campanha e atendimento.",
+      "distribuicao_recursos_por_servico": [
+        { "servico": "Traefik Ingress & TLS", "cpu": "0.5 vCPU", "ram": "256 MB", "motivo": "Roteamento reativo de borda, compressão Brotli/Gzip e renovação automática de certificados SSL." },
+        { "servico": "Keycloak SSO (OpenJDK JVM)", "cpu": "1.5 vCPU", "ram": "2.0 GB", "motivo": "Baseline da JVM Java para autenticação federada OIDC/SAML e criptografia de senhas Argon2." },
+        { "servico": "Mautic Marketing & Cron", "cpu": "2.0 vCPU", "ram": "4.0 GB", "motivo": "Processamento em lote de campanhas para 50k+ leads, segmentação e rastreamento assíncrono de cliques." },
+        { "servico": "Twenty CRM & GraphQL", "cpu": "1.5 vCPU", "ram": "3.0 GB", "motivo": "API reativa, buscas full-text e pipeline comercial Kanban simultâneo para 10 a 50 vendedores." },
+        { "servico": "Chatwoot + Sidekiq", "cpu": "1.5 vCPU", "ram": "3.5 GB", "motivo": "Ruby on Rails com centenas de WebSockets ao vivo para multiatendentes no WhatsApp e filas Redis." },
+        { "servico": "Evolution API (WhatsApp)", "cpu": "1.0 vCPU", "ram": "1.5 GB", "motivo": "Sessões Baileys ativas com o WhatsApp, decodificação de áudios OGG/MP3 e disparo de webhooks." },
+        { "servico": "n8n Orquestrador", "cpu": "0.5 vCPU", "ram": "1.0 GB", "motivo": "Execução assíncrona de fluxos de dados, webhooks e sincronização contínua entre CRM e WhatsApp." },
+        { "servico": "Buffer de Picos / Anti-OOM", "cpu": "1.0 vCPU", "ram": "1.7 GB", "motivo": "Margem de folga do kernel Linux para backups diários pg_dump e picos sazonais (Black Friday)." }
+      ],
+      "provedores_validados": [
+        { "provedor": "Hetzner Cloud (CPX41 / CCX23)", "custo_mensal": "€ 28 (~ R$ 170/mês)", "vantagem": "Melhor custo-benefício e performance bruta por vCPU dedicada (Datacenters UE/EUA)." },
+        { "provedor": "Contabo (Cloud VPS L)", "custo_mensal": "€ 16 (~ R$ 100/mês)", "vantagem": "Maior volume de memória RAM e disco NVMe por valor investido." },
+        { "provedor": "DigitalOcean (Dedicated 16GB)", "custo_mensal": "$ 84 (~ R$ 460/mês)", "vantagem": "Excelente SLA de rede, suporte global e facilidade de snapshots." },
+        { "provedor": "AWS Lightsail (16GB RAM)", "custo_mensal": "$ 80 (~ R$ 440/mês)", "vantagem": "Infraestrutura corporativa AWS com 5 TB de transferência inclusos." }
+      ]
     },
     "analogia_didatica_stack": {
       "o_que_e_vps": "🏢 A VPS é o seu 'apartamento alugado na nuvem'. Em vez de manter um computador físico ligado no escritório gastando luz, você aluga um servidor ultra-rápido que fica ligado 24 horas por dia, 7 dias por semana, com gerador e internet de fibra ótica.",

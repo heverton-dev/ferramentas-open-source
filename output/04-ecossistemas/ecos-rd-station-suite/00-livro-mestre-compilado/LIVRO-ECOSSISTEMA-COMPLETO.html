@@ -3486,6 +3486,116 @@ volumes:
     <div class="step-card"><div class="step-head"><span class="step-badge">01</span> Passo 1: Contratar a VPS (Tempo estimado: 3 minutos)</div><p>Acesse um provedor de nuvem confiável (como Hetzner Cloud, DigitalOcean, Contabo ou AWS Lightsail). Escolha o plano com 8 vCPU e 16 GB RAM, selecione o sistema operacional Ubuntu 22.04 LTS e clique em 'Criar Servidor'. Você receberá o IP da máquina por e-mail.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">02</span> Passo 2: Apontar o seu Domínio (Tempo estimado: 2 minutos)</div><p>No site onde você comprou seu domínio (Registro.br, Cloudflare, GoDaddy ou Hostinger), vá na aba DNS e crie um apontamento Tipo A com o nome `*` (asterisco) apontando para o IP da sua VPS. Isso garante que `mkt.suaempresa.com.br`, `crm.suaempresa.com.br` e `chat.suaempresa.com.br` funcionem sozinhos.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">03</span> Passo 3: Rodar o Comando de 1 Clique (Tempo estimado: 1 minuto)</div><p>Abra o terminal da VPS e cole o comando automático de inicialização. O sistema fará o download de todas as ferramentas, configurará os bancos de dados e ativará os certificados de segurança SSL em menos de 120 segundos.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">04</span> Passo 4: Acessar os Painéis no seu Navegador</div><p>Abra o navegador no seu computador e acerte o endereço: `crm.suaempresa.com.br` para seus vendedores, `chat.suaempresa.com.br` para o atendimento e `mkt.suaempresa.com.br` para as campanhas de marketing.</p></div>
   </div>
 
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 10px; color: var(--ink);">5. Especificação da VPS Ideal para Suportar Todo o Ecossistema (e Por Que)</h3>
+  <div class="racional-box">
+    <p><strong>🖥️ Configuração Recomendada:</strong> 8 vCPU Dedicated Cloud / 16 GB RAM ECC / 160-240 GB NVMe SSD / Link 1 Gbps / Ubuntu 24.04 LTS x86_64</p>
+    <p style="margin-top: 6px;"><strong>💡 Racional Técnico:</strong> Garante estabilidade absoluta para os 9 contêineres rodando em simultâneo com isolamento de processos, prevenindo gargalos de I/O em banco de dados e eliminando o risco do OOM Killer durante picos de campanha e atendimento.</p>
+  </div>
+
+  <h4 style="margin: 16px 0 8px;">Distribuição de Recursos de Hardware por Serviço (vCPU &amp; RAM)</h4>
+  
+        <div class="tablewrap" style="margin: 14px 0 20px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Serviço / Módulo da Stack</th>
+                <th>vCPU Alocada</th>
+                <th>Memória RAM</th>
+                <th>Motivo Técnico &amp; Gargalo Previsto</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+            <tr>
+              <td><strong>Traefik Ingress & TLS</strong></td>
+              <td><code>0.5 vCPU</code></td>
+              <td><code>256 MB</code></td>
+              <td>Roteamento reativo de borda, compressão Brotli/Gzip e renovação automática de certificados SSL.</td>
+            </tr>
+            
+            <tr>
+              <td><strong>Keycloak SSO (OpenJDK JVM)</strong></td>
+              <td><code>1.5 vCPU</code></td>
+              <td><code>2.0 GB</code></td>
+              <td>Baseline da JVM Java para autenticação federada OIDC/SAML e criptografia de senhas Argon2.</td>
+            </tr>
+            
+            <tr>
+              <td><strong>Mautic Marketing & Cron</strong></td>
+              <td><code>2.0 vCPU</code></td>
+              <td><code>4.0 GB</code></td>
+              <td>Processamento em lote de campanhas para 50k+ leads, segmentação e rastreamento assíncrono de cliques.</td>
+            </tr>
+            
+            <tr>
+              <td><strong>Twenty CRM & GraphQL</strong></td>
+              <td><code>1.5 vCPU</code></td>
+              <td><code>3.0 GB</code></td>
+              <td>API reativa, buscas full-text e pipeline comercial Kanban simultâneo para 10 a 50 vendedores.</td>
+            </tr>
+            
+            <tr>
+              <td><strong>Chatwoot + Sidekiq</strong></td>
+              <td><code>1.5 vCPU</code></td>
+              <td><code>3.5 GB</code></td>
+              <td>Ruby on Rails com centenas de WebSockets ao vivo para multiatendentes no WhatsApp e filas Redis.</td>
+            </tr>
+            
+            <tr>
+              <td><strong>Evolution API (WhatsApp)</strong></td>
+              <td><code>1.0 vCPU</code></td>
+              <td><code>1.5 GB</code></td>
+              <td>Sessões Baileys ativas com o WhatsApp, decodificação de áudios OGG/MP3 e disparo de webhooks.</td>
+            </tr>
+            
+            <tr>
+              <td><strong>n8n Orquestrador</strong></td>
+              <td><code>0.5 vCPU</code></td>
+              <td><code>1.0 GB</code></td>
+              <td>Execução assíncrona de fluxos de dados, webhooks e sincronização contínua entre CRM e WhatsApp.</td>
+            </tr>
+            
+            <tr>
+              <td><strong>Buffer de Picos / Anti-OOM</strong></td>
+              <td><code>1.0 vCPU</code></td>
+              <td><code>1.7 GB</code></td>
+              <td>Margem de folga do kernel Linux para backups diários pg_dump e picos sazonais (Black Friday).</td>
+            </tr>
+            
+            </tbody>
+          </table>
+        </div>
+        
+
+  <h4 style="margin: 20px 0 10px;">Provedores de Nuvem Recomendados &amp; Validados</h4>
+  <div class="integration-grid">
+    
+            <div class="stat-card">
+              <div class="stat-lbl">Hetzner Cloud (CPX41 / CCX23)</div>
+              <div style="font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--green); margin: 2px 0;">€ 28 (~ R$ 170/mês)</div>
+              <p style="margin: 0; font-size: 12px; color: var(--ink-2);">Melhor custo-benefício e performance bruta por vCPU dedicada (Datacenters UE/EUA).</p>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-lbl">Contabo (Cloud VPS L)</div>
+              <div style="font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--green); margin: 2px 0;">€ 16 (~ R$ 100/mês)</div>
+              <p style="margin: 0; font-size: 12px; color: var(--ink-2);">Maior volume de memória RAM e disco NVMe por valor investido.</p>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-lbl">DigitalOcean (Dedicated 16GB)</div>
+              <div style="font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--green); margin: 2px 0;">$ 84 (~ R$ 460/mês)</div>
+              <p style="margin: 0; font-size: 12px; color: var(--ink-2);">Excelente SLA de rede, suporte global e facilidade de snapshots.</p>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-lbl">AWS Lightsail (16GB RAM)</div>
+              <div style="font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--green); margin: 2px 0;">$ 80 (~ R$ 440/mês)</div>
+              <p style="margin: 0; font-size: 12px; color: var(--ink-2);">Infraestrutura corporativa AWS com 5 TB de transferência inclusos.</p>
+            </div>
+            
+  </div>
+
   <!-- SEÇÃO 06: MODULARIDADE & HOT-SWAP -->
   <div class="sec-head" id="cap-06" style="margin-top: 48px;">
     <div class="sec-info">

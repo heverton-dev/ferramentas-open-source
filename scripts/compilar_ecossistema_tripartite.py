@@ -606,6 +606,30 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
     for idx, s in enumerate(stack_detalhe, 1):
         linhas.append(f"| {idx:02d} | **{s.get('servico')}** | `{s.get('imagem_docker')}` | {s.get('papel_na_stack')} | `{s.get('portas_expostas')}` | `{s.get('persistencia')}` |")
 
+    vps_spec = deploy.get("vps_ideal_especificacao", {})
+    if vps_spec:
+        linhas.extend([
+            f"",
+            f"### 🖥️ Especificação da VPS Ideal para o Ecossistema Completo (e Por Que)",
+            f"> **Perfil de Máquina Recomendado:** `{vps_spec.get('perfil_recomendado')}`  ",
+            f"> **Por Que Desta Configuração (Racional Técnico):** {vps_spec.get('por_que_desta_configuracao')}",
+            f"",
+            f"#### Distribuição de Recursos de Hardware por Serviço (vCPU & RAM)",
+            f"| Serviço / Módulo | vCPU Alocada | Memória RAM | Motivo Técnico / Gargalo Previsto |",
+            f"|---|---|---|---|"
+        ])
+        for dist in vps_spec.get("distribuicao_recursos_por_servico", []):
+            linhas.append(f"| **{dist.get('servico')}** | `{dist.get('cpu')}` | `{dist.get('ram')}` | {dist.get('motivo')} |")
+        
+        linhas.extend([
+            f"",
+            f"#### Provedores de Nuvem Recomendados & Validados",
+            f"| Provedor de Nuvem | Custo Mensal Estimado | Vantagem Principal / SLA |",
+            f"|---|---|---|"
+        ])
+        for prov in vps_spec.get("provedores_validados", []):
+            linhas.append(f"| **{prov.get('provedor')}** | `{prov.get('custo_mensal')}` | {prov.get('vantagem')} |")
+
     linhas.extend([
         f"",
         f"### Dimensionamento de Hardware Recomendado",
@@ -1026,6 +1050,49 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
         for s in stack_detalhe
     ])
 
+    vps_spec = deploy.get("vps_ideal_especificacao", {})
+    tabela_vps_recursos = ""
+    provedores_vps_cards = ""
+    if vps_spec:
+        linhas_recursos_vps = "".join([
+            f"""
+            <tr>
+              <td><strong>{dist.get('servico')}</strong></td>
+              <td><code>{dist.get('cpu')}</code></td>
+              <td><code>{dist.get('ram')}</code></td>
+              <td>{dist.get('motivo')}</td>
+            </tr>
+            """
+            for dist in vps_spec.get("distribuicao_recursos_por_servico", [])
+        ])
+        tabela_vps_recursos = f"""
+        <div class="tablewrap" style="margin: 14px 0 20px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Serviço / Módulo da Stack</th>
+                <th>vCPU Alocada</th>
+                <th>Memória RAM</th>
+                <th>Motivo Técnico &amp; Gargalo Previsto</th>
+              </tr>
+            </thead>
+            <tbody>
+              {linhas_recursos_vps}
+            </tbody>
+          </table>
+        </div>
+        """
+        provedores_vps_cards = "".join([
+            f"""
+            <div class="stat-card">
+              <div class="stat-lbl">{prov.get('provedor')}</div>
+              <div style="font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--green); margin: 2px 0;">{prov.get('custo_mensal')}</div>
+              <p style="margin: 0; font-size: 12px; color: var(--ink-2);">{prov.get('vantagem')}</p>
+            </div>
+            """
+            for prov in vps_spec.get("provedores_validados", [])
+        ])
+
     analogias = deploy.get("analogia_didatica_stack", {})
     analogias_cards_html = f"""
     <div class="integration-grid" style="margin: 16px 0 24px;">
@@ -1370,6 +1437,20 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
     {passos_cards}
   </div>
 
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 10px; color: var(--ink);">5. Especificação da VPS Ideal para Suportar Todo o Ecossistema (e Por Que)</h3>
+  <div class="racional-box">
+    <p><strong>🖥️ Configuração Recomendada:</strong> {vps_spec.get('perfil_recomendado')}</p>
+    <p style="margin-top: 6px;"><strong>💡 Racional Técnico:</strong> {vps_spec.get('por_que_desta_configuracao')}</p>
+  </div>
+
+  <h4 style="margin: 16px 0 8px;">Distribuição de Recursos de Hardware por Serviço (vCPU &amp; RAM)</h4>
+  {tabela_vps_recursos}
+
+  <h4 style="margin: 20px 0 10px;">Provedores de Nuvem Recomendados &amp; Validados</h4>
+  <div class="integration-grid">
+    {provedores_vps_cards}
+  </div>
+
   <!-- SEÇÃO 06: MODULARIDADE & HOT-SWAP -->
   <div class="sec-head" id="cap-06" style="margin-top: 48px;">
     <div class="sec-info">
@@ -1480,6 +1561,7 @@ def gerar_typst_ecossistema(dados: dict) -> str:
     econ = dados.get("analise_economica_global", {})
     seg = dados.get("seguranca_backup_lgpd", {})
     mon = dados.get("monitoramento_e_saude_vps", {})
+    vps_spec = deploy.get("vps_ideal_especificacao", {})
     stack_detalhe = deploy.get("composicao_stack_detalhada", [])
 
     def sanitizar_typ(txt: str) -> str:
@@ -1715,8 +1797,23 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 = Capítulo 7: Manual de Engenharia de Infraestrutura & Deploy All-in-One
 
 - *Segurança de Rede:* {sanitizar_typ(deploy.get('arquitetura_rede_seguranca', ''))}
-- *Hardware Recomendado:* {sanitizar_typ(deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada', '8 vCPU'))} / {sanitizar_typ(deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada', '16 GB RAM'))}
+- *Perfil de VPS Recomendado:* `{sanitizar_typ(vps_spec.get('perfil_recomendado', '8 vCPU / 16 GB RAM'))}`
 
+#v(6pt)
+== Especificação da VPS Ideal (e Por Que Desta Configuração)
+#text(size: 8.5pt, style: "italic", fill: rgb("#334155"))[{sanitizar_typ(vps_spec.get('por_que_desta_configuracao', ''))}]
+
+#v(6pt)
+#table(
+  columns: (1.5fr, 0.7fr, 0.7fr, 2.8fr),
+  fill: (x, y) => if y == 0 {{ rgb("#f1f5f9") }} else {{ none }},
+  stroke: 0.5pt + rgb("#cbd5e1"),
+  inset: 4pt,
+  [*Serviço / Módulo*], [*vCPU*], [*RAM*], [*Motivo Técnico & Gargalo*],
+  { "".join([f"[{sanitizar_typ(dist.get('servico'))}], [`{sanitizar_typ(dist.get('cpu'))}`], [`{sanitizar_typ(dist.get('ram'))}`], [{sanitizar_typ(dist.get('motivo'))}],\n" for dist in vps_spec.get("distribuicao_recursos_por_servico", [])]) }
+)
+
+#v(8pt)
 == Manifesto docker-compose.yml de Produção
 ```yaml
 {deploy.get('docker_compose_exemplo', '')}
