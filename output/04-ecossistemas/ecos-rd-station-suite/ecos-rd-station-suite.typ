@@ -150,8 +150,49 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 )
 
 #pagebreak()
+= Capítulo 2: Infraestrutura Global, Dimensionamento da VPS & Provedores Validados
 
-= Capítulo 2: Matriz Estratégica do Quinteto Soberano
+- *Perfil de Máquina Recomendado:* `8 vCPU Dedicated Cloud / 16 GB RAM ECC / 160-240 GB NVMe SSD / Link 1 Gbps / Ubuntu 24.04 LTS x86\_64`
+- *Racional de Engenharia:* Garante estabilidade absoluta para os 9 contêineres rodando em simultâneo com isolamento de processos, prevenindo gargalos de I/O em banco de dados e eliminando o risco do OOM Killer durante picos de campanha e atendimento.
+
+#v(6pt)
+== Provedores de Nuvem Recomendados & Custo Mensal
+
+#table(
+  columns: (1.5fr, 1.2fr, 2.3fr),
+  fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
+  stroke: 0.5pt + rgb("#cbd5e1"),
+  inset: 5pt,
+  [*Provedor de Nuvem*], [*Custo Mensal*], [*Vantagem Principal & SLA*],
+  [Hetzner Cloud (CPX41 / CCX23)], [`€ 28 (~ R\$ 170/mês)`], [Melhor custo-benefício e performance bruta por vCPU dedicada (Datacenters UE/EUA).],
+[Contabo (Cloud VPS L)], [`€ 16 (~ R\$ 100/mês)`], [Maior volume de memória RAM e disco NVMe por valor investido.],
+[DigitalOcean (Dedicated 16GB)], [`\$ 84 (~ R\$ 460/mês)`], [Excelente SLA de rede, suporte global e facilidade de snapshots.],
+[AWS Lightsail (16GB RAM)], [`\$ 80 (~ R\$ 440/mês)`], [Infraestrutura corporativa AWS com 5 TB de transferência inclusos.],
+
+)
+
+#v(8pt)
+== Alocação Técnica de Recursos por Serviço (vCPU & RAM)
+
+#table(
+  columns: (1.5fr, 0.7fr, 0.7fr, 2.8fr),
+  fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
+  stroke: 0.5pt + rgb("#cbd5e1"),
+  inset: 4pt,
+  [*Serviço / Módulo*], [*vCPU*], [*RAM*], [*Motivo Técnico & Gargalo*],
+  [Traefik Ingress & TLS], [`0.5 vCPU`], [`256 MB`], [Roteamento reativo de borda, compressão Brotli/Gzip e renovação automática de certificados SSL.],
+[Keycloak SSO (OpenJDK JVM)], [`1.5 vCPU`], [`2.0 GB`], [Baseline da JVM Java para autenticação federada OIDC/SAML e criptografia de senhas Argon2.],
+[Mautic Marketing & Cron], [`2.0 vCPU`], [`4.0 GB`], [Processamento em lote de campanhas para 50k+ leads, segmentação e rastreamento assíncrono de cliques.],
+[Twenty CRM & GraphQL], [`1.5 vCPU`], [`3.0 GB`], [API reativa, buscas full-text e pipeline comercial Kanban simultâneo para 10 a 50 vendedores.],
+[Chatwoot + Sidekiq], [`1.5 vCPU`], [`3.5 GB`], [Ruby on Rails com centenas de WebSockets ao vivo para multiatendentes no WhatsApp e filas Redis.],
+[Evolution API (WhatsApp)], [`1.0 vCPU`], [`1.5 GB`], [Sessões Baileys ativas com o WhatsApp, decodificação de áudios OGG/MP3 e disparo de webhooks.],
+[n8n Orquestrador], [`0.5 vCPU`], [`1.0 GB`], [Execução assíncrona de fluxos de dados, webhooks e sincronização contínua entre CRM e WhatsApp.],
+[Buffer de Picos / Anti-OOM], [`1.0 vCPU`], [`1.7 GB`], [Margem de folga do kernel Linux para backups diários pg\_dump e picos sazonais (Black Friday).],
+
+)
+
+#pagebreak()
+= Capítulo 3: Matriz Estratégica do Quinteto Soberano
 
 #table(
   columns: (0.5fr, 1.3fr, 1.3fr, 1.8fr, 2.2fr, 1.3fr),

@@ -424,6 +424,7 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
     deploy = dados.get("deploy_consolidado", {})
     guia = dados.get("guia_modularidade_e_expansao", {})
     econ = dados.get("analise_economica_global", {})
+    vps_spec = deploy.get("vps_ideal_especificacao", {})
     stack_detalhe = deploy.get("composicao_stack_detalhada", [])
 
     linhas = [
@@ -440,14 +441,15 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
         f"",
         f"1. [Prefácio Executivo & Manifesto da Soberania Tecnológica](#prefacio-executivo--manifesto-da-soberania-tecnologica)",
         f"2. [Capítulo 1 · Engenharia Financeira, TCO Global & Payback](#capitulo-1--engenharia-financeira-tco-global--payback)",
-        f"3. [Capítulo 2 · Matriz Estratégica do Quinteto Soberano](#capitulo-2--matriz-estrategica-do-quinteto-soberano)",
-        f"4. [Capítulo 3 · Tratados Técnicos Individuais dos Pilares](#capitulo-3--tratados-tecnicos-individuais-dos-pilares)",
-        f"5. [Capítulo 4 · Camada de Cola, SSO Federado & Blueprints n8n](#capitulo-4--camada-de-cola-sso-federado--blueprints-n8n)",
-        f"6. [Capítulo 5 · Manual de Engenharia de Infraestrutura & Deploy All-in-One](#capitulo-5--manual-de-engenharia-de-infraestrutura--deploy-all-in-one)",
-        f"7. [Capítulo 6 · Protocolos de Modularidade & Hot-Swap (Princípio do Lego)](#capitulo-6--protocolos-de-modularidade--hot-swap-principio-do-lego)",
-        f"8. [Capítulo 7 · Roteiro Prático de Migração de Dados Históricos](#capitulo-7--roteiro-pratico-de-migracao-de-dados-historicos)",
-        f"9. [Capítulo 8 · Governança Corporativa, Backup 3-2-1 & Conformidade LGPD](#capitulo-8--governanca-corporativa-backup-3-2-1--conformidade-lgpd)",
-        f"10. [Capítulo 9 · Cronograma de Implantação em 30 Dias & Monitoramento da VPS](#capitulo-9--cronograma-de-implantacao-em-30-dias--monitoramento-da-vps)",
+        f"3. [Capítulo 2 · Infraestrutura Global, Dimensionamento da VPS & Provedores Validados](#capitulo-2--infraestrutura-global-dimensionamento-da-vps--provedores-validados)",
+        f"4. [Capítulo 3 · Matriz Estratégica do Quinteto Soberano](#capitulo-3--matriz-estrategica-do-quinteto-soberano)",
+        f"5. [Capítulo 4 · Tratados Técnicos Individuais dos Pilares](#capitulo-4--tratados-tecnicos-individuais-dos-pilares)",
+        f"6. [Capítulo 5 · Camada de Cola, SSO Federado & Blueprints n8n](#capitulo-5--camada-de-cola-sso-federado--blueprints-n8n)",
+        f"7. [Capítulo 6 · Manual de Engenharia de Infraestrutura & Deploy All-in-One](#capitulo-6--manual-de-engenharia-de-infraestrutura--deploy-all-in-one)",
+        f"8. [Capítulo 7 · Protocolos de Modularidade & Hot-Swap (Princípio do Lego)](#capitulo-7--protocolos-de-modularidade--hot-swap-principio-do-lego)",
+        f"9. [Capítulo 8 · Roteiro Prático de Migração de Dados Históricos](#capitulo-8--roteiro-pratico-de-migracao-de-dados-historicos)",
+        f"10. [Capítulo 9 · Governança Corporativa, Backup 3-2-1 & Conformidade LGPD](#capitulo-9--governanca-corporativa-backup-3-2-1--conformidade-lgpd)",
+        f"11. [Capítulo 10 · Cronograma de Implantação em 30 Dias & Monitoramento da VPS](#capitulo-10--cronograma-de-implantacao-em-30-dias--monitoramento-da-vps)",
         f"",
         f"---",
         f"",
@@ -477,14 +479,38 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
         f"|---|---|---|---|---|---|"
     ]
 
-    for dg in econ.get("detalhamento_por_grupo", []):
-        linhas.append(f"| **{dg.get('grupo')}** | {dg.get('saas_referencia')} | `{dg.get('custo_saas_anual')}` | `{dg.get('custo_vps_alocado')}` | `{dg.get('economia_anual_liquida')}` | **{dg.get('percentual_economia')}** |")
+    linhas.extend([
+        f"",
+        f"---",
+        f"",
+        f"## CAPÍTULO 2 · INFRAESTRUTURA GLOBAL, DIMENSIONAMENTO DA VPS & PROVEDORES VALIDADOS",
+        f"",
+        f"> **Perfil de Máquina Recomendado:** `{vps_spec.get('perfil_recomendado', '8 vCPU / 16 GB RAM ECC / 160-240 GB NVMe')}`  ",
+        f"> **Racional de Engenharia:** {vps_spec.get('por_que_desta_configuracao', '')}",
+        f"",
+        f"### 🌐 Provedores de Nuvem Recomendados & Custo Mensal da Infraestrutura",
+        f"| Provedor de Nuvem | Custo Mensal Estimado | Vantagem Principal & SLA |",
+        f"|---|---|---|"
+    ])
+
+    for prov in vps_spec.get("provedores_validados", []):
+        linhas.append(f"| **{prov.get('provedor')}** | `{prov.get('custo_mensal')}` | {prov.get('vantagem')} |")
+
+    linhas.extend([
+        f"",
+        f"### ⚙️ Alocação Técnica de Recursos por Serviço (vCPU & RAM)",
+        f"| Serviço / Módulo | vCPU Alocada | Memória RAM | Motivo Técnico / Gargalo Previsto |",
+        f"|---|---|---|---|"
+    ])
+
+    for dist in vps_spec.get("distribuicao_recursos_por_servico", []):
+        linhas.append(f"| **{dist.get('servico')}** | `{dist.get('cpu')}` | `{dist.get('ram')}` | {dist.get('motivo')} |")
 
     linhas.extend([
         f"",
         f"---",
         f"",
-        f"## CAPÍTULO 2 · MATRIZ ESTRATÉGICA DO QUINTETO SOBERANO",
+        f"## CAPÍTULO 3 · MATRIZ ESTRATÉGICA DO QUINTETO SOBERANO",
         f"",
         f"| # | Grupo Funcional | Persona | Ferramenta | Módulo SaaS Substituído | Economia Anual | Licença | Repositório |",
         f"|---|---|---|---|---|---|---|---|"
@@ -501,7 +527,7 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
         f"",
         f"---",
         f"",
-        f"## CAPÍTULO 3 · TRATADOS TÉCNICOS INDIVIDUAIS DOS PILARES",
+        f"## CAPÍTULO 4 · TRATADOS TÉCNICOS INDIVIDUAIS DOS PILARES",
         f""
     ])
 
@@ -1256,16 +1282,17 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
     <h3>📖 Sumário Geral dos Capítulos</h3>
     <div class="toc-grid">
       <div class="toc-item"><a href="#cap-01">Capítulo 01 · Demonstrativo Financeiro &amp; Calculadora TCO</a> <span>Pág. 04</span></div>
-      <div class="toc-item"><a href="#cap-02">Capítulo 02 · Matriz Geral do Quinteto Soberano</a> <span>Pág. 08</span></div>
-      <div class="toc-item"><a href="#pilar-1">Capítulo 03 · Pilar 01: Marketing &amp; Nutrição</a> <span>Pág. 12</span></div>
-      <div class="toc-item"><a href="#pilar-2">Capítulo 04 · Pilar 02: Pipeline Comercial &amp; CRM</a> <span>Pág. 24</span></div>
-      <div class="toc-item"><a href="#pilar-3">Capítulo 05 · Pilar 03: Atendimento &amp; WhatsApp</a> <span>Pág. 36</span></div>
-      <div class="toc-item"><a href="#cap-04">Capítulo 06 · Camada de Cola, SSO &amp; Blueprints n8n</a> <span>Pág. 48</span></div>
-      <div class="toc-item"><a href="#cap-05">Capítulo 07 · Manual de Deploy All-in-One Compose</a> <span>Pág. 56</span></div>
-      <div class="toc-item"><a href="#cap-06">Capítulo 08 · Guia de Modularidade &amp; Hot-Swap Lego</a> <span>Pág. 64</span></div>
-      <div class="toc-item"><a href="#cap-07">Capítulo 09 · Roteiro de Migração de Dados De-SaaS</a> <span>Pág. 72</span></div>
-      <div class="toc-item"><a href="#cap-08">Capítulo 10 · Segurança, Backup 3-2-1 &amp; LGPD</a> <span>Pág. 80</span></div>
-      <div class="toc-item"><a href="#cap-09">Capítulo 11 · Cronograma 30 Dias &amp; Monitoramento</a> <span>Pág. 88</span></div>
+      <div class="toc-item"><a href="#cap-02">Capítulo 02 · Infraestrutura Global &amp; Provedores Validados</a> <span>Pág. 08</span></div>
+      <div class="toc-item"><a href="#cap-03">Capítulo 03 · Matriz Geral do Quinteto Soberano</a> <span>Pág. 12</span></div>
+      <div class="toc-item"><a href="#pilar-1">Capítulo 04 · Pilar 01: Marketing &amp; Nutrição</a> <span>Pág. 16</span></div>
+      <div class="toc-item"><a href="#pilar-2">Capítulo 05 · Pilar 02: Pipeline Comercial &amp; CRM</a> <span>Pág. 28</span></div>
+      <div class="toc-item"><a href="#pilar-3">Capítulo 06 · Pilar 03: Atendimento &amp; WhatsApp</a> <span>Pág. 40</span></div>
+      <div class="toc-item"><a href="#cap-04">Capítulo 07 · Camada de Cola, SSO &amp; Blueprints n8n</a> <span>Pág. 52</span></div>
+      <div class="toc-item"><a href="#cap-05">Capítulo 08 · Manual de Deploy All-in-One Compose</a> <span>Pág. 60</span></div>
+      <div class="toc-item"><a href="#cap-06">Capítulo 09 · Guia de Modularidade &amp; Hot-Swap Lego</a> <span>Pág. 68</span></div>
+      <div class="toc-item"><a href="#cap-07">Capítulo 10 · Roteiro de Migração de Dados De-SaaS</a> <span>Pág. 76</span></div>
+      <div class="toc-item"><a href="#cap-08">Capítulo 11 · Segurança, Backup 3-2-1 &amp; LGPD</a> <span>Pág. 84</span></div>
+      <div class="toc-item"><a href="#cap-09">Capítulo 12 · Cronograma 30 Dias &amp; Monitoramento</a> <span>Pág. 92</span></div>
     </div>
   </div>
 
@@ -1332,10 +1359,34 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
   <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">Desmembramento por Frente de Negócio</h3>
   {tabela_tco_grupos}
 
-  <!-- SEÇÃO 02: MATRIZ GERAL -->
+  <!-- SEÇÃO 02: INFRAESTRUTURA GLOBAL & PROVEDORES VALIDADOS -->
   <div class="sec-head" id="cap-02">
     <div class="sec-info">
-      <span class="sec-num">Capítulo 02 · Matriz Estratégica do Quinteto Soberano</span>
+      <span class="sec-num">Capítulo 02 · Infraestrutura Global &amp; Dimensionamento de Servidor</span>
+      <h2>VPS Ideal, Provedores Validados &amp; Custo Mensal</h2>
+      <p class="sec-note">Mapeamento explícito da infraestrutura de nuvem recomendada para sustentar todo o ecossistema antes do detalhamento dos pilares.</p>
+    </div>
+  </div>
+
+  <div class="racional-box" style="margin-bottom: 20px;">
+    <p><strong>🖥️ Configuração Consolidada Recomendada:</strong> <code>{vps_spec.get('perfil_recomendado', '8 vCPU Dedicated / 16 GB RAM ECC / 160-240 GB NVMe SSD / 1 Gbps / Ubuntu 24.04 LTS')}</code></p>
+    <p style="margin-top: 6px;"><strong>💡 Racional Técnico de Engenharia:</strong> {vps_spec.get('por_que_desta_configuracao')}</p>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">🌐 Provedores de Nuvem Recomendados &amp; Custo Mensal da Infraestrutura</h3>
+  <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 14px;">Opções de VPS de alta performance homologadas para rodar os 9 serviços simultâneos com estabilidade absoluta.</p>
+  <div class="integration-grid" style="margin-bottom: 24px;">
+    {provedores_vps_cards}
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">⚙️ Alocação Técnica de Recursos por Contêiner (vCPU &amp; Memória RAM)</h3>
+  <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 12px;">Como os 16 GB de RAM e as 8 vCPUs são distribuídos para evitar contenção de hardware e gargalos de banco de dados.</p>
+  {tabela_vps_recursos}
+
+  <!-- SEÇÃO 03: MATRIZ GERAL -->
+  <div class="sec-head" id="cap-03">
+    <div class="sec-info">
+      <span class="sec-num">Capítulo 03 · Matriz Estratégica do Quinteto Soberano</span>
       <h2>Pilha Aberta Integrada por Grupo Funcional</h2>
       <p class="sec-note">Visão consolidada das 15 ferramentas que compõem os 3 pilares estratégicos da suíte.</p>
     </div>
@@ -1768,8 +1819,37 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 )
 
 #pagebreak()
+= Capítulo 2: Infraestrutura Global, Dimensionamento da VPS & Provedores Validados
 
-= Capítulo 2: Matriz Estratégica do Quinteto Soberano
+- *Perfil de Máquina Recomendado:* `{sanitizar_typ(vps_spec.get('perfil_recomendado', '8 vCPU / 16 GB RAM ECC / 160-240 GB NVMe'))}`
+- *Racional de Engenharia:* {sanitizar_typ(vps_spec.get('por_que_desta_configuracao', ''))}
+
+#v(6pt)
+== Provedores de Nuvem Recomendados & Custo Mensal
+
+#table(
+  columns: (1.5fr, 1.2fr, 2.3fr),
+  fill: (x, y) => if y == 0 {{ rgb("#f1f5f9") }} else {{ none }},
+  stroke: 0.5pt + rgb("#cbd5e1"),
+  inset: 5pt,
+  [*Provedor de Nuvem*], [*Custo Mensal*], [*Vantagem Principal & SLA*],
+  { "".join([f"[{sanitizar_typ(prov.get('provedor'))}], [`{sanitizar_typ(prov.get('custo_mensal'))}`], [{sanitizar_typ(prov.get('vantagem'))}],\n" for prov in vps_spec.get("provedores_validados", [])]) }
+)
+
+#v(8pt)
+== Alocação Técnica de Recursos por Serviço (vCPU & RAM)
+
+#table(
+  columns: (1.5fr, 0.7fr, 0.7fr, 2.8fr),
+  fill: (x, y) => if y == 0 {{ rgb("#f1f5f9") }} else {{ none }},
+  stroke: 0.5pt + rgb("#cbd5e1"),
+  inset: 4pt,
+  [*Serviço / Módulo*], [*vCPU*], [*RAM*], [*Motivo Técnico & Gargalo*],
+  { "".join([f"[{sanitizar_typ(dist.get('servico'))}], [`{sanitizar_typ(dist.get('cpu'))}`], [`{sanitizar_typ(dist.get('ram'))}`], [{sanitizar_typ(dist.get('motivo'))}],\n" for dist in vps_spec.get("distribuicao_recursos_por_servico", [])]) }
+)
+
+#pagebreak()
+= Capítulo 3: Matriz Estratégica do Quinteto Soberano
 
 #table(
   columns: (0.5fr, 1.3fr, 1.3fr, 1.8fr, 2.2fr, 1.3fr),

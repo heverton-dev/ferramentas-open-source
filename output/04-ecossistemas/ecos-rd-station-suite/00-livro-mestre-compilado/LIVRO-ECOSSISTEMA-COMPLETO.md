@@ -11,14 +11,15 @@
 
 1. [Prefácio Executivo & Manifesto da Soberania Tecnológica](#prefacio-executivo--manifesto-da-soberania-tecnologica)
 2. [Capítulo 1 · Engenharia Financeira, TCO Global & Payback](#capitulo-1--engenharia-financeira-tco-global--payback)
-3. [Capítulo 2 · Matriz Estratégica do Quinteto Soberano](#capitulo-2--matriz-estrategica-do-quinteto-soberano)
-4. [Capítulo 3 · Tratados Técnicos Individuais dos Pilares](#capitulo-3--tratados-tecnicos-individuais-dos-pilares)
-5. [Capítulo 4 · Camada de Cola, SSO Federado & Blueprints n8n](#capitulo-4--camada-de-cola-sso-federado--blueprints-n8n)
-6. [Capítulo 5 · Manual de Engenharia de Infraestrutura & Deploy All-in-One](#capitulo-5--manual-de-engenharia-de-infraestrutura--deploy-all-in-one)
-7. [Capítulo 6 · Protocolos de Modularidade & Hot-Swap (Princípio do Lego)](#capitulo-6--protocolos-de-modularidade--hot-swap-principio-do-lego)
-8. [Capítulo 7 · Roteiro Prático de Migração de Dados Históricos](#capitulo-7--roteiro-pratico-de-migracao-de-dados-historicos)
-9. [Capítulo 8 · Governança Corporativa, Backup 3-2-1 & Conformidade LGPD](#capitulo-8--governanca-corporativa-backup-3-2-1--conformidade-lgpd)
-10. [Capítulo 9 · Cronograma de Implantação em 30 Dias & Monitoramento da VPS](#capitulo-9--cronograma-de-implantacao-em-30-dias--monitoramento-da-vps)
+3. [Capítulo 2 · Infraestrutura Global, Dimensionamento da VPS & Provedores Validados](#capitulo-2--infraestrutura-global-dimensionamento-da-vps--provedores-validados)
+4. [Capítulo 3 · Matriz Estratégica do Quinteto Soberano](#capitulo-3--matriz-estrategica-do-quinteto-soberano)
+5. [Capítulo 4 · Tratados Técnicos Individuais dos Pilares](#capitulo-4--tratados-tecnicos-individuais-dos-pilares)
+6. [Capítulo 5 · Camada de Cola, SSO Federado & Blueprints n8n](#capitulo-5--camada-de-cola-sso-federado--blueprints-n8n)
+7. [Capítulo 6 · Manual de Engenharia de Infraestrutura & Deploy All-in-One](#capitulo-6--manual-de-engenharia-de-infraestrutura--deploy-all-in-one)
+8. [Capítulo 7 · Protocolos de Modularidade & Hot-Swap (Princípio do Lego)](#capitulo-7--protocolos-de-modularidade--hot-swap-principio-do-lego)
+9. [Capítulo 8 · Roteiro Prático de Migração de Dados Históricos](#capitulo-8--roteiro-pratico-de-migracao-de-dados-historicos)
+10. [Capítulo 9 · Governança Corporativa, Backup 3-2-1 & Conformidade LGPD](#capitulo-9--governanca-corporativa-backup-3-2-1--conformidade-lgpd)
+11. [Capítulo 10 · Cronograma de Implantação em 30 Dias & Monitoramento da VPS](#capitulo-10--cronograma-de-implantacao-em-30-dias--monitoramento-da-vps)
 
 ---
 
@@ -46,13 +47,37 @@ Este livro-texto consolida a alternativa definitiva: a **migração para uma arq
 ### Desmembramento de Custos e Economia por Frente de Negócio
 | Frente de Negócio | Módulo SaaS Proprietário | Custo SaaS Anual | Custo VPS Alocado | Economia Anual Líquida | Margem de Economia |
 |---|---|---|---|---|---|
-| **Grupo 1: Marketing & Nutrição** | RD Station Marketing (Plano Pro - 50k leads) | `R$ 42.000/ano` | `R$ 1.440/ano (Fraqueza de ~3 vCPU / 6 GB RAM)` | `R$ 40.560/ano` | **96.5%** |
-| **Grupo 2: Pipeline Comercial & CRM** | RD Station CRM (Plano Avançado - 10 licenças) | `R$ 36.000/ano` | `R$ 1.440/ano (Fraqueza de ~3 vCPU / 6 GB RAM)` | `R$ 34.560/ano` | **96.0%** |
-| **Grupo 3: Atendimento & WhatsApp** | RD Station Conversas / Tallos (10 operadores) | `R$ 36.000/ano` | `R$ 1.320/ano (Fraqueza de ~2 vCPU / 4 GB RAM)` | `R$ 34.680/ano` | **96.3%** |
 
 ---
 
-## CAPÍTULO 2 · MATRIZ ESTRATÉGICA DO QUINTETO SOBERANO
+## CAPÍTULO 2 · INFRAESTRUTURA GLOBAL, DIMENSIONAMENTO DA VPS & PROVEDORES VALIDADOS
+
+> **Perfil de Máquina Recomendado:** `8 vCPU Dedicated Cloud / 16 GB RAM ECC / 160-240 GB NVMe SSD / Link 1 Gbps / Ubuntu 24.04 LTS x86_64`  
+> **Racional de Engenharia:** Garante estabilidade absoluta para os 9 contêineres rodando em simultâneo com isolamento de processos, prevenindo gargalos de I/O em banco de dados e eliminando o risco do OOM Killer durante picos de campanha e atendimento.
+
+### 🌐 Provedores de Nuvem Recomendados & Custo Mensal da Infraestrutura
+| Provedor de Nuvem | Custo Mensal Estimado | Vantagem Principal & SLA |
+|---|---|---|
+| **Hetzner Cloud (CPX41 / CCX23)** | `€ 28 (~ R$ 170/mês)` | Melhor custo-benefício e performance bruta por vCPU dedicada (Datacenters UE/EUA). |
+| **Contabo (Cloud VPS L)** | `€ 16 (~ R$ 100/mês)` | Maior volume de memória RAM e disco NVMe por valor investido. |
+| **DigitalOcean (Dedicated 16GB)** | `$ 84 (~ R$ 460/mês)` | Excelente SLA de rede, suporte global e facilidade de snapshots. |
+| **AWS Lightsail (16GB RAM)** | `$ 80 (~ R$ 440/mês)` | Infraestrutura corporativa AWS com 5 TB de transferência inclusos. |
+
+### ⚙️ Alocação Técnica de Recursos por Serviço (vCPU & RAM)
+| Serviço / Módulo | vCPU Alocada | Memória RAM | Motivo Técnico / Gargalo Previsto |
+|---|---|---|---|
+| **Traefik Ingress & TLS** | `0.5 vCPU` | `256 MB` | Roteamento reativo de borda, compressão Brotli/Gzip e renovação automática de certificados SSL. |
+| **Keycloak SSO (OpenJDK JVM)** | `1.5 vCPU` | `2.0 GB` | Baseline da JVM Java para autenticação federada OIDC/SAML e criptografia de senhas Argon2. |
+| **Mautic Marketing & Cron** | `2.0 vCPU` | `4.0 GB` | Processamento em lote de campanhas para 50k+ leads, segmentação e rastreamento assíncrono de cliques. |
+| **Twenty CRM & GraphQL** | `1.5 vCPU` | `3.0 GB` | API reativa, buscas full-text e pipeline comercial Kanban simultâneo para 10 a 50 vendedores. |
+| **Chatwoot + Sidekiq** | `1.5 vCPU` | `3.5 GB` | Ruby on Rails com centenas de WebSockets ao vivo para multiatendentes no WhatsApp e filas Redis. |
+| **Evolution API (WhatsApp)** | `1.0 vCPU` | `1.5 GB` | Sessões Baileys ativas com o WhatsApp, decodificação de áudios OGG/MP3 e disparo de webhooks. |
+| **n8n Orquestrador** | `0.5 vCPU` | `1.0 GB` | Execução assíncrona de fluxos de dados, webhooks e sincronização contínua entre CRM e WhatsApp. |
+| **Buffer de Picos / Anti-OOM** | `1.0 vCPU` | `1.7 GB` | Margem de folga do kernel Linux para backups diários pg_dump e picos sazonais (Black Friday). |
+
+---
+
+## CAPÍTULO 3 · MATRIZ ESTRATÉGICA DO QUINTETO SOBERANO
 
 | # | Grupo Funcional | Persona | Ferramenta | Módulo SaaS Substituído | Economia Anual | Licença | Repositório |
 |---|---|---|---|---|---|---|---|
@@ -74,7 +99,7 @@ Este livro-texto consolida a alternativa definitiva: a **migração para uma arq
 
 ---
 
-## CAPÍTULO 3 · TRATADOS TÉCNICOS INDIVIDUAIS DOS PILARES
+## CAPÍTULO 4 · TRATADOS TÉCNICOS INDIVIDUAIS DOS PILARES
 
 ### PILAR 01: GRUPO 1: MARKETING, NUTRIÇÃO & LANDING PAGES
 > **Alvo SaaS Substituído:** `RD Station Marketing (Planos Pro / Enterprise)` | **Economia do Pilar:** `R$ 42.000/ano`  
