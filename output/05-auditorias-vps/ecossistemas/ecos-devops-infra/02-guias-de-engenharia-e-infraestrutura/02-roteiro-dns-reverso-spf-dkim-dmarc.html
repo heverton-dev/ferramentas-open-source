@@ -1,333 +1,253 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roteiro de DNS e Seguranca de E-mail</title>
-    <style>
-﻿:root {
-  --bg-main: #0b1120;
-  --bg-card: #0f172a;
-  --bg-surface: #1e293b;
-  --bg-surface-hover: #273549;
-  --border-subtle: #334155;
-  --border-focus: #0284c7;
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --accent-primary: #38bdf8;
-  --accent-blue: #0284c7;
-  --accent-blue-soft: rgba(2, 132, 199, 0.15);
-  --success-text: #34d399;
-  --success-bg: rgba(16, 185, 129, 0.12);
-  --success-border: rgba(16, 185, 129, 0.35);
-  --font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
-}
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Roteiro de DNS e Seguranca de E-mail · Arsenal Open Source</title>
+<style>
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+ :root {
+ --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+ --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+ --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+ --paper: #F6F4EF;
+ --surface: #FFFFFF;
+ --surface-2: #FBF9F4;
+ --surface-dark: #0A0F1D;
+ --ink: #1B1E23;
+ --ink-2: #383D45;
+ --muted: #666E7A;
+ --rule: #D8D2C4;
+ --rule-soft: #EAE5D9;
+ --accent: #0284C7;
+ --accent-dark: #38BDF8;
+ --accent-soft: #E0F2FE;
+ --accent-soft-dark: #0C4A6E;
+ --green: #00875A;
+ --green-soft: #E3FCEF;
+ --gold: #FFAB00;
+ --gold-soft: #FFF0B3;
+ --flag: #DE350B;
+ --flag-soft: #FFEBE6;
+ --shadow: 0 1px 3px rgba(0,0,0,0.04);
+ }
 
-body {
-  font-family: var(--font-sans);
-  background-color: var(--bg-main);
-  color: var(--text-primary);
-  line-height: 1.65;
-  padding: 2.5rem 1.5rem;
-}
+ @media (prefers-color-scheme: dark) {
+ :root {
+ --paper: #0E121B;
+ --surface: #141924;
+ --surface-2: #1A2130;
+ --ink: #E6E8ED;
+ --ink-2: #B0B5C0;
+ --muted: #7E8695;
+ --rule: #262F40;
+ --rule-soft: #1E2533;
+ --accent: var(--accent-dark);
+ --accent-soft: var(--accent-soft-dark);
+ --green: #57D9A3;
+ --green-soft: #162B22;
+ --gold: #FFC400;
+ --gold-soft: #332600;
+ --flag: #FF7452;
+ --flag-soft: #361B15;
+ --shadow: 0 1px 3px rgba(0,0,0,0.25);
+ }
+ }
 
-.container {
-  max-width: 1040px;
-  margin: 0 auto;
-}
+ *, *::before, *::after { box-sizing: border-box; }
+ html { font-size: 16px; scroll-behavior: smooth; }
 
-.header-card {
-  background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-}
+ * {
+ scrollbar-width: thin;
+ scrollbar-color: var(--accent) transparent;
+ }
+ ::-webkit-scrollbar {
+ width: 4px;
+ height: 4px;
+ }
+ ::-webkit-scrollbar-track {
+ background: transparent;
+ }
+ ::-webkit-scrollbar-thumb {
+ background: var(--accent);
+ border-radius: 4px;
+ }
 
-.header-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--accent-blue-soft);
-  color: var(--accent-primary);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 1rem;
-}
+ body {
+ margin: 0; padding: 0;
+ background: var(--paper);
+ color: var(--ink);
+ font-family: var(--font-sans);
+ line-height: 1.6;
+ -webkit-font-smoothing: antialiased;
+ }
 
-h1.report-title {
-  font-size: 1.95rem;
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.5rem;
-}
+ .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
 
-.report-subtitle {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  margin-bottom: 1.5rem;
-}
+ header { margin-bottom: 32px; }
+ .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+ .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+ .back-link:hover { color: var(--accent); }
+ .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
+ .hero { margin: 20px 0 24px; }
+ h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 38px); line-height: 1.18; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
+ h2 { font-family: var(--font-serif); font-size: 24px; margin: 32px 0 16px; color: var(--ink); border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+ h3 { font-family: var(--font-serif); font-size: 19px; margin: 24px 0 12px; color: var(--ink); }
+ .deck { font-size: 16px; line-height: 1.65; color: var(--ink-2); margin: 0 0 20px; }
 
-.stat-box {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 1rem;
-}
+ .hero-stats {
+ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+ gap: 12px; margin: 24px 0 32px;
+ }
+ .stat-card {
+ background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+ padding: 12px 16px; box-shadow: var(--shadow);
+ }
+ .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+ .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
 
-.stat-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-  font-weight: 700;
-  margin-bottom: 0.35rem;
-}
+ .target-box { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 3px; padding: 18px 20px; margin: 24px 0; }
+ .target-tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--accent); }
+ .target-box h4 { font-family: var(--font-serif); font-size: 20px; margin: 6px 0 8px; color: var(--ink); }
+ .target-box p { margin: 0 0 10px; font-size: 14px; color: var(--ink-2); }
+ .target-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+ .target-pill { font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); font-weight: 600; }
 
-.stat-value {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #ffffff;
-}
+ .racional-box {
+ background: var(--surface-2);
+ border-left: 4px solid var(--green);
+ padding: 16px 20px;
+ margin: 24px 0;
+ font-size: 14px;
+ color: var(--ink-2);
+ border-radius: 0 3px 3px 0;
+ line-height: 1.6;
+ }
 
-.stat-value.highlight {
-  color: var(--accent-primary);
-}
+ .tablewrap { width: 100%; overflow-x: auto; margin: 20px 0 32px 0; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
+ table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+ thead { background: var(--surface-2); border-bottom: 1px solid var(--rule); }
+ th { text-align: left; padding: 10px 14px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; white-space: nowrap; }
+ td { padding: 12px 14px; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; color: var(--ink); }
+ tr:last-child td { border-bottom: none; }
+ tr:hover td { background: var(--surface-2); }
 
-.stat-value.success {
-  color: var(--success-text);
-}
+ .code-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 3px; padding: 16px; font-family: var(--mono); font-size: 12.5px; overflow-x: auto; color: var(--ink); position: relative; margin: 16px 0 24px; }
+ .code-box pre { margin: 0; font-family: inherit; }
+ code { font-family: var(--mono); font-size: 0.9em; background: var(--surface-2); padding: 2px 5px; border-radius: 2px; border: 1px solid var(--rule-soft); }
 
-.stat-sub {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-top: 0.2rem;
-}
+ .copy-btn {
+ position: absolute;
+ top: 8px;
+ right: 8px;
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ color: var(--muted);
+ font-family: var(--mono);
+ font-size: 10.5px;
+ font-weight: 600;
+ padding: 3px 8px;
+ border-radius: 3px;
+ cursor: pointer;
+ transition: all 0.2s ease;
+ }
+ .copy-btn:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
 
-.section-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 1.8rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-}
+ .report-footer {
+ text-align: center;
+ font-size: 12px;
+ color: var(--muted);
+ font-family: var(--mono);
+ margin-top: 48px;
+ padding-top: 24px;
+ border-top: 1px solid var(--rule);
+ }
 
-h2.section-heading {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--accent-primary);
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 1.2rem;
-  padding-bottom: 0.6rem;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.opinion-box {
-  background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(15, 23, 42, 0.6) 100%);
-  border-left: 4px solid var(--accent-blue);
-  border-radius: 0 8px 8px 0;
-  padding: 1.2rem 1.5rem;
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  line-height: 1.75;
-  text-align: justify;
-}
-
-.summary-list {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 0.8rem;
-}
-
-.summary-item {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 0.85rem 1.1rem;
-  font-size: 0.88rem;
-}
-
-.summary-item strong {
-  color: var(--accent-primary);
-  display: block;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.2rem;
-}
-
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  border-radius: 8px;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-card);
-}
-
-table.enterprise-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.88rem;
-  text-align: left;
-}
-
-table.enterprise-table th {
-  background: var(--bg-surface);
-  color: var(--text-primary);
-  font-weight: 700;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.9rem 1.1rem;
-  border-bottom: 2px solid var(--border-subtle);
-}
-
-table.enterprise-table td {
-  padding: 0.9rem 1.1rem;
-  border-bottom: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  vertical-align: middle;
-}
-
-table.enterprise-table tr:last-child td {
-  border-bottom: none;
-}
-
-table.enterprise-table tr:hover td {
-  background: var(--bg-surface-hover);
-}
-
-.badge-gate {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
-  background: var(--bg-surface);
-  color: var(--accent-primary);
-  border: 1px solid var(--border-subtle);
-  display: inline-block;
-}
-
-.badge-status-approved {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  font-weight: 700;
-  padding: 0.25rem 0.65rem;
-  border-radius: 20px;
-  background: var(--success-bg);
-  color: var(--success-text);
-  border: 1px solid var(--success-border);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.badge-rank {
-  font-family: var(--font-mono);
-  font-weight: 800;
-  color: var(--accent-primary);
-  background: var(--bg-surface);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  border: 1px solid var(--border-subtle);
-}
-
-.badge-license {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  background: rgba(148, 163, 184, 0.1);
-  color: #e2e8f0;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  border: 1px solid rgba(148, 163, 184, 0.25);
-}
-
-.badge-pill {
-  font-size: 0.76rem;
-  font-weight: 600;
-  padding: 0.2rem 0.55rem;
-  border-radius: 4px;
-  background: rgba(56, 189, 248, 0.1);
-  color: var(--accent-primary);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-}
-
-code.mono-code {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  background: #111827;
-  color: var(--accent-primary);
-  padding: 0.2rem 0.45rem;
-  border-radius: 4px;
-  border: 1px solid #1f2937;
-}
-
-a.file-link {
-  color: var(--accent-primary);
-  text-decoration: none;
-  font-weight: 600;
-}
-a.file-link:hover {
-  text-decoration: underline;
-}
-
-footer.report-footer {
-  text-align: center;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-top: 3rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-subtle);
-}
-
-    </style>
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header-card">
-            <div class="header-badge">Roteiro de DNS</div>
-            <h1 class='report-title'>Roteiro de Configuracao de DNS, SPF, DKIM e DMARC</h1>
+<div class="wrap">
+  <header>
+    <div class="header-top">
+      <a class="back-link" href="../00-painel-consolidado-multialvo.html">← Painel Consolidado de Auditoria VPS</a>
+      <span class="camada-pill">FLUXO 5 · Roteiro de DNS</span>
+    </div>
+    <div class="hero">
+      <h1>Roteiro de Configuracao de DNS, SPF, DKIM e DMARC</h1>
+      <p class="deck">Cadastre na sua zona de DNS (Cloudflare, Registro.br ou Route53):</p>
+    </div>
+    <div class="hero-stats">
+  <div class="stat-card">
+    <div class="num">12 vCPUs</div>
+    <div class="lbl">Capacidade de CPU</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">47.05 GB</div>
+    <div class="lbl">Memória RAM Global</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color: var(--green);">~43.99 GB</div>
+    <div class="lbl">Headroom Livre</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color: var(--accent);">100/100</div>
+    <div class="lbl">Score de Viabilidade</div>
+  </div>
+</div>
+    <div class="target-box">
+  <div class="target-tag">Alvo de Auditoria &amp; Incorporação</div>
+  <h4>Ecossistema DevOps & Engenharia de Dados (NocoDB + Supabase + n8n + Directus)</h4>
+  <p>Stack e Módulos de Produção · Garantia de Risco Zero e Isolamento Estrito da VPS.</p>
+  <div class="target-pills">
+    <span class="target-pill">Host: painel.vpsconexao.org</span>
+    <span class="target-pill">Ingress: Traefik SNI</span>
+    <span class="target-pill">Docker Swarm</span>
+    <span class="target-pill">Isolamento: 100%</span>
+  </div>
+</div>
+  </header>
 
-<h2>1. Apontamentos de Zona DNS (Registros A)</h2>
-Cadastre na sua zona de DNS (Cloudflare, Registro.br ou Route53):
-
-<div class='table-wrapper'><table>
+  <main>
+    <h2>1. Apontamentos de Zona DNS (Registros A)</h2>
+<div class='tablewrap'><table>
+<thead>
 <tr><th>Subdominio / Host</th><th>Tipo</th><th>Destino / Valor</th><th>Observacao</th></tr>
-<tr><td><code>nocodb.vpsconexao.org</code></td><td>A</td><td>IP da VPS</td><td>DNS Only (Nuvem Cinza inicial)</td></tr>
-<tr><td><code>supabase.vpsconexao.org</code></td><td>A</td><td>IP da VPS</td><td>DNS Only (Nuvem Cinza inicial)</td></tr>
-<tr><td><code>directus.vpsconexao.org</code></td><td>A</td><td>IP da VPS</td><td>DNS Only (Nuvem Cinza inicial)</td></tr>
+</thead>
+<tbody>
+<tr><td>`nocodb.vpsconexao.org`</td><td>A</td><td>IP da VPS</td><td>DNS Only (Nuvem Cinza inicial)</td></tr>
+<tr><td>`supabase.vpsconexao.org`</td><td>A</td><td>IP da VPS</td><td>DNS Only (Nuvem Cinza inicial)</td></tr>
+<tr><td>`directus.vpsconexao.org`</td><td>A</td><td>IP da VPS</td><td>DNS Only (Nuvem Cinza inicial)</td></tr>
+</tbody>
 </table></div>
 
 <h2>2. Registros para Servidor de E-mail (Se Aplicavel)</h2>
-- <strong>Registro MX:</strong> <code>mail.vpsconexao.org</code> -&gt; Prioridade 10
-- <strong>Registro TXT (SPF):</strong> <code>v=spf1 mx a:mail.vpsconexao.org ~all</code>
-- <strong>Registro TXT (DMARC):</strong> <code>_dmarc.vpsconexao.org</code> -&gt; <code>v=DMARC1; p=quarantine; rua=mailto:admin@vpsconexao.org</code>
-- <strong>Registro TXT (DKIM):</strong> Gerado automaticamente no painel web do servidor de e-mail.
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• <strong>Registro MX:</strong> <code>mail.vpsconexao.org</code> -> Prioridade 10</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• <strong>Registro TXT (SPF):</strong> <code>v=spf1 mx a:mail.vpsconexao.org ~all</code></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• <strong>Registro TXT (DMARC):</strong> <code>_dmarc.vpsconexao.org</code> -> <code>v=DMARC1; p=quarantine; rua=mailto:admin@vpsconexao.org</code></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• <strong>Registro TXT (DKIM):</strong> Gerado automaticamente no painel web do servidor de e-mail.</p>
+  </main>
 
-        </div>
-    </div>
+  <footer class="report-footer">
+    <p>Arsenal Open Source · Fábrica Universal AIDD · Governança e Engenharia de VPS · 2026</p>
+  </footer>
+</div>
+
+<script>
+function copyCode(btn) {
+  const code = btn.nextElementSibling.innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const originalText = btn.innerText;
+    btn.innerText = 'Copiado!';
+    btn.style.background = 'var(--green)';
+    btn.style.color = '#FFFFFF';
+    setTimeout(() => {
+      btn.innerText = originalText;
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2000);
+  });
+}
+</script>
 </body>
 </html>

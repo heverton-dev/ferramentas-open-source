@@ -3,303 +3,164 @@ import os
 import re
 import datetime
 
-ENTERPRISE_CSS = """﻿:root {
-  --bg-main: #0b1120;
-  --bg-card: #0f172a;
-  --bg-surface: #1e293b;
-  --bg-surface-hover: #273549;
-  --border-subtle: #334155;
-  --border-focus: #0284c7;
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --accent-primary: #38bdf8;
-  --accent-blue: #0284c7;
-  --accent-blue-soft: rgba(2, 132, 199, 0.15);
-  --success-text: #34d399;
-  --success-bg: rgba(16, 185, 129, 0.12);
-  --success-border: rgba(16, 185, 129, 0.35);
-  --font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
-}
+ENTERPRISE_CSS = """
+ :root {
+ --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+ --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+ --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+ --paper: #F6F4EF;
+ --surface: #FFFFFF;
+ --surface-2: #FBF9F4;
+ --surface-dark: #0A0F1D;
+ --ink: #1B1E23;
+ --ink-2: #383D45;
+ --muted: #666E7A;
+ --rule: #D8D2C4;
+ --rule-soft: #EAE5D9;
+ --accent: #0284C7;
+ --accent-dark: #38BDF8;
+ --accent-soft: #E0F2FE;
+ --accent-soft-dark: #0C4A6E;
+ --green: #00875A;
+ --green-soft: #E3FCEF;
+ --gold: #FFAB00;
+ --gold-soft: #FFF0B3;
+ --flag: #DE350B;
+ --flag-soft: #FFEBE6;
+ --shadow: 0 1px 3px rgba(0,0,0,0.04);
+ }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+ @media (prefers-color-scheme: dark) {
+ :root {
+ --paper: #0E121B;
+ --surface: #141924;
+ --surface-2: #1A2130;
+ --ink: #E6E8ED;
+ --ink-2: #B0B5C0;
+ --muted: #7E8695;
+ --rule: #262F40;
+ --rule-soft: #1E2533;
+ --accent: var(--accent-dark);
+ --accent-soft: var(--accent-soft-dark);
+ --green: #57D9A3;
+ --green-soft: #162B22;
+ --gold: #FFC400;
+ --gold-soft: #332600;
+ --flag: #FF7452;
+ --flag-soft: #361B15;
+ --shadow: 0 1px 3px rgba(0,0,0,0.25);
+ }
+ }
 
-body {
-  font-family: var(--font-sans);
-  background-color: var(--bg-main);
-  color: var(--text-primary);
-  line-height: 1.65;
-  padding: 2.5rem 1.5rem;
-}
+ *, *::before, *::after { box-sizing: border-box; }
+ html { font-size: 16px; scroll-behavior: smooth; }
 
-.container {
-  max-width: 1040px;
-  margin: 0 auto;
-}
+ * {
+ scrollbar-width: thin;
+ scrollbar-color: var(--accent) transparent;
+ }
+ ::-webkit-scrollbar {
+ width: 4px;
+ height: 4px;
+ }
+ ::-webkit-scrollbar-track {
+ background: transparent;
+ }
+ ::-webkit-scrollbar-thumb {
+ background: var(--accent);
+ border-radius: 4px;
+ }
 
-.header-card {
-  background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-}
+ body {
+ margin: 0; padding: 0;
+ background: var(--paper);
+ color: var(--ink);
+ font-family: var(--font-sans);
+ line-height: 1.6;
+ -webkit-font-smoothing: antialiased;
+ }
 
-.header-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--accent-blue-soft);
-  color: var(--accent-primary);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 1rem;
-}
+ .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
 
-h1.report-title {
-  font-size: 1.95rem;
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.5rem;
-}
+ header { margin-bottom: 32px; }
+ .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+ .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+ .back-link:hover { color: var(--accent); }
+ .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
 
-.report-subtitle {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  margin-bottom: 1.5rem;
-}
+ .hero { margin: 20px 0 24px; }
+ h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 38px); line-height: 1.18; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
+ h2 { font-family: var(--font-serif); font-size: 24px; margin: 32px 0 16px; color: var(--ink); border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+ h3 { font-family: var(--font-serif); font-size: 19px; margin: 24px 0 12px; color: var(--ink); }
+ .deck { font-size: 16px; line-height: 1.65; color: var(--ink-2); margin: 0 0 20px; }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
+ .hero-stats {
+ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+ gap: 12px; margin: 24px 0 32px;
+ }
+ .stat-card {
+ background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+ padding: 12px 16px; box-shadow: var(--shadow);
+ }
+ .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+ .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
 
-.stat-box {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 1rem;
-}
+ .target-box { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 3px; padding: 18px 20px; margin: 24px 0; }
+ .target-tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--accent); }
+ .target-box h4 { font-family: var(--font-serif); font-size: 20px; margin: 6px 0 8px; color: var(--ink); }
+ .target-box p { margin: 0 0 10px; font-size: 14px; color: var(--ink-2); }
+ .target-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+ .target-pill { font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); font-weight: 600; }
 
-.stat-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-  font-weight: 700;
-  margin-bottom: 0.35rem;
-}
+ .racional-box {
+ background: var(--surface-2);
+ border-left: 4px solid var(--green);
+ padding: 16px 20px;
+ margin: 24px 0;
+ font-size: 14px;
+ color: var(--ink-2);
+ border-radius: 0 3px 3px 0;
+ line-height: 1.6;
+ }
 
-.stat-value {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #ffffff;
-}
+ .tablewrap { width: 100%; overflow-x: auto; margin: 20px 0 32px 0; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
+ table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+ thead { background: var(--surface-2); border-bottom: 1px solid var(--rule); }
+ th { text-align: left; padding: 10px 14px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; white-space: nowrap; }
+ td { padding: 12px 14px; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; color: var(--ink); }
+ tr:last-child td { border-bottom: none; }
+ tr:hover td { background: var(--surface-2); }
 
-.stat-value.highlight {
-  color: var(--accent-primary);
-}
+ .code-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 3px; padding: 16px; font-family: var(--mono); font-size: 12.5px; overflow-x: auto; color: var(--ink); position: relative; margin: 16px 0 24px; }
+ .code-box pre { margin: 0; font-family: inherit; }
+ code { font-family: var(--mono); font-size: 0.9em; background: var(--surface-2); padding: 2px 5px; border-radius: 2px; border: 1px solid var(--rule-soft); }
 
-.stat-value.success {
-  color: var(--success-text);
-}
+ .copy-btn {
+ position: absolute;
+ top: 8px;
+ right: 8px;
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ color: var(--muted);
+ font-family: var(--mono);
+ font-size: 10.5px;
+ font-weight: 600;
+ padding: 3px 8px;
+ border-radius: 3px;
+ cursor: pointer;
+ transition: all 0.2s ease;
+ }
+ .copy-btn:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
 
-.stat-sub {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-top: 0.2rem;
-}
-
-.section-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 1.8rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-}
-
-h2.section-heading {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--accent-primary);
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 1.2rem;
-  padding-bottom: 0.6rem;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.opinion-box {
-  background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(15, 23, 42, 0.6) 100%);
-  border-left: 4px solid var(--accent-blue);
-  border-radius: 0 8px 8px 0;
-  padding: 1.2rem 1.5rem;
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  line-height: 1.75;
-  text-align: justify;
-}
-
-.summary-list {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 0.8rem;
-}
-
-.summary-item {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 0.85rem 1.1rem;
-  font-size: 0.88rem;
-}
-
-.summary-item strong {
-  color: var(--accent-primary);
-  display: block;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.2rem;
-}
-
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  border-radius: 8px;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-card);
-}
-
-table.enterprise-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.88rem;
-  text-align: left;
-}
-
-table.enterprise-table th {
-  background: var(--bg-surface);
-  color: var(--text-primary);
-  font-weight: 700;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.9rem 1.1rem;
-  border-bottom: 2px solid var(--border-subtle);
-}
-
-table.enterprise-table td {
-  padding: 0.9rem 1.1rem;
-  border-bottom: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  vertical-align: middle;
-}
-
-table.enterprise-table tr:last-child td {
-  border-bottom: none;
-}
-
-table.enterprise-table tr:hover td {
-  background: var(--bg-surface-hover);
-}
-
-.badge-gate {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 700;
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
-  background: var(--bg-surface);
-  color: var(--accent-primary);
-  border: 1px solid var(--border-subtle);
-  display: inline-block;
-}
-
-.badge-status-approved {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  font-weight: 700;
-  padding: 0.25rem 0.65rem;
-  border-radius: 20px;
-  background: var(--success-bg);
-  color: var(--success-text);
-  border: 1px solid var(--success-border);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.badge-rank {
-  font-family: var(--font-mono);
-  font-weight: 800;
-  color: var(--accent-primary);
-  background: var(--bg-surface);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  border: 1px solid var(--border-subtle);
-}
-
-.badge-license {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  background: rgba(148, 163, 184, 0.1);
-  color: #e2e8f0;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  border: 1px solid rgba(148, 163, 184, 0.25);
-}
-
-.badge-pill {
-  font-size: 0.76rem;
-  font-weight: 600;
-  padding: 0.2rem 0.55rem;
-  border-radius: 4px;
-  background: rgba(56, 189, 248, 0.1);
-  color: var(--accent-primary);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-}
-
-code.mono-code {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  background: #111827;
-  color: var(--accent-primary);
-  padding: 0.2rem 0.45rem;
-  border-radius: 4px;
-  border: 1px solid #1f2937;
-}
-
-a.file-link {
-  color: var(--accent-primary);
-  text-decoration: none;
-  font-weight: 600;
-}
-a.file-link:hover {
-  text-decoration: underline;
-}
-
-footer.report-footer {
-  text-align: center;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-top: 3rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-subtle);
-}
+ .report-footer {
+ text-align: center;
+ font-size: 12px;
+ color: var(--muted);
+ font-family: var(--mono);
+ margin-top: 48px;
+ padding-top: 24px;
+ border-top: 1px solid var(--rule);
+ }
 """
 
 class VPSGenerator:
@@ -1103,58 +964,209 @@ docker volume ls --filter name={slug_clean} -q | xargs -r docker volume rm
 *(Nenhum volume do Mautic, n8n, PostgreSQL global ou MySQL sera afetado).*
 """
 
-    def _build_html_page(self, title, md_content, badge="Dossiê Executivo"):
-        html_body = md_content.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-        html_body = re.sub(r'^# (.*?)$', r"<h1 class='report-title'>\1</h1>", html_body, flags=re.MULTILINE)
-        html_body = re.sub(r'^## (.*?)$', r"<h2>\1</h2>", html_body, flags=re.MULTILINE)
-        html_body = re.sub(r'^### (.*?)$', r"<h3>\1</h3>", html_body, flags=re.MULTILINE)
-        html_body = re.sub(r'\*\*(.*?)\*\*', r"<strong>\1</strong>", html_body)
-        html_body = re.sub(r'`([^`]+)`', r"<code>\1</code>", html_body)
-        html_body = re.sub(r'^---$', r"<hr>", html_body, flags=re.MULTILINE)
-
-        lines = html_body.split('\n')
+    def _build_html_page(self, title, md_content, badge="Auditoria de VPS"):
+        # Escapar tags básicas antes de converter Markdown
+        lines = md_content.split('\n')
+        out_blocks = []
         in_table = False
-        new_lines = []
+        table_rows = []
+        in_code = False
+        code_lines = []
+        hero_rendered = False
+        hero_title = title
+        hero_deck = ""
+
+        # Estatísticas do Hardware / Decisão
+        hw = self.audit.get('hardware', {})
+        v = self.decision.get('verdict', {})
+        prof = self.decision.get('profile', {})
+
         for line in lines:
+            # Code block fence
+            if line.strip().startswith('```'):
+                if in_code:
+                    in_code = False
+                    raw_code = "\n".join(code_lines).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+                    out_blocks.append(f"""<div class="code-box">
+  <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+  <pre><code>{raw_code}</code></pre>
+</div>""")
+                    code_lines = []
+                else:
+                    in_code = True
+                    code_lines = []
+                continue
+
+            if in_code:
+                code_lines.append(line)
+                continue
+
+            # Tables
             if line.strip().startswith('|') and '|' in line[1:]:
                 if not in_table:
                     in_table = True
-                    new_lines.append("<div class='table-wrapper'><table>")
-                
+                    table_rows = []
                 if ':---' in line:
                     continue
-                
                 parts = [p.strip() for p in line.strip().split('|')[1:-1]]
-                tag = 'th' if not any('<tr>' in l for l in new_lines[-5:]) and in_table and '<table>' in new_lines[-1] else 'td'
-                cells = "".join([f"<{tag}>{p}</{tag}>" for p in parts])
-                new_lines.append(f"<tr>{cells}</tr>")
+                table_rows.append(parts)
+                continue
             else:
                 if in_table:
                     in_table = False
-                    new_lines.append("</table></div>")
-                new_lines.append(line)
+                    # Render table
+                    t_html = "<div class='tablewrap'><table>\n<thead>\n<tr>"
+                    if table_rows:
+                        for th in table_rows[0]:
+                            t_html += f"<th>{th}</th>"
+                        t_html += "</tr>\n</thead>\n<tbody>\n"
+                        for row in table_rows[1:]:
+                            t_html += "<tr>"
+                            for td in row:
+                                t_html += f"<td>{td}</td>"
+                            t_html += "</tr>\n"
+                    t_html += "</tbody>\n</table></div>\n"
+                    out_blocks.append(t_html)
+                    table_rows = []
 
-        if in_table:
-            new_lines.append("</table></div>")
+            # Headers
+            if line.startswith('# '):
+                hero_title = line[2:].strip()
+                continue
+            elif line.startswith('## '):
+                h2_text = line[3:].strip()
+                out_blocks.append(f"<h2>{h2_text}</h2>")
+                continue
+            elif line.startswith('### '):
+                h3_text = line[4:].strip()
+                out_blocks.append(f"<h3>{h3_text}</h3>")
+                continue
+            elif line.startswith('> '):
+                quote_text = line[2:].strip()
+                out_blocks.append(f"<div class='racional-box'>{quote_text}</div>")
+                continue
+            elif line.strip() == '---':
+                continue
 
-        processed_html = "\n".join(new_lines)
+            # Normal paragraphs / inline styles
+            if line.strip():
+                p_text = line.strip()
+                p_text = re.sub(r'\*\*(.*?)\*\*', r"<strong>\1</strong>", p_text)
+                p_text = re.sub(r'`([^`]+)`', r"<code>\1</code>", p_text)
+                if not hero_deck and not hero_rendered:
+                    hero_deck = p_text
+                    hero_rendered = True
+                else:
+                    if p_text.startswith('- '):
+                        out_blocks.append(f"<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• {p_text[2:]}</p>")
+                    else:
+                        out_blocks.append(f"<p>{p_text}</p>")
+
+        if in_table and table_rows:
+            t_html = "<div class='tablewrap'><table>\n<thead>\n<tr>"
+            for th in table_rows[0]:
+                t_html += f"<th>{th}</th>"
+            t_html += "</tr>\n</thead>\n<tbody>\n"
+            for row in table_rows[1:]:
+                t_html += "<tr>"
+                for td in row:
+                    t_html += f"<td>{td}</td>"
+                t_html += "</tr>\n"
+            t_html += "</tbody>\n</table></div>\n"
+            out_blocks.append(t_html)
+
+        body_content = "\n".join(out_blocks)
+
+        # Stats bar corporativa
+        cpu_tot = hw.get('total_cpu', 12)
+        mem_tot = hw.get('total_mem_gb', 23.4)
+        free_ram = v.get('free_ram_gb', 16.9)
+        score_val = v.get('score', 100)
+
+        hero_stats_html = f"""<div class="hero-stats">
+  <div class="stat-card">
+    <div class="num">{cpu_tot} vCPUs</div>
+    <div class="lbl">Capacidade de CPU</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">{mem_tot} GB</div>
+    <div class="lbl">Memória RAM Global</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color: var(--green);">~{free_ram} GB</div>
+    <div class="lbl">Headroom Livre</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color: var(--accent);">{score_val}/100</div>
+    <div class="lbl">Score de Viabilidade</div>
+  </div>
+</div>"""
+
+        # Target Box
+        target_name = prof.get('name', hero_title)
+        role_name = prof.get('role', 'Stack e Módulos de Produção')
+        target_box_html = f"""<div class="target-box">
+  <div class="target-tag">Alvo de Auditoria &amp; Incorporação</div>
+  <h4>{target_name}</h4>
+  <p>{role_name} · Garantia de Risco Zero e Isolamento Estrito da VPS.</p>
+  <div class="target-pills">
+    <span class="target-pill">Host: painel.{self.base_domain}</span>
+    <span class="target-pill">Ingress: Traefik SNI</span>
+    <span class="target-pill">Docker Swarm</span>
+    <span class="target-pill">Isolamento: 100%</span>
+  </div>
+</div>"""
 
         return f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title}</title>
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>{title} · Arsenal Open Source</title>
+<style>
 {ENTERPRISE_CSS}
-    </style>
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header-card">
-            <div class="header-badge">{badge}</div>
-            {processed_html}
-        </div>
+<div class="wrap">
+  <header>
+    <div class="header-top">
+      <a class="back-link" href="../00-painel-consolidado-multialvo.html">← Painel Consolidado de Auditoria VPS</a>
+      <span class="camada-pill">FLUXO 5 · {badge}</span>
     </div>
+    <div class="hero">
+      <h1>{hero_title}</h1>
+      <p class="deck">{hero_deck if hero_deck else 'Dossiê de engenharia, isolamento e incorporação de infraestrutura em VPS.'}</p>
+    </div>
+    {hero_stats_html}
+    {target_box_html}
+  </header>
+
+  <main>
+    {body_content}
+  </main>
+
+  <footer class="report-footer">
+    <p>Arsenal Open Source · Fábrica Universal AIDD · Governança e Engenharia de VPS · {datetime.date.today().year}</p>
+  </footer>
+</div>
+
+<script>
+function copyCode(btn) {{
+  const code = btn.nextElementSibling.innerText;
+  navigator.clipboard.writeText(code).then(() => {{
+    const originalText = btn.innerText;
+    btn.innerText = 'Copiado!';
+    btn.style.background = 'var(--green)';
+    btn.style.color = '#FFFFFF';
+    setTimeout(() => {{
+      btn.innerText = originalText;
+      btn.style.background = '';
+      btn.style.color = '';
+    }}, 2000);
+  }});
+}}
+</script>
 </body>
 </html>"""
+
