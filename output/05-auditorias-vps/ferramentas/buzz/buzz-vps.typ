@@ -16,7 +16,7 @@
     [
       #text(size: 10pt, fill: rgb("38bdf8"), weight: "bold")[LIVRO MESTRE · AUDITORIA & ENGENHARIA DE VPS]\n
       #v(0.4em)
-      #text(size: 20pt, fill: rgb("ffffff"), weight: "bold")[Ferramenta buzz]\n
+      #text(size: 20pt, fill: rgb("ffffff"), weight: "bold")[Block Buzz Messaging Workspace]\n
       #v(0.4em)
       #text(size: 10pt, fill: rgb("94a3b8"))[Data: 28/08/2026 · Host: painel.vpsconexao.org]\n
       #v(0.4em)
@@ -26,7 +26,7 @@
 ]
 
 #v(1em)
-**Alvo:** Ferramenta buzz
+**Alvo:** Block Buzz Messaging Workspace
 
 **Data da Auditoria:** 28/08/2026
 
@@ -65,7 +65,7 @@
 
 #pagebreak()
 = PARTE I · GUIAS EXECUTIVOS & VIABILIDADE ESTRATÉGICA
-**Alvo de Incorporação:** Ferramenta buzz
+**Alvo de Incorporação:** Block Buzz Messaging Workspace
 
 **Data da Auditoria:** 28/08/2026
 
@@ -94,13 +94,13 @@
   [12 vCPUs],
   [~1.5 vCPUs],
   [~10.3 vCPUs],
-  [1.5 vCPUs],
+  [2.0 vCPUs],
   [APROVADO],
   [Memória RAM Global],
   [47.05 GB],
   [~3.06 GB],
   [~43.99 GB],
-  [1.5 GB],
+  [3.0 GB],
   [APROVADO],
   [Modo de Orquestração],
   [Docker Swarm],
@@ -123,7 +123,7 @@
 == 2. Parecer Técnico de Viabilidade e Tolerância a Carga
 
 === 2.1 Recomendações Estruturais e Oportunidades
-- Memoria RAM abundante: 43.99 GB livres para suportar a carga de 1.5 GB com alta folga.
+- Memoria RAM abundante: 43.99 GB livres para suportar a carga de 3.0 GB com alta folga.
 - Capacidade de processamento adequada: 12 vCPUs totais no servidor.
 - Zero conflito de portas de host detectado. Roteamento 100% via Traefik e subdominios.
 - Proxy reverso Traefik detectado com certresolver 'letsencryptresolver' e rede 'network_conexao'. Integracao direta sem criar novos proxies.
@@ -146,7 +146,7 @@
   [#text(fill: white, weight: "bold")[Subdomínio de Acesso]],
   [#text(fill: white, weight: "bold")[Método de Roteamento]],
   [Buzz Service],
-  [Componente da Stack Ferramenta buzz],
+  [Componente da Stack Block Buzz Messaging Workspace],
   [`https://buzz.vpsconexao.org`],
   [Roteamento Traefik SNI],
 )
@@ -156,7 +156,7 @@
 #v(0.5em)
 **Garantia de Isolamento:** 100% de Preservação do Ecossistema em Produção
 
-**Alvo:** Ferramenta buzz | **Data:** 28/08/2026
+**Alvo:** Block Buzz Messaging Workspace | **Data:** 28/08/2026
 
 
 == 1. Princípio do Isolamento Estrito
@@ -216,35 +216,178 @@ A incorporação é classificada como **Risco Zero** devido a 3 fatores determin
 version: '3.8'
 
 services:
-  buzz_app:
-    image: buzz:latest
+  # 1. BANCO DE DADOS DEDICADO DO ECOSSISTEMA
+  workspace_db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: workspace_user
+      POSTGRES_PASSWORD: WorkspaceDBSecret_2026!
+      POSTGRES_DB: workspace_nextcloud
+    volumes:
+      - workspace_db_data:/var/lib/postgresql/data
     networks:
       - network_conexao
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+
+  # 2. CACHE & SESSOES (REDIS DEDICADO)
+  workspace_redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
     volumes:
-      - buzz_data:/data
+      - workspace_redis_data:/data
+    networks:
+      - network_conexao
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+
+  # 3. NEXTCLOUD HUB (DRIVE, MAIL, CALENDAR, TALK)
+  workspace_nextcloud:
+    image: nextcloud:30-apache
+    environment:
+      POSTGRES_HOST: workspace_db
+      POSTGRES_DB: workspace_nextcloud
+      POSTGRES_USER: workspace_user
+      POSTGRES_PASSWORD: WorkspaceDBSecret_2026!
+      REDIS_HOST: workspace_redis
+      OVERWRITEPROTOCOL: https
+      OVERWRITECLIURL: https://drive.vpsconexao.org
+      TRUSTED_PROXIES: 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+    volumes:
+      - workspace_nextcloud_html:/var/www/html
+      - workspace_nextcloud_data:/var/www/html/data
+    networks:
+      - network_conexao
     deploy:
       mode: replicated
       replicas: 1
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=network_conexao"
-        - "traefik.http.routers.buzz.rule=Host(`buzz.vpsconexao.org`)"
-        - "traefik.http.routers.buzz.entrypoints=websecure"
-        - "traefik.http.routers.buzz.tls=true"
-        - "traefik.http.routers.buzz.tls.certresolver=letsencryptresolver"
-        - "traefik.http.services.buzz.loadbalancer.server.port=80"
-        - "traefik.http.services.buzz.loadbalancer.passHostHeader=true"
+        - "traefik.http.routers.workspace_nextcloud.rule=Host(`drive.vpsconexao.org`)"
+        - "traefik.http.routers.workspace_nextcloud.entrypoints=websecure"
+        - "traefik.http.routers.workspace_nextcloud.tls=true"
+        - "traefik.http.routers.workspace_nextcloud.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.workspace_nextcloud.priority=10"
+        - "traefik.http.services.workspace_nextcloud.loadbalancer.server.port=80"
+        - "traefik.http.services.workspace_nextcloud.loadbalancer.passHostHeader=true"
       resources:
         limits:
-          cpus: '1.5'
-          memory: 1536M
+          cpus: '3.0'
+          memory: 3072M
+
+  # 4. ONLYOFFICE DOCUMENT SERVER (DOCS/SHEETS/SLIDES)
+  workspace_onlyoffice:
+    image: onlyoffice/documentserver:latest
+    environment:
+      JWT_ENABLED: 'true'
+      JWT_SECRET: OnlyOfficeSecretKey2026_SecureToken!
+      USE_UNAUTHORIZED_STORAGE: 'true'
+    volumes:
+      - workspace_onlyoffice_data:/var/www/onlyoffice/Data
+      - workspace_onlyoffice_log:/var/log/onlyoffice
+    networks:
+      - network_conexao
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_conexao"
+        - "traefik.http.routers.workspace_onlyoffice.rule=Host(`office.vpsconexao.org`)"
+        - "traefik.http.routers.workspace_onlyoffice.entrypoints=websecure"
+        - "traefik.http.routers.workspace_onlyoffice.tls=true"
+        - "traefik.http.routers.workspace_onlyoffice.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.workspace_onlyoffice.priority=10"
+        - "traefik.http.services.workspace_onlyoffice.loadbalancer.server.port=80"
+        - "traefik.http.services.workspace_onlyoffice.loadbalancer.passHostHeader=true"
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: 3072M
+
+  # 5. STALWART MAIL SERVER (SMTP/IMAP/JMAP/CALDAV)
+  workspace_stalwart:
+    image: stalwartlabs/stalwart:latest
+    environment:
+      STALWART_ADMIN_USER: admin
+      STALWART_ADMIN_PASS: StalwartMasterPass2026!
+    volumes:
+      - workspace_stalwart_data:/opt/stalwart-mail
+    networks:
+      - network_conexao
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_conexao"
+        - "traefik.http.routers.workspace_stalwart.rule=Host(`mail.vpsconexao.org`)"
+        - "traefik.http.routers.workspace_stalwart.entrypoints=websecure"
+        - "traefik.http.routers.workspace_stalwart.tls=true"
+        - "traefik.http.routers.workspace_stalwart.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.workspace_stalwart.priority=10"
+        - "traefik.http.services.workspace_stalwart.loadbalancer.server.port=8080"
+        - "traefik.http.services.workspace_stalwart.loadbalancer.passHostHeader=true"
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+
+  # 6. CRYPTPAD (SUITE CRIPTOGRAFADA ZERO-KNOWLEDGE)
+  workspace_cryptpad:
+    image: cryptpad/cryptpad:latest
+    environment:
+      CPAD_MAIN_DOMAIN: https://docs.vpsconexao.org
+    volumes:
+      - workspace_cryptpad_data:/cryptpad/datastore
+      - workspace_cryptpad_blob:/cryptpad/blob
+    networks:
+      - network_conexao
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_conexao"
+        - "traefik.http.routers.workspace_cryptpad.rule=Host(`docs.vpsconexao.org`)"
+        - "traefik.http.routers.workspace_cryptpad.entrypoints=websecure"
+        - "traefik.http.routers.workspace_cryptpad.tls=true"
+        - "traefik.http.routers.workspace_cryptpad.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.workspace_cryptpad.priority=10"
+        - "traefik.http.services.workspace_cryptpad.loadbalancer.server.port=3000"
+        - "traefik.http.services.workspace_cryptpad.loadbalancer.passHostHeader=true"
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
 
 networks:
   network_conexao:
     external: true
 
 volumes:
-  buzz_data:
+  workspace_db_data:
+  workspace_redis_data:
+  workspace_nextcloud_html:
+  workspace_nextcloud_data:
+  workspace_onlyoffice_data:
+  workspace_onlyoffice_log:
+  workspace_stalwart_data:
+  workspace_cryptpad_data:
+  workspace_cryptpad_blob:
 
 ```
 
@@ -298,7 +441,7 @@ Todos os dados persistentes vivem em volumes Docker gerenciados com alta velocid
 
 #pagebreak()
 = PARTE III · PLAYBOOKS DE INSTALAÇÃO & OPERAÇÃO
-**Alvo:** Ferramenta buzz
+**Alvo:** Block Buzz Messaging Workspace
 
 **Público-Alvo:** Gestores, Consultores e Engenheiros de TI
 
@@ -400,7 +543,7 @@ No painel do seu Uptime Kuma já em execução (`https://monitor.vpsconexao.org`
 Para cada serviço da stack, cadastre uma sonda no seu Uptime Kuma (`https://monitor.vpsconexao.org`):
 
 + **Tipo de Monitor:** HTTP(s).
-+ **Nome:** `Ferramenta buzz - App Principal`.
++ **Nome:** `Block Buzz Messaging Workspace - App Principal`.
 + **URL:** `https://buzz.vpsconexao.org`.
 + **Intervalo de Checagem:** 60 segundos.
 + **Notificações:** Configure alerta via Telegram, Discord ou e-mail.
@@ -411,7 +554,7 @@ Para cada serviço da stack, cadastre uma sonda no seu Uptime Kuma (`https://mon
 
 #pagebreak()
 = PARTE IV · PLAYBOOKS DE DESINSTALAÇÃO & GOVERNANÇA
-**Alvo:** Ferramenta buzz
+**Alvo:** Block Buzz Messaging Workspace
 
 **Garantia de Isolamento:** 100% de preservação dos demais containers da VPS
 
@@ -423,7 +566,7 @@ Para cada serviço da stack, cadastre uma sonda no seu Uptime Kuma (`https://mon
 #v(0.5em)
 
 == 1. Princípios de Segurança e Isolamento
-Todos os recursos criados para o alvo `Ferramenta buzz` foram encapsulados no namespace `buzz`.
+Todos os recursos criados para o alvo `Block Buzz Messaging Workspace` foram encapsulados no namespace `buzz`.
 
 A remoção da stack desconecta os serviços da rede `network_conexao` e revoga os roteadores do Traefik de forma atômica.
 

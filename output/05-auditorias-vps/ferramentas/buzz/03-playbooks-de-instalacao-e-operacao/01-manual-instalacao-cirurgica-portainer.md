@@ -1,6 +1,6 @@
 # Manual de Instalação Cirúrgica no Portainer & Playbook de Operação
 
-**Alvo:** Ferramenta buzz  
+**Alvo:** Block Buzz Messaging Workspace  
 **Público-Alvo:** Gestores, Consultores e Engenheiros de TI  
 **Tempo Estimado de Execução:** 5 a 10 minutos  
 **Garantia Arquitetural:** Zero interferência nas aplicações existentes (`mautic`, `evolution`, `n8n`, `mysql`, `postgres`)

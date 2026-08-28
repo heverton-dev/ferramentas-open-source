@@ -164,6 +164,14 @@ class VPSDecisionEngine:
             "host_ports": [],
             "subdomains": ["rag"],
             "role": "Engine Corporativo de Extracao RAG e OCR Avancado"
+        },
+        "buzz": {
+            "name": "Block Buzz Messaging Workspace",
+            "req_cpu": 2.0,
+            "req_ram_gb": 3.0,
+            "host_ports": [],
+            "subdomains": ["buzz"],
+            "role": "Workspace de Mensageria Descentralizada Nostr com Agentes IA Nativos (Alternativa Slack/Teams)"
         }
     }
 

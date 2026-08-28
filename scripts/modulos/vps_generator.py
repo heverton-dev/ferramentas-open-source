@@ -893,7 +893,7 @@ volumes:
 """
         else:
             sub = prof.get('subdomains', ['app'])[0]
-            port = 8080 if 'stalwart' in slug_clean else (3000 if 'cryptpad' in slug_clean or 'chatwoot' in slug_clean or 'nocodb' in slug_clean or 'anything' in slug_clean else 80)
+            port = 8080 if 'stalwart' in slug_clean else (3000 if 'cryptpad' in slug_clean or 'chatwoot' in slug_clean or 'nocodb' in slug_clean or 'anything' in slug_clean or 'buzz' in slug_clean else 80)
             return f"""version: '3.8'
 
 services:
