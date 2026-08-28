@@ -98,6 +98,60 @@ Write-Output "`n== Pastas .agents\ (junction para .claude\..., harnesses alterna
 Set-Junction ".agents\agents"                             ".claude\agents"
 Set-Junction ".agents\commands"                           ".claude\commands"
 
+Write-Output "`n== Skills da Fabrica Universal (.agents\skills -> .claude\skills) =="
+$skillsLocais = @("fluxo1-listas-horizontais", "fluxo2-dossies-verticais", "fluxo3-manuais-e-trilhas", "fluxo4-ecossistemas", "fluxo-total-aidd")
+foreach ($sk in $skillsLocais) {
+    Set-Junction ".claude\skills\$sk" ".agents\skills\$sk"
+}
+
+Write-Output "`n== Sincronizacao Global de Skills (Antigravity, Gemini CLI, Claude Code Global) =="
+$geminiSkillsDir = "$env:USERPROFILE\.gemini\config\skills"
+$claudeGlobalSkillsDir = "$env:USERPROFILE\.claude\skills"
+
+if (Test-Path $geminiSkillsDir) {
+    Write-Output "Disponibilizando skills em $geminiSkillsDir (Antigravity & Gemini)..."
+    foreach ($sk in $skillsLocais) {
+        $targetSkill = Join-Path $raiz ".agents\skills\$sk"
+        $destSkill = Join-Path $geminiSkillsDir $sk
+        if (Test-Path $targetSkill) {
+            if (Test-Path $destSkill) {
+                $item = Get-Item $destSkill -Force
+                if ($item.LinkType -eq "Junction") {
+                    Write-Output "OK (ja e junction global Gemini): $sk"
+                } else {
+                    Write-Output "Atualizando skill global Gemini: $sk"
+                    Copy-Item -Path $targetSkill -Destination $destSkill -Recurse -Force
+                }
+            } else {
+                New-Item -ItemType Junction -Path $destSkill -Target $targetSkill -Force | Out-Null
+                Write-Output "Criada junction global Gemini: $sk"
+            }
+        }
+    }
+}
+
+if (Test-Path $claudeGlobalSkillsDir) {
+    Write-Output "Disponibilizando skills em $claudeGlobalSkillsDir (Claude Code Global)..."
+    foreach ($sk in $skillsLocais) {
+        $targetSkill = Join-Path $raiz ".agents\skills\$sk"
+        $destSkill = Join-Path $claudeGlobalSkillsDir $sk
+        if (Test-Path $targetSkill) {
+            if (Test-Path $destSkill) {
+                $item = Get-Item $destSkill -Force
+                if ($item.LinkType -eq "Junction") {
+                    Write-Output "OK (ja e junction global Claude): $sk"
+                } else {
+                    Write-Output "Atualizando skill global Claude: $sk"
+                    Copy-Item -Path $targetSkill -Destination $destSkill -Recurse -Force
+                }
+            } else {
+                New-Item -ItemType Junction -Path $destSkill -Target $targetSkill -Force | Out-Null
+                Write-Output "Criada junction global Claude: $sk"
+            }
+        }
+    }
+}
+
 Write-Output "`n== Pastas .opencode\ (junction para .claude\..., OpenCode) =="
 Set-Junction ".opencode\skills"                           ".claude\skills"
 Set-Junction ".opencode\agents"                           ".claude\agents"
