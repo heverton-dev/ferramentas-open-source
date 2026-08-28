@@ -141,16 +141,18 @@ CSS_CANONICO_DIAMANTE = """
   .search-input:focus { border-color: var(--accent); }
 
   .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
-  table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+  table { width: 100%; min-width: 980px; border-collapse: collapse; font-size: 13.5px; text-align: left; }
   th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
-  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
-  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
+  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 45px; text-align: center; }
   td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
   td.tool a:hover { color: var(--accent); }
-  td.saas { color: var(--flag); font-size: 12.5px; font-weight: 600; }
-  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
-  td.lic { font-family: var(--mono); font-size: 11px; }
+  td.pilar-col { min-width: 160px; white-space: nowrap; }
+  td.saas { color: var(--flag); font-size: 12.5px; font-weight: 600; line-height: 1.4; min-width: 240px; }
+  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; white-space: nowrap; min-width: 140px; }
+  td.lic { font-family: var(--mono); font-size: 11px; text-align: center; width: 90px; }
+  td.code-col { text-align: center; width: 95px; }
 
   .ledger { display: flex; flex-direction: column; gap: 24px; }
   .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
@@ -162,7 +164,7 @@ CSS_CANONICO_DIAMANTE = """
   .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
 
   .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
-  .pilar-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--gold-soft); color: #8A6100; border: 1px solid var(--gold); font-weight: 600; }
+  .pilar-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; background: var(--gold-soft); color: #8A6100; border: 1px solid var(--gold); font-weight: 700; white-space: nowrap; display: inline-block; }
   .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
   .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
   .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
@@ -359,16 +361,25 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
     # Tabela Síntese Geral
     tabela_linhas = ""
     for p in pilares:
+        nome_pilar_completo = p.get('nome_pilar', '')
+        partes = nome_pilar_completo.split(":")
+        if len(partes) > 1:
+            grupo_num = partes[0].strip()
+            tema_curto = partes[1].split(",")[0].split("&")[0].strip()
+            pilar_label = f"{grupo_num} · {tema_curto}"
+        else:
+            pilar_label = nome_pilar_completo
+
         for f in p.get("ferramentas", []):
             tabela_linhas += f"""
             <tr>
               <td class="rank">{f['rank']:02d}</td>
               <td class="tool"><a href="#{f['slug']}">{f['nome']}</a></td>
-              <td><span class="pilar-badge">{p.get('nome_pilar').split(':')[0]}</span></td>
+              <td class="pilar-col"><span class="pilar-badge">{pilar_label}</span></td>
               <td class="saas">{f['saas_substituido_direto']}</td>
               <td class="econ">{f['economia_anual_str']}</td>
               <td class="lic"><code>{f['licenca_osi']}</code></td>
-              <td><a href="{f['repositorio_github']}" target="_blank" rel="noopener" class="repo-btn">GitHub ↗</a></td>
+              <td class="code-col"><a href="{f['repositorio_github']}" target="_blank" rel="noopener" class="repo-btn">GitHub ↗</a></td>
             </tr>
             """
 
