@@ -93,52 +93,42 @@
     box-shadow: var(--shadow);
   }
 
-  header {
-    border-bottom: 2px solid var(--ink);
-    padding-bottom: 32px;
-    margin-bottom: 36px;
+  /* CAPA DO LIVRO MESTRE */
+  .book-cover {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    padding: 48px 36px;
+    margin-bottom: 40px;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
   }
+  .book-tagline { font-family: var(--mono); font-size: 12px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 12px; }
+  .book-title { font-family: var(--font-serif); font-size: 42px; line-height: 1.1; margin: 0 0 12px; color: var(--ink); font-weight: 700; letter-spacing: -.02em; }
+  .book-subtitle { font-size: 18px; color: var(--ink-2); line-height: 1.5; margin-bottom: 24px; max-width: 90%; }
+  .book-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; border-top: 1px solid var(--rule); padding-top: 20px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  .book-meta-item strong { display: block; color: var(--ink); font-size: 13px; margin-top: 2px; }
 
-  .meta {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 12px;
-    font-weight: 700;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
+  /* SUMÁRIO DO LIVRO */
+  .toc-box {
+    background: var(--surface-2);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 24px;
+    margin: 28px 0 40px;
   }
-
-  h1 {
-    font-family: var(--font-serif);
-    font-size: 38px;
-    line-height: 1.15;
-    margin: 0 0 12px 0;
-    font-weight: 700;
-    letter-spacing: -.02em;
-    color: var(--ink);
-  }
-
-  .deck {
-    font-size: 16px;
-    color: var(--ink-2);
-    margin: 0 0 24px 0;
-    line-height: 1.55;
-    max-width: 95%;
-  }
+  .toc-box h3 { font-family: var(--font-serif); font-size: 22px; margin: 0 0 16px; color: var(--ink); border-bottom: 1px solid var(--rule-soft); padding-bottom: 8px; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px 24px; }
+  .toc-item { font-size: 13.5px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--rule-soft); padding: 4px 0; }
+  .toc-item a { color: var(--ink); text-decoration: none; font-weight: 500; }
+  .toc-item a:hover { color: var(--accent); }
+  .toc-item span { font-family: var(--mono); font-size: 11px; color: var(--muted); }
 
   .stats-bar {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 16px;
-    border-top: 1px solid var(--rule-soft);
-    padding-top: 20px;
-    margin-top: 20px;
+    margin: 24px 0;
   }
 
   .stat-card {
@@ -169,18 +159,19 @@
 
   .racional-box {
     background: var(--surface-2);
-    border-left: 3px solid var(--accent);
-    padding: 14px 18px;
-    margin: 20px 0;
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    margin: 24px 0;
     font-size: 14px;
     color: var(--ink-2);
-    border-radius: 0 2px 2px 0;
+    border-radius: 0 3px 3px 0;
+    line-height: 1.6;
   }
 
   .sec-head {
-    margin: 44px 0 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--rule);
+    margin: 54px 0 24px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--ink);
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -189,9 +180,9 @@
   }
 
   .sec-info { flex: 1; }
-  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: .08em; }
-  .sec-head h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0 0 0; color: var(--ink); font-weight: 600; }
-  .sec-note { font-size: 13.5px; color: var(--muted); margin-top: 4px; }
+  .sec-num { font-family: var(--mono); font-size: 11.5px; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: .1em; }
+  .sec-head h2 { font-family: var(--font-serif); font-size: 28px; margin: 4px 0 0 0; color: var(--ink); font-weight: 700; }
+  .sec-note { font-size: 14px; color: var(--muted); margin-top: 4px; }
   .pilar-subtotal-badge { font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 4px 10px; background: var(--green-soft); color: var(--green); border-radius: 2px; border: 1px solid var(--green); }
 
   /* TABELA MATRIX */
@@ -371,12 +362,6 @@ function updateTcoCalculator() {
   document.getElementById('calc-saas-total').innerText = 'R$ ' + saasTotal.toLocaleString('pt-BR') + '/ano';
   document.getElementById('calc-vps-total').innerText = 'R$ ' + custoVps.toLocaleString('pt-BR') + '/ano';
   document.getElementById('calc-savings-total').innerText = 'R$ ' + economiaLiquida.toLocaleString('pt-BR') + '/ano (' + economiaPct + '%)';
-}
-
-function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    alert('✅ Código copiado para a área de transferência!');
-  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
