@@ -171,17 +171,11 @@ CSS_CANONICO_DIAMANTE = """
   .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
   .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
 
-  .persona-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
-  .persona-badge.robusta { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
-  .persona-badge.completa { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
-  .persona-badge.moderna { background: #EAE6FF; color: #403294; border: 1px solid #C0B6F2; }
-  .persona-badge.leve { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
-  .persona-badge.simples { background: #E6FCFF; color: #00667A; border: 1px solid #B3F5FF; }
-
-  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
-  .pilar-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; background: var(--gold-soft); color: #8A6100; border: 1px solid var(--gold); font-weight: 700; white-space: nowrap; display: inline-block; }
-  .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
-  .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
+  .persona-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+  .pilar-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--gold-soft); color: #8A6100; border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent); font-weight: 700; white-space: nowrap; }
+  .killer-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; white-space: nowrap; }
+  .econ-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; white-space: nowrap; }
+  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule-soft); font-weight: 600; white-space: nowrap; }
 
   .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
   .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
@@ -499,7 +493,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
     for p_idx, p in enumerate(pilares, 1):
         entries_pilar = ""
         for f in p.get("ferramentas", []):
-            p_cls = persona_classe(f.get('classificacao', ''))
+            classif_simples = simplificar_classificacao(f.get('classificacao', ''))
             
             # Passos Práticos
             passos_f_html = "".join([
@@ -536,7 +530,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
               <div class="entry-body">
                 <div class="entry-top">
                   <h3>{f['nome']} · {f['subtitulo']}</h3>
-                  <span class="persona-badge {p_cls}">{f.get('classificacao')}</span>
+                  <span class="persona-badge">Persona: {classif_simples}</span>
                   <span class="pilar-badge">{p.get('nome_pilar').split(':')[0]}</span>
                   <span class="killer-badge">Substitui: {f['saas_substituido_direto']}</span>
                   <span class="econ-badge">{f['economia_anual_str']}</span>
