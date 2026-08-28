@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  coqui-xtts_app:
+    image: coqui-xtts:latest
+    networks:
+      - network_conexao
+    volumes:
+      - coqui-xtts_data:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_conexao"
+        - "traefik.http.routers.coqui-xtts.rule=Host(`coqui-xtts.vpsconexao.org`)"
+        - "traefik.http.routers.coqui-xtts.entrypoints=websecure"
+        - "traefik.http.routers.coqui-xtts.tls=true"
+        - "traefik.http.routers.coqui-xtts.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.coqui-xtts.loadbalancer.server.port=80"
+        - "traefik.http.services.coqui-xtts.loadbalancer.passHostHeader=true"
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1536M
+
+networks:
+  network_conexao:
+    external: true
+
+volumes:
+  coqui-xtts_data:
