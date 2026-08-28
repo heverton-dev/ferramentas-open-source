@@ -7,6 +7,9 @@
 
 ## 📌 Aprendizados Registrados
 
+### [2026-08-28] Incorporação dos Manuais e Trilhas Individuais no Fluxo 4 (Camada 05)
+* **Decisão & Arquitetura:** O Fluxo 4 foi elevado para uma entrega ponta a ponta chave na mão (*Turnkey*). Além dos 12 capítulos do Livro Mestre e dos fascículos executivos/infraestrutura, a pasta `05-manuais-e-trilhas-individuais/<ferramenta>/` agora compila automaticamente o **Manual de Engenharia de VPS** (com protocolo de Desinstalação Cirúrgica de 4 passos) e a **Trilha Didática de Aprendizado em 5 Aulas** para cada uma das ferramentas que compõem o macro-ecossistema, com links bidirecionais diretos a partir do Livro Mestre.
+
 ### [2026-08-28] Regra R20 · Visual Corporativo Estrito & Proibição Absoluta de Emojis
 * **Decisão & Governança:** Fica estritamente proibido o uso de emojis ou pictogramas em todos os fluxos (Fluxo 1, Fluxo 2, Fluxo 3, Fluxo 4 e Pipeline Total) e em todos os formatos de materiais gerados (HTML Diamante R5, Markdown, PDF Typst, relatórios executivos e fascículos de engenharia).
 * **Racional Executivo:** Emojis empobrecem o posicionamento visual corporativo/técnico dos materiais perante tomadores de decisão (C-Level, Diretores e Engenheiros). A elegância visual é garantida por tipografia sóbria (`Liberation Serif` / `Liberation Sans`), hierarquia rígida de espaçamentos, badges formais de texto e tabelas de alta densidade técnica.
