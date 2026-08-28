@@ -171,6 +171,8 @@ def validar_ecossistema(dados: Dict[str, Any]) -> Tuple[bool, List[str]]:
         prefixo_p = f"Pilar #{idx} ({pilar.get('nome_pilar', 'Sem Nome')}):"
         if not pilar.get("nome_pilar") or not pilar.get("modulo_saas_alvo"):
             erros.append(f"{prefixo_p} Deve conter 'nome_pilar' e 'modulo_saas_alvo'.")
+        if not pilar.get("subtotal_economia_anual"):
+            erros.append(f"{prefixo_p} Deve conter 'subtotal_economia_anual' do grupo.")
         
         ferrs = pilar.get("ferramentas", [])
         if len(ferrs) < 2:
@@ -179,7 +181,7 @@ def validar_ecossistema(dados: Dict[str, Any]) -> Tuple[bool, List[str]]:
 
         for f_idx, f in enumerate(ferrs, 1):
             prefixo_f = f"{prefixo_p} Ferramenta #{f_idx} ({f.get('nome', 'Sem Nome')}):"
-            for campo in ["slug", "nome", "papel_no_pilar", "licenca_osi", "o_que_faz", "como_funciona", "comando_rapido"]:
+            for campo in ["slug", "nome", "papel_no_pilar", "saas_substituido_direto", "racional_escolha", "economia_anual_str", "licenca_osi", "o_que_faz", "como_funciona", "comando_rapido"]:
                 if campo not in f or not f[campo]:
                     erros.append(f"{prefixo_f} Campo obrigatório '{campo}' ausente ou vazio.")
 

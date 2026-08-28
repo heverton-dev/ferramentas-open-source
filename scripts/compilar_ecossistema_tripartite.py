@@ -2,7 +2,10 @@
 """
 COMPILADOR TRIPARTITE DE MACRO-ECOSSISTEMAS SAAS (FLUXO 4 - PADRÃO DIAMANTE R5-E)
 Gera o HTML final, Markdown denso e PDF Typst com 100% de paridade de design aos Fluxos 1, 2 e 3.
-Utiliza o molde canônico do Padrão Diamante (Tipografia Editorial, Light/Dark mode, Hero Stats, Busca, Grid 60px 1fr).
+Inclui análise por Grupos de Negócio e triangulação explícita de cada ferramenta:
+- Qual módulo substitui diretamente;
+- Racional técnico da escolha open source;
+- Economia financeira individual e subtotal por pilar.
 """
 import sys
 import json
@@ -126,10 +129,12 @@ CSS_CANONICO_DIAMANTE = """
   .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
   .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
 
-  .sec-head { margin: 40px 0 16px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  .sec-head { margin: 40px 0 16px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
+  .sec-info { flex: 1; }
   .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
   h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
   .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
+  .pilar-subtotal-badge { font-family: var(--mono); font-size: 12px; background: var(--green-soft); color: var(--green); border: 1px solid var(--green); padding: 6px 12px; border-radius: 3px; font-weight: 700; }
 
   .search-wrapper { position: relative; margin: 20px 0 24px; }
   .search-input { width: 100%; padding: 12px 42px 12px 16px; font-family: var(--font-sans); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); outline: none; box-shadow: var(--shadow); }
@@ -143,7 +148,7 @@ CSS_CANONICO_DIAMANTE = """
   td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
   td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
   td.tool a:hover { color: var(--accent); }
-  td.saas { color: var(--flag); }
+  td.saas { color: var(--flag); font-size: 12.5px; font-weight: 600; }
   td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
   td.lic { font-family: var(--mono); font-size: 11px; }
 
@@ -158,12 +163,17 @@ CSS_CANONICO_DIAMANTE = """
 
   .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
   .pilar-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--gold-soft); color: #8A6100; border: 1px solid var(--gold); font-weight: 600; }
+  .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
+  .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
   .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
 
   .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
   .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
   .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
   .entry-section p strong { color: var(--ink); font-weight: 600; }
+
+  .racional-box { background: var(--surface-2); border-left: 3px solid var(--accent); border-radius: 2px; padding: 10px 14px; }
+  .racional-box p { font-size: 13.5px; color: var(--ink-2); margin: 0; line-height: 1.5; }
 
   .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
   .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
@@ -176,7 +186,6 @@ CSS_CANONICO_DIAMANTE = """
   .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
   .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
 
-  /* CAIXAS DE COLA & DEPLOY */
   .integration-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin: 16px 0; }
   .integ-card { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 3px; padding: 16px; box-shadow: var(--shadow); }
   .integ-card h4 { font-family: var(--font-serif); font-size: 18px; margin: 0 0 8px; color: var(--ink); }
@@ -271,21 +280,22 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
         f"",
         f"---",
         f"",
-        f"## 2. Pilares Funcionais do Ecossistema",
+        f"## 2. Pilares Funcionais & Frentes de Negócio",
         f""
     ]
 
     for p in pilares:
         linhas.extend([
             f"### {p.get('nome_pilar')}",
-            f"**Módulo SaaS Alvo:** `{p.get('modulo_saas_alvo')}`  ",
-            f"*{p.get('descricao_pilar')}*",
+            f"- **Módulo SaaS Alvo:** `{p.get('modulo_saas_alvo')}`",
+            f"- **Subtotal de Economia do Grupo:** **{p.get('subtotal_economia_anual', 'N/A')}**",
+            f"- **Escopo:** *{p.get('descricao_pilar')}*",
             f"",
-            f"| # | Ferramenta | Papel no Pilar | Licença | Repositório GitHub |",
-            f"| :---: | :--- | :--- | :---: | :--- |"
+            f"| # | Ferramenta | Substitui Diretamente | Racional da Escolha | Economia Estimada | Licença |",
+            f"| :---: | :--- | :--- | :--- | :---: | :---: |"
         ])
         for f in p.get("ferramentas", []):
-            linhas.append(f"| {f['rank']} | **{f['nome']}** | {f['papel_no_pilar']} | `{f['licenca_osi']}` | [{f['repositorio_github']}]({f['repositorio_github']}) |")
+            linhas.append(f"| {f['rank']} | **{f['nome']}** | {f['saas_substituido_direto']} | {f['racional_escolha']} | **{f['economia_anual_str']}** | `{f['licenca_osi']}` |")
         linhas.append("")
 
     linhas.extend([
@@ -326,12 +336,8 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
     return "\n".join(linhas) + "\n"
 
 def gerar_html_ecossistema_diamante(dados: dict) -> str:
-    slug = dados.get("slug", "ecossistema")
     titulo = dados.get("titulo", "Dossiê de Macro-Ecossistema Open Source")
-    subtitulo = dados.get("subtitulo", "")
     deck = dados.get("deck", "")
-    nome_eco = dados.get("nome_ecossistema", "")
-    saas_sub = dados.get("saas_substituido", "")
     stats = dados.get("stats", {})
     pilares = dados.get("pilares", [])
     integracao = dados.get("camada_integracao", {})
@@ -340,7 +346,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
 
     total_ferramentas = sum(len(p.get("ferramentas", [])) for p in pilares)
 
-    # Tabela Sintética
+    # Tabela Síntese Geral
     tabela_linhas = ""
     for p in pilares:
         for f in p.get("ferramentas", []):
@@ -349,13 +355,14 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
               <td class="rank">{f['rank']:02d}</td>
               <td class="tool"><a href="#{f['slug']}">{f['nome']}</a></td>
               <td><span class="pilar-badge">{p.get('nome_pilar').split(':')[0]}</span></td>
-              <td>{f['papel_no_pilar']}</td>
+              <td class="saas">{f['saas_substituido_direto']}</td>
+              <td class="econ">{f['economia_anual_str']}</td>
               <td class="lic"><code>{f['licenca_osi']}</code></td>
               <td><a href="{f['repositorio_github']}" target="_blank" rel="noopener" class="repo-btn">GitHub ↗</a></td>
             </tr>
             """
 
-    # Seções de Pilares e Fichas Técnicas Diamante
+    # Seções de Pilares com Fichas Técnicas
     pilares_conteudo = ""
     for p_idx, p in enumerate(pilares, 1):
         entries_pilar = ""
@@ -367,17 +374,26 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
                 <div class="entry-top">
                   <h3>{f['nome']}</h3>
                   <span class="pilar-badge">{p.get('nome_pilar').split(':')[0]}</span>
+                  <span class="killer-badge">Substitui: {f['saas_substituido_direto']}</span>
+                  <span class="econ-badge">{f['economia_anual_str']}</span>
                   <span class="lic-badge">{f['licenca_osi']}</span>
-                  <span class="kind">{f['subtitulo']}</span>
                 </div>
 
                 <div class="entry-section">
-                  <div class="label">Papel no Ecossistema</div>
-                  <p><strong>{f['papel_no_pilar']}</strong></p>
+                  <div class="label">🎯 Substituição Direta no Ecossistema</div>
+                  <p><strong>Substitui:</strong> {f['saas_substituido_direto']}</p>
                 </div>
 
                 <div class="entry-section">
-                  <div class="label">O Que Faz &amp; Como Funciona</div>
+                  <div class="label">💡 Racional da Escolha Open Source</div>
+                  <div class="racional-box">
+                    <p>{f['racional_escolha']}</p>
+                  </div>
+                </div>
+
+                <div class="entry-section">
+                  <div class="label">Papel no Pilar &amp; Funcionamento</div>
+                  <p><strong>Papel:</strong> {f['papel_no_pilar']}</p>
                   <p>{f['o_que_faz']} {f['como_funciona']}</p>
                 </div>
 
@@ -396,6 +412,10 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
                       <div class="infra-val">{f.get('requisitos_infra', {}).get('cpu_minima', '1 vCPU')} / {f.get('requisitos_infra', {}).get('ram_minima', '2 GB RAM')}</div>
                     </div>
                     <div class="infra-card">
+                      <div class="infra-lbl">Economia Direta</div>
+                      <div class="infra-val" style="color: var(--green);">{f['economia_anual_str']}</div>
+                    </div>
+                    <div class="infra-card">
                       <div class="infra-lbl">Repositório Oficial</div>
                       <div class="infra-val"><a href="{f['repositorio_github']}" target="_blank" rel="noopener" class="repo-btn">Ver no GitHub ↗</a></div>
                     </div>
@@ -407,16 +427,18 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
 
         pilares_conteudo += f"""
         <div class="sec-head">
-          <span class="sec-num">Pilar 0{p_idx} · {p.get('modulo_saas_alvo')}</span>
-          <h2>{p.get('nome_pilar')}</h2>
-          <p class="sec-note">{p.get('descricao_pilar')}</p>
+          <div class="sec-info">
+            <span class="sec-num">Pilar 0{p_idx} · {p.get('modulo_saas_alvo')}</span>
+            <h2>{p.get('nome_pilar')}</h2>
+            <p class="sec-note">{p.get('descricao_pilar')}</p>
+          </div>
+          <div class="pilar-subtotal-badge">Subtotal: {p.get('subtotal_economia_anual')}</div>
         </div>
         <div class="ledger">
           {entries_pilar}
         </div>
         """
 
-    # Passos de Deploy Consolidado
     passos_cards = "".join([
         f'<div class="step-card"><div class="step-head"><span class="step-badge">0{idx}</span> {passo.get("titulo")}</div><p>{passo.get("descricao")}</p></div>'
         for idx, passo in enumerate(deploy.get("passos_deploy", []), 1)
@@ -444,17 +466,19 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
       <p class="deck">{deck}</p>
     </div>
     <div class="hero-stats">
-      <div class="stat-card"><div class="num">{len(pilares)}</div><div class="lbl">Pilares Funcionais</div></div>
+      <div class="stat-card"><div class="num">{len(pilares)}</div><div class="lbl">Grupos Funcionais</div></div>
       <div class="stat-card"><div class="num">{total_ferramentas}</div><div class="lbl">Ferramentas Mapeadas</div></div>
       <div class="stat-card"><div class="num">{stats.get('licencas_osi', '100%')}</div><div class="lbl">Licenças OSI</div></div>
-      <div class="stat-card"><div class="num">{stats.get('economia_media', '94%')}</div><div class="lbl">Economia Média</div></div>
+      <div class="stat-card"><div class="num">{stats.get('economia_media', '96%')}</div><div class="lbl">Economia Média</div></div>
     </div>
   </header>
 
   <div class="sec-head">
-    <span class="sec-num">Seção 01 · Demonstrativo Financeiro Consolidado</span>
-    <h2>Análise de TCO Global &amp; Payback</h2>
-    <p class="sec-note">Comparativo financeiro da suíte corporativa proprietária versus infraestrutura aberta autônoma.</p>
+    <div class="sec-info">
+      <span class="sec-num">Seção 01 · Demonstrativo Financeiro Consolidado</span>
+      <h2>Análise de TCO Global &amp; Payback</h2>
+      <p class="sec-note">Comparativo financeiro da suíte corporativa proprietária versus infraestrutura aberta autônoma.</p>
+    </div>
   </div>
 
   <div class="tco-banner">
@@ -477,9 +501,11 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
   </div>
 
   <div class="sec-head">
-    <span class="sec-num">Seção 02 · Matriz Geral de Ferramentas</span>
-    <h2>Pilha Aberta Integrada</h2>
-    <p class="sec-note">Todas as ferramentas líderes que compõem os pilares do ecossistema.</p>
+    <div class="sec-info">
+      <span class="sec-num">Seção 02 · Matriz Geral de Substituição por Grupo</span>
+      <h2>Pilha Aberta Integrada</h2>
+      <p class="sec-note">Mapeamento direto de cada módulo proprietário para a ferramenta open source soberana correspondente.</p>
+    </div>
   </div>
 
   <div class="search-wrapper">
@@ -491,9 +517,10 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
       <thead>
         <tr>
           <th>#</th>
-          <th>Ferramenta</th>
-          <th>Pilar</th>
-          <th>Papel no Ecossistema</th>
+          <th>Ferramenta Open Source</th>
+          <th>Grupo</th>
+          <th>Substitui Diretamente no SaaS</th>
+          <th>Economia Estimada</th>
           <th>Licença</th>
           <th>Código</th>
         </tr>
@@ -505,17 +532,21 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
   </div>
 
   <div class="sec-head">
-    <span class="sec-num">Seção 03 · Fichas Técnicas por Pilar</span>
-    <h2>Detalhamento dos Pilares Funcionais</h2>
-    <p class="sec-note">Especificação de engenharia de cada ferramenta dentro da arquitetura integrada.</p>
+    <div class="sec-info">
+      <span class="sec-num">Seção 03 · Análise Detalhada por Frentes de Negócio</span>
+      <h2>Detalhamento dos Grupos Funcionais</h2>
+      <p class="sec-note">Triangulação técnica com justificativa da escolha e detalhamento do papel de cada solução.</p>
+    </div>
   </div>
 
   {pilares_conteudo}
 
   <div class="sec-head">
-    <span class="sec-num">Seção 04 · Camada de Cola &amp; Orquestração</span>
-    <h2>Integração, SSO &amp; Barramento de Eventos</h2>
-    <p class="sec-note">Como os módulos dialogam de forma transparente sem silos de dados.</p>
+    <div class="sec-info">
+      <span class="sec-num">Seção 04 · Camada de Cola &amp; Orquestração</span>
+      <h2>Integração, SSO &amp; Barramento de Eventos</h2>
+      <p class="sec-note">Como os módulos dialogam de forma transparente sem silos de dados.</p>
+    </div>
   </div>
 
   <div class="integration-grid">
@@ -539,9 +570,11 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
   </div>
 
   <div class="sec-head">
-    <span class="sec-num">Seção 05 · Deploy All-in-One</span>
-    <h2>Orquestração Unificada (Docker Compose)</h2>
-    <p class="sec-note">Provisionamento em VPS corporativa única ({deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')}).</p>
+    <div class="sec-info">
+      <span class="sec-num">Seção 05 · Deploy All-in-One</span>
+      <h2>Orquestração Unificada (Docker Compose)</h2>
+      <p class="sec-note">Provisionamento em VPS corporativa única ({deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')}).</p>
+    </div>
   </div>
 
   <div class="code-box" style="margin-bottom: 16px;">
@@ -575,18 +608,19 @@ def gerar_typst_ecossistema(dados: dict) -> str:
         linhas_pilares += f"""
 === {p.get('nome_pilar')}
 #text(size: 8.5pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS: {p.get('modulo_saas_alvo')}] \\
+#text(size: 8.5pt, fill: rgb("#00875A"), weight: "bold")[Economia do Grupo: {sanitizar_typ(p.get('subtotal_economia_anual'))}] \\
 #text(size: 8.5pt, style: "italic", fill: rgb("#475569"))[{p.get('descricao_pilar')}] \\
 #v(4pt)
 
 #table(
-  columns: (0.8fr, 2.5fr, 3.5fr, 1.5fr),
+  columns: (0.6fr, 1.8fr, 2.8fr, 1.8fr, 1.0fr),
   fill: (x, y) => if y == 0 {{ rgb("#f1f5f9") }} else {{ none }},
   stroke: 0.5pt + rgb("#e2e8f0"),
-  inset: 5pt,
-  [*Nº*], [*Ferramenta*], [*Papel no Pilar*], [*Licença*],
+  inset: 4.5pt,
+  [*Nº*], [*Ferramenta*], [*Substitui Diretamente*], [*Economia*], [*Licença*],
 """
         for f in p.get("ferramentas", []):
-            linhas_pilares += f"  [{f['rank']}], [*{f['nome']}*], [{f['papel_no_pilar']}], [`{f['licenca_osi']}`],\n"
+            linhas_pilares += f"  [{f['rank']}], [*{f['nome']}*], [{f['saas_substituido_direto']}], [{sanitizar_typ(f['economia_anual_str'])}], [`{f['licenca_osi']}`],\n"
         linhas_pilares += ")\n#v(8pt)\n"
 
     custo_saas = sanitizar_typ(econ.get('custo_saas_anual', ''))
@@ -612,7 +646,7 @@ def gerar_typst_ecossistema(dados: dict) -> str:
 
 #set text(
   font: ("Segoe UI", "Arial", "Liberation Sans"),
-  size: 9pt,
+  size: 8.5pt,
   fill: rgb("#0f172a"),
   lang: "pt"
 )
@@ -646,7 +680,7 @@ def gerar_typst_ecossistema(dados: dict) -> str:
 
 #v(8pt)
 
-== 2. Pilares Funcionais do Ecossistema
+== 2. Análise Detalhada por Grupos de Negócio
 
 {linhas_pilares}
 
@@ -717,10 +751,10 @@ def compilar_ecossistema_tripartite(slug: str) -> bool:
 
 > **Ecossistema:** {dados.get('nome_ecossistema')}  
 > **Data:** {hoje}  
-> **Status:** 100% Concluído & Auditado (Padrão Diamante R5-E, Gate R9 e R11)
+> **Status:** 100% Concluído & Auditado (Padrão Diamante R5-E com Análise por Grupos)
 
 ### Métricas da Suíte:
-- Total de Pilares: {dados.get('stats', {}).get('total_pilares')}
+- Total de Grupos Funcionais: {dados.get('stats', {}).get('total_pilares')}
 - Total de Ferramentas Mapeadas: {dados.get('stats', {}).get('total_ferramentas')}
 - Economia Líquida Anual: {dados.get('analise_economica_global', {}).get('economia_anual_liquida')}
 - Gate R5-E (Padrão Diamante): APROVADO

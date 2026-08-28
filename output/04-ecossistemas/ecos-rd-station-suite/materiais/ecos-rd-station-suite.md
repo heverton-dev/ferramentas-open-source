@@ -8,46 +8,49 @@
 ## 1. Visão Executiva & TCO Global
 
 - **Macro-SaaS Substituído:** RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier)
-- **Custo SaaS Estimado:** R$ 114.000/ano (RD Marketing Pro R$ 42k + RD CRM 15 usuários R$ 36k + RD Conversas 10 atendentes R$ 36k)
+- **Custo SaaS Estimado:** R$ 114.000/ano (RD Marketing Pro R$ 42k + RD CRM 10 vendedores R$ 36k + RD Conversas 10 atendentes R$ 36k)
 - **Custo da Infraestrutura Soberana:** R$ 4.200/ano (VPS 8 vCPU / 16 GB RAM a R$ 350/mês)
-- **Economia Líquida Anual:** R$ 109.800/ano (Economia de 96.3%)
+- **Economia Líquida Anual:** R$ 109.800/ano (Economia Líquida de 96.3%)
 - **Payback Estimado:** Payback positivo em apenas 14 dias de operação unificada.
 
 ---
 
-## 2. Pilares Funcionais do Ecossistema
+## 2. Pilares Funcionais & Frentes de Negócio
 
-### Pilar 1: Marketing, Nutrição & Landing Pages
-**Módulo SaaS Alvo:** `RD Station Marketing (Pro/Enterprise)`  
-*Responsável por captura de leads, criação de landing pages dinâmicas, disparos de e-mail marketing em alta escala, automação de fluxos de nutrição e cálculo de lead scoring.*
+### Grupo 1: Marketing, Nutrição & Landing Pages
+- **Módulo SaaS Alvo:** `RD Station Marketing (Planos Pro / Enterprise)`
+- **Subtotal de Economia do Grupo:** **R$ 42.000/ano**
+- **Escopo:** *Frente responsável pela atração de tráfego, captura e enriquecimento de contatos, criação autônoma de landing pages dinâmicas, disparos de e-mail marketing em massa e automação de fluxos com pontuação de leads (lead scoring).*
 
-| # | Ferramenta | Papel no Pilar | Licença | Repositório GitHub |
-| :---: | :--- | :--- | :---: | :--- |
-| 1 | **Mautic** | Motor central de automação de marketing, segmentação dinâmica e pontuação de leads. | `GPL-3.0` | [https://github.com/mautic/mautic](https://github.com/mautic/mautic) |
-| 2 | **Listmonk** | Entrega de e-mails em massa e newsletters com custo quase nulo via Amazon SES. | `AGPL-3.0` | [https://github.com/knadh/listmonk](https://github.com/knadh/listmonk) |
-| 3 | **Directus** | Gestão autônoma de conteúdo das landing pages e portais corporativos sem depender de desenvolvedores. | `GPL-3.0` | [https://github.com/directus/directus](https://github.com/directus/directus) |
+| # | Ferramenta | Substitui Diretamente | Racional da Escolha | Economia Estimada | Licença |
+| :---: | :--- | :--- | :--- | :---: | :---: |
+| 1 | **Mautic** | RD Station Marketing (Módulo de Automação de Fluxos & Lead Scoring) | Única plataforma open source com construtor visual de jornadas em árvore equivalente ao RD Pro, com rastreamento avançado de comportamento web (lead tracking) e ausência de cobrança por volume de contatos na base. | **R$ 42.000/ano (Base de 50.000 leads)** | `GPL-3.0` |
+| 2 | **Listmonk** | RD Station Marketing (Módulo de Disparos de E-mail & Broadcast) | Desenvolvido em Go puro, entrega milhões de e-mails consumindo menos de 50 MB de RAM, suportando segmentação relacional JSONB instantânea e eliminando custos punitivos por envio. | **R$ 18.000/ano** | `AGPL-3.0` |
+| 3 | **Directus** | RD Station Marketing (Construtor de Landing Pages & Formulários Estáticos) | Converte qualquer banco de dados relacional em uma interface no-code intuitiva para o time de marketing editar textos, banners e seções de conversão sem risco de quebra de layout. | **R$ 12.000/ano** | `GPL-3.0` |
 
-### Pilar 2: Pipeline de Vendas, CRM & Fechamento
-**Módulo SaaS Alvo:** `RD Station CRM (Avançado)`  
-*Responsável pela gestão de oportunidades comerciais em formato Kanban, distribuição de leads para vendedores, agendamento de reuniões e assinatura digital de contratos.*
+### Grupo 2: Pipeline Comercial, CRM & Contratos
+- **Módulo SaaS Alvo:** `RD Station CRM (Plano Avançado para Equipes de Vendas)`
+- **Subtotal de Economia do Grupo:** **R$ 36.000/ano**
+- **Escopo:** *Frente responsável pela gestão visual de oportunidades comerciais em formato Kanban, distribuição de leads qualificados, histórico de contatos, agendamento de reuniões e assinatura de propostas.*
 
-| # | Ferramenta | Papel no Pilar | Licença | Repositório GitHub |
-| :---: | :--- | :--- | :---: | :--- |
-| 1 | **Twenty** | Interface principal dos vendedores para acompanhamento de negócios, tarefas e histórico de contatos. | `AGPL-3.0` | [https://github.com/twentyhq/twenty](https://github.com/twentyhq/twenty) |
-| 2 | **Cal.com** | Elimina a fricção na marcação de reuniões de qualificação e fechamento com clientes. | `AGPL-3.0` | [https://github.com/calcom/cal.com](https://github.com/calcom/cal.com) |
-| 3 | **Documenso** | Formalização jurídica de propostas comerciais e contratos sem custo por documento. | `AGPL-3.0` | [https://github.com/documenso/documenso](https://github.com/documenso/documenso) |
-| 4 | **EspoCRM** | Gerencia contas complexas B2B, hierarquia de permissões e regras avançadas de comissionamento. | `GPL-3.0` | [https://github.com/espocrm/espocrm](https://github.com/espocrm/espocrm) |
+| # | Ferramenta | Substitui Diretamente | Racional da Escolha | Economia Estimada | Licença |
+| :---: | :--- | :--- | :--- | :---: | :---: |
+| 1 | **Twenty** | RD Station CRM (Módulo de Pipeline Kanban, Oportunidades & Tarefas) | Arquitetura reativa ultrarrápida em React/TypeScript com sincronização bidirecional de e-mails, campos customizados ilimitados e experiência de usuário moderna superior a CRMs legados. | **R$ 24.000/ano (Equipe de 10 vendedores)** | `AGPL-3.0` |
+| 2 | **Cal.com** | RD Station CRM (Agendamentos) / Calendly Integrado | Suporte a distribuição round-robin entre múltiplos corretores/vendedores, integração direta com CalDAV, Google e Outlook e total personalização sob domínio próprio. | **R$ 12.000/ano** | `AGPL-3.0` |
+| 3 | **Documenso** | Clicksign / DocuSign / Módulo de Propostas Comerciais | Garante soberania jurídica dos documentos com trilha de auditoria criptográfica e registro de IPs, sem impor limites de contratos assinados por mês. | **R$ 18.000/ano** | `AGPL-3.0` |
+| 4 | **EspoCRM** | RD Station CRM (Módulos Corporativos Avançados & Múltiplos Pipelines) | Mecanismo BPM no-code maduro para operações B2B que necessitam de regras de aprovação de desconto e múltiplos pipelines simultâneos por linha de produto. | **R$ 18.000/ano** | `GPL-3.0` |
 
-### Pilar 3: Atendimento Omnicanal, WhatsApp & Chatbots
-**Módulo SaaS Alvo:** `RD Station Conversas (Tallos / Z-API)`  
-*Responsável pela caixa de entrada unificada de atendimento ao cliente, conexão estável com múltiplos números de WhatsApp e triagem automatizada via chatbots interativos.*
+### Grupo 3: Atendimento Omnichannel & WhatsApp
+- **Módulo SaaS Alvo:** `RD Station Conversas (Antigo Tallos / Módulos de Mensageria)`
+- **Subtotal de Economia do Grupo:** **R$ 36.000/ano**
+- **Escopo:** *Frente responsável pela caixa de entrada unificada multicanal, conexão estável com múltiplos números de WhatsApp sem taxas por mensagem e triagem inteligente com chatbots.*
 
-| # | Ferramenta | Papel no Pilar | Licença | Repositório GitHub |
-| :---: | :--- | :--- | :---: | :--- |
-| 1 | **Chatwoot** | Inbox unificada para múltiplos atendentes humanos responderem WhatsApp, Webchat e Instagram. | `MIT` | [https://github.com/chatwoot/chatwoot](https://github.com/chatwoot/chatwoot) |
-| 2 | **Evolution API** | Conecta os números de WhatsApp corporativos e integra diretamente com o Chatwoot e n8n. | `Apache-2.0` | [https://github.com/EvolutionAPI/evolution-api](https://github.com/EvolutionAPI/evolution-api) |
-| 3 | **Typebot** | Realiza o primeiro atendimento, coleta dados do lead e transfere para a fila certa no Chatwoot. | `AGPL-3.0` | [https://github.com/baptisteArno/typebot.io](https://github.com/baptisteArno/typebot.io) |
-| 4 | **WAHA** | Redundância de conexão WhatsApp para disparos de alertas transacionais críticos. | `Apache-2.0` | [https://github.com/devlikeapro/waha](https://github.com/devlikeapro/waha) |
+| # | Ferramenta | Substitui Diretamente | Racional da Escolha | Economia Estimada | Licença |
+| :---: | :--- | :--- | :--- | :---: | :---: |
+| 1 | **Chatwoot** | RD Station Conversas (Painel de Atendimento Multiatendente) | Software líder global em suporte omnicanal aberto, eliminando a cobrança por licença de atendente e fornecendo relatórios completos de CSAT e tempo de primeira resposta. | **R$ 36.000/ano (10 operadores)** | `MIT` |
+| 2 | **Evolution API** | RD Station Conversas (Conectores Proprietários Z-API / Gupshup) | API brasileira madura com suporte a múltiplas instâncias simultâneas, conversão automática de áudios em formato compatível e integração nativa de 1 clique com o Chatwoot. | **R$ 18.000/ano** | `Apache-2.0` |
+| 3 | **Typebot** | RD Station Conversas (Chatbots de Triagem) / Landbot | Melhor construtor visual de fluxos conversacionais do mercado, com suporte a variáveis, ramificações condicionais e integração nativa com modelos de IA para atendimento automático. | **R$ 14.400/ano** | `AGPL-3.0` |
+| 4 | **WAHA** | RD Station Notificações WhatsApp / Twilio Messaging | Solução headless ultra-estável em contêiner isolado para garantir que mensagens transacionais de sistema sejam enviadas mesmo em caso de sobrecarga da fila de atendimento. | **R$ 12.000/ano** | `Apache-2.0` |
 
 ---
 
@@ -59,12 +62,12 @@
 
 ### Fluxo de Dados Integrado
 ```
-1. Lead entra via Typebot ou Landing Page Directus;
-2. Webhook dispara no n8n que cadastra o contato no Mautic para fluxo de nutrição;
-3. Ao atingir pontuação de qualificação (Lead Scoring >= 50), o Mautic aciona o n8n;
-4. O n8n cria a Oportunidade no Twenty CRM e abre uma sala de conversa no Chatwoot;
-5. O vendedor agenda demonstração via Cal.com e envia proposta pelo Documenso;
-6. O status de ganho atualiza o ERP e encerra o ciclo comercial com registro integral.
+1. Entrada de Leads: Lead preenche formulário no Typebot ou na Landing Page gerenciada pelo Directus;
+2. Cadastramento & Nutrição: O webhook dispara no n8n que cadastra o contato no Mautic e inicia a régua de nutrição de e-mails;
+3. Qualificação por Lead Scoring: Ao atingir 50 pontos no Mautic, um webhook notifica o n8n;
+4. Criação de Oportunidade: O n8n cria a negociação no Twenty CRM e abre uma sala de contato prioritária no Chatwoot;
+5. Agendamento & Fechamento: O vendedor envia link do Cal.com para demonstração e emite contrato pelo Documenso;
+6. Sincronização Final: A assinatura do contrato atualiza o status de 'Ganho' no Twenty CRM e notifica o time no WhatsApp.
 ```
 
 ---

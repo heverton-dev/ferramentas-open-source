@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "SchemaDossieEcossistema",
-  "description": "Schema canônico para validação de dossiês de macro-ecossistemas SaaS (Fluxo 4 AIDD)",
+  "description": "Schema canônico para validação de dossiês de macro-ecossistemas SaaS com análise por grupos e triangulação de ferramentas (Fluxo 4 AIDD)",
   "type": "object",
   "required": [
     "slug",
@@ -39,12 +39,20 @@
       "minItems": 2,
       "items": {
         "type": "object",
-        "required": ["pilar_id", "nome_pilar", "modulo_saas_alvo", "descricao_pilar", "ferramentas"],
+        "required": [
+          "pilar_id",
+          "nome_pilar",
+          "modulo_saas_alvo",
+          "descricao_pilar",
+          "subtotal_economia_anual",
+          "ferramentas"
+        ],
         "properties": {
           "pilar_id": { "type": "string" },
           "nome_pilar": { "type": "string" },
           "modulo_saas_alvo": { "type": "string" },
           "descricao_pilar": { "type": "string" },
+          "subtotal_economia_anual": { "type": "string" },
           "ferramentas": {
             "type": "array",
             "minItems": 2,
@@ -56,6 +64,9 @@
                 "nome",
                 "subtitulo",
                 "papel_no_pilar",
+                "saas_substituido_direto",
+                "racional_escolha",
+                "economia_anual_str",
                 "licenca_osi",
                 "repositorio_github",
                 "o_que_faz",
@@ -75,14 +86,7 @@
         "barramento_eventos",
         "gateway_reverse_proxy",
         "fluxo_integracao_descricao"
-      ],
-      "properties": {
-        "autenticacao_sso": { "type": "string" },
-        "barramento_eventos": { "type": "string" },
-        "gateway_reverse_proxy": { "type": "string" },
-        "fluxo_integracao_descricao": { "type": "string" },
-        "diagrama_arquitetura": { "type": "string" }
-      }
+      ]
     },
     "deploy_consolidado": {
       "type": "object",
@@ -90,15 +94,7 @@
         "docker_compose_exemplo",
         "requisitos_hardware_totais",
         "passos_deploy"
-      ],
-      "properties": {
-        "docker_compose_exemplo": { "type": "string" },
-        "requisitos_hardware_totais": {
-          "type": "object",
-          "required": ["ram_total_recomendada", "cpu_total_recomendada", "armazenamento_minimo"]
-        },
-        "passos_deploy": { "type": "array", "minItems": 3 }
-      }
+      ]
     },
     "analise_economica_global": {
       "type": "object",

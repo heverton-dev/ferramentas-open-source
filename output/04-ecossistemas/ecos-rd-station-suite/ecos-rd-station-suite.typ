@@ -16,7 +16,7 @@
 
 #set text(
   font: ("Segoe UI", "Arial", "Liberation Sans"),
-  size: 9pt,
+  size: 8.5pt,
   fill: rgb("#0f172a"),
   lang: "pt"
 )
@@ -45,64 +45,67 @@
   stroke: 0.5pt + rgb("#cbd5e1"),
   inset: 6pt,
   [*Custo SaaS Anual*], [*Custo VPS Soberana*], [*Economia Líquida*], [*Payback*],
-  [R\$ 114.000/ano (RD Marketing Pro R\$ 42k + RD CRM 15 usuários R\$ 36k + RD Conversas 10 atendentes R\$ 36k)], [R\$ 4.200/ano (VPS 8 vCPU / 16 GB RAM a R\$ 350/mês)], [*R\$ 109.800/ano (Economia de 96.3%)*], [Payback positivo em apenas 14 dias de operação unificada.]
+  [R\$ 114.000/ano (RD Marketing Pro R\$ 42k + RD CRM 10 vendedores R\$ 36k + RD Conversas 10 atendentes R\$ 36k)], [R\$ 4.200/ano (VPS 8 vCPU / 16 GB RAM a R\$ 350/mês)], [*R\$ 109.800/ano (Economia Líquida de 96.3%)*], [Payback positivo em apenas 14 dias de operação unificada.]
 )
 
 #v(8pt)
 
-== 2. Pilares Funcionais do Ecossistema
+== 2. Análise Detalhada por Grupos de Negócio
 
 
-=== Pilar 1: Marketing, Nutrição & Landing Pages
-#text(size: 8.5pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS: RD Station Marketing (Pro/Enterprise)] \
-#text(size: 8.5pt, style: "italic", fill: rgb("#475569"))[Responsável por captura de leads, criação de landing pages dinâmicas, disparos de e-mail marketing em alta escala, automação de fluxos de nutrição e cálculo de lead scoring.] \
+=== Grupo 1: Marketing, Nutrição & Landing Pages
+#text(size: 8.5pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS: RD Station Marketing (Planos Pro / Enterprise)] \
+#text(size: 8.5pt, fill: rgb("#00875A"), weight: "bold")[Economia do Grupo: R\$ 42.000/ano] \
+#text(size: 8.5pt, style: "italic", fill: rgb("#475569"))[Frente responsável pela atração de tráfego, captura e enriquecimento de contatos, criação autônoma de landing pages dinâmicas, disparos de e-mail marketing em massa e automação de fluxos com pontuação de leads (lead scoring).] \
 #v(4pt)
 
 #table(
-  columns: (0.8fr, 2.5fr, 3.5fr, 1.5fr),
+  columns: (0.6fr, 1.8fr, 2.8fr, 1.8fr, 1.0fr),
   fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
   stroke: 0.5pt + rgb("#e2e8f0"),
-  inset: 5pt,
-  [*Nº*], [*Ferramenta*], [*Papel no Pilar*], [*Licença*],
-  [1], [*Mautic*], [Motor central de automação de marketing, segmentação dinâmica e pontuação de leads.], [`GPL-3.0`],
-  [2], [*Listmonk*], [Entrega de e-mails em massa e newsletters com custo quase nulo via Amazon SES.], [`AGPL-3.0`],
-  [3], [*Directus*], [Gestão autônoma de conteúdo das landing pages e portais corporativos sem depender de desenvolvedores.], [`GPL-3.0`],
+  inset: 4.5pt,
+  [*Nº*], [*Ferramenta*], [*Substitui Diretamente*], [*Economia*], [*Licença*],
+  [1], [*Mautic*], [RD Station Marketing (Módulo de Automação de Fluxos & Lead Scoring)], [R\$ 42.000/ano (Base de 50.000 leads)], [`GPL-3.0`],
+  [2], [*Listmonk*], [RD Station Marketing (Módulo de Disparos de E-mail & Broadcast)], [R\$ 18.000/ano], [`AGPL-3.0`],
+  [3], [*Directus*], [RD Station Marketing (Construtor de Landing Pages & Formulários Estáticos)], [R\$ 12.000/ano], [`GPL-3.0`],
 )
 #v(8pt)
 
-=== Pilar 2: Pipeline de Vendas, CRM & Fechamento
-#text(size: 8.5pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS: RD Station CRM (Avançado)] \
-#text(size: 8.5pt, style: "italic", fill: rgb("#475569"))[Responsável pela gestão de oportunidades comerciais em formato Kanban, distribuição de leads para vendedores, agendamento de reuniões e assinatura digital de contratos.] \
+=== Grupo 2: Pipeline Comercial, CRM & Contratos
+#text(size: 8.5pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS: RD Station CRM (Plano Avançado para Equipes de Vendas)] \
+#text(size: 8.5pt, fill: rgb("#00875A"), weight: "bold")[Economia do Grupo: R\$ 36.000/ano] \
+#text(size: 8.5pt, style: "italic", fill: rgb("#475569"))[Frente responsável pela gestão visual de oportunidades comerciais em formato Kanban, distribuição de leads qualificados, histórico de contatos, agendamento de reuniões e assinatura de propostas.] \
 #v(4pt)
 
 #table(
-  columns: (0.8fr, 2.5fr, 3.5fr, 1.5fr),
+  columns: (0.6fr, 1.8fr, 2.8fr, 1.8fr, 1.0fr),
   fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
   stroke: 0.5pt + rgb("#e2e8f0"),
-  inset: 5pt,
-  [*Nº*], [*Ferramenta*], [*Papel no Pilar*], [*Licença*],
-  [1], [*Twenty*], [Interface principal dos vendedores para acompanhamento de negócios, tarefas e histórico de contatos.], [`AGPL-3.0`],
-  [2], [*Cal.com*], [Elimina a fricção na marcação de reuniões de qualificação e fechamento com clientes.], [`AGPL-3.0`],
-  [3], [*Documenso*], [Formalização jurídica de propostas comerciais e contratos sem custo por documento.], [`AGPL-3.0`],
-  [4], [*EspoCRM*], [Gerencia contas complexas B2B, hierarquia de permissões e regras avançadas de comissionamento.], [`GPL-3.0`],
+  inset: 4.5pt,
+  [*Nº*], [*Ferramenta*], [*Substitui Diretamente*], [*Economia*], [*Licença*],
+  [1], [*Twenty*], [RD Station CRM (Módulo de Pipeline Kanban, Oportunidades & Tarefas)], [R\$ 24.000/ano (Equipe de 10 vendedores)], [`AGPL-3.0`],
+  [2], [*Cal.com*], [RD Station CRM (Agendamentos) / Calendly Integrado], [R\$ 12.000/ano], [`AGPL-3.0`],
+  [3], [*Documenso*], [Clicksign / DocuSign / Módulo de Propostas Comerciais], [R\$ 18.000/ano], [`AGPL-3.0`],
+  [4], [*EspoCRM*], [RD Station CRM (Módulos Corporativos Avançados & Múltiplos Pipelines)], [R\$ 18.000/ano], [`GPL-3.0`],
 )
 #v(8pt)
 
-=== Pilar 3: Atendimento Omnicanal, WhatsApp & Chatbots
-#text(size: 8.5pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS: RD Station Conversas (Tallos / Z-API)] \
-#text(size: 8.5pt, style: "italic", fill: rgb("#475569"))[Responsável pela caixa de entrada unificada de atendimento ao cliente, conexão estável com múltiplos números de WhatsApp e triagem automatizada via chatbots interativos.] \
+=== Grupo 3: Atendimento Omnichannel & WhatsApp
+#text(size: 8.5pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS: RD Station Conversas (Antigo Tallos / Módulos de Mensageria)] \
+#text(size: 8.5pt, fill: rgb("#00875A"), weight: "bold")[Economia do Grupo: R\$ 36.000/ano] \
+#text(size: 8.5pt, style: "italic", fill: rgb("#475569"))[Frente responsável pela caixa de entrada unificada multicanal, conexão estável com múltiplos números de WhatsApp sem taxas por mensagem e triagem inteligente com chatbots.] \
 #v(4pt)
 
 #table(
-  columns: (0.8fr, 2.5fr, 3.5fr, 1.5fr),
+  columns: (0.6fr, 1.8fr, 2.8fr, 1.8fr, 1.0fr),
   fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
   stroke: 0.5pt + rgb("#e2e8f0"),
-  inset: 5pt,
-  [*Nº*], [*Ferramenta*], [*Papel no Pilar*], [*Licença*],
-  [1], [*Chatwoot*], [Inbox unificada para múltiplos atendentes humanos responderem WhatsApp, Webchat e Instagram.], [`MIT`],
-  [2], [*Evolution API*], [Conecta os números de WhatsApp corporativos e integra diretamente com o Chatwoot e n8n.], [`Apache-2.0`],
-  [3], [*Typebot*], [Realiza o primeiro atendimento, coleta dados do lead e transfere para a fila certa no Chatwoot.], [`AGPL-3.0`],
-  [4], [*WAHA*], [Redundância de conexão WhatsApp para disparos de alertas transacionais críticos.], [`Apache-2.0`],
+  inset: 4.5pt,
+  [*Nº*], [*Ferramenta*], [*Substitui Diretamente*], [*Economia*], [*Licença*],
+  [1], [*Chatwoot*], [RD Station Conversas (Painel de Atendimento Multiatendente)], [R\$ 36.000/ano (10 operadores)], [`MIT`],
+  [2], [*Evolution API*], [RD Station Conversas (Conectores Proprietários Z-API / Gupshup)], [R\$ 18.000/ano], [`Apache-2.0`],
+  [3], [*Typebot*], [RD Station Conversas (Chatbots de Triagem) / Landbot], [R\$ 14.400/ano], [`AGPL-3.0`],
+  [4], [*WAHA*], [RD Station Notificações WhatsApp / Twilio Messaging], [R\$ 12.000/ano], [`Apache-2.0`],
 )
 #v(8pt)
 
