@@ -7,6 +7,10 @@
 
 ## 📌 Aprendizados Registrados
 
+### [2026-08-28] Regra R20 · Visual Corporativo Estrito & Proibição Absoluta de Emojis
+* **Decisão & Governança:** Fica estritamente proibido o uso de emojis ou pictogramas em todos os fluxos (Fluxo 1, Fluxo 2, Fluxo 3, Fluxo 4 e Pipeline Total) e em todos os formatos de materiais gerados (HTML Diamante R5, Markdown, PDF Typst, relatórios executivos e fascículos de engenharia).
+* **Racional Executivo:** Emojis empobrecem o posicionamento visual corporativo/técnico dos materiais perante tomadores de decisão (C-Level, Diretores e Engenheiros). A elegância visual é garantida por tipografia sóbria (`Liberation Serif` / `Liberation Sans`), hierarquia rígida de espaçamentos, badges formais de texto e tabelas de alta densidade técnica.
+
 ### [2026-08-27] Soberania de Pasta Única `output/` & Deploy Direto (Anti-Forks)
 * **Decisão:** A pasta duplicada `docs/` foi eliminada definitivamente do repositório. Todos os compêndios dos 3 fluxos vivem na estrutura soberana tripartite dentro de `output/` (`01-listas-horizontais/`, `02-dossies-verticais/`, `03-manuais-e-trilhas/`).
 * **Blindagem de Conta GitHub:** Banido expressamente qualquer script de auto-forking em lote via API para prevenir sanções de conta. O deploy online é realizado via GitHub Actions direta (`.github/workflows/deploy-pages.yml`) a partir de `output/`.

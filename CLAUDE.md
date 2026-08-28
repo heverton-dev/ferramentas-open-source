@@ -40,8 +40,9 @@ alwaysApply: true
 - **R15 (Segredos):** Zero credenciais versionadas. O hook `pre-commit` bloqueia detecções.
 - **R16 (Nunca Commitar Vermelho):** Pós-implementação: suite de testes e gates ➔ 100% verde ➔ commit + push.
 - **R17 (Integridade OSI):** Ferramentas devem ter licença OSI explícita, SaaS substituído e URL válida.
-- **R18 (Higiene Soberana):** Zero `.tmp`/`.bak`/`.typ`. Pasta soberana única `output/` (`01-listas-horizontais/`, `02-dossies-verticais/`, `03-manuais-e-trilhas/`). Proibido auto-fork em lote.
+- **R18 (Higiene Soberana):** Zero `.tmp`/`.bak`/`.typ`. Pasta soberana única `output/` (`01-listas-horizontais/`, `02-dossies-verticais/`, `03-manuais-e-trilhas/`, `04-ecossistemas/`). Proibido auto-fork em lote.
 - **R19 (Comunicação Direta):** Resultado na primeira linha. Uma sentença por tópico. Verbos de ação. Zero clichês.
+- **R20 (Visual Corporativo Estrito & Proibição de Emojis):** Proibição absoluta do uso de emojis ou pictogramas em todos os materiais gerados em todos os fluxos (HTML, Markdown, PDF Typst, relatórios executivos, manuais e trilhas). O visual deve ser 100% corporativo, sóbrio, elegante e técnico, utilizando tipografia formal, badges, numeração e tabelas.
 
 ## 2. Squad & Especialistas
 

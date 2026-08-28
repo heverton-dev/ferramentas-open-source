@@ -1,4 +1,4 @@
-﻿---
+---
 description: Governanca universal, squad e fluxo do projeto — orquestrador para qualquer agente neste diretorio.
 alwaysApply: true
 ---
@@ -40,8 +40,9 @@ alwaysApply: true
 - **R15 (Segredos):** Zero credenciais versionadas. O hook `pre-commit` bloqueia detecções.
 - **R16 (Nunca Commitar Vermelho):** Pós-implementação: suite de testes e gates ➔ 100% verde ➔ commit + push.
 - **R17 (Integridade OSI):** Ferramentas devem ter licença OSI explícita, SaaS substituído e URL válida.
-- **R18 (Higiene Soberana):** Zero `.tmp`/`.bak`/`.typ`. Pasta soberana única `output/` (`01-listas-horizontais/`, `02-dossies-verticais/`, `03-manuais-e-trilhas/`). Proibido auto-fork em lote.
+- **R18 (Higiene Soberana):** Zero `.tmp`/`.bak`/`.typ`. Pasta soberana única `output/` (`01-listas-horizontais/`, `02-dossies-verticais/`, `03-manuais-e-trilhas/`, `04-ecossistemas/`). Proibido auto-fork em lote.
 - **R19 (Comunicação Direta):** Resultado na primeira linha. Uma sentença por tópico. Verbos de ação. Zero clichês.
+- **R20 (Visual Corporativo Estrito & Proibição de Emojis):** Proibição absoluta do uso de emojis ou pictogramas em todos os materiais gerados em todos os fluxos (HTML, Markdown, PDF Typst, relatórios executivos, manuais e trilhas). O visual deve ser 100% corporativo, sóbrio, elegante e técnico, utilizando tipografia formal, badges, numeração e tabelas.
 
 ## 2. Squad & Especialistas
 
@@ -55,12 +56,13 @@ alwaysApply: true
 - **MCPs (`.mcp.json`):** `db_state_esteira` (SQLite R11) e `file_validator` (Integridade R18).
 - **Templates:** `scripts/padroes/template_dossie_executivo.py`, `relatorio_enterprise.css`, `scripts/schemas/`.
 
-## 4. Os 3 Macro-Fluxos AIDD
+## 4. Os 4 Macro-Fluxos AIDD
 
-1. **Fluxo 1 · Listas Horizontais (49 Camadas):** `/fluxo1 [slug]` | `python scripts/run_fluxo1.py --slug <slug>` ➔ `output/01-listas-horizontais/list-<slug>/` (HTML R5, MD, PDF + relatórios)
+1. **Fluxo 1 · Listas Horizontais (Camadas Temáticas):** `/fluxo1 [slug]` | `python scripts/run_fluxo1.py --slug <slug>` ➔ `output/01-listas-horizontais/list-<slug>/` (HTML R5, MD, PDF + relatórios)
 2. **Fluxo 2 · Dossiês Verticais & Quinteto:** `/fluxo2 [saas]` | `python scripts/run_fluxo2.py --saas <saas>` ➔ `output/02-dossies-verticais/vert-<saas>/` (HTML R5-V, MD, PDF + relatórios)
 3. **Fluxo 3 · Manuais VPS & Trilhas:** `/fluxo3 [ferramenta] [saas]` | `python scripts/run_fluxo3.py --ferramenta <slug> --saas <saas>` ➔ `output/03-manuais-e-trilhas/<saas>/<ferramenta>/` (9 arquivos)
-4. **Pipeline Total:** `/fluxo-total` | `python scripts/run_fluxo_total.py`
+4. **Fluxo 4 · Macro-Ecossistemas & Suítes Integradas:** `/fluxo4 [ecossistema]` | `python scripts/run_fluxo4.py --ecossistema <slug>` ➔ `output/04-ecossistemas/ecos-<slug>/` (HTML R5-E, MD, PDF + relatórios)
+5. **Pipeline Total:** `/fluxo-total` | `python scripts/run_fluxo_total.py`
 
 ## 5. Portabilidade Multi-IDE & RTK
 
