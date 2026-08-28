@@ -1,60 +1,65 @@
 {
   "$schema": "../schemas/schema_manual_operacional.json",
-  "produto_foco": "BUZZ",
+  "produto_foco": "Block BUZZ",
   "slug": "buzz",
-  "saas_origem": "otter-ai",
-  "versao": "0.11.0",
-  "licenca_osi": "MIT",
-  "tempo_estimado_setup": "30 a 45 minutos (Conhecimento básico de Linux)",
+  "saas_origem": "slack",
+  "versao": "0.5.0",
+  "licenca_osi": "Apache-2.0",
+  "tempo_estimado_setup": "60 a 90 minutos (Conhecimento intermediário de Docker e Nostr)",
   "nivelamento_conceitual": [
     {
-      "termo": "BUZZ (A Ferramenta)",
-      "analogia_cotidiana": "Uma Secretária que Escuta Gravações e Digita Tudo",
-      "explicacao_simples": "BUZZ é um aplicativo que recebe um arquivo de áudio (mp3, wav, m4a) e automaticamente converte em texto escrito. Como se você tivesse uma secretária ouvindo sua reunião e digitando tudo. A diferença: BUZZ faz isso de graça, sem limites, e os dados ficam 100% com você."
+      "termo": "Block BUZZ (A Ferramenta)",
+      "analogia_cotidiana": "O Slack Que Você Controla Completamente",
+      "explicacao_simples": "BUZZ é um workspace de comunicação para equipes, como Slack ou Teams. A diferença crucial: você instala no seu servidor, os dados nunca saem de lá, e é totalmente open source. Sem mensalidade ao Salesforce. Sem espiar seus dados. 100% seu."
     },
     {
-      "termo": "Whisper (O Motor Invisível)",
-      "analogia_cotidiana": "O Ouvido Treinado que Entende Qualquer Sotaque",
-      "explicacao_simples": "Whisper é um modelo de inteligência artificial criado pelo OpenAI. Ele foi treinado com milhares de horas de áudio em 99 idiomas. BUZZ usa Whisper para fazer a 'escuta mágica'. Você não paga nada a OpenAI; Whisper roda no seu servidor."
+      "termo": "Nostr (O Protocolo de Fundo)",
+      "analogia_cotidiana": "Email, Mas Para Mensagens Descentralizadas",
+      "explicacao_simples": "Email é descentralizado: você pode ter Gmail, Outlook, Yahoo e trocar mensagens. Nostr é similar. BUZZ usa Nostr como camada de sincronização. Seus relays (servidores) falam entre si. Você não fica preso a um único provedor."
     },
     {
       "termo": "VPS (Servidor Privado Virtual)",
-      "analogia_cotidiana": "Uma Sala de Computadores Alugada 24/7",
-      "explicacao_simples": "Você não quer deixar seu computador ligado 24h transcrevendo áudio. Aluga um servidor profissional (VPS) por R$ 80-150/mês em um data center. Coloca BUZZ lá e acessa via navegador web de qualquer lugar."
+      "analogia_cotidiana": "Uma Sala de Servidores Alugada 24/7",
+      "explicacao_simples": "Você aluga um computador profissional por R$ 100-300/mês em um data center. Coloca BUZZ lá. Sua equipe acessa via web (HTTPS) ou app desktop. Sem deixar o servidor ligado no escritório."
     },
     {
-      "termo": "Python e ffmpeg (Ferramentas de Fundo)",
-      "analogia_cotidiana": "O Martelo e a Chave Inglesa que BUZZ Precisa",
-      "explicacao_simples": "BUZZ é escrito em Python (linguagem de programação). Precisa de ffmpeg (conversor de áudio) para ler diferentes formatos de arquivo. Ambas são gratuitas e open source."
+      "termo": "Docker & Compose (Containerização)",
+      "analogia_cotidiana": "Um Pacote Pronto Com Tudo Que BUZZ Precisa",
+      "explicacao_simples": "BUZZ precisa de: PostgreSQL (banco), Redis (cache), MinIO (arquivos). Docker empacota tudo isso como caixas isoladas. Docker Compose orquestra: 'suba PostgreSQL, depois Redis, depois BUZZ'. Tudo em um comando."
     },
     {
-      "termo": "Fila de Transcrição",
-      "analogia_cotidiana": "A Fila do Banco: Cada Cliente Aguarda Sua Vez",
-      "explicacao_simples": "Quando você envia 5 áudios para BUZZ transcrever, ele não faz tudo junto (quebraria o servidor). Coloca na fila: áudio 1, depois 2, depois 3. Você recebe notificação quando cada um fica pronto."
+      "termo": "Chaves Nostr (Identidade Criptográfica)",
+      "analogia_cotidiana": "Seu CPF Digital, Mas Que Você Controla",
+      "explicacao_simples": "Nostr usa criptografia de chave pública. Você gera uma chave privada (guarda em segredo) e uma chave pública (publica). Seu relay BUZZ é identificado pela chave pública. Ninguém consegue se passar por você sem a chave privada."
     },
     {
-      "termo": "Transcrição vs Tradução",
-      "analogia_cotidiana": "Digitar vs Traduzir para Outra Língua",
-      "explicacao_simples": "BUZZ transcreve = converte áudio em texto do MESMO idioma. Você fala em inglês, BUZZ escreve em inglês. Tradução (converter inglês para português) é diferente; BUZZ pode fazer com plugin extra."
+      "termo": "Relay (Servidor Nostr)",
+      "analogia_cotidiana": "Uma Estação de Correio Que Distribui Mensagens",
+      "explicacao_simples": "Um relay recebe mensagens, armazena e distribui. BUZZ roda um relay nativo. Quando um usuário posta em BUZZ, a mensagem vai para o relay. Quando outro usuário acessa, o relay entrega a mensagem. Tudo encriptado."
     },
     {
-      "termo": "Taxa de Acurácia (Precisão)",
-      "analogia_cotidiana": "O Quanto a Secretária Acerta ao Digitar",
-      "explicacao_simples": "Whisper tem 95-99% de acurácia em idiomas comuns (inglês, português). Significa: a cada 100 palavras, errar 1-5. Áudio de baixa qualidade ou sotaque muito forte reduz a acurácia."
+      "termo": "TLS & Let's Encrypt (Criptografia na Web)",
+      "analogia_cotidiana": "Um Cadeado de Segurança Na Porta da Loja",
+      "explicacao_simples": "HTTPS (criptografia) é obrigatório em produção. Let's Encrypt fornece certificados grátis. Caddy (servidor web) renueva automaticamente a cada 3 meses. Ninguém espia suas mensagens em trânsito."
+    },
+    {
+      "termo": "Agent-Native (Colaboração Com IA)",
+      "analogia_cotidiana": "Um Colega Bot Que Participa da Reunião",
+      "explicacao_simples": "BUZZ foi desenhado para agentes IA trabalharem junto com humanos. Um bot pode postar, processar mensagens, executar ações. Slack/Teams não foram feitos para isso. BUZZ sim: é 'agent-native'."
     }
   ],
   "vps_recomendada": {
-    "provedor_modelo": "Hetzner Cloud CPX21 (2 vCPU, 4 GB RAM, EUR 9,90) ou Contabo VPS M",
-    "vcpu": "2 vCPU Dedicadas (AMD EPYC ou Intel Xeon E5) - Mínimo 1 vCPU, 2+ para velocidade",
-    "ram": "4 GB RAM mínimo (8 GB recomendado para transcrição paralela de vários áudios)",
-    "armazenamento": "80 GB SSD NVMe (mínimo 40 GB; crescer conforme volume de áudios)",
+    "provedor_modelo": "Hetzner Cloud CX31 (4 vCPU, 8 GB RAM, EUR 25,90) ou Contabo VPS XL",
+    "vcpu": "4 vCPU Dedicadas (AMD EPYC ou Intel Xeon) - Mínimo 2 vCPU, 4+ para produção com 10+ usuários",
+    "ram": "8 GB RAM mínimo (16 GB recomendado para 50+ usuários ou arquivos/mídia pesada)",
+    "armazenamento": "100 GB SSD NVMe (mínimo 50 GB; crescer conforme volume de repositórios Git + mídia)",
     "so_recomendado": "Ubuntu 22.04 LTS (x86_64) ou Debian 12",
-    "custo_mensal_estimado": "EUR 9,90 a 19,90/mês (~R$ 60 a R$ 120 na cotação média)",
+    "custo_mensal_estimado": "EUR 25,90 a 49,90/mês (~R$ 150 a R$ 300 na cotação média)",
     "portas_abertas": [
       "22/tcp (SSH - Acesso remoto exclusivo seu)",
-      "80/tcp (HTTP - Interface web padrão)",
-      "443/tcp (HTTPS - Interface web segura)",
-      "8000/tcp (API Interna - Se exposição opcional)"
+      "80/tcp (HTTP - Redirecionamento para HTTPS)",
+      "443/tcp (HTTPS - Interface web segura + WebSocket Nostr)",
+      "5432/tcp (PostgreSQL - NUNCA expor, apenas localhost)"
     ]
   },
   "instalacao_producao": {
@@ -62,342 +67,364 @@
       {
         "numero": 1,
         "titulo": "Acessar VPS via SSH e Atualizar Sistema",
-        "descricao": "Você se conecta ao seu servidor alugado. Primeiro passo: garantir que todas as ferramentas estejam atualizadas.",
-        "analogia": "Verificar se todos os fios da casa estão funcionando antes de instalar a TV.",
-        "o_que_acontece_na_tela": "Linhas em preto e branco mostrando pacotes atualizados.",
-        "como_saber_se_deu_certo": "Termina sem erros em vermelho. Prompt retorna normal.",
+        "descricao": "Você se conecta ao seu servidor. Primeira ação: garantir que tudo está atualizado.",
+        "analogia": "Verificar as tubulações e fiação da casa antes de morar nela.",
+        "o_que_acontece_na_tela": "Linhas mostrando pacotes atualizados.",
+        "como_saber_se_deu_certo": "Termina sem erros. Prompt retorna normal.",
         "comandos": "ssh root@seu_ip_vps\nsudo apt-get update\nsudo apt-get upgrade -y",
         "fonte_id": "F01"
       },
       {
         "numero": 2,
-        "titulo": "Instalar Python 3.11+, ffmpeg e Dependências",
-        "descricao": "BUZZ e Whisper rodam em Python. ffmpeg converte áudios. Ambos são gratuitos e open source.",
-        "analogia": "Comprar o motor (Python) e o conversor de combustível (ffmpeg) antes de montar o carro.",
-        "o_que_acontece_na_tela": "Muitas linhas de pacotes sendo baixados e instalados. Pode levar 3-5 minutos.",
-        "como_saber_se_deu_certo": "Termina com 'Processing triggers' sem erros. python3 --version retorna >= 3.11.",
-        "comandos": "sudo apt-get install -y python3.11 python3.11-venv python3.11-dev python3-pip ffmpeg git curl wget\npython3.11 --version\nffmpeg -version",
+        "titulo": "Instalar Docker e Docker Compose",
+        "descricao": "BUZZ roda em Docker. Vamos instalar Docker (engine) e Docker Compose (orquestrador).",
+        "analogia": "Instalar o 'gerenciador de caixas' antes de guardar caixas isoladas.",
+        "o_que_acontece_na_tela": "Repositório Docker adicionado. Pacotes instalados. Pode levar 2-3 minutos.",
+        "como_saber_se_deu_certo": "Comandos 'docker --version' e 'docker compose --version' retornam versões >= 24.x.",
+        "comandos": "sudo apt-get install -y docker.io docker-compose-plugin\nsudo usermod -aG docker $USER\nsudo systemctl start docker\nsudo systemctl enable docker\ndocker --version && docker compose --version",
         "fonte_id": "F01"
       },
       {
         "numero": 3,
-        "titulo": "Clonar Repositório BUZZ do GitHub",
-        "descricao": "Vamos buscar o código oficial de BUZZ do GitHub, clonar para a VPS e preparar o ambiente.",
-        "analogia": "Comprar um kit de móvel pronto do fabricante e desempacotar na sala.",
-        "o_que_acontece_na_tela": "Comando git clone baixando centenas de arquivos. Pode levar 1-2 minutos.",
-        "como_saber_se_deu_certo": "Pasta /var/www/buzz existe com subpastas: src/, tests/, requirements.txt, etc.",
-        "comandos": "cd /var/www\nsudo git clone https://github.com/chidiwilliams/buzz.git\ncd buzz\nsudo chown -R www-data:www-data /var/www/buzz",
+        "titulo": "Instalar Rust, Node.js 24+ e ffmpeg (Build & Runtime)",
+        "descricao": "BUZZ é escrito em Rust e Node.js. Precisamos de ambos. ffmpeg para processamento de mídia.",
+        "analogia": "Comprar as ferramentas específicas antes de montar o móvel.",
+        "o_que_acontece_na_tela": "Ferramentas sendo instaladas. Pode levar 5-10 minutos (Rust é grande).",
+        "como_saber_se_deu_certo": "Comandos 'rustc --version', 'node --version' (>= 24.0.0), 'npm --version', 'ffmpeg -version' retornam versões.",
+        "comandos": "sudo apt-get install -y build-essential curl git ffmpeg\ncurl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y\nsource $HOME/.cargo/env\ncurl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -\nsudo apt-get install -y nodejs\nrustc --version && node --version",
         "fonte_id": "F01"
       },
       {
         "numero": 4,
-        "titulo": "Criar Virtual Environment e Instalar Dependências Python",
-        "descricao": "Virtual environment isola o BUZZ de outros projetos Python. Instalamos Whisper, Flask (servidor web) e bibliotecas.",
-        "analogia": "Criar uma 'bolha isolada' para BUZZ para não conflitar com outros programas.",
-        "o_que_acontece_na_tela": "Muitos pacotes pip sendo instalados. Pode levar 5-10 minutos (primeiro Whisper é grande ~2GB).",
-        "como_saber_se_deu_certo": "Venv ativado e prompt mostra (buzz). Comando 'pip list' mostra whisper, flask, etc.",
-        "comandos": "cd /var/www/buzz\nsudo python3.11 -m venv venv\nsudo chown -R www-data:www-data venv\nsource venv/bin/activate\npip install --upgrade pip\npip install -r requirements.txt\npip install openai-whisper flask gunicorn",
+        "titulo": "Clonar Repositório BUZZ e Gerar Chaves Nostr",
+        "descricao": "Vamos buscar o código oficial de BUZZ do GitHub e gerar as chaves criptográficas para o relay.",
+        "analogia": "Comprar o kit pronto e gerar os documentos de identidade.",
+        "o_que_acontece_na_tela": "Git clonando repositório (~200 MB). Depois, gerando chaves (rápido).",
+        "como_saber_se_deu_certo": "Pasta /opt/buzz existe com arquivos Rust/Node.js. Arquivo .env contém RELAY_PK e RELAY_SK.",
+        "comandos": "sudo mkdir -p /opt/buzz && cd /opt/buzz\nsudo git clone https://github.com/block/buzz.git .\nsudo chown -R $USER:$USER /opt/buzz\ncd /opt/buzz\n# Gerar chaves Nostr:\nnode -e \"const crypto = require('crypto'); const sk = crypto.randomBytes(32).toString('hex'); console.log('RELAY_SK=' + sk);\" >> .env\nnode -e \"const crypto = require('crypto'); const pk = crypto.createPublicKey({key: Buffer.from(require('fs').readFileSync('.env', 'utf8').match(/RELAY_SK=(.+)/)[1], 'hex'), format: 'der', type: 'private'}).export({format: 'pem', type: 'pkcs8'}); console.log('RELAY_PK=' + pk.toString());\" >> .env",
         "fonte_id": "F01"
       },
       {
         "numero": 5,
-        "titulo": "Configurar Serviço Systemd para BUZZ (Auto-iniciar)",
-        "descricao": "Criamos um arquivo de serviço para que BUZZ inicie automaticamente ao rebootar a VPS.",
-        "analogia": "Programar a TV para ligar automaticamente às 7h da manhã.",
-        "o_que_acontece_na_tela": "Você abre editor nano, cola algumas linhas, salva.",
-        "como_saber_se_deu_certo": "Comando 'systemctl status buzz' mostra 'active (running)'.",
-        "comandos": "sudo nano /etc/systemd/system/buzz.service\n# Colar conteúdo do arquivo de configuração (ver próxima seção)\nsudo systemctl daemon-reload\nsudo systemctl enable buzz\nsudo systemctl start buzz",
-        "fonte_id": "F02"
+        "titulo": "Configurar Docker Compose para BUZZ",
+        "descricao": "Criamos um arquivo docker-compose.yml com PostgreSQL, Redis, MinIO e BUZZ configurados.",
+        "analogia": "Escrever a lista de ingredientes e modo de preparo para a receita.",
+        "o_que_acontece_na_tela": "Você abre editor nano, cola configuração, salva.",
+        "como_saber_se_deu_certo": "Arquivo /opt/buzz/docker-compose.yml existe com 150+ linhas.",
+        "comandos": "cd /opt/buzz\nsudo nano docker-compose.yml\n# Colar configuração do arquivo de composição (ver próxima seção)\nsudo docker compose config | head -20  # Validar sintaxe",
+        "fonte_id": "F01"
       },
       {
         "numero": 6,
-        "titulo": "Configurar Apache como Proxy Reverso para BUZZ",
-        "descricao": "Apache recebe requisições HTTPS em buzz.sua-empresa.com.br e passa para BUZZ rodando localmente.",
-        "analogia": "Um recepcionista (Apache) que recebe clientes e os encaminha ao gerente (BUZZ).",
-        "o_que_acontece_na_tela": "Você configura VirtualHost do Apache.",
-        "como_saber_se_deu_certo": "apache2ctl configtest retorna 'Syntax OK'. Site acessível via https://buzz.sua-empresa.com.br.",
-        "comandos": "sudo a2enmod proxy\nsudo a2enmod proxy_http\nsudo nano /etc/apache2/sites-available/buzz.conf\n# Colar configuração do proxy reverso\nsudo a2ensite buzz.conf\nsudo systemctl reload apache2",
+        "titulo": "Compilar BUZZ e Iniciar Serviços Docker",
+        "descricao": "Compilamos o backend Rust e inicializamos todos os containers.",
+        "analogia": "Montar o móvel e ligá-lo para verificar se funciona.",
+        "o_que_acontece_na_tela": "Compilação Rust leva 10-20 minutos (primeira vez). Docker containers iniciando.",
+        "como_saber_se_deu_certo": "Comando 'docker ps' mostra 5 containers em 'up': postgres, redis, minio, buzz-backend, buzz-frontend.",
+        "comandos": "cd /opt/buzz\nsudo docker compose build\nsudo docker compose up -d\nsudo docker compose ps",
         "fonte_id": "F02"
       },
       {
         "numero": 7,
-        "titulo": "Ativar HTTPS com Let's Encrypt",
-        "descricao": "Certificado SSL gratuito para HTTPS. Renovação automática a cada 3 meses.",
-        "analogia": "Colocar cadeado de segurança na porta.",
-        "o_que_acontece_na_tela": "Certbot pede email e domínio. Modifica Apache automaticamente.",
-        "como_saber_se_deu_certo": "Acessar https://buzz.sua-empresa.com.br sem avisos de certificado inválido.",
-        "comandos": "sudo apt-get install -y certbot python3-certbot-apache\nsudo certbot --apache -d buzz.sua-empresa.com.br",
+        "titulo": "Configurar Caddy como Proxy Reverso com TLS",
+        "descricao": "Caddy recebe HTTPS em buzz.sua-empresa.com.br e passa para BUZZ em localhost:3000.",
+        "analogia": "Um recepcionista que recebe clientes de fora e os encaminha internamente.",
+        "o_que_acontece_na_tela": "Caddy se instala, arquivo Caddyfile criado, TLS automático com Let's Encrypt.",
+        "como_saber_se_deu_certo": "Acessar https://buzz.sua-empresa.com.br retorna página de login do BUZZ sem avisos SSL.",
+        "comandos": "sudo apt-get install -y caddy\nsudo nano /etc/caddy/Caddyfile\n# Colar configuração do proxy\nsudo systemctl reload caddy",
         "fonte_id": "F02"
       },
       {
         "numero": 8,
-        "titulo": "Criar Diretórios de Armazenamento para Áudios e Transcrições",
-        "descricao": "Pastas isoladas para armazenar áudios recebidos, transcrições geradas e logs.",
-        "analogia": "Criar pastas bem organizadas para documentos: entrada, saída, arquivo.",
-        "o_que_acontece_na_tela": "Simples criação de diretórios.",
-        "como_saber_se_deu_certo": "Pastas existem e são acessíveis via BUZZ: /var/lib/buzz/uploads/, /var/lib/buzz/transcriptions/, /var/log/buzz/.",
-        "comandos": "sudo mkdir -p /var/lib/buzz/{uploads,transcriptions,models}\nsudo mkdir -p /var/log/buzz\nsudo chown -R www-data:www-data /var/lib/buzz /var/log/buzz\nsudo chmod 755 /var/lib/buzz /var/log/buzz",
+        "titulo": "Criar Usuário Admin e Configurar BUZZ",
+        "descricao": "Acessar https://buzz.sua-empresa.com.br e completar setup wizard (admin user, empresa, preferências).",
+        "analogia": "O primeiro boot de um novo sistema: perguntas sobre configuração inicial.",
+        "o_que_acontece_na_tela": "Interface web pedindo: Email do Admin, Senha, Nome da Empresa, Timezone, Domínio de Relay.",
+        "como_saber_se_deu_certo": "Você consegue fazer login com email/senha criados e vê o dashboard do BUZZ.",
+        "comandos": "Nenhum comando. Tudo é feito via navegador web em https://buzz.sua-empresa.com.br",
         "fonte_id": "F03"
       },
       {
         "numero": 9,
-        "titulo": "Testar BUZZ e Transcrever Áudio de Exemplo",
-        "descricao": "Fazer uma transcrição de teste para confirmar que tudo está funcionando.",
-        "analogia": "Ligar o motor do carro para verificar se está rodando corretamente.",
-        "o_que_acontece_na_tela": "Primeira execução baixa modelo Whisper (~2GB). Depois, transcreve um áudio de teste.",
-        "como_saber_se_deu_certo": "Arquivo de transcrição .txt gerado em /var/lib/buzz/transcriptions/ com o texto do áudio.",
-        "comandos": "cd /var/www/buzz\nsource venv/bin/activate\nwget https://example.com/audio-sample.wav -O /tmp/test.wav\npython -m buzz.cli /tmp/test.wav --output /var/lib/buzz/transcriptions/test.txt\ncat /var/lib/buzz/transcriptions/test.txt",
+        "titulo": "Configurar Backup Automatizado de Dados",
+        "descricao": "Script que faz backup diário do PostgreSQL, Redis e repositórios Git.",
+        "analogia": "Tirar fotografia do arquivo da empresa todo dia.",
+        "o_que_acontece_na_tela": "Script criado em /usr/local/bin/. Agendado via crontab.",
+        "como_saber_se_deu_certo": "Arquivo .tar.gz com backup existe em /backups/ com timestamp de hoje.",
+        "comandos": "sudo mkdir -p /backups\nsudo nano /usr/local/bin/backup-buzz.sh\n# Colar script de backup\nsudo chmod +x /usr/local/bin/backup-buzz.sh\nsudo crontab -e\n# Adicionar: 0 2 * * * /usr/local/bin/backup-buzz.sh",
         "fonte_id": "F04"
       }
     ],
     "arquivos_configuracao": [
       {
-        "caminho": "/etc/systemd/system/buzz.service",
-        "linguagem": "ini",
-        "conteudo": "[Unit]\nDescription=BUZZ - Transcrição de Áudio com Whisper\nAfter=network.target\n\n[Service]\nType=notify\nUser=www-data\nGroup=www-data\nWorkingDirectory=/var/www/buzz\nEnvironment=\"PATH=/var/www/buzz/venv/bin:/usr/local/bin:/usr/bin\"\nEnvironment=\"PYTHONUNBUFFERED=1\"\nEnvironment=\"WHISPER_MODEL=base\"\nExecStart=/var/www/buzz/venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 buzz.app:app\nRestart=always\nRestartSec=5\nStandardOutput=append:/var/log/buzz/buzz.log\nStandardError=append:/var/log/buzz/buzz-error.log\n\n[Install]\nWantedBy=multi-user.target",
-        "explicacao": "Arquivo systemd que define BUZZ como serviço. Inicia automaticamente em boot. Roda como www-data (usuário web seguro). Gunicorn é o servidor WSGI que executa Python. Modelo Whisper padrão é 'base' (equilibra velocidade e precisão)."
+        "caminho": "/opt/buzz/docker-compose.yml",
+        "linguagem": "yaml",
+        "conteudo": "version: '3.8'\n\nservices:\n  postgres:\n    image: postgres:16-alpine\n    container_name: buzz-postgres\n    environment:\n      POSTGRES_DB: buzz\n      POSTGRES_USER: buzzuser\n      POSTGRES_PASSWORD: SenhaSegura123!BuzzVPS\n    volumes:\n      - postgres_data:/var/lib/postgresql/data\n    networks:\n      - buzz-network\n    restart: unless-stopped\n\n  redis:\n    image: redis:7-alpine\n    container_name: buzz-redis\n    volumes:\n      - redis_data:/data\n    networks:\n      - buzz-network\n    restart: unless-stopped\n\n  minio:\n    image: minio/minio:latest\n    container_name: buzz-minio\n    environment:\n      MINIO_ROOT_USER: minioadmin\n      MINIO_ROOT_PASSWORD: SenhaSegura123!MinioVPS\n    volumes:\n      - minio_data:/data\n    networks:\n      - buzz-network\n    command: minio server /data\n    restart: unless-stopped\n\n  buzz:\n    build:\n      context: .\n      dockerfile: Dockerfile\n    container_name: buzz-server\n    depends_on:\n      - postgres\n      - redis\n      - minio\n    environment:\n      DATABASE_URL: postgres://buzzuser:SenhaSegura123!BuzzVPS@postgres:5432/buzz\n      REDIS_URL: redis://redis:6379\n      MINIO_ENDPOINT: minio:9000\n      MINIO_ACCESS_KEY: minioadmin\n      MINIO_SECRET_KEY: SenhaSegura123!MinioVPS\n      RELAY_PK: ${RELAY_PK}\n      RELAY_SK: ${RELAY_SK}\n      PORT: 3000\n      RUST_LOG: info\n    ports:\n      - \"3000:3000\"\n    volumes:\n      - /opt/buzz/data:/app/data\n    networks:\n      - buzz-network\n    restart: unless-stopped\n\nvolumes:\n  postgres_data:\n  redis_data:\n  minio_data:\n\nnetworks:\n  buzz-network:\n    driver: bridge",
+        "explicacao": "Docker Compose que orquestra: PostgreSQL (banco), Redis (cache), MinIO (armazenamento S3-compatível), BUZZ (server Rust em port 3000). Variáveis de ambiente carregadas de .env. Volumes persistem dados entre restarts."
       },
       {
-        "caminho": "/etc/apache2/sites-available/buzz.conf",
-        "linguagem": "apache",
-        "conteudo": "<VirtualHost *:80>\n    ServerName buzz.sua-empresa.com.br\n    Redirect / https://buzz.sua-empresa.com.br/\n</VirtualHost>\n\n<VirtualHost *:443>\n    ServerName buzz.sua-empresa.com.br\n    DocumentRoot /var/www/buzz\n\n    SSLEngine on\n    SSLCertificateFile /etc/letsencrypt/live/buzz.sua-empresa.com.br/fullchain.pem\n    SSLCertificateKeyFile /etc/letsencrypt/live/buzz.sua-empresa.com.br/privkey.pem\n\n    ProxyPreserveHost On\n    ProxyPass / http://127.0.0.1:8000/\n    ProxyPassReverse / http://127.0.0.1:8000/\n\n    <Location />\n        Require all granted\n    </Location>\n\n    ErrorLog ${APACHE_LOG_DIR}/buzz-error.log\n    CustomLog ${APACHE_LOG_DIR}/buzz-access.log combined\n</VirtualHost>",
-        "explicacao": "VirtualHost Apache que: 1) Redireciona HTTP → HTTPS. 2) Configura SSL com certificados Let's Encrypt. 3) Proxy reverso para BUZZ rodando em 127.0.0.1:8000. 4) Logs separados."
+        "caminho": "/etc/caddy/Caddyfile",
+        "linguagem": "caddy",
+        "conteudo": "buzz.sua-empresa.com.br {\n  encode gzip\n  reverse_proxy localhost:3000 {\n    header_up X-Forwarded-For {http.request.remote.host}\n    header_up X-Forwarded-Proto {http.request.proto}\n    header_up X-Real-IP {http.request.remote.host}\n  }\n  \n  # WebSocket suporte\n  reverse_proxy /ws/* localhost:3000 {\n    header_up Connection \"upgrade\"\n    header_up Upgrade \"websocket\"\n  }\n}",
+        "explicacao": "Caddyfile que: 1) Ativa TLS automático com Let's Encrypt. 2) Compressão gzip. 3) Proxy reverso para BUZZ em localhost:3000. 4) Suporte a WebSocket (protocolo Nostr). Caddy renova certificado automaticamente."
       },
       {
-        "caminho": "/var/www/buzz/config.env",
+        "caminho": "/opt/buzz/.env",
         "linguagem": "ini",
-        "conteudo": "# Configuração de Produção para BUZZ\nFLASK_ENV=production\nFLASK_DEBUG=0\nSECRET_KEY=SenhaSegura123456789AleatoriaMuitoForte\n\n# Whisper Config\nWHISPER_MODEL=base\nWHISPER_DEVICE=cpu\nWHISPER_LANGUAGE=pt\n\n# Storage Config\nUPLOAD_FOLDER=/var/lib/buzz/uploads\nOUTPUT_FOLDER=/var/lib/buzz/transcriptions\nMAX_FILE_SIZE=500MB\n\n# Queue Config\nMAX_CONCURRENT_JOBS=2\nJOB_TIMEOUT=3600\n\n# Logging\nLOG_LEVEL=INFO\nLOG_FILE=/var/log/buzz/buzz.log",
-        "explicacao": "Configurações de produção do BUZZ: Ambiente (production), Modelo Whisper (base = bom equilíbrio), Idioma padrão (português), Pastas de armazenamento, Limite de arquivo (500MB), Máximo de transcrições paralelas (2 para CPU com 2 cores), Timeout (1 hora), Logging."
+        "conteudo": "# Ambiente de Produção\nRUST_ENV=production\nRUST_LOG=info\n\n# Banco de Dados\nDATABASE_URL=postgres://buzzuser:SenhaSegura123!BuzzVPS@postgres:5432/buzz\nREDIS_URL=redis://redis:6379\n\n# Storage (MinIO)\nMINIO_ENDPOINT=minio:9000\nMINIO_ACCESS_KEY=minioadmin\nMINIO_SECRET_KEY=SenhaSegura123!MinioVPS\nMINIO_BUCKET=buzz-media\n\n# Nostr Relay\nRELAY_PK=SEU_PUBLIC_KEY_HEX_AQUI\nRELAY_SK=SEU_SECRET_KEY_HEX_AQUI\n\n# Server\nPORT=3000\nBIND_ADDR=0.0.0.0\nCORS_ORIGINS=https://buzz.sua-empresa.com.br\n\n# Media Config\nMAX_FILE_SIZE=500MB\nALLOWED_MEDIA_TYPES=image/*,video/*,audio/*,application/pdf",
+        "explicacao": "Configurações críticas: banco de dados, cache, storage S3, chaves Nostr (RELAY_PK e RELAY_SK geradas na etapa 4), port e CORS. Substitua SUA_EMPRESA e os valores de exemplo antes de usar em produção."
+      },
+      {
+        "caminho": "/usr/local/bin/backup-buzz.sh",
+        "linguagem": "bash",
+        "conteudo": "#!/bin/bash\nBACKUP_DIR=\"/backups\"\nDATE=$(date +%Y%m%d_%H%M%S)\n\necho \"[$(date)] Iniciando backup de BUZZ...\" >> /var/log/buzz-backup.log\n\n# Backup PostgreSQL\ncd /opt/buzz\ndocker compose exec -T postgres pg_dump -U buzzuser buzz | gzip > $BACKUP_DIR/buzz_postgres_$DATE.sql.gz\n\n# Backup Redis\ndocker compose exec -T redis redis-cli BGSAVE\nsleep 5\ndocker compose exec -T redis cat /data/dump.rdb > $BACKUP_DIR/buzz_redis_$DATE.rdb\n\n# Backup MinIO (repositórios e mídia)\ntar --exclude='*/cache' -czf $BACKUP_DIR/buzz_storage_$DATE.tar.gz /opt/buzz/data\n\n# Manter apenas últimos 30 dias\nfind $BACKUP_DIR -name 'buzz_*' -mtime +30 -delete\n\necho \"[$(date)] Backup concluído com sucesso.\" >> /var/log/buzz-backup.log",
+        "explicacao": "Script de backup que: 1) Faz dump do PostgreSQL. 2) Copia snapshot Redis. 3) Compacta diretório de dados. 4) Deleta backups com 30+ dias. Execute diariamente via crontab às 2h da manhã."
       }
     ]
   },
   "manual_uso_exaustivo": {
-    "arquitetura_uso": "BUZZ funciona em três camadas: (1) Interface Web (Apache/HTTPS) onde usuários acessam o dashboard e fazem upload de áudios. (2) Fila de Processamento (Python + Whisper) que transcre um áudio por vez (serializado para não sobrecarregar CPU). (3) Armazenamento (Diretórios /var/lib/buzz) onde áudios brutos e transcrições em .txt/.json são salvos. Whisper roda na CPU (ou GPU se disponível) e processa áudio em chunks de 30 segundos.",
+    "arquitetura_uso": "BUZZ funciona em 4 camadas: (1) Camada Web (Caddy + TLS) recebe HTTPS, (2) Backend Rust roda servidor Nostr relay em port 3000, (3) PostgreSQL armazena mensagens, usuários, canais (eventos Nostr), (4) Redis caches presença em tempo real, indicadores de digitação, sessões. MinIO armazena mídia (arquivos, imagens, vídeos). Tudo containerizado em Docker Compose, isolado de outros serviços.",
     "roteiro_primeiro_voo": [
       {
-        "passo": "1. Acessar Dashboard",
-        "acao": "Abra https://buzz.sua-empresa.com.br em navegador web. Você verá página inicial com campo 'Upload de Áudio'.",
-        "resultado_esperado": "Dashboard carrega sem erros. Botão 'Selecionar Arquivo' e indicador 'Status: Pronto para Transcever' visíveis."
+        "passo": "1. Acessar Dashboard Web",
+        "acao": "Abra https://buzz.sua-empresa.com.br em navegador. Você verá tela de login.",
+        "resultado_esperado": "Página de login carrega sem erros SSL. Caixa de email e senha visíveis."
       },
       {
-        "passo": "2. Upload de Arquivo de Áudio",
-        "acao": "Clique em 'Selecionar Arquivo'. Escolha um MP3, WAV ou M4A com até 500MB. Clique 'Transcrever'.",
-        "resultado_esperado": "Arquivo é enviado. Dashboard mostra 'Processando... 25%' e aumenta até 100%. Transcrição aparece em segundos/minutos (conforme tamanho do áudio)."
+        "passo": "2. Criar Primeiro Usuário (Admin)",
+        "acao": "Clique 'Criar Conta'. Digite email, senha, nome. Clique 'Registrar'.",
+        "resultado_esperado": "Login bem-sucedido. Dashboard mostra 'Bem-vindo ao BUZZ' com 'Crear Workspace' ou 'Join Workspace'."
       },
       {
-        "passo": "3. Copiar/Exportar Transcrição",
-        "acao": "Transcrição pronta. Botão 'Copiar para Clipboard'. Ou 'Download TXT' ou 'Download JSON'.",
-        "resultado_esperado": "Texto copiado para sua área de transferência. Você pode colar em Word/Google Docs. Ou arquivo .txt/.json baixado."
+        "passo": "3. Criar Workspace",
+        "acao": "Clique 'Create Workspace'. Digite nome (ex: 'Empresa Teste'). Clique 'Criar'.",
+        "resultado_esperado": "Workspace criado. Você vê canais padrão (#general, #random) e seção 'Members'."
       },
       {
-        "passo": "4. Ajustar Qualidade (Opcional)",
-        "acao": "Se transcrição teve erros, aumentar 'Modelo de Precisão' de 'base' para 'small/medium' (mais lento, mais preciso).",
-        "resultado_esperado": "Próxima transcrição usa modelo melhor. Velocidade diminui, mas acurácia aumenta de 95% para 98%."
+        "passo": "4. Enviar Primeira Mensagem",
+        "acao": "Clique em #general. Digite 'Olá BUZZ!' na caixa de mensagem. Pressione Enter.",
+        "resultado_esperado": "Mensagem aparece no chat com timestamp. Seu nome de usuário aparece como remetente."
+      },
+      {
+        "passo": "5. Convidar Outro Usuário",
+        "acao": "Clique em 'Members' ou ícone de pessoas. Clique 'Invite'. Cole link de convite ou envie email.",
+        "resultado_esperado": "Outro usuário recebe convite. Ao aceitar, aparece no workspace como membro."
       }
     ],
     "comandos_cli": [
       {
-        "comando": "buzz-cli transcribe <arquivo-audio> --output <arquivo-saida>",
-        "descricao": "Transcrever um áudio via linha de comando (sem interface web). Útil para automação/scripts.",
-        "exemplo": "cd /var/www/buzz && source venv/bin/activate && python -m buzz.cli /tmp/gravacao.wav --output /var/lib/buzz/transcriptions/resultado.txt",
+        "comando": "docker compose logs buzz -f",
+        "descricao": "Ver logs em tempo real do servidor BUZZ (debug de problemas).",
+        "exemplo": "cd /opt/buzz && sudo docker compose logs buzz -f | grep -i error",
         "fonte_id": "F03"
       },
       {
-        "comando": "systemctl status buzz",
-        "descricao": "Verificar se serviço BUZZ está rodando. Mostra se está ativo, logs recentes, tempo de atividade.",
-        "exemplo": "sudo systemctl status buzz",
+        "comando": "docker compose restart buzz",
+        "descricao": "Reiniciar servidor BUZZ após mudança de configuração.",
+        "exemplo": "cd /opt/buzz && sudo docker compose restart buzz",
         "fonte_id": "F03"
       },
       {
-        "comando": "systemctl restart buzz",
-        "descricao": "Reiniciar serviço BUZZ após mudança de configuração ou se ele travou.",
-        "exemplo": "sudo systemctl restart buzz",
+        "comando": "docker compose down && docker compose up -d",
+        "descricao": "Parar todos os containers e reiniciar (redeploy).",
+        "exemplo": "cd /opt/buzz && sudo docker compose down && sudo docker compose up -d",
         "fonte_id": "F03"
       }
     ],
     "rotas_api": [
       {
         "metodo": "POST",
-        "rota": "/api/transcribe",
-        "descricao": "Enviar áudio para transcrição via API (sem interface web). Retorna ID do job.",
-        "payload_exemplo": "curl -X POST -F 'audio=@meu-audio.wav' https://buzz.sua-empresa.com.br/api/transcribe",
+        "rota": "/auth/register",
+        "descricao": "Registrar novo usuário.",
+        "payload_exemplo": "curl -X POST https://buzz.sua-empresa.com.br/auth/register -H 'Content-Type: application/json' -d '{\"email\":\"user@empresa.com\",\"password\":\"Senha123\",\"name\":\"João Silva\"}'",
+        "fonte_id": "F04"
+      },
+      {
+        "metodo": "POST",
+        "rota": "/messages",
+        "descricao": "Enviar mensagem programaticamente (via agent).",
+        "payload_exemplo": "curl -X POST https://buzz.sua-empresa.com.br/messages -H 'Authorization: Bearer TOKEN' -d '{\"channel\":\"general\",\"content\":\"Olá do bot!\"}'",
         "fonte_id": "F04"
       },
       {
         "metodo": "GET",
-        "rota": "/api/status/{job_id}",
-        "descricao": "Verificar status de uma transcrição em andamento (0-100%) ou concluída.",
-        "payload_exemplo": "curl https://buzz.sua-empresa.com.br/api/status/job123",
-        "fonte_id": "F04"
-      },
-      {
-        "metodo": "GET",
-        "rota": "/api/result/{job_id}",
-        "descricao": "Baixar transcrição concluída em formato JSON (com timestamps) ou TXT.",
-        "payload_exemplo": "curl https://buzz.sua-empresa.com.br/api/result/job123?format=json",
+        "rota": "/.well-known/nostr.json",
+        "descricao": "Endpoint Nostr para descoberta de relay (NIP-05).",
+        "payload_exemplo": "curl https://buzz.sua-empresa.com.br/.well-known/nostr.json",
         "fonte_id": "F04"
       }
     ],
     "interface_ui": [
       {
-        "modulo": "Upload & Transcrição",
-        "descricao": "Página principal: campo para upload de áudio, progresso em tempo real (0-100%), visualização da transcrição conforme pronta.",
+        "modulo": "Dashboard",
+        "descricao": "Página inicial após login: lista de workspaces, botão 'Create/Join Workspace', notificações recentes.",
         "recursos_chave": [
-          "Drag-and-drop de arquivos",
-          "Indicador de progresso animado",
-          "Suporte a MP3, WAV, M4A, FLAC, OGG",
-          "Limite de 500MB por arquivo"
+          "Search de workspaces",
+          "Notificações em tempo real",
+          "Quick access aos workspaces favoritos",
+          "Configurações de perfil"
         ]
       },
       {
-        "modulo": "Histórico de Transcrições",
-        "descricao": "Lista de todos os áudios já transcritos. Data, tamanho do arquivo, tempo de processamento, ações (reeditar, baixar, excluir).",
+        "modulo": "Workspace",
+        "descricao": "Área central: lista de canais (#general, #marketing, etc), área de mensagens, lista de membros, documentos/arquivos anexados.",
         "recursos_chave": [
-          "Busca por nome de arquivo",
-          "Filtro por data",
-          "Ordenação por tempo de processamento",
-          "Reedição de transcrição (correções manuais)"
+          "Canais públicos e privados",
+          "Threads (respostas aninhadas)",
+          "Reações com emoji",
+          "Upload de arquivos/mídia",
+          "Busca de histórico"
         ]
       },
       {
-        "modulo": "Configurações",
-        "descricao": "Ajustes de BUZZ: modelo Whisper (base/small/medium/large), idioma padrão, qualidade, parallelização.",
+        "modulo": "Direct Messages",
+        "descricao": "Conversas 1-a-1 com outros usuários. Criptografia ponta-a-ponta (em roadmap).",
         "recursos_chave": [
-          "Seleção de modelo Whisper",
-          "Suporte a 99 idiomas",
-          "Número de trabalhos paralelos (1-4)",
-          "Timeout por job (30min-2h)"
+          "Mensagens privadas",
+          "Chamadas de voz/vídeo (plugin)",
+          "Compartilhamento de tela",
+          "Status de presença"
         ]
       },
       {
-        "modulo": "Monitor de Recursos",
-        "descricao": "Dashboard de saúde: CPU %, RAM %, Espaço em disco, Fila de espera, Trabalhos completados hoje.",
+        "modulo": "Integração de Agentes",
+        "descricao": "Seção para adicionar bots/agentes que participam do workspace. BUZZ foi desenhado para isso.",
         "recursos_chave": [
-          "Gráficos em tempo real",
-          "Alertas se CPU > 90%",
-          "Estimativa de tempo para próxima transcrição",
-          "Logs do sistema"
+          "Webhooks para eventos",
+          "Bot command slash commands (/help, /remind, etc)",
+          "Acesso a mensagens via Nostr Protocol",
+          "Automações e workflows"
+        ]
+      },
+      {
+        "modulo": "Admin Settings",
+        "descricao": "Painel de administração: gerenciar membros, roles, políticas de mensagens, backups.",
+        "recursos_chave": [
+          "Permissões por role",
+          "Política de retenção de mensagens",
+          "Integração LDAP/SSO (roadmap)",
+          "Auditoria de ações"
         ]
       }
     ],
     "troubleshooting": [
       {
-        "sintoma": "Upload falha com erro '413 Request Entity Too Large'",
-        "causa_provavel": "Arquivo maior que 500MB. Ou limite do Apache/PHP muito baixo.",
-        "solucao_comando": "1. Comprimir áudio antes: ffmpeg -i original.wav -b:a 128k comprimido.mp3\n2. Ou aumentar limite no Apache: sudo nano /etc/apache2/apache2.conf, adicionar 'LimitRequestBody 536870912'\n3. Recarregar: sudo systemctl reload apache2"
+        "sintoma": "Página não carrega (timeout ou erro 502)",
+        "causa_provavel": "BUZZ container parado ou consumindo muita memória/CPU.",
+        "solucao_comando": "1. Verificar: docker compose ps (todos devem estar 'up')\n2. Ver logs: docker compose logs buzz | tail -50\n3. Se parado: docker compose up -d buzz\n4. Se lento: aumentar RAM/CPU da VPS"
       },
       {
-        "sintoma": "Transcrição muito lenta (> 10 minutos para 1 hora de áudio)",
-        "causa_provavel": "Modelo Whisper muito grande ('large'). Ou CPU com apenas 1 core.",
-        "solucao_comando": "1. Trocar modelo de 'large' para 'small/base': editar /var/www/buzz/config.env\n2. Aumentar vCPUs da VPS de 1 para 2+\n3. Se GPU disponível, habilitar: WHISPER_DEVICE=cuda"
+        "sintoma": "Mensagens não aparecem em tempo real (delay de minutos)",
+        "causa_provavel": "Redis não está sincronizado ou PostgreSQL está lento.",
+        "solucao_comando": "1. Reiniciar Redis: docker compose restart redis\n2. Verificar conexão: docker compose exec redis redis-cli ping (deve retornar PONG)\n3. Ver logs PostgreSQL: docker compose logs postgres | grep error"
       },
       {
-        "sintoma": "BUZZ travado, não responde",
-        "causa_provavel": "Serviço BUZZ parou ou memória esgotada (áudio muito grande).",
-        "solucao_comando": "1. Verificar status: sudo systemctl status buzz\n2. Se parado, reiniciar: sudo systemctl restart buzz\n3. Ver logs: sudo tail -50 /var/log/buzz/buzz-error.log\n4. Se falta memória: aumentar RAM da VPS ou reduzir modelo Whisper"
+        "sintoma": "Erro 'WebSocket connection refused' no cliente desktop/mobile",
+        "causa_provavel": "Porta 3000 bloqueada no firewall ou Caddy não está redirecionando corretamente.",
+        "solucao_comando": "1. Testar conectividade: curl -v https://buzz.sua-empresa.com.br\n2. Verificar Caddyfile: sudo caddy validate --config /etc/caddy/Caddyfile\n3. Recarregar Caddy: sudo systemctl reload caddy\n4. Liberar port 3000 internamente: sudo ufw allow 3000 (se firewall ativo)"
       },
       {
-        "sintoma": "Transcrição com muitos erros (acurácia < 80%)",
-        "causa_provavel": "Áudio de qualidade ruim, sotaque forte ou idioma incorreto.",
-        "solucao_comando": "1. Melhorar áudio: ffmpeg -i entrada.wav -af 'highpass=f=200,lowpass=f=3000' saida.wav\n2. Usar modelo maior: trocar 'base' para 'medium/large' em config.env\n3. Verificar idioma: confirmar que está setado para o idioma correto (ex: WHISPER_LANGUAGE=pt)"
+        "sintoma": "Disco cheio (df -h mostra 100%)",
+        "causa_provavel": "MinIO (armazenamento de mídia) ou PostgreSQL consumindo espaço.",
+        "solucao_comando": "1. Ver tamanho: du -sh /opt/buzz/data/*\n2. Se MinIO: limpar uploads antigos: docker compose exec minio mc rm --recursive minio/buzz-media/uploads --older-than 30d\n3. Se PostgreSQL: fazer VACUUM: docker compose exec postgres vacuumdb -U buzzuser buzz\n4. Aumentar disco da VPS se necessário"
       },
       {
-        "sintoma": "Erro 'Permission Denied' ao acessar /var/lib/buzz/uploads/",
-        "causa_provavel": "Permissões de arquivo incorretas. BUZZ roda como www-data, pasta não pertence a ele.",
-        "solucao_comando": "sudo chown -R www-data:www-data /var/lib/buzz\nsudo chmod -R 755 /var/lib/buzz\nsudo systemctl restart buzz"
+        "sintoma": "Certificado SSL inválido ou expirado",
+        "causa_provavel": "Caddy não conseguiu renovar Let's Encrypt automaticamente.",
+        "solucao_comando": "1. Verificar: sudo caddy list-warnings\n2. Renovar manualmente: sudo caddy renew --force\n3. Ver logs: sudo journalctl -u caddy -n 50\n4. Se ACME error, verificar acesso a Let's Encrypt (firewall port 80/443)"
       }
     ]
   },
   "desinstalacao_cirurgica": {
     "titulo": "Parte IV: Desinstalação Cirúrgica & Isolamento da VPS",
-    "principio_isolamento": "BUZZ foi instalado em estrutura totalmente isolada: aplicação em /var/www/buzz/, serviço systemd próprio, dados em /var/lib/buzz/, logs em /var/log/buzz/, VirtualHost Apache dedicado. Esta modularidade permite remoção cirúrgica sem efeitos colaterais em outros websites/serviços. Seguindo estes passos, BUZZ desaparece completamente, deixando a VPS tão limpa quanto antes da instalação.",
+    "principio_isolamento": "BUZZ foi instalado em estrutura totalmente isolada em Docker: containers em /opt/buzz/, volumes em Docker named volumes (postgres_data, redis_data, minio_data), configuração em /opt/buzz/.env e /etc/caddy/Caddyfile, Caddy separado. Esta modularidade permite remoção cirúrgica sem efeitos colaterais. Outros containers/aplicações na VPS não serão afetadas. Seguindo estes passos, BUZZ desaparece completamente.",
     "passos": [
       {
         "numero": 1,
-        "titulo": "Parar Serviço BUZZ",
-        "descricao": "Interrompa o serviço systemd de BUZZ e desative site Apache.",
-        "comandos": "sudo systemctl stop buzz\nsudo systemctl disable buzz\nsudo a2dissite buzz.conf\nsudo systemctl reload apache2",
-        "alerta_seguranca": "ALERTA: Após este passo, https://buzz.sua-empresa.com.br será inacessível (erro 404/503).",
-        "como_validar": "sudo systemctl status buzz retorna 'inactive (dead)'. Apache error.log não contém erros para 'buzz'."
+        "titulo": "Parar Containers BUZZ",
+        "descricao": "Interrompa todos os containers Docker de BUZZ sem deletar volumes/dados.",
+        "comandos": "cd /opt/buzz\nsudo docker compose down\nsudo docker compose ps  # Deve estar vazio",
+        "alerta_seguranca": "ALERTA: Após este passo, https://buzz.sua-empresa.com.br será inacessível.",
+        "como_validar": "Acessar https://buzz.sua-empresa.com.br retorna erro 502 ou timeout."
       },
       {
         "numero": 2,
         "titulo": "Backup Final de Dados (Altamente Recomendado)",
-        "descricao": "Se alguma transcrição é importante, faça backup antes de deletar.",
-        "comandos": "tar -czf ~/buzz_backup_$(date +%Y%m%d).tar.gz /var/lib/buzz/transcriptions/\ntar -czf ~/buzz_logs_$(date +%Y%m%d).tar.gz /var/log/buzz/",
+        "descricao": "Fazer backup completo antes de deletar: PostgreSQL, Redis, MinIO, repositórios.",
+        "comandos": "sudo mkdir -p /backups/buzz-final\ntar -czf /backups/buzz-final/postgres_dump_$(date +%Y%m%d).sql.gz /opt/buzz/data/postgres\ntar -czf /backups/buzz-final/redis_dump_$(date +%Y%m%d).tar.gz /opt/buzz/data/redis\ntar -czf /backups/buzz-final/minio_dump_$(date +%Y%m%d).tar.gz /opt/buzz/data/minio\ntar -czf /backups/buzz-final/app_$(date +%Y%m%d).tar.gz /opt/buzz",
         "alerta_seguranca": "CRÍTICO: Sem este backup, os dados são irrecuperáveis após próxima etapa.",
-        "como_validar": "Dois arquivos .tar.gz em $HOME com tamanho > 1MB (se houver transcrições)."
+        "como_validar": "4 arquivos .tar.gz em /backups/buzz-final/ com tamanho total > 100MB"
       },
       {
         "numero": 3,
-        "titulo": "Remover Pasta e Arquivos de BUZZ",
-        "descricao": "Deletar completamente aplicação, dados e logs. Sem possibilidade de recuperação.",
-        "comandos": "sudo rm -rf /var/www/buzz/\nsudo rm -rf /var/lib/buzz/\nsudo rm -rf /var/log/buzz/\nsudo rm -f /etc/systemd/system/buzz.service\nsudo rm -f /etc/apache2/sites-available/buzz.conf\nsudo rm -f /etc/apache2/sites-available/buzz-ssl.conf\nsudo systemctl daemon-reload",
-        "alerta_seguranca": "PONTO DE NÃO-RETORNO: Todos os arquivos e dados de BUZZ são deletados permanentemente.",
-        "como_validar": "sudo ls /var/www/buzz/ retorna 'No such file or directory'. sudo ls /var/lib/buzz/ também não existe."
+        "titulo": "Deletar Containers, Imagens e Volumes Docker",
+        "descricao": "Remover completamente todos os containers, imagens e volumes nomeados de BUZZ.",
+        "comandos": "cd /opt/buzz\nsudo docker compose down -v  # -v remove volumes\nsudo docker rmi -f buzz-server  # Remove imagem BUZZ\nsudo docker volume rm buzz-postgres buzz-redis buzz-minio 2>/dev/null\nsudo docker system prune -f  # Remove dangling images",
+        "alerta_seguranca": "PONTO DE NÃO-RETORNO: Containers, imagens e volumes são deletados permanentemente.",
+        "como_validar": "sudo docker compose ps retorna 'No containers'. sudo docker volume ls não lista volumes 'buzz-*'."
       },
       {
         "numero": 4,
-        "titulo": "Remover Certificado SSL (Opcional - Se BUZZ era único HTTPS)",
-        "descricao": "Se BUZZ era o único site HTTPS, remover certificado Let's Encrypt.",
-        "comandos": "sudo certbot delete --cert-name buzz.sua-empresa.com.br",
-        "alerta_seguranca": "ATENÇÃO: Remova apenas se nenhum outro site na VPS usa este domínio.",
-        "como_validar": "sudo certbot certificates não lista 'buzz.sua-empresa.com.br'."
+        "titulo": "Remover Aplicação e Configurações",
+        "descricao": "Deletar pasta de aplicação, Caddyfile e scripts de backup.",
+        "comandos": "sudo rm -rf /opt/buzz/\nsudo rm -f /etc/caddy/Caddyfile.bak\nsudo rm -f /usr/local/bin/backup-buzz.sh\nsudo rm -f /var/log/buzz*\nsudo crontab -e  # Remover entrada de backup",
+        "alerta_seguranca": "PONTO DE NÃO-RETORNO: Todos os arquivos de BUZZ são deletados.",
+        "como_validar": "sudo ls /opt/buzz/ retorna 'No such file'. sudo crontab -l não contém 'buzz'."
       },
       {
         "numero": 5,
-        "titulo": "Limpar Python Virtual Environment",
-        "descricao": "Se não há outro projeto Python na VPS que dependa desse venv, pode limpar.",
-        "comandos": "sudo rm -rf /opt/buzz-venv/ (se foi instalado lá)\n# Ou manter em /var/www/buzz (já deletado acima)\n# Desinstalar Python 3.11 se não usado por outra app:\nsudo apt-get autoremove python3.11",
-        "alerta_seguranca": "ATENÇÃO: Só remova Python 3.11 se nenhuma outra aplicação a usa.",
-        "como_validar": "python3.11 --version retorna 'command not found' se removido com sucesso."
+        "titulo": "Remover Certificado SSL e Desativar Caddy",
+        "descricao": "Se BUZZ era o único site HTTPS, remover certificado Let's Encrypt e desativar Caddy.",
+        "comandos": "sudo certbot delete --cert-name buzz.sua-empresa.com.br 2>/dev/null\nsudo systemctl stop caddy\nsudo systemctl disable caddy\nsudo rm -f /etc/caddy/Caddyfile",
+        "alerta_seguranca": "ATENÇÃO: Remova apenas se nenhum outro site na VPS usa este domínio.",
+        "como_validar": "sudo systemctl status caddy mostra 'inactive'. sudo certbot certificates não lista 'buzz.sua-empresa.com.br'."
       }
     ],
     "checklist_saude_vps": [
-      "ESPAÇO EM DISCO: df -h → Deve liberar >20GB que BUZZ ocupava. Coluna 'Avail' >= 20GB livres",
-      "PROCESSOS PYTHON: ps aux | grep python | grep buzz → Deve estar vazio (sem processos BUZZ)",
-      "SERVIÇOS: sudo systemctl list-units --type service | grep buzz → Deve estar vazio",
-      "PORTAS: sudo netstat -tlnp | grep 8000 → Porta 8000 (BUZZ) não deve estar em LISTEN",
-      "APACHE VHOSTS: sudo apache2ctl -S | grep buzz → NÃO deve listar buzz.conf",
-      "LOGS: sudo tail -20 /var/log/apache2/error.log → NÃO deve conter 'buzz'",
-      "CERTIFICADOS SSL: sudo certbot certificates → NÃO deve listar 'buzz.sua-empresa.com.br'",
-      "CRON JOBS: sudo crontab -l → Se houver, NÃO deve ter scripts de BUZZ"
+      "ESPAÇO EM DISCO: df -h → Deve liberar 50+ GB. Coluna 'Avail' >= 30GB",
+      "CONTAINERS: docker ps | grep buzz → Nenhum container BUZZ deve estar rodando",
+      "VOLUMES: docker volume ls | grep buzz → Nenhum volume nomeado 'buzz-*'",
+      "IMAGENS: docker images | grep buzz → Nenhuma imagem com 'buzz' no nome",
+      "PORTAS: sudo netstat -tlnp | grep 3000 → Porta 3000 NOT in LISTEN",
+      "CADDY: sudo systemctl status caddy → Deve estar 'inactive' ou removido",
+      "LOGS: tail -20 /var/log/syslog → NÃO deve conter 'buzz' ou 'caddy'",
+      "CRON: sudo crontab -l → NÃO deve ter scripts de backup-buzz"
     ]
   },
   "referencias_bibliograficas": [
     {
       "id": "F01",
       "categoria": "Repositório Oficial",
-      "titulo": "BUZZ - GitHub Repository",
-      "url": "https://github.com/chidiwilliams/buzz",
-      "autor_ou_canal": "Chidi Williams"
+      "titulo": "Block BUZZ - GitHub Repository",
+      "url": "https://github.com/block/buzz",
+      "autor_ou_canal": "Block Inc. / Jack Dorsey"
     },
     {
       "id": "F02",
       "categoria": "Documentação",
-      "titulo": "BUZZ - Installation & Usage Guide",
-      "url": "https://github.com/chidiwilliams/buzz#readme",
-      "autor_ou_canal": "BUZZ Community"
+      "titulo": "BUZZ Docker Deployment Guide",
+      "url": "https://github.com/block/buzz#deployment",
+      "autor_ou_canal": "BUZZ Documentation"
     },
     {
       "id": "F03",
-      "categoria": "Dependência",
-      "titulo": "OpenAI Whisper - Speech Recognition Model",
-      "url": "https://github.com/openai/whisper",
-      "autor_ou_canal": "OpenAI"
+      "categoria": "Protocolo",
+      "titulo": "Nostr Protocol - NIP-01, NIP-42, NIP-34",
+      "url": "https://github.com/nostr-protocol/nips",
+      "autor_ou_canal": "Nostr Community"
     },
     {
       "id": "F04",
       "categoria": "Ferramenta",
-      "titulo": "FFmpeg - Audio/Video Processing",
-      "url": "https://ffmpeg.org/",
-      "autor_ou_canal": "FFmpeg Team"
+      "titulo": "Docker Compose - Orquestração de Containers",
+      "url": "https://docs.docker.com/compose/",
+      "autor_ou_canal": "Docker Inc."
     },
     {
       "id": "F05",
       "categoria": "Licença",
-      "titulo": "MIT License - Texto Completo",
-      "url": "https://opensource.org/licenses/MIT",
+      "titulo": "Apache License 2.0 - Texto Completo",
+      "url": "https://opensource.org/licenses/Apache-2.0",
       "autor_ou_canal": "Open Source Initiative"
     }
   ]

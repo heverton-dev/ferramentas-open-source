@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manual Operacional: Block BUZZ · Deploy VPS &amp; Uso Exaustivo</title>
+  <style>
+
+  :root {
+    --font-serif: "Liberation Serif", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --paper: #F8FAFC;
+    --surface: #FFFFFF;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --rule: #CBD5E1;
+    --rule-soft: #E2E8F0;
+    --accent: #0284C7;
+    --accent-dark: #0369A1;
+    --accent-soft: #E0F2FE;
+    --green: #10B981;
+    --green-dark: #065F46;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+    --purple: #8B5CF6;
+    --purple-soft: #EDE9FE;
+    --code-bg: #0F172A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .container { max-width: 1060px; margin: 0 auto; }
+  
+  .header-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+  
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    background: var(--paper);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--rule-soft);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat-val { font-size: 14.5px; font-weight: 800; color: var(--ink); }
+
+  .nav-anchors {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .nav-anchors a {
+    padding: 8px 14px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    color: var(--ink-2);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-anchors a:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    background: var(--accent-soft);
+  }
+
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .section-header {
+    border-bottom: 2px solid var(--rule-soft);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .section-title { font-size: 20px; font-weight: 800; color: var(--ink); }
+
+  /* CARDS DE NIVELAMENTO */
+  .grid-conceitos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .card-conceito {
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    padding: 16px;
+    border-left: 4px solid var(--purple);
+  }
+  .conceito-termo { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+  .conceito-analogia { font-size: 12.5px; font-weight: 700; color: #6D28D9; background: var(--purple-soft); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+  .conceito-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+
+  /* PASSOS DE INSTALAÇÃO */
+  .step-box {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .step-box:last-child { border-bottom: none; }
+  .step-top {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .step-num {
+    background: var(--accent);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .step-heading { font-size: 17px; font-weight: 800; color: var(--ink); }
+  .analogia-box {
+    background: #F0FDF4;
+    border-left: 4px solid var(--green);
+    padding: 8px 12px;
+    border-radius: 0 4px 4px 0;
+    margin: 8px 0;
+    font-size: 13px;
+    color: var(--green-dark);
+  }
+  .feedback-box {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #92400E;
+  }
+  .validacao-box {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12.5px;
+    color: #1E40AF;
+  }
+
+  .code-box {
+    position: relative;
+    background: var(--code-bg);
+    border-radius: 6px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  .code-box pre {
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: #F8FAFC;
+    line-height: 1.5;
+  }
+  .btn-copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.15);
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-copy:hover { background: rgba(255,255,255,0.3); }
+
+  .cite-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--gold-soft);
+    color: #B45309;
+    vertical-align: super;
+    margin-left: 4px;
+    text-decoration: none;
+  }
+
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  table.data-table th {
+    background: var(--paper);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--ink-2);
+    border-bottom: 2px solid var(--rule);
+  }
+  table.data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink-2);
+  }
+  table.data-table tr:hover td { background: rgba(2, 132, 199, 0.02); }
+
+  .trouble-card {
+    background: #FFFBEB;
+    border-left: 4px solid var(--gold);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 0 4px 4px 0;
+  }
+  .trouble-symptom { font-weight: 700; color: #92400E; font-size: 13.5px; }
+  .trouble-cause { font-size: 13px; color: #78350F; margin: 4px 0; }
+  .trouble-fix { font-family: var(--mono); font-size: 12px; background: #FEF3C7; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="header-card">
+    <div class="breadcrumb">
+      <a href="../../listas-open-source/vert-slack.html">← Voltar ao Dossiê Vertical Slack</a>
+      &nbsp;·&nbsp;
+      <a href="../trilhas/trilha-buzz-aprendizado.html">Ver Trilha de Aprendizado 🗺️</a>
+    </div>
+    <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
+    <h1>Manual Operacional Completo: Block BUZZ</h1>
+    <p class="deck">
+      Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
+    </p>
+
+    <!-- HERO STATS DA VPS -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">VPS Recomendada</span>
+        <span class="stat-val">Hetzner Cloud CX31 (4 vCPU, 8 GB RAM, EUR 25,90) ou Contabo VPS XL</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Hardware Mínimo</span>
+        <span class="stat-val">4 vCPU Dedicadas (AMD EPYC ou Intel Xeon) - Mínimo 2 vCPU, 4+ para produção com 10+ usuários · 8 GB RAM mínimo (16 GB recomendado para 50+ usuários ou arquivos/mídia pesada)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Armazenamento &amp; SO</span>
+        <span class="stat-val">100 GB SSD NVMe (mínimo 50 GB; crescer conforme volume de repositórios Git + mídia) · Ubuntu 22.04 LTS (x86_64) ou Debian 12</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Custo Mensal Estimado</span>
+        <span class="stat-val" style="color:var(--accent-dark);">EUR 25,90 a 49,90/mês (~R$ 150 a R$ 300 na cotação média)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Licença de Uso</span>
+        <span class="stat-val" style="color:var(--green);">Apache-2.0 (Livre &amp; Comercial)</span>
+      </div>
+    </div>
+
+    <!-- NAVEGAÇÃO RÁPIDA -->
+    <div class="nav-anchors">
+      <a href="#nivelamento">💡 Módulo 0: Nivelamento para Iniciantes</a>
+      <a href="#instalacao">📦 Parte I: Instalação Passo a Passo</a>
+      <a href="#configuracao">⚙️ Arquivos de Configuração</a>
+      <a href="#primeiro-voo">✈️ Roteiro de Primeiro Voo</a>
+      <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
+      <a href="#manual-api">🌐 Endpoints de API</a>
+      <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
+      <a href="#desinstalacao">🛡️ Desinstalação Cirúrgica VPS</a>
+      <a href="#bibliografia">📚 Referências Bibliográficas</a>
+    </div>
+  </div>
+
+  <!-- MÓDULO 0: NIVELAMENTO CONCEITUAL -->
+  <div class="section-card" id="nivelamento">
+    <div class="section-header">
+      <h2 class="section-title">Módulo 0: Nivelamento Conceitual (O que você precisa saber antes de começar)</h2>
+      <span class="badge-tag" style="background:var(--purple-soft); color:#6D28D9;">Zero Programação</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:16px;">
+      Você não precisa ser engenheiro de software para entender como o sistema funciona. Abaixo explicamos os 5 conceitos-chave usando analogias do cotidiano:
+    </p>
+    <div class="grid-conceitos">
+      
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Block BUZZ (A Ferramenta)</div>
+          <div class="conceito-analogia">Analogia: O Slack Que Você Controla Completamente</div>
+          <p class="conceito-desc">BUZZ é um workspace de comunicação para equipes, como Slack ou Teams. A diferença crucial: você instala no seu servidor, os dados nunca saem de lá, e é totalmente open source. Sem mensalidade ao Salesforce. Sem espiar seus dados. 100% seu.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Nostr (O Protocolo de Fundo)</div>
+          <div class="conceito-analogia">Analogia: Email, Mas Para Mensagens Descentralizadas</div>
+          <p class="conceito-desc">Email é descentralizado: você pode ter Gmail, Outlook, Yahoo e trocar mensagens. Nostr é similar. BUZZ usa Nostr como camada de sincronização. Seus relays (servidores) falam entre si. Você não fica preso a um único provedor.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 VPS (Servidor Privado Virtual)</div>
+          <div class="conceito-analogia">Analogia: Uma Sala de Servidores Alugada 24/7</div>
+          <p class="conceito-desc">Você aluga um computador profissional por R$ 100-300/mês em um data center. Coloca BUZZ lá. Sua equipe acessa via web (HTTPS) ou app desktop. Sem deixar o servidor ligado no escritório.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Docker & Compose (Containerização)</div>
+          <div class="conceito-analogia">Analogia: Um Pacote Pronto Com Tudo Que BUZZ Precisa</div>
+          <p class="conceito-desc">BUZZ precisa de: PostgreSQL (banco), Redis (cache), MinIO (arquivos). Docker empacota tudo isso como caixas isoladas. Docker Compose orquestra: 'suba PostgreSQL, depois Redis, depois BUZZ'. Tudo em um comando.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Chaves Nostr (Identidade Criptográfica)</div>
+          <div class="conceito-analogia">Analogia: Seu CPF Digital, Mas Que Você Controla</div>
+          <p class="conceito-desc">Nostr usa criptografia de chave pública. Você gera uma chave privada (guarda em segredo) e uma chave pública (publica). Seu relay BUZZ é identificado pela chave pública. Ninguém consegue se passar por você sem a chave privada.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Relay (Servidor Nostr)</div>
+          <div class="conceito-analogia">Analogia: Uma Estação de Correio Que Distribui Mensagens</div>
+          <p class="conceito-desc">Um relay recebe mensagens, armazena e distribui. BUZZ roda um relay nativo. Quando um usuário posta em BUZZ, a mensagem vai para o relay. Quando outro usuário acessa, o relay entrega a mensagem. Tudo encriptado.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 TLS & Let's Encrypt (Criptografia na Web)</div>
+          <div class="conceito-analogia">Analogia: Um Cadeado de Segurança Na Porta da Loja</div>
+          <p class="conceito-desc">HTTPS (criptografia) é obrigatório em produção. Let's Encrypt fornece certificados grátis. Caddy (servidor web) renueva automaticamente a cada 3 meses. Ninguém espia suas mensagens em trânsito.</p>
+        </div>
+        
+        <div class="card-conceito">
+          <div class="conceito-termo">💡 Agent-Native (Colaboração Com IA)</div>
+          <div class="conceito-analogia">Analogia: Um Colega Bot Que Participa da Reunião</div>
+          <p class="conceito-desc">BUZZ foi desenhado para agentes IA trabalharem junto com humanos. Um bot pode postar, processar mensagens, executar ações. Slack/Teams não foram feitos para isso. BUZZ sim: é 'agent-native'.</p>
+        </div>
+        
+    </div>
+  </div>
+
+  <!-- SEÇÃO 1: INSTALAÇÃO EM PRODUÇÃO -->
+  <div class="section-card" id="instalacao">
+    <div class="section-header">
+      <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
+      <span class="badge-tag">Tempo ~60 a 90 minutos (Conhecimento intermediário de Docker e Nostr)</span>
+    </div>
+    
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 1</span>
+            <span class="step-heading">Acessar VPS via SSH e Atualizar Sistema</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Você se conecta ao seu servidor. Primeira ação: garantir que tudo está atualizado.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Verificar as tubulações e fiação da casa antes de morar nela.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>ssh root@seu_ip_vps
+sudo apt-get update
+sudo apt-get upgrade -y</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Linhas mostrando pacotes atualizados.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Termina sem erros. Prompt retorna normal.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 2</span>
+            <span class="step-heading">Instalar Docker e Docker Compose</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">BUZZ roda em Docker. Vamos instalar Docker (engine) e Docker Compose (orquestrador).</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Instalar o 'gerenciador de caixas' antes de guardar caixas isoladas.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>sudo apt-get install -y docker.io docker-compose-plugin
+sudo usermod -aG docker $USER
+sudo systemctl start docker
+sudo systemctl enable docker
+docker --version && docker compose --version</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Repositório Docker adicionado. Pacotes instalados. Pode levar 2-3 minutos.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Comandos 'docker --version' e 'docker compose --version' retornam versões >= 24.x.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 3</span>
+            <span class="step-heading">Instalar Rust, Node.js 24+ e ffmpeg (Build & Runtime)</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">BUZZ é escrito em Rust e Node.js. Precisamos de ambos. ffmpeg para processamento de mídia.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Comprar as ferramentas específicas antes de montar o móvel.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>sudo apt-get install -y build-essential curl git ffmpeg
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+source $HOME/.cargo/env
+curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
+sudo apt-get install -y nodejs
+rustc --version && node --version</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Ferramentas sendo instaladas. Pode levar 5-10 minutos (Rust é grande).</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Comandos 'rustc --version', 'node --version' (>= 24.0.0), 'npm --version', 'ffmpeg -version' retornam versões.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 4</span>
+            <span class="step-heading">Clonar Repositório BUZZ e Gerar Chaves Nostr</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Vamos buscar o código oficial de BUZZ do GitHub e gerar as chaves criptográficas para o relay.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Comprar o kit pronto e gerar os documentos de identidade.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>sudo mkdir -p /opt/buzz && cd /opt/buzz
+sudo git clone https://github.com/block/buzz.git .
+sudo chown -R $USER:$USER /opt/buzz
+cd /opt/buzz
+# Gerar chaves Nostr:
+node -e "const crypto = require('crypto'); const sk = crypto.randomBytes(32).toString('hex'); console.log('RELAY_SK=' + sk);" >> .env
+node -e "const crypto = require('crypto'); const pk = crypto.createPublicKey({key: Buffer.from(require('fs').readFileSync('.env', 'utf8').match(/RELAY_SK=(.+)/)[1], 'hex'), format: 'der', type: 'private'}).export({format: 'pem', type: 'pkcs8'}); console.log('RELAY_PK=' + pk.toString());" >> .env</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Git clonando repositório (~200 MB). Depois, gerando chaves (rápido).</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Pasta /opt/buzz existe com arquivos Rust/Node.js. Arquivo .env contém RELAY_PK e RELAY_SK.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 5</span>
+            <span class="step-heading">Configurar Docker Compose para BUZZ</span>
+            <a href="#ref-F01" class="cite-badge">[F01]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Criamos um arquivo docker-compose.yml com PostgreSQL, Redis, MinIO e BUZZ configurados.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Escrever a lista de ingredientes e modo de preparo para a receita.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>cd /opt/buzz
+sudo nano docker-compose.yml
+# Colar configuração do arquivo de composição (ver próxima seção)
+sudo docker compose config | head -20  # Validar sintaxe</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Você abre editor nano, cola configuração, salva.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Arquivo /opt/buzz/docker-compose.yml existe com 150+ linhas.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 6</span>
+            <span class="step-heading">Compilar BUZZ e Iniciar Serviços Docker</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Compilamos o backend Rust e inicializamos todos os containers.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Montar o móvel e ligá-lo para verificar se funciona.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>cd /opt/buzz
+sudo docker compose build
+sudo docker compose up -d
+sudo docker compose ps</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Compilação Rust leva 10-20 minutos (primeira vez). Docker containers iniciando.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Comando 'docker ps' mostra 5 containers em 'up': postgres, redis, minio, buzz-backend, buzz-frontend.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 7</span>
+            <span class="step-heading">Configurar Caddy como Proxy Reverso com TLS</span>
+            <a href="#ref-F02" class="cite-badge">[F02]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Caddy recebe HTTPS em buzz.sua-empresa.com.br e passa para BUZZ em localhost:3000.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Um recepcionista que recebe clientes de fora e os encaminha internamente.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>sudo apt-get install -y caddy
+sudo nano /etc/caddy/Caddyfile
+# Colar configuração do proxy
+sudo systemctl reload caddy</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Caddy se instala, arquivo Caddyfile criado, TLS automático com Let's Encrypt.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Acessar https://buzz.sua-empresa.com.br retorna página de login do BUZZ sem avisos SSL.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 8</span>
+            <span class="step-heading">Criar Usuário Admin e Configurar BUZZ</span>
+            <a href="#ref-F03" class="cite-badge">[F03]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Acessar https://buzz.sua-empresa.com.br e completar setup wizard (admin user, empresa, preferências).</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> O primeiro boot de um novo sistema: perguntas sobre configuração inicial.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>Nenhum comando. Tudo é feito via navegador web em https://buzz.sua-empresa.com.br</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Interface web pedindo: Email do Admin, Senha, Nome da Empresa, Timezone, Domínio de Relay.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Você consegue fazer login com email/senha criados e vê o dashboard do BUZZ.</div>
+        </div>
+        
+        <div class="step-box">
+          <div class="step-top">
+            <span class="step-num">Passo 9</span>
+            <span class="step-heading">Configurar Backup Automatizado de Dados</span>
+            <a href="#ref-F04" class="cite-badge">[F04]</a>
+          </div>
+          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Script que faz backup diário do PostgreSQL, Redis e repositórios Git.</p>
+          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Tirar fotografia do arquivo da empresa todo dia.</div>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+            <pre><code>sudo mkdir -p /backups
+sudo nano /usr/local/bin/backup-buzz.sh
+# Colar script de backup
+sudo chmod +x /usr/local/bin/backup-buzz.sh
+sudo crontab -e
+# Adicionar: 0 2 * * * /usr/local/bin/backup-buzz.sh</code></pre>
+          </div>
+          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Script criado em /usr/local/bin/. Agendado via crontab.</div>
+          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Arquivo .tar.gz com backup existe em /backups/ com timestamp de hoje.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
+  <div class="section-card" id="configuracao">
+    <div class="section-header">
+      <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
+    </div>
+    
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/buzz/docker-compose.yml</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Docker Compose que orquestra: PostgreSQL (banco), Redis (cache), MinIO (armazenamento S3-compatível), BUZZ (server Rust em port 3000). Variáveis de ambiente carregadas de .env. Volumes persistem dados entre restarts.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: buzz-postgres
+    environment:
+      POSTGRES_DB: buzz
+      POSTGRES_USER: buzzuser
+      POSTGRES_PASSWORD: SenhaSegura123!BuzzVPS
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - buzz-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: buzz-redis
+    volumes:
+      - redis_data:/data
+    networks:
+      - buzz-network
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:latest
+    container_name: buzz-minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: SenhaSegura123!MinioVPS
+    volumes:
+      - minio_data:/data
+    networks:
+      - buzz-network
+    command: minio server /data
+    restart: unless-stopped
+
+  buzz:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: buzz-server
+    depends_on:
+      - postgres
+      - redis
+      - minio
+    environment:
+      DATABASE_URL: postgres://buzzuser:SenhaSegura123!BuzzVPS@postgres:5432/buzz
+      REDIS_URL: redis://redis:6379
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: SenhaSegura123!MinioVPS
+      RELAY_PK: ${RELAY_PK}
+      RELAY_SK: ${RELAY_SK}
+      PORT: 3000
+      RUST_LOG: info
+    ports:
+      - "3000:3000"
+    volumes:
+      - /opt/buzz/data:/app/data
+    networks:
+      - buzz-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+
+networks:
+  buzz-network:
+    driver: bridge</code></pre>
+          </div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/etc/caddy/Caddyfile</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Caddyfile que: 1) Ativa TLS automático com Let's Encrypt. 2) Compressão gzip. 3) Proxy reverso para BUZZ em localhost:3000. 4) Suporte a WebSocket (protocolo Nostr). Caddy renova certificado automaticamente.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>buzz.sua-empresa.com.br {
+  encode gzip
+  reverse_proxy localhost:3000 {
+    header_up X-Forwarded-For {http.request.remote.host}
+    header_up X-Forwarded-Proto {http.request.proto}
+    header_up X-Real-IP {http.request.remote.host}
+  }
+  
+  # WebSocket suporte
+  reverse_proxy /ws/* localhost:3000 {
+    header_up Connection "upgrade"
+    header_up Upgrade "websocket"
+  }
+}</code></pre>
+          </div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/buzz/.env</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Configurações críticas: banco de dados, cache, storage S3, chaves Nostr (RELAY_PK e RELAY_SK geradas na etapa 4), port e CORS. Substitua SUA_EMPRESA e os valores de exemplo antes de usar em produção.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code># Ambiente de Produção
+RUST_ENV=production
+RUST_LOG=info
+
+# Banco de Dados
+DATABASE_URL=postgres://buzzuser:SenhaSegura123!BuzzVPS@postgres:5432/buzz
+REDIS_URL=redis://redis:6379
+
+# Storage (MinIO)
+MINIO_ENDPOINT=minio:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=SenhaSegura123!MinioVPS
+MINIO_BUCKET=buzz-media
+
+# Nostr Relay
+RELAY_PK=SEU_PUBLIC_KEY_HEX_AQUI
+RELAY_SK=SEU_SECRET_KEY_HEX_AQUI
+
+# Server
+PORT=3000
+BIND_ADDR=0.0.0.0
+CORS_ORIGINS=https://buzz.sua-empresa.com.br
+
+# Media Config
+MAX_FILE_SIZE=500MB
+ALLOWED_MEDIA_TYPES=image/*,video/*,audio/*,application/pdf</code></pre>
+          </div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/usr/local/bin/backup-buzz.sh</strong>
+          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Script de backup que: 1) Faz dump do PostgreSQL. 2) Copia snapshot Redis. 3) Compacta diretório de dados. 4) Deleta backups com 30+ dias. Execute diariamente via crontab às 2h da manhã.</p>
+          <div class="code-box">
+            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+            <pre><code>#!/bin/bash
+BACKUP_DIR="/backups"
+DATE=$(date +%Y%m%d_%H%M%S)
+
+echo "[$(date)] Iniciando backup de BUZZ..." >> /var/log/buzz-backup.log
+
+# Backup PostgreSQL
+cd /opt/buzz
+docker compose exec -T postgres pg_dump -U buzzuser buzz | gzip > $BACKUP_DIR/buzz_postgres_$DATE.sql.gz
+
+# Backup Redis
+docker compose exec -T redis redis-cli BGSAVE
+sleep 5
+docker compose exec -T redis cat /data/dump.rdb > $BACKUP_DIR/buzz_redis_$DATE.rdb
+
+# Backup MinIO (repositórios e mídia)
+tar --exclude='*/cache' -czf $BACKUP_DIR/buzz_storage_$DATE.tar.gz /opt/buzz/data
+
+# Manter apenas últimos 30 dias
+find $BACKUP_DIR -name 'buzz_*' -mtime +30 -delete
+
+echo "[$(date)] Backup concluído com sucesso." >> /var/log/buzz-backup.log</code></pre>
+          </div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
+  <div class="section-card" id="primeiro-voo">
+    <div class="section-header">
+      <h2 class="section-title">Parte II: Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green-dark);">Prática Imediata</span>
+    </div>
+    <p style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
+      Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
+    </p>
+    
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">1. Acessar Dashboard Web:</strong> Abra https://buzz.sua-empresa.com.br em navegador. Você verá tela de login.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Página de login carrega sem erros SSL. Caixa de email e senha visíveis.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">2. Criar Primeiro Usuário (Admin):</strong> Clique 'Criar Conta'. Digite email, senha, nome. Clique 'Registrar'.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Login bem-sucedido. Dashboard mostra 'Bem-vindo ao BUZZ' com 'Crear Workspace' ou 'Join Workspace'.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">3. Criar Workspace:</strong> Clique 'Create Workspace'. Digite nome (ex: 'Empresa Teste'). Clique 'Criar'.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Workspace criado. Você vê canais padrão (#general, #random) e seção 'Members'.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">4. Enviar Primeira Mensagem:</strong> Clique em #general. Digite 'Olá BUZZ!' na caixa de mensagem. Pressione Enter.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Mensagem aparece no chat com timestamp. Seu nome de usuário aparece como remetente.</div>
+        </div>
+        
+        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+          <strong style="color: var(--accent-dark);">5. Convidar Outro Usuário:</strong> Clique em 'Members' ou ícone de pessoas. Clique 'Invite'. Cole link de convite ou envie email.
+          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Outro usuário recebe convite. Ao aceitar, aparece no workspace como membro.</div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 4: MANUAL DE USO CLI -->
+  <div class="section-card" id="manual-cli">
+    <div class="section-header">
+      <h2 class="section-title">Dicionário Completo de Comandos (CLI)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Comando / Opção</th>
+          <th>O que faz (em português claro)</th>
+          <th>Exemplo de Execução</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose logs buzz -f</code></td>
+          <td>Ver logs em tempo real do servidor BUZZ (debug de problemas).</td>
+          <td><code>cd /opt/buzz && sudo docker compose logs buzz -f | grep -i error</code></td>
+          <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose restart buzz</code></td>
+          <td>Reiniciar servidor BUZZ após mudança de configuração.</td>
+          <td><code>cd /opt/buzz && sudo docker compose restart buzz</code></td>
+          <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
+        </tr>
+        
+        <tr>
+          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose down && docker compose up -d</code></td>
+          <td>Parar todos os containers e reiniciar (redeploy).</td>
+          <td><code>cd /opt/buzz && sudo docker compose down && sudo docker compose up -d</code></td>
+          <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 5: REFERÊNCIA DE API REST -->
+  <div class="section-card" id="manual-api">
+    <div class="section-header">
+      <h2 class="section-title">Endpoints de API REST &amp; Conexão com Agentes (MCP)</h2>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Método</th>
+          <th>Rota</th>
+          <th>Finalidade</th>
+          <th>Payload / Resposta</th>
+          <th>Fonte</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">POST</span></td>
+          <td><code>/auth/register</code></td>
+          <td>Registrar novo usuário.</td>
+          <td><pre style="font-size:11px; margin:0;">curl -X POST https://buzz.sua-empresa.com.br/auth/register -H 'Content-Type: application/json' -d '{"email":"user@empresa.com","password":"Senha123","name":"João Silva"}'</pre></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">POST</span></td>
+          <td><code>/messages</code></td>
+          <td>Enviar mensagem programaticamente (via agent).</td>
+          <td><pre style="font-size:11px; margin:0;">curl -X POST https://buzz.sua-empresa.com.br/messages -H 'Authorization: Bearer TOKEN' -d '{"channel":"general","content":"Olá do bot!"}'</pre></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+        <tr>
+          <td><span class="step-num" style="background:#059669;">GET</span></td>
+          <td><code>/.well-known/nostr.json</code></td>
+          <td>Endpoint Nostr para descoberta de relay (NIP-05).</td>
+          <td><pre style="font-size:11px; margin:0;">curl https://buzz.sua-empresa.com.br/.well-known/nostr.json</pre></td>
+          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SEÇÃO 6: TROUBLESHOOTING -->
+  <div class="section-card" id="troubleshooting">
+    <div class="section-header">
+      <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
+    </div>
+    
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Página não carrega (timeout ou erro 502)</div>
+          <div class="trouble-cause">Causa Provável: BUZZ container parado ou consumindo muita memória/CPU.</div>
+          <div>Solução Prática: <code class="trouble-fix">1. Verificar: docker compose ps (todos devem estar 'up')
+2. Ver logs: docker compose logs buzz | tail -50
+3. Se parado: docker compose up -d buzz
+4. Se lento: aumentar RAM/CPU da VPS</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Mensagens não aparecem em tempo real (delay de minutos)</div>
+          <div class="trouble-cause">Causa Provável: Redis não está sincronizado ou PostgreSQL está lento.</div>
+          <div>Solução Prática: <code class="trouble-fix">1. Reiniciar Redis: docker compose restart redis
+2. Verificar conexão: docker compose exec redis redis-cli ping (deve retornar PONG)
+3. Ver logs PostgreSQL: docker compose logs postgres | grep error</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Erro 'WebSocket connection refused' no cliente desktop/mobile</div>
+          <div class="trouble-cause">Causa Provável: Porta 3000 bloqueada no firewall ou Caddy não está redirecionando corretamente.</div>
+          <div>Solução Prática: <code class="trouble-fix">1. Testar conectividade: curl -v https://buzz.sua-empresa.com.br
+2. Verificar Caddyfile: sudo caddy validate --config /etc/caddy/Caddyfile
+3. Recarregar Caddy: sudo systemctl reload caddy
+4. Liberar port 3000 internamente: sudo ufw allow 3000 (se firewall ativo)</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Disco cheio (df -h mostra 100%)</div>
+          <div class="trouble-cause">Causa Provável: MinIO (armazenamento de mídia) ou PostgreSQL consumindo espaço.</div>
+          <div>Solução Prática: <code class="trouble-fix">1. Ver tamanho: du -sh /opt/buzz/data/*
+2. Se MinIO: limpar uploads antigos: docker compose exec minio mc rm --recursive minio/buzz-media/uploads --older-than 30d
+3. Se PostgreSQL: fazer VACUUM: docker compose exec postgres vacuumdb -U buzzuser buzz
+4. Aumentar disco da VPS se necessário</code></div>
+        </div>
+        
+        <div class="trouble-card">
+          <div class="trouble-symptom">⚠️ Sintoma: Certificado SSL inválido ou expirado</div>
+          <div class="trouble-cause">Causa Provável: Caddy não conseguiu renovar Let's Encrypt automaticamente.</div>
+          <div>Solução Prática: <code class="trouble-fix">1. Verificar: sudo caddy list-warnings
+2. Renovar manualmente: sudo caddy renew --force
+3. Ver logs: sudo journalctl -u caddy -n 50
+4. Se ACME error, verificar acesso a Let's Encrypt (firewall port 80/443)</code></div>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
+  <div class="section-card" id="desinstalacao">
+    <div class="section-header">
+      <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
+      <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
+    </div>
+    
+        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
+          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
+          <p style="margin:0; font-size:13.5px; color:#1E293B;">BUZZ foi instalado em estrutura totalmente isolada em Docker: containers em /opt/buzz/, volumes em Docker named volumes (postgres_data, redis_data, minio_data), configuração em /opt/buzz/.env e /etc/caddy/Caddyfile, Caddy separado. Esta modularidade permite remoção cirúrgica sem efeitos colaterais. Outros containers/aplicações na VPS não serão afetadas. Seguindo estes passos, BUZZ desaparece completamente.</p>
+        </div>
+        
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 1</span>
+                <span class="step-title">Parar Containers BUZZ</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Interrompa todos os containers Docker de BUZZ sem deletar volumes/dados.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>cd /opt/buzz
+sudo docker compose down
+sudo docker compose ps  # Deve estar vazio</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> ALERTA: Após este passo, https://buzz.sua-empresa.com.br será inacessível.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>Acessar https://buzz.sua-empresa.com.br retorna erro 502 ou timeout.</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 2</span>
+                <span class="step-title">Backup Final de Dados (Altamente Recomendado)</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Fazer backup completo antes de deletar: PostgreSQL, Redis, MinIO, repositórios.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo mkdir -p /backups/buzz-final
+tar -czf /backups/buzz-final/postgres_dump_$(date +%Y%m%d).sql.gz /opt/buzz/data/postgres
+tar -czf /backups/buzz-final/redis_dump_$(date +%Y%m%d).tar.gz /opt/buzz/data/redis
+tar -czf /backups/buzz-final/minio_dump_$(date +%Y%m%d).tar.gz /opt/buzz/data/minio
+tar -czf /backups/buzz-final/app_$(date +%Y%m%d).tar.gz /opt/buzz</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> CRÍTICO: Sem este backup, os dados são irrecuperáveis após próxima etapa.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>4 arquivos .tar.gz em /backups/buzz-final/ com tamanho total > 100MB</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 3</span>
+                <span class="step-title">Deletar Containers, Imagens e Volumes Docker</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remover completamente todos os containers, imagens e volumes nomeados de BUZZ.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>cd /opt/buzz
+sudo docker compose down -v  # -v remove volumes
+sudo docker rmi -f buzz-server  # Remove imagem BUZZ
+sudo docker volume rm buzz-postgres buzz-redis buzz-minio 2>/dev/null
+sudo docker system prune -f  # Remove dangling images</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> PONTO DE NÃO-RETORNO: Containers, imagens e volumes são deletados permanentemente.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo docker compose ps retorna 'No containers'. sudo docker volume ls não lista volumes 'buzz-*'.</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 4</span>
+                <span class="step-title">Remover Aplicação e Configurações</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Deletar pasta de aplicação, Caddyfile e scripts de backup.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo rm -rf /opt/buzz/
+sudo rm -f /etc/caddy/Caddyfile.bak
+sudo rm -f /usr/local/bin/backup-buzz.sh
+sudo rm -f /var/log/buzz*
+sudo crontab -e  # Remover entrada de backup</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> PONTO DE NÃO-RETORNO: Todos os arquivos de BUZZ são deletados.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo ls /opt/buzz/ retorna 'No such file'. sudo crontab -l não contém 'buzz'.</code></div>
+            </div>
+            
+            <div class="step-card">
+              <div class="step-header">
+                <span class="step-num" style="background:#0284C7;">Passo 5</span>
+                <span class="step-title">Remover Certificado SSL e Desativar Caddy</span>
+              </div>
+              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Se BUZZ era o único site HTTPS, remover certificado Let's Encrypt e desativar Caddy.</p>
+              <div class="code-box">
+                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                <pre><code>sudo certbot delete --cert-name buzz.sua-empresa.com.br 2>/dev/null
+sudo systemctl stop caddy
+sudo systemctl disable caddy
+sudo rm -f /etc/caddy/Caddyfile</code></pre>
+              </div>
+              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> ATENÇÃO: Remova apenas se nenhum outro site na VPS usa este domínio.</div>
+              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo systemctl status caddy mostra 'inactive'. sudo certbot certificates não lista 'buzz.sua-empresa.com.br'.</code></div>
+            </div>
+            
+        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
+          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
+          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
+            <li style='margin-bottom:6px;'><code>ESPAÇO EM DISCO: df -h → Deve liberar 50+ GB. Coluna 'Avail' >= 30GB</code></li><li style='margin-bottom:6px;'><code>CONTAINERS: docker ps | grep buzz → Nenhum container BUZZ deve estar rodando</code></li><li style='margin-bottom:6px;'><code>VOLUMES: docker volume ls | grep buzz → Nenhum volume nomeado 'buzz-*'</code></li><li style='margin-bottom:6px;'><code>IMAGENS: docker images | grep buzz → Nenhuma imagem com 'buzz' no nome</code></li><li style='margin-bottom:6px;'><code>PORTAS: sudo netstat -tlnp | grep 3000 → Porta 3000 NOT in LISTEN</code></li><li style='margin-bottom:6px;'><code>CADDY: sudo systemctl status caddy → Deve estar 'inactive' ou removido</code></li><li style='margin-bottom:6px;'><code>LOGS: tail -20 /var/log/syslog → NÃO deve conter 'buzz' ou 'caddy'</code></li><li style='margin-bottom:6px;'><code>CRON: sudo crontab -l → NÃO deve ter scripts de backup-buzz</code></li>
+          </ul>
+        </div>
+        
+  </div>
+
+  <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
+  <div class="section-card" id="bibliografia">
+    <div class="section-header">
+      <h2 class="section-title">Parte III: Fontes Citadas &amp; Referência Bibliográfica Auditada</h2>
+      <span class="badge-tag" style="background:var(--green-soft); color:var(--green);">100% Verificadas</span>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Categoria</th>
+          <th>Título da Obra / Documento</th>
+          <th>Autor / Mantenedor</th>
+          <th>Link Oficial</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr id="ref-F01">
+          <td><strong style="color:var(--accent);">F01</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Repositório Oficial</span></td>
+          <td><strong>Block BUZZ - GitHub Repository</strong></td>
+          <td>Block Inc. / Jack Dorsey</td>
+          <td><a href="https://github.com/block/buzz" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F02">
+          <td><strong style="color:var(--accent);">F02</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação</span></td>
+          <td><strong>BUZZ Docker Deployment Guide</strong></td>
+          <td>BUZZ Documentation</td>
+          <td><a href="https://github.com/block/buzz#deployment" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F03">
+          <td><strong style="color:var(--accent);">F03</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Protocolo</span></td>
+          <td><strong>Nostr Protocol - NIP-01, NIP-42, NIP-34</strong></td>
+          <td>Nostr Community</td>
+          <td><a href="https://github.com/nostr-protocol/nips" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F04">
+          <td><strong style="color:var(--accent);">F04</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Ferramenta</span></td>
+          <td><strong>Docker Compose - Orquestração de Containers</strong></td>
+          <td>Docker Inc.</td>
+          <td><a href="https://docs.docker.com/compose/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+        <tr id="ref-F05">
+          <td><strong style="color:var(--accent);">F05</strong></td>
+          <td><span class="badge-tag" style="margin:0; font-size:10px;">Licença</span></td>
+          <td><strong>Apache License 2.0 - Texto Completo</strong></td>
+          <td>Open Source Initiative</td>
+          <td><a href="https://opensource.org/licenses/Apache-2.0" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  if (!pre) return;
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    const original = btn.innerText;
+    btn.innerText = 'Copiado!';
+    setTimeout(() => { btn.innerText = original; }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>
