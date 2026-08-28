@@ -1,0 +1,816 @@
+{
+  "slug": "ecos-penso-suite",
+  "nome_ecossistema": "Penso Mail & Collaboration Suite",
+  "titulo": "Suíte Soberana de E-mail Corporativo, Armazenamento em Nuvem e Comunicação Unificada",
+  "subtitulo": "Desmantelamento Completo do Penso Suite (Zimbra, Penso Drive, Antispam e Chat Corporativo) com Arquitetura Soberana On-Premise/VPS",
+  "saas_substituido": "Penso Suite (Zimbra Collaboration, Penso Drive, Penso Antispam)",
+  "deck": "Dossiê executivo e manual de engenharia para substituir 100% dos serviços de e-mail corporativo, groupware, compartilhamento de arquivos em nuvem e mensageria em equipe da Penso Tecnologia por uma infraestrutura open source soberana, auditável e de altíssimo desempenho.",
+  "analise_economica_global": {
+    "custo_saas_anual": "R$ 54.000/ano",
+    "custo_vps_anual": "R$ 4.200/ano",
+    "economia_anual_liquida": "R$ 49.800/ano",
+    "economia_percentual": "92.2%",
+    "roi_meses": "0.9 meses",
+    "tco_5_anos_saas": "R$ 270.000",
+    "tco_5_anos_vps": "R$ 21.000",
+    "economia_acumulada_5_anos": "R$ 249.000",
+    "racional_financeiro_global": "A contratação do Penso Suite cobra licenças cumulativas por caixa postal (R$ 25 a R$ 45/usuário/mês) e adicionais por gigabyte no Penso Drive. Ao migrar para uma VPS dedicada de alta capacidade (16 vCPU / 32 GB RAM / 2 TB Storage), o custo passa a ser fixo de infraestrutura, eliminando completamente as taxas por usuário e garantindo soberania absoluta sob a LGPD.",
+    "detalhamento_por_grupo": [
+      {
+        "grupo": "Pilar 01: E-mail Corporativo & Groupware",
+        "saas_referencia": "Penso Mail Enterprise / Zimbra (150 caixas postais)",
+        "custo_saas_anual": "R$ 24.000/ano",
+        "custo_vps_alocado": "R$ 1.680/ano (~6 vCPU / 12 GB RAM)",
+        "economia_anual_liquida": "R$ 22.320/ano",
+        "percentual_economia": "93.0%"
+      },
+      {
+        "grupo": "Pilar 02: Drive & Nuvem de Documentos",
+        "saas_referencia": "Penso Drive Corporativo (2 TB de armazenamento)",
+        "custo_saas_anual": "R$ 18.000/ano",
+        "custo_vps_alocado": "R$ 1.500/ano (~6 vCPU / 12 GB RAM)",
+        "economia_anual_liquida": "R$ 16.500/ano",
+        "percentual_economia": "91.7%"
+      },
+      {
+        "grupo": "Pilar 03: Chat Corporativo & Meet",
+        "saas_referencia": "Penso Chat / Microsoft Teams / Zoom Pro",
+        "custo_saas_anual": "R$ 12.000/ano",
+        "custo_vps_alocado": "R$ 1.020/ano (~4 vCPU / 8 GB RAM)",
+        "economia_anual_liquida": "R$ 10.980/ano",
+        "percentual_economia": "91.5%"
+      }
+    ]
+  },
+  "stats": {
+    "total_pilares": 3,
+    "total_ferramentas": 15,
+    "total_manuais_vps": 15,
+    "total_trilhas_aprendizado": 15,
+    "tempo_total_implantacao": "30 dias"
+  },
+  "pilares": [
+    {
+      "pilar_id": "pilar-01-email-groupware",
+      "nome_pilar": "Pilar 01: E-mail Corporativo, Groupware & Gateway Antispam",
+      "modulo_saas_alvo": "Penso Mail / Zimbra Collaboration / Penso Antispam",
+      "descricao_pilar": "Servidores de correio eletrônico corporativo com suporte completo a protocolos IMAP, POP3, SMTP, ActiveSync (Exchange ActiveSync), calendários CalDAV, contatos CardDAV e proteção perimetral antispam com Rspamd, ClamAV e assinaturas DKIM/DMARC.",
+      "subtotal_economia_anual": "R$ 24.000/ano",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "slug": "mailcow",
+          "nome": "Mailcow: dockerized",
+          "subtitulo": "Suíte Moderna de E-mail Corporativo com Rspamd, SOGo Groupware e ActiveSync",
+          "classificacao": "Mais Robusta para Ambientes Corporativos",
+          "papel_no_pilar": "Servidor de correio primário com painel administrativo multi-domínio, webmail SOGo e filtro antispam integrado.",
+          "saas_substituido_direto": "Penso Mail Enterprise / Zimbra Network Edition",
+          "racional_escolha": "Solução conteinerizada líder mundial com arquitetura modular, atualizações automáticas via script, suporte nativo a 2FA/FIDO2, ActiveSync para dispositivos móveis e integração direta com Rspamd.",
+          "economia_anual_str": "R$ 24.000/ano",
+          "licenca_osi": "GPL-3.0",
+          "repositorio_github": "https://github.com/mailcow/mailcow-dockerized",
+          "o_que_faz": "Gerencia caixas postais corporativas, filas SMTP, roteamento de domínios e proteção antispam com aprendizado bayesiano.",
+          "como_funciona": "Orquestração em contêineres Docker interligados por rede interna, utilizando Postfix para MTA, Dovecot para IMAP/LMTP, Nginx para proxy reverso e SOGo para webmail e groupware.",
+          "comando_rapido": "git clone https://github.com/mailcow/mailcow-dockerized && cd mailcow-dockerized && ./generate_config.sh && docker compose up -d",
+          "requisitos_infra": {
+            "ram_minima": "4 GB",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "mailcow/postfix:latest",
+            "banco_dados": "MariaDB / Redis"
+          },
+          "veredito": "A escolha mais sólida e testada em batalha para substituição direta de servidores Zimbra corporativos com zero perda de recursos.",
+          "passos_praticos": [
+            {
+              "titulo": "Configuração de DNS Autoritativo",
+              "descricao": "Crie registros MX, SPF (v=spf1 mx ~all), DKIM e DMARC (v=DMARC1; p=quarantine) no provedor DNS do domínio corporativo."
+            },
+            {
+              "titulo": "Provisionamento do Mailcow",
+              "descricao": "Execute generate_config.sh informando o FQDN (mail.empresa.com.br) e suba o cluster com docker compose up -d."
+            },
+            {
+              "titulo": "Criação de Caixas Postais & Migração",
+              "descricao": "Acesse a interface de administração, configure o domínio e utilize o módulo de sincronização IMAP (Syncjob) para puxar as mensagens do Zimbra antigo."
+            }
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "SOGo Webmail / Bootstrap CSS",
+            "mecanica_customizacao": "Customização de logos, cores institucionais e favicon diretamente via painel administrativo do Mailcow.",
+            "manutenibilidade_tema": "Persistente entre atualizações de contêineres através de volumes mapeados."
+          },
+          "uso_complementar": [
+            {"tipo": "CLI", "nome": "mailcow-cli", "descricao": "Automação de provisionamento de caixas postais via terminal", "comando_ou_repo": "https://github.com/mailcow/mailcow-cli"},
+            {"tipo": "Plugin", "nome": "Nextcloud Mail Integration", "descricao": "Conector Oauth2/IMAP para leitura de mensagens no painel da nuvem", "comando_ou_repo": "https://apps.nextcloud.com/apps/mail"}
+          ]
+        },
+        {
+          "rank": 2,
+          "slug": "mailu",
+          "nome": "Mailu",
+          "subtitulo": "Servidor de E-mail Leve, Modular e Focado em Simplicidade Operacional",
+          "classificacao": "Mais Completa e Moderna",
+          "papel_no_pilar": "Alternativa de correio eletrônico com baixo consumo de memória e painel administrativo intuitivo.",
+          "saas_substituido_direto": "Penso Mail Padrão",
+          "racional_escolha": "Arquitetura limpa sem componentes legados, com suporte nativo a Roundcube ou SnappyMail e excelente integração com clientes desktop Thunderbird e Outlook.",
+          "economia_anual_str": "R$ 18.000/ano",
+          "licenca_osi": "MIT",
+          "repositorio_github": "https://github.com/Mailu/Mailu",
+          "o_que_faz": "Entrega servidor de e-mail seguro com suporte a Webmail, antispam, antivírus e administração centralizada.",
+          "como_funciona": "Usa Postfix, Dovecot e Rspamd com gerador de docker-compose oficial para deploy personalizado.",
+          "comando_rapido": "curl -sSL https://setup.mailu.io -o setup.py && python3 setup.py",
+          "requisitos_infra": {
+            "ram_minima": "2 GB",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "mailu/admin:latest",
+            "banco_dados": "PostgreSQL / SQLite"
+          },
+          "veredito": "Excelente para equipes que buscam facilidade de manutenção e menor consumo de recursos de VPS.",
+          "passos_praticos": [
+            {
+              "titulo": "Geração do Manifesto",
+              "descricao": "Utilize o assistente oficial para selecionar os módulos desejados (Roundcube, Antivírus, Fetchmail)."
+            },
+            {
+              "titulo": "Deploy via Docker Compose",
+              "descricao": "Suba o cluster com docker compose -p mailu up -d e crie o usuário root inicial."
+            },
+            {
+              "titulo": "Validação de Reputação IP",
+              "descricao": "Teste o envio para ferramentas de validação de entregabilidade (Mail-Tester) visando nota 10/10."
+            }
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Médio",
+            "stack_ui": "Roundcube / SnappyMail Skin",
+            "mecanica_customizacao": "Aplicação de CSS customizado e skins temáticas na interface do webmail.",
+            "manutenibilidade_tema": "Alta estabilidade."
+          },
+          "uso_complementar": [
+            {"tipo": "API", "nome": "Mailu REST API", "descricao": "API REST nativa para criação automática de e-mails em onboarding de funcionários", "comando_ou_repo": "https://mailu.io/api"}
+          ]
+        },
+        {
+          "rank": 3,
+          "slug": "stalwart-mail",
+          "nome": "Stalwart Mail Server",
+          "subtitulo": "Servidor de Correio All-in-One de Próxima Geração em Rust",
+          "classificacao": "Mais Moderna e Segura",
+          "papel_no_pilar": "Servidor de alta densidade com suporte nativo a JMAP, IMAP, SMTP e DMARC em binário único compilado.",
+          "saas_substituido_direto": "Penso Mail High Performance",
+          "racional_escolha": "Desenvolvido em Rust com zero memory-leaks, suporte nativo ao protocolo moderno JMAP e altíssima velocidade de busca e indexação.",
+          "economia_anual_str": "R$ 18.000/ano",
+          "licenca_osi": "AGPL-3.0",
+          "repositorio_github": "https://github.com/stalwartlabs/mail-server",
+          "o_que_faz": "Unifica servidor SMTP, IMAP, JMAP, antispam e gerenciador de chaves criptográficas em um único serviço ultra-rápido.",
+          "como_funciona": "Arquitetura assíncrona em Rust com backend de armazenamento flexível (RocksDB, S3 ou SQL).",
+          "comando_rapido": "docker run -d --name stalwart -p 25:25 -p 993:993 -p 8080:8080 stalwartlabs/mail-server:latest",
+          "requisitos_infra": {
+            "ram_minima": "1 GB",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "stalwartlabs/mail-server:latest",
+            "banco_dados": "RocksDB / PostgreSQL"
+          },
+          "veredito": "A solução de engenharia mais avançada tecnologicamente para servidores de e-mail corporativos da próxima década.",
+          "passos_praticos": [
+            {"titulo": "Inicialização", "descricao": "Suba o contêiner Stalwart com persistência de volumes."},
+            {"titulo": "Configuração Web GUI", "descricao": "Acesse a porta 8080 para definir domínios, chaves DKIM e políticas de quota."},
+            {"titulo": "Integração JMAP/IMAP", "descricao": "Conecte clientes modernos que suportam o protocolo rápido JMAP."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "Web Admin Moderno",
+            "mecanica_customizacao": "Temas nativos no painel de controle.",
+            "manutenibilidade_tema": "Alta."
+          },
+          "uso_complementar": [
+            {"tipo": "CLI", "nome": "stalwart-cli", "descricao": "Ferramenta de linha de comando para administração avançada", "comando_ou_repo": "https://github.com/stalwartlabs/cli"}
+          ]
+        },
+        {
+          "rank": 4,
+          "slug": "modoboa",
+          "nome": "Modoboa",
+          "subtitulo": "Plataforma de E-mail Corporativo e Groupware Baseada em Python e Django",
+          "classificacao": "Mais Leve e Customizável",
+          "papel_no_pilar": "Painel de administração modular com webmail integrado e monitoramento de reputação.",
+          "saas_substituido_direto": "Penso Mail Básico",
+          "racional_escolha": "Código legível em Python/Django, instalador automatizado para Debian/Ubuntu e plugins para relatórios de tráfego de e-mail.",
+          "economia_anual_str": "R$ 14.000/ano",
+          "licenca_osi": "ISC",
+          "repositorio_github": "https://github.com/modoboa/modoboa",
+          "o_que_faz": "Fornece interface web completa para gestão de correio, quarentena de spam e estatísticas de tráfego.",
+          "como_funciona": "Integra Postfix, Dovecot, Amavis/Rspamd e banco PostgreSQL através de uma API em Django.",
+          "comando_rapido": "git clone https://github.com/modoboa/modoboa-installer && cd modoboa-installer && python3 run.py <seu-dominio.com.br>",
+          "requisitos_infra": {
+            "ram_minima": "2 GB",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "modoboa/modoboa:latest",
+            "banco_dados": "PostgreSQL"
+          },
+          "veredito": "Perfeito para ambientes que necessitam de customização em Python e integração com portais corporativos existentes.",
+          "passos_praticos": [
+            {"titulo": "Execução do Instalador", "descricao": "Rode o modoboa-installer no Ubuntu Server limpo."},
+            {"titulo": "Parametrização", "descricao": "Defina limites de envio por domínio e regras de quarentena."},
+            {"titulo": "Habilitação de Autenticação", "descricao": "Conecte com diretórios LDAP/Active Directory se necessário."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Médio",
+            "stack_ui": "Django Templates / CSS",
+            "mecanica_customizacao": "Customização de templates HTML corporativos.",
+            "manutenibilidade_tema": "Estável."
+          },
+          "uso_complementar": [
+            {"tipo": "Plugin", "nome": "Modoboa Radicale", "descricao": "Servidor CalDAV/CardDAV integrado para sincronização de contatos e calendários", "comando_ou_repo": "https://github.com/modoboa/modoboa-radicale"}
+          ]
+        },
+        {
+          "rank": 5,
+          "slug": "poste-io",
+          "nome": "Poste.io",
+          "subtitulo": "Servidor de E-mail Completo em Contêiner Único com Painel Administrativo Ágil",
+          "classificacao": "Mais Simples de Operar",
+          "papel_no_pilar": "Solução de deploy instantâneo para empresas que necessitam de correio eletrônico seguro com manutenção zero.",
+          "saas_substituido_direto": "Penso Mail Start",
+          "racional_escolha": "Empacotado em uma única imagem Docker, inclui Webmail Roundcube, antispam Rspamd, antivírus ClamAV e certificado Let's Encrypt automático em 1 comando.",
+          "economia_anual_str": "R$ 12.000/ano",
+          "licenca_osi": "GPL-2.0",
+          "repositorio_github": "https://github.com/analogic/poste.io",
+          "o_que_faz": "Provê serviço completo de correio eletrônico corporativo em um único contêiner autossuficiente.",
+          "como_funciona": "Combina Haraka/Postfix com Dovecot e painel em PHP/SQLite em imagem única otimizada.",
+          "comando_rapido": "docker run -d --name mail -p 25:25 -p 80:80 -p 443:443 -p 993:993 -v /opt/mail/data:/data analogic/poste.io",
+          "requisitos_infra": {
+            "ram_minima": "2 GB",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "analogic/poste.io:latest",
+            "banco_dados": "SQLite integrado"
+          },
+          "veredito": "A forma mais rápida e descomplicada de subir um servidor de e-mail funcional em menos de 5 minutos.",
+          "passos_praticos": [
+            {"titulo": "Subida do Contêiner", "descricao": "Execute o comando Docker mapeando as portas padrão de correio."},
+            {"titulo": "Assistente Web", "descricao": "Abra https://ip-vps para criar a senha mestre de administração."},
+            {"titulo": "Adição de Domínios", "descricao": "Cadastre os domínios e gere as chaves DKIM com 1 clique."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "Interface Web Limpa",
+            "mecanica_customizacao": "Troca de logotipo institucional no painel.",
+            "manutenibilidade_tema": "Simples."
+          },
+          "uso_complementar": [
+            {"tipo": "Skill", "nome": "E-mail Health Monitor", "descricao": "Monitoramento de reputação de IP em listas RBL", "comando_ou_repo": "scripts/auditar_rbl.py"}
+          ]
+        }
+      ]
+    },
+    {
+      "pilar_id": "pilar-02-nuvem-drive-documentos",
+      "nome_pilar": "Pilar 02: Armazenamento em Nuvem, Drive Corporativo & Documentos",
+      "modulo_saas_alvo": "Penso Drive / Google Drive / OneDrive",
+      "descricao_pilar": "Plataforma centralizada de arquivos corporativos com sincronização desktop/mobile, compartilhamento seguro de links com expiração e senha, edição colaborativa de planilhas e documentos em tempo real e controle de versionamento.",
+      "subtotal_economia_anual": "R$ 18.000/ano",
+      "ferramentas": [
+        {
+          "rank": 6,
+          "slug": "nextcloud",
+          "nome": "Nextcloud Hub",
+          "subtitulo": "A Plataforma de Produtividade e Armazenamento Soberana Líder Mundial",
+          "classificacao": "Mais Robusta e Completa",
+          "papel_no_pilar": "Nuvem central corporativa para arquivos, documentos com OnlyOffice, calendários, contatos e formulários.",
+          "saas_substituido_direto": "Penso Drive / Google Workspace Drive / Dropbox Business",
+          "racional_escolha": "Padrão de ouro de governança de dados na Europa e no setor público brasileiro. Suporte a criptografia ponta a ponta, auditoria de acessos LGPD, clientes para Windows, Mac, Linux, Android e iOS.",
+          "economia_anual_str": "R$ 18.000/ano",
+          "licenca_osi": "AGPL-3.0",
+          "repositorio_github": "https://github.com/nextcloud/server",
+          "o_que_faz": "Armazena, versiona e compartilha arquivos corporativos com suporte a edição online de planilhas, apresentações e textos.",
+          "como_funciona": "Backend PHP/PostgreSQL com Redis para locking transacional e OnlyOffice Document Server integrado para edição colaborativa.",
+          "comando_rapido": "docker compose up -d nextcloud nextcloud-db redis onlyoffice",
+          "requisitos_infra": {
+            "ram_minima": "4 GB",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "nextcloud:apache",
+            "banco_dados": "PostgreSQL / Redis"
+          },
+          "veredito": "A substituição definitiva para o Penso Drive e Google Drive, com soberania total de arquivos e suporte nativo a OnlyOffice.",
+          "passos_praticos": [
+            {"titulo": "Deploy do Nextcloud Hub", "descricao": "Suba o compose com PostgreSQL, Redis e OnlyOffice Document Server configurados."},
+            {"titulo": "Configuração de Armazenamento", "descricao": "Mapeie o volume NVMe local ou storage corporativo via S3/MinIO para expansão elástica."},
+            {"titulo": "Distribuição de Clientes", "descricao": "Instale o cliente Nextcloud Desktop nos computadores dos colaboradores com sincronização seletiva."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "Nextcloud Theming (Nativo)",
+            "mecanica_customizacao": "Aplicação de logotipo, cores da marca corporativa, background e slogan diretamente nas configurações de administração.",
+            "manutenibilidade_tema": "100% nativo e imune a atualizações de versão."
+          },
+          "uso_complementar": [
+            {"tipo": "Extensão", "nome": "OnlyOffice Docs", "descricao": "Editor colaborativo de documentos compatível com DOCX, XLSX e PPTX", "comando_ou_repo": "https://github.com/ONLYOFFICE/DocumentServer"},
+            {"tipo": "Plugin", "nome": "Nextcloud Group Folders", "descricao": "Pastas departamentais com controle granular de permissões por grupo", "comando_ou_repo": "https://apps.nextcloud.com/apps/groupfolders"}
+          ]
+        },
+        {
+          "rank": 7,
+          "slug": "seafile",
+          "nome": "Seafile",
+          "subtitulo": "Sistema de Sincronização e Armazenamento de Arquivos de Alta Velocidade em C/Python",
+          "classificacao": "Mais Robusta em Performance e Sincronização",
+          "papel_no_pilar": "Drive corporativo focado em máxima velocidade de transferência de arquivos grandes e baixo uso de CPU/RAM.",
+          "saas_substituido_direto": "Penso Drive High Performance",
+          "racional_escolha": "Escrito em linguagem C no núcleo de sincronização, possui algoritmo de deduplicação de blocos (delta sync) superior a soluções puramente PHP.",
+          "economia_anual_str": "R$ 15.000/ano",
+          "licenca_osi": "GPL-2.0",
+          "repositorio_github": "https://github.com/haiwen/seafile",
+          "o_que_faz": "Sincroniza bibliotecas de arquivos com alta velocidade, controle de versão infinito e drive virtual montado no Windows Explorer.",
+          "como_funciona": "Servidor C/C++ (seafile-server) com interface Seahub em Python/Django e banco MySQL/PostgreSQL.",
+          "comando_rapido": "docker compose up -d seafile seafile-mysql seafile-memcached",
+          "requisitos_infra": {
+            "ram_minima": "2 GB",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "seafileltd/seafile-mc:latest",
+            "banco_dados": "MariaDB / Memcached"
+          },
+          "veredito": "A escolha ideal para escritórios e agências que manipulam gigabytes diários de arquivos pesados com sincronização em tempo real.",
+          "passos_praticos": [
+            {"titulo": "Deploy Docker", "descricao": "Suba o Seafile Community Server com compose oficial."},
+            {"titulo": "Criação de Bibliotecas", "descricao": "Estruture as bibliotecas por departamento com criptografia opcional no cliente."},
+            {"titulo": "Montagem do Drive Virtual", "descricao": "Utilize o Seafile Drive Client para acessar os arquivos sem ocupar espaço em disco local."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Médio",
+            "stack_ui": "Seahub CSS",
+            "mecanica_customizacao": "Substituição de arquivos de logo e CSS corporativo em pasta de customização mapeada.",
+            "manutenibilidade_tema": "Alta."
+          },
+          "uso_complementar": [
+            {"tipo": "Driver", "nome": "Seafile Drive Client", "descricao": "Monta a nuvem como disco rígido virtual (ex: S:) no Windows", "comando_ou_repo": "https://www.seafile.com/en/download/"}
+          ]
+        },
+        {
+          "rank": 8,
+          "slug": "owncloud-ocis",
+          "nome": "ownCloud Infinite Scale (oCIS)",
+          "subtitulo": "Nuvem Corporativa Moderna em Go e Microserviços Cloud-Native",
+          "classificacao": "Mais Moderna e Escalável",
+          "papel_no_pilar": "Armazenamento corporativo desacoplado de banco relacional clássico, projetado para alta escalabilidade.",
+          "saas_substituido_direto": "Penso Drive Enterprise",
+          "racional_escolha": "Desenvolvido em Go (Golang) com frontend em Vue.js, inicialização instantânea em binário único e compatibilidade nativa com armazenamento S3.",
+          "economia_anual_str": "R$ 15.000/ano",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/owncloud/ocis",
+          "o_que_faz": "Gerencia arquivos em nuvem com arquitetura de microserviços e alta concorrência de usuários.",
+          "como_funciona": "Binário único em Go que orquestra serviços de metadados, armazenamento e API OIDC.",
+          "comando_rapido": "docker run -d --name ocis -p 9200:9200 -e OCIS_INSECURE=true owncloud/ocis:latest",
+          "requisitos_infra": {
+            "ram_minima": "1 GB",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "owncloud/ocis:latest",
+            "banco_dados": "Armazenamento nativo / S3"
+          },
+          "veredito": "Excelente para arquiteturas corporativas modernas que buscam eliminar a sobrecarga de bancos relacionais.",
+          "passos_praticos": [
+            {"titulo": "Inicialização", "descricao": "Execute o contêiner oCIS definindo a URL pública corporativa."},
+            {"titulo": "Integração Keycloak", "descricao": "Conecte o serviço de autenticação OIDC nativo ao Keycloak corporativo."},
+            {"titulo": "Configuração de Spaces", "descricao": "Crie Espaços de Trabalho compartilhados para cada equipe."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "ownCloud Web (Vue.js)",
+            "mecanica_customizacao": "Customização de temas via arquivos JSON de configuração de branding.",
+            "manutenibilidade_tema": "Excelente."
+          },
+          "uso_complementar": [
+            {"tipo": "CLI", "nome": "ocis-cli", "descricao": "CLI nativa para administração e automação de quotas", "comando_ou_repo": "https://owncloud.dev/ocis/"}
+          ]
+        },
+        {
+          "rank": 9,
+          "slug": "cryptpad",
+          "nome": "CryptPad",
+          "subtitulo": "Suíte Colaborativa de Documentos com Criptografia Ponta a Ponta Zero-Knowledge",
+          "classificacao": "Mais Segura e Privada",
+          "papel_no_pilar": "Edição de documentos, planilhas, formulários e kanban com criptografia no navegador.",
+          "saas_substituido_direto": "Penso Drive Seguro / Google Docs Privado",
+          "racional_escolha": "Nem mesmo o administrador da VPS consegue ler o conteúdo dos documentos: a chave criptográfica reside exclusivamente na sessão do usuário no navegador.",
+          "economia_anual_str": "R$ 12.000/ano",
+          "licenca_osi": "AGPL-3.0",
+          "repositorio_github": "https://github.com/cryptpad/cryptpad",
+          "o_que_faz": "Edição de documentos de texto, código, apresentações, enquetes e quadros brancos com proteção total de dados.",
+          "como_funciona": "Backend em Node.js leve que atua como relay criptográfico sem acesso às chaves descriptografadas.",
+          "comando_rapido": "docker run -d --name cryptpad -p 3000:3000 -p 3001:3001 cryptpad/cryptpad:latest",
+          "requisitos_infra": {
+            "ram_minima": "1 GB",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "cryptpad/cryptpad:latest",
+            "banco_dados": "Armazenamento em arquivo plano"
+          },
+          "veredito": "A solução definitiva para departamentos jurídicos, diretoria e compliance que exigem sigilo absoluto de documentos.",
+          "passos_praticos": [
+            {"titulo": "Provisionamento de Domínio", "descricao": "Configure os 2 domínios necessários (domínio principal e sandbox) para isolamento do navegador."},
+            {"titulo": "Subida do Contêiner", "descricao": "Execute o CryptPad com Docker e proxy Traefik com TLS."},
+            {"titulo": "Criação do Painel do Admin", "descricao": "Gere a conta administrativa com chave de recuperação física."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "Interface Web Minimalista",
+            "mecanica_customizacao": "Customização de logos e cores via config.js.",
+            "manutenibilidade_tema": "Alta."
+          },
+          "uso_complementar": [
+            {"tipo": "Skill", "nome": "CryptPad DRP Guard", "descricao": "Rotina de backup criptografado do storage do CryptPad", "comando_ou_repo": "scripts/backup_cryptpad.sh"}
+          ]
+        },
+        {
+          "rank": 10,
+          "slug": "filebrowser",
+          "nome": "Filebrowser",
+          "subtitulo": "Gerenciador de Arquivos Web Ultra-Leve em Binário Único Go",
+          "classificacao": "Mais Leve e Simples",
+          "papel_no_pilar": "Painel de acesso rápido e compartilhamento de arquivos sem peso computacional.",
+          "saas_substituido_direto": "Penso Drive Básico",
+          "racional_escolha": "Consome menos de 30 MB de RAM, suporta múltiplos usuários com permissões específicas de diretório e links de download públicos.",
+          "economia_anual_str": "R$ 9.600/ano",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/filebrowser/filebrowser",
+          "o_que_faz": "Provê interface web intuitiva para upload, download, pré-visualização de imagens/vídeos e gerenciamento de arquivos na VPS.",
+          "como_funciona": "Binário compilado em Go com banco SQLite e interface SPA em Vue.js.",
+          "comando_rapido": "docker run -d --name filebrowser -p 8080:80 -v /srv/files:/srv -v /opt/filebrowser/database.db:/database.db filebrowser/filebrowser:latest",
+          "requisitos_infra": {
+            "ram_minima": "256 MB",
+            "cpu_recomendada": "0.5 vCPU",
+            "docker_image": "filebrowser/filebrowser:latest",
+            "banco_dados": "SQLite integrado"
+          },
+          "veredito": "A solução mais leve existente para compartilhar e gerenciar arquivos corporativos com consumo quase nulo de hardware.",
+          "passos_praticos": [
+            {"titulo": "Subida do Contêiner", "descricao": "Mapeie a pasta de arquivos e suba o contêiner em 2 segundos."},
+            {"titulo": "Criação de Usuários", "descricao": "Cadastre os usuários com permissões de leitura/escrita por pasta."},
+            {"titulo": "Geração de Links", "descricao": "Compartilhe links públicos com tempo de expiração e senha."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "Vue.js SPA",
+            "mecanica_customizacao": "Customização de título e cores via painel de configurações.",
+            "manutenibilidade_tema": "Simples."
+          },
+          "uso_complementar": [
+            {"tipo": "CLI", "nome": "filebrowser-cli", "descricao": "CLI nativa para gerenciamento de usuários em lote", "comando_ou_repo": "https://filebrowser.org/cli"}
+          ]
+        }
+      ]
+    },
+    {
+      "pilar_id": "pilar-03-comunicacao-chat-meet",
+      "nome_pilar": "Pilar 03: Comunicação Unificada, Chat Corporativo & Videoconferência",
+      "modulo_saas_alvo": "Penso Chat / Microsoft Teams / Slack / Zoom",
+      "descricao_pilar": "Ambiente centralizado de comunicação em equipe com canais públicos e privados, mensagens diretas, integração com bots, compartilhamento de tela e videoconferências em alta definição sem limite de tempo por reunião.",
+      "subtotal_economia_anual": "R$ 12.000/ano",
+      "ferramentas": [
+        {
+          "rank": 11,
+          "slug": "mattermost",
+          "nome": "Mattermost Team Edition",
+          "subtitulo": "A Plataforma de Mensageria Segura e Operações para Empresas Líder de Mercado",
+          "classificacao": "Mais Robusta para Empresas",
+          "papel_no_pilar": "Hub central de comunicação corporativa, canais departamentais, playbooks e chamadas de voz.",
+          "saas_substituido_direto": "Penso Chat / Slack / Microsoft Teams",
+          "racional_escolha": "Substituição completa do Slack/Teams com aplicativos nativos para Windows, Mac, Linux, iOS e Android, suporte a LDAP/SAML/OIDC, webhooks ilimitados e total soberania de dados.",
+          "economia_anual_str": "R$ 12.000/ano",
+          "licenca_osi": "MIT",
+          "repositorio_github": "https://github.com/mattermost/mattermost",
+          "o_que_faz": "Gerencia mensagens instantâneas, canais por projetos, integrações com sistemas legados e quadros de tarefas (Boards).",
+          "como_funciona": "Backend em Go de altíssima concorrência com PostgreSQL e interface moderna em React/Redux.",
+          "comando_rapido": "git clone https://github.com/mattermost/docker && cd docker && docker compose -f docker-compose.yml -f docker-compose.without-nginx.yml up -d",
+          "requisitos_infra": {
+            "ram_minima": "2 GB",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "mattermost/mattermost-team-edition:latest",
+            "banco_dados": "PostgreSQL"
+          },
+          "veredito": "A plataforma de chat corporativo mais madura, confiável e adotada por grandes corporações globais.",
+          "passos_praticos": [
+            {"titulo": "Deploy do Cluster Mattermost", "descricao": "Execute o compose com PostgreSQL e crie o usuário System Admin inicial."},
+            {"titulo": "Estruturação de Canais", "descricao": "Crie os times corporativos e canais padrão por departamento (Geral, Vendas, TI, Suporte)."},
+            {"titulo": "Integração de Webhooks", "descricao": "Conecte o Mattermost ao n8n e aos alertas de infraestrutura para notificações automáticas."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "React Web / Custom CSS",
+            "mecanica_customizacao": "Customização de logotipo, nome da empresa, tela de login e temas de cores diretamente pelo painel.",
+            "manutenibilidade_tema": "Nativa e mantida entre deploys."
+          },
+          "uso_complementar": [
+            {"tipo": "Plugin", "nome": "Mattermost Boards (Focalboard)", "descricao": "Gestão de projetos estilo Trello integrada dentro dos canais de chat", "comando_ou_repo": "https://github.com/mattermost/focalboard"},
+            {"tipo": "Plugin", "nome": "Mattermost Calls", "descricao": "Chamadas de voz e compartilhamento de tela com 1 clique direto no canal", "comando_ou_repo": "https://github.com/mattermost/mattermost-plugin-calls"}
+          ]
+        },
+        {
+          "rank": 12,
+          "slug": "matrix-synapse",
+          "nome": "Matrix Synapse & Element",
+          "subtitulo": "Rede Aberta e Federada de Comunicação Segura com Criptografia Ponta a Ponta",
+          "classificacao": "Mais Moderna e Federada",
+          "papel_no_pilar": "Protocolo de comunicação descentralizado para conversas corporativas ultra-seguras.",
+          "saas_substituido_direto": "Penso Chat Seguro",
+          "racional_escolha": "Padrão adotado por governos internacionais para soberania digital, com criptografia nativa Olm/Megolm e possibilidade de federar com outras filiais ou empresas parceiras.",
+          "economia_anual_str": "R$ 10.000/ano",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/element-hq/synapse",
+          "o_que_faz": "Provê servidor de mensageria federada com salas criptografadas, chamadas de áudio/vídeo e controle granular de chaves.",
+          "como_funciona": "Servidor Synapse (Python/Rust) conectado a banco PostgreSQL com cliente web/desktop Element.",
+          "comando_rapido": "docker compose up -d synapse synapse-db element-web",
+          "requisitos_infra": {
+            "ram_minima": "2 GB",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "matrixdotorg/synapse:latest",
+            "banco_dados": "PostgreSQL"
+          },
+          "veredito": "A melhor escolha para organizações que exigem federação segura entre diferentes domínios e criptografia inquebrável.",
+          "passos_praticos": [
+            {"titulo": "Configuração do Homeserver", "descricao": "Gere o arquivo homeserver.yaml com o domínio corporativo e chaves de assinatura."},
+            {"titulo": "Deploy Synapse & Element", "descricao": "Suba o servidor e o cliente Element Web com proxy Traefik."},
+            {"titulo": "Definição de Políticas de Criptografia", "descricao": "Habilite a criptografia ponta a ponta (E2EE) obrigatória para todas as salas internas."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Médio",
+            "stack_ui": "Element Web (React)",
+            "mecanica_customizacao": "Customização de branding no config.json do Element Web.",
+            "manutenibilidade_tema": "Alta."
+          },
+          "uso_complementar": [
+            {"tipo": "Bridge", "nome": "Matrix Appservice IRC/Slack", "descricao": "Pontes de integração para conectar o Matrix a canais legados", "comando_ou_repo": "https://github.com/matrix-org/matrix-appservice-slack"}
+          ]
+        },
+        {
+          "rank": 13,
+          "slug": "rocket-chat",
+          "nome": "Rocket.Chat",
+          "subtitulo": "Hub de Comunicação Omnichannel e Mensageria Corporativa Segura",
+          "classificacao": "Mais Completa e Omnichannel",
+          "papel_no_pilar": "Chat corporativo interno com capacidade de atender clientes externos via Livechat e WhatsApp.",
+          "saas_substituido_direto": "Penso Chat & Atendimento",
+          "racional_escolha": "Combina comunicação de equipe interna com atendimento a clientes em um único painel, com suporte nativo a automações de atendimento.",
+          "economia_anual_str": "R$ 10.000/ano",
+          "licenca_osi": "MIT",
+          "repositorio_github": "https://github.com/RocketChat/Rocket.Chat",
+          "o_que_faz": "Centraliza conversas de equipes internas e chats de suporte ao cliente em tempo real.",
+          "como_funciona": "Backend em Node.js com banco de dados MongoDB e suporte a microserviços de alta disponibilidade.",
+          "comando_rapido": "docker compose up -d rocketchat rocketchat-mongodb",
+          "requisitos_infra": {
+            "ram_minima": "2 GB",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "registry.rocket.chat/rocketchat/rocket.chat:latest",
+            "banco_dados": "MongoDB"
+          },
+          "veredito": "Excelente para empresas que desejam unificar o chat entre funcionários e o atendimento web aos clientes no mesmo sistema.",
+          "passos_praticos": [
+            {"titulo": "Deploy com MongoDB", "descricao": "Execute o compose com MongoDB com replica set ativo."},
+            {"titulo": "Setup Inicial", "descricao": "Complete o assistente de onboarding e configure o idioma PT-BR corporativo."},
+            {"titulo": "Widget de Livechat", "descricao": "Insira o script do Livechat no site corporativo para recepção de visitantes."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "Fuselage / Custom CSS",
+            "mecanica_customizacao": "Painel de personalização de marca nativo.",
+            "manutenibilidade_tema": "Fácil."
+          },
+          "uso_complementar": [
+            {"tipo": "App", "nome": "Rocket.Chat Omnichannel Hub", "descricao": "Conector para atendimento centralizado multicanal", "comando_ou_repo": "https://github.com/RocketChat/Apps.Omnichannel"}
+          ]
+        },
+        {
+          "rank": 14,
+          "slug": "zulip",
+          "nome": "Zulip",
+          "subtitulo": "Plataforma de Chat em Equipe Organizada por Tópicos e Threads Assíncronas",
+          "classificacao": "Mais Focada em Produtividade Assíncrona",
+          "papel_no_pilar": "Chat para equipes de engenharia e gestão que sofrem com excesso de notificações em conversas desorganizadas.",
+          "saas_substituido_direto": "Penso Chat / Slack",
+          "racional_escolha": "Modelo exclusivo de tópicos dentro de streams que permite ler conversas importantes de forma organizada sem perder o contexto.",
+          "economia_anual_str": "R$ 8.000/ano",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/zulip/zulip",
+          "o_que_faz": "Combina a agilidade do chat em tempo real com a organização de um fórum corporativo estruturado.",
+          "como_funciona": "Backend Python/Django com Tornado para webhooks assíncronos e banco PostgreSQL.",
+          "comando_rapido": "docker compose up -d zulip zulip-db zulip-redis",
+          "requisitos_infra": {
+            "ram_minima": "2 GB",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "zulip/docker-zulip:latest",
+            "banco_dados": "PostgreSQL / Redis"
+          },
+          "veredito": "A melhor opção para empresas remotas e equipes de desenvolvimento que priorizam foco e comunicação assíncrona organizada.",
+          "passos_praticos": [
+            {"titulo": "Deploy Docker", "descricao": "Suba o Zulip com o docker-zulip oficial."},
+            {"titulo": "Criação da Organização", "descricao": "Acesse a URL e finalize o registro da empresa."},
+            {"titulo": "Parametrização de Tópicos", "descricao": "Oriente a equipe a criar tópicos específicos para cada demanda."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "Interface Zulip",
+            "mecanica_customizacao": "Customização de logos e nomes de streams no painel corporativo.",
+            "manutenibilidade_tema": "Estável."
+          },
+          "uso_complementar": [
+            {"tipo": "Bot", "nome": "Zulip GitHub Bot", "descricao": "Notificações automáticas de commits e pull requests diretamente nos tópicos de TI", "comando_ou_repo": "https://zulip.com/integrations/doc/github"}
+          ]
+        },
+        {
+          "rank": 15,
+          "slug": "jitsi-meet",
+          "nome": "Jitsi Meet",
+          "subtitulo": "Servidor de Videoconferência Criptografada HD sem Limite de Duração",
+          "classificacao": "Mais Simples para Videoconferência",
+          "papel_no_pilar": "Reuniões virtuais em áudio e vídeo HD, gravação local/nuvem e compartilhamento de apresentações.",
+          "saas_substituido_direto": "Penso Meet / Zoom Pro / Google Meet",
+          "racional_escolha": "Zero instalação para convidados (funciona direto no navegador WebRTC), sem limite de 40 minutos por reunião e com controle total das gravações.",
+          "economia_anual_str": "R$ 8.000/ano",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/jitsi/jitsi-meet",
+          "o_que_faz": "Transmite áudio e vídeo de alta qualidade com salas protegidas por senha e sala de espera.",
+          "como_funciona": "Arquitetura WebRTC escalável com Jitsi Videobridge (JVB), Prosody XMPP e Jicofo em contêineres Docker.",
+          "comando_rapido": "git clone https://github.com/jitsi/docker-jitsi-meet && cd docker-jitsi-meet && cp env.example .env && ./gen-passwords.sh && docker compose up -d",
+          "requisitos_infra": {
+            "ram_minima": "2 GB",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "jitsi/web:latest",
+            "banco_dados": "Prosody XMPP integrado"
+          },
+          "veredito": "A solução definitiva de reuniões virtuais corporativas, eliminando 100% dos custos recorrentes de licenças Zoom/Meet.",
+          "passos_praticos": [
+            {"titulo": "Clone do Repositório", "descricao": "Baixe o docker-jitsi-meet e gere as senhas internas com ./gen-passwords.sh."},
+            {"titulo": "Configuração de Domínio", "descricao": "Defina o domínio (meet.empresa.com.br) no arquivo .env e suba o cluster."},
+            {"titulo": "Autenticação de Moderadores", "descricao": "Habilite a autenticação para que apenas colaboradores possam abrir salas públicas."}
+          ],
+          "design_system": {
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "React / WebRTC",
+            "mecanica_customizacao": "Substituição de marca d'água, logo de carregamento e interface via interface_config.js.",
+            "manutenibilidade_tema": "Excelente."
+          },
+          "uso_complementar": [
+            {"tipo": "Plugin", "nome": "Nextcloud Jitsi Integration", "descricao": "Botão de criação de chamadas Jitsi com 1 clique dentro dos eventos do calendário Nextcloud", "comando_ou_repo": "https://apps.nextcloud.com/apps/jitsimeet"}
+          ]
+        }
+      ]
+    }
+  ],
+  "camada_integracao": {
+    "autenticacao_sso": "Keycloak / Authentik OIDC unificado para login único no Webmail (Mailcow/SOGo), Nuvem (Nextcloud Hub) e Chat (Mattermost)",
+    "barramento_eventos": "n8n para automação de onboarding de novos colaboradores, sincronização de contatos e alertas corporativos",
+    "gateway_reverse_proxy": "Traefik v3 com certificados Let's Encrypt TLS automáticos, roteamento por subdomínios (mail., drive., chat., meet.) e proteção contra ataques DDoS",
+    "fluxo_integracao_descricao": "O colaborador faz login único via OIDC no Keycloak e tem acesso imediato à sua caixa postal corporativa, ao seu drive na nuvem com documentos OnlyOffice e aos seus canais de chat no Mattermost. Novos funcionários cadastrados no RH são provisionados automaticamente em todos os sistemas via fluxo n8n."
+  },
+  "deploy_consolidado": {
+    "arquitetura_rede_seguranca": "Cluster conteinerizado em rede Docker interna isolada (penso_sovereign_net), exposto publicamente apenas pelas portas 80/443 (HTTPS Traefik) e portas padrão de e-mail (25, 465, 587, 993) com firewall UFW ativo e Fail2ban protegendo contra força bruta.",
+    "vps_ideal_especificacao": {
+      "provedor_recomendado": "Hetzner Cloud (CPX41) ou Contabo (Cloud VPS L)",
+      "especificacao_hardware": "16 vCPU Dedicadas / 32 GB RAM ECC / 240 GB NVMe SSD + 1 TB Volume de Armazenamento para E-mails/Arquivos",
+      "custo_mensal_estimado": "€ 48 a € 65/mês (~ R$ 300 a R$ 400/mês)",
+      "sistema_operacional": "Ubuntu Server 24.04 LTS (64-bit) com kernel otimizado",
+      "racional_engenharia_vps": "A infraestrutura foi dimensionada para suportar com extrema folga 150 a 300 colaboradores corporativos com alto volume de e-mails diários, sincronização de arquivos em nuvem e videoconferências simultâneas sem perigo de acionamento do OOM Killer.",
+      "distribuicao_recursos_por_servico": [
+        {"servico": "Traefik + Keycloak SSO", "cpu": "2 vCPU", "ram": "2.5 GB RAM", "motivo": "Autenticação federada central e roteamento TLS para toda a suíte"},
+        {"servico": "Mailcow Cluster (Postfix + Dovecot + Rspamd + SOGo)", "cpu": "4 vCPU", "ram": "8.0 GB RAM", "motivo": "Processamento de filas SMTP, escaneamento de vírus ClamAV e IMAP"},
+        {"servico": "Nextcloud Hub + OnlyOffice Document Server", "cpu": "4 vCPU", "ram": "8.0 GB RAM", "motivo": "Edição de planilhas/documentos e sincronização de arquivos pesados"},
+        {"servico": "Mattermost Team Edition + PostgreSQL", "cpu": "2 vCPU", "ram": "4.0 GB RAM", "motivo": "Comunicação em tempo real, canais e persistência de histórico"},
+        {"servico": "Jitsi Meet (WebRTC + JVB)", "cpu": "2 vCPU", "ram": "3.5 GB RAM", "motivo": "Encaminhamento de fluxos de áudio e vídeo HD sem transcoding pesado"},
+        {"servico": "n8n Workflow Engine + Redis", "cpu": "1 vCPU", "ram": "1.5 GB RAM", "motivo": "Orquestração de eventos e rotinas assíncronas"},
+        {"servico": "Margem de Segurança & Cache do SO", "cpu": "1 vCPU", "ram": "4.5 GB RAM", "motivo": "Buffer de I/O em disco NVMe e prevenção contra picos de tráfego"}
+      ]
+    },
+    "composicao_stack_detalhada": [
+      {"servico": "Traefik Reverse Proxy", "imagem_docker": "traefik:v3.0", "papel_na_stack": "Entrada única HTTPS, SSL Let's Encrypt automático e balanceamento", "racional_escolha": "Roteamento dinâmico baseado em labels Docker sem necessidade de reiniciar o proxy", "portas_expostas": "80, 443", "persistencia": "./traefik/acme.json"},
+      {"servico": "Keycloak SSO", "imagem_docker": "quay.io/keycloak/keycloak:latest", "papel_na_stack": "Provedor de Identidade (IdP) OIDC para login único de todos os módulos", "racional_escolha": "Padrão de mercado para gestão de identidades corporativas e 2FA", "portas_expostas": "Rede interna (8080)", "persistencia": "./keycloak_data"},
+      {"servico": "Mailcow E-mail Stack", "imagem_docker": "mailcow/*", "papel_na_stack": "Servidor de e-mail corporativo, groupware e filtro antispam", "racional_escolha": "Suíte all-in-one mais testada e segura para substituição direta do Zimbra", "portas_expostas": "25, 465, 587, 993, 110, 995", "persistencia": "./mailcow_data"},
+      {"servico": "Nextcloud Hub", "imagem_docker": "nextcloud:apache", "papel_na_stack": "Armazenamento em nuvem, drive corporativo e OnlyOffice", "racional_escolha": "Governança soberana de arquivos e colaboração em tempo real", "portas_expostas": "Rede interna (80)", "persistencia": "./nextcloud_data"},
+      {"servico": "Mattermost Chat", "imagem_docker": "mattermost/mattermost-team-edition:latest", "papel_na_stack": "Mensageria corporativa, canais e playbooks de equipe", "racional_escolha": "Substituição completa do Slack/Teams com aplicativos nativos", "portas_expostas": "Rede interna (8065)", "persistencia": "./mattermost_data"},
+      {"servico": "Jitsi Meet", "imagem_docker": "jitsi/*", "papel_na_stack": "Videoconferência criptografada em alta definição", "racional_escolha": "Reuniões sem limite de tempo e sem taxas por participante", "portas_expostas": "10000/udp, 443", "persistencia": "./jitsi_config"}
+    ],
+    "docker_compose_exemplo": "version: '3.8'\n\nnetworks:\n  penso_sovereign_net:\n    name: penso_sovereign_net\n    driver: bridge\n\nservices:\n  traefik:\n    image: traefik:v3.0\n    container_name: traefik_gateway\n    restart: always\n    command:\n      - '--api.dashboard=true'\n      - '--providers.docker=true'\n      - '--providers.docker.exposedbydefault=false'\n      - '--entrypoints.web.address=:80'\n      - '--entrypoints.websecure.address=:443'\n      - '--certificatesresolvers.letsencrypt.acme.tlschallenge=true'\n      - '--certificatesresolvers.letsencrypt.acme.email=admin@empresa.com.br'\n      - '--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json'\n    ports:\n      - '80:80'\n      - '443:443'\n    volumes:\n      - '/var/run/docker.sock:/var/run/docker.sock:ro'\n      - './traefik_data/acme.json:/letsencrypt/acme.json'\n    networks:\n      - penso_sovereign_net\n\n  keycloak:\n    image: quay.io/keycloak/keycloak:latest\n    container_name: keycloak_sso\n    restart: always\n    command: start --optimized\n    environment:\n      - KC_DB=postgres\n      - KC_DB_URL=jdbc:postgresql://postgres_sso:5432/keycloak\n      - KC_DB_USERNAME=keycloak\n      - KC_DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}\n      - KC_HOSTNAME=auth.empresa.com.br\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.keycloak.rule=Host(`auth.empresa.com.br`)'\n      - 'traefik.http.routers.keycloak.entrypoints=websecure'\n      - 'traefik.http.routers.keycloak.tls.certresolver=letsencrypt'\n    networks:\n      - penso_sovereign_net\n\n  nextcloud:\n    image: nextcloud:apache\n    container_name: nextcloud_drive\n    restart: always\n    environment:\n      - POSTGRES_HOST=postgres_drive\n      - POSTGRES_DB=nextcloud\n      - POSTGRES_USER=nextcloud\n      - POSTGRES_PASSWORD=${NEXTCLOUD_DB_PASSWORD}\n      - REDIS_HOST=redis_drive\n    volumes:\n      - './nextcloud_data/html:/var/www/html'\n      - './nextcloud_data/data:/var/www/html/data'\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.nextcloud.rule=Host(`drive.empresa.com.br`)'\n      - 'traefik.http.routers.nextcloud.entrypoints=websecure'\n      - 'traefik.http.routers.nextcloud.tls.certresolver=letsencrypt'\n    networks:\n      - penso_sovereign_net\n\n  mattermost:\n    image: mattermost/mattermost-team-edition:latest\n    container_name: mattermost_chat\n    restart: always\n    environment:\n      - MM_SQLSETTINGS_DATASOURCE=postgres://mmuser:${MM_DB_PASSWORD}@postgres_chat:5432/mattermost?sslmode=disable\n    volumes:\n      - './mattermost_data/config:/mattermost/config'\n      - './mattermost_data/data:/mattermost/data'\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.mattermost.rule=Host(`chat.empresa.com.br`)'\n      - 'traefik.http.routers.mattermost.entrypoints=websecure'\n      - 'traefik.http.routers.mattermost.tls.certresolver=letsencrypt'\n    networks:\n      - penso_sovereign_net",
+    "passos_deploy": [
+      {"numero": 1, "titulo": "Provisionamento da VPS & Configuração de DNS", "descricao": "Contrate a VPS com Ubuntu 24.04 LTS e aponte os registros de subdomínio (mail., drive., chat., meet., auth.) para o IP público."},
+      {"numero": 2, "titulo": "Deploy do Traefik & Keycloak SSO", "descricao": "Inicialize o roteamento TLS e configure o realm corporativo no Keycloak para login único em todos os módulos."},
+      {"numero": 3, "titulo": "Subida do Mailcow & Nextcloud Hub", "descricao": "Inicie o cluster de e-mail e a nuvem corporativa com volumes NVMe de alta velocidade."},
+      {"numero": 4, "titulo": "Subida do Mattermost & Jitsi Meet", "descricao": "Ative o chat corporativo e as salas de reunião com conexão OIDC ao Keycloak."},
+      {"numero": 5, "titulo": "Validação de Rotinas & Backups", "descricao": "Execute o script de backup automatizado 3-2-1 e faça o teste prático de restauração."}
+    ]
+  },
+  "guia_modularidade_e_expansao": {
+    "filosofia_modular": "Princípio do Lego: cada serviço (Mailcow, Nextcloud, Mattermost, Jitsi) roda em seu próprio contêiner desacoplado com volumes persistentes. Se a empresa decidir trocar o Mattermost pelo Zulip ou o Nextcloud pelo Seafile, a substituição é realizada sem interromper o serviço de e-mail ou o proxy central.",
+    "passos_adicionar_ferramenta": [
+      {"etapa": "1. Definir Bloco no Compose", "descricao": "Adicione o novo serviço no docker-compose.yml associando-o à rede penso_sovereign_net."},
+      {"etapa": "2. Labels do Traefik", "descricao": "Configure a regra de domínio Host(`novo-modulo.empresa.com.br`) e TLS automático."},
+      {"etapa": "3. Conectar ao SSO", "descricao": "Cadastre o client OIDC no Keycloak para habilitar login com credenciais corporativas unificadas."}
+    ],
+    "passo_a_passo_adicionar_ferramenta": "1. Abra o arquivo docker-compose.yml e adicione a definição do novo contêiner;\n2. Execute docker compose up -d no terminal da VPS;\n3. O Traefik detecta as novas labels e emite o certificado SSL Let's Encrypt automaticamente;\n4. Cadastre o novo módulo no Keycloak para autenticação SSO unificada.",
+    "passo_a_passo_substituir_hotswap": "1. Suba o novo serviço em paralelo em uma porta/subdomínio temporário;\n2. Sincronize os dados históricos do serviço antigo;\n3. Teste o login via Keycloak;\n4. Altere a label do Traefik apontando o subdomínio principal para o novo contêiner;\n5. Desligue o contêiner legado após 48 horas de validação.",
+    "passo_a_passo_remover_ferramenta": "1. Execute docker compose stop <servico>;\n2. Remova as rotas dedicadas no Traefik;\n3. Exclua a pasta /opt/<servico> preservando o arquivo tar.gz de backup final;\n4. Verifique com docker ps e ss -tulpn que nenhum processo residual permaneceu ativo.",
+    "exemplo_caso_pratico_hotswap": {
+      "cenario": "Substituição do Webmail SOGo pelo SnappyMail ou migração de arquivos do Nextcloud para o Seafile",
+      "passo_1_isolamento": "O servidor de e-mail Mailcow e o chat Mattermost comunicam-se via protocolos abertos (IMAP/OIDC/n8n) e permanecem 100% operacionais durante todo o procedimento.",
+      "passo_2_novo_servico": "O novo serviço de interface web é provisionado em uma porta temporária com testes de login único via Keycloak.",
+      "passo_3_chaveamento_n8n": "A rota do Traefik é chaveada de forma transparente para o novo contêiner sem derrubar as sessões ativas de correio.",
+      "passo_4_resultado": "A migração da interface é concluída com ZERO minutos de downtime na recepção e envio de e-mails corporativos."
+    },
+    "faq_nao_tecnicos": [
+      {
+        "pergunta": "E se a VPS for reiniciada pelo provedor de nuvem?",
+        "resposta": "Todos os contêineres possuem a diretiva restart: always. Quando a VPS religar, o servidor de e-mail, drive e chat sobem automaticamente em menos de 45 segundos sem intervenção manual."
+      },
+      {
+        "pergunta": "Como garantir que meus e-mails corporativos não caiam na caixa de spam?",
+        "resposta": "O Mailcow configura e valida automaticamente as assinaturas criptográficas DKIM, registros SPF e políticas DMARC, garantindo entregabilidade nota 10/10 nos principais provedores globais (Gmail, Outlook e Yahoo)."
+      },
+      {
+        "pergunta": "A minha equipe precisará reinstalar programas em todos os computadores?",
+        "resposta": "Não! Todas as ferramentas contam com clientes web modernos compatíveis com qualquer navegador, além de suporte a clientes tradicionais já utilizados (Outlook, Thunderbird e celulares iOS/Android)."
+      }
+    ]
+  },
+  "blueprints_n8n": [
+    {
+      "nome": "Onboarding Automático de Novo Colaborador (RH -> Keycloak + Mailcow + Nextcloud + Mattermost)",
+      "descricao": "Quando um novo funcionário é cadastrado no formulário de admissão, o n8n cria a conta unificada no Keycloak, gera a caixa postal no Mailcow, cria o diretório no Nextcloud e adiciona o usuário aos canais gerais do Mattermost.",
+      "json_blueprint": "{\n  \"name\": \"Onboarding Corporativo Total\",\n  \"nodes\": [\n    {\"name\": \"Webhook Admissão RH\", \"type\": \"n8n-nodes-base.webhook\", \"position\": [100, 300]},\n    {\"name\": \"Criar Usuário Keycloak SSO\", \"type\": \"n8n-nodes-base.httpRequest\", \"position\": [300, 300]},\n    {\"name\": \"Criar Caixa Postal Mailcow\", \"type\": \"n8n-nodes-base.httpRequest\", \"position\": [500, 200]},\n    {\"name\": \"Criar Conta Nextcloud Hub\", \"type\": \"n8n-nodes-base.nextcloud\", \"position\": [500, 400]},\n    {\"name\": \"Adicionar Canais Mattermost\", \"type\": \"n8n-nodes-base.mattermost\", \"position\": [700, 300]},\n    {\"name\": \"Notificar Gestor via E-mail\", \"type\": \"n8n-nodes-base.emailSend\", \"position\": [900, 300]}\n  ]\n}"
+    },
+    {
+      "nome": "Alerta de Tentativa de Phishing & Quarentena Antispam",
+      "descricao": "Monitora a fila do Rspamd no Mailcow. Quando uma mensagem com alta pontuação de ameaça é detectada, o n8n envia um alerta imediato no canal #seguranca-ti do Mattermost com opção de bloqueio de domínio remetente.",
+      "json_blueprint": "{\n  \"name\": \"Monitoramento Rspamd Phishing\",\n  \"nodes\": [\n    {\"name\": \"Webhook Rspamd Alert\", \"type\": \"n8n-nodes-base.webhook\", \"position\": [100, 300]},\n    {\"name\": \"Análise de Score & SPF\", \"type\": \"n8n-nodes-base.if\", \"position\": [300, 300]},\n    {\"name\": \"Publicar Alerta no Mattermost TI\", \"type\": \"n8n-nodes-base.mattermost\", \"position\": [550, 200]},\n    {\"name\": \"Registrar Log de Segurança\", \"type\": \"n8n-nodes-base.postgres\", \"position\": [550, 400]}\n  ]\n}"
+    }
+  ],
+  "guia_migracao_dados": [
+    {
+      "modulo": "E-mail Corporativo (Zimbra / Penso Mail -> Mailcow)",
+      "o_que_migrar": "Todas as caixas postais, histórico de mensagens, pastas personalizadas, regras de encaminhamento e contatos.",
+      "passos": [
+        "1. Exporte a lista de contas ativas do Zimbra com endereços e cotas;",
+        "2. Crie os usuários no Mailcow com senhas temporárias ou via SSO Keycloak;",
+        "3. Configure os Syncjobs do Mailcow para sincronização IMAP contínua (pull em background);",
+        "4. No dia da virada de chave, altere os registros MX do DNS;",
+        "5. Execute a última sincronização incremental para transferir os últimos e-mails recebidos durante a propagação do DNS."
+      ],
+      "cuidados": "Mantenha o servidor Zimbra antigo acessível por IP durante 72 horas pós-virada para garantir que nenhuma mensagem em trânsito seja perdida."
+    },
+    {
+      "modulo": "Arquivos & Documentos (Penso Drive -> Nextcloud Hub)",
+      "o_que_migrar": "Pastas de departamentos, arquivos corporativos, permissões e documentos OnlyOffice.",
+      "passos": [
+        "1. Realize o download em lote das pastas corporativas do Penso Drive via cliente WebDAV ou rsync;",
+        "2. Transfira os dados para o volume /var/www/html/data do Nextcloud na VPS;",
+        "3. Execute o comando occ files:scan --all para indexar instantaneamente todos os arquivos no banco de dados;",
+        "4. Aplique as regras de compartilhamento de grupo (Group Folders) correspondentes."
+      ],
+      "cuidados": "Valide as permissões de proprietário (chown -R www-data:www-data) no diretório de dados antes da varredura."
+    }
+  ],
+  "seguranca_backup_lgpd": {
+    "arquitetura_backup_321": "Regra 3-2-1 estrita: 3 cópias dos dados (produção local, backup criptografado em disco secundário e snapshot offsite em storage S3 externo como Wasabi ou Backblaze B2).",
+    "script_backup_diario": "#!/bin/bash\nset -e\nDATA=$(date +%Y%m%d_%H%M%S)\nDEST=/var/backups/sovereign_suite\nmkdir -p $DEST\n\n# 1. Backup Banco de Dados PostgreSQL (Keycloak, Nextcloud, Mattermost)\ndocker exec postgres_sso pg_dumpall -U keycloak | gzip > $DEST/db_sso_$DATA.sql.gz\ndocker exec postgres_drive pg_dumpall -U nextcloud | gzip > $DEST/db_drive_$DATA.sql.gz\ndocker exec postgres_chat pg_dumpall -U mmuser | gzip > $DEST/db_chat_$DATA.sql.gz\n\n# 2. Backup Mailcow (Utilitário Nativo de Backup)\ncd /opt/mailcow-dockerized && ./helper-scripts/backup_and_restore.sh backup all --delete-days 7\n\n# 3. Criptografia com OpenSSL (AES-256-CBC)\ntar -czf - -C $DEST . | openssl enc -aes-256-cbc -salt -pbkdf2 -pass pass:${BACKUP_PASSWORD} -out /var/backups_encrypted/penso_suite_backup_$DATA.tar.enc\n\n# 4. Envio Seguro para Storage S3 Offsite (Wasabi / AWS)\nrclone copy /var/backups_encrypted/ s3-backup:empresa-backups-soberanos/\n\necho 'Backup 3-2-1 executado e criptografado com sucesso!'",
+    "checklist_conformidade_lgpd": [
+      {"item": "Armazenamento em Território Nacional / Infraestrutura Própria", "status": "Conforme · Controle exclusivo dos dados sem transferência internacional involuntária."},
+      {"item": "Logs de Auditoria de Acessos e Modificações", "status": "Conforme · Registro completo de downloads, compartilhamentos e logins no Nextcloud e Keycloak."},
+      {"item": "Direito de Exclusão e Portabilidade do Titular", "status": "Conforme · Exportação e expurgo cirúrgico de caixas postais e arquivos em poucos cliques."},
+      {"item": "Criptografia em Repouso e em Trânsito (TLS 1.3)", "status": "Conforme · Criptografia de disco local, TLS 1.3 nos proxies e criptografia ponta a ponta disponível."}
+    ]
+  },
+  "cronograma_implantacao_30_dias": [
+    {
+      "semana": "Semana 01",
+      "fase": "Provisionamento de VPS & Identidade Unificada (Keycloak SSO)",
+      "atividades": "Contratação da VPS dedicada, endurecimento do sistema operacional (SSH seguro, UFW, Fail2ban), deploy do Traefik com TLS e configuração do Keycloak com os usuários corporativos.",
+      "marco_entrega": "Painel de autenticação online em auth.empresa.com.br com certificados SSL válidos."
+    },
+    {
+      "semana": "Semana 02",
+      "fase": "Deploy do Servidor de E-mail Soberano & Testes de Entregabilidade",
+      "atividades": "Deploy do Mailcow, configuração de chaves DKIM, SPF e DMARC, teste de reputação IP (Mail-Tester 10/10) e sincronização piloto de 10 caixas postais via Syncjob.",
+      "marco_entrega": "Servidor de correio enviando e recebendo mensagens com reputação máxima."
+    },
+    {
+      "semana": "Semana 03",
+      "fase": "Deploy do Drive Corporativo (Nextcloud) & Chat (Mattermost)",
+      "atividades": "Deploy do Nextcloud Hub com OnlyOffice, migração das pastas departamentais do Penso Drive, subida do Mattermost com canais de equipe e integração ao Keycloak.",
+      "marco_entrega": "Nuvem de arquivos e chat corporativo operacionais para testes internos com a equipe de TI."
+    },
+    {
+      "semana": "Semana 04",
+      "fase": "Virada de Chave (DNS Cutover), Treinamento & Desativação do SaaS",
+      "atividades": "Alteração dos registros MX definitivos no DNS, execução da sincronização final de e-mails, distribuição dos clientes desktop/mobile e aplicação da Trilha de Aprendizado em 5 Aulas para a equipe.",
+      "marco_entrega": "Operação 100% migrada para a infraestrutura própria e cancelamento das faturas do Penso Suite."
+    }
+  ],
+  "monitoramento_e_saude_vps": {
+    "comandos_diagnostico_1clique": [
+      {"comando": "docker ps --format 'table {{.Names}}\\t{{.Status}}\\t{{.Ports}}'", "finalidade": "Visualizar o status de todos os contêineres da suíte em execução."},
+      {"comando": "docker stats --no-stream", "finalidade": "Verificar o consumo de CPU e Memória RAM em tempo real por serviço."},
+      {"comando": "tail -f /var/log/mail.log", "finalidade": "Acompanhar a fila e conexões do servidor de correio em tempo real."},
+      {"comando": "df -h", "finalidade": "Checar o espaço em disco disponível na VPS e nos volumes de dados."}
+    ],
+    "metricas_alerta": [
+      {"metrica": "Uso de Memória RAM > 85%", "limite_alerta": "Alerta Crítico", "acao_recomendada": "Verificar contêineres de escaneamento ClamAV ou habilitar swap de emergência."},
+      {"metrica": "Espaço em Disco NVMe < 15%", "limite_alerta": "Alerta Alto", "acao_recomendada": "Executar limpeza de logs docker system prune -a ou expandir volume de storage."},
+      {"metrica": "Fila SMTP > 100 mensagens retidas", "limite_alerta": "Alerta Médio", "acao_recomendada": "Investigar se algum domínio destinatário está aplicando greylisting temporário."}
+    ]
+  }
+}
