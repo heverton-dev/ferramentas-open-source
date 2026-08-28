@@ -151,13 +151,16 @@ CSS_CANONICO_DIAMANTE = """
   td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 45px; text-align: center; }
+  td.classif-col { font-weight: 600; color: var(--ink-2); font-size: 12.5px; white-space: nowrap; }
   td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
   td.tool a:hover { color: var(--accent); }
-  td.pilar-col { min-width: 150px; white-space: nowrap; }
-  td.saas { color: var(--flag); font-size: 12.5px; font-weight: 600; line-height: 1.4; min-width: 230px; }
-  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; white-space: nowrap; min-width: 130px; }
+  td.pilar-col { min-width: 140px; white-space: nowrap; }
+  td.saas { color: var(--flag); font-size: 12.5px; font-weight: 600; line-height: 1.4; min-width: 200px; }
+  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; font-size: 12.5px; line-height: 1.35; min-width: 120px; }
   td.lic { font-family: var(--mono); font-size: 11px; text-align: center; width: 85px; }
-  td.code-col { text-align: center; width: 90px; }
+  td.code-col { text-align: center; width: 75px; }
+  td.code-col a.code-link { font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+  td.code-col a.code-link:hover { color: var(--ink); }
 
   .ledger { display: flex; flex-direction: column; gap: 24px; }
   .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
@@ -469,17 +472,16 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
             pilar_label = nome_pilar_completo
 
         for f in p.get("ferramentas", []):
-            p_cls = persona_classe(f.get('classificacao', ''))
             tabela_linhas += f"""
             <tr>
               <td class="rank">{f['rank']:02d}</td>
-              <td><span class="persona-badge {p_cls}">{f.get('classificacao')}</span></td>
+              <td class="classif-col">{f.get('classificacao')}</td>
               <td class="tool"><a href="#{f['slug']}">{f['nome']}</a></td>
               <td class="pilar-col"><span class="pilar-badge">{pilar_label}</span></td>
               <td class="saas">{f['saas_substituido_direto']}</td>
               <td class="econ">{f['economia_anual_str']}</td>
               <td class="lic"><code>{f['licenca_osi']}</code></td>
-              <td class="code-col"><a href="{f['repositorio_github']}" target="_blank" rel="noopener" class="repo-btn">GitHub ↗</a></td>
+              <td class="code-col"><a href="{f['repositorio_github']}" target="_blank" rel="noopener" class="code-link">GitHub</a></td>
             </tr>
             """
 
@@ -791,7 +793,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
         <tr>
           <th>#</th>
           <th>Classificação</th>
-          <th>Ferramenta Open Source</th>
+          <th>Ferramenta</th>
           <th>Grupo</th>
           <th>Substitui Diretamente no SaaS</th>
           <th>Economia Estimada</th>
