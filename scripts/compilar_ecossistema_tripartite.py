@@ -2703,87 +2703,132 @@ Regras de Operação:
   with open(dir_agentic_config / "AGENT-INSTRUCTIONS.md", "w", encoding="utf-8") as f_inst:
     f_inst.write(agent_instructions)
 
-  # Playbook Master (HTML e MD)
+  # Playbook Master para Não-Técnicos (HTML e MD Hiper-Detalhados)
   body_playbook_html = f"""
   <div class="racional-box">
-   <p><strong>Playbook de Automação com Agentes de IA:</strong> Este guia orienta o <strong>Engenheiro Agêntico</strong> a utilizar agentes de IA (Claude Code, Cursor, Antigravity, OpenCode ou Windsurf) com Servidores MCP para realizar o deploy, parametrização e testes da suíte <strong>{dados.get('nome_ecossistema')}</strong> de forma 100% automatizada e autônoma.</p>
+   <p><strong>Manual de Cabeceira para Profissionais e Gestores:</strong> Este livro-texto foi escrito especialmente para <strong>médicos, advogados, consultores, analistas de marketing e empresários</strong> que não possuem formação em TI, mas desejam usar o poder dos <strong>Agentes de Inteligência Artificial</strong> para conquistar soberania digital, eliminar faturas abusivas de software e ter seus próprios sistemas corporativos funcionando em minutos.</p>
   </div>
 
   <div class="tco-banner" style="margin-bottom: 24px;">
-   <div class="tco-col"><div class="tco-lbl">Perfil Operador</div><div class="tco-val highlight">Engenheiro Agêntico</div></div>
+   <div class="tco-col"><div class="tco-lbl">Público-Alvo</div><div class="tco-val highlight">Profissionais Não-Técnicos</div></div>
    <div class="tco-col"><div class="tco-lbl">Tempo de Deploy por IA</div><div class="tco-val">~ 15 minutos</div></div>
-   <div class="tco-col"><div class="tco-lbl">Manipulação VPS</div><div class="tco-val">Termius (SSH/SFTP)</div></div>
-   <div class="tco-col"><div class="tco-lbl">Observabilidade</div><div class="tco-val">Uptime Kuma</div></div>
+   <div class="tco-col"><div class="tco-lbl">Controle Remoto</div><div class="tco-val">Termius (App Amigável)</div></div>
+   <div class="tco-col"><div class="tco-lbl">Vigia 24 Horas</div><div class="tco-val">Uptime Kuma</div></div>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px;">Os 4 Prompts Mestres de Orquestração Agêntica</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 22px; margin: 28px 0 12px; color: var(--ink);">Capítulo 01 · O Que É a Revolução da Engenharia Agêntica?</h3>
+  <p style="margin-bottom: 14px; line-height: 1.6;">No modelo tradicional, para criar e manter uma infraestrutura própria de e-mails, nuvem de arquivos e chat, uma empresa precisava contratar consultorias de TI caras e técnicos que cobravam mensalidades elevadas. Na <strong>Engenharia Agêntica</strong>, você assume o papel de diretor estratégico e utiliza um <strong>Agente de Inteligência Artificial (como Claude Code, Cursor ou Antigravity)</strong> como seu engenheiro dedicado.</p>
+  <p style="margin-bottom: 20px; line-height: 1.6;">Você não precisa aprender a programar nem decorar comandos complexos. Você apenas entrega os <strong>Prompts Mestres</strong> (roteiros pré-validados) contidos neste livro para a IA, e ela executa todo o trabalho pesado de instalação, configuração de segurança e testes automaticamente.</p>
+
+  <h3 style="font-family: var(--font-serif); font-size: 22px; margin: 28px 0 12px; color: var(--ink);">Capítulo 02 · Glossário Descomplicado (Entenda Tudo em 2 Minutos)</h3>
+  <div class="ds-grid" style="margin-bottom: 24px;">
+   <div class="ds-card">
+    <span class="ds-lbl">VPS (Servidor Privado Virtual)</span>
+    <p>É o seu "computador na nuvem". Uma máquina potente e blindada que fica ligada 24 horas por dia em um datacenter profissional, onde seus sistemas rodam sem risco de falta de luz ou lentidão.</p>
+   </div>
+   <div class="ds-card">
+    <span class="ds-lbl">Docker &amp; Contêineres</span>
+    <p>Imagine "cápsulas isoladas". Cada aplicativo da sua empresa (o e-mail, o drive de arquivos, o chat) roda dentro da sua própria cápsula selada. Se uma precisar de manutenção, nenhuma outra é afetada.</p>
+   </div>
+   <div class="ds-card">
+    <span class="ds-lbl">Traefik &amp; Certificado SSL</span>
+    <p>O Traefik atua como o "porteiro digital" da sua empresa. Ele recebe as visitas da internet, confere a segurança e coloca automaticamente o <strong>cadeado verde (HTTPS)</strong> em todos os seus endereços web.</p>
+   </div>
+   <div class="ds-card">
+    <span class="ds-lbl">Termius</span>
+    <p>É o seu "controle remoto de bolso". Um aplicativo bonito e intuitivo para celular e computador que permite gerenciar sua VPS com chaves de segurança criptografadas, sem precisar de senhas difíceis.</p>
+   </div>
+   <div class="ds-card">
+    <span class="ds-lbl">Uptime Kuma</span>
+    <p>O seu "vigia 24 horas". Um painel que verifica a cada minuto se todos os seus sistemas estão rápidos e no ar. Se qualquer serviço falhar, ele envia um aviso instantâneo no seu WhatsApp ou chat corporativo.</p>
+   </div>
+   <div class="ds-card">
+    <span class="ds-lbl">Keycloak (Login Único SSO)</span>
+    <p>O "crachá digital único". Seus colaboradores usam um único usuário e senha para acessar o e-mail, o drive de documentos e o chat de equipe, com proteção extra de código de celular (2FA).</p>
+   </div>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 22px; margin: 28px 0 12px; color: var(--ink);">Capítulo 03 · O Roteiro de 4 Passos com Agentes de IA</h3>
   <div class="steps-grid" style="margin-bottom: 24px;">
    <div class="step-card">
-    <div class="step-head"><span class="step-badge">01</span> Provisionamento &amp; Hardening</div>
-    <p>O agente acessa a VPS via SSH MCP, atualiza o Ubuntu, ativa o UFW restritivo, Fail2ban e instala o Docker Engine oficial com rede isolada.</p>
+    <div class="step-head"><span class="step-badge">Passo 1</span> Contrate a VPS &amp; Abra o Termius</div>
+    <p>Contrate um servidor na Hetzner ou Contabo (a partir de R$ 250/mês). No Termius, gere sua chave Ed25519 e conecte na VPS com 1 clique.</p>
    </div>
    <div class="step-card">
-    <div class="step-head"><span class="step-badge">02</span> Deploy do Cluster Soberano</div>
-    <p>O agente gera os arquivos <code>.env</code> com chaves criptográficas seguras, escreve o <code>docker-compose.yml</code> e inicializa a stack com Traefik TLS.</p>
+    <div class="step-head"><span class="step-badge">Passo 2</span> Inicie o seu Agente de IA</div>
+    <p>Abra seu assistente agêntico favorito no computador (Claude Code, Cursor ou Antigravity) e aponte para a pasta deste ecossistema.</p>
    </div>
    <div class="step-card">
-    <div class="step-head"><span class="step-badge">03</span> Observabilidade com Uptime Kuma</div>
-    <p>O agente provisiona o Uptime Kuma, cadastra os endpoints de monitoramento de cada ferramenta e configura os webhooks de alerta em caso de queda.</p>
+    <div class="step-head"><span class="step-badge">Passo 3</span> Envie os Prompts Mestres</div>
+    <p>Copie e cole os 4 Prompts Mestres em sequência. O agente configurará o firewall, o cluster de aplicativos e o Uptime Kuma automaticamente.</p>
    </div>
    <div class="step-card">
-    <div class="step-head"><span class="step-badge">04</span> Smoke Tests &amp; DRP</div>
-    <p>O agente executa testes ponta a ponta (verificação de SSL, teste de login OIDC, rotina de backup 3-2-1) e emite o relatório de conformidade.</p>
+    <div class="step-head"><span class="step-badge">Passo 4</span> Distribua os Acessos à Equipe</div>
+    <p>Abra os endereços web criados no seu navegador e comece a utilizar sua nova suíte própria sem pagar mensalidades por usuário.</p>
    </div>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 10px;">Kit de Ferramentas do Engenheiro Agêntico</h3>
-  <div class="ds-grid">
-   <div class="ds-card">
-    <span class="ds-lbl">Termius (Gestão de Acesso Seguro)</span>
-    <p>Gerenciamento de conexões SSH por chaves Ed25519, túneis criptografados para portas internas (5432, 6379, 8080) e SFTP integrado para auditoria.</p>
-   </div>
-   <div class="ds-card">
-    <span class="ds-lbl">Uptime Kuma (Monitoramento em Tempo Real)</span>
-    <p>Monitoramento 24/7 com checagem de HTTP 200, portas de rede, expiração de certificados TLS e página de status corporativa pública.</p>
-   </div>
-   <div class="ds-card">
-    <span class="ds-lbl">Servidores MCP para Agentes</span>
-    <p>Permite que agentes de IA executem comandos remotos com isolamento e controlem contêineres Docker de forma declarativa.</p>
-   </div>
+  <h3 style="font-family: var(--font-serif); font-size: 22px; margin: 28px 0 12px; color: var(--ink);">Capítulo 04 · Os 4 Prompts Mestres Prontos para Copiar e Colar</h3>
+  <div class="racional-box" style="margin-bottom: 16px;">
+   <p><strong>Como usar:</strong> Basta abrir seu agente de IA e colar os prompts abaixo um a um, aguardando a IA confirmar a conclusão antes de enviar o próximo.</p>
+  </div>
+
+  <div class="code-box" style="margin-bottom: 20px;">
+   <p style="font-weight: bold; margin-bottom: 8px; color: var(--ink);">Prompt Mestre 01 · Preparação e Blindagem da VPS</p>
+   <pre><code>{p1_vps}</code></pre>
+  </div>
+
+  <div class="code-box" style="margin-bottom: 20px;">
+   <p style="font-weight: bold; margin-bottom: 8px; color: var(--ink);">Prompt Mestre 02 · Deploy All-in-One dos Aplicativos</p>
+   <pre><code>{p2_cluster}</code></pre>
+  </div>
+
+  <div class="code-box" style="margin-bottom: 20px;">
+   <p style="font-weight: bold; margin-bottom: 8px; color: var(--ink);">Prompt Mestre 03 · Configuração do Vigia 24h (Uptime Kuma)</p>
+   <pre><code>{p3_monitor}</code></pre>
+  </div>
+
+  <div class="code-box" style="margin-bottom: 20px;">
+   <p style="font-weight: bold; margin-bottom: 8px; color: var(--ink);">Prompt Mestre 04 · Teste de Qualidade &amp; Backup 3-2-1</p>
+   <pre><code>{p4_smoke}</code></pre>
   </div>
   """
 
   html_playbook = renderizar_fasciculo_html(
-    f"Playbook do Engenheiro Agêntico: {dados.get('nome_ecossistema')}",
-    "Guia de Orquestração com Agentes de IA, Termius e Uptime Kuma",
-    "Engenharia Agêntica & IA",
+    f"Livro-Texto do Engenheiro Agêntico: {dados.get('nome_ecossistema')}",
+    "Guia Prático para Não-Técnicos: Como Subir sua Infraestrutura Própria com Agentes de IA, Termius e Uptime Kuma",
+    "Engenharia Agêntica & Soberania Digital",
     body_playbook_html
   )
 
-  md_playbook = f"""# Playbook do Engenheiro Agêntico: {dados.get('nome_ecossistema')}
+  md_playbook = f"""# Livro-Texto do Engenheiro Agêntico: {dados.get('nome_ecossistema')}
 
-> **Objetivo:** Subir e gerenciar 100% do ecossistema utilizando Agentes de IA autônomos, Termius para acesso seguro e Uptime Kuma para monitoramento contínuo em tempo real.  
-> **SaaS Substituído:** `{dados.get('saas_substituido')}` | **Economia:** `{dados.get('analise_economica_global', {}).get('economia_anual_liquida')}`  
-
----
-
-## 1. Visão Geral da Abordagem Agêntica
-O Engenheiro Agêntico não executa comandos manuais repetitivos: ele orquestra agentes de IA equipados com ferramentas (MCPs) que executam o ciclo completo de vida da infraestrutura.
+> **Público-Alvo:** Profissionais Liberais, Advogados, Médicos, Gestores e Analistas que não são de TI.  
+> **Objetivo:** Subir e gerenciar 100% da infraestrutura própria utilizando Agentes de IA autônomos, Termius para acesso simples e Uptime Kuma para monitoramento 24h.  
+> **SaaS Substituído:** `{dados.get('saas_substituido')}` | **Economia Real:** `{dados.get('analise_economica_global', {}).get('economia_anual_liquida')}`  
 
 ---
 
-## 2. Estrutura de Prompts Mestres (Disponíveis em `prompts-mestres/`)
-1. `01-prompt-mestre-provisionamento-vps-e-hardened-ssh.md`: Hardening da VPS, UFW, Fail2ban e Docker;
-2. `02-prompt-mestre-deploy-cluster-compose-e-traefik.md`: Geração de manifestos, variáveis seguras e subida do cluster;
-3. `03-prompt-mestre-configuracao-uptime-kuma-e-alertas.md`: Configuração do monitoramento em tempo real com Uptime Kuma;
-4. `04-prompt-mestre-validacao-saude-e-smoke-tests.md`: Testes de fumaça, validação OIDC e teste prático de backup 3-2-1.
+## 1. O Que É a Revolução Agêntica?
+Você não precisa contratar consultorias de TI nem aprender a programar. Com o advento dos Agentes de IA (Claude Code, Cursor, Antigravity), você atua como Diretor Estratégico: entrega os Prompts Mestres contidos neste livro e o agente faz todo o trabalho de engenharia de infraestrutura na sua VPS.
 
 ---
 
-## 3. Ferramentas Obrigatórias de Gestão & Observabilidade
-- **Termius:** Gestão de credenciais SSH (Ed25519), túneis seguros para portas internas e SFTP corporativo;
-- **Uptime Kuma:** Monitoramento de saúde 24/7 de todos os serviços com alertas via Webhook no Mattermost / WhatsApp;
-- **Servidores MCP:** `@modelcontextprotocol/server-ssh` e `@modelcontextprotocol/server-docker` configurados em `agents-config/.mcp.json`.
+## 2. Glossário Descomplicado
+- **VPS:** Seu computador seguro na nuvem, ligado 24h por dia em datacenter profissional;
+- **Docker & Contêineres:** Cápsulas seladas onde cada aplicativo (e-mail, drive, chat) roda com isolamento total;
+- **Traefik & SSL:** O porteiro digital que garante o cadeado verde de segurança (HTTPS) em todos os seus endereços;
+- **Termius:** O controle remoto com chaves criptográficas para acessar seu servidor pelo celular ou computador;
+- **Uptime Kuma:** O vigia 24h que monitora seus sistemas e avisa no WhatsApp/chat se houver lentidão;
+- **Keycloak SSO:** O crachá digital único para login em todos os aplicativos com autenticação 2FA.
+
+---
+
+## 3. Os 4 Prompts Mestres para Copiar e Colar
+1. `prompts-mestres/01-prompt-mestre-provisionamento-vps-e-hardened-ssh.md`: Blindagem e segurança da VPS;
+2. `prompts-mestres/02-prompt-mestre-deploy-cluster-compose-e-traefik.md`: Deploy de todos os aplicativos em contêineres;
+3. `prompts-mestres/03-prompt-mestre-configuracao-uptime-kuma-e-alertas.md`: Ativação do monitoramento Uptime Kuma;
+4. `prompts-mestres/04-prompt-mestre-validacao-saude-e-smoke-tests.md`: Testes de fumaça e cópias de segurança 3-2-1.
 """
 
   # Compilação do Livro-Texto do Engenheiro Agêntico (HTML, MD e PDF Typst)
@@ -2796,14 +2841,14 @@ O Engenheiro Agêntico não executa comandos manuais repetitivos: ele orquestra 
   with open(dir_agentic / "PLAYBOOK-ENGENHEIRO-AGENTICO.md", "w", encoding="utf-8") as f_pl:
     f_pl.write(md_playbook)
 
-  # Compilação do Livro-Texto Agêntico em PDF Typst
+  # Compilação do Livro-Texto Agêntico em PDF Typst Hiper-Detalhado
   typ_agentic = f"""
 #set page(
   paper: "a4",
   margin: (x: 1.5cm, top: 2.2cm, bottom: 2.0cm),
   header: align(center)[
     #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[
-      Fábrica Universal AIDD · Livro-Texto do Engenheiro Agêntico (Padrão Diamante R5-E)
+      Fábrica Universal AIDD · Tratado de Engenharia Agêntica para Não-Técnicos
     ]
   ],
   footer: [
@@ -2834,51 +2879,51 @@ O Engenheiro Agêntico não executa comandos manuais repetitivos: ele orquestra 
 #show heading: set text(fill: rgb("#0f172a"), font: "Liberation Sans")
 #show heading.where(level: 1): it => {{
   v(14pt, weak: true)
-  text(size: 16pt, weight: "bold")[#it.body]
+  text(size: 15pt, weight: "bold")[#it.body]
   v(8pt, weak: true)
 }}
 #show heading.where(level: 2): it => {{
   v(10pt, weak: true)
-  text(size: 12pt, weight: "bold", fill: rgb("#00875a"))[#it.body]
+  text(size: 11pt, weight: "bold", fill: rgb("#00875a"))[#it.body]
   v(6pt, weak: true)
 }}
 
 #align(center)[
-  #v(20pt)
-  #text(size: 22pt, weight: "bold", fill: rgb("#0f172a"))[LIVRO-TEXTO DO ENGENHEIRO AGÊNTICO]
-  #v(8pt)
-  #text(size: 12pt, style: "italic", fill: rgb("#475569"))[Orquestração Autônoma de Infraestrutura Soberana com Agentes de IA, Termius e Uptime Kuma]
+  #v(16pt)
+  #text(size: 20pt, weight: "bold", fill: rgb("#0f172a"))[LIVRO-TEXTO DO ENGENHEIRO AGÊNTICO]
   #v(6pt)
-  #text(size: 10pt, weight: "bold", fill: rgb("#00875a"))[Suíte Alvo: {sanitizar_typ(dados.get('nome_ecossistema'))} · Substitui {sanitizar_typ(dados.get('saas_substituido'))}]
-  #v(20pt)
+  #text(size: 11pt, style: "italic", fill: rgb("#475569"))[Guia Definitivo para Não-Técnicos: Como Subir sua Infraestrutura Própria com IA, Termius e Uptime Kuma]
+  #v(4pt)
+  #text(size: 9.5pt, weight: "bold", fill: rgb("#00875a"))[Suíte Alvo: {sanitizar_typ(dados.get('nome_ecossistema'))} · Substitui {sanitizar_typ(dados.get('saas_substituido'))}]
+  #v(14pt)
 ]
 
-= Capítulo 01: Filosofia da Engenharia Agêntica
-A Engenharia Agêntica substitui a execução manual e suscetível a erros por um modelo declarativo onde o engenheiro fornece Prompts Mestres e Servidores MCP para que agentes de inteligência artificial (Claude Code, Cursor, Antigravity, OpenCode, Windsurf) realizem o provisionamento, deploy, configuração de certificados TLS e testes de integridade em produção.
+= Capítulo 01: A Revolução da Engenharia Agêntica
+No modelo antigo de tecnologia, advogados, médicos e analistas dependiam de caríssimas equipes de TI para gerenciar servidores ou ficavam reféns de mensalidades abusivas de softwares fechados. Na *Engenharia Agêntica*, você se torna o Diretor da sua própria infraestrutura: munido de *Prompts Mestres* rigorosamente testados, você orienta Agentes de Inteligência Artificial para realizar o provisionamento, deploy e manutenção da sua VPS sem escrever uma única linha de código manual.
 
-= Capítulo 02: Gestão Remota Segura com Termius
-- *Par de Chaves Ed25519:* Acesso SSH criptografado de alta performance com desativação total de login por senha no arquivo `/etc/ssh/sshd_config`;
-- *SFTP Integrado:* Manipulação e auditoria de arquivos de ambiente `.env`, manifestos Docker Compose e chaves de backup;
-- *Túneis SSH Seguros (Local Port Forwarding):* Conexão a bancos PostgreSQL (`5432`), Redis (`6379`) e painéis internos sem expor portas no firewall público.
+= Capítulo 02: Dicionário Descomplicado (Analogias do Mundo Real)
+- *VPS (Servidor Privado Virtual):* O seu computador comercial blindado na nuvem, ativo 24h por dia sem risco de interrupção elétrica;
+- *Docker & Contêineres:* Cápsulas de isolamento digital. O e-mail, a nuvem e o chat rodam em cápsulas separadas sem risco de contaminação;
+- *Traefik & SSL:* O porteiro digital que garante o cadeado verde de criptografia (HTTPS) em todos os seus endereços na web;
+- *Termius:* O controle remoto criptográfico de alta segurança para você acessar e auditar seu servidor de qualquer celular ou computador;
+- *Uptime Kuma:* O vigia 24h que testa seus sistemas a cada minuto e alerta imediatamente no WhatsApp se algum serviço oscilar;
+- *Keycloak SSO:* O crachá digital unificado para que sua equipe acerte todos os módulos com uma única senha segura e autenticação 2FA.
 
-= Capítulo 03: Observabilidade em Tempo Real com Uptime Kuma
-- *Monitoramento Contínuo 24/7:* Verificação de HTTP 200 nos subdomínios da suíte, portas TCP e expiração de certificados TLS;
-- *Alertas Instantâneos:* Roteamento automático de incidentes via Webhook para Mattermost e WhatsApp;
-- *Status Page Corporativa:* Painel visual de transparência operacional para a diretoria e clientes.
+#pagebreak()
+= Capítulo 03: Os 4 Prompts Mestres de Execução Autônoma
+Para colocar toda a sua suíte no ar, basta copiar e colar os 4 blocos abaixo sequencialmente no seu assistente de IA:
 
-= Capítulo 04: Os 4 Prompts Mestres de Execução
 == Prompt Mestre 01: Provisionamento & Hardening da VPS
 ```bash
 {p1_vps}
 ```
 
-#pagebreak()
 == Prompt Mestre 02: Deploy do Cluster All-in-One Compose
 ```bash
 {p2_cluster}
 ```
 
-== Prompt Mestre 03: Configuração do Uptime Kuma & Alertas
+== Prompt Mestre 03: Configuração do Vigia 24h (Uptime Kuma)
 ```bash
 {p3_monitor}
 ```
@@ -2899,7 +2944,7 @@ A Engenharia Agêntica substitui a execução manual e suscetível a erros por u
   except Exception as e:
     print(f"  Typst compilação agêntica falhou ou aviso: {e}")
 
-  print(f"  Camada 06 (Livro-Texto do Engenheiro Agêntico em HTML, MD e PDF) gerada com sucesso!")
+  print(f"  Camada 06 (Livro-Texto do Engenheiro Agêntico para Não-Técnicos) gerada com sucesso!")
 
   # 8. Registro no SQLite (Regra R11)
   try:

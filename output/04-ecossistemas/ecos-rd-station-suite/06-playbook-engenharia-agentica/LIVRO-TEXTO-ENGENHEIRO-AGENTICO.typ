@@ -4,7 +4,7 @@
   margin: (x: 1.5cm, top: 2.2cm, bottom: 2.0cm),
   header: align(center)[
     #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[
-      Fábrica Universal AIDD · Livro-Texto do Engenheiro Agêntico (Padrão Diamante R5-E)
+      Fábrica Universal AIDD · Tratado de Engenharia Agêntica para Não-Técnicos
     ]
   ],
   footer: [
@@ -35,39 +35,40 @@
 #show heading: set text(fill: rgb("#0f172a"), font: "Liberation Sans")
 #show heading.where(level: 1): it => {
   v(14pt, weak: true)
-  text(size: 16pt, weight: "bold")[#it.body]
+  text(size: 15pt, weight: "bold")[#it.body]
   v(8pt, weak: true)
 }
 #show heading.where(level: 2): it => {
   v(10pt, weak: true)
-  text(size: 12pt, weight: "bold", fill: rgb("#00875a"))[#it.body]
+  text(size: 11pt, weight: "bold", fill: rgb("#00875a"))[#it.body]
   v(6pt, weak: true)
 }
 
 #align(center)[
-  #v(20pt)
-  #text(size: 22pt, weight: "bold", fill: rgb("#0f172a"))[LIVRO-TEXTO DO ENGENHEIRO AGÊNTICO]
-  #v(8pt)
-  #text(size: 12pt, style: "italic", fill: rgb("#475569"))[Orquestração Autônoma de Infraestrutura Soberana com Agentes de IA, Termius e Uptime Kuma]
+  #v(16pt)
+  #text(size: 20pt, weight: "bold", fill: rgb("#0f172a"))[LIVRO-TEXTO DO ENGENHEIRO AGÊNTICO]
   #v(6pt)
-  #text(size: 10pt, weight: "bold", fill: rgb("#00875a"))[Suíte Alvo: RD Station Suite · Substitui RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier)]
-  #v(20pt)
+  #text(size: 11pt, style: "italic", fill: rgb("#475569"))[Guia Definitivo para Não-Técnicos: Como Subir sua Infraestrutura Própria com IA, Termius e Uptime Kuma]
+  #v(4pt)
+  #text(size: 9.5pt, weight: "bold", fill: rgb("#00875a"))[Suíte Alvo: RD Station Suite · Substitui RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier)]
+  #v(14pt)
 ]
 
-= Capítulo 01: Filosofia da Engenharia Agêntica
-A Engenharia Agêntica substitui a execução manual e suscetível a erros por um modelo declarativo onde o engenheiro fornece Prompts Mestres e Servidores MCP para que agentes de inteligência artificial (Claude Code, Cursor, Antigravity, OpenCode, Windsurf) realizem o provisionamento, deploy, configuração de certificados TLS e testes de integridade em produção.
+= Capítulo 01: A Revolução da Engenharia Agêntica
+No modelo antigo de tecnologia, advogados, médicos e analistas dependiam de caríssimas equipes de TI para gerenciar servidores ou ficavam reféns de mensalidades abusivas de softwares fechados. Na *Engenharia Agêntica*, você se torna o Diretor da sua própria infraestrutura: munido de *Prompts Mestres* rigorosamente testados, você orienta Agentes de Inteligência Artificial para realizar o provisionamento, deploy e manutenção da sua VPS sem escrever uma única linha de código manual.
 
-= Capítulo 02: Gestão Remota Segura com Termius
-- *Par de Chaves Ed25519:* Acesso SSH criptografado de alta performance com desativação total de login por senha no arquivo `/etc/ssh/sshd_config`;
-- *SFTP Integrado:* Manipulação e auditoria de arquivos de ambiente `.env`, manifestos Docker Compose e chaves de backup;
-- *Túneis SSH Seguros (Local Port Forwarding):* Conexão a bancos PostgreSQL (`5432`), Redis (`6379`) e painéis internos sem expor portas no firewall público.
+= Capítulo 02: Dicionário Descomplicado (Analogias do Mundo Real)
+- *VPS (Servidor Privado Virtual):* O seu computador comercial blindado na nuvem, ativo 24h por dia sem risco de interrupção elétrica;
+- *Docker & Contêineres:* Cápsulas de isolamento digital. O e-mail, a nuvem e o chat rodam em cápsulas separadas sem risco de contaminação;
+- *Traefik & SSL:* O porteiro digital que garante o cadeado verde de criptografia (HTTPS) em todos os seus endereços na web;
+- *Termius:* O controle remoto criptográfico de alta segurança para você acessar e auditar seu servidor de qualquer celular ou computador;
+- *Uptime Kuma:* O vigia 24h que testa seus sistemas a cada minuto e alerta imediatamente no WhatsApp se algum serviço oscilar;
+- *Keycloak SSO:* O crachá digital unificado para que sua equipe acerte todos os módulos com uma única senha segura e autenticação 2FA.
 
-= Capítulo 03: Observabilidade em Tempo Real com Uptime Kuma
-- *Monitoramento Contínuo 24/7:* Verificação de HTTP 200 nos subdomínios da suíte, portas TCP e expiração de certificados TLS;
-- *Alertas Instantâneos:* Roteamento automático de incidentes via Webhook para Mattermost e WhatsApp;
-- *Status Page Corporativa:* Painel visual de transparência operacional para a diretoria e clientes.
+#pagebreak()
+= Capítulo 03: Os 4 Prompts Mestres de Execução Autônoma
+Para colocar toda a sua suíte no ar, basta copiar e colar os 4 blocos abaixo sequencialmente no seu assistente de IA:
 
-= Capítulo 04: Os 4 Prompts Mestres de Execução
 == Prompt Mestre 01: Provisionamento & Hardening da VPS
 ```bash
 # PROMPT MESTRE 01 · PROVISIONAMENTO & HARDENING DA VPS
@@ -91,7 +92,6 @@ Protocolo de Execução:
 
 ```
 
-#pagebreak()
 == Prompt Mestre 02: Deploy do Cluster All-in-One Compose
 ```bash
 # PROMPT MESTRE 02 · DEPLOY ALL-IN-ONE DA SUÍTE SOBERANA
@@ -109,7 +109,7 @@ Protocolo de Execução:
 
 ```
 
-== Prompt Mestre 03: Configuração do Uptime Kuma & Alertas
+== Prompt Mestre 03: Configuração do Vigia 24h (Uptime Kuma)
 ```bash
 # PROMPT MESTRE 03 · MONITORAMENTO EM TEMPO REAL (UPTIME KUMA)
 Você é um Engenheiro SRE / Observabilidade operando como Agente Autônomo.
