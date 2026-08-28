@@ -581,43 +581,75 @@
         "imagem_docker": "traefik:v3.0",
         "papel_na_stack": "Ingress Controller & Reverse Proxy com TLS automático",
         "racional_escolha": "Descobre contêineres dinamicamente via labels do Docker sem necessidade de recarregar Nginx manualmente. Emite certificados SSL Let's Encrypt para múltiplos subdomínios corporativos.",
-        "portas_expostas": "80:80 (HTTP) e 443:443 (HTTPS)",
-        "persistencia": "Volume `/letsencrypt/acme.json` para certificados"
+        "portas_expostas": "80:80 (HTTP com redirect) e 443:443 (HTTPS)",
+        "persistencia": "Volume `/letsencrypt/acme.json` para certificados SSL"
       },
       {
         "servico": "Keycloak SSO",
         "imagem_docker": "quay.io/keycloak/keycloak:latest",
         "papel_na_stack": "Provedor Central de Identidade (IdP) & Single Sign-On (OIDC/SAML)",
         "racional_escolha": "Elimina silos de senhas: os colaboradores usam a mesma credencial corporativa para acessar o CRM (Twenty), o Atendimento (Chatwoot), as Landing Pages (Directus) e a Automação (Mautic).",
-        "portas_expostas": "Apenas rede interna (exposto via Traefik em `sso.empresa.com.br`)",
-        "persistencia": "PostgreSQL corporativo compartilhado"
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `sso.suaempresa.com.br`)",
+        "persistencia": "Banco `db_keycloak` no PostgreSQL compartilhado"
       },
       {
         "servico": "n8n Automation",
         "imagem_docker": "n8nio/n8n:latest",
-        "papel_na_stack": "Barramento de Eventos & Orquestração Assíncrona de Dados",
+        "papel_na_stack": "Barramento de Eventos & Orquestração Assíncrona de Dados (Glue Layer)",
         "racional_escolha": "Funciona como a 'cola' do ecossistema. Substitui o Zapier/Make com interface visual no-code, processando webhooks e roteando leads do Typebot para o Mautic, CRM e WhatsApp sem código customizado.",
-        "portas_expostas": "Apenas rede interna (exposto via Traefik em `n8n.empresa.com.br`)",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `n8n.suaempresa.com.br`)",
         "persistencia": "Volume `/data/.n8n` ou PostgreSQL"
       },
       {
-        "servico": "Cluster PostgreSQL",
-        "imagem_docker": "postgres:16-alpine",
-        "papel_na_stack": "Banco de Dados Relacional Consolidado",
-        "racional_escolha": "Instância única otimizada com bancos lógicos dedicados (`db_mautic`, `db_twenty`, `db_chatwoot`, `db_keycloak`, `db_n8n`), reduzindo drasticamente o consumo de memória RAM na VPS.",
-        "portas_expostas": "Nenhuma porta pública (porta 5432 restrita à rede `ecosystem_net`)",
-        "persistencia": "Volume de dados `/var/lib/postgresql/data` com política diária de pg_dump"
+        "servico": "Mautic Marketing",
+        "imagem_docker": "mautic/mautic:latest",
+        "papel_na_stack": "Motor de Automação de Marketing, Régua de Nutrição & Lead Scoring",
+        "racional_escolha": "Substitui integralmente o RD Station Marketing com jornadas em árvore drag-and-drop, rastreamento de comportamento no site institucional e pontuação automática de leads para repasse ao CRM.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `mkt.suaempresa.com.br`)",
+        "persistencia": "Volume `/var/www/html/docroot/media` e banco `db_mautic`"
       },
       {
-        "servico": "Redis Cache & Queue",
+        "servico": "Twenty CRM",
+        "imagem_docker": "twentyhq/twenty:latest",
+        "papel_na_stack": "Pipeline Comercial, Funil de Vendas Kanban & Gestão de Contatos",
+        "racional_escolha": "Substitui o RD Station CRM com arquitetura moderna e reativa em TypeScript/React, histórico unificado de interações, notas comerciais e campos customizados ilimitados para os vendedores.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `crm.suaempresa.com.br`)",
+        "persistencia": "Banco `db_twenty` no PostgreSQL corporativo"
+      },
+      {
+        "servico": "Chatwoot Omnichannel",
+        "imagem_docker": "chatwoot/chatwoot:latest",
+        "papel_na_stack": "Central de Atendimento Multiatendente para WhatsApp, Chat & Redes",
+        "racional_escolha": "Substitui o RD Station Conversas com caixa de entrada compartilhada, divisão de atendentes por departamentos (Vendas, Suporte, Financeiro), macros de resposta rápida e relatórios de SLA/CSAT.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `chat.suaempresa.com.br`)",
+        "persistencia": "Volume `/app/storage`, banco `db_chatwoot` e Redis"
+      },
+      {
+        "servico": "Evolution API",
+        "imagem_docker": "atendai/evolution-api:v2.1.0",
+        "papel_na_stack": "Gateway de Integração WhatsApp Baileys com Suporte a Múltiplos Números",
+        "racional_escolha": "Conecta múltiplos números de WhatsApp da empresa sem cobranças por mensagem enviada, convertendo áudios e disparando webhooks instantâneos de mensagens para o Chatwoot e n8n.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `wa.suaempresa.com.br`)",
+        "persistencia": "Sessões e credenciais autenticadas no Redis e PostgreSQL"
+      },
+      {
+        "servico": "Cluster PostgreSQL 16",
+        "imagem_docker": "postgres:16-alpine",
+        "papel_na_stack": "Banco de Dados Relacional Unificado da Suíte",
+        "racional_escolha": "Instância única otimizada com bancos lógicos dedicados (`db_mautic`, `db_twenty`, `db_chatwoot`, `db_keycloak`, `db_n8n`), reduzindo drasticamente o consumo de memória RAM na VPS.",
+        "portas_expostas": "Nenhuma porta pública (porta 5432 restrita à rede privada `ecosystem_net`)",
+        "persistencia": "Volume de dados `/var/lib/postgresql/data` com política de backup diário pg_dump"
+      },
+      {
+        "servico": "Redis Cache 7",
         "imagem_docker": "redis:7-alpine",
-        "papel_na_stack": "Fila de Mensageria em Memória & Sessões WebSockets",
-        "racional_escolha": "Gerencia as filas de alta velocidade do Chatwoot (atendimento em tempo real), Evolution API (sessões Baileys do WhatsApp) e n8n (execuções em background).",
-        "portas_expostas": "Nenhuma porta pública (porta 6379 restrita à rede `ecosystem_net`)",
-        "persistencia": "Volume persistente `/data` (AOF habilitado)"
+        "papel_na_stack": "Fila de Mensageria em Memória & Sessões WebSockets em Tempo Real",
+        "racional_escolha": "Gerencia as filas de alta velocidade do Chatwoot (atendimento em tempo real), Evolution API (sessões Baileys do WhatsApp) e n8n (execuções assíncronas em background).",
+        "portas_expostas": "Nenhuma porta pública (porta 6379 restrita à rede privada `ecosystem_net`)",
+        "persistencia": "Volume persistente `/data` com Append-Only File (AOF) ativado"
       }
     ],
-    "docker_compose_exemplo": "version: '3.8'\n\nnetworks:\n  ecosystem_net:\n    driver: bridge\n\nservices:\n  traefik:\n    image: traefik:v3.0\n    command:\n      - '--providers.docker=true'\n      - '--entrypoints.websecure.address=:443'\n      - '--certificatesresolvers.myresolver.acme.tlschallenge=true'\n    ports:\n      - '80:80'\n      - '443:443'\n    volumes:\n      - '/var/run/docker.sock:/var/run/docker.sock:ro'\n      - './letsencrypt:/letsencrypt'\n    networks:\n      - ecosystem_net\n\n  keycloak:\n    image: quay.io/keycloak/keycloak:latest\n    command: start-dev\n    environment:\n      - KEYCLOAK_ADMIN=admin\n      - KEYCLOAK_ADMIN_PASSWORD=SegredoForte2026\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.keycloak.rule=Host(`sso.suaempresa.com.br`)'\n      - 'traefik.http.routers.keycloak.entrypoints=websecure'\n      - 'traefik.http.routers.keycloak.tls.certresolver=myresolver'\n    networks:\n      - ecosystem_net\n\n  n8n:\n    image: n8nio/n8n:latest\n    environment:\n      - N8N_BASIC_AUTH_ACTIVE=true\n      - N8N_HOST=n8n.suaempresa.com.br\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.n8n.rule=Host(`n8n.suaempresa.com.br`)'\n      - 'traefik.http.routers.n8n.entrypoints=websecure'\n      - 'traefik.http.routers.n8n.tls.certresolver=myresolver'\n    networks:\n      - ecosystem_net\n\n  mautic:\n    image: mautic/mautic:latest\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.mautic.rule=Host(`mkt.suaempresa.com.br`)'\n      - 'traefik.http.routers.mautic.entrypoints=websecure'\n      - 'traefik.http.routers.mautic.tls.certresolver=myresolver'\n    networks:\n      - ecosystem_net\n\n  twenty:\n    image: twentyhq/twenty:latest\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.twenty.rule=Host(`crm.suaempresa.com.br`)'\n      - 'traefik.http.routers.twenty.entrypoints=websecure'\n      - 'traefik.http.routers.twenty.tls.certresolver=myresolver'\n    networks:\n      - ecosystem_net\n\n  chatwoot:\n    image: chatwoot/chatwoot:latest\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.chatwoot.rule=Host(`chat.suaempresa.com.br`)'\n      - 'traefik.http.routers.chatwoot.entrypoints=websecure'\n      - 'traefik.http.routers.chatwoot.tls.certresolver=myresolver'\n    networks:\n      - ecosystem_net\n\n  evolution-api:\n    image: atendai/evolution-api:v2.1.0\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.evolution.rule=Host(`wa.suaempresa.com.br`)'\n      - 'traefik.http.routers.evolution.entrypoints=websecure'\n      - 'traefik.http.routers.evolution.tls.certresolver=myresolver'\n    networks:\n      - ecosystem_net",
+    "docker_compose_exemplo": "version: '3.8'\n\nnetworks:\n  ecosystem_net:\n    driver: bridge\n\nservices:\n  # 1. Reverse Proxy & TLS Automático\n  traefik:\n    image: traefik:v3.0\n    command:\n      - '--providers.docker=true'\n      - '--entrypoints.websecure.address=:443'\n      - '--certificatesresolvers.myresolver.acme.tlschallenge=true'\n    ports:\n      - '80:80'\n      - '443:443'\n    volumes:\n      - '/var/run/docker.sock:/var/run/docker.sock:ro'\n      - './letsencrypt:/letsencrypt'\n    networks:\n      - ecosystem_net\n\n  # 2. Provedor de Identidade & SSO\n  keycloak:\n    image: quay.io/keycloak/keycloak:latest\n    command: start-dev\n    environment:\n      - KEYCLOAK_ADMIN=admin\n      - KEYCLOAK_ADMIN_PASSWORD=SegredoForte2026\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.keycloak.rule=Host(`sso.suaempresa.com.br`)'\n      - 'traefik.http.routers.keycloak.entrypoints=websecure'\n      - 'traefik.http.routers.keycloak.tls.certresolver=myresolver'\n    networks:\n      - ecosystem_net\n\n  # 3. Barramento de Eventos e Workflows\n  n8n:\n    image: n8nio/n8n:latest\n    environment:\n      - N8N_BASIC_AUTH_ACTIVE=true\n      - N8N_HOST=n8n.suaempresa.com.br\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.n8n.rule=Host(`n8n.suaempresa.com.br`)'\n      - 'traefik.http.routers.n8n.entrypoints=websecure'\n      - 'traefik.http.routers.n8n.tls.certresolver=myresolver'\n    networks:\n      - ecosystem_net\n\n  # 4. Automação de Marketing & Nutrição (RD Marketing)\n  mautic:\n    image: mautic/mautic:latest\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.mautic.rule=Host(`mkt.suaempresa.com.br`)'\n      - 'traefik.http.routers.mautic.entrypoints=websecure'\n      - 'traefik.http.routers.mautic.tls.certresolver=myresolver'\n    networks:\n      - ecosystem_net\n\n  # 5. Pipeline Comercial & CRM (RD CRM)\n  twenty:\n    image: twentyhq/twenty:latest\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.twenty.rule=Host(`crm.suaempresa.com.br`)'\n      - 'traefik.http.routers.twenty.entrypoints=websecure'\n      - 'traefik.http.routers.twenty.tls.certresolver=myresolver'\n    networks:\n      - ecosystem_net\n\n  # 6. Atendimento Omnichannel & Livechat (RD Conversas)\n  chatwoot:\n    image: chatwoot/chatwoot:latest\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.chatwoot.rule=Host(`chat.suaempresa.com.br`)'\n      - 'traefik.http.routers.chatwoot.entrypoints=websecure'\n      - 'traefik.http.routers.chatwoot.tls.certresolver=myresolver'\n    networks:\n      - ecosystem_net\n\n  # 7. Gateway WhatsApp Baileys & Webhooks\n  evolution-api:\n    image: atendai/evolution-api:v2.1.0\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.evolution.rule=Host(`wa.suaempresa.com.br`)'\n      - 'traefik.http.routers.evolution.entrypoints=websecure'\n      - 'traefik.http.routers.evolution.tls.certresolver=myresolver'\n    networks:\n      - ecosystem_net\n\n  # 8. Banco de Dados Relacional Consolidado\n  postgres:\n    image: postgres:16-alpine\n    environment:\n      - POSTGRES_USER=postgres\n      - POSTGRES_PASSWORD=SegredoPostgres2026\n    volumes:\n      - postgres_data:/var/lib/postgresql/data\n    networks:\n      - ecosystem_net\n\n  # 9. Filas de Alta Velocidade & Sessões\n  redis:\n    image: redis:7-alpine\n    volumes:\n      - redis_data:/data\n    networks:\n      - ecosystem_net\n\nvolumes:\n  postgres_data:\n  redis_data:",
     "requisitos_hardware_totais": {
       "ram_total_recomendada": "16 GB RAM",
       "cpu_total_recomendada": "8 vCPU",

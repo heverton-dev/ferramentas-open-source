@@ -690,18 +690,52 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
     guia = dados.get("guia_modularidade_e_expansao", {})
     stack_detalhe = deploy.get("composicao_stack_detalhada", [])
     
+    stack_linhas_tabela = "".join([
+        f"""
+        <tr>
+          <td class="rank">{idx:02d}</td>
+          <td><strong>{s.get('servico')}</strong></td>
+          <td><code>{s.get('imagem_docker')}</code></td>
+          <td>{s.get('papel_na_stack')}</td>
+          <td><code>{s.get('portas_expostas')}</code></td>
+          <td><code>{s.get('persistencia')}</code></td>
+        </tr>
+        """
+        for idx, s in enumerate(stack_detalhe, 1)
+    ])
+
+    tabela_stack_html = f"""
+    <div class="tablewrap" style="margin: 14px 0 20px;">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Serviço / Ferramenta</th>
+            <th>Imagem Docker</th>
+            <th>Papel na Stack</th>
+            <th>Portas / Exposição</th>
+            <th>Persistência</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stack_linhas_tabela}
+        </tbody>
+      </table>
+    </div>
+    """
+
     stack_cards_html = "".join([
         f"""
-        <div class="integ-card" style="margin-bottom: 10px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
             <h4 style="margin: 0; color: var(--ink);">{s.get('servico')}</h4>
-            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 2px;">{s.get('imagem_docker')}</code>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 8px; border-radius: 2px; border: 1px solid var(--rule-soft);">{s.get('imagem_docker')}</code>
           </div>
-          <p><strong>Papel na Stack:</strong> {s.get('papel_na_stack')}</p>
-          <p style="margin-top: 4px;"><strong>Por que foi escolhido:</strong> {s.get('racional_escolha')}</p>
-          <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted);">
-            <span>🔌 {s.get('portas_expostas')}</span>
-            <span>💾 {s.get('persistencia')}</span>
+          <p><strong>Papel na Infraestrutura:</strong> {s.get('papel_na_stack')}</p>
+          <p style="margin-top: 4px;"><strong>Por que faz parte do Deploy All-in-One:</strong> {s.get('racional_escolha')}</p>
+          <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted); flex-wrap: wrap;">
+            <span>🔌 <strong>Rede/Portas:</strong> {s.get('portas_expostas')}</span>
+            <span>💾 <strong>Armazenamento:</strong> {s.get('persistencia')}</span>
           </div>
         </div>
         """
@@ -850,9 +884,9 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
 
   <div class="sec-head">
     <div class="sec-info">
-      <span class="sec-num">Seção 05 · Deploy All-in-One</span>
-      <h2>Orquestração Unificada (Docker Compose) &amp; Anatomia da Stack</h2>
-      <p class="sec-note">Provisionamento consolidado em VPS ({deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')}).</p>
+      <span class="sec-num">Seção 05 · Deploy All-in-One: Orquestração Unificada</span>
+      <h2>Composição da Stack Tecnológica &amp; Docker Compose</h2>
+      <p class="sec-note">Especificação de engenharia de cada um dos 9 serviços que compõem o cluster consolidado em VPS ({deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')}).</p>
     </div>
   </div>
 
@@ -860,15 +894,21 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
     <p><strong>🛡️ Segurança e Topologia de Rede:</strong> {deploy.get('arquitetura_rede_seguranca')}</p>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">Composição dos Serviços de Infraestrutura</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 10px; color: var(--ink);">1. Matriz dos Serviços da Stack (docker-compose.yml)</h3>
+  <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 12px;">Visão tabular de todas as ferramentas de infraestrutura, aplicação, banco e filas presentes no orquestrador.</p>
+  {tabela_stack_html}
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 10px; color: var(--ink);">2. Racional &amp; Papel de Cada Ferramenta na Stack</h3>
+  <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 14px;">Detalhamento técnico de por que cada componente foi selecionado e sua interdependência operacional no cluster.</p>
   {stack_cards_html}
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 12px; color: var(--ink);">Arquivo docker-compose.yml Completo</h3>
-  <div class="code-box" style="margin-bottom: 16px;">
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 10px; color: var(--ink);">3. Arquivo docker-compose.yml Completo</h3>
+  <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 12px;">Manifesto de orquestração pronto para produção com volumes, redes, variáveis de ambiente e labels Traefik.</p>
+  <div class="code-box" style="margin-bottom: 20px;">
     <pre><code>{deploy.get('docker_compose_exemplo')}</code></pre>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">Passos de Subida do Ambiente</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">4. Passos de Inicialização &amp; Subida do Ambiente</h3>
   <div class="steps-grid">
     {passos_cards}
   </div>

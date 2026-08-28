@@ -96,32 +96,56 @@
 - **Traefik Proxy v3** (`traefik:v3.0`):
   - *Papel:* Ingress Controller & Reverse Proxy com TLS automático
   - *Por que foi escolhido:* Descobre contêineres dinamicamente via labels do Docker sem necessidade de recarregar Nginx manualmente. Emite certificados SSL Let's Encrypt para múltiplos subdomínios corporativos.
-  - *Portas & Exposição:* 80:80 (HTTP) e 443:443 (HTTPS)
-  - *Persistência:* `Volume `/letsencrypt/acme.json` para certificados`
+  - *Portas & Exposição:* 80:80 (HTTP com redirect) e 443:443 (HTTPS)
+  - *Persistência:* `Volume `/letsencrypt/acme.json` para certificados SSL`
 
 - **Keycloak SSO** (`quay.io/keycloak/keycloak:latest`):
   - *Papel:* Provedor Central de Identidade (IdP) & Single Sign-On (OIDC/SAML)
   - *Por que foi escolhido:* Elimina silos de senhas: os colaboradores usam a mesma credencial corporativa para acessar o CRM (Twenty), o Atendimento (Chatwoot), as Landing Pages (Directus) e a Automação (Mautic).
-  - *Portas & Exposição:* Apenas rede interna (exposto via Traefik em `sso.empresa.com.br`)
-  - *Persistência:* `PostgreSQL corporativo compartilhado`
+  - *Portas & Exposição:* Apenas rede interna (roteado via Traefik sob `sso.suaempresa.com.br`)
+  - *Persistência:* `Banco `db_keycloak` no PostgreSQL compartilhado`
 
 - **n8n Automation** (`n8nio/n8n:latest`):
-  - *Papel:* Barramento de Eventos & Orquestração Assíncrona de Dados
+  - *Papel:* Barramento de Eventos & Orquestração Assíncrona de Dados (Glue Layer)
   - *Por que foi escolhido:* Funciona como a 'cola' do ecossistema. Substitui o Zapier/Make com interface visual no-code, processando webhooks e roteando leads do Typebot para o Mautic, CRM e WhatsApp sem código customizado.
-  - *Portas & Exposição:* Apenas rede interna (exposto via Traefik em `n8n.empresa.com.br`)
+  - *Portas & Exposição:* Apenas rede interna (roteado via Traefik sob `n8n.suaempresa.com.br`)
   - *Persistência:* `Volume `/data/.n8n` ou PostgreSQL`
 
-- **Cluster PostgreSQL** (`postgres:16-alpine`):
-  - *Papel:* Banco de Dados Relacional Consolidado
-  - *Por que foi escolhido:* Instância única otimizada com bancos lógicos dedicados (`db_mautic`, `db_twenty`, `db_chatwoot`, `db_keycloak`, `db_n8n`), reduzindo drasticamente o consumo de memória RAM na VPS.
-  - *Portas & Exposição:* Nenhuma porta pública (porta 5432 restrita à rede `ecosystem_net`)
-  - *Persistência:* `Volume de dados `/var/lib/postgresql/data` com política diária de pg_dump`
+- **Mautic Marketing** (`mautic/mautic:latest`):
+  - *Papel:* Motor de Automação de Marketing, Régua de Nutrição & Lead Scoring
+  - *Por que foi escolhido:* Substitui integralmente o RD Station Marketing com jornadas em árvore drag-and-drop, rastreamento de comportamento no site institucional e pontuação automática de leads para repasse ao CRM.
+  - *Portas & Exposição:* Apenas rede interna (roteado via Traefik sob `mkt.suaempresa.com.br`)
+  - *Persistência:* `Volume `/var/www/html/docroot/media` e banco `db_mautic``
 
-- **Redis Cache & Queue** (`redis:7-alpine`):
-  - *Papel:* Fila de Mensageria em Memória & Sessões WebSockets
-  - *Por que foi escolhido:* Gerencia as filas de alta velocidade do Chatwoot (atendimento em tempo real), Evolution API (sessões Baileys do WhatsApp) e n8n (execuções em background).
-  - *Portas & Exposição:* Nenhuma porta pública (porta 6379 restrita à rede `ecosystem_net`)
-  - *Persistência:* `Volume persistente `/data` (AOF habilitado)`
+- **Twenty CRM** (`twentyhq/twenty:latest`):
+  - *Papel:* Pipeline Comercial, Funil de Vendas Kanban & Gestão de Contatos
+  - *Por que foi escolhido:* Substitui o RD Station CRM com arquitetura moderna e reativa em TypeScript/React, histórico unificado de interações, notas comerciais e campos customizados ilimitados para os vendedores.
+  - *Portas & Exposição:* Apenas rede interna (roteado via Traefik sob `crm.suaempresa.com.br`)
+  - *Persistência:* `Banco `db_twenty` no PostgreSQL corporativo`
+
+- **Chatwoot Omnichannel** (`chatwoot/chatwoot:latest`):
+  - *Papel:* Central de Atendimento Multiatendente para WhatsApp, Chat & Redes
+  - *Por que foi escolhido:* Substitui o RD Station Conversas com caixa de entrada compartilhada, divisão de atendentes por departamentos (Vendas, Suporte, Financeiro), macros de resposta rápida e relatórios de SLA/CSAT.
+  - *Portas & Exposição:* Apenas rede interna (roteado via Traefik sob `chat.suaempresa.com.br`)
+  - *Persistência:* `Volume `/app/storage`, banco `db_chatwoot` e Redis`
+
+- **Evolution API** (`atendai/evolution-api:v2.1.0`):
+  - *Papel:* Gateway de Integração WhatsApp Baileys com Suporte a Múltiplos Números
+  - *Por que foi escolhido:* Conecta múltiplos números de WhatsApp da empresa sem cobranças por mensagem enviada, convertendo áudios e disparando webhooks instantâneos de mensagens para o Chatwoot e n8n.
+  - *Portas & Exposição:* Apenas rede interna (roteado via Traefik sob `wa.suaempresa.com.br`)
+  - *Persistência:* `Sessões e credenciais autenticadas no Redis e PostgreSQL`
+
+- **Cluster PostgreSQL 16** (`postgres:16-alpine`):
+  - *Papel:* Banco de Dados Relacional Unificado da Suíte
+  - *Por que foi escolhido:* Instância única otimizada com bancos lógicos dedicados (`db_mautic`, `db_twenty`, `db_chatwoot`, `db_keycloak`, `db_n8n`), reduzindo drasticamente o consumo de memória RAM na VPS.
+  - *Portas & Exposição:* Nenhuma porta pública (porta 5432 restrita à rede privada `ecosystem_net`)
+  - *Persistência:* `Volume de dados `/var/lib/postgresql/data` com política de backup diário pg_dump`
+
+- **Redis Cache 7** (`redis:7-alpine`):
+  - *Papel:* Fila de Mensageria em Memória & Sessões WebSockets em Tempo Real
+  - *Por que foi escolhido:* Gerencia as filas de alta velocidade do Chatwoot (atendimento em tempo real), Evolution API (sessões Baileys do WhatsApp) e n8n (execuções assíncronas em background).
+  - *Portas & Exposição:* Nenhuma porta pública (porta 6379 restrita à rede privada `ecosystem_net`)
+  - *Persistência:* `Volume persistente `/data` com Append-Only File (AOF) ativado`
 
 **Dimensionamento de Hardware Total:**
 - RAM Recomendada: 16 GB RAM
@@ -137,6 +161,7 @@ networks:
     driver: bridge
 
 services:
+  # 1. Reverse Proxy & TLS Automático
   traefik:
     image: traefik:v3.0
     command:
@@ -152,6 +177,7 @@ services:
     networks:
       - ecosystem_net
 
+  # 2. Provedor de Identidade & SSO
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     command: start-dev
@@ -166,6 +192,7 @@ services:
     networks:
       - ecosystem_net
 
+  # 3. Barramento de Eventos e Workflows
   n8n:
     image: n8nio/n8n:latest
     environment:
@@ -179,6 +206,7 @@ services:
     networks:
       - ecosystem_net
 
+  # 4. Automação de Marketing & Nutrição (RD Marketing)
   mautic:
     image: mautic/mautic:latest
     labels:
@@ -189,6 +217,7 @@ services:
     networks:
       - ecosystem_net
 
+  # 5. Pipeline Comercial & CRM (RD CRM)
   twenty:
     image: twentyhq/twenty:latest
     labels:
@@ -199,6 +228,7 @@ services:
     networks:
       - ecosystem_net
 
+  # 6. Atendimento Omnichannel & Livechat (RD Conversas)
   chatwoot:
     image: chatwoot/chatwoot:latest
     labels:
@@ -209,6 +239,7 @@ services:
     networks:
       - ecosystem_net
 
+  # 7. Gateway WhatsApp Baileys & Webhooks
   evolution-api:
     image: atendai/evolution-api:v2.1.0
     labels:
@@ -218,6 +249,29 @@ services:
       - 'traefik.http.routers.evolution.tls.certresolver=myresolver'
     networks:
       - ecosystem_net
+
+  # 8. Banco de Dados Relacional Consolidado
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=SegredoPostgres2026
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ecosystem_net
+
+  # 9. Filas de Alta Velocidade & Sessões
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - ecosystem_net
+
+volumes:
+  postgres_data:
+  redis_data:
 ```
 
 ### Passos de Instalação e Subida

@@ -2795,9 +2795,9 @@
 
   <div class="sec-head">
     <div class="sec-info">
-      <span class="sec-num">Seção 05 · Deploy All-in-One</span>
-      <h2>Orquestração Unificada (Docker Compose) &amp; Anatomia da Stack</h2>
-      <p class="sec-note">Provisionamento consolidado em VPS (8 vCPU / 16 GB RAM).</p>
+      <span class="sec-num">Seção 05 · Deploy All-in-One: Orquestração Unificada</span>
+      <h2>Composição da Stack Tecnológica &amp; Docker Compose</h2>
+      <p class="sec-note">Especificação de engenharia de cada um dos 9 serviços que compõem o cluster consolidado em VPS (8 vCPU / 16 GB RAM).</p>
     </div>
   </div>
 
@@ -2805,76 +2805,233 @@
     <p><strong>🛡️ Segurança e Topologia de Rede:</strong> A infraestrutura opera sobre uma rede bridge isolada do Docker (`ecosystem_net`). Apenas o reverse proxy Traefik expõe as portas públicas 80 (HTTP com redirect) e 443 (HTTPS TLS automático via ACME/Let's Encrypt). Todas as ferramentas (Mautic, Twenty, Chatwoot, Evolution, n8n, Keycloak e PostgreSQL) comunicam-se exclusivamente pela rede interna através de seus nomes DNS de serviço (ex: `http://chatwoot:3000`, `postgres:5432`), eliminando vetores de ataque externos e exposição de portas desnecessárias.</p>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">Composição dos Serviços de Infraestrutura</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 10px; color: var(--ink);">1. Matriz dos Serviços da Stack (docker-compose.yml)</h3>
+  <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 12px;">Visão tabular de todas as ferramentas de infraestrutura, aplicação, banco e filas presentes no orquestrador.</p>
   
-        <div class="integ-card" style="margin-bottom: 10px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+    <div class="tablewrap" style="margin: 14px 0 20px;">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Serviço / Ferramenta</th>
+            <th>Imagem Docker</th>
+            <th>Papel na Stack</th>
+            <th>Portas / Exposição</th>
+            <th>Persistência</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td class="rank">01</td>
+          <td><strong>Traefik Proxy v3</strong></td>
+          <td><code>traefik:v3.0</code></td>
+          <td>Ingress Controller & Reverse Proxy com TLS automático</td>
+          <td><code>80:80 (HTTP com redirect) e 443:443 (HTTPS)</code></td>
+          <td><code>Volume `/letsencrypt/acme.json` para certificados SSL</code></td>
+        </tr>
+        
+        <tr>
+          <td class="rank">02</td>
+          <td><strong>Keycloak SSO</strong></td>
+          <td><code>quay.io/keycloak/keycloak:latest</code></td>
+          <td>Provedor Central de Identidade (IdP) & Single Sign-On (OIDC/SAML)</td>
+          <td><code>Apenas rede interna (roteado via Traefik sob `sso.suaempresa.com.br`)</code></td>
+          <td><code>Banco `db_keycloak` no PostgreSQL compartilhado</code></td>
+        </tr>
+        
+        <tr>
+          <td class="rank">03</td>
+          <td><strong>n8n Automation</strong></td>
+          <td><code>n8nio/n8n:latest</code></td>
+          <td>Barramento de Eventos & Orquestração Assíncrona de Dados (Glue Layer)</td>
+          <td><code>Apenas rede interna (roteado via Traefik sob `n8n.suaempresa.com.br`)</code></td>
+          <td><code>Volume `/data/.n8n` ou PostgreSQL</code></td>
+        </tr>
+        
+        <tr>
+          <td class="rank">04</td>
+          <td><strong>Mautic Marketing</strong></td>
+          <td><code>mautic/mautic:latest</code></td>
+          <td>Motor de Automação de Marketing, Régua de Nutrição & Lead Scoring</td>
+          <td><code>Apenas rede interna (roteado via Traefik sob `mkt.suaempresa.com.br`)</code></td>
+          <td><code>Volume `/var/www/html/docroot/media` e banco `db_mautic`</code></td>
+        </tr>
+        
+        <tr>
+          <td class="rank">05</td>
+          <td><strong>Twenty CRM</strong></td>
+          <td><code>twentyhq/twenty:latest</code></td>
+          <td>Pipeline Comercial, Funil de Vendas Kanban & Gestão de Contatos</td>
+          <td><code>Apenas rede interna (roteado via Traefik sob `crm.suaempresa.com.br`)</code></td>
+          <td><code>Banco `db_twenty` no PostgreSQL corporativo</code></td>
+        </tr>
+        
+        <tr>
+          <td class="rank">06</td>
+          <td><strong>Chatwoot Omnichannel</strong></td>
+          <td><code>chatwoot/chatwoot:latest</code></td>
+          <td>Central de Atendimento Multiatendente para WhatsApp, Chat & Redes</td>
+          <td><code>Apenas rede interna (roteado via Traefik sob `chat.suaempresa.com.br`)</code></td>
+          <td><code>Volume `/app/storage`, banco `db_chatwoot` e Redis</code></td>
+        </tr>
+        
+        <tr>
+          <td class="rank">07</td>
+          <td><strong>Evolution API</strong></td>
+          <td><code>atendai/evolution-api:v2.1.0</code></td>
+          <td>Gateway de Integração WhatsApp Baileys com Suporte a Múltiplos Números</td>
+          <td><code>Apenas rede interna (roteado via Traefik sob `wa.suaempresa.com.br`)</code></td>
+          <td><code>Sessões e credenciais autenticadas no Redis e PostgreSQL</code></td>
+        </tr>
+        
+        <tr>
+          <td class="rank">08</td>
+          <td><strong>Cluster PostgreSQL 16</strong></td>
+          <td><code>postgres:16-alpine</code></td>
+          <td>Banco de Dados Relacional Unificado da Suíte</td>
+          <td><code>Nenhuma porta pública (porta 5432 restrita à rede privada `ecosystem_net`)</code></td>
+          <td><code>Volume de dados `/var/lib/postgresql/data` com política de backup diário pg_dump</code></td>
+        </tr>
+        
+        <tr>
+          <td class="rank">09</td>
+          <td><strong>Redis Cache 7</strong></td>
+          <td><code>redis:7-alpine</code></td>
+          <td>Fila de Mensageria em Memória & Sessões WebSockets em Tempo Real</td>
+          <td><code>Nenhuma porta pública (porta 6379 restrita à rede privada `ecosystem_net`)</code></td>
+          <td><code>Volume persistente `/data` com Append-Only File (AOF) ativado</code></td>
+        </tr>
+        
+        </tbody>
+      </table>
+    </div>
+    
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 10px; color: var(--ink);">2. Racional &amp; Papel de Cada Ferramenta na Stack</h3>
+  <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 14px;">Detalhamento técnico de por que cada componente foi selecionado e sua interdependência operacional no cluster.</p>
+  
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
             <h4 style="margin: 0; color: var(--ink);">Traefik Proxy v3</h4>
-            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 2px;">traefik:v3.0</code>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 8px; border-radius: 2px; border: 1px solid var(--rule-soft);">traefik:v3.0</code>
           </div>
-          <p><strong>Papel na Stack:</strong> Ingress Controller & Reverse Proxy com TLS automático</p>
-          <p style="margin-top: 4px;"><strong>Por que foi escolhido:</strong> Descobre contêineres dinamicamente via labels do Docker sem necessidade de recarregar Nginx manualmente. Emite certificados SSL Let's Encrypt para múltiplos subdomínios corporativos.</p>
-          <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted);">
-            <span>🔌 80:80 (HTTP) e 443:443 (HTTPS)</span>
-            <span>💾 Volume `/letsencrypt/acme.json` para certificados</span>
+          <p><strong>Papel na Infraestrutura:</strong> Ingress Controller & Reverse Proxy com TLS automático</p>
+          <p style="margin-top: 4px;"><strong>Por que faz parte do Deploy All-in-One:</strong> Descobre contêineres dinamicamente via labels do Docker sem necessidade de recarregar Nginx manualmente. Emite certificados SSL Let's Encrypt para múltiplos subdomínios corporativos.</p>
+          <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted); flex-wrap: wrap;">
+            <span>🔌 <strong>Rede/Portas:</strong> 80:80 (HTTP com redirect) e 443:443 (HTTPS)</span>
+            <span>💾 <strong>Armazenamento:</strong> Volume `/letsencrypt/acme.json` para certificados SSL</span>
           </div>
         </div>
         
-        <div class="integ-card" style="margin-bottom: 10px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
             <h4 style="margin: 0; color: var(--ink);">Keycloak SSO</h4>
-            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 2px;">quay.io/keycloak/keycloak:latest</code>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 8px; border-radius: 2px; border: 1px solid var(--rule-soft);">quay.io/keycloak/keycloak:latest</code>
           </div>
-          <p><strong>Papel na Stack:</strong> Provedor Central de Identidade (IdP) & Single Sign-On (OIDC/SAML)</p>
-          <p style="margin-top: 4px;"><strong>Por que foi escolhido:</strong> Elimina silos de senhas: os colaboradores usam a mesma credencial corporativa para acessar o CRM (Twenty), o Atendimento (Chatwoot), as Landing Pages (Directus) e a Automação (Mautic).</p>
-          <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted);">
-            <span>🔌 Apenas rede interna (exposto via Traefik em `sso.empresa.com.br`)</span>
-            <span>💾 PostgreSQL corporativo compartilhado</span>
+          <p><strong>Papel na Infraestrutura:</strong> Provedor Central de Identidade (IdP) & Single Sign-On (OIDC/SAML)</p>
+          <p style="margin-top: 4px;"><strong>Por que faz parte do Deploy All-in-One:</strong> Elimina silos de senhas: os colaboradores usam a mesma credencial corporativa para acessar o CRM (Twenty), o Atendimento (Chatwoot), as Landing Pages (Directus) e a Automação (Mautic).</p>
+          <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted); flex-wrap: wrap;">
+            <span>🔌 <strong>Rede/Portas:</strong> Apenas rede interna (roteado via Traefik sob `sso.suaempresa.com.br`)</span>
+            <span>💾 <strong>Armazenamento:</strong> Banco `db_keycloak` no PostgreSQL compartilhado</span>
           </div>
         </div>
         
-        <div class="integ-card" style="margin-bottom: 10px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
             <h4 style="margin: 0; color: var(--ink);">n8n Automation</h4>
-            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 2px;">n8nio/n8n:latest</code>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 8px; border-radius: 2px; border: 1px solid var(--rule-soft);">n8nio/n8n:latest</code>
           </div>
-          <p><strong>Papel na Stack:</strong> Barramento de Eventos & Orquestração Assíncrona de Dados</p>
-          <p style="margin-top: 4px;"><strong>Por que foi escolhido:</strong> Funciona como a 'cola' do ecossistema. Substitui o Zapier/Make com interface visual no-code, processando webhooks e roteando leads do Typebot para o Mautic, CRM e WhatsApp sem código customizado.</p>
-          <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted);">
-            <span>🔌 Apenas rede interna (exposto via Traefik em `n8n.empresa.com.br`)</span>
-            <span>💾 Volume `/data/.n8n` ou PostgreSQL</span>
-          </div>
-        </div>
-        
-        <div class="integ-card" style="margin-bottom: 10px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <h4 style="margin: 0; color: var(--ink);">Cluster PostgreSQL</h4>
-            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 2px;">postgres:16-alpine</code>
-          </div>
-          <p><strong>Papel na Stack:</strong> Banco de Dados Relacional Consolidado</p>
-          <p style="margin-top: 4px;"><strong>Por que foi escolhido:</strong> Instância única otimizada com bancos lógicos dedicados (`db_mautic`, `db_twenty`, `db_chatwoot`, `db_keycloak`, `db_n8n`), reduzindo drasticamente o consumo de memória RAM na VPS.</p>
-          <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted);">
-            <span>🔌 Nenhuma porta pública (porta 5432 restrita à rede `ecosystem_net`)</span>
-            <span>💾 Volume de dados `/var/lib/postgresql/data` com política diária de pg_dump</span>
+          <p><strong>Papel na Infraestrutura:</strong> Barramento de Eventos & Orquestração Assíncrona de Dados (Glue Layer)</p>
+          <p style="margin-top: 4px;"><strong>Por que faz parte do Deploy All-in-One:</strong> Funciona como a 'cola' do ecossistema. Substitui o Zapier/Make com interface visual no-code, processando webhooks e roteando leads do Typebot para o Mautic, CRM e WhatsApp sem código customizado.</p>
+          <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted); flex-wrap: wrap;">
+            <span>🔌 <strong>Rede/Portas:</strong> Apenas rede interna (roteado via Traefik sob `n8n.suaempresa.com.br`)</span>
+            <span>💾 <strong>Armazenamento:</strong> Volume `/data/.n8n` ou PostgreSQL</span>
           </div>
         </div>
         
-        <div class="integ-card" style="margin-bottom: 10px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <h4 style="margin: 0; color: var(--ink);">Redis Cache & Queue</h4>
-            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 2px;">redis:7-alpine</code>
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+            <h4 style="margin: 0; color: var(--ink);">Mautic Marketing</h4>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 8px; border-radius: 2px; border: 1px solid var(--rule-soft);">mautic/mautic:latest</code>
           </div>
-          <p><strong>Papel na Stack:</strong> Fila de Mensageria em Memória & Sessões WebSockets</p>
-          <p style="margin-top: 4px;"><strong>Por que foi escolhido:</strong> Gerencia as filas de alta velocidade do Chatwoot (atendimento em tempo real), Evolution API (sessões Baileys do WhatsApp) e n8n (execuções em background).</p>
-          <div style="display: flex; gap: 16px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted);">
-            <span>🔌 Nenhuma porta pública (porta 6379 restrita à rede `ecosystem_net`)</span>
-            <span>💾 Volume persistente `/data` (AOF habilitado)</span>
+          <p><strong>Papel na Infraestrutura:</strong> Motor de Automação de Marketing, Régua de Nutrição & Lead Scoring</p>
+          <p style="margin-top: 4px;"><strong>Por que faz parte do Deploy All-in-One:</strong> Substitui integralmente o RD Station Marketing com jornadas em árvore drag-and-drop, rastreamento de comportamento no site institucional e pontuação automática de leads para repasse ao CRM.</p>
+          <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted); flex-wrap: wrap;">
+            <span>🔌 <strong>Rede/Portas:</strong> Apenas rede interna (roteado via Traefik sob `mkt.suaempresa.com.br`)</span>
+            <span>💾 <strong>Armazenamento:</strong> Volume `/var/www/html/docroot/media` e banco `db_mautic`</span>
+          </div>
+        </div>
+        
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+            <h4 style="margin: 0; color: var(--ink);">Twenty CRM</h4>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 8px; border-radius: 2px; border: 1px solid var(--rule-soft);">twentyhq/twenty:latest</code>
+          </div>
+          <p><strong>Papel na Infraestrutura:</strong> Pipeline Comercial, Funil de Vendas Kanban & Gestão de Contatos</p>
+          <p style="margin-top: 4px;"><strong>Por que faz parte do Deploy All-in-One:</strong> Substitui o RD Station CRM com arquitetura moderna e reativa em TypeScript/React, histórico unificado de interações, notas comerciais e campos customizados ilimitados para os vendedores.</p>
+          <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted); flex-wrap: wrap;">
+            <span>🔌 <strong>Rede/Portas:</strong> Apenas rede interna (roteado via Traefik sob `crm.suaempresa.com.br`)</span>
+            <span>💾 <strong>Armazenamento:</strong> Banco `db_twenty` no PostgreSQL corporativo</span>
+          </div>
+        </div>
+        
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+            <h4 style="margin: 0; color: var(--ink);">Chatwoot Omnichannel</h4>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 8px; border-radius: 2px; border: 1px solid var(--rule-soft);">chatwoot/chatwoot:latest</code>
+          </div>
+          <p><strong>Papel na Infraestrutura:</strong> Central de Atendimento Multiatendente para WhatsApp, Chat & Redes</p>
+          <p style="margin-top: 4px;"><strong>Por que faz parte do Deploy All-in-One:</strong> Substitui o RD Station Conversas com caixa de entrada compartilhada, divisão de atendentes por departamentos (Vendas, Suporte, Financeiro), macros de resposta rápida e relatórios de SLA/CSAT.</p>
+          <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted); flex-wrap: wrap;">
+            <span>🔌 <strong>Rede/Portas:</strong> Apenas rede interna (roteado via Traefik sob `chat.suaempresa.com.br`)</span>
+            <span>💾 <strong>Armazenamento:</strong> Volume `/app/storage`, banco `db_chatwoot` e Redis</span>
+          </div>
+        </div>
+        
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+            <h4 style="margin: 0; color: var(--ink);">Evolution API</h4>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 8px; border-radius: 2px; border: 1px solid var(--rule-soft);">atendai/evolution-api:v2.1.0</code>
+          </div>
+          <p><strong>Papel na Infraestrutura:</strong> Gateway de Integração WhatsApp Baileys com Suporte a Múltiplos Números</p>
+          <p style="margin-top: 4px;"><strong>Por que faz parte do Deploy All-in-One:</strong> Conecta múltiplos números de WhatsApp da empresa sem cobranças por mensagem enviada, convertendo áudios e disparando webhooks instantâneos de mensagens para o Chatwoot e n8n.</p>
+          <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted); flex-wrap: wrap;">
+            <span>🔌 <strong>Rede/Portas:</strong> Apenas rede interna (roteado via Traefik sob `wa.suaempresa.com.br`)</span>
+            <span>💾 <strong>Armazenamento:</strong> Sessões e credenciais autenticadas no Redis e PostgreSQL</span>
+          </div>
+        </div>
+        
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+            <h4 style="margin: 0; color: var(--ink);">Cluster PostgreSQL 16</h4>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 8px; border-radius: 2px; border: 1px solid var(--rule-soft);">postgres:16-alpine</code>
+          </div>
+          <p><strong>Papel na Infraestrutura:</strong> Banco de Dados Relacional Unificado da Suíte</p>
+          <p style="margin-top: 4px;"><strong>Por que faz parte do Deploy All-in-One:</strong> Instância única otimizada com bancos lógicos dedicados (`db_mautic`, `db_twenty`, `db_chatwoot`, `db_keycloak`, `db_n8n`), reduzindo drasticamente o consumo de memória RAM na VPS.</p>
+          <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted); flex-wrap: wrap;">
+            <span>🔌 <strong>Rede/Portas:</strong> Nenhuma porta pública (porta 5432 restrita à rede privada `ecosystem_net`)</span>
+            <span>💾 <strong>Armazenamento:</strong> Volume de dados `/var/lib/postgresql/data` com política de backup diário pg_dump</span>
+          </div>
+        </div>
+        
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+            <h4 style="margin: 0; color: var(--ink);">Redis Cache 7</h4>
+            <code style="font-size: 11px; background: var(--surface-2); padding: 2px 8px; border-radius: 2px; border: 1px solid var(--rule-soft);">redis:7-alpine</code>
+          </div>
+          <p><strong>Papel na Infraestrutura:</strong> Fila de Mensageria em Memória & Sessões WebSockets em Tempo Real</p>
+          <p style="margin-top: 4px;"><strong>Por que faz parte do Deploy All-in-One:</strong> Gerencia as filas de alta velocidade do Chatwoot (atendimento em tempo real), Evolution API (sessões Baileys do WhatsApp) e n8n (execuções assíncronas em background).</p>
+          <div style="display: flex; gap: 20px; margin-top: 8px; font-size: 12px; font-family: var(--mono); color: var(--muted); flex-wrap: wrap;">
+            <span>🔌 <strong>Rede/Portas:</strong> Nenhuma porta pública (porta 6379 restrita à rede privada `ecosystem_net`)</span>
+            <span>💾 <strong>Armazenamento:</strong> Volume persistente `/data` com Append-Only File (AOF) ativado</span>
           </div>
         </div>
         
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 12px; color: var(--ink);">Arquivo docker-compose.yml Completo</h3>
-  <div class="code-box" style="margin-bottom: 16px;">
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 10px; color: var(--ink);">3. Arquivo docker-compose.yml Completo</h3>
+  <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 12px;">Manifesto de orquestração pronto para produção com volumes, redes, variáveis de ambiente e labels Traefik.</p>
+  <div class="code-box" style="margin-bottom: 20px;">
     <pre><code>version: '3.8'
 
 networks:
@@ -2882,6 +3039,7 @@ networks:
     driver: bridge
 
 services:
+  # 1. Reverse Proxy & TLS Automático
   traefik:
     image: traefik:v3.0
     command:
@@ -2897,6 +3055,7 @@ services:
     networks:
       - ecosystem_net
 
+  # 2. Provedor de Identidade & SSO
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     command: start-dev
@@ -2911,6 +3070,7 @@ services:
     networks:
       - ecosystem_net
 
+  # 3. Barramento de Eventos e Workflows
   n8n:
     image: n8nio/n8n:latest
     environment:
@@ -2924,6 +3084,7 @@ services:
     networks:
       - ecosystem_net
 
+  # 4. Automação de Marketing & Nutrição (RD Marketing)
   mautic:
     image: mautic/mautic:latest
     labels:
@@ -2934,6 +3095,7 @@ services:
     networks:
       - ecosystem_net
 
+  # 5. Pipeline Comercial & CRM (RD CRM)
   twenty:
     image: twentyhq/twenty:latest
     labels:
@@ -2944,6 +3106,7 @@ services:
     networks:
       - ecosystem_net
 
+  # 6. Atendimento Omnichannel & Livechat (RD Conversas)
   chatwoot:
     image: chatwoot/chatwoot:latest
     labels:
@@ -2954,6 +3117,7 @@ services:
     networks:
       - ecosystem_net
 
+  # 7. Gateway WhatsApp Baileys & Webhooks
   evolution-api:
     image: atendai/evolution-api:v2.1.0
     labels:
@@ -2962,10 +3126,33 @@ services:
       - 'traefik.http.routers.evolution.entrypoints=websecure'
       - 'traefik.http.routers.evolution.tls.certresolver=myresolver'
     networks:
-      - ecosystem_net</code></pre>
+      - ecosystem_net
+
+  # 8. Banco de Dados Relacional Consolidado
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=SegredoPostgres2026
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ecosystem_net
+
+  # 9. Filas de Alta Velocidade & Sessões
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - ecosystem_net
+
+volumes:
+  postgres_data:
+  redis_data:</code></pre>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">Passos de Subida do Ambiente</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">4. Passos de Inicialização &amp; Subida do Ambiente</h3>
   <div class="steps-grid">
     <div class="step-card"><div class="step-head"><span class="step-badge">01</span> Provisionamento do Host</div><p>Contrate uma VPS de 8 vCPU / 16 GB RAM com Ubuntu 22.04 LTS e instale Docker Engine e Docker Compose.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">02</span> Configuração de DNS Wildcard</div><p>Crie uma entrada DNS tipo A apontando `*.suaempresa.com.br` para o IP público da VPS.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">03</span> Subida do Cluster Integrado</div><p>Execute `docker compose up -d` na pasta do ecossistema e acesse os painéis com certificados SSL automáticos.</p></div>
   </div>
