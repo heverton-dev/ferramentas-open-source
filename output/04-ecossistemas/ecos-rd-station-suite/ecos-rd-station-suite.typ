@@ -4,15 +4,15 @@
   header: align(right)[
     #text(size: 7.5pt, fill: rgb("#94a3b8"), font: "Liberation Sans")[FÁBRICA UNIVERSAL AIDD · LIVRO-TEXTO DE MACRO-ECOSSISTEMA SOBERANO (PADRÃO DIAMANTE R5-E)]
   ],
-  footer: locate(loc => [
+  footer: [
     #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[
       #grid(
         columns: (1fr, 1fr),
         [Suíte do Ecossistema Soberano · RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier)],
-        align(right)[Página #counter(page).display()]
+        align(right)[Fábrica Universal AIDD]
       )
     ]
-  ])
+  ]
 )
 #set text(font: "Liberation Sans", size: 9.5pt, lang: "pt")
 #set par(justify: true, leading: 0.65em)
@@ -786,7 +786,7 @@ echo "✅ Backup soberano concluído e sincronizado na nuvem fria!"
 = Capítulo 11: Cronograma de Implantação em 30 Dias & Monitoramento
 
 == Semana 1 (Dias 1 a 7) · Infraestrutura & Instalação do Cluster
-- *Atividades:* Contratação da VPS, configuração de DNS wildcard (*.empresa.com.br), execução do docker-compose.yml e ativação dos certificados SSL automáticos via Traefik.
+- *Atividades:* Contratação da VPS, configuração de DNS wildcard (wildcard.empresa.com.br), execução do docker-compose.yml e ativação dos certificados SSL automáticos via Traefik.
 - *Marco de Entrega:* Todos os painéis acessíveis online com cadeado verde (HTTPS).
 
 == Semana 2 (Dias 8 a 14) · Migração de Dados & Conexão de Mensageria

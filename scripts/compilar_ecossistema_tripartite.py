@@ -1475,7 +1475,7 @@ def gerar_typst_ecossistema(dados: dict) -> str:
     stack_detalhe = deploy.get("composicao_stack_detalhada", [])
 
     def sanitizar_typ(txt: str) -> str:
-        return str(txt).replace('[', '(').replace(']', ')').replace('$', '\\$').replace('#', '\\#').replace('_', '\\_')
+        return str(txt).replace('[', '(').replace(']', ')').replace('$', '\\$').replace('#', '\\#').replace('_', '\\_').replace('(*.', '(wildcard.').replace('*.', 'wildcard.')
 
     # PILARES E FERRAMENTAS COMPLETAS EM TYPST
     capitulos_pilares_typ = ""
@@ -1535,15 +1535,15 @@ def gerar_typst_ecossistema(dados: dict) -> str:
   header: align(right)[
     #text(size: 7.5pt, fill: rgb("#94a3b8"), font: "Liberation Sans")[FÁBRICA UNIVERSAL AIDD · LIVRO-TEXTO DE MACRO-ECOSSISTEMA SOBERANO (PADRÃO DIAMANTE R5-E)]
   ],
-  footer: locate(loc => [
+  footer: [
     #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[
       #grid(
         columns: (1fr, 1fr),
         [Suíte do Ecossistema Soberano · {sanitizar_typ(saas)}],
-        align(right)[Página #counter(page).display()]
+        align(right)[Fábrica Universal AIDD]
       )
     ]
-  ])
+  ]
 )
 #set text(font: "Liberation Sans", size: 9.5pt, lang: "pt")
 #set par(justify: true, leading: 0.65em)
