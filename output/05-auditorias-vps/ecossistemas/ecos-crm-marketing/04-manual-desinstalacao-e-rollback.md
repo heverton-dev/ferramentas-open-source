@@ -1,6 +1,6 @@
 # Manual de Desinstala??o Cir?rgica e Rollback
 
-**Alvo:** Ecossistema CRM & Automa??o de Marketing (Chatwoot + Twenty + Evolution + Mautic)  
+**Alvo:** Ecossistema CRM & Automacao de Marketing (Chatwoot + Twenty + Evolution + Mautic)  
 **Garantia de Isolamento:** 100% de preserva??o dos demais containers da VPS  
 **Tempo de Execu??o:** Menos de 10 segundos
 
@@ -8,7 +8,7 @@
 
 ## 1. Princ?pios de Seguran?a e Isolamento
 
-Todos os recursos criados para o alvo `Ecossistema CRM & Automa??o de Marketing (Chatwoot + Twenty + Evolution + Mautic)` foram encapsulados no namespace `ecos-crm-marketing`.
+Todos os recursos criados para o alvo `Ecossistema CRM & Automacao de Marketing (Chatwoot + Twenty + Evolution + Mautic)` foram encapsulados no namespace `ecos-crm-marketing`.
 A remo??o da stack desconecta os servi?os da rede `network_conexao` e revoga os roteadores do Traefik de forma at?mica.
 **Mautic, Evolution, n8n, MySQL, PostgreSQL global e Portainer continuam operando normalmente sem nenhuma interrup??o.**
 

@@ -2,7 +2,7 @@
 
 **Alvo de Incorpora??o:** NocoDB  
 **Data da Auditoria:** 28/08/2026  
-**Veredito T?cnico:** **TOTALMENTE VI?VEL (100% HOMOLOGADO)** (Score: 100/100)  
+**Veredito T?cnico:** **TOTALMENTE VIAVEL (100% HOMOLOGADO)** (Score: 100/100)  
 **Host Auditado:** `painel.vpsconexao.org` (Docker Swarm Ativo)
 
 ---
@@ -21,10 +21,10 @@
 ## 2. Parecer T?cnico de Viabilidade e Toler?ncia a Carga
 
 ### 2.1 Recomenda??es Estruturais e Oportunidades
-- Mem?ria RAM abundante: 43.99 GB livres para suportar a carga de 1.0 GB com alta folga.
+- Memoria RAM abundante: 43.99 GB livres para suportar a carga de 1.0 GB com alta folga.
 - Capacidade de processamento adequada: 12 vCPUs totais no servidor.
-- Zero conflito de portas de host detectado. Roteamento 100% via Traefik e subdom?nios.
-- Proxy reverso Traefik detectado com certresolver 'letsencryptresolver' e rede 'network_conexao'. Integra??o direta sem criar novos proxies.
+- Zero conflito de portas de host detectado. Roteamento 100% via Traefik e subdominios.
+- Proxy reverso Traefik detectado com certresolver 'letsencryptresolver' e rede 'network_conexao'. Integracao direta sem criar novos proxies.
 
 ### 2.2 Alertas de Seguran?a e Limites de Carga
 - Nenhum impedimento t?cnico detectado na VPS.

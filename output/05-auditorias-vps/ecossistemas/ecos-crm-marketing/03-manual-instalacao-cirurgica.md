@@ -1,6 +1,6 @@
 # Manual de Instala??o Cir?rgica no Portainer & Playbook de Opera??o
 
-**Alvo:** Ecossistema CRM & Automa??o de Marketing (Chatwoot + Twenty + Evolution + Mautic)  
+**Alvo:** Ecossistema CRM & Automacao de Marketing (Chatwoot + Twenty + Evolution + Mautic)  
 **P?blico-Alvo:** Gestores, Consultores e Engenheiros de TI  
 **Tempo Estimado de Execu??o:** 5 a 10 minutos  
 **Garantia Arquitetural:** Zero interfer?ncia nas aplica??es existentes (`mautic`, `evolution`, `n8n`, `mysql`, `postgres`)

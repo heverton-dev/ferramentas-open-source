@@ -10,14 +10,14 @@ class VPSDecisionEngine:
             "subdomains": ["drive", "office", "mail", "docs", "sso"],
             "recommended_db": "postgres",
             "components": [
-                {"name": "Nextcloud Hub", "ram_gb": 2.5, "role": "Drive, Contatos, Calend?rio e Chat"},
+                {"name": "Nextcloud Hub", "ram_gb": 2.5, "role": "Drive, Contatos, Calendario e Chat"},
                 {"name": "ONLYOFFICE Document Server", "ram_gb": 2.5, "role": "Editor Docs, Sheets e Slides"},
                 {"name": "Stalwart Mail Server", "ram_gb": 1.0, "role": "Servidor de E-mail Corporativo"},
-                {"name": "CryptPad", "ram_gb": 1.0, "role": "Docs Criptografados e Formul?rios"}
+                {"name": "CryptPad", "ram_gb": 1.0, "role": "Docs Criptografados e Formularios"}
             ]
         },
         "ecos-crm-marketing": {
-            "name": "Ecossistema CRM & Automa??o de Marketing (Chatwoot + Twenty + Evolution + Mautic)",
+            "name": "Ecossistema CRM & Automacao de Marketing (Chatwoot + Twenty + Evolution + Mautic)",
             "req_cpu": 3,
             "req_ram_gb": 4.5,
             "host_ports": [],
@@ -26,8 +26,8 @@ class VPSDecisionEngine:
             "components": [
                 {"name": "Chatwoot", "ram_gb": 1.5, "role": "Atendimento Omnichannel"},
                 {"name": "Twenty CRM", "ram_gb": 1.5, "role": "CRM Open Source Moderno"},
-                {"name": "Evolution API", "ram_gb": 1.0, "role": "API de WhatsApp (J? Ativo na VPS)"},
-                {"name": "Mautic", "ram_gb": 1.0, "role": "Automa??o de E-mail (J? Ativo na VPS)"}
+                {"name": "Evolution API", "ram_gb": 1.0, "role": "API de WhatsApp (Ja Ativo na VPS)"},
+                {"name": "Mautic", "ram_gb": 1.0, "role": "Automacao de E-mail (Ja Ativo na VPS)"}
             ]
         },
         "ecos-devops-infra": {
@@ -40,7 +40,7 @@ class VPSDecisionEngine:
             "components": [
                 {"name": "NocoDB", "ram_gb": 1.0, "role": "Airtable Open Source"},
                 {"name": "Directus", "ram_gb": 1.5, "role": "Headless CMS & API de Dados"},
-                {"name": "n8n", "ram_gb": 1.5, "role": "Orquestrador de Workflows (J? Ativo na VPS)"}
+                {"name": "n8n", "ram_gb": 1.5, "role": "Orquestrador de Workflows (Ja Ativo na VPS)"}
             ]
         }
     }
@@ -52,7 +52,7 @@ class VPSDecisionEngine:
             "req_ram_gb": 1.5,
             "host_ports": [25, 465, 587, 993],
             "subdomains": ["mail"],
-            "role": "Servidor de E-mail e Colabora??o JMAP/IMAP/SMTP"
+            "role": "Servidor de E-mail e Colaboracao JMAP/IMAP/SMTP"
         },
         "nextcloud": {
             "name": "Nextcloud Hub",
@@ -60,7 +60,7 @@ class VPSDecisionEngine:
             "req_ram_gb": 2.5,
             "host_ports": [],
             "subdomains": ["drive"],
-            "role": "Armazenamento de Arquivos, Calend?rio e Contatos"
+            "role": "Armazenamento de Arquivos, Calendario e Contatos"
         },
         "onlyoffice": {
             "name": "ONLYOFFICE Document Server",
@@ -84,7 +84,7 @@ class VPSDecisionEngine:
             "req_ram_gb": 1.5,
             "host_ports": [],
             "subdomains": ["drive"],
-            "role": "Sincroniza??o R?pida de Arquivos Corporativos"
+            "role": "Sincronizacao R?pida de Arquivos Corporativos"
         },
         "zitadel": {
             "name": "Zitadel Identity Management",
@@ -176,7 +176,7 @@ class VPSDecisionEngine:
 
         if not cumul_ram_ok:
             score -= 50
-            alerts.append(f"Carga cumulativa excede a RAM livre: Exigido {total_req_ram:.1f} GB vs Dispon?vel {free_ram:.1f} GB.")
+            alerts.append(f"Carga cumulativa excede a RAM livre: Exigido {total_req_ram:.1f} GB vs Disponivel {free_ram:.1f} GB.")
         else:
             recommendations.append(f"Headroom de RAM aprovado para a carga conjunta: {total_req_ram:.1f} GB de {free_ram:.1f} GB livres.")
 
@@ -191,13 +191,13 @@ class VPSDecisionEngine:
             alerts.append(f"Conflito cumulativo de portas no host: {conflicting_ports}")
 
         if score >= 90:
-            status = "CONJUNTO TOTALMENTE VI?VEL (100% HOMOLOGADO)"
+            status = "CONJUNTO TOTALMENTE VIAVEL (100% HOMOLOGADO)"
             level = "GREEN"
         elif score >= 60:
-            status = "CONJUNTO VI?VEL COM ADAPTA??ES"
+            status = "CONJUNTO VIAVEL COM ADAPTA??ES"
             level = "YELLOW"
         else:
-            status = "CONJUNTO INVI?VEL SIMULTANEAMENTE"
+            status = "CONJUNTO INVIAVEL SIMULTANEAMENTE"
             level = "RED"
 
         return {
@@ -240,13 +240,13 @@ class VPSDecisionEngine:
 
         if not ram_ok:
             score -= 50
-            alerts.append(f"Mem?ria RAM insuficiente. Exigido: {req_ram} GB | Livre estimado: {free_ram} GB")
+            alerts.append(f"Memoria RAM insuficiente. Exigido: {req_ram} GB | Livre estimado: {free_ram} GB")
         else:
-            recommendations.append(f"Mem?ria RAM abundante: {free_ram} GB livres para suportar a carga de {req_ram} GB com alta folga.")
+            recommendations.append(f"Memoria RAM abundante: {free_ram} GB livres para suportar a carga de {req_ram} GB com alta folga.")
 
         if not cpu_ok:
             score -= 30
-            alerts.append(f"vCPUs insuficientes. Exigido: {req_cpu} vCPUs | Dispon?vel estimado: {free_cpu:.1f} vCPUs")
+            alerts.append(f"vCPUs insuficientes. Exigido: {req_cpu} vCPUs | Disponivel estimado: {free_cpu:.1f} vCPUs")
         else:
             recommendations.append(f"Capacidade de processamento adequada: {hw['total_cpu']} vCPUs totais no servidor.")
 
@@ -254,21 +254,21 @@ class VPSDecisionEngine:
             score -= 20
             alerts.append(f"Conflito de portas no host: {conflicting_ports}")
         else:
-            recommendations.append("Zero conflito de portas de host detectado. Roteamento 100% via Traefik e subdom?nios.")
+            recommendations.append("Zero conflito de portas de host detectado. Roteamento 100% via Traefik e subdominios.")
 
         if self.audit["ingress"]["detected"]:
             cert = self.audit["ingress"]["certresolvers"][0] if self.audit["ingress"]["certresolvers"] else "letsencryptresolver"
             net = self.audit["ingress"].get("default_overlay", "network_conexao")
-            recommendations.append(f"Proxy reverso Traefik detectado com certresolver '{cert}' e rede '{net}'. Integra??o direta sem criar novos proxies.")
+            recommendations.append(f"Proxy reverso Traefik detectado com certresolver '{cert}' e rede '{net}'. Integracao direta sem criar novos proxies.")
 
         if score >= 90:
-            status = "TOTALMENTE VI?VEL (100% HOMOLOGADO)"
+            status = "TOTALMENTE VIAVEL (100% HOMOLOGADO)"
             level = "GREEN"
         elif score >= 60:
-            status = "VI?VEL COM ADAPTA??ES"
+            status = "VIAVEL COM ADAPTA??ES"
             level = "YELLOW"
         else:
-            status = "INVI?VEL NO AMBIENTE ATUAL"
+            status = "INVIAVEL NO AMBIENTE ATUAL"
             level = "RED"
 
         return {
