@@ -1,4 +1,4 @@
-﻿---
+---
 description: Governanca universal, squad e fluxo do projeto — orquestrador para qualquer agente neste diretorio.
 alwaysApply: true
 ---
@@ -55,12 +55,13 @@ alwaysApply: true
 - **MCPs (`.mcp.json`):** `db_state_esteira` (SQLite R11) e `file_validator` (Integridade R18).
 - **Templates:** `scripts/padroes/template_dossie_executivo.py`, `relatorio_enterprise.css`, `scripts/schemas/`.
 
-## 4. Os 3 Macro-Fluxos AIDD
+## 4. Os 4 Macro-Fluxos AIDD
 
-1. **Fluxo 1 · Listas Horizontais (49 Camadas):** `/fluxo1 [slug]` | `python scripts/run_fluxo1.py --slug <slug>` ➔ `output/01-listas-horizontais/list-<slug>/` (HTML R5, MD, PDF + relatórios)
+1. **Fluxo 1 · Listas Horizontais (Camadas Temáticas):** `/fluxo1 [slug]` | `python scripts/run_fluxo1.py --slug <slug>` ➔ `output/01-listas-horizontais/list-<slug>/` (HTML R5, MD, PDF + relatórios)
 2. **Fluxo 2 · Dossiês Verticais & Quinteto:** `/fluxo2 [saas]` | `python scripts/run_fluxo2.py --saas <saas>` ➔ `output/02-dossies-verticais/vert-<saas>/` (HTML R5-V, MD, PDF + relatórios)
 3. **Fluxo 3 · Manuais VPS & Trilhas:** `/fluxo3 [ferramenta] [saas]` | `python scripts/run_fluxo3.py --ferramenta <slug> --saas <saas>` ➔ `output/03-manuais-e-trilhas/<saas>/<ferramenta>/` (9 arquivos)
-4. **Pipeline Total:** `/fluxo-total` | `python scripts/run_fluxo_total.py`
+4. **Fluxo 4 · Macro-Ecossistemas & Suítes Integradas:** `/fluxo4 [ecossistema]` | `python scripts/run_fluxo4.py --ecossistema <slug>` ➔ `output/04-ecossistemas/ecos-<slug>/` (HTML R5-E, MD, PDF + relatórios)
+5. **Pipeline Total:** `/fluxo-total` | `python scripts/run_fluxo_total.py`
 
 ## 5. Portabilidade Multi-IDE & RTK
 

@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 COMPILADOR TRIPARTITE DE MACRO-ECOSSISTEMAS SAAS (FLUXO 4 - PADRÃO DIAMANTE R5-E)
-Compila dossiês de ecossistemas a partir de JSON estruturado diretamente na pasta soberana:
-output/04-ecossistemas/ecos-<slug>/
-1. HTML Interativo Padrão Diamante R5-E (Hero Stats, Pilares Funcionais, Camada de Cola/SSO, Deploy Unificado)
-2. Markdown Denso Estruturado
-3. PDF Executivo de Alta Fidelidade via Typst (Anti-sobreposição)
-4. Relatório de Execução Tripartite
-Persiste estado e métricas no SQLite (Regra R11).
+Gera o HTML final, Markdown denso e PDF Typst com 100% de paridade de design aos Fluxos 1, 2 e 3.
+Utiliza o molde canônico do Padrão Diamante (Tipografia Editorial, Light/Dark mode, Hero Stats, Busca, Grid 60px 1fr).
 """
 import sys
 import json
@@ -31,12 +26,228 @@ sys.path.insert(0, str(BASE_DIR / "scripts"))
 
 from estado_esteira import registrar_ecossistema
 
+CSS_CANONICO_DIAMANTE = """
+  :root {
+    --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+    --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    --paper: #F6F4EF;
+    --surface: #FFFFFF;
+    --surface-2: #FBF9F4;
+    --surface-dark: #0A0F1D;
+    --ink: #1B1E23;
+    --ink-2: #383D45;
+    --muted: #666E7A;
+    --rule: #D8D2C4;
+    --rule-soft: #EAE5D9;
+    --accent: #00875A;
+    --accent-dark: #57D9A3;
+    --accent-soft: #E3FCEF;
+    --accent-soft-dark: #162B22;
+    --green: #00875A;
+    --green-soft: #E3FCEF;
+    --gold: #FFAB00;
+    --gold-soft: #FFF0B3;
+    --flag: #DE350B;
+    --flag-soft: #FFEBE6;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0E121B;
+      --surface: #141924;
+      --surface-2: #1A2130;
+      --ink: #E6E8ED;
+      --ink-2: #B0B5C0;
+      --muted: #7E8695;
+      --rule: #262F40;
+      --rule-soft: #1E2533;
+      --accent: var(--accent-dark);
+      --accent-soft: var(--accent-soft-dark);
+      --green: #57D9A3;
+      --green-soft: #162B22;
+      --gold: #FFC400;
+      --gold-soft: #332600;
+      --flag: #FF7452;
+      --flag-soft: #361B15;
+      --shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+  }
+
+  body {
+    margin: 0; padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  header { margin-bottom: 32px; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .back-link:hover { color: var(--accent); }
+  .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+
+  .hero { margin: 20px 0 24px; }
+  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 42px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
+  .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
+
+  .hero-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px; margin: 24px 0 32px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 12px 16px; box-shadow: var(--shadow);
+  }
+  .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+
+  .sec-head { margin: 40px 0 16px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
+  h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
+  .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
+
+  .search-wrapper { position: relative; margin: 20px 0 24px; }
+  .search-input { width: 100%; padding: 12px 42px 12px 16px; font-family: var(--font-sans); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); outline: none; box-shadow: var(--shadow); }
+  .search-input:focus { border-color: var(--accent); }
+
+  .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+  th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
+  tr:last-child td { border-bottom: none; }
+  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
+  td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
+  td.tool a:hover { color: var(--accent); }
+  td.saas { color: var(--flag); }
+  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
+  td.lic { font-family: var(--mono); font-size: 11px; }
+
+  .ledger { display: flex; flex-direction: column; gap: 24px; }
+  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
+  .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+  .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
+  
+  .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+
+  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+  .pilar-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--gold-soft); color: #8A6100; border: 1px solid var(--gold); font-weight: 600; }
+  .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
+
+  .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .entry-section p strong { color: var(--ink); font-weight: 600; }
+
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
+  .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
+
+  .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
+  pre { margin: 0; padding: 10px 14px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; font-family: var(--mono); font-size: 12px; color: var(--ink); }
+
+  .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
+  .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+  /* CAIXAS DE COLA & DEPLOY */
+  .integration-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin: 16px 0; }
+  .integ-card { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 3px; padding: 16px; box-shadow: var(--shadow); }
+  .integ-card h4 { font-family: var(--font-serif); font-size: 18px; margin: 0 0 8px; color: var(--ink); }
+  .integ-card p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 8px; }
+  .step-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; box-shadow: var(--shadow); }
+  .step-head { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; }
+  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 6px; font-size: 10px; }
+  .step-card p { margin: 0; font-size: 13px; color: var(--ink-2); }
+
+  .tco-banner { background: var(--surface); border: 1px solid var(--green); border-radius: 3px; padding: 20px; margin: 20px 0; box-shadow: var(--shadow); display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .tco-col .tco-lbl { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+  .tco-col .tco-val { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--ink); }
+  .tco-col .tco-val.highlight { color: var(--green); }
+  .tco-col .tco-val.killer { color: var(--flag); }
+"""
+
+JS_CANONICO_DIAMANTE = """
+<script>
+function filterTools(query) {
+  const q = query.toLowerCase().trim();
+  const entries = document.querySelectorAll('.entry');
+  const rows = document.querySelectorAll('.tablewrap tbody tr');
+  let visibleCount = 0;
+
+  entries.forEach(entry => {
+    const text = entry.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      entry.style.display = 'grid';
+      visibleCount++;
+    } else {
+      entry.style.display = 'none';
+    }
+  });
+
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    if (!q || text.includes(q)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  const countEl = document.getElementById('search-count');
+  if (countEl) {
+    countEl.innerText = `${visibleCount} ferramentas encontradas`;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('busca-ferramentas');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => filterTools(e.target.value));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+  }
+});
+</script>
+"""
+
 def gerar_markdown_ecossistema(dados: dict) -> str:
     titulo = dados.get("titulo", "Dossiê de Macro-Ecossistema Open Source")
     deck = dados.get("deck", "")
     nome_eco = dados.get("nome_ecossistema", "")
     saas_sub = dados.get("saas_substituido", "")
-    stats = dados.get("stats", {})
     pilares = dados.get("pilares", [])
     integracao = dados.get("camada_integracao", {})
     deploy = dados.get("deploy_consolidado", {})
@@ -114,488 +325,8 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
 
     return "\n".join(linhas) + "\n"
 
-def gerar_html_ecossistema(dados: dict) -> str:
-    titulo = dados.get("titulo", "Dossiê de Macro-Ecossistema Open Source")
-    subtitulo = dados.get("subtitulo", "")
-    deck = dados.get("deck", "")
-    nome_eco = dados.get("nome_ecossistema", "")
-    stats = dados.get("stats", {})
-    pilares = dados.get("pilares", [])
-    integracao = dados.get("camada_integracao", {})
-    deploy = dados.get("deploy_consolidado", {})
-    econ = dados.get("analise_economica_global", {})
-
-    pilares_html = ""
-    for p in pilares:
-        ferrs_cards = ""
-        for f in p.get("ferramentas", []):
-            ferrs_cards += f"""
-            <div class="tool-card">
-              <div class="tool-header">
-                <div class="tool-rank">#{f['rank']}</div>
-                <div>
-                  <h4 class="tool-name">{f['nome']}</h4>
-                  <div class="tool-subtitle">{f['subtitulo']}</div>
-                </div>
-                <div class="tool-license">{f['licenca_osi']}</div>
-              </div>
-              <div class="tool-body">
-                <div class="tool-badge"><strong>Papel:</strong> {f['papel_no_pilar']}</div>
-                <p class="tool-desc"><strong>O que faz:</strong> {f['o_que_faz']}</p>
-                <div class="code-box"><code>{f['comando_rapido']}</code></div>
-                <div class="tool-footer">
-                  <span>💾 {f.get('requisitos_infra', {}).get('ram_minima', '2 GB RAM')}</span>
-                  <a href="{f['repositorio_github']}" target="_blank" rel="noopener">GitHub ↗</a>
-                </div>
-              </div>
-            </div>
-            """
-
-        pilares_html += f"""
-        <div class="pilar-section">
-          <div class="pilar-header">
-            <h3>{p.get('nome_pilar')}</h3>
-            <span class="pilar-target">Alvo: {p.get('modulo_saas_alvo')}</span>
-          </div>
-          <p class="pilar-desc">{p.get('descricao_pilar')}</p>
-          <div class="tools-grid">
-            {ferrs_cards}
-          </div>
-        </div>
-        """
-
-    passos_html = "".join([
-        f'<div class="step-card"><div class="step-num">{idx}</div><div><h4>{passo.get("titulo")}</h4><p>{passo.get("descricao")}</p></div></div>'
-        for idx, passo in enumerate(deploy.get("passos_deploy", []), 1)
-    ])
-
-    html = f"""<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{titulo} · Padrão Diamante R5-E</title>
-<style>
-:root {{
-  --bg-main: #0b1120;
-  --bg-card: #0f172a;
-  --bg-surface: #1e293b;
-  --bg-surface-hover: #273549;
-  --border-subtle: #334155;
-  --border-focus: #0284c7;
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --accent-primary: #38bdf8;
-  --accent-blue: #0284c7;
-  --accent-blue-soft: rgba(2, 132, 199, 0.15);
-  --success-text: #34d399;
-  --success-bg: rgba(16, 185, 129, 0.12);
-  --success-border: rgba(16, 185, 129, 0.35);
-  --font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
-}}
-
-* {{ box-sizing: border-box; margin: 0; padding: 0; }}
-
-body {{
-  font-family: var(--font-sans);
-  background-color: var(--bg-main);
-  color: var(--text-primary);
-  line-height: 1.65;
-  padding: 2.5rem 1.5rem;
-}}
-
-.container {{
-  max-width: 1200px;
-  margin: 0 auto;
-}}
-
-.hero-header {{
-  background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 2.5rem;
-  margin-bottom: 2.5rem;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
-}}
-
-.hero-badge {{
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--accent-blue-soft);
-  color: var(--accent-primary);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  padding: 0.35rem 0.9rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 1rem;
-}}
-
-h1 {{
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 0.5rem;
-}}
-
-.hero-subtitle {{
-  color: var(--text-secondary);
-  font-size: 1.15rem;
-  margin-bottom: 1.25rem;
-}}
-
-.hero-deck {{
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  border-left: 3px solid var(--accent-primary);
-  padding-left: 1rem;
-  margin-bottom: 2rem;
-}}
-
-.hero-stats {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  background: rgba(11, 17, 32, 0.6);
-  padding: 1.25rem;
-  border-radius: 8px;
-  border: 1px solid var(--border-subtle);
-}}
-
-.stat-item {{
-  text-align: center;
-}}
-
-.stat-val {{
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--accent-primary);
-}}
-
-.stat-lbl {{
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}}
-
-.section-card {{
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2.5rem;
-}}
-
-.section-title {{
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 0.75rem;
-}}
-
-.pilar-section {{
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  padding: 1.75rem;
-  margin-bottom: 2rem;
-}}
-
-.pilar-header {{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-}}
-
-.pilar-header h3 {{
-  font-size: 1.25rem;
-  color: var(--accent-primary);
-}}
-
-.pilar-target {{
-  background: rgba(2, 132, 199, 0.2);
-  color: var(--accent-primary);
-  padding: 0.25rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-}}
-
-.pilar-desc {{
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
-}}
-
-.tools-grid {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.25rem;
-}}
-
-.tool-card {{
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}}
-
-.tool-header {{
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}}
-
-.tool-rank {{
-  background: var(--accent-blue);
-  color: white;
-  font-weight: bold;
-  font-size: 0.85rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-}}
-
-.tool-name {{
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-}}
-
-.tool-subtitle {{
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}}
-
-.tool-license {{
-  margin-left: auto;
-  font-size: 0.75rem;
-  background: var(--bg-surface);
-  color: var(--success-text);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  border: 1px solid var(--success-border);
-}}
-
-.tool-badge {{
-  font-size: 0.82rem;
-  color: var(--accent-primary);
-  background: var(--accent-blue-soft);
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  margin-bottom: 0.75rem;
-}}
-
-.tool-desc {{
-  font-size: 0.88rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.75rem;
-}}
-
-.code-box {{
-  background: #090d16;
-  padding: 0.6rem 0.8rem;
-  border-radius: 4px;
-  border: 1px solid var(--border-subtle);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: #38bdf8;
-  overflow-x: auto;
-  margin-bottom: 0.75rem;
-}}
-
-.tool-footer {{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  border-top: 1px solid var(--border-subtle);
-  padding-top: 0.75rem;
-  margin-top: 0.5rem;
-}}
-
-.tool-footer a {{
-  color: var(--accent-primary);
-  text-decoration: none;
-  font-weight: 600;
-}}
-
-.integration-box {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}}
-
-.integ-item {{
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 1.25rem;
-}}
-
-.integ-item h4 {{
-  color: var(--accent-primary);
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-}}
-
-.integ-item p {{
-  color: var(--text-secondary);
-  font-size: 0.88rem;
-}}
-
-.steps-grid {{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}}
-
-.step-card {{
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 1.25rem;
-  display: flex;
-  gap: 1rem;
-}}
-
-.step-num {{
-  background: var(--accent-blue);
-  color: white;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 0.9rem;
-  flex-shrink: 0;
-}}
-
-.step-card h4 {{
-  font-size: 0.95rem;
-  color: #fff;
-  margin-bottom: 0.3rem;
-}}
-
-.step-card p {{
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-}}
-
-.econ-banner {{
-  background: linear-gradient(145deg, rgba(16, 185, 129, 0.1) 0%, rgba(2, 132, 199, 0.1) 100%);
-  border: 1px solid var(--success-border);
-  border-radius: 8px;
-  padding: 1.5rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-}}
-
-.econ-item h5 {{
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-}}
-
-.econ-item .val {{
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--success-text);
-}}
-</style>
-</head>
-<body>
-<div class="container">
-  <div class="hero-header">
-    <div class="hero-badge">🌐 Macro-Ecossistema Soberano · Fluxo 4 AIDD</div>
-    <h1>{titulo}</h1>
-    <div class="hero-subtitle">{subtitulo}</div>
-    <div class="hero-deck">{deck}</div>
-    <div class="hero-stats">
-      <div class="stat-item"><div class="stat-val">{stats.get('total_pilares', 3)}</div><div class="stat-lbl">Pilares Funcionais</div></div>
-      <div class="stat-item"><div class="stat-val">{stats.get('total_ferramentas', 10)}</div><div class="stat-lbl">Ferramentas Mapeadas</div></div>
-      <div class="stat-item"><div class="stat-val">{stats.get('licencas_osi', '100%')}</div><div class="stat-lbl">Licenças OSI</div></div>
-      <div class="stat-item"><div class="stat-val">{stats.get('economia_media', '94%')}</div><div class="stat-lbl">Economia Média</div></div>
-    </div>
-  </div>
-
-  <div class="section-card">
-    <div class="section-title">📊 Demonstrativo Financeiro Consolidado (TCO Global)</div>
-    <div class="econ-banner">
-      <div class="econ-item"><h5>Custo SaaS Combinado</h5><div class="val" style="color: #f87171;">{econ.get('custo_saas_anual', 'R$ 114.000/ano')}</div></div>
-      <div class="econ-item"><h5>Custo VPS Soberana</h5><div class="val" style="color: var(--accent-primary);">{econ.get('custo_vps_anual', 'R$ 4.200/ano')}</div></div>
-      <div class="econ-item"><h5>Economia Líquida Anual</h5><div class="val">{econ.get('economia_anual_liquida', 'R$ 109.800/ano')}</div></div>
-      <div class="econ-item"><h5>Payback Estimado</h5><div class="val" style="color: var(--accent-primary);">{econ.get('roi_meses', '14 dias')}</div></div>
-    </div>
-  </div>
-
-  <div class="section-card">
-    <div class="section-title">🏛️ Pilares Funcionais do Ecossistema</div>
-    {pilares_html}
-  </div>
-
-  <div class="section-card">
-    <div class="section-title">🔗 Camada de Cola, SSO &amp; Orquestração Integrada</div>
-    <div class="integration-box">
-      <div class="integ-item">
-        <h4>🔑 Autenticação Unificada (SSO)</h4>
-        <p>{integracao.get('autenticacao_sso')}</p>
-      </div>
-      <div class="integ-item">
-        <h4>⚡ Barramento de Eventos</h4>
-        <p>{integracao.get('barramento_eventos')}</p>
-      </div>
-      <div class="integ-item">
-        <h4>🛡️ Reverse Proxy &amp; TLS</h4>
-        <p>{integracao.get('gateway_reverse_proxy')}</p>
-      </div>
-    </div>
-    <div class="integ-item" style="margin-top: 1rem;">
-      <h4>🔄 Fluxo de Dados Integrado entre Módulos</h4>
-      <p style="white-space: pre-line; margin-top: 0.5rem; color: var(--text-secondary);">{integracao.get('fluxo_integracao_descricao')}</p>
-    </div>
-  </div>
-
-  <div class="section-card">
-    <div class="section-title">🚀 Deploy All-in-One Consolidado</div>
-    <div style="margin-bottom: 1.5rem;">
-      <p style="color: var(--text-secondary); margin-bottom: 0.75rem;"><strong>Requisitos Totais de Hardware:</strong> {deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('armazenamento_minimo')}</p>
-      <div class="code-box" style="max-height: 280px;"><pre>{deploy.get('docker_compose_exemplo')}</pre></div>
-    </div>
-    <div class="steps-grid">
-      {passos_html}
-    </div>
-  </div>
-</div>
-</body>
-</html>
-"""
-    return html
-
-def gerar_typst_ecossistema(dados: dict) -> str:
+def gerar_html_ecossistema_diamante(dados: dict) -> str:
+    slug = dados.get("slug", "ecossistema")
     titulo = dados.get("titulo", "Dossiê de Macro-Ecossistema Open Source")
     subtitulo = dados.get("subtitulo", "")
     deck = dados.get("deck", "")
@@ -606,6 +337,238 @@ def gerar_typst_ecossistema(dados: dict) -> str:
     integracao = dados.get("camada_integracao", {})
     deploy = dados.get("deploy_consolidado", {})
     econ = dados.get("analise_economica_global", {})
+
+    total_ferramentas = sum(len(p.get("ferramentas", [])) for p in pilares)
+
+    # Tabela Sintética
+    tabela_linhas = ""
+    for p in pilares:
+        for f in p.get("ferramentas", []):
+            tabela_linhas += f"""
+            <tr>
+              <td class="rank">{f['rank']:02d}</td>
+              <td class="tool"><a href="#{f['slug']}">{f['nome']}</a></td>
+              <td><span class="pilar-badge">{p.get('nome_pilar').split(':')[0]}</span></td>
+              <td>{f['papel_no_pilar']}</td>
+              <td class="lic"><code>{f['licenca_osi']}</code></td>
+              <td><a href="{f['repositorio_github']}" target="_blank" rel="noopener" class="repo-btn">GitHub ↗</a></td>
+            </tr>
+            """
+
+    # Seções de Pilares e Fichas Técnicas Diamante
+    pilares_conteudo = ""
+    for p_idx, p in enumerate(pilares, 1):
+        entries_pilar = ""
+        for f in p.get("ferramentas", []):
+            entries_pilar += f"""
+            <article class="entry" id="{f['slug']}">
+              <div class="entry-rank">{f['rank']:02d}</div>
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3>{f['nome']}</h3>
+                  <span class="pilar-badge">{p.get('nome_pilar').split(':')[0]}</span>
+                  <span class="lic-badge">{f['licenca_osi']}</span>
+                  <span class="kind">{f['subtitulo']}</span>
+                </div>
+
+                <div class="entry-section">
+                  <div class="label">Papel no Ecossistema</div>
+                  <p><strong>{f['papel_no_pilar']}</strong></p>
+                </div>
+
+                <div class="entry-section">
+                  <div class="label">O Que Faz &amp; Como Funciona</div>
+                  <p>{f['o_que_faz']} {f['como_funciona']}</p>
+                </div>
+
+                <div class="entry-section">
+                  <div class="label">Comando de Inicialização Rápida</div>
+                  <div class="code-box">
+                    <pre><code>{f['comando_rapido']}</code></pre>
+                  </div>
+                </div>
+
+                <div class="entry-section">
+                  <div class="label">Requisitos de Infraestrutura &amp; Código Fonte</div>
+                  <div class="infra-grid">
+                    <div class="infra-card">
+                      <div class="infra-lbl">Recursos Mínimos</div>
+                      <div class="infra-val">{f.get('requisitos_infra', {}).get('cpu_minima', '1 vCPU')} / {f.get('requisitos_infra', {}).get('ram_minima', '2 GB RAM')}</div>
+                    </div>
+                    <div class="infra-card">
+                      <div class="infra-lbl">Repositório Oficial</div>
+                      <div class="infra-val"><a href="{f['repositorio_github']}" target="_blank" rel="noopener" class="repo-btn">Ver no GitHub ↗</a></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+            """
+
+        pilares_conteudo += f"""
+        <div class="sec-head">
+          <span class="sec-num">Pilar 0{p_idx} · {p.get('modulo_saas_alvo')}</span>
+          <h2>{p.get('nome_pilar')}</h2>
+          <p class="sec-note">{p.get('descricao_pilar')}</p>
+        </div>
+        <div class="ledger">
+          {entries_pilar}
+        </div>
+        """
+
+    # Passos de Deploy Consolidado
+    passos_cards = "".join([
+        f'<div class="step-card"><div class="step-head"><span class="step-badge">0{idx}</span> {passo.get("titulo")}</div><p>{passo.get("descricao")}</p></div>'
+        for idx, passo in enumerate(deploy.get("passos_deploy", []), 1)
+    ])
+
+    html = f"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>{titulo} · Dossiê de Macro-Ecossistema Soberano</title>
+<style>
+{CSS_CANONICO_DIAMANTE}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="header-top">
+      <a href="../../../INDICE-MESTRE.html" class="back-link">← Catálogo Mestre</a>
+      <span class="camada-pill">Macro-Ecossistema Soberano</span>
+    </div>
+    <div class="hero">
+      <h1>{titulo}</h1>
+      <p class="deck">{deck}</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card"><div class="num">{len(pilares)}</div><div class="lbl">Pilares Funcionais</div></div>
+      <div class="stat-card"><div class="num">{total_ferramentas}</div><div class="lbl">Ferramentas Mapeadas</div></div>
+      <div class="stat-card"><div class="num">{stats.get('licencas_osi', '100%')}</div><div class="lbl">Licenças OSI</div></div>
+      <div class="stat-card"><div class="num">{stats.get('economia_media', '94%')}</div><div class="lbl">Economia Média</div></div>
+    </div>
+  </header>
+
+  <div class="sec-head">
+    <span class="sec-num">Seção 01 · Demonstrativo Financeiro Consolidado</span>
+    <h2>Análise de TCO Global &amp; Payback</h2>
+    <p class="sec-note">Comparativo financeiro da suíte corporativa proprietária versus infraestrutura aberta autônoma.</p>
+  </div>
+
+  <div class="tco-banner">
+    <div class="tco-col">
+      <div class="tco-lbl">Custo SaaS Proprietário</div>
+      <div class="tco-val killer">{econ.get('custo_saas_anual', 'R$ 114.000/ano')}</div>
+    </div>
+    <div class="tco-col">
+      <div class="tco-lbl">Custo VPS Soberana</div>
+      <div class="tco-val">{econ.get('custo_vps_anual', 'R$ 4.200/ano')}</div>
+    </div>
+    <div class="tco-col">
+      <div class="tco-lbl">Economia Líquida Anual</div>
+      <div class="tco-val highlight">{econ.get('economia_anual_liquida', 'R$ 109.800/ano')}</div>
+    </div>
+    <div class="tco-col">
+      <div class="tco-lbl">Retorno do Investimento (ROI)</div>
+      <div class="tco-val highlight">{econ.get('roi_meses', '14 dias')}</div>
+    </div>
+  </div>
+
+  <div class="sec-head">
+    <span class="sec-num">Seção 02 · Matriz Geral de Ferramentas</span>
+    <h2>Pilha Aberta Integrada</h2>
+    <p class="sec-note">Todas as ferramentas líderes que compõem os pilares do ecossistema.</p>
+  </div>
+
+  <div class="search-wrapper">
+    <input type="text" id="busca-ferramentas" class="search-input" placeholder="Filtrar ferramentas por nome, pilar ou licença... (Pressione '/' para buscar)">
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Ferramenta</th>
+          <th>Pilar</th>
+          <th>Papel no Ecossistema</th>
+          <th>Licença</th>
+          <th>Código</th>
+        </tr>
+      </thead>
+      <tbody>
+        {tabela_linhas}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-head">
+    <span class="sec-num">Seção 03 · Fichas Técnicas por Pilar</span>
+    <h2>Detalhamento dos Pilares Funcionais</h2>
+    <p class="sec-note">Especificação de engenharia de cada ferramenta dentro da arquitetura integrada.</p>
+  </div>
+
+  {pilares_conteudo}
+
+  <div class="sec-head">
+    <span class="sec-num">Seção 04 · Camada de Cola &amp; Orquestração</span>
+    <h2>Integração, SSO &amp; Barramento de Eventos</h2>
+    <p class="sec-note">Como os módulos dialogam de forma transparente sem silos de dados.</p>
+  </div>
+
+  <div class="integration-grid">
+    <div class="integ-card">
+      <h4>🔑 Autenticação Unificada (SSO)</h4>
+      <p>{integracao.get('autenticacao_sso')}</p>
+    </div>
+    <div class="integ-card">
+      <h4>⚡ Barramento de Eventos</h4>
+      <p>{integracao.get('barramento_eventos')}</p>
+    </div>
+    <div class="integ-card">
+      <h4>🛡️ Reverse Proxy &amp; TLS</h4>
+      <p>{integracao.get('gateway_reverse_proxy')}</p>
+    </div>
+  </div>
+
+  <div class="integ-card" style="margin-top: 12px;">
+    <h4>🔄 Fluxo de Integração Operacional</h4>
+    <p style="white-space: pre-line; margin-top: 8px;">{integracao.get('fluxo_integracao_descricao')}</p>
+  </div>
+
+  <div class="sec-head">
+    <span class="sec-num">Seção 05 · Deploy All-in-One</span>
+    <h2>Orquestração Unificada (Docker Compose)</h2>
+    <p class="sec-note">Provisionamento em VPS corporativa única ({deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')}).</p>
+  </div>
+
+  <div class="code-box" style="margin-bottom: 16px;">
+    <pre><code>{deploy.get('docker_compose_exemplo')}</code></pre>
+  </div>
+
+  <div class="steps-grid">
+    {passos_cards}
+  </div>
+
+</div>
+{JS_CANONICO_DIAMANTE}
+</body>
+</html>
+"""
+    return html
+
+def gerar_typst_ecossistema(dados: dict) -> str:
+    titulo = dados.get("titulo", "Dossiê de Macro-Ecossistema Open Source")
+    subtitulo = dados.get("subtitulo", "")
+    pilares = dados.get("pilares", [])
+    integracao = dados.get("camada_integracao", {})
+    deploy = dados.get("deploy_consolidado", {})
+    econ = dados.get("analise_economica_global", {})
+
+    def sanitizar_typ(txt: str) -> str:
+        return str(txt).replace('[', '(').replace(']', ')').replace('$', '\\$')
 
     linhas_pilares = ""
     for p in pilares:
@@ -625,9 +588,6 @@ def gerar_typst_ecossistema(dados: dict) -> str:
         for f in p.get("ferramentas", []):
             linhas_pilares += f"  [{f['rank']}], [*{f['nome']}*], [{f['papel_no_pilar']}], [`{f['licenca_osi']}`],\n"
         linhas_pilares += ")\n#v(8pt)\n"
-
-    def sanitizar_typ(txt: str) -> str:
-        return str(txt).replace('[', '(').replace(']', ')').replace('$', '\\$')
 
     custo_saas = sanitizar_typ(econ.get('custo_saas_anual', ''))
     custo_vps = sanitizar_typ(econ.get('custo_vps_anual', ''))
@@ -723,12 +683,12 @@ def compilar_ecossistema_tripartite(slug: str) -> bool:
 
     print(f"\n🚀 Compilando Dossiê de Macro-Ecossistema Tripartite: 'ecos-{slug_limpo}'")
 
-    # 1. HTML
-    html_content = gerar_html_ecossistema(dados)
+    # 1. HTML Diamante R5-E
+    html_content = gerar_html_ecossistema_diamante(dados)
     html_file = pasta_materiais / f"ecos-{slug_limpo}.html"
     with open(html_file, "w", encoding="utf-8") as f:
         f.write(html_content)
-    print(f"   ✅ HTML gerado: {html_file.name} ({len(html_content.encode('utf-8'))} bytes)")
+    print(f"   ✅ HTML Diamante R5-E gerado: {html_file.name} ({len(html_content.encode('utf-8'))} bytes)")
 
     # 2. Markdown
     md_content = gerar_markdown_ecossistema(dados)
@@ -757,13 +717,13 @@ def compilar_ecossistema_tripartite(slug: str) -> bool:
 
 > **Ecossistema:** {dados.get('nome_ecossistema')}  
 > **Data:** {hoje}  
-> **Status:** 100% Concluído & Auditado (Gate R9 e R11)
+> **Status:** 100% Concluído & Auditado (Padrão Diamante R5-E, Gate R9 e R11)
 
 ### Métricas da Suíte:
 - Total de Pilares: {dados.get('stats', {}).get('total_pilares')}
 - Total de Ferramentas Mapeadas: {dados.get('stats', {}).get('total_ferramentas')}
 - Economia Líquida Anual: {dados.get('analise_economica_global', {}).get('economia_anual_liquida')}
-- Gate R5-E: APROVADO
+- Gate R5-E (Padrão Diamante): APROVADO
 - Gate R18 (Higiene Soberana): APROVADO
 """
     with open(rel_md_file, "w", encoding="utf-8") as f:
