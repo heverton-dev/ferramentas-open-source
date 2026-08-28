@@ -93,13 +93,13 @@
       {
         "caminho": "/opt/waha/docker-compose.yml",
         "linguagem": "yaml",
-        "conteudo": "version: '3.8'\nservices:\n  waha:\n    image: devlikeapro/waha:latest\n    container_name: waha-api\n    restart: unless-stopped\n    ports:\n      - '3000:3000'\n      - '5000:5000'\n    environment:\n      WHATSAPP_API_KEY: ${WAHA_API_KEY}\n      DEBUG: waha:*\n      NODE_ENV: production\n    volumes:\n      - waha_sessions:/app/.sessions\n      - waha_logs:/app/logs\n    networks:\n      - waha_net\n  redis:\n    image: redis:7-alpine\n    restart: unless-stopped\n    ports:\n      - '6379:6379'\n    volumes:\n      - redis_data:/data\n    networks:\n      - waha_net\n  caddy:\n    image: caddy:2-alpine\n    restart: unless-stopped\n    ports:\n      - '80:80'\n      - '443:443'\n    volumes:\n      - ./Caddyfile:/etc/caddy/Caddyfile\n      - caddy_data:/data\n      - caddy_config:/config\n    networks:\n      - waha_net\nvolumes:\n  waha_sessions:\n  waha_logs:\n  redis_data:\n  caddy_data:\n  caddy_config:\nnetworks:\n  waha_net:\n    driver: bridge",
+        "conteudo": "version: '3.8'\nservices:\n waha:\n image: devlikeapro/waha:latest\n container_name: waha-api\n restart: unless-stopped\n ports:\n - '3000:3000'\n - '5000:5000'\n environment:\n WHATSAPP_API_KEY: ${WAHA_API_KEY}\n DEBUG: waha:*\n NODE_ENV: production\n volumes:\n - waha_sessions:/app/.sessions\n - waha_logs:/app/logs\n networks:\n - waha_net\n redis:\n image: redis:7-alpine\n restart: unless-stopped\n ports:\n - '6379:6379'\n volumes:\n - redis_data:/data\n networks:\n - waha_net\n caddy:\n image: caddy:2-alpine\n restart: unless-stopped\n ports:\n - '80:80'\n - '443:443'\n volumes:\n - ./Caddyfile:/etc/caddy/Caddyfile\n - caddy_data:/data\n - caddy_config:/config\n networks:\n - waha_net\nvolumes:\n waha_sessions:\n waha_logs:\n redis_data:\n caddy_data:\n caddy_config:\nnetworks:\n waha_net:\n driver: bridge",
         "explicacao": "Stack completa com WAHA, Redis e Caddy para proxy HTTPS."
       },
       {
         "caminho": "/opt/waha/Caddyfile",
         "linguagem": "caddyfile",
-        "conteudo": "whatsapp.seu-dominio.com {\n  encode gzip\n  header {\n    Strict-Transport-Security \"max-age=31536000\"\n    X-Content-Type-Options nosniff\n  }\n  reverse_proxy localhost:5000 {\n    header_uri X-Real-IP {http.request.remote.host}\n  }\n  rate_limit /api/sendText 100 100\n}",
+        "conteudo": "whatsapp.seu-dominio.com {\n encode gzip\n header {\n Strict-Transport-Security \"max-age=31536000\"\n X-Content-Type-Options nosniff\n }\n reverse_proxy localhost:5000 {\n header_uri X-Real-IP {http.request.remote.host}\n }\n rate_limit /api/sendText 100 100\n}",
         "explicacao": "Proxy reverso com SSL automático e rate limiting anti-spam."
       },
       {
@@ -305,4 +305,3 @@
     ]
   }
 }
-

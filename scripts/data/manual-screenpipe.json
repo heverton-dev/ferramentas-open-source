@@ -113,13 +113,13 @@
       {
         "caminho": "/opt/screenpipe/docker-compose.yml",
         "linguagem": "yaml",
-        "conteudo": "services:\n  screenpipe:\n    image: mediar/screenpipe:latest\n    container_name: screenpipe-engine\n    restart: unless-stopped\n    deploy:\n      resources:\n        limits:\n          cpus: '3.5'\n          memory: 6G\n    volumes:\n      - ./data:/root/.screenpipe\n    environment:\n      - SCREENPIPE_SERVER_PORT=3030\n      - AUDIO_ENGINE=whisper-large-v3\n      - LOG_LEVEL=info\n    networks:\n      - internal_net\n\n  caddy:\n    image: caddy:2-alpine\n    container_name: screenpipe-proxy\n    restart: unless-stopped\n    ports:\n      - \"80:80\"\n      - \"443:443\"\n    volumes:\n      - ./caddy/Caddyfile:/etc/caddy/Caddyfile\n      - ./caddy/data:/data\n      - ./caddy/config:/config\n    networks:\n      - internal_net\n\nnetworks:\n  internal_net:\n    driver: bridge",
+        "conteudo": "services:\n screenpipe:\n image: mediar/screenpipe:latest\n container_name: screenpipe-engine\n restart: unless-stopped\n deploy:\n resources:\n limits:\n cpus: '3.5'\n memory: 6G\n volumes:\n - ./data:/root/.screenpipe\n environment:\n - SCREENPIPE_SERVER_PORT=3030\n - AUDIO_ENGINE=whisper-large-v3\n - LOG_LEVEL=info\n networks:\n - internal_net\n\n caddy:\n image: caddy:2-alpine\n container_name: screenpipe-proxy\n restart: unless-stopped\n ports:\n - \"80:80\"\n - \"443:443\"\n volumes:\n - ./caddy/Caddyfile:/etc/caddy/Caddyfile\n - ./caddy/data:/data\n - ./caddy/config:/config\n networks:\n - internal_net\n\nnetworks:\n internal_net:\n driver: bridge",
         "explicacao": "Arquivo que define como o Screenpipe roda isolado e como o proxy de segurança Caddy expõe a ferramenta com proteção contra travamentos."
       },
       {
         "caminho": "/opt/screenpipe/caddy/Caddyfile",
         "linguagem": "caddyfile",
-        "conteudo": "seu-dominio-empresa.com {\n    encode zstd gzip\n    header {\n        Strict-Transport-Security \"max-age=31536000; includeSubDomains; preload\"\n        X-Content-Type-Options \"nosniff\"\n        X-Frame-Options \"DENY\"\n    }\n    reverse_proxy screenpipe:3030\n}",
+        "conteudo": "seu-dominio-empresa.com {\n encode zstd gzip\n header {\n Strict-Transport-Security \"max-age=31536000; includeSubDomains; preload\"\n X-Content-Type-Options \"nosniff\"\n X-Frame-Options \"DENY\"\n }\n reverse_proxy screenpipe:3030\n}",
         "explicacao": "Configuração da recepção segura: transforma conexões normais em criptografadas com certificado SSL automático."
       }
     ]

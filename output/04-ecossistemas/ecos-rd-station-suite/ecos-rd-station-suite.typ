@@ -1,102 +1,102 @@
 #set page(
-  paper: "a4",
-  margin: (x: 1.8cm, top: 2.2cm, bottom: 2.2cm),
-  header: align(center)[
-    #set par(leading: 0.65em)
-    #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[Fábrica Universal AIDD · Livro-Texto de Macro-Ecossistema Soberano (Padrão Diamante R5-E)]
-  ],
-  footer: [
-    #set par(leading: 0.65em)
-    #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[
-      #grid(
-        columns: (1fr, 1fr),
-        [Suíte do Ecossistema Soberano · RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier)],
-        align(right)[Fábrica Universal AIDD]
-      )
-    ]
+ paper: "a4",
+ margin: (x: 1.8cm, top: 2.2cm, bottom: 2.2cm),
+ header: align(center)[
+  #set par(leading: 0.65em)
+  #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[Fábrica Universal AIDD · Livro-Texto de Macro-Ecossistema Soberano (Padrão Diamante R5-E)]
+ ],
+ footer: [
+  #set par(leading: 0.65em)
+  #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[
+   #grid(
+    columns: (1fr, 1fr),
+    [Suíte do Ecossistema Soberano · RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier)],
+    align(right)[Fábrica Universal AIDD]
+   )
   ]
+ ]
 )
 #set text(font: "Liberation Sans", size: 9.5pt, lang: "pt")
 #set par(justify: true, leading: 1.5em)
 
 // DIAGRAMAÇÃO DE TÍTULOS E ESPAÇAMENTOS (HIERARQUIA H1-H6 SEM ESPAÇAMENTO ENTRE LINHAS)
 #show heading: it => [
-  #set par(leading: 0.45em)
-  #it
+ #set par(leading: 0.45em)
+ #it
 ]
 
 #show heading.where(level: 1): it => block(
-  above: 28pt,
-  below: 14pt,
-  [
-    #set par(leading: 0.45em)
-    #text(size: 18pt, weight: "bold", fill: rgb("#0f172a"), font: "Liberation Serif")[#it.body]
-  ]
+ above: 28pt,
+ below: 14pt,
+ [
+  #set par(leading: 0.45em)
+  #text(size: 18pt, weight: "bold", fill: rgb("#0f172a"), font: "Liberation Serif")[#it.body]
+ ]
 )
 
 #show heading.where(level: 2): it => block(
-  above: 22pt,
-  below: 10pt,
-  [
-    #set par(leading: 0.45em)
-    #text(size: 13.5pt, weight: "bold", fill: rgb("#0f172a"), font: "Liberation Sans")[#it.body]
-  ]
+ above: 22pt,
+ below: 10pt,
+ [
+  #set par(leading: 0.45em)
+  #text(size: 13.5pt, weight: "bold", fill: rgb("#0f172a"), font: "Liberation Sans")[#it.body]
+ ]
 )
 
 #show heading.where(level: 3): it => block(
-  above: 16pt,
-  below: 8pt,
-  [
-    #set par(leading: 0.45em)
-    #text(size: 11pt, weight: "bold", fill: rgb("#1e293b"), font: "Liberation Sans")[#it.body]
-  ]
+ above: 16pt,
+ below: 8pt,
+ [
+  #set par(leading: 0.45em)
+  #text(size: 11pt, weight: "bold", fill: rgb("#1e293b"), font: "Liberation Sans")[#it.body]
+ ]
 )
 
 #show heading.where(level: 4): it => block(
-  above: 14pt,
-  below: 6pt,
-  [
-    #set par(leading: 0.45em)
-    #text(size: 10pt, weight: "bold", fill: rgb("#334155"), font: "Liberation Sans")[#it.body]
-  ]
+ above: 14pt,
+ below: 6pt,
+ [
+  #set par(leading: 0.45em)
+  #text(size: 10pt, weight: "bold", fill: rgb("#334155"), font: "Liberation Sans")[#it.body]
+ ]
 )
 
 #show heading.where(level: 5): it => block(
-  above: 12pt,
-  below: 4pt,
-  [
-    #set par(leading: 0.45em)
-    #text(size: 9.5pt, weight: "bold", fill: rgb("#475569"), font: "Liberation Sans")[#it.body]
-  ]
+ above: 12pt,
+ below: 4pt,
+ [
+  #set par(leading: 0.45em)
+  #text(size: 9.5pt, weight: "bold", fill: rgb("#475569"), font: "Liberation Sans")[#it.body]
+ ]
 )
 
 #show heading.where(level: 6): it => block(
-  above: 10pt,
-  below: 4pt,
-  [
-    #set par(leading: 0.45em)
-    #text(size: 9pt, weight: "bold", fill: rgb("#64748b"), font: "Liberation Sans")[#it.body]
-  ]
+ above: 10pt,
+ below: 4pt,
+ [
+  #set par(leading: 0.45em)
+  #text(size: 9pt, weight: "bold", fill: rgb("#64748b"), font: "Liberation Sans")[#it.body]
+ ]
 )
 
 // CAPA EDITORIAL EXECUTIVA
 #align(center + horizon)[
-  #rect(stroke: 2pt + rgb("#0f172a"), inset: 24pt, radius: 4pt, width: 100%)[
-    #text(size: 10pt, tracking: 0.2em, weight: "bold", fill: rgb("#00875A"))[FÁBRICA UNIVERSAL AIDD · TRATADO DE ENGENHARIA] \
-    #v(12pt)
-    #text(size: 24pt, weight: "bold", fill: rgb("#0f172a"), font: "Liberation Serif")[Macro-Ecossistema RD Station: Marketing, CRM & Conversas] \
-    #v(6pt)
-    #text(size: 12pt, fill: rgb("#334155"))[Arquitetura Aberta Integrada com Quinteto Soberano por Grupo, SSO, Barramento de Eventos e MCPs] \
-    #v(16pt)
-    #line(length: 60%, stroke: 1pt + rgb("#cbd5e1"))
-    #v(16pt)
-    #text(size: 10pt, fill: rgb("#475569"))[
-      *Macro-Ecossistema Alvo:* RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier) \
-      *Economia Anual Líquida:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 109.800/ano (Economia Líquida de 96.3%)] \
-      *Padrão Normativo:* Diamante R5-E Tripartite \
-      *Publicação:* 28/08/2026 · 1ª Edição Oficial
-    ]
+ #rect(stroke: 2pt + rgb("#0f172a"), inset: 24pt, radius: 4pt, width: 100%)[
+  #text(size: 10pt, tracking: 0.2em, weight: "bold", fill: rgb("#00875A"))[FÁBRICA UNIVERSAL AIDD · TRATADO DE ENGENHARIA] \
+  #v(12pt)
+  #text(size: 24pt, weight: "bold", fill: rgb("#0f172a"), font: "Liberation Serif")[Macro-Ecossistema RD Station: Marketing, CRM & Conversas] \
+  #v(6pt)
+  #text(size: 12pt, fill: rgb("#334155"))[Arquitetura Aberta Integrada com Quinteto Soberano por Grupo, SSO, Barramento de Eventos e MCPs] \
+  #v(16pt)
+  #line(length: 60%, stroke: 1pt + rgb("#cbd5e1"))
+  #v(16pt)
+  #text(size: 10pt, fill: rgb("#475569"))[
+   *Macro-Ecossistema Alvo:* RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier) \
+   *Economia Anual Líquida:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 109.800/ano (Economia Líquida de 96.3%)] \
+   *Padrão Normativo:* Diamante R5-E Tripartite \
+   *Publicação:* 28/08/2026 · 1ª Edição Oficial
   ]
+ ]
 ]
 
 #pagebreak()
@@ -118,16 +118,16 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 = Capítulo 1: Engenharia Financeira, TCO Global & Payback
 
 #grid(
-  columns: (1fr, 1fr),
-  gutter: 10pt,
-  rect(fill: rgb("#fef2f2"), stroke: 0.5pt + rgb("#fecaca"), inset: 10pt, radius: 2pt)[
-    #text(size: 8pt, fill: rgb("#991b1b"), weight: "bold")[CUSTO SAAS ANUAL (RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier))] \
-    #text(size: 14pt, weight: "bold", fill: rgb("#dc2626"))[R\$ 114.000/ano (RD Marketing Pro R\$ 42k + RD CRM 10 vendedores R\$ 36k + RD Conversas 10 atendentes R\$ 36k)]
-  ],
-  rect(fill: rgb("#f0fdf4"), stroke: 0.5pt + rgb("#bbf7d0"), inset: 10pt, radius: 2pt)[
-    #text(size: 8pt, fill: rgb("#166534"), weight: "bold")[ECONOMIA LÍQUIDA ANUAL NO CAIXA] \
-    #text(size: 14pt, weight: "bold", fill: rgb("#16a34a"))[R\$ 109.800/ano (Economia Líquida de 96.3%)]
-  ]
+ columns: (1fr, 1fr),
+ gutter: 10pt,
+ rect(fill: rgb("#fef2f2"), stroke: 0.5pt + rgb("#fecaca"), inset: 10pt, radius: 2pt)[
+  #text(size: 8pt, fill: rgb("#991b1b"), weight: "bold")[CUSTO SAAS ANUAL (RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier))] \
+  #text(size: 14pt, weight: "bold", fill: rgb("#dc2626"))[R\$ 114.000/ano (RD Marketing Pro R\$ 42k + RD CRM 10 vendedores R\$ 36k + RD Conversas 10 atendentes R\$ 36k)]
+ ],
+ rect(fill: rgb("#f0fdf4"), stroke: 0.5pt + rgb("#bbf7d0"), inset: 10pt, radius: 2pt)[
+  #text(size: 8pt, fill: rgb("#166534"), weight: "bold")[ECONOMIA LÍQUIDA ANUAL NO CAIXA] \
+  #text(size: 14pt, weight: "bold", fill: rgb("#16a34a"))[R\$ 109.800/ano (Economia Líquida de 96.3%)]
+ ]
 )
 
 #v(10pt)
@@ -138,12 +138,12 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 == Desmembramento Contábil por Frente de Negócio
 
 #table(
-  columns: (1.5fr, 1.8fr, 1.2fr, 1.2fr, 0.9fr),
-  fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
-  stroke: 0.5pt + rgb("#cbd5e1"),
-  inset: 5pt,
-  [*Grupo*], [*SaaS Alvo*], [*Custo SaaS*], [*Economia*], [*Margem*],
-  [Grupo 1: Marketing & Nutrição], [RD Station Marketing (Plano Pro - 50k leads)], [R\$ 42.000/ano], [R\$ 40.560/ano], [96.5%],
+ columns: (1.5fr, 1.8fr, 1.2fr, 1.2fr, 0.9fr),
+ fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
+ stroke: 0.5pt + rgb("#cbd5e1"),
+ inset: 5pt,
+ [*Grupo*], [*SaaS Alvo*], [*Custo SaaS*], [*Economia*], [*Margem*],
+ [Grupo 1: Marketing & Nutrição], [RD Station Marketing (Plano Pro - 50k leads)], [R\$ 42.000/ano], [R\$ 40.560/ano], [96.5%],
 [Grupo 2: Pipeline Comercial & CRM], [RD Station CRM (Plano Avançado - 10 licenças)], [R\$ 36.000/ano], [R\$ 34.560/ano], [96.0%],
 [Grupo 3: Atendimento & WhatsApp], [RD Station Conversas / Tallos (10 operadores)], [R\$ 36.000/ano], [R\$ 34.680/ano], [96.3%],
 
@@ -159,12 +159,12 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 == Provedores de Nuvem Recomendados & Custo Mensal
 
 #table(
-  columns: (1.5fr, 1.2fr, 2.3fr),
-  fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
-  stroke: 0.5pt + rgb("#cbd5e1"),
-  inset: 5pt,
-  [*Provedor de Nuvem*], [*Custo Mensal*], [*Vantagem Principal & SLA*],
-  [Hetzner Cloud (CPX41 / CCX23)], [`€ 28 (~ R\$ 170/mês)`], [Melhor custo-benefício e performance bruta por vCPU dedicada (Datacenters UE/EUA).],
+ columns: (1.5fr, 1.2fr, 2.3fr),
+ fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
+ stroke: 0.5pt + rgb("#cbd5e1"),
+ inset: 5pt,
+ [*Provedor de Nuvem*], [*Custo Mensal*], [*Vantagem Principal & SLA*],
+ [Hetzner Cloud (CPX41 / CCX23)], [`€ 28 (~ R\$ 170/mês)`], [Melhor custo-benefício e performance bruta por vCPU dedicada (Datacenters UE/EUA).],
 [Contabo (Cloud VPS L)], [`€ 16 (~ R\$ 100/mês)`], [Maior volume de memória RAM e disco NVMe por valor investido.],
 [DigitalOcean (Dedicated 16GB)], [`\$ 84 (~ R\$ 460/mês)`], [Excelente SLA de rede, suporte global e facilidade de snapshots.],
 [AWS Lightsail (16GB RAM)], [`\$ 80 (~ R\$ 440/mês)`], [Infraestrutura corporativa AWS com 5 TB de transferência inclusos.],
@@ -175,12 +175,12 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 == Alocação Técnica de Recursos por Serviço (vCPU & RAM)
 
 #table(
-  columns: (1.5fr, 0.7fr, 0.7fr, 2.8fr),
-  fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
-  stroke: 0.5pt + rgb("#cbd5e1"),
-  inset: 4pt,
-  [*Serviço / Módulo*], [*vCPU*], [*RAM*], [*Motivo Técnico & Gargalo*],
-  [Traefik Ingress & TLS], [`0.5 vCPU`], [`256 MB`], [Roteamento reativo de borda, compressão Brotli/Gzip e renovação automática de certificados SSL.],
+ columns: (1.5fr, 0.7fr, 0.7fr, 2.8fr),
+ fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
+ stroke: 0.5pt + rgb("#cbd5e1"),
+ inset: 4pt,
+ [*Serviço / Módulo*], [*vCPU*], [*RAM*], [*Motivo Técnico & Gargalo*],
+ [Traefik Ingress & TLS], [`0.5 vCPU`], [`256 MB`], [Roteamento reativo de borda, compressão Brotli/Gzip e renovação automática de certificados SSL.],
 [Keycloak SSO (OpenJDK JVM)], [`1.5 vCPU`], [`2.0 GB`], [Baseline da JVM Java para autenticação federada OIDC/SAML e criptografia de senhas Argon2.],
 [Mautic Marketing & Cron], [`2.0 vCPU`], [`4.0 GB`], [Processamento em lote de campanhas para 50k+ leads, segmentação e rastreamento assíncrono de cliques.],
 [Twenty CRM & GraphQL], [`1.5 vCPU`], [`3.0 GB`], [API reativa, buscas full-text e pipeline comercial Kanban simultâneo para 10 a 50 vendedores.],
@@ -195,12 +195,12 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 = Capítulo 3: Matriz Estratégica do Quinteto Soberano
 
 #table(
-  columns: (0.5fr, 1.3fr, 1.3fr, 1.8fr, 2.2fr, 1.3fr),
-  fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
-  stroke: 0.5pt + rgb("#cbd5e1"),
-  inset: 4pt,
-  [*Nº*], [*Grupo*], [*Persona*], [*Ferramenta*], [*Substitui*], [*Economia*],
-  [1], [Grupo 1], [Completa], [*Mautic*], [RD Station Marketing (Módulo de Automação de Fluxos & Lead Scoring)], [R\$ 42.000/ano (Base de 50.000 leads)],
+ columns: (0.5fr, 1.3fr, 1.3fr, 1.8fr, 2.2fr, 1.3fr),
+ fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
+ stroke: 0.5pt + rgb("#cbd5e1"),
+ inset: 4pt,
+ [*Nº*], [*Grupo*], [*Persona*], [*Ferramenta*], [*Substitui*], [*Economia*],
+ [1], [Grupo 1], [Completa], [*Mautic*], [RD Station Marketing (Módulo de Automação de Fluxos & Lead Scoring)], [R\$ 42.000/ano (Base de 50.000 leads)],
 [2], [Grupo 1], [Leve], [*Listmonk*], [RD Station Marketing (Módulo de Disparos de E-mail & Broadcast)], [R\$ 18.000/ano],
 [3], [Grupo 1], [Robusta], [*Directus*], [RD Station Marketing (Construtor de Landing Pages & Formulários Estáticos)], [R\$ 12.000/ano],
 [4], [Grupo 1], [Moderna], [*Novu*], [RD Station Notificações / OneSignal / Courier], [R\$ 14.400/ano],
@@ -231,13 +231,13 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 == 01. Mautic · Automação de Marketing & Jornadas de Nutrição (Persona: Completa)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* RD Station Marketing (Módulo de Automação de Fluxos & Lead Scoring)],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 42.000/ano (Base de 50.000 leads)]],
-    [*Licença:* `GPL-3.0`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* RD Station Marketing (Módulo de Automação de Fluxos & Lead Scoring)],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 42.000/ano (Base de 50.000 leads)]],
+  [*Licença:* `GPL-3.0`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -260,13 +260,13 @@ docker run -d -p 8080:80 --name mautic mautic/mautic:latest
 == 02. Listmonk · Disparador de E-mails & Newsletters de Alta Performance (Persona: Leve)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* RD Station Marketing (Módulo de Disparos de E-mail & Broadcast)],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 18.000/ano]],
-    [*Licença:* `AGPL-3.0`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* RD Station Marketing (Módulo de Disparos de E-mail & Broadcast)],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 18.000/ano]],
+  [*Licença:* `AGPL-3.0`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -289,13 +289,13 @@ Desenvolvido em Go puro, entrega milhões de e-mails consumindo menos de 50 MB d
 == 03. Directus · Headless CMS para Landing Pages & Portais de Conteúdo (Persona: Robusta)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* RD Station Marketing (Construtor de Landing Pages & Formulários Estáticos)],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 12.000/ano]],
-    [*Licença:* `GPL-3.0`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* RD Station Marketing (Construtor de Landing Pages & Formulários Estáticos)],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 12.000/ano]],
+  [*Licença:* `GPL-3.0`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -318,13 +318,13 @@ Converte qualquer banco de dados relacional em uma interface no-code intuitiva p
 == 04. Novu · Infraestrutura Moderna de Notificações Multicanal (Persona: Moderna)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* RD Station Notificações / OneSignal / Courier],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 14.400/ano]],
-    [*Licença:* `Apache-2.0`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* RD Station Notificações / OneSignal / Courier],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 14.400/ano]],
+  [*Licença:* `Apache-2.0`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -347,13 +347,13 @@ Arquitetura reativa moderna em TypeScript/React com centro de preferências do u
 == 05. Plunk · Automação de E-mails Minimalista & Rápida (Persona: Simples)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* RD Station Marketing (Plano Light / Automações Básicas)],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 9.600/ano]],
-    [*Licença:* `MIT`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* RD Station Marketing (Plano Light / Automações Básicas)],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 9.600/ano]],
+  [*Licença:* `MIT`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -385,13 +385,13 @@ Setup de 2 minutos com interface minimalista focada exclusivamente em disparos b
 == 01. Twenty · CRM Moderno Aberto & Gestão de Funil Comercial (Persona: Moderna)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* RD Station CRM (Módulo de Pipeline Kanban, Oportunidades & Tarefas)],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 24.000/ano (Equipe de 10 vendedores)]],
-    [*Licença:* `AGPL-3.0`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* RD Station CRM (Módulo de Pipeline Kanban, Oportunidades & Tarefas)],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 24.000/ano (Equipe de 10 vendedores)]],
+  [*Licença:* `AGPL-3.0`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -414,13 +414,13 @@ Arquitetura reativa ultrarrápida em React/TypeScript com sincronização bidire
 == 02. EspoCRM · Motor de Regras Corporativas B2B & Workflows (Persona: Robusta)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* RD Station CRM (Módulos Corporativos Avançados & Múltiplos Pipelines)],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 18.000/ano]],
-    [*Licença:* `GPL-3.0`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* RD Station CRM (Módulos Corporativos Avançados & Múltiplos Pipelines)],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 18.000/ano]],
+  [*Licença:* `GPL-3.0`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -443,13 +443,13 @@ Mecanismo BPM no-code maduro para operações B2B que necessitam de regras de ap
 == 03. SuiteCRM · Suíte Completa Enterprise para Grandes Operações de Vendas (Persona: Completa)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* Salesforce Sales Cloud / SugarCRM Enterprise],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 36.000/ano]],
-    [*Licença:* `AGPL-3.0`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* Salesforce Sales Cloud / SugarCRM Enterprise],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 36.000/ano]],
+  [*Licença:* `AGPL-3.0`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -472,13 +472,13 @@ A alternativa open source mais madura e completa do mercado corporativo, possuin
 == 04. Documenso · Assinatura Eletrônica Soberana de Contratos e Propostas (Persona: Leve)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* Clicksign / DocuSign / Módulo de Propostas Comerciais],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 18.000/ano]],
-    [*Licença:* `AGPL-3.0`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* Clicksign / DocuSign / Módulo de Propostas Comerciais],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 18.000/ano]],
+  [*Licença:* `AGPL-3.0`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -501,13 +501,13 @@ Garante soberania jurídica dos documentos com trilha de auditoria criptográfic
 == 05. Cal.com · Agendamento Automatizado de Demonstrações Comerciais (Persona: Simples)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* RD Station CRM (Agendamentos) / Calendly Integrado],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 12.000/ano]],
-    [*Licença:* `AGPL-3.0`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* RD Station CRM (Agendamentos) / Calendly Integrado],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 12.000/ano]],
+  [*Licença:* `AGPL-3.0`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -539,13 +539,13 @@ Suporte a distribuição round-robin entre múltiplos corretores/vendedores, int
 == 01. Chatwoot · Central de Atendimento Omnicanal & Livechat Colaborativo (Persona: Completa)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* RD Station Conversas (Painel de Atendimento Multiatendente)],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 36.000/ano (10 operadores)]],
-    [*Licença:* `MIT`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* RD Station Conversas (Painel de Atendimento Multiatendente)],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 36.000/ano (10 operadores)]],
+  [*Licença:* `MIT`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -568,13 +568,13 @@ Software líder global em suporte omnicanal aberto, eliminando a cobrança por l
 == 02. Evolution API · Gateway Profissional de WhatsApp Baileys com Webhooks (Persona: Robusta)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* RD Station Conversas (Conectores Proprietários Z-API / Gupshup)],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 18.000/ano]],
-    [*Licença:* `Apache-2.0`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* RD Station Conversas (Conectores Proprietários Z-API / Gupshup)],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 18.000/ano]],
+  [*Licença:* `Apache-2.0`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -597,13 +597,13 @@ API brasileira madura com suporte a múltiplas instâncias simultâneas, convers
 == 03. Typebot · Construtor Visual de Fluxos de Triagem & Qualificação (Persona: Moderna)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* RD Station Conversas (Chatbots de Triagem) / Landbot],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 14.400/ano]],
-    [*Licença:* `AGPL-3.0`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* RD Station Conversas (Chatbots de Triagem) / Landbot],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 14.400/ano]],
+  [*Licença:* `AGPL-3.0`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -626,13 +626,13 @@ Melhor construtor visual de fluxos conversacionais do mercado, com suporte a var
 == 04. WAHA · Gateway Headless Secundário de Alta Disponibilidade (Persona: Leve)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* RD Station Notificações WhatsApp / Twilio Messaging],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 12.000/ano]],
-    [*Licença:* `Apache-2.0`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* RD Station Notificações WhatsApp / Twilio Messaging],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 12.000/ano]],
+  [*Licença:* `Apache-2.0`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -655,13 +655,13 @@ Solução headless ultra-estável em contêiner isolado para garantir que mensag
 == 05. Papercups · Livechat & Suporte Direto sem Burocracia (Persona: Simples)
 
 #rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#cbd5e1"), inset: 8pt, radius: 2pt, width: 100%)[
-  #grid(
-    columns: (1fr, 1fr, 1fr),
-    gutter: 6pt,
-    [*Substitui:* Intercom / Crisp / Chat Básico do RD],
-    [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 10.800/ano]],
-    [*Licença:* `MIT`]
-  )
+ #grid(
+  columns: (1fr, 1fr, 1fr),
+  gutter: 6pt,
+  [*Substitui:* Intercom / Crisp / Chat Básico do RD],
+  [*Economia:* #text(fill: rgb("#00875A"), weight: "bold")[R\$ 10.800/ano]],
+  [*Licença:* `MIT`]
+ )
 ]
 
 *1. O Que Faz & Como Funciona:* \
@@ -710,12 +710,12 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 
 #v(6pt)
 #table(
-  columns: (1.5fr, 0.7fr, 0.7fr, 2.8fr),
-  fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
-  stroke: 0.5pt + rgb("#cbd5e1"),
-  inset: 4pt,
-  [*Serviço / Módulo*], [*vCPU*], [*RAM*], [*Motivo Técnico & Gargalo*],
-  [Traefik Ingress & TLS], [`0.5 vCPU`], [`256 MB`], [Roteamento reativo de borda, compressão Brotli/Gzip e renovação automática de certificados SSL.],
+ columns: (1.5fr, 0.7fr, 0.7fr, 2.8fr),
+ fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
+ stroke: 0.5pt + rgb("#cbd5e1"),
+ inset: 4pt,
+ [*Serviço / Módulo*], [*vCPU*], [*RAM*], [*Motivo Técnico & Gargalo*],
+ [Traefik Ingress & TLS], [`0.5 vCPU`], [`256 MB`], [Roteamento reativo de borda, compressão Brotli/Gzip e renovação automática de certificados SSL.],
 [Keycloak SSO (OpenJDK JVM)], [`1.5 vCPU`], [`2.0 GB`], [Baseline da JVM Java para autenticação federada OIDC/SAML e criptografia de senhas Argon2.],
 [Mautic Marketing & Cron], [`2.0 vCPU`], [`4.0 GB`], [Processamento em lote de campanhas para 50k+ leads, segmentação e rastreamento assíncrono de cliques.],
 [Twenty CRM & GraphQL], [`1.5 vCPU`], [`3.0 GB`], [API reativa, buscas full-text e pipeline comercial Kanban simultâneo para 10 a 50 vendedores.],
@@ -732,121 +732,121 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 version: '3.8'
 
 networks:
-  ecosystem_net:
-    driver: bridge
+ ecosystem_net:
+ driver: bridge
 
 services:
-  # 1. Reverse Proxy & TLS Automático
-  traefik:
-    image: traefik:v3.0
-    command:
-      - '--providers.docker=true'
-      - '--entrypoints.websecure.address=:443'
-      - '--certificatesresolvers.myresolver.acme.tlschallenge=true'
-    ports:
-      - '80:80'
-      - '443:443'
-    volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock:ro'
-      - './letsencrypt:/letsencrypt'
-    networks:
-      - ecosystem_net
+ # 1. Reverse Proxy & TLS Automático
+ traefik:
+ image: traefik:v3.0
+ command:
+ - '--providers.docker=true'
+ - '--entrypoints.websecure.address=:443'
+ - '--certificatesresolvers.myresolver.acme.tlschallenge=true'
+ ports:
+ - '80:80'
+ - '443:443'
+ volumes:
+ - '/var/run/docker.sock:/var/run/docker.sock:ro'
+ - './letsencrypt:/letsencrypt'
+ networks:
+ - ecosystem_net
 
-  # 2. Provedor de Identidade & SSO
-  keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    command: start-dev
-    environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=SegredoForte2026
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.keycloak.rule=Host(`sso.suaempresa.com.br`)'
-      - 'traefik.http.routers.keycloak.entrypoints=websecure'
-      - 'traefik.http.routers.keycloak.tls.certresolver=myresolver'
-    networks:
-      - ecosystem_net
+ # 2. Provedor de Identidade & SSO
+ keycloak:
+ image: quay.io/keycloak/keycloak:latest
+ command: start-dev
+ environment:
+ - KEYCLOAK_ADMIN=admin
+ - KEYCLOAK_ADMIN_PASSWORD=SegredoForte2026
+ labels:
+ - 'traefik.enable=true'
+ - 'traefik.http.routers.keycloak.rule=Host(`sso.suaempresa.com.br`)'
+ - 'traefik.http.routers.keycloak.entrypoints=websecure'
+ - 'traefik.http.routers.keycloak.tls.certresolver=myresolver'
+ networks:
+ - ecosystem_net
 
-  # 3. Barramento de Eventos e Workflows
-  n8n:
-    image: n8nio/n8n:latest
-    environment:
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_HOST=n8n.suaempresa.com.br
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.n8n.rule=Host(`n8n.suaempresa.com.br`)'
-      - 'traefik.http.routers.n8n.entrypoints=websecure'
-      - 'traefik.http.routers.n8n.tls.certresolver=myresolver'
-    networks:
-      - ecosystem_net
+ # 3. Barramento de Eventos e Workflows
+ n8n:
+ image: n8nio/n8n:latest
+ environment:
+ - N8N_BASIC_AUTH_ACTIVE=true
+ - N8N_HOST=n8n.suaempresa.com.br
+ labels:
+ - 'traefik.enable=true'
+ - 'traefik.http.routers.n8n.rule=Host(`n8n.suaempresa.com.br`)'
+ - 'traefik.http.routers.n8n.entrypoints=websecure'
+ - 'traefik.http.routers.n8n.tls.certresolver=myresolver'
+ networks:
+ - ecosystem_net
 
-  # 4. Automação de Marketing & Nutrição (RD Marketing)
-  mautic:
-    image: mautic/mautic:latest
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.mautic.rule=Host(`mkt.suaempresa.com.br`)'
-      - 'traefik.http.routers.mautic.entrypoints=websecure'
-      - 'traefik.http.routers.mautic.tls.certresolver=myresolver'
-    networks:
-      - ecosystem_net
+ # 4. Automação de Marketing & Nutrição (RD Marketing)
+ mautic:
+ image: mautic/mautic:latest
+ labels:
+ - 'traefik.enable=true'
+ - 'traefik.http.routers.mautic.rule=Host(`mkt.suaempresa.com.br`)'
+ - 'traefik.http.routers.mautic.entrypoints=websecure'
+ - 'traefik.http.routers.mautic.tls.certresolver=myresolver'
+ networks:
+ - ecosystem_net
 
-  # 5. Pipeline Comercial & CRM (RD CRM)
-  twenty:
-    image: twentyhq/twenty:latest
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.twenty.rule=Host(`crm.suaempresa.com.br`)'
-      - 'traefik.http.routers.twenty.entrypoints=websecure'
-      - 'traefik.http.routers.twenty.tls.certresolver=myresolver'
-    networks:
-      - ecosystem_net
+ # 5. Pipeline Comercial & CRM (RD CRM)
+ twenty:
+ image: twentyhq/twenty:latest
+ labels:
+ - 'traefik.enable=true'
+ - 'traefik.http.routers.twenty.rule=Host(`crm.suaempresa.com.br`)'
+ - 'traefik.http.routers.twenty.entrypoints=websecure'
+ - 'traefik.http.routers.twenty.tls.certresolver=myresolver'
+ networks:
+ - ecosystem_net
 
-  # 6. Atendimento Omnichannel & Livechat (RD Conversas)
-  chatwoot:
-    image: chatwoot/chatwoot:latest
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.chatwoot.rule=Host(`chat.suaempresa.com.br`)'
-      - 'traefik.http.routers.chatwoot.entrypoints=websecure'
-      - 'traefik.http.routers.chatwoot.tls.certresolver=myresolver'
-    networks:
-      - ecosystem_net
+ # 6. Atendimento Omnichannel & Livechat (RD Conversas)
+ chatwoot:
+ image: chatwoot/chatwoot:latest
+ labels:
+ - 'traefik.enable=true'
+ - 'traefik.http.routers.chatwoot.rule=Host(`chat.suaempresa.com.br`)'
+ - 'traefik.http.routers.chatwoot.entrypoints=websecure'
+ - 'traefik.http.routers.chatwoot.tls.certresolver=myresolver'
+ networks:
+ - ecosystem_net
 
-  # 7. Gateway WhatsApp Baileys & Webhooks
-  evolution-api:
-    image: atendai/evolution-api:v2.1.0
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.evolution.rule=Host(`wa.suaempresa.com.br`)'
-      - 'traefik.http.routers.evolution.entrypoints=websecure'
-      - 'traefik.http.routers.evolution.tls.certresolver=myresolver'
-    networks:
-      - ecosystem_net
+ # 7. Gateway WhatsApp Baileys & Webhooks
+ evolution-api:
+ image: atendai/evolution-api:v2.1.0
+ labels:
+ - 'traefik.enable=true'
+ - 'traefik.http.routers.evolution.rule=Host(`wa.suaempresa.com.br`)'
+ - 'traefik.http.routers.evolution.entrypoints=websecure'
+ - 'traefik.http.routers.evolution.tls.certresolver=myresolver'
+ networks:
+ - ecosystem_net
 
-  # 8. Banco de Dados Relacional Consolidado
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=SegredoPostgres2026
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - ecosystem_net
+ # 8. Banco de Dados Relacional Consolidado
+ postgres:
+ image: postgres:16-alpine
+ environment:
+ - POSTGRES_USER=postgres
+ - POSTGRES_PASSWORD=SegredoPostgres2026
+ volumes:
+ - postgres_data:/var/lib/postgresql/data
+ networks:
+ - ecosystem_net
 
-  # 9. Filas de Alta Velocidade & Sessões
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - redis_data:/data
-    networks:
-      - ecosystem_net
+ # 9. Filas de Alta Velocidade & Sessões
+ redis:
+ image: redis:7-alpine
+ volumes:
+ - redis_data:/data
+ networks:
+ - ecosystem_net
 
 volumes:
-  postgres_data:
-  redis_data:
+ postgres_data:
+ redis_data:
 ```
 
 #pagebreak()
@@ -864,15 +864,15 @@ volumes:
 #pagebreak()
 = Capítulo 9: Roteiro Prático de Migração de Dados Históricos
 
-== 1. Migração do RD Station Marketing ➔ Mautic
+== 1. Migração do RD Station Marketing Mautic
 - *O que migrar:* Base total de contatos (Leads), campos personalizados, histórico de tags, segmentos e listas de descadastro (opt-out).
 - *Cuidados:* Importe a lista de opt-out (unsubscribers) com o status 'Não perturbe' ativado para preservar a reputação do seu domínio de e-mail.
 
-== 2. Migração do RD Station CRM ➔ Twenty CRM
+== 2. Migração do RD Station CRM Twenty CRM
 - *O que migrar:* Empresas cadastradas, Pessoas de contato, Etapas do Funil de Vendas (Kanban), Negociações abertas/ganhas e Histórico de anotações comerciais.
 - *Cuidados:* Mantenha a correspondência exata dos e-mails dos vendedores para que o histórico de notas e tarefas seja atribuído aos donos corretos.
 
-== 3. Migração do RD Conversas / WhatsApp ➔ Chatwoot & Evolution API
+== 3. Migração do RD Conversas / WhatsApp Chatwoot & Evolution API
 - *O que migrar:* Números de WhatsApp conectados, mensagens pré-programadas (macros de resposta rápida), equipes de atendentes e departamentos.
 - *Cuidados:* Não desconecte o chip do aparelho físico durante a virada para garantir a sincronização inicial de contatos.
 
@@ -905,7 +905,7 @@ rclone copy $BACKUP_DIR remote-s3:backups-empresa/$TIMESTAMP/
 
 # 5. Limpeza de backups locais com mais de 7 dias
 find /opt/backups/* -mtime +7 -exec rm -rf {} \;
-echo "✅ Backup soberano concluído e sincronizado na nuvem fria!"
+echo " Backup soberano concluído e sincronizado na nuvem fria!"
 ```
 
 #pagebreak()

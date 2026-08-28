@@ -7,11 +7,31 @@
   "licenca_osi": "ISC",
   "tempo_estimado_setup": "25 a 35 minutos",
   "nivelamento_conceitual": [
-    {"termo": "Modoboa","analogia_cotidiana": "Departamento Correios Inteligente","explicacao_simples": "Gerenciador central de emails. Recebe (Postfix), guarda (Dovecot), controla (Django)."},
-    {"termo": "Postfix","analogia_cotidiana": "Entregador Cartas","explicacao_simples": "Carteiro que sai pela porta com cartas endereçadas (porta 25 SMTP)."},
-    {"termo": "Dovecot","analogia_cotidiana": "Gerente Gavetas Correspondência","explicacao_simples": "Coloca carta certa com nome funcionário (portas 143 IMAP ou 110 POP3)."},
-    {"termo": "Django/Python","analogia_cotidiana": "Painel Controle Centralizado","explicacao_simples": "Painel web onde admin clica criar usuários, domínios."},
-    {"termo": "PostgreSQL","analogia_cotidiana": "Arquivo Central Documentos","explicacao_simples": "Banco dados: usuários, domínios, permissões, filtros, histórico."}
+    {
+      "termo": "Modoboa",
+      "analogia_cotidiana": "Departamento Correios Inteligente",
+      "explicacao_simples": "Gerenciador central de emails. Recebe (Postfix), guarda (Dovecot), controla (Django)."
+    },
+    {
+      "termo": "Postfix",
+      "analogia_cotidiana": "Entregador Cartas",
+      "explicacao_simples": "Carteiro que sai pela porta com cartas endereçadas (porta 25 SMTP)."
+    },
+    {
+      "termo": "Dovecot",
+      "analogia_cotidiana": "Gerente Gavetas Correspondência",
+      "explicacao_simples": "Coloca carta certa com nome funcionário (portas 143 IMAP ou 110 POP3)."
+    },
+    {
+      "termo": "Django/Python",
+      "analogia_cotidiana": "Painel Controle Centralizado",
+      "explicacao_simples": "Painel web onde admin clica criar usuários, domínios."
+    },
+    {
+      "termo": "PostgreSQL",
+      "analogia_cotidiana": "Arquivo Central Documentos",
+      "explicacao_simples": "Banco dados: usuários, domínios, permissões, filtros, histórico."
+    }
   ],
   "vps_recomendada": {
     "provedor_modelo": "Hetzner Cloud CPX31 (ou UpCloud 4GB)",
@@ -31,72 +51,339 @@
   },
   "instalacao_producao": {
     "passos": [
-      {"numero": 1,"titulo": "Provisionar VPS e SSH","descricao": "Hetzner Cloud, Debian 12, CPX31","analogia": "Alugar prédio","o_que_acontece_na_tela": "Terminal abre","como_saber_se_deu_certo": "Prompt root@mail","comandos": "ssh root@SEU_IP_AQUI","fonte_id": "F01"},
-      {"numero": 2,"titulo": "Atualizar Sistema","descricao": "Updates Debian + ferramentas essenciais","analogia": "Limpar prédio","o_que_acontece_na_tela": "Progresso verde 2-3min","como_saber_se_deu_certo": "python3 3.11+","comandos": "apt-get update && apt-get upgrade -y\napt-get install -y curl wget git build-essential python3-dev python3-pip postgresql postfix dovecot-core dovecot-imapd dovecot-pop3d nginx","fonte_id": "F02"},
-      {"numero": 3,"titulo": "Clonar Repositório Modoboa","descricao": "Download código-fonte do GitHub","analogia": "Trazer plantas construção","o_que_acontece_na_tela": "Git exibe Cloning into","como_saber_se_deu_certo": "/opt/modoboa existe","comandos": "cd /opt && git clone https://github.com/modoboa/modoboa.git\ncd modoboa && git checkout v2.3.0","fonte_id": "F01"},
-      {"numero": 4,"titulo": "Instalador Automático","descricao": "Configura PostgreSQL, Postfix, Dovecot, Nginx, Django","analogia": "Apertar botão construir","o_que_acontece_na_tela": "Perguntas hostname/domínio/senha","como_saber_se_deu_certo": "Installation complete!","comandos": "cd /opt/modoboa\npython3 -m pip install -U pip setuptools wheel\npython3 -m pip install -e .\nmodoboa deploy /var/vmail/modoboa","fonte_id": "F03"},
-      {"numero": 5,"titulo": "Configurar Firewall UFW","descricao": "Liberar portas 22,25,80,143,110,587,443","analogia": "Guarita porteiro","o_que_acontece_na_tela": "Rule added para cada porta","como_saber_se_deu_certo": "ufw status OK","comandos": "ufw default deny incoming && ufw default allow outgoing\nufw allow 22/tcp && ufw allow 25/tcp && ufw allow 80/tcp && ufw allow 143/tcp && ufw allow 110/tcp && ufw allow 587/tcp && ufw allow 443/tcp\nufw --force enable","fonte_id": "F05"},
-      {"numero": 6,"titulo": "Ativar HTTPS Let's Encrypt","descricao": "Certificado SSL/TLS que renova automaticamente","analogia": "Lacre segurança","o_que_acontece_na_tela": "Received certificate em 30s","como_saber_se_deu_certo": "Cadeado verde https://seu-ip","comandos": "apt-get install -y certbot python3-certbot-nginx\ncertbot certonly --nginx -d seu-dominio.com\nsudo systemctl restart nginx","fonte_id": "F04"}
+      {
+        "numero": 1,
+        "titulo": "Provisionar VPS e SSH",
+        "descricao": "Hetzner Cloud, Debian 12, CPX31",
+        "analogia": "Alugar prédio",
+        "o_que_acontece_na_tela": "Terminal abre",
+        "como_saber_se_deu_certo": "Prompt root@mail",
+        "comandos": "ssh root@SEU_IP_AQUI",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Atualizar Sistema",
+        "descricao": "Updates Debian + ferramentas essenciais",
+        "analogia": "Limpar prédio",
+        "o_que_acontece_na_tela": "Progresso verde 2-3min",
+        "como_saber_se_deu_certo": "python3 3.11+",
+        "comandos": "apt-get update && apt-get upgrade -y\napt-get install -y curl wget git build-essential python3-dev python3-pip postgresql postfix dovecot-core dovecot-imapd dovecot-pop3d nginx",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 3,
+        "titulo": "Clonar Repositório Modoboa",
+        "descricao": "Download código-fonte do GitHub",
+        "analogia": "Trazer plantas construção",
+        "o_que_acontece_na_tela": "Git exibe Cloning into",
+        "como_saber_se_deu_certo": "/opt/modoboa existe",
+        "comandos": "cd /opt && git clone https://github.com/modoboa/modoboa.git\ncd modoboa && git checkout v2.3.0",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 4,
+        "titulo": "Instalador Automático",
+        "descricao": "Configura PostgreSQL, Postfix, Dovecot, Nginx, Django",
+        "analogia": "Apertar botão construir",
+        "o_que_acontece_na_tela": "Perguntas hostname/domínio/senha",
+        "como_saber_se_deu_certo": "Installation complete!",
+        "comandos": "cd /opt/modoboa\npython3 -m pip install -U pip setuptools wheel\npython3 -m pip install -e .\nmodoboa deploy /var/vmail/modoboa",
+        "fonte_id": "F03"
+      },
+      {
+        "numero": 5,
+        "titulo": "Configurar Firewall UFW",
+        "descricao": "Liberar portas 22,25,80,143,110,587,443",
+        "analogia": "Guarita porteiro",
+        "o_que_acontece_na_tela": "Rule added para cada porta",
+        "como_saber_se_deu_certo": "ufw status OK",
+        "comandos": "ufw default deny incoming && ufw default allow outgoing\nufw allow 22/tcp && ufw allow 25/tcp && ufw allow 80/tcp && ufw allow 143/tcp && ufw allow 110/tcp && ufw allow 587/tcp && ufw allow 443/tcp\nufw --force enable",
+        "fonte_id": "F05"
+      },
+      {
+        "numero": 6,
+        "titulo": "Ativar HTTPS Let's Encrypt",
+        "descricao": "Certificado SSL/TLS que renova automaticamente",
+        "analogia": "Lacre segurança",
+        "o_que_acontece_na_tela": "Received certificate em 30s",
+        "como_saber_se_deu_certo": "Cadeado verde https://seu-ip",
+        "comandos": "apt-get install -y certbot python3-certbot-nginx\ncertbot certonly --nginx -d seu-dominio.com\nsudo systemctl restart nginx",
+        "fonte_id": "F04"
+      }
     ],
     "arquivos_configuracao": [
-      {"caminho": "/etc/postfix/main.cf","linguagem": "conf","conteudo": "myhostname = mail.seu-dominio.com\nmydomain = seu-dominio.com\nvirtual_mailbox_base = /var/vmail\nvirtual_uid_maps = static:901","explicacao": "Integração Postfix com PostgreSQL"},
-      {"caminho": "/etc/dovecot/conf.d/10-mail.conf","linguagem": "conf","conteudo": "mail_location = maildir:~/.maildir:LAYOUT=fs\nprotocols = imap pop3\nlisten = *, ::","explicacao": "Armazenamento maildir IMAP/POP3"},
-      {"caminho": "/etc/nginx/sites-available/modoboa","linguagem": "nginx","conteudo": "upstream modoboa { server 127.0.0.1:8000; }\nserver { listen 80; server_name admin.seu-dominio.com; location / { proxy_pass http://modoboa; } }","explicacao": "Proxy reverso Nginx para Django"}
+      {
+        "caminho": "/etc/postfix/main.cf",
+        "linguagem": "conf",
+        "conteudo": "myhostname = mail.seu-dominio.com\nmydomain = seu-dominio.com\nvirtual_mailbox_base = /var/vmail\nvirtual_uid_maps = static:901",
+        "explicacao": "Integração Postfix com PostgreSQL"
+      },
+      {
+        "caminho": "/etc/dovecot/conf.d/10-mail.conf",
+        "linguagem": "conf",
+        "conteudo": "mail_location = maildir:~/.maildir:LAYOUT=fs\nprotocols = imap pop3\nlisten = *, ::",
+        "explicacao": "Armazenamento maildir IMAP/POP3"
+      },
+      {
+        "caminho": "/etc/nginx/sites-available/modoboa",
+        "linguagem": "nginx",
+        "conteudo": "upstream modoboa { server 127.0.0.1:8000; }\nserver { listen 80; server_name admin.seu-dominio.com; location / { proxy_pass http://modoboa; } }",
+        "explicacao": "Proxy reverso Nginx para Django"
+      }
     ]
   },
   "manual_uso_exaustivo": {
     "arquitetura_uso": "Postfix(SMTP:25) recebe emails externos, Dovecot(IMAP:143/POP3:110) permite acesso local aos mailboxes, Django(web:443) oferece painel admin, PostgreSQL armazena metadados. Nenhum dado sai do servidor.",
     "roteiro_primeiro_voo": [
-      {"passo": "Passo 1: Admin","acao": "Abra https://admin.seu-dominio.com com usuario admin","resultado_esperado": "Dashboard com estatísticas"},
-      {"passo": "Passo 2: Domínio","acao": "Menu Domínios → +, digite empresa.com.br","resultado_esperado": "Domínio criado e ativo"},
-      {"passo": "Passo 3: Email","acao": "Domínio → Contas → +, username joao, quota 2GB","resultado_esperado": "joao@empresa.com.br criado"},
-      {"passo": "Passo 4: Webmail","acao": "https://mail.seu-dominio.com/webmail/ com joao@empresa.com.br","resultado_esperado": "Bandeja entrada com calendário"},
-      {"passo": "Passo 5: Cliente","acao": "Configure Outlook/Thunderbird IMAP mail.seu-dominio.com:143 TLS, SMTP :587","resultado_esperado": "Email chega em segundos"}
+      {
+        "passo": "Passo 1: Admin",
+        "acao": "Abra https://admin.seu-dominio.com com usuario admin",
+        "resultado_esperado": "Dashboard com estatísticas"
+      },
+      {
+        "passo": "Passo 2: Domínio",
+        "acao": "Menu Domínios → +, digite empresa.com.br",
+        "resultado_esperado": "Domínio criado e ativo"
+      },
+      {
+        "passo": "Passo 3: Email",
+        "acao": "Domínio → Contas → +, username joao, quota 2GB",
+        "resultado_esperado": "joao@empresa.com.br criado"
+      },
+      {
+        "passo": "Passo 4: Webmail",
+        "acao": "https://mail.seu-dominio.com/webmail/ com joao@empresa.com.br",
+        "resultado_esperado": "Bandeja entrada com calendário"
+      },
+      {
+        "passo": "Passo 5: Cliente",
+        "acao": "Configure Outlook/Thunderbird IMAP mail.seu-dominio.com:143 TLS, SMTP :587",
+        "resultado_esperado": "Email chega em segundos"
+      }
     ],
     "comandos_cli": [
-      {"comando": "modoboa deploy /var/vmail/modoboa","descricao": "Inicializa instância de produção","exemplo": "modoboa deploy /var/vmail/modoboa","fonte_id": "F01"},
-      {"comando": "modoboa migrate","descricao": "Aplica migrações do banco de dados","exemplo": "modoboa migrate","fonte_id": "F02"},
-      {"comando": "postqueue -p","descricao": "Mostra emails na fila do Postfix","exemplo": "postqueue -p","fonte_id": "F03"},
-      {"comando": "postfix status","descricao": "Verifica saúde do Postfix","exemplo": "postfix status","fonte_id": "F04"},
-      {"comando": "systemctl restart dovecot","descricao": "Reinicia serviço Dovecot","exemplo": "sudo systemctl restart dovecot","fonte_id": "F05"},
-      {"comando": "modoboa manage createsuperuser","descricao": "Cria admin via linha de comando","exemplo": "modoboa manage createsuperuser","fonte_id": "F01"}
+      {
+        "comando": "modoboa deploy /var/vmail/modoboa",
+        "descricao": "Inicializa instância de produção",
+        "exemplo": "modoboa deploy /var/vmail/modoboa",
+        "fonte_id": "F01"
+      },
+      {
+        "comando": "modoboa migrate",
+        "descricao": "Aplica migrações do banco de dados",
+        "exemplo": "modoboa migrate",
+        "fonte_id": "F02"
+      },
+      {
+        "comando": "postqueue -p",
+        "descricao": "Mostra emails na fila do Postfix",
+        "exemplo": "postqueue -p",
+        "fonte_id": "F03"
+      },
+      {
+        "comando": "postfix status",
+        "descricao": "Verifica saúde do Postfix",
+        "exemplo": "postfix status",
+        "fonte_id": "F04"
+      },
+      {
+        "comando": "systemctl restart dovecot",
+        "descricao": "Reinicia serviço Dovecot",
+        "exemplo": "sudo systemctl restart dovecot",
+        "fonte_id": "F05"
+      },
+      {
+        "comando": "modoboa manage createsuperuser",
+        "descricao": "Cria admin via linha de comando",
+        "exemplo": "modoboa manage createsuperuser",
+        "fonte_id": "F01"
+      }
     ],
     "rotas_api": [
-      {"metodo": "GET","rota": "/api/v1/domains/","descricao": "Lista todos domínios","payload_exemplo": "GET /api/v1/domains/ → [{\"name\": \"empresa.com.br\", \"active\": true}]","fonte_id": "F01"},
-      {"metodo": "POST","rota": "/api/v1/domains/","descricao": "Criar novo domínio","payload_exemplo": "POST {\"name\": \"novo.com.br\"}","fonte_id": "F02"},
-      {"metodo": "GET","rota": "/api/v1/statistics/","descricao": "Estatísticas do servidor","payload_exemplo": "GET → {\"total_received\": 15234, \"spam_detected\": 2103}","fonte_id": "F03"},
-      {"metodo": "GET","rota": "/api/v1/domains/{id}/accounts/","descricao": "Lista contas de um domínio","payload_exemplo": "GET /api/v1/domains/1/accounts/ → [{\"username\": \"joao\"}]","fonte_id": "F04"}
+      {
+        "metodo": "GET",
+        "rota": "/api/v1/domains/",
+        "descricao": "Lista todos domínios",
+        "payload_exemplo": "GET /api/v1/domains/ → [{\"name\": \"empresa.com.br\", \"active\": true}]",
+        "fonte_id": "F01"
+      },
+      {
+        "metodo": "POST",
+        "rota": "/api/v1/domains/",
+        "descricao": "Criar novo domínio",
+        "payload_exemplo": "POST {\"name\": \"novo.com.br\"}",
+        "fonte_id": "F02"
+      },
+      {
+        "metodo": "GET",
+        "rota": "/api/v1/statistics/",
+        "descricao": "Estatísticas do servidor",
+        "payload_exemplo": "GET → {\"total_received\": 15234, \"spam_detected\": 2103}",
+        "fonte_id": "F03"
+      },
+      {
+        "metodo": "GET",
+        "rota": "/api/v1/domains/{id}/accounts/",
+        "descricao": "Lista contas de um domínio",
+        "payload_exemplo": "GET /api/v1/domains/1/accounts/ → [{\"username\": \"joao\"}]",
+        "fonte_id": "F04"
+      }
     ],
     "interface_ui": [
-      {"modulo": "Dashboard Admin","descricao": "Tela inicial com estatísticas","recursos_chave": ["Gráficos emails/spam","Alertas disk/CPU","Acesso rápido funções"]},
-      {"modulo": "Gerenciador Domínios","descricao": "Adicionar/editar domínios","recursos_chave": ["Quota global","Status SPF/DKIM/DMARC","Backup por domínio"]},
-      {"modulo": "Gerenciador Contas","descricao": "Criar/modificar emails","recursos_chave": ["Busca rápida por email","Import em lote CSV","Histórico de login"]},
-      {"modulo": "Webmail","descricao": "Interface de email web","recursos_chave": ["Calendario com CalDAV","Contatos com CardDAV","Notificações tempo real"]},
-      {"modulo": "Relatórios","descricao": "Logs de auditoria","recursos_chave": ["Filtros por data/usuário","Export CSV/JSON","Retenção configurável"]}
+      {
+        "modulo": "Dashboard Admin",
+        "descricao": "Tela inicial com estatísticas",
+        "recursos_chave": [
+          "Gráficos emails/spam",
+          "Alertas disk/CPU",
+          "Acesso rápido funções"
+        ]
+      },
+      {
+        "modulo": "Gerenciador Domínios",
+        "descricao": "Adicionar/editar domínios",
+        "recursos_chave": [
+          "Quota global",
+          "Status SPF/DKIM/DMARC",
+          "Backup por domínio"
+        ]
+      },
+      {
+        "modulo": "Gerenciador Contas",
+        "descricao": "Criar/modificar emails",
+        "recursos_chave": [
+          "Busca rápida por email",
+          "Import em lote CSV",
+          "Histórico de login"
+        ]
+      },
+      {
+        "modulo": "Webmail",
+        "descricao": "Interface de email web",
+        "recursos_chave": [
+          "Calendario com CalDAV",
+          "Contatos com CardDAV",
+          "Notificações tempo real"
+        ]
+      },
+      {
+        "modulo": "Relatórios",
+        "descricao": "Logs de auditoria",
+        "recursos_chave": [
+          "Filtros por data/usuário",
+          "Export CSV/JSON",
+          "Retenção configurável"
+        ]
+      }
     ],
     "troubleshooting": [
-      {"sintoma": "Emails chegam em spam","causa_provavel": "SPF, DKIM ou DMARC não configurados","solucao_comando": "Verificar registros SPF/DKIM no painel. Adicionar no DNS do registrador."},
-      {"sintoma": "Port 25 blocked - emails não saem","causa_provavel": "ISP bloqueou porta 25 (comum em residencial)","solucao_comando": "Configure relayhost para smarthost confiável via porta 587 em /etc/postfix/main.cf"},
-      {"sintoma": "IMAP não conecta com erro","causa_provavel": "Dovecot não está rodando ou permissões /var/vmail erradas","solucao_comando": "sudo systemctl restart dovecot && sudo chown -R vmail:vmail /var/vmail"},
-      {"sintoma": "Painel web fica lento ou travado","causa_provavel": "PostgreSQL sob pressão ou muitos usuários simultâneos","solucao_comando": "sudo systemctl restart modoboa && monitorar pool connections"},
-      {"sintoma": "ClamAV/SpamAssassin consumindo 100% CPU","causa_provavel": "Muitos emails grandes sendo processados simultaneamente","solucao_comando": "Reduza MaxThreads em /etc/clamav/clamd.conf ou desative ClamAV"}
+      {
+        "sintoma": "Emails chegam em spam",
+        "causa_provavel": "SPF, DKIM ou DMARC não configurados",
+        "solucao_comando": "Verificar registros SPF/DKIM no painel. Adicionar no DNS do registrador."
+      },
+      {
+        "sintoma": "Port 25 blocked - emails não saem",
+        "causa_provavel": "ISP bloqueou porta 25 (comum em residencial)",
+        "solucao_comando": "Configure relayhost para smarthost confiável via porta 587 em /etc/postfix/main.cf"
+      },
+      {
+        "sintoma": "IMAP não conecta com erro",
+        "causa_provavel": "Dovecot não está rodando ou permissões /var/vmail erradas",
+        "solucao_comando": "sudo systemctl restart dovecot && sudo chown -R vmail:vmail /var/vmail"
+      },
+      {
+        "sintoma": "Painel web fica lento ou travado",
+        "causa_provavel": "PostgreSQL sob pressão ou muitos usuários simultâneos",
+        "solucao_comando": "sudo systemctl restart modoboa && monitorar pool connections"
+      },
+      {
+        "sintoma": "ClamAV/SpamAssassin consumindo 100% CPU",
+        "causa_provavel": "Muitos emails grandes sendo processados simultaneamente",
+        "solucao_comando": "Reduza MaxThreads em /etc/clamav/clamd.conf ou desative ClamAV"
+      }
     ]
   },
   "referencias_bibliograficas": [
-    {"id": "F01","categoria": "Documentação Oficial","titulo": "Modoboa Official Documentation - ReadTheDocs","url": "https://modoboa.readthedocs.io","autor_ou_canal": "Modoboa Project Team"},
-    {"id": "F02","categoria": "Repositório Oficial","titulo": "Modoboa GitHub Repository - Source Code","url": "https://github.com/modoboa/modoboa","autor_ou_canal": "Modoboa Open Source Developers"},
-    {"id": "F03","categoria": "Tutorial Prático","titulo": "How To Set Up Secure Private Email Server With Modoboa - UpCloud","url": "https://upcloud.com/resources/tutorials/install-secure-private-email-server-modoboa/","autor_ou_canal": "UpCloud Documentation Team"},
-    {"id": "F04","categoria": "Guia de Setup","titulo": "How to Quickly Set Up a Mail Server on Ubuntu 20.04 with Modoboa","url": "https://www.linuxbabe.com/mail-server/modoboa-email-server-ubuntu-20-04","autor_ou_canal": "LinuxBabe"},
-    {"id": "F05","categoria": "Documentação Técnica","titulo": "Modoboa API Documentation & REST Endpoints","url": "https://modoboa.readthedocs.io/en/latest/integration/api.html","autor_ou_canal": "Modoboa Core Contributors"},
-    {"id": "F06","categoria": "Discussão Comunitária","titulo": "Minimum Resources on VPS for Install Modoboa - GitHub Discussion","url": "https://github.com/modoboa/modoboa/discussions/2139","autor_ou_canal": "Modoboa Community & Maintainers"}
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "Modoboa Official Documentation - ReadTheDocs",
+      "url": "https://modoboa.readthedocs.io",
+      "autor_ou_canal": "Modoboa Project Team"
+    },
+    {
+      "id": "F02",
+      "categoria": "Repositório Oficial",
+      "titulo": "Modoboa GitHub Repository - Source Code",
+      "url": "https://github.com/modoboa/modoboa",
+      "autor_ou_canal": "Modoboa Open Source Developers"
+    },
+    {
+      "id": "F03",
+      "categoria": "Tutorial Prático",
+      "titulo": "How To Set Up Secure Private Email Server With Modoboa - UpCloud",
+      "url": "https://upcloud.com/resources/tutorials/install-secure-private-email-server-modoboa/",
+      "autor_ou_canal": "UpCloud Documentation Team"
+    },
+    {
+      "id": "F04",
+      "categoria": "Guia de Setup",
+      "titulo": "How to Quickly Set Up a Mail Server on Ubuntu 20.04 with Modoboa",
+      "url": "https://www.linuxbabe.com/mail-server/modoboa-email-server-ubuntu-20-04",
+      "autor_ou_canal": "LinuxBabe"
+    },
+    {
+      "id": "F05",
+      "categoria": "Documentação Técnica",
+      "titulo": "Modoboa API Documentation & REST Endpoints",
+      "url": "https://modoboa.readthedocs.io/en/latest/integration/api.html",
+      "autor_ou_canal": "Modoboa Core Contributors"
+    },
+    {
+      "id": "F06",
+      "categoria": "Discussão Comunitária",
+      "titulo": "Minimum Resources on VPS for Install Modoboa - GitHub Discussion",
+      "url": "https://github.com/modoboa/modoboa/discussions/2139",
+      "autor_ou_canal": "Modoboa Community & Maintainers"
+    }
   ],
   "desinstalacao_cirurgica": {
     "principio_isolamento": "Remove exclusivamente instância Modoboa (Django, dados email, bancos SQL). Preserva Postfix, Dovecot, certificados SSL e SO.",
     "passos": [
-      {"numero": 1,"titulo": "Parada de Serviços Modoboa","descricao": "Para Django (Gunicorn) e Celery sem afetar Postfix/Dovecot/Nginx","comandos": "sudo systemctl stop modoboa\nsudo systemctl disable modoboa\nsudo systemctl stop modoboa-celery\nsudo systemctl disable modoboa-celery","alerta_seguranca": "NÃO execute 'systemctl stop postfix' ou 'systemctl stop dovecot'","como_validar": "sudo systemctl is-active modoboa # Retorna 'inactive'"},
-      {"numero": 2,"titulo": "Remoção do Banco PostgreSQL","descricao": "Deleta schema Modoboa, preservando outros bancos","comandos": "sudo -u postgres psql -c \"DROP DATABASE IF EXISTS modoboa;\"\nsudo -u postgres psql -c \"DROP USER IF EXISTS modoboa;\"","alerta_seguranca": "JAMAIS execute 'DROP DATABASE postgres;'","como_validar": "sudo -u postgres psql -l | grep modoboa # Não deve aparecer"},
-      {"numero": 3,"titulo": "Remoção de Diretórios","descricao": "Remove /var/vmail/modoboa (dados) e /opt/modoboa (código)","comandos": "sudo rm -rf /var/vmail/modoboa\nsudo rm -rf /opt/modoboa\nsudo rm -f /etc/systemd/system/modoboa.service\nsudo rm -f /etc/systemd/system/modoboa-celery.service","alerta_seguranca": "Não execute 'rm -rf /' nem 'rm -rf /var/'","como_validar": "ls -ld /var/vmail/modoboa 2>&1 | grep 'cannot access'"},
-      {"numero": 4,"titulo": "Limpeza Nginx","descricao": "Remove virtual host Modoboa do Nginx","comandos": "sudo rm -f /etc/nginx/sites-enabled/modoboa\nsudo rm -f /etc/nginx/sites-available/modoboa\nsudo systemctl reload nginx\nsudo systemctl daemon-reload","alerta_seguranca": "Mantenha outros sites em /etc/nginx/sites-available/","como_validar": "sudo nginx -t # Retorna 'configuration OK'"}
+      {
+        "numero": 1,
+        "titulo": "Parada de Serviços Modoboa",
+        "descricao": "Para Django (Gunicorn) e Celery sem afetar Postfix/Dovecot/Nginx",
+        "comandos": "sudo systemctl stop modoboa\nsudo systemctl disable modoboa\nsudo systemctl stop modoboa-celery\nsudo systemctl disable modoboa-celery",
+        "alerta_seguranca": "NÃO execute 'systemctl stop postfix' ou 'systemctl stop dovecot'",
+        "como_validar": "sudo systemctl is-active modoboa # Retorna 'inactive'"
+      },
+      {
+        "numero": 2,
+        "titulo": "Remoção do Banco PostgreSQL",
+        "descricao": "Deleta schema Modoboa, preservando outros bancos",
+        "comandos": "sudo -u postgres psql -c \"DROP DATABASE IF EXISTS modoboa;\"\nsudo -u postgres psql -c \"DROP USER IF EXISTS modoboa;\"",
+        "alerta_seguranca": "JAMAIS execute 'DROP DATABASE postgres;'",
+        "como_validar": "sudo -u postgres psql -l | grep modoboa # Não deve aparecer"
+      },
+      {
+        "numero": 3,
+        "titulo": "Remoção de Diretórios",
+        "descricao": "Remove /var/vmail/modoboa (dados) e /opt/modoboa (código)",
+        "comandos": "sudo rm -rf /var/vmail/modoboa\nsudo rm -rf /opt/modoboa\nsudo rm -f /etc/systemd/system/modoboa.service\nsudo rm -f /etc/systemd/system/modoboa-celery.service",
+        "alerta_seguranca": "Não execute 'rm -rf /' nem 'rm -rf /var/'",
+        "como_validar": "ls -ld /var/vmail/modoboa 2>&1 | grep 'cannot access'"
+      },
+      {
+        "numero": 4,
+        "titulo": "Limpeza Nginx",
+        "descricao": "Remove virtual host Modoboa do Nginx",
+        "comandos": "sudo rm -f /etc/nginx/sites-enabled/modoboa\nsudo rm -f /etc/nginx/sites-available/modoboa\nsudo systemctl reload nginx\nsudo systemctl daemon-reload",
+        "alerta_seguranca": "Mantenha outros sites em /etc/nginx/sites-available/",
+        "como_validar": "sudo nginx -t # Retorna 'configuration OK'"
+      }
     ],
     "checklist_saude_vps": [
       "ps aux | grep -E '(gunicorn|celery|modoboa)' # Nenhum processo deve aparecer",

@@ -86,7 +86,7 @@
         "analogia": "Ligar as máquinas e sistemas do cartório: computadores, impressoras e telefones.",
         "o_que_acontece_na_tela": "Docker faz download de imagens e containers iniciam com logs coloridos. Aguarde 2-3 minutos.",
         "como_saber_se_deu_certo": "Execute 'docker compose ps' e veja 4 containers com status 'Up'.",
-        "comandos": "cd /opt/postal\ncat > docker-compose.yml << 'EOF'\nversion: '3.8'\nservices:\n  postgres:\n    image: postgres:16-alpine\n    environment:\n      POSTGRES_DB: postal\n      POSTGRES_USER: postal\n      POSTGRES_PASSWORD: $(openssl rand -base64 32)\n    volumes:\n      - postgres_data:/var/lib/postgresql/data\n    restart: unless-stopped\n  redis:\n    image: redis:7-alpine\n    volumes:\n      - redis_data:/data\n    restart: unless-stopped\n  postal:\n    image: postalserver/postal:latest\n    depends_on:\n      - postgres\n      - redis\n    environment:\n      RAILS_ENV: production\n      DATABASE_URL: postgres://postal:password@postgres:5432/postal\n      REDIS_URL: redis://redis:6379\n    ports:\n      - '5000:5000'\n    volumes:\n      - postal_data:/opt/postal/data\n    restart: unless-stopped\n  caddy:\n    image: caddy:2-alpine\n    ports:\n      - '80:80'\n      - '443:443'\n    volumes:\n      - ./Caddyfile:/etc/caddy/Caddyfile\n      - caddy_data:/data\n    restart: unless-stopped\nvolumes:\n  postgres_data:\n  redis_data:\n  postal_data:\n  caddy_data:\nEOF\ndocker compose up -d",
+        "comandos": "cd /opt/postal\ncat > docker-compose.yml << 'EOF'\nversion: '3.8'\nservices:\n postgres:\n image: postgres:16-alpine\n environment:\n POSTGRES_DB: postal\n POSTGRES_USER: postal\n POSTGRES_PASSWORD: $(openssl rand -base64 32)\n volumes:\n - postgres_data:/var/lib/postgresql/data\n restart: unless-stopped\n redis:\n image: redis:7-alpine\n volumes:\n - redis_data:/data\n restart: unless-stopped\n postal:\n image: postalserver/postal:latest\n depends_on:\n - postgres\n - redis\n environment:\n RAILS_ENV: production\n DATABASE_URL: postgres://postal:password@postgres:5432/postal\n REDIS_URL: redis://redis:6379\n ports:\n - '5000:5000'\n volumes:\n - postal_data:/opt/postal/data\n restart: unless-stopped\n caddy:\n image: caddy:2-alpine\n ports:\n - '80:80'\n - '443:443'\n volumes:\n - ./Caddyfile:/etc/caddy/Caddyfile\n - caddy_data:/data\n restart: unless-stopped\nvolumes:\n postgres_data:\n redis_data:\n postal_data:\n caddy_data:\nEOF\ndocker compose up -d",
         "fonte_id": "F02"
       },
       {
@@ -114,7 +114,7 @@
       {
         "caminho": "/opt/postal/Caddyfile",
         "linguagem": "caddyfile",
-        "conteudo": "postal.seu-dominio.com.br {\n  encode gzip\n  header {\n    Strict-Transport-Security \"max-age=31536000; includeSubDomains\"\n    X-Content-Type-Options nosniff\n    X-Frame-Options DENY\n  }\n  reverse_proxy localhost:5000 {\n    header_uri X-Real-IP {http.request.remote.host}\n    header_uri X-Forwarded-For {http.request.remote.host}\n  }\n  rate_limit /api/v1/send 1000 100\n}",
+        "conteudo": "postal.seu-dominio.com.br {\n encode gzip\n header {\n Strict-Transport-Security \"max-age=31536000; includeSubDomains\"\n X-Content-Type-Options nosniff\n X-Frame-Options DENY\n }\n reverse_proxy localhost:5000 {\n header_uri X-Real-IP {http.request.remote.host}\n header_uri X-Forwarded-For {http.request.remote.host}\n }\n rate_limit /api/v1/send 1000 100\n}",
         "explicacao": "Proxy reverso com SSL automático (Let's Encrypt), rate limiting na API de envio e headers de segurança."
       },
       {
@@ -126,7 +126,7 @@
       {
         "caminho": "/opt/postal/docker-compose.override.yml",
         "linguagem": "yaml",
-        "conteudo": "version: '3.8'\nservices:\n  postal:\n    environment:\n      POSTAL_WEB_PROTOCOL: https\n      POSTAL_WEB_HOST: postal.seu-dominio.com.br\n    healthcheck:\n      test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:5000/health\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n      start_period: 60s",
+        "conteudo": "version: '3.8'\nservices:\n postal:\n environment:\n POSTAL_WEB_PROTOCOL: https\n POSTAL_WEB_HOST: postal.seu-dominio.com.br\n healthcheck:\n test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:5000/health\"]\n interval: 30s\n timeout: 10s\n retries: 3\n start_period: 60s",
         "explicacao": "Configurações de override para produção com health check automático."
       }
     ]

@@ -1,8 +1,8 @@
 # LIVRO-TEXTO EXECUTIVO: MACRO-ECOSSISTEMA RD STATION: MARKETING, CRM & CONVERSAS
 
-> **Macro-Ecossistema SaaS Alvo:** RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier)  
-> **Autoridade Emissora:** Fábrica Universal AIDD · Governança Aberta Multi-IDE  
-> **Padrão Normativo:** Diamante R5-E Tripartite | **Data de Publicação:** 28/08/2026  
+> **Macro-Ecossistema SaaS Alvo:** RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier) 
+> **Autoridade Emissora:** Fábrica Universal AIDD · Governança Aberta Multi-IDE 
+> **Padrão Normativo:** Diamante R5-E Tripartite | **Data de Publicação:** 28/08/2026 
 > **Edição:** 1ª Edição Oficial — Desmantelamento Integral de Suítes Proprietárias
 
 ---
@@ -52,10 +52,10 @@ Este livro-texto consolida a alternativa definitiva: a **migração para uma arq
 
 ## CAPÍTULO 2 · INFRAESTRUTURA GLOBAL, DIMENSIONAMENTO DA VPS & PROVEDORES VALIDADOS
 
-> **Perfil de Máquina Recomendado:** `8 vCPU Dedicated Cloud / 16 GB RAM ECC / 160-240 GB NVMe SSD / Link 1 Gbps / Ubuntu 24.04 LTS x86_64`  
+> **Perfil de Máquina Recomendado:** `8 vCPU Dedicated Cloud / 16 GB RAM ECC / 160-240 GB NVMe SSD / Link 1 Gbps / Ubuntu 24.04 LTS x86_64` 
 > **Racional de Engenharia:** Garante estabilidade absoluta para os 9 contêineres rodando em simultâneo com isolamento de processos, prevenindo gargalos de I/O em banco de dados e eliminando o risco do OOM Killer durante picos de campanha e atendimento.
 
-### 🌐 Provedores de Nuvem Recomendados & Custo Mensal da Infraestrutura
+### Provedores de Nuvem Recomendados & Custo Mensal da Infraestrutura
 | Provedor de Nuvem | Custo Mensal Estimado | Vantagem Principal & SLA |
 |---|---|---|
 | **Hetzner Cloud (CPX41 / CCX23)** | `€ 28 (~ R$ 170/mês)` | Melhor custo-benefício e performance bruta por vCPU dedicada (Datacenters UE/EUA). |
@@ -63,7 +63,7 @@ Este livro-texto consolida a alternativa definitiva: a **migração para uma arq
 | **DigitalOcean (Dedicated 16GB)** | `$ 84 (~ R$ 460/mês)` | Excelente SLA de rede, suporte global e facilidade de snapshots. |
 | **AWS Lightsail (16GB RAM)** | `$ 80 (~ R$ 440/mês)` | Infraestrutura corporativa AWS com 5 TB de transferência inclusos. |
 
-### ⚙️ Alocação Técnica de Recursos por Serviço (vCPU & RAM)
+### Alocação Técnica de Recursos por Serviço (vCPU & RAM)
 | Serviço / Módulo | vCPU Alocada | Memória RAM | Motivo Técnico / Gargalo Previsto |
 |---|---|---|---|
 | **Traefik Ingress & TLS** | `0.5 vCPU` | `256 MB` | Roteamento reativo de borda, compressão Brotli/Gzip e renovação automática de certificados SSL. |
@@ -102,7 +102,7 @@ Este livro-texto consolida a alternativa definitiva: a **migração para uma arq
 ## CAPÍTULO 4 · TRATADOS TÉCNICOS INDIVIDUAIS DOS PILARES
 
 ### PILAR 01: GRUPO 1: MARKETING, NUTRIÇÃO & LANDING PAGES
-> **Alvo SaaS Substituído:** `RD Station Marketing (Planos Pro / Enterprise)` | **Economia do Pilar:** `R$ 42.000/ano`  
+> **Alvo SaaS Substituído:** `RD Station Marketing (Planos Pro / Enterprise)` | **Economia do Pilar:** `R$ 42.000/ano` 
 > **Descrição Estratégica:** Frente responsável pela atração de tráfego, captura e enriquecimento de contatos, criação autônoma de landing pages dinâmicas, disparos de e-mail marketing em massa e automação de fluxos com pontuação de leads (lead scoring).
 
 #### 01. Mautic · Automação de Marketing & Jornadas de Nutrição (Classificação: Persona Completa)
@@ -110,34 +110,34 @@ Este livro-texto consolida a alternativa definitiva: a **migração para uma arq
 - **Economia Anual Individual:** `R$ 42.000/ano (Base de 50.000 leads)` | **Licença OSI:** `GPL-3.0`
 - **Papel no Ecossistema:** Motor central de automação de marketing, segmentação dinâmica e pontuação de leads.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Gerencia campanhas multicanal, pontua leads por interesse e aciona gatilhos de nutrição automática. Backend em PHP/Symfony com orquestrador visual de jornadas em árvore e integração de rastreamento no site.
 ```bash
 # Inicialização Rápida via Docker / CLI
 docker run -d -p 8080:80 --name mautic mautic/mautic:latest
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Única plataforma open source com construtor visual de jornadas em árvore equivalente ao RD Pro, com rastreamento avançado de comportamento web (lead tracking) e ausência de cobrança por volume de contatos na base.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `4 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *O Mautic é a única alternativa aberta com maturidade funcional para substituir integralmente réguas de nutrição e pontuação de leads de grandes empresas sem limites de contatos.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Configuração de SMTP & DNS:** Conecte o Amazon SES ou servidor SMTP próprio e valide registros SPF, DKIM e DMARC no domínio institucional.
 2. **Desenho da Jornada Visual:** Crie o fluxo de automação em árvore no construtor drag-and-drop acionando e-mails após downloads de materiais ricos.
 3. **Regras de Lead Scoring:** Defina pontuações automáticas por abertura de e-mail e visitas a páginas de preços para qualificação comercial.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `Twig + Bootstrap + CSS Variables`
 - Mecânica de Customização: Permite substituir logo, favicon e aplicar paleta institucional via temas Twig customizados e CSS corporativo.
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] @modelcontextprotocol/server-mautic:** Permite a agentes de IA consultarem o histórico de interações e pontuações de leads diretamente via MCP. (`npx -y mautic-mcp-server`)
 - **[Agent Skill] skill-mautic-lead-enrichment:** Skill para agentes LLM enriquecerem contatos no Mautic a partir de pesquisas públicas no LinkedIn. (`.claude/skills/mautic-enrichment/SKILL.md`)
 - **[CLI Tool] mautic-cli:** CLI para execução determinística de tarefas cron de segmentação e disparo de campanhas. (`php bin/console mautic:segments:update`)
@@ -149,34 +149,34 @@ docker run -d -p 8080:80 --name mautic mautic/mautic:latest
 - **Economia Anual Individual:** `R$ 18.000/ano` | **Licença OSI:** `AGPL-3.0`
 - **Papel no Ecossistema:** Entrega de e-mails em massa e newsletters com custo quase nulo via Amazon SES.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Processa milhões de disparos de e-mail com segmentação SQL ultrarrápida. Binário Go estático de alto rendimento sobre PostgreSQL com suporte nativo a JSONB.
 ```bash
 # Inicialização Rápida via Docker / CLI
 docker run -d -p 9000:9000 --name listmonk listmonk/listmonk:latest
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Desenvolvido em Go puro, entrega milhões de e-mails consumindo menos de 50 MB de RAM, suportando segmentação relacional JSONB instantânea e eliminando custos punitivos por envio.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `1 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *Imbatível para disparos volumosos e newsletters corporativas; entrega desempenho industrial com fraqueza de recursos.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Importação de Base:** Importe listas de contatos via CSV ou API REST com mapeamento instantâneo de atributos customizados JSONB.
 2. **Templates Responsivos:** Escreva templates de e-mail em HTML/Go template ou importe templates projetados no Figma.
 3. **Disparo em Massa:** Agende campanhas de broadcast monitorando taxas de entrega, cliques e bounce em tempo real.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `Vue.js + Go Templates`
 - Mecânica de Customização: Interface limpa com suporte a upload de logo institucional e customização total dos formulários públicos de opt-in.
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] listmonk-mcp:** Interface MCP para agentes agendarem e validarem campanhas de e-mail via linguagem natural. (`npx -y listmonk-mcp-server`)
 - **[Agent Skill] skill-newsletter-compiler:** Compila newsletters semanais a partir de dados do banco e despacha via Listmonk. (`.claude/skills/newsletter-compiler/SKILL.md`)
 - **[CLI Tool] listmonk-cli:** Gerenciador de linha de comando para automação de rotinas de manutenção. (`listmonk --config config.toml`)
@@ -188,34 +188,34 @@ Desenvolvido em Go puro, entrega milhões de e-mails consumindo menos de 50 MB d
 - **Economia Anual Individual:** `R$ 12.000/ano` | **Licença OSI:** `GPL-3.0`
 - **Papel no Ecossistema:** Gestão autônoma de conteúdo das landing pages e portais corporativos sem depender de desenvolvedores.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Fornece painel no-code para o time de marketing editar textos, depoimentos e formulários de landing pages. API REST/GraphQL instantânea sobre o PostgreSQL corporativo com autenticação OIDC.
 ```bash
 # Inicialização Rápida via Docker / CLI
 docker run -d -p 8055:8055 --name directus directus/directus
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Converte qualquer banco de dados relacional em uma interface no-code intuitiva para o time de marketing editar textos, banners e seções de conversão sem risco de quebra de layout.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `2 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *A melhor infraestrutura de dados para times de marketing gerenciarem landing pages headless sem tocar em código.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Modelagem de Blocos:** Crie coleções para hero banners, depoimentos, tabelas de preços e formulários de captura.
 2. **Conexão com Frontend:** Conecte o frontend Next.js/Astro das landing pages consumindo os dados via GraphQL com cache.
 3. **Permissões de Marketing:** Configure papéis de acesso no-code para editores e redatores publicarem alterações com 1 clique.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `Vue.js 3 + Tailwind CSS`
 - Mecânica de Customização: Suporte nativo a temas corporativos com injeção de logo, favicon e CSS global diretamente no painel de administração.
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] @directus/mcp-server:** Servidor MCP oficial para agentes de IA atualizarem banners e textos de landing pages. (`npx -y @directus/mcp-server`)
 - **[Agent Skill] skill-landing-page-generator:** Gera novas páginas promocionais e cadastra diretamente no Directus. (`.claude/skills/lp-generator/SKILL.md`)
 - **[CLI Tool] directus-cli:** Sincroniza modelos de landing pages entre ambientes de homologação e produção. (`npx directus schema apply ./schema.yaml`)
@@ -227,34 +227,34 @@ Converte qualquer banco de dados relacional em uma interface no-code intuitiva p
 - **Economia Anual Individual:** `R$ 14.400/ano` | **Licença OSI:** `Apache-2.0`
 - **Papel no Ecossistema:** Centro de orquestração de notificações transacionais (E-mail, SMS, In-App e WhatsApp).
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Gerencia fluxos de notificação transacionais com digest, delays e construtor visual de mensagens. NestJS, Redis e React com motor de regras para envio condicional de alertas multicanal.
 ```bash
 # Inicialização Rápida via Docker / CLI
 npx novu init
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Arquitetura reativa moderna em TypeScript/React com centro de preferências do usuário e fallback inteligente entre provedores de entrega.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `3 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *Solução moderna essencial para empresas que precisam de régua de comunicação transacional unificada com fallback.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Cadastro de Provedores:** Vincule o Amazon SES para e-mails e a Evolution API para mensagens automáticas de WhatsApp.
 2. **Criação de Workflows:** Desenhe fluxos de boas-vindas com nós de digest para evitar sobrecarga de mensagens ao usuário.
 3. **Integração via SDK:** Dispare notificações a partir de eventos do CRM com apenas 3 linhas de código.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `React + Tailwind + Headless UI`
 - Mecânica de Customização: Fornece componentes React headless (Inbox Notification Center) para inserção transparente no portal do cliente.
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] novu-mcp:** Permite a agentes de IA dispararem alertas transacionais contextualizados para clientes. (`npx -y @novu/mcp`)
 - **[Agent Skill] skill-notification-optimizer:** Skill para otimização de copy e horários de envio de notificações. (`.claude/skills/notification-optimizer/SKILL.md`)
 - **[CLI Tool] novu-cli:** Emulador local para teste de templates de notificação antes do deploy. (`novu dev`)
@@ -266,34 +266,34 @@ Arquitetura reativa moderna em TypeScript/React com centro de preferências do u
 - **Economia Anual Individual:** `R$ 9.600/ano` | **Licença OSI:** `MIT`
 - **Papel no Ecossistema:** Disparos rápidos de e-mails transacionais e sequências curtas de onboarding com curva de aprendizado zero.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Envia e-mails transacionais e executa sequências simples baseadas em eventos de produto. Backend em Node.js com banco PostgreSQL e dashboard em React.
 ```bash
 # Inicialização Rápida via Docker / CLI
 docker run -d -p 8080:8080 --name plunk useplunk/plunk:latest
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Setup de 2 minutos com interface minimalista focada exclusivamente em disparos baseados em eventos com consumo ínfimo de recursos.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `1 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *Perfeita para operações que não precisam da complexidade do Mautic e buscam simplicidade operacional imediata.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Conexão de SMTP:** Insira as credenciais SMTP corporativas no painel inicial do Plunk.
 2. **Gatilho de Boas-Vindas:** Crie uma ação para enviar e-mail imediatamente após a criação de um lead no site.
 3. **Rastreamento:** Acompanhe aberturas e cliques diretamente no painel minimalista.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `Next.js + Tailwind`
 - Mecânica de Customização: Templates de e-mail em Markdown/HTML limpo totalmente adaptáveis à identidade institucional.
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] plunk-mcp:** Servidor MCP para disparo direto de e-mails por agentes inteligentes. (`npx -y plunk-mcp`)
 - **[Agent Skill] skill-quick-email:** Gera respostas de suporte e envia via Plunk. (`.claude/skills/quick-email/SKILL.md`)
 - **[CLI Tool] plunk-cli:** Envio de eventos via chamadas HTTP simples. (`curl -X POST https://plunk.empresa/api/track`)
@@ -301,7 +301,7 @@ Setup de 2 minutos com interface minimalista focada exclusivamente em disparos b
 - **Repositório Oficial:** [https://github.com/useplunk/plunk](https://github.com/useplunk/plunk)
 
 ### PILAR 02: GRUPO 2: PIPELINE COMERCIAL, CRM & CONTRATOS
-> **Alvo SaaS Substituído:** `RD Station CRM (Plano Avançado para Equipes de Vendas)` | **Economia do Pilar:** `R$ 36.000/ano`  
+> **Alvo SaaS Substituído:** `RD Station CRM (Plano Avançado para Equipes de Vendas)` | **Economia do Pilar:** `R$ 36.000/ano` 
 > **Descrição Estratégica:** Frente responsável pela gestão visual de oportunidades comerciais em formato Kanban, distribuição de leads qualificados, histórico de contatos, agendamento de reuniões e assinatura de propostas.
 
 #### 01. Twenty · CRM Moderno Aberto & Gestão de Funil Comercial (Classificação: Persona Moderna)
@@ -309,34 +309,34 @@ Setup de 2 minutos com interface minimalista focada exclusivamente em disparos b
 - **Economia Anual Individual:** `R$ 24.000/ano (Equipe de 10 vendedores)` | **Licença OSI:** `AGPL-3.0`
 - **Papel no Ecossistema:** Interface principal dos vendedores para acompanhamento de negócios, tarefas e histórico de contatos.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Gerencia oportunidades em funil Kanban com sincronização de e-mail e notas em tempo real. Arquitetura reativa em TypeScript, React, NestJS e PostgreSQL com GraphQL nativo.
 ```bash
 # Inicialização Rápida via Docker / CLI
 git clone https://github.com/twentyhq/twenty && cd twenty && docker compose up -d
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Arquitetura reativa ultrarrápida em React/TypeScript com sincronização bidirecional de e-mails, campos customizados ilimitados e experiência de usuário moderna superior a CRMs legados.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `4 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *O CRM open source mais moderno do mundo, com padrão de usabilidade equivalente ou superior a SaaS como Notion e HubSpot.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Modelagem de Funis:** Configure as etapas do funil (Prospecção, Qualificação, Demonstração, Negociação e Fechamento).
 2. **Sincronização de E-mail:** Conecte contas IMAP/SMTP dos vendedores para registro automático de trocas de mensagens na timeline.
 3. **Campos Customizados:** Adicione campos de CNPJ, segmento e valor de contrato com validação de formato.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `React + TypeScript + Tailwind`
 - Mecânica de Customização: Interface moderna com suporte a logotipo da empresa e modo escuro/claro nativo.
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] @twentyhq/twenty-mcp:** Permite que assistentes de vendas consultem e atualizem oportunidades no Twenty via IA. (`npx -y @twentyhq/twenty-mcp`)
 - **[Agent Skill] skill-crm-deal-analyst:** Analisa negócios parados no pipeline e sugere ações de reativação para vendedores. (`.claude/skills/crm-deal-analyst/SKILL.md`)
 - **[CLI Tool] twenty-cli:** CLI para gestão de migrações e extensões de banco. (`yarn twenty db:migrate`)
@@ -348,34 +348,34 @@ Arquitetura reativa ultrarrápida em React/TypeScript com sincronização bidire
 - **Economia Anual Individual:** `R$ 18.000/ano` | **Licença OSI:** `GPL-3.0`
 - **Papel no Ecossistema:** Gerencia contas complexas B2B, hierarquia de permissões e regras avançadas de comissionamento.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Permite modelar entidades customizadas e fluxos BPM para grandes operações comerciais. PHP/MySQL com construtor no-code de layouts e entidades relacionais.
 ```bash
 # Inicialização Rápida via Docker / CLI
 docker run -d -p 8081:80 --name espocrm espocrm/espocrm
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Mecanismo BPM no-code maduro para operações B2B que necessitam de regras de aprovação de desconto e múltiplos pipelines simultâneos por linha de produto.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `2 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *A ferramenta mais sólida para empresas que necessitam de regras rígidas de segurança, permissões granulares e processos BPM.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Definição de Papéis (ACL):** Crie níveis de permissão onde vendedores veem apenas suas contas e gerentes veem o consolidado.
 2. **Automação de Tarefas:** Crie fluxos que distribuem leads automaticamente por round-robin ou região geográfica.
 3. **Relatórios Dinâmicos:** Gere relatórios tabulares e gráficos de conversão por canal de aquisição.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `Backbone.js + Bootstrap`
 - Mecânica de Customização: Totalmente personalizável pelo painel de administração (logo, cores, fontes e disposição de campos).
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] espocrm-mcp-server:** Servidor MCP para integração de dados comerciais complexos com LLMs. (`npx -y espocrm-mcp`)
 - **[Agent Skill] skill-b2b-lead-routing:** Roteamento inteligente de leads corporativos baseado em regras financeiras. (`.claude/skills/b2b-lead-routing/SKILL.md`)
 - **[CLI Tool] espocrm-console:** Executor de jobs em background para sincronização corporativa. (`php command.php run-job`)
@@ -387,34 +387,34 @@ Mecanismo BPM no-code maduro para operações B2B que necessitam de regras de ap
 - **Economia Anual Individual:** `R$ 36.000/ano` | **Licença OSI:** `AGPL-3.0`
 - **Papel no Ecossistema:** Gestão 360º de clientes com módulo nativo de cotações, faturamento, contratos e suporte pós-venda.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Centraliza todo o ciclo de vida do cliente: da prospecção ao faturamento e suporte técnico. PHP/Symfony com arquitetura robusta e banco relacional MySQL/Postgres.
 ```bash
 # Inicialização Rápida via Docker / CLI
 docker run -d -p 8080:80 --name suitecrm suitecrm/suitecrm
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 A alternativa open source mais madura e completa do mercado corporativo, possuindo módulos nativos de catálogo de produtos, cálculo de impostos e emissão de propostas.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `4 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *Para empresas que precisam de todas as funcionalidades de um ERP/CRM corporativo integrado em uma só plataforma.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Catálogo de Produtos:** Cadastre tabela de preços, SKUs e regras de desconto por volume.
 2. **Emissão de Orçamento:** Gere PDFs de cotações comerciais detalhadas diretamente na tela da oportunidade.
 3. **Gestão de Contratos:** Acompanhe renovações automáticas de contratos recorrentes e alertas de expiração.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `Symfony + Angular + Bootstrap`
 - Mecânica de Customização: Tema SuiteP com suporte a upload de marca corporativa e alteração da paleta de cores primária e secundária.
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] suitecrm-mcp:** Consulta de inventário e emissão de propostas via agentes de IA. (`npx -y suitecrm-mcp-server`)
 - **[Agent Skill] skill-quote-generator:** Gera cotações automáticas a partir de mensagens trocadas com o lead. (`.claude/skills/quote-gen/SKILL.md`)
 - **[CLI Tool] suitecrm-cli:** Instalador automatizado de pacotes e extensões. (`bin/console suitecrm:app:install`)
@@ -426,34 +426,34 @@ A alternativa open source mais madura e completa do mercado corporativo, possuin
 - **Economia Anual Individual:** `R$ 18.000/ano` | **Licença OSI:** `AGPL-3.0`
 - **Papel no Ecossistema:** Formalização jurídica de propostas comerciais e contratos sem custo por documento.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Gera links de assinatura digital com trilha de auditoria e carimbo do tempo criptográfico. Backend em TypeScript sobre PostgreSQL com geração de hashes SHA-256 dos documentos.
 ```bash
 # Inicialização Rápida via Docker / CLI
 git clone https://github.com/documenso/documenso && cd documenso && docker compose up -d
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Garante soberania jurídica dos documentos com trilha de auditoria criptográfica e registro de IPs, sem impor limites de contratos assinados por mês.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `2 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *Elimina 100% das cobranças punitivas por documento assinado mantendo validade jurídica plena sob a MP 2.200-2/2001.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Upload do PDF:** Envie o modelo de contrato gerado pela equipe comercial.
 2. **Posicionamento dos Campos:** Arraste os campos de assinatura, CPF, data e rubrica no documento.
 3. **Disparo & Trilha:** Envie o link para o cliente e receba o PDF assinado com certificado criptográfico.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `Next.js + Tailwind + shadcn/ui`
 - Mecânica de Customização: Customização completa de emails de disparo, página de assinatura com logo da empresa e domínio próprio.
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] documenso-mcp:** Geração e disparo de contratos para assinatura através de comandos de agentes de IA. (`npx -y documenso-mcp`)
 - **[Agent Skill] skill-contract-auditor:** Audita cláusulas contratuais antes do envio para assinatura. (`.claude/skills/contract-auditor/SKILL.md`)
 - **[CLI Tool] documenso-cli:** Criação de templates via linha de comando. (`documenso template create ./contrato.pdf`)
@@ -465,34 +465,34 @@ Garante soberania jurídica dos documentos com trilha de auditoria criptográfic
 - **Economia Anual Individual:** `R$ 12.000/ano` | **Licença OSI:** `AGPL-3.0`
 - **Papel no Ecossistema:** Elimina a fricção na marcação de reuniões de qualificação e fechamento com clientes.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Disponibiliza links de agendamento conectados à agenda dos vendedores com distribuição round-robin. Next.js e Prisma com sincronização com Google Calendar, Outlook e CalDAV.
 ```bash
 # Inicialização Rápida via Docker / CLI
 git clone https://github.com/calcom/cal.com && cd cal.com && docker compose up -d
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Suporte a distribuição round-robin entre múltiplos corretores/vendedores, integração direta com CalDAV, Google e Outlook e total personalização sob domínio próprio.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `2 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *A solução definitiva de agendamento: fácil de usar, elegante para o cliente e com total privacidade corporativa.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Conexão de Calendários:** Vincule a agenda dos vendedores corporativos (Google, Microsoft 365 ou Nextcloud).
 2. **Definição de Tipos de Reunião:** Configure reuniões de Demonstração (30 min) e Reunião de Fechamento (45 min).
 3. **Link no Chat/E-mail:** Insira o link na assinatura de e-mail e nos fluxos automáticos do Chatwoot/WhatsApp.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `Next.js + Tailwind + Radix UI`
 - Mecânica de Customização: Páginas públicas de agendamento 100% white-label sob subdomínio institucional (ex: `agenda.empresa.com.br`).
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] @calcom/mcp-server:** Permite que assistentes de IA agendem reuniões diretamente na conversa com o lead. (`npx -y @calcom/mcp-server`)
 - **[Agent Skill] skill-auto-scheduler:** Negocia horários disponíveis no WhatsApp e conclui o agendamento. (`.claude/skills/auto-scheduler/SKILL.md`)
 - **[CLI Tool] calcom-cli:** Inicialização rápida de ambientes corporativos. (`yarn calcom db-seed`)
@@ -500,7 +500,7 @@ Suporte a distribuição round-robin entre múltiplos corretores/vendedores, int
 - **Repositório Oficial:** [https://github.com/calcom/cal.com](https://github.com/calcom/cal.com)
 
 ### PILAR 03: GRUPO 3: ATENDIMENTO OMNICHANNEL & WHATSAPP
-> **Alvo SaaS Substituído:** `RD Station Conversas (Antigo Tallos / Módulos de Mensageria)` | **Economia do Pilar:** `R$ 36.000/ano`  
+> **Alvo SaaS Substituído:** `RD Station Conversas (Antigo Tallos / Módulos de Mensageria)` | **Economia do Pilar:** `R$ 36.000/ano` 
 > **Descrição Estratégica:** Frente responsável pela caixa de entrada unificada multicanal, conexão estável com múltiplos números de WhatsApp sem taxas por mensagem e triagem inteligente com chatbots.
 
 #### 01. Chatwoot · Central de Atendimento Omnicanal & Livechat Colaborativo (Classificação: Persona Completa)
@@ -508,34 +508,34 @@ Suporte a distribuição round-robin entre múltiplos corretores/vendedores, int
 - **Economia Anual Individual:** `R$ 36.000/ano (10 operadores)` | **Licença OSI:** `MIT`
 - **Papel no Ecossistema:** Inbox unificada para múltiplos atendentes humanos responderem WhatsApp, Webchat e Instagram.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Centraliza conversas de clientes, distribui tickets e permite notas internas entre atendentes. Ruby on Rails com WebSockets e Vue.js para mensageria em tempo real.
 ```bash
 # Inicialização Rápida via Docker / CLI
 git clone https://github.com/chatwoot/chatwoot && cd chatwoot && docker compose up -d
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Software líder global em suporte omnicanal aberto, eliminando a cobrança por licença de atendente e fornecendo relatórios completos de CSAT e tempo de primeira resposta.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `4 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *A plataforma mais completa do mercado aberto para atendimento humano, com relatórios gerenciais e SLAs avançados.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Criação de Caixas de Entrada:** Cadastre os canais de WhatsApp corporativo, Livechat do site e Instagram Direct.
 2. **Divisão por Equipes:** Crie equipes de Suporte Técnico, Vendas e Financeiro com distribuição automática de tickets.
 3. **Respostas Rápidas:** Cadastre macros de texto para agilizar as respostas mais comuns dos atendentes.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `Vue.js + Tailwind CSS`
 - Mecânica de Customização: Permite customizar logotipo, cores do widget de chat, nome da empresa e domínio institucional.
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] chatwoot-mcp:** Servidor MCP para agentes de IA lerem tickets e sugerirem respostas aos operadores humanos. (`npx -y chatwoot-mcp-server`)
 - **[Agent Skill] skill-sentiment-analyst:** Analisa o sentimento do cliente em tempo real no Chatwoot e alerta supervisores. (`.claude/skills/sentiment-analyst/SKILL.md`)
 - **[CLI Tool] chatwoot-ctl:** Gerenciamento de contas e instâncias via terminal. (`bundle exec rails runner 'Account.all'`)
@@ -547,34 +547,34 @@ Software líder global em suporte omnicanal aberto, eliminando a cobrança por l
 - **Economia Anual Individual:** `R$ 18.000/ano` | **Licença OSI:** `Apache-2.0`
 - **Papel no Ecossistema:** Conecta os números de WhatsApp corporativos e integra diretamente com o Chatwoot e n8n.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Recebe e envia mensagens, mídias e áudios de WhatsApp via endpoints REST. Node.js e TypeScript com gerenciamento de sessões em Redis e Postgres.
 ```bash
 # Inicialização Rápida via Docker / CLI
 docker run -d -p 8080:8080 --name evolution-api atendai/evolution-api:v2.1.0
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 API brasileira madura com suporte a múltiplas instâncias simultâneas, conversão automática de áudios em formato compatível e integração nativa de 1 clique com o Chatwoot.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `2 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *O conector WhatsApp mais estável do ecossistema nacional, suportando milhares de mensagens diárias com alta resiliência.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Geração de QR Code:** Crie uma instância via API e leia o QR Code com o aplicativo WhatsApp Business.
 2. **Conexão com Chatwoot:** Ative a flag nativa do Chatwoot para sincronizar mensagens bidirecionais instantâneas.
 3. **Configuração de Webhooks:** Aponte os webhooks de mensagens recebidas para o n8n para acionamento de IA.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `API REST / Swagger UI`
 - Mecânica de Customização: Opera como serviço de backend invisível sob domínio próprio da empresa (ex: `api-wa.empresa.com.br`).
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] evolution-api-mcp:** Permite que agentes LLM enviem mensagens e mídias de WhatsApp de forma autônoma. (`npx -y evolution-api-mcp`)
 - **[Agent Skill] skill-wa-audio-transcriber:** Transcreve áudios recebidos no WhatsApp e envia o resumo ao vendedor. (`.claude/skills/wa-transcriber/SKILL.md`)
 - **[CLI Tool] evolution-cli:** Criação programática de novas instâncias de WhatsApp. (`curl -X POST https://wa.empresa/instance/create`)
@@ -586,34 +586,34 @@ API brasileira madura com suporte a múltiplas instâncias simultâneas, convers
 - **Economia Anual Individual:** `R$ 14.400/ano` | **Licença OSI:** `AGPL-3.0`
 - **Papel no Ecossistema:** Realiza o primeiro atendimento, coleta dados do lead e transfere para a fila certa no Chatwoot.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Cria chatbots conversacionais interativos para qualificação de leads antes do humano. Editor visual drag-and-drop com blocos lógicos e integração nativa com IA e webhooks.
 ```bash
 # Inicialização Rápida via Docker / CLI
 docker run -d -p 3001:3000 --name typebot baptistearno/typebot-builder:latest
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Melhor construtor visual de fluxos conversacionais do mercado, com suporte a variáveis, ramificações condicionais e integração nativa com modelos de IA para atendimento automático.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `2 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *A melhor experiência de criação de robôs conversacionais: fluida, moderna e sem necessidade de conhecimento em programação.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Desenho do Fluxo:** Adicione blocos de perguntas, coleta de e-mail, telefone e opções de múltipla escolha.
 2. **Nó de Inteligência Artificial:** Integre o nó OpenAI/Anthropic para responder dúvidas sobre produtos com base em arquivos PDF.
 3. **Transbordo Humano:** Insira o bloco Chatwoot para transferir a conversa para um atendente quando o lead solicitar.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `Next.js + React + Tailwind`
 - Mecânica de Customização: Customização completa de fontes, avatares, cores de balões e plano de fundo no construtor visual.
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] typebot-mcp:** Permite que agentes analisem as respostas de formulários e conversem com leads. (`npx -y typebot-mcp-server`)
 - **[Agent Skill] skill-bot-flow-optimizer:** Analisa taxa de abandono nas perguntas do bot e otimiza as mensagens. (`.claude/skills/bot-optimizer/SKILL.md`)
 - **[CLI Tool] typebot-export:** Exportação de fluxos em formato JSON para controle de versão. (`typebot export --id flow-lead-qualification`)
@@ -625,34 +625,34 @@ Melhor construtor visual de fluxos conversacionais do mercado, com suporte a var
 - **Economia Anual Individual:** `R$ 12.000/ano` | **Licença OSI:** `Apache-2.0`
 - **Papel no Ecossistema:** Redundância de conexão WhatsApp para disparos de alertas transacionais críticos.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Fornece API HTTP estável para automações de sistema sem interferir na fila de atendimento humano. Sessões Chromium headless em contêiner Docker isolado.
 ```bash
 # Inicialização Rápida via Docker / CLI
 docker run -d -p 3000:3000 --name waha devlikeapro/waha
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Solução headless ultra-estável em contêiner isolado para garantir que mensagens transacionais de sistema sejam enviadas mesmo em caso de sobrecarga da fila de atendimento.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `2 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *Essencial para garantir que alertas de segurança e notificações financeiras não disputem fila com atendimentos humanos.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Inicialização:** Suba o contêiner WAHA apontando para uma porta interna isolada.
 2. **Autenticação:** Escaneie o QR Code via endpoint `/api/sessions/start`.
 3. **Disparo Transacional:** Envie alertas de cobrança e lembretes de reunião via chamadas REST no n8n.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `Swagger / OpenAPI`
 - Mecânica de Customização: Serviço totalmente desacoplado operando sob API interna.
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] waha-mcp:** Interface MCP para disparos transacionais de alta confiabilidade. (`npx -y waha-mcp-server`)
 - **[Agent Skill] skill-wa-delivery-checker:** Verifica status de entrega e leitura de notificações críticas. (`.claude/skills/delivery-checker/SKILL.md`)
 - **[CLI Tool] waha-cli:** Disparo direto de mensagens de terminal. (`curl -X POST https://waha.empresa/api/sendText`)
@@ -664,34 +664,34 @@ Solução headless ultra-estável em contêiner isolado para garantir que mensag
 - **Economia Anual Individual:** `R$ 10.800/ano` | **Licença OSI:** `MIT`
 - **Papel no Ecossistema:** Chat de atendimento direto no site corporativo com instalação instantânea e zero complexidade.
 
-**1. O Que Faz & Como Funciona:**  
+**1. O Que Faz & Como Funciona:** 
 Fornece chat ao vivo para clientes conversarem com a equipe diretamente pelo navegador. Backend em Elixir/Phoenix (alta concorrência) com frontend em React.
 ```bash
 # Inicialização Rápida via Docker / CLI
 docker run -d -p 4000:4000 --name papercups papercups/papercups:latest
 ```
 
-**2. Racional Financeiro da Escolha:**  
+**2. Racional Financeiro da Escolha:** 
 Widget de chat leve em React com painel simples e sem dependências pesadas, ideal para suporte ágil.
 
-**3. Requisitos de Infraestrutura & Veredito Técnico:**  
+**3. Requisitos de Infraestrutura & Veredito Técnico:** 
 - Memória RAM Mínima: `1 GB RAM`
 - CPU Recomendada: `1 vCPU`
 - Imagem Docker Oficial: `oficial`
 - Banco de Dados / Persistência: `PostgreSQL`
 - **Veredito da Engenharia:** *A solução mais direta e leve para quem precisa apenas de um chat corporativo elegante no site sem excesso de menus.*
 
-**4. Guia Prático de Uso em 3 Passos:**  
+**4. Guia Prático de Uso em 3 Passos:** 
 1. **Cópia do Script:** Copie o código JS do widget e cole no rodapé do site corporativo.
 2. **Definição de Cores:** Defina a cor primária e mensagem de boas-vindas do atendente.
 3. **Atendimento:** Responda mensagens de visitantes diretamente pelo dashboard web ou aplicativo.
 
-**5. White-Label & Design System:**  
+**5. White-Label & Design System:** 
 - Nível de Esforço: `Baixo` | Stack UI: `React + TypeScript + Theme Props`
 - Mecânica de Customização: Total customização visual do widget flutuante (título, subtítulo, avatar e cor hexadecimal).
 - Manutenibilidade de Temas: 
 
-**6. Ecossistema Agêntico (MCPs, Skills & Extensões):**  
+**6. Ecossistema Agêntico (MCPs, Skills & Extensões):** 
 - **[MCP Server] papercups-mcp:** Consulta de conversas de livechat em tempo real por agentes. (`npx -y papercups-mcp`)
 - **[Agent Skill] skill-livechat-responder:** Responde dúvidas de produtos no chat ao vivo do site. (`.claude/skills/livechat-responder/SKILL.md`)
 - **[CLI Tool] papercups-cli:** Extração de histórico de conversas. (`curl -X GET https://chat.empresa/api/v1/conversations`)
@@ -703,9 +703,9 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 ## CAPÍTULO 4 · CAMADA DE COLA, SSO FEDERADO & BLUEPRINTS N8N
 
 ### Arquitetura de Interconexão sem Silos de Dados
-- **🔑 Autenticação Única Federada (SSO):** Keycloak / Authentik (OpenID Connect / SAML) unificando o login dos colaboradores no Twenty CRM, Chatwoot, Directus, Mautic e SuiteCRM.
-- **⚡ Barramento de Eventos Assíncronos:** n8n Community Edition atuando como orquestrador central de eventos assíncronos (Lead capturado no Typebot -> pontuado no Mautic -> oportunidade criada no Twenty -> alerta enviado no WhatsApp via Evolution).
-- **🛡️ Gateway de Borda & Ingress TLS:** Traefik Proxy v3 com terminação TLS automática via Let's Encrypt e roteamento por subdomínios corporativos (mkt.empresa.com.br, crm.empresa.com.br, chat.empresa.com.br, sso.empresa.com.br).
+- ** Autenticação Única Federada (SSO):** Keycloak / Authentik (OpenID Connect / SAML) unificando o login dos colaboradores no Twenty CRM, Chatwoot, Directus, Mautic e SuiteCRM.
+- ** Barramento de Eventos Assíncronos:** n8n Community Edition atuando como orquestrador central de eventos assíncronos (Lead capturado no Typebot -> pontuado no Mautic -> oportunidade criada no Twenty -> alerta enviado no WhatsApp via Evolution).
+- ** Gateway de Borda & Ingress TLS:** Traefik Proxy v3 com terminação TLS automática via Let's Encrypt e roteamento por subdomínios corporativos (mkt.empresa.com.br, crm.empresa.com.br, chat.empresa.com.br, sso.empresa.com.br).
 
 ### Fluxo Operacional de Ponta a Ponta
 1. Entrada de Leads: Lead preenche formulário no Typebot ou na Landing Page gerenciada pelo Directus;
@@ -722,33 +722,33 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 - *Gatilho:* `Webhook HTTP POST `/webhook/novo-lead``
 ```json
 {
-  "name": "RD-to-Sovereign: Ingestão de Lead & CRM Deal",
-  "nodes": [
-    {
-      "parameters": {"httpMethod": "POST", "path": "novo-lead"},
-      "name": "Webhook Entrada Lead",
-      "type": "n8n-nodes-base.webhook",
-      "position": [250, 300]
-    },
-    {
-      "parameters": {"url": "http://mautic/api/contacts/new", "method": "POST"},
-      "name": "Cadastrar no Mautic",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [450, 300]
-    },
-    {
-      "parameters": {"url": "http://twenty:3000/graphql", "method": "POST"},
-      "name": "Criar Oportunidade Twenty",
-      "type": "n8n-nodes-base.graphql",
-      "position": [650, 300]
-    },
-    {
-      "parameters": {"url": "http://evolution-api:8080/message/sendText/empresa", "method": "POST"},
-      "name": "Notificar Vendedor WhatsApp",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [850, 300]
-    }
-  ]
+ "name": "RD-to-Sovereign: Ingestão de Lead & CRM Deal",
+ "nodes": [
+ {
+ "parameters": {"httpMethod": "POST", "path": "novo-lead"},
+ "name": "Webhook Entrada Lead",
+ "type": "n8n-nodes-base.webhook",
+ "position": [250, 300]
+ },
+ {
+ "parameters": {"url": "http://mautic/api/contacts/new", "method": "POST"},
+ "name": "Cadastrar no Mautic",
+ "type": "n8n-nodes-base.httpRequest",
+ "position": [450, 300]
+ },
+ {
+ "parameters": {"url": "http://twenty:3000/graphql", "method": "POST"},
+ "name": "Criar Oportunidade Twenty",
+ "type": "n8n-nodes-base.graphql",
+ "position": [650, 300]
+ },
+ {
+ "parameters": {"url": "http://evolution-api:8080/message/sendText/empresa", "method": "POST"},
+ "name": "Notificar Vendedor WhatsApp",
+ "type": "n8n-nodes-base.httpRequest",
+ "position": [850, 300]
+ }
+ ]
 }
 ```
 
@@ -757,27 +757,27 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 - *Gatilho:* `Webhook de Evento Mautic `lead.score.updated``
 ```json
 {
-  "name": "RD-to-Sovereign: Lead Scoring Quente to Chatwoot",
-  "nodes": [
-    {
-      "parameters": {"path": "mautic-score-trigger"},
-      "name": "Webhook Mautic Score",
-      "type": "n8n-nodes-base.webhook",
-      "position": [250, 300]
-    },
-    {
-      "parameters": {"conditions": {"number": [{"value1": "={{$json.score}}", "operation": "largerEqual", "value2": 50}]}},
-      "name": "Score >= 50?",
-      "type": "n8n-nodes-base.if",
-      "position": [450, 300]
-    },
-    {
-      "parameters": {"url": "http://chatwoot:3000/api/v1/accounts/1/conversations", "method": "POST"},
-      "name": "Abrir Atendimento Chatwoot",
-      "type": "n8n-nodes-base.httpRequest",
-      "position": [650, 200]
-    }
-  ]
+ "name": "RD-to-Sovereign: Lead Scoring Quente to Chatwoot",
+ "nodes": [
+ {
+ "parameters": {"path": "mautic-score-trigger"},
+ "name": "Webhook Mautic Score",
+ "type": "n8n-nodes-base.webhook",
+ "position": [250, 300]
+ },
+ {
+ "parameters": {"conditions": {"number": [{"value1": "={{$json.score}}", "operation": "largerEqual", "value2": 50}]}},
+ "name": "Score >= 50?",
+ "type": "n8n-nodes-base.if",
+ "position": [450, 300]
+ },
+ {
+ "parameters": {"url": "http://chatwoot:3000/api/v1/accounts/1/conversations", "method": "POST"},
+ "name": "Abrir Atendimento Chatwoot",
+ "type": "n8n-nodes-base.httpRequest",
+ "position": [650, 200]
+ }
+ ]
 }
 ```
 
@@ -785,11 +785,11 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 
 ## CAPÍTULO 5 · MANUAL DE ENGENHARIA DE INFRAESTRUTURA & DEPLOY ALL-IN-ONE
 
-### 💡 Entendendo os 4 Pilares da Infraestrutura (Sem Jargões)
-- **1. O que é VPS?** 🏢 A VPS é o seu 'apartamento alugado na nuvem'. Em vez de manter um computador físico ligado no escritório gastando luz, você aluga um servidor ultra-rápido que fica ligado 24 horas por dia, 7 dias por semana, com gerador e internet de fibra ótica.
-- **2. O que é Docker Compose?** 📦 O Docker Compose é o 'manual de montagem e mobília automática'. Você não precisa instalar programas um por um nem entender de Linux. Ao rodar um único comando, o Docker baixa todos os módulos prontos e os liga automaticamente.
-- **3. O que é Traefik?** 🛡️ O Traefik é o 'porteiro inteligente do condomínio'. Ele atende os visitantes na internet, verifica a segurança, coloca o cadeado verde (certificado SSL HTTPS gratuito) e encaminha cada pessoa para o apartamento certo (mkt, crm, chat ou sso).
-- **4. O que é n8n?** ⚡ O n8n é o 'carteiro e mensageiro da empresa'. Ele fica vigiando os formulários: quando um cliente preenche um cadastro, o n8n pega as informações na hora e entrega no WhatsApp do vendedor e no funil do CRM automaticamente.
+### Entendendo os 4 Pilares da Infraestrutura (Sem Jargões)
+- **1. O que é VPS?** A VPS é o seu 'apartamento alugado na nuvem'. Em vez de manter um computador físico ligado no escritório gastando luz, você aluga um servidor ultra-rápido que fica ligado 24 horas por dia, 7 dias por semana, com gerador e internet de fibra ótica.
+- **2. O que é Docker Compose?** O Docker Compose é o 'manual de montagem e mobília automática'. Você não precisa instalar programas um por um nem entender de Linux. Ao rodar um único comando, o Docker baixa todos os módulos prontos e os liga automaticamente.
+- **3. O que é Traefik?** O Traefik é o 'porteiro inteligente do condomínio'. Ele atende os visitantes na internet, verifica a segurança, coloca o cadeado verde (certificado SSL HTTPS gratuito) e encaminha cada pessoa para o apartamento certo (mkt, crm, chat ou sso).
+- **4. O que é n8n?** O n8n é o 'carteiro e mensageiro da empresa'. Ele fica vigiando os formulários: quando um cliente preenche um cadastro, o n8n pega as informações na hora e entrega no WhatsApp do vendedor e no funil do CRM automaticamente.
 
 > **Topologia & Segurança de Rede:** A infraestrutura opera sobre uma rede bridge isolada do Docker (`ecosystem_net`). Apenas o reverse proxy Traefik expõe as portas públicas 80 (HTTP com redirect) e 443 (HTTPS TLS automático via ACME/Let's Encrypt). Todas as ferramentas (Mautic, Twenty, Chatwoot, Evolution, n8n, Keycloak e PostgreSQL) comunicam-se exclusivamente pela rede interna através de seus nomes DNS de serviço (ex: `http://chatwoot:3000`, `postgres:5432`), eliminando vetores de ataque externos e exposição de portas desnecessárias.
 
@@ -806,8 +806,8 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 | 08 | **Cluster PostgreSQL 16** | `postgres:16-alpine` | Banco de Dados Relacional Unificado da Suíte | `Nenhuma porta pública (porta 5432 restrita à rede privada `ecosystem_net`)` | `Volume de dados `/var/lib/postgresql/data` com política de backup diário pg_dump` |
 | 09 | **Redis Cache 7** | `redis:7-alpine` | Fila de Mensageria em Memória & Sessões WebSockets em Tempo Real | `Nenhuma porta pública (porta 6379 restrita à rede privada `ecosystem_net`)` | `Volume persistente `/data` com Append-Only File (AOF) ativado` |
 
-### 🖥️ Especificação da VPS Ideal para o Ecossistema Completo (e Por Que)
-> **Perfil de Máquina Recomendado:** `8 vCPU Dedicated Cloud / 16 GB RAM ECC / 160-240 GB NVMe SSD / Link 1 Gbps / Ubuntu 24.04 LTS x86_64`  
+### Especificação da VPS Ideal para o Ecossistema Completo (e Por Que)
+> **Perfil de Máquina Recomendado:** `8 vCPU Dedicated Cloud / 16 GB RAM ECC / 160-240 GB NVMe SSD / Link 1 Gbps / Ubuntu 24.04 LTS x86_64` 
 > **Por Que Desta Configuração (Racional Técnico):** Garante estabilidade absoluta para os 9 contêineres rodando em simultâneo com isolamento de processos, prevenindo gargalos de I/O em banco de dados e eliminando o risco do OOM Killer durante picos de campanha e atendimento.
 
 #### Distribuição de Recursos de Hardware por Serviço (vCPU & RAM)
@@ -840,121 +840,121 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 version: '3.8'
 
 networks:
-  ecosystem_net:
-    driver: bridge
+ ecosystem_net:
+ driver: bridge
 
 services:
-  # 1. Reverse Proxy & TLS Automático
-  traefik:
-    image: traefik:v3.0
-    command:
-      - '--providers.docker=true'
-      - '--entrypoints.websecure.address=:443'
-      - '--certificatesresolvers.myresolver.acme.tlschallenge=true'
-    ports:
-      - '80:80'
-      - '443:443'
-    volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock:ro'
-      - './letsencrypt:/letsencrypt'
-    networks:
-      - ecosystem_net
+ # 1. Reverse Proxy & TLS Automático
+ traefik:
+ image: traefik:v3.0
+ command:
+ - '--providers.docker=true'
+ - '--entrypoints.websecure.address=:443'
+ - '--certificatesresolvers.myresolver.acme.tlschallenge=true'
+ ports:
+ - '80:80'
+ - '443:443'
+ volumes:
+ - '/var/run/docker.sock:/var/run/docker.sock:ro'
+ - './letsencrypt:/letsencrypt'
+ networks:
+ - ecosystem_net
 
-  # 2. Provedor de Identidade & SSO
-  keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    command: start-dev
-    environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=SegredoForte2026
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.keycloak.rule=Host(`sso.suaempresa.com.br`)'
-      - 'traefik.http.routers.keycloak.entrypoints=websecure'
-      - 'traefik.http.routers.keycloak.tls.certresolver=myresolver'
-    networks:
-      - ecosystem_net
+ # 2. Provedor de Identidade & SSO
+ keycloak:
+ image: quay.io/keycloak/keycloak:latest
+ command: start-dev
+ environment:
+ - KEYCLOAK_ADMIN=admin
+ - KEYCLOAK_ADMIN_PASSWORD=SegredoForte2026
+ labels:
+ - 'traefik.enable=true'
+ - 'traefik.http.routers.keycloak.rule=Host(`sso.suaempresa.com.br`)'
+ - 'traefik.http.routers.keycloak.entrypoints=websecure'
+ - 'traefik.http.routers.keycloak.tls.certresolver=myresolver'
+ networks:
+ - ecosystem_net
 
-  # 3. Barramento de Eventos e Workflows
-  n8n:
-    image: n8nio/n8n:latest
-    environment:
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_HOST=n8n.suaempresa.com.br
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.n8n.rule=Host(`n8n.suaempresa.com.br`)'
-      - 'traefik.http.routers.n8n.entrypoints=websecure'
-      - 'traefik.http.routers.n8n.tls.certresolver=myresolver'
-    networks:
-      - ecosystem_net
+ # 3. Barramento de Eventos e Workflows
+ n8n:
+ image: n8nio/n8n:latest
+ environment:
+ - N8N_BASIC_AUTH_ACTIVE=true
+ - N8N_HOST=n8n.suaempresa.com.br
+ labels:
+ - 'traefik.enable=true'
+ - 'traefik.http.routers.n8n.rule=Host(`n8n.suaempresa.com.br`)'
+ - 'traefik.http.routers.n8n.entrypoints=websecure'
+ - 'traefik.http.routers.n8n.tls.certresolver=myresolver'
+ networks:
+ - ecosystem_net
 
-  # 4. Automação de Marketing & Nutrição (RD Marketing)
-  mautic:
-    image: mautic/mautic:latest
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.mautic.rule=Host(`mkt.suaempresa.com.br`)'
-      - 'traefik.http.routers.mautic.entrypoints=websecure'
-      - 'traefik.http.routers.mautic.tls.certresolver=myresolver'
-    networks:
-      - ecosystem_net
+ # 4. Automação de Marketing & Nutrição (RD Marketing)
+ mautic:
+ image: mautic/mautic:latest
+ labels:
+ - 'traefik.enable=true'
+ - 'traefik.http.routers.mautic.rule=Host(`mkt.suaempresa.com.br`)'
+ - 'traefik.http.routers.mautic.entrypoints=websecure'
+ - 'traefik.http.routers.mautic.tls.certresolver=myresolver'
+ networks:
+ - ecosystem_net
 
-  # 5. Pipeline Comercial & CRM (RD CRM)
-  twenty:
-    image: twentyhq/twenty:latest
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.twenty.rule=Host(`crm.suaempresa.com.br`)'
-      - 'traefik.http.routers.twenty.entrypoints=websecure'
-      - 'traefik.http.routers.twenty.tls.certresolver=myresolver'
-    networks:
-      - ecosystem_net
+ # 5. Pipeline Comercial & CRM (RD CRM)
+ twenty:
+ image: twentyhq/twenty:latest
+ labels:
+ - 'traefik.enable=true'
+ - 'traefik.http.routers.twenty.rule=Host(`crm.suaempresa.com.br`)'
+ - 'traefik.http.routers.twenty.entrypoints=websecure'
+ - 'traefik.http.routers.twenty.tls.certresolver=myresolver'
+ networks:
+ - ecosystem_net
 
-  # 6. Atendimento Omnichannel & Livechat (RD Conversas)
-  chatwoot:
-    image: chatwoot/chatwoot:latest
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.chatwoot.rule=Host(`chat.suaempresa.com.br`)'
-      - 'traefik.http.routers.chatwoot.entrypoints=websecure'
-      - 'traefik.http.routers.chatwoot.tls.certresolver=myresolver'
-    networks:
-      - ecosystem_net
+ # 6. Atendimento Omnichannel & Livechat (RD Conversas)
+ chatwoot:
+ image: chatwoot/chatwoot:latest
+ labels:
+ - 'traefik.enable=true'
+ - 'traefik.http.routers.chatwoot.rule=Host(`chat.suaempresa.com.br`)'
+ - 'traefik.http.routers.chatwoot.entrypoints=websecure'
+ - 'traefik.http.routers.chatwoot.tls.certresolver=myresolver'
+ networks:
+ - ecosystem_net
 
-  # 7. Gateway WhatsApp Baileys & Webhooks
-  evolution-api:
-    image: atendai/evolution-api:v2.1.0
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.evolution.rule=Host(`wa.suaempresa.com.br`)'
-      - 'traefik.http.routers.evolution.entrypoints=websecure'
-      - 'traefik.http.routers.evolution.tls.certresolver=myresolver'
-    networks:
-      - ecosystem_net
+ # 7. Gateway WhatsApp Baileys & Webhooks
+ evolution-api:
+ image: atendai/evolution-api:v2.1.0
+ labels:
+ - 'traefik.enable=true'
+ - 'traefik.http.routers.evolution.rule=Host(`wa.suaempresa.com.br`)'
+ - 'traefik.http.routers.evolution.entrypoints=websecure'
+ - 'traefik.http.routers.evolution.tls.certresolver=myresolver'
+ networks:
+ - ecosystem_net
 
-  # 8. Banco de Dados Relacional Consolidado
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=SegredoPostgres2026
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - ecosystem_net
+ # 8. Banco de Dados Relacional Consolidado
+ postgres:
+ image: postgres:16-alpine
+ environment:
+ - POSTGRES_USER=postgres
+ - POSTGRES_PASSWORD=SegredoPostgres2026
+ volumes:
+ - postgres_data:/var/lib/postgresql/data
+ networks:
+ - ecosystem_net
 
-  # 9. Filas de Alta Velocidade & Sessões
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - redis_data:/data
-    networks:
-      - ecosystem_net
+ # 9. Filas de Alta Velocidade & Sessões
+ redis:
+ image: redis:7-alpine
+ volumes:
+ - redis_data:/data
+ networks:
+ - ecosystem_net
 
 volumes:
-  postgres_data:
-  redis_data:
+ postgres_data:
+ redis_data:
 ```
 
 ### Roteiro de Instalação e Subida em 4 Passos
@@ -968,7 +968,7 @@ volumes:
 
 ## CAPÍTULO 6 · PROTOCOLOS DE MODULARIDADE & HOT-SWAP (PRINCÍPIO DO LEGO)
 
-> **O Princípio das Tomadas Independentes:**  
+> **O Princípio das Tomadas Independentes:** 
 > A arquitetura opera sob o princípio de 'Tomadas e Aparelhos Independentes'. Nenhuma ferramenta fica grudada ou dependente da outra com código travado. Imagine uma régua de tomadas na sua sala: a sua TV (Twenty CRM) e a sua Caixa de Som (Chatwoot) funcionam perfeitamente mesmo se você desligar o Abajur (Mautic). Se você quiser trocar o abajur por uma luminária moderna, basta tirar da tomada e plugar a nova. Nada na sua sala quebra.
 
 ### Protocolo 1: Inserção de Novas Ferramentas (Plug-and-Play)
@@ -997,45 +997,45 @@ volumes:
 
 ### Perguntas Frequentes (FAQ Operacional para Não-Técnicos)
 
-- **❓ E se a VPS for reiniciada por falta de luz no datacenter?**
-  - *Resposta:* Todos os serviços possuem configuração de auto-recuperação (restart: always). Quando o servidor ligar novamente, todas as ferramentas e bancos de dados sobem sozinhos sem você precisar fazer nada.
+- ** E se a VPS for reiniciada por falta de luz no datacenter?**
+ - *Resposta:* Todos os serviços possuem configuração de auto-recuperação (restart: always). Quando o servidor ligar novamente, todas as ferramentas e bancos de dados sobem sozinhos sem você precisar fazer nada.
 
-- **❓ Como funcionam os backups dos meus clientes e conversas?**
-  - *Resposta:* Todas as informações de leads, negociações e mensagens de WhatsApp ficam armazenadas em uma pasta segura de dados (`/var/lib/postgresql/data`). Um script diário gera cópias automáticas que podem ser enviadas para o seu Google Drive ou Amazon S3.
+- ** Como funcionam os backups dos meus clientes e conversas?**
+ - *Resposta:* Todas as informações de leads, negociações e mensagens de WhatsApp ficam armazenadas em uma pasta segura de dados (`/var/lib/postgresql/data`). Um script diário gera cópias automáticas que podem ser enviadas para o seu Google Drive ou Amazon S3.
 
-- **❓ Preciso contratar um desenvolvedor para usar no dia a dia?**
-  - *Resposta:* Não! O uso rotineiro da sua equipe é 100% feito pelo navegador web em telas modernas e em português, exatamente como se estivesse usando o RD Station, Trello ou WhatsApp Web.
+- ** Preciso contratar um desenvolvedor para usar no dia a dia?**
+ - *Resposta:* Não! O uso rotineiro da sua equipe é 100% feito pelo navegador web em telas modernas e em português, exatamente como se estivesse usando o RD Station, Trello ou WhatsApp Web.
 
 ---
 
 ## CAPÍTULO 7 · ROTEIRO PRÁTICO DE MIGRAÇÃO DE DADOS HISTÓRICOS
 
-### 1. Migração do RD Station Marketing ➔ Mautic
+### 1. Migração do RD Station Marketing Mautic
 - **O que migrar:** Base total de contatos (Leads), campos personalizados, histórico de tags, segmentos e listas de descadastro (opt-out).
 - **Passos de Migração:**
-  1. No RD Station Marketing, vá em Base de Leads > Exportar Base Completa em formato CSV com todos os campos e tags;
-  1. Abra o Mautic em `mkt.suaempresa.com.br` e crie previamente os campos customizados correspondentes (ex: Cargo, Segmento, Faturamento);
-  1. Vá em Contatos > Importar > Selecione o arquivo CSV do RD Station e faça o de-para (mapeamento) das colunas em 2 minutos;
-  1. Execute a importação em segundo plano. O Mautic processa 100.000 contatos em menos de 10 minutos.
-- **⚠️ Cuidados Críticos:** Importe a lista de opt-out (unsubscribers) com o status 'Não perturbe' ativado para preservar a reputação do seu domínio de e-mail.
+ 1. No RD Station Marketing, vá em Base de Leads > Exportar Base Completa em formato CSV com todos os campos e tags;
+ 1. Abra o Mautic em `mkt.suaempresa.com.br` e crie previamente os campos customizados correspondentes (ex: Cargo, Segmento, Faturamento);
+ 1. Vá em Contatos > Importar > Selecione o arquivo CSV do RD Station e faça o de-para (mapeamento) das colunas em 2 minutos;
+ 1. Execute a importação em segundo plano. O Mautic processa 100.000 contatos em menos de 10 minutos.
+- ** Cuidados Críticos:** Importe a lista de opt-out (unsubscribers) com o status 'Não perturbe' ativado para preservar a reputação do seu domínio de e-mail.
 
-### 2. Migração do RD Station CRM ➔ Twenty CRM
+### 2. Migração do RD Station CRM Twenty CRM
 - **O que migrar:** Empresas cadastradas, Pessoas de contato, Etapas do Funil de Vendas (Kanban), Negociações abertas/ganhas e Histórico de anotações comerciais.
 - **Passos de Migração:**
-  1. No RD Station CRM, acerte a exportação completa de 'Negociações e Contatos' em formato CSV ou XLSX;
-  1. No Twenty CRM (`crm.suaempresa.com.br`), configure as fases do seu funil (ex: Qualificação, Apresentação, Proposta, Fechamento);
-  1. Utilize o importador nativo do Twenty CRM para carregar as empresas e vincular automaticamente os contatos e valores de negócio;
-  1. Atribua as negociações existentes aos seus respectivos vendedores via login unificado do Keycloak.
-- **⚠️ Cuidados Críticos:** Mantenha a correspondência exata dos e-mails dos vendedores para que o histórico de notas e tarefas seja atribuído aos donos corretos.
+ 1. No RD Station CRM, acerte a exportação completa de 'Negociações e Contatos' em formato CSV ou XLSX;
+ 1. No Twenty CRM (`crm.suaempresa.com.br`), configure as fases do seu funil (ex: Qualificação, Apresentação, Proposta, Fechamento);
+ 1. Utilize o importador nativo do Twenty CRM para carregar as empresas e vincular automaticamente os contatos e valores de negócio;
+ 1. Atribua as negociações existentes aos seus respectivos vendedores via login unificado do Keycloak.
+- ** Cuidados Críticos:** Mantenha a correspondência exata dos e-mails dos vendedores para que o histórico de notas e tarefas seja atribuído aos donos corretos.
 
-### 3. Migração do RD Conversas / WhatsApp ➔ Chatwoot & Evolution API
+### 3. Migração do RD Conversas / WhatsApp Chatwoot & Evolution API
 - **O que migrar:** Números de WhatsApp conectados, mensagens pré-programadas (macros de resposta rápida), equipes de atendentes e departamentos.
 - **Passos de Migração:**
-  1. Cadastre os departamentos no Chatwoot (Vendas, Suporte, Financeiro) e convide os atendentes;
-  1. Conecte a Evolution API ao Chatwoot criando uma nova caixa de entrada do tipo API Webhook;
-  1. No painel da Evolution API (`wa.suaempresa.com.br`), gere o QR Code e escaneie com o celular corporativo do WhatsApp da empresa;
-  1. A conexão é estabelecida imediatamente com recepção de mensagens em tempo real e divisão automática entre atendentes.
-- **⚠️ Cuidados Críticos:** Não desconecte o chip do aparelho físico durante a virada para garantir a sincronização inicial de contatos.
+ 1. Cadastre os departamentos no Chatwoot (Vendas, Suporte, Financeiro) e convide os atendentes;
+ 1. Conecte a Evolution API ao Chatwoot criando uma nova caixa de entrada do tipo API Webhook;
+ 1. No painel da Evolution API (`wa.suaempresa.com.br`), gere o QR Code e escaneie com o celular corporativo do WhatsApp da empresa;
+ 1. A conexão é estabelecida imediatamente com recepção de mensagens em tempo real e divisão automática entre atendentes.
+- ** Cuidados Críticos:** Não desconecte o chip do aparelho físico durante a virada para garantir a sincronização inicial de contatos.
 
 ---
 
@@ -1065,7 +1065,7 @@ rclone copy $BACKUP_DIR remote-s3:backups-empresa/$TIMESTAMP/
 
 # 5. Limpeza de backups locais com mais de 7 dias
 find /opt/backups/* -mtime +7 -exec rm -rf {} \;
-echo "✅ Backup soberano concluído e sincronizado na nuvem fria!"
+echo " Backup soberano concluído e sincronizado na nuvem fria!"
 ```
 
 ### Checklist de Conformidade Estrita com a LGPD
@@ -1083,27 +1083,27 @@ echo "✅ Backup soberano concluído e sincronizado na nuvem fria!"
 
 #### Semana 1 (Dias 1 a 7) · Infraestrutura & Instalação do Cluster
 - *Atividades Principais:* Contratação da VPS, configuração de DNS wildcard (*.empresa.com.br), execução do docker-compose.yml e ativação dos certificados SSL automáticos via Traefik.
-- *🎯 Marco de Conclusão:* **Todos os painéis acessíveis online com cadeado verde (HTTPS).**
+- * Marco de Conclusão:* **Todos os painéis acessíveis online com cadeado verde (HTTPS).**
 
 #### Semana 2 (Dias 8 a 14) · Migração de Dados & Conexão de Mensageria
 - *Atividades Principais:* Importação de leads do RD Marketing no Mautic, exportação do funil de vendas para o Twenty CRM e pareamento do WhatsApp na Evolution API e Chatwoot.
-- *🎯 Marco de Conclusão:* **Base histórica 100% carregada e WhatsApp corporativo recebendo mensagens no Chatwoot.**
+- * Marco de Conclusão:* **Base histórica 100% carregada e WhatsApp corporativo recebendo mensagens no Chatwoot.**
 
 #### Semana 3 (Dias 15 a 21) · Importação dos Blueprints n8n & Treinamento das Equipes
 - *Atividades Principais:* Importação dos templates de workflow no n8n, realização de testes de passagem de bastão (Lead -> CRM -> WhatsApp) e workshop de capacitação dos vendedores e atendentes.
-- *🎯 Marco de Conclusão:* **Equipes comerciais operando com agilidade e fluxos automatizados aprovados.**
+- * Marco de Conclusão:* **Equipes comerciais operando com agilidade e fluxos automatizados aprovados.**
 
 #### Semana 4 (Dias 22 a 30) · Virada de Chave Definitiva & Descomissionamento SaaS
 - *Atividades Principais:* Redirecionamento de formulários do site oficial para a nova stack, ativação da régua de nutrição oficial e cancelamento das faturas recorrentes do RD Station Suite.
-- *🎯 Marco de Conclusão:* **Autonomia digital plena e economia de R$ 109.800/ano consolidada!**
+- * Marco de Conclusão:* **Autonomia digital plena e economia de R$ 109.800/ano consolidada!**
 
 ### Monitoramento em Tempo Real da VPS (Netdata / Portainer Community Edition (Monitoramento visual leve e em tempo real))
 
 **Comandos de Diagnóstico em 1 Clique:**
 
-- `docker stats --no-stream` ➔ Exibe o consumo instantâneo de memória RAM, % de CPU e tráfego de rede de cada um dos 9 serviços da stack.
-- `docker compose ps` ➔ Verifica o status de saúde (Up / Healthy) de todos os contêineres e o tempo em que estão no ar.
-- `docker compose logs -f --tail=50 traefik` ➔ Inspeciona o tráfego HTTP/HTTPS em tempo real e a renovação de certificados SSL.
+- `docker stats --no-stream` Exibe o consumo instantâneo de memória RAM, % de CPU e tráfego de rede de cada um dos 9 serviços da stack.
+- `docker compose ps` Verifica o status de saúde (Up / Healthy) de todos os contêineres e o tempo em que estão no ar.
+- `docker compose logs -f --tail=50 traefik` Inspeciona o tráfego HTTP/HTTPS em tempo real e a renovação de certificados SSL.
 
 **Métricas Críticas & Ações Imediatas:**
 

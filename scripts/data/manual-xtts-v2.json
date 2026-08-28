@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "../schemas/schema_manual_operacional.json",
   "produto_foco": "Coqui XTTS-v2 (Clonagem de Voz Multilingue & TTS Neural)",
   "slug": "xtts-v2",
@@ -84,13 +84,13 @@
       {
         "caminho": "/opt/xtts/docker-compose.yml",
         "linguagem": "yaml",
-        "conteudo": "version: '3.8'\nservices:\n  xtts:\n    image: ghcr.io/coqui-ai/tts:latest\n    container_name: xtts-server\n    restart: unless-stopped\n    ports:\n      - '5002:5002'\n    environment:\n      - NVIDIA_VISIBLE_DEVICES=all\n      - COQUI_TOS_AGREED=1\n    volumes:\n      - ./voices:/app/voices\n      - xtts_models:/root/.local/share/tts\n    deploy:\n      resources:\n        reservations:\n          devices:\n            - driver: nvidia\n              count: all\n              capabilities: [gpu]\nvolumes:\n  xtts_models:\n    driver: local",
+        "conteudo": "version: '3.8'\nservices:\n xtts:\n image: ghcr.io/coqui-ai/tts:latest\n container_name: xtts-server\n restart: unless-stopped\n ports:\n - '5002:5002'\n environment:\n - NVIDIA_VISIBLE_DEVICES=all\n - COQUI_TOS_AGREED=1\n volumes:\n - ./voices:/app/voices\n - xtts_models:/root/.local/share/tts\n deploy:\n resources:\n reservations:\n devices:\n - driver: nvidia\n count: all\n capabilities: [gpu]\nvolumes:\n xtts_models:\n driver: local",
         "explicacao": "Docker compose com aceleracao de GPU NVIDIA e persistencia de vozes clonadas."
       },
       {
         "caminho": "/etc/nginx/sites-available/xtts.conf",
         "linguagem": "nginx",
-        "conteudo": "server {\n  listen 80;\n  server_name voz.suaempresa.com;\n  location / {\n    proxy_pass http://127.0.0.1:5002;\n    proxy_http_version 1.1;\n    proxy_set_header Upgrade $http_upgrade;\n    proxy_set_header Connection 'upgrade';\n    proxy_set_header Host $host;\n    proxy_read_timeout 300s;\n  }\n}",
+        "conteudo": "server {\n listen 80;\n server_name voz.suaempresa.com;\n location / {\n proxy_pass http://127.0.0.1:5002;\n proxy_http_version 1.1;\n proxy_set_header Upgrade $http_upgrade;\n proxy_set_header Connection 'upgrade';\n proxy_set_header Host $host;\n proxy_read_timeout 300s;\n }\n}",
         "explicacao": "Reverse proxy para expor a API de sintese e WebSocket com timeout estendido."
       }
     ]
