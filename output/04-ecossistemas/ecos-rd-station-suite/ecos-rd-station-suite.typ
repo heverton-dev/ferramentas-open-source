@@ -19,6 +19,43 @@
 #set text(font: "Liberation Sans", size: 9.5pt, lang: "pt")
 #set par(justify: true, leading: 1.5em)
 
+// DIAGRAMAÇÃO DE TÍTULOS E ESPAÇAMENTOS (HIERARQUIA H1-H6)
+#show heading.where(level: 1): it => block(
+  above: 28pt,
+  below: 14pt,
+  text(size: 18pt, weight: "bold", fill: rgb("#0f172a"), font: "Liberation Serif")[#it.body]
+)
+
+#show heading.where(level: 2): it => block(
+  above: 22pt,
+  below: 10pt,
+  text(size: 13.5pt, weight: "bold", fill: rgb("#0f172a"), font: "Liberation Sans")[#it.body]
+)
+
+#show heading.where(level: 3): it => block(
+  above: 16pt,
+  below: 8pt,
+  text(size: 11pt, weight: "bold", fill: rgb("#1e293b"), font: "Liberation Sans")[#it.body]
+)
+
+#show heading.where(level: 4): it => block(
+  above: 14pt,
+  below: 6pt,
+  text(size: 10pt, weight: "bold", fill: rgb("#334155"), font: "Liberation Sans")[#it.body]
+)
+
+#show heading.where(level: 5): it => block(
+  above: 12pt,
+  below: 4pt,
+  text(size: 9.5pt, weight: "bold", fill: rgb("#475569"), font: "Liberation Sans")[#it.body]
+)
+
+#show heading.where(level: 6): it => block(
+  above: 10pt,
+  below: 4pt,
+  text(size: 9pt, weight: "bold", fill: rgb("#64748b"), font: "Liberation Sans")[#it.body]
+)
+
 // CAPA EDITORIAL EXECUTIVA
 #align(center + horizon)[
   #rect(stroke: 2pt + rgb("#0f172a"), inset: 24pt, radius: 4pt, width: 100%)[

@@ -115,6 +115,14 @@ CSS_CANONICO_DIAMANTE = """
     -webkit-font-smoothing: antialiased;
   }
 
+  h1 { font-family: var(--font-serif); font-size: 32px; margin: 38px 0 18px 0; color: var(--ink); line-height: 1.2; font-weight: 700; }
+  h2 { font-family: var(--font-serif); font-size: 26px; margin: 32px 0 16px 0; color: var(--ink); line-height: 1.25; font-weight: 700; }
+  h3 { font-family: var(--font-serif); font-size: 21px; margin: 26px 0 12px 0; color: var(--ink); line-height: 1.3; font-weight: 600; }
+  h4 { font-family: var(--font-sans); font-size: 17px; margin: 22px 0 10px 0; color: var(--ink); line-height: 1.35; font-weight: 700; }
+  h5 { font-family: var(--font-sans); font-size: 14.5px; margin: 18px 0 8px 0; color: var(--ink-2); line-height: 1.4; font-weight: 700; }
+  h6 { font-family: var(--font-sans); font-size: 12.5px; margin: 14px 0 6px 0; color: var(--muted); line-height: 1.4; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+  p { margin: 0 0 14px 0; }
+
   .wrap {
     max-width: 1180px;
     margin: 0 auto;
@@ -1549,6 +1557,43 @@ def gerar_typst_ecossistema(dados: dict) -> str:
 )
 #set text(font: "Liberation Sans", size: 9.5pt, lang: "pt")
 #set par(justify: true, leading: 1.5em)
+
+// DIAGRAMAÇÃO DE TÍTULOS E ESPAÇAMENTOS (HIERARQUIA H1-H6)
+#show heading.where(level: 1): it => block(
+  above: 28pt,
+  below: 14pt,
+  text(size: 18pt, weight: "bold", fill: rgb("#0f172a"), font: "Liberation Serif")[#it.body]
+)
+
+#show heading.where(level: 2): it => block(
+  above: 22pt,
+  below: 10pt,
+  text(size: 13.5pt, weight: "bold", fill: rgb("#0f172a"), font: "Liberation Sans")[#it.body]
+)
+
+#show heading.where(level: 3): it => block(
+  above: 16pt,
+  below: 8pt,
+  text(size: 11pt, weight: "bold", fill: rgb("#1e293b"), font: "Liberation Sans")[#it.body]
+)
+
+#show heading.where(level: 4): it => block(
+  above: 14pt,
+  below: 6pt,
+  text(size: 10pt, weight: "bold", fill: rgb("#334155"), font: "Liberation Sans")[#it.body]
+)
+
+#show heading.where(level: 5): it => block(
+  above: 12pt,
+  below: 4pt,
+  text(size: 9.5pt, weight: "bold", fill: rgb("#475569"), font: "Liberation Sans")[#it.body]
+)
+
+#show heading.where(level: 6): it => block(
+  above: 10pt,
+  below: 4pt,
+  text(size: 9pt, weight: "bold", fill: rgb("#64748b"), font: "Liberation Sans")[#it.body]
+)
 
 // CAPA EDITORIAL EXECUTIVA
 #align(center + horizon)[
