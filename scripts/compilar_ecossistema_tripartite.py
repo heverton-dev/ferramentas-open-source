@@ -1580,9 +1580,8 @@ def compilar_ecossistema_tripartite(slug: str):
     dir_eng = out_dir / "02-guias-de-engenharia-e-infraestrutura"
     dir_ops = out_dir / "03-guias-de-integracao-e-operacao"
     dir_pilares = out_dir / "04-arsenal-dos-pilares"
-    mat_dir = out_dir / "materiais"
     
-    for d in [dir_livro, dir_exec, dir_eng, dir_ops, dir_pilares, mat_dir]:
+    for d in [dir_livro, dir_exec, dir_eng, dir_ops, dir_pilares]:
         d.mkdir(parents=True, exist_ok=True)
 
     # 1. LIVRO COMPLETO (HTML, Markdown, PDF)
@@ -1606,15 +1605,6 @@ def compilar_ecossistema_tripartite(slug: str):
         print(f"   ✅ Livro-Texto Completo em PDF compilado: {pdf_livro_path.name}")
     except Exception as e:
         print(f"   ⚠️ Typst não encontrado ou falha no PDF: {e}")
-
-    # Salva espelho canônico em materiais/ (para compatibilidade R11)
-    with open(mat_dir / f"ecos-{slug}.html", "w", encoding="utf-8") as f:
-        f.write(html_livro)
-    with open(mat_dir / f"ecos-{slug}.md", "w", encoding="utf-8") as f:
-        f.write(md_livro)
-    if pdf_livro_path.exists():
-        import shutil
-        shutil.copy2(pdf_livro_path, mat_dir / f"ecos-{slug}.pdf")
 
     print(f"   ✅ 00. Livro Mestre Compilado gerado com sucesso!")
 

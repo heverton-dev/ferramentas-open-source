@@ -62,10 +62,13 @@ def executar_fluxo4(slug: str = None) -> bool:
     if sucesso:
         print("\n" + "="*70)
         print(f"🏆 FLUXO 4 CONCLUÍDO COM SUCESSO PARA '{slug_sanitizado}'!")
-        print("📁 Artefatos Tripartites Gerados em:")
-        print(f"   - HTML Interativo: output/04-ecossistemas/ecos-{slug_sanitizado}/materiais/ecos-{slug_sanitizado}.html")
-        print(f"   - Markdown Limpo:  output/04-ecossistemas/ecos-{slug_sanitizado}/materiais/ecos-{slug_sanitizado}.md")
-        print(f"   - PDF Typst:       output/04-ecossistemas/ecos-{slug_sanitizado}/materiais/ecos-{slug_sanitizado}.pdf")
+        print("📁 Artefatos da Suíte Modular Gerados em:")
+        print(f"   - 📖 Livro Completo (HTML): output/04-ecossistemas/ecos-{slug_sanitizado}/00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.html")
+        print(f"   - 📕 Livro Completo (PDF):  output/04-ecossistemas/ecos-{slug_sanitizado}/00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.pdf")
+        print(f"   - 💼 Guias Executivos:     output/04-ecossistemas/ecos-{slug_sanitizado}/01-guias-executivos-e-estrategicos/")
+        print(f"   - 🛠️ Guias de Engenharia:  output/04-ecossistemas/ecos-{slug_sanitizado}/02-guias-de-engenharia-e-infraestrutura/")
+        print(f"   - ⚡ Guias de Operações:   output/04-ecossistemas/ecos-{slug_sanitizado}/03-guias-de-integracao-e-operacao/")
+        print(f"   - 📦 Arsenal dos Pilares:  output/04-ecossistemas/ecos-{slug_sanitizado}/04-arsenal-dos-pilares/")
         
         # Auto-Sincronização do Índice Mestre
         print("\n🔄 [Auto-Sincronização R11] Atualizando Catálogo Mestre e Portal Interativo...")

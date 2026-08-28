@@ -313,9 +313,9 @@ def ingerir_ecossistemas():
             dados = json.load(f)
 
         nome_eco = dados.get("nome_ecossistema", eco_slug.title())
-        html_p = pe / "materiais" / f"ecos-{eco_slug}.html"
-        md_p = pe / "materiais" / f"ecos-{eco_slug}.md"
-        pdf_p = pe / "materiais" / f"ecos-{eco_slug}.pdf"
+        html_p = pe / "00-livro-mestre-compilado" / "LIVRO-ECOSSISTEMA-COMPLETO.html"
+        md_p = pe / "00-livro-mestre-compilado" / "LIVRO-ECOSSISTEMA-COMPLETO.md"
+        pdf_p = pe / "00-livro-mestre-compilado" / "LIVRO-ECOSSISTEMA-COMPLETO.pdf"
 
         for pilar in dados.get("pilares", []):
             nome_pilar = pilar.get("nome_pilar", "Pilar")
