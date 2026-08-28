@@ -752,5 +752,116 @@
         "percentual_economia": "96.3%"
       }
     ]
+  },
+  "blueprints_n8n": [
+    {
+      "id": "wf-lead-to-deal",
+      "nome": "Fluxo 1 · Ingestão de Lead & Criação Automática de Oportunidade no CRM",
+      "descricao": "Recebe o formulário preenchido no Typebot/Landing Page, cadastra no Mautic para nutrição de e-mail, cria o negócio no Twenty CRM e envia notificação no WhatsApp do vendedor via Evolution API.",
+      "gatilho": "Webhook HTTP POST `/webhook/novo-lead`",
+      "acoes": ["Mautic: Create/Update Contact", "Twenty CRM: Create Deal in Pipeline", "Evolution API: Send WhatsApp Template Alert"],
+      "json_blueprint": "{\n  \"name\": \"RD-to-Sovereign: Ingestão de Lead & CRM Deal\",\n  \"nodes\": [\n    {\n      \"parameters\": {\"httpMethod\": \"POST\", \"path\": \"novo-lead\"},\n      \"name\": \"Webhook Entrada Lead\",\n      \"type\": \"n8n-nodes-base.webhook\",\n      \"position\": [250, 300]\n    },\n    {\n      \"parameters\": {\"url\": \"http://mautic/api/contacts/new\", \"method\": \"POST\"},\n      \"name\": \"Cadastrar no Mautic\",\n      \"type\": \"n8n-nodes-base.httpRequest\",\n      \"position\": [450, 300]\n    },\n    {\n      \"parameters\": {\"url\": \"http://twenty:3000/graphql\", \"method\": \"POST\"},\n      \"name\": \"Criar Oportunidade Twenty\",\n      \"type\": \"n8n-nodes-base.graphql\",\n      \"position\": [650, 300]\n    },\n    {\n      \"parameters\": {\"url\": \"http://evolution-api:8080/message/sendText/empresa\", \"method\": \"POST\"},\n      \"name\": \"Notificar Vendedor WhatsApp\",\n      \"type\": \"n8n-nodes-base.httpRequest\",\n      \"position\": [850, 300]\n    }\n  ]\n}"
+    },
+    {
+      "id": "wf-score-to-whatsapp",
+      "nome": "Fluxo 2 · Lead Scoring Quente & Abertura de Atendimento Prioritário",
+      "descricao": "Quando um lead atinge pontuação qualificada no Mautic (ex: abriu 3 e-mails e visitou a página de preços), o n8n cria uma conversa prioritária na fila de vendas do Chatwoot.",
+      "gatilho": "Webhook de Evento Mautic `lead.score.updated`",
+      "acoes": ["Filtro de Condição: Score >= 50", "Chatwoot: Create Conversation with Priority Label", "Twenty CRM: Update Stage to 'Em Negociação'"],
+      "json_blueprint": "{\n  \"name\": \"RD-to-Sovereign: Lead Scoring Quente to Chatwoot\",\n  \"nodes\": [\n    {\n      \"parameters\": {\"path\": \"mautic-score-trigger\"},\n      \"name\": \"Webhook Mautic Score\",\n      \"type\": \"n8n-nodes-base.webhook\",\n      \"position\": [250, 300]\n    },\n    {\n      \"parameters\": {\"conditions\": {\"number\": [{\"value1\": \"={{$json.score}}\", \"operation\": \"largerEqual\", \"value2\": 50}]}},\n      \"name\": \"Score >= 50?\",\n      \"type\": \"n8n-nodes-base.if\",\n      \"position\": [450, 300]\n    },\n    {\n      \"parameters\": {\"url\": \"http://chatwoot:3000/api/v1/accounts/1/conversations\", \"method\": \"POST\"},\n      \"name\": \"Abrir Atendimento Chatwoot\",\n      \"type\": \"n8n-nodes-base.httpRequest\",\n      \"position\": [650, 200]\n    }\n  ]\n}"
+    }
+  ],
+  "guia_migracao_dados": [
+    {
+      "modulo": "1. Migração do RD Station Marketing ➔ Mautic",
+      "o_que_migrar": "Base total de contatos (Leads), campos personalizados, histórico de tags, segmentos e listas de descadastro (opt-out).",
+      "passos": [
+        "No RD Station Marketing, vá em Base de Leads > Exportar Base Completa em formato CSV com todos os campos e tags;",
+        "Abra o Mautic em `mkt.suaempresa.com.br` e crie previamente os campos customizados correspondentes (ex: Cargo, Segmento, Faturamento);",
+        "Vá em Contatos > Importar > Selecione o arquivo CSV do RD Station e faça o de-para (mapeamento) das colunas em 2 minutos;",
+        "Execute a importação em segundo plano. O Mautic processa 100.000 contatos em menos de 10 minutos."
+      ],
+      "cuidados": "Importe a lista de opt-out (unsubscribers) com o status 'Não perturbe' ativado para preservar a reputação do seu domínio de e-mail."
+    },
+    {
+      "modulo": "2. Migração do RD Station CRM ➔ Twenty CRM",
+      "o_que_migrar": "Empresas cadastradas, Pessoas de contato, Etapas do Funil de Vendas (Kanban), Negociações abertas/ganhas e Histórico de anotações comerciais.",
+      "passos": [
+        "No RD Station CRM, acerte a exportação completa de 'Negociações e Contatos' em formato CSV ou XLSX;",
+        "No Twenty CRM (`crm.suaempresa.com.br`), configure as fases do seu funil (ex: Qualificação, Apresentação, Proposta, Fechamento);",
+        "Utilize o importador nativo do Twenty CRM para carregar as empresas e vincular automaticamente os contatos e valores de negócio;",
+        "Atribua as negociações existentes aos seus respectivos vendedores via login unificado do Keycloak."
+      ],
+      "cuidados": "Mantenha a correspondência exata dos e-mails dos vendedores para que o histórico de notas e tarefas seja atribuído aos donos corretos."
+    },
+    {
+      "modulo": "3. Migração do RD Conversas / WhatsApp ➔ Chatwoot & Evolution API",
+      "o_que_migrar": "Números de WhatsApp conectados, mensagens pré-programadas (macros de resposta rápida), equipes de atendentes e departamentos.",
+      "passos": [
+        "Cadastre os departamentos no Chatwoot (Vendas, Suporte, Financeiro) e convide os atendentes;",
+        "Conecte a Evolution API ao Chatwoot criando uma nova caixa de entrada do tipo API Webhook;",
+        "No painel da Evolution API (`wa.suaempresa.com.br`), gere o QR Code e escaneie com o celular corporativo do WhatsApp da empresa;",
+        "A conexão é estabelecida imediatamente com recepção de mensagens em tempo real e divisão automática entre atendentes."
+      ],
+      "cuidados": "Não desconecte o chip do aparelho físico durante a virada para garantir a sincronização inicial de contatos."
+    }
+  ],
+  "seguranca_backup_lgpd": {
+    "arquitetura_backup_321": "A política de proteção de dados opera na regra de ouro 3-2-1: (3) cópias de dados em (2) tipos de mídias diferentes, com (1) cópia externa criptografada em nuvem fria (Wasabi / AWS S3 / Google Drive).",
+    "script_backup_diario": "#!/bin/bash\n# Script de Backup Automatizado Soberano (PostgreSQL + Volumes + Mídias)\nTIMESTAMP=$(date +\"%Y%m%d_%H%M%S\")\nBACKUP_DIR=\"/opt/backups/$TIMESTAMP\"\nmkdir -p $BACKUP_DIR\n\n# 1. Dump consistente de todos os bancos de dados (Mautic, Twenty, Chatwoot, Keycloak, n8n)\ndocker exec postgres pg_dumpall -U postgres | gzip > $BACKUP_DIR/db_all_cluster.sql.gz\n\n# 2. Compactação dos arquivos de mídia e anexos\ntar -czf $BACKUP_DIR/media_storage.tar.gz -C /var/lib/docker/volumes postgres_data/_data\n\n# 3. Criptografia AES-256 com senha segura\ngpg --batch --yes --passphrase \"SuaChaveMestreSegura2026\" -c $BACKUP_DIR/db_all_cluster.sql.gz\n\n# 4. Envio para Storage Seguro Externo (rclone / AWS S3)\nrclone copy $BACKUP_DIR remote-s3:backups-empresa/$TIMESTAMP/\n\n# 5. Limpeza de backups locais com mais de 7 dias\nfind /opt/backups/* -mtime +7 -exec rm -rf {} \\;\necho \"✅ Backup soberano concluído e sincronizado na nuvem fria!\"",
+    "checklist_conformidade_lgpd": [
+      { "item": "Soberania Física dos Dados", "status": "Em conformidade: O banco reside em servidor exclusivo da empresa, sem compartilhamento com provedores terceiros ou venda de dados para IA pública." },
+      { "item": "Direito de Exclusão do Titular (Art. 18 LGPD)", "status": "Em conformidade: O n8n executa script de expurgo automatizado com 1 clique no Mautic, Twenty e Chatwoot quando solicitado pelo cliente." },
+      { "item": "Criptografia em Trânsito & Repouso", "status": "Em conformidade: Trânsito 100% sob TLS 1.3 / HSTS automático via Traefik e volumes criptografados com LUKS/AES-256 no sistema de arquivos do host." },
+      { "item": "Trilha de Auditoria & Logs de Acesso", "status": "Em conformidade: O Keycloak e o PostgreSQL gravam logs imutáveis de cada autenticação e ação executada por colaboradores." }
+    ]
+  },
+  "cronograma_implantacao_30_dias": [
+    {
+      "semana": "Semana 1 (Dias 1 a 7)",
+      "fase": "Infraestrutura & Instalação do Cluster",
+      "atividades": "Contratação da VPS, configuração de DNS wildcard (*.empresa.com.br), execução do docker-compose.yml e ativação dos certificados SSL automáticos via Traefik.",
+      "marco_entrega": "Todos os painéis acessíveis online com cadeado verde (HTTPS)."
+    },
+    {
+      "semana": "Semana 2 (Dias 8 a 14)",
+      "fase": "Migração de Dados & Conexão de Mensageria",
+      "atividades": "Importação de leads do RD Marketing no Mautic, exportação do funil de vendas para o Twenty CRM e pareamento do WhatsApp na Evolution API e Chatwoot.",
+      "marco_entrega": "Base histórica 100% carregada e WhatsApp corporativo recebendo mensagens no Chatwoot."
+    },
+    {
+      "semana": "Semana 3 (Dias 15 a 21)",
+      "fase": "Importação dos Blueprints n8n & Treinamento das Equipes",
+      "atividades": "Importação dos templates de workflow no n8n, realização de testes de passagem de bastão (Lead -> CRM -> WhatsApp) e workshop de capacitação dos vendedores e atendentes.",
+      "marco_entrega": "Equipes comerciais operando com agilidade e fluxos automatizados aprovados."
+    },
+    {
+      "semana": "Semana 4 (Dias 22 a 30)",
+      "fase": "Virada de Chave Definitiva & Descomissionamento SaaS",
+      "atividades": "Redirecionamento de formulários do site oficial para a nova stack, ativação da régua de nutrição oficial e cancelamento das faturas recorrentes do RD Station Suite.",
+      "marco_entrega": "Autonomia digital plena e economia de R$ 109.800/ano consolidada!"
+    }
+  ],
+  "monitoramento_e_saude_vps": {
+    "painel_recomendado": "Netdata / Portainer Community Edition (Monitoramento visual leve e em tempo real)",
+    "comandos_diagnostico_1clique": [
+      {
+        "comando": "docker stats --no-stream",
+        "finalidade": "Exibe o consumo instantâneo de memória RAM, % de CPU e tráfego de rede de cada um dos 9 serviços da stack."
+      },
+      {
+        "comando": "docker compose ps",
+        "finalidade": "Verifica o status de saúde (Up / Healthy) de todos os contêineres e o tempo em que estão no ar."
+      },
+      {
+        "comando": "docker compose logs -f --tail=50 traefik",
+        "finalidade": "Inspeciona o tráfego HTTP/HTTPS em tempo real e a renovação de certificados SSL."
+      }
+    ],
+    "metricas_alerta": [
+      { "metrica": "Consumo de RAM da VPS", "limite_alerta": "> 85% por mais de 10 minutos", "acao_recomendada": "Ajustar limite de memória no container do Mautic ou adicionar swap de 4 GB." },
+      { "metrica": "Uso de Disco SSD", "limite_alerta": "> 80% do armazenamento total", "acao_recomendada": "Executar o script de limpeza de logs e backups antigos com `docker system prune -f`." },
+      { "metrica": "Sessão WhatsApp Evolution", "limite_alerta": "Status 'Disconnected'", "acao_recomendada": "O n8n envia alerta imediato no Telegram do administrador para reconexão via QR Code." }
+    ]
   }
 }

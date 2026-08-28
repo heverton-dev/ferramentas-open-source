@@ -1,72 +1,36 @@
-#set page(
-  paper: "a4",
-  margin: (x: 1.5cm, y: 1.8cm),
-  header: align(right)[
-    #text(size: 8pt, fill: rgb("#64748b"))[Fábrica Universal AIDD · Macro-Ecossistema Soberano]
+#set page(paper: "a4", flipped: true, margin: (x: 1.2cm, top: 1.2cm, bottom: 1.2cm))
+#set text(font: "Liberation Sans", size: 9pt, lang: "pt")
+
+#text(size: 8pt, fill: rgb("#64748b"), weight: "bold")[FÁBRICA UNIVERSAL AIDD · DOSSIÊ DE MACRO-ECOSSISTEMA SOBERANO (PADRÃO DIAMANTE R5-E)]
+#v(2pt)
+#text(size: 16pt, weight: "bold", fill: rgb("#0f172a"))[Macro-Ecossistema RD Station: Marketing, CRM & Conversas]
+#v(-2pt)
+#text(size: 10pt, fill: rgb("#00875A"), weight: "bold")[Arquitetura Aberta Integrada com Quinteto Soberano por Grupo, SSO, Barramento de Eventos e MCPs]
+#v(6pt)
+
+#grid(
+  columns: (1fr, 1fr, 1.2fr, 1fr),
+  gutter: 8pt,
+  rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#e2e8f0"), inset: 6pt)[
+    #text(size: 7.5pt, fill: rgb("#64748b"))[CUSTO SAAS ANUAL] \
+    #text(size: 11pt, weight: "bold", fill: rgb("#dc2626"))[R\$ 114.000/ano (RD Marketing Pro R\$ 42k + RD CRM 10 vendedores R\$ 36k + RD Conversas 10 atendentes R\$ 36k)]
   ],
-  footer: [
-    #line(length: 100%, stroke: 0.5pt + rgb("#cbd5e1"))
-    #grid(
-      columns: (1fr, 1fr),
-      text(size: 8pt, fill: rgb("#94a3b8"))[Confidencial & Soberano],
-      align(right, text(size: 8pt, fill: rgb("#94a3b8"))[Página #context counter(page).display()])
-    )
-  ]
-)
-
-#set text(
-  font: ("Segoe UI", "Arial", "Liberation Sans"),
-  size: 8.5pt,
-  fill: rgb("#0f172a"),
-  lang: "pt"
-)
-
-#block(
-  fill: rgb("#0f172a"),
-  inset: 14pt,
-  radius: 6pt,
-  width: 100%,
-  [
-    #text(size: 7.5pt, weight: "bold", fill: rgb("#38bdf8"))[MACRO-ECOSSISTEMA SOBERANO · FLUXO 4 AIDD] \
-    #v(3pt)
-    #text(size: 15pt, weight: "bold", fill: white)[Macro-Ecossistema RD Station: Marketing, CRM & Conversas] \
-    #v(2pt)
-    #text(size: 8.5pt, fill: rgb("#cbd5e1"))[Arquitetura Aberta Integrada com Quinteto Soberano por Grupo, SSO, Barramento de Eventos e MCPs]
+  rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#e2e8f0"), inset: 6pt)[
+    #text(size: 7.5pt, fill: rgb("#64748b"))[CUSTO VPS SOBERANA] \
+    #text(size: 11pt, weight: "bold", fill: rgb("#0f172a"))[R\$ 4.200/ano (VPS 8 vCPU / 16 GB RAM a R\$ 350/mês)]
+  ],
+  rect(fill: rgb("#f0fdf4"), stroke: 0.5pt + rgb("#bbf7d0"), inset: 6pt)[
+    #text(size: 7.5pt, fill: rgb("#166534"))[ECONOMIA LÍQUIDA ANUAL] \
+    #text(size: 11pt, weight: "bold", fill: rgb("#16a34a"))[R\$ 109.800/ano (Economia Líquida de 96.3%)]
+  ],
+  rect(fill: rgb("#f0fdf4"), stroke: 0.5pt + rgb("#bbf7d0"), inset: 6pt)[
+    #text(size: 7.5pt, fill: rgb("#166534"))[PAYBACK ESTIMADO] \
+    #text(size: 11pt, weight: "bold", fill: rgb("#16a34a"))[Payback positivo em apenas 14 dias de operação unificada.]
   ]
 )
 
 #v(8pt)
-
-== 1. Demonstrativo Financeiro de TCO Desmembrado & Consolidado
-
-#table(
-  columns: (2.5fr, 2.5fr, 2.5fr, 2.5fr),
-  fill: rgb("#f8fafc"),
-  stroke: 0.5pt + rgb("#cbd5e1"),
-  inset: 6pt,
-  [*Custo SaaS Total*], [*Custo VPS Total*], [*Economia Líquida*], [*Payback*],
-  [R\$ 114.000/ano (RD Marketing Pro R\$ 42k + RD CRM 10 vendedores R\$ 36k + RD Conversas 10 atendentes R\$ 36k)], [R\$ 4.200/ano (VPS 8 vCPU / 16 GB RAM a R\$ 350/mês)], [*R\$ 109.800/ano (Economia Líquida de 96.3%)*], [Payback positivo em apenas 14 dias de operação unificada.]
-)
-
-#v(8pt)
-
-
-=== Demonstrativo de TCO Desmembrado por Grupo Funcional
-#table(
-  columns: (2.5fr, 2.5fr, 1.8fr, 1.8fr, 1.8fr),
-  fill: (x, y) => if y == 0 {{ rgb("#f1f5f9") }} else {{ none }},
-  stroke: 0.5pt + rgb("#e2e8f0"),
-  inset: 4.5pt,
-  [*Grupo Funcional*], [*SaaS de Referência*], [*Custo SaaS*], [*Custo VPS*], [*Economia Líq.*],
-  [*Grupo 1: Marketing & Nutrição*], [RD Station Marketing (Plano Pro - 50k leads)], [R\$ 42.000/ano], [R\$ 1.440/ano (Fraqueza de ~3 vCPU / 6 GB RAM)], [*R\$ 40.560/ano*],
-  [*Grupo 2: Pipeline Comercial & CRM*], [RD Station CRM (Plano Avançado - 10 licenças)], [R\$ 36.000/ano], [R\$ 1.440/ano (Fraqueza de ~3 vCPU / 6 GB RAM)], [*R\$ 34.560/ano*],
-  [*Grupo 3: Atendimento & WhatsApp*], [RD Station Conversas / Tallos (10 operadores)], [R\$ 36.000/ano], [R\$ 1.320/ano (Fraqueza de ~2 vCPU / 4 GB RAM)], [*R\$ 34.680/ano*],
-)
-#v(8pt)
-
-
-== 2. Análise Detalhada dos Quintetos por Grupos de Negócio
-
+== Pilares Estratégicos & Quinteto Soberano por Grupo
 
 === Grupo 1: Marketing, Nutrição & Landing Pages
 #text(size: 8.5pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS: RD Station Marketing (Planos Pro / Enterprise)] \
@@ -129,23 +93,13 @@
 #v(8pt)
 
 
-== 3. Camada de Cola, SSO & Orquestração
-
-- *Autenticação Unificada (SSO):* Keycloak / Authentik (OpenID Connect / SAML) unificando o login dos colaboradores no Twenty CRM, Chatwoot, Directus, Mautic e SuiteCRM.
-- *Barramento de Eventos:* n8n Community Edition atuando como orquestrador central de eventos assíncronos (Lead capturado no Typebot -> pontuado no Mautic -> oportunidade criada no Twenty -> alerta enviado no WhatsApp via Evolution).
-- *Reverse Proxy & TLS:* Traefik Proxy v3 com terminação TLS automática via Let's Encrypt e roteamento por subdomínios corporativos (mkt.empresa.com.br, crm.empresa.com.br, chat.empresa.com.br, sso.empresa.com.br).
+#v(8pt)
+== Camada de Cola, SSO & Barramento de Eventos
+- *Autenticação Única:* Keycloak / Authentik (OpenID Connect / SAML) unificando o login dos colaboradores no Twenty CRM, Chatwoot, Directus, Mautic e SuiteCRM.
+- *Barramento:* n8n Community Edition atuando como orquestrador central de eventos assíncronos (Lead capturado no Typebot -> pontuado no Mautic -> oportunidade criada no Twenty -> alerta enviado no WhatsApp via Evolution).
+- *Reverse Proxy:* Traefik Proxy v3 com terminação TLS automática via Let's Encrypt e roteamento por subdomínios corporativos (mkt.empresa.com.br, crm.empresa.com.br, chat.empresa.com.br, sso.empresa.com.br).
 
 #v(8pt)
-
-== 4. Deploy All-in-One & Composição da Stack
-
-- *Hardware Recomendado:* 8 vCPU / 16 GB RAM / 120 GB NVMe SSD
-- *Isolamento de Rede:* Rede Docker `ecosystem_net` com portas 80/443 públicas via Traefik v3.
-
-#v(6pt)
-
-== 5. Guia de Modularidade & Hot-Swap de Serviços
-
-- *Acoplamento Fraco:* Todos os módulos dialogam via webhooks no n8n e autenticação OIDC no Keycloak.
-- *Inserção de Nova Ferramenta:* Declare o contêiner no `docker-compose.override.yml`, conecte à rede `ecosystem_net` e configure labels do Traefik.
-- *Hot-Swap de Ferramenta:* Suba o novo serviço em paralelo, aponte os nós no n8n e altere a rota no Traefik com zero downtime.
+== Deploy All-in-One & Modularidade Operacional
+- *Topologia:* A infraestrutura opera sobre uma rede bridge isolada do Docker (`ecosystem_net`). Apenas o reverse proxy Traefik expõe as portas públicas 80 (HTTP com redirect) e 443 (HTTPS TLS automático via ACME/Let's Encrypt). Todas as ferramentas (Mautic, Twenty, Chatwoot, Evolution, n8n, Keycloak e PostgreSQL) comunicam-se exclusivamente pela rede interna através de seus nomes DNS de serviço (ex: `http://chatwoot:3000`, `postgres:5432`), eliminando vetores de ataque externos e exposição de portas desnecessárias.
+- *Princípio Modular:* A arquitetura opera sob o princípio de 'Tomadas e Aparelhos Independentes'. Nenhuma ferramenta fica grudada ou dependente da outra com código travado. Imagine uma régua de tomadas na sua sala: a sua TV (Twenty CRM) e a sua Caixa de Som (Chatwoot) funcionam perfeitamente mesmo se você desligar o Abajur (Mautic). Se você quiser trocar o abajur por uma luminária moderna, basta tirar da tomada e plugar a nova. Nada na sua sala quebra.

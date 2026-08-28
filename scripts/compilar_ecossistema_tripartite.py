@@ -2,15 +2,17 @@
 """
 COMPILADOR TRIPARTITE DE MACRO-ECOSSISTEMAS SAAS (FLUXO 4 - PADRÃO DIAMANTE R5-E & QUINTETO SOBERANO)
 Gera o HTML final, Markdown denso e PDF Typst com 100% de paridade de design aos Fluxos 1, 2 e 3.
-Estrutura cada grupo com seu próprio QUINTETO SOBERANO (5 personas canônicas) e fichas técnicas completas:
-1. O Que Faz & Como Funciona
-2. Análise Econômica & Impacto Financeiro
-3. Requisitos de Infraestrutura & Veredito Técnico
-4. Como Usar no Dia a Dia · Guia Prático
-5. White-Label & Aderência ao Design System Corporativo
-6. Uso Complementar & Ecossistema Agêntico (MCPs, Skills e Plugins)
-7. Deploy Consolidado All-in-One com Anatomia da Stack
-8. Guia Operacional de Modularidade & Hot-Swap
+Estrutura completa com 10 macro-seções de alto valor:
+1. Demonstrativo Financeiro Consolidado, Análise de TCO Global & Calculadora Interativa de Payback
+2. Matriz Geral do Quinteto Soberano por Grupo (Pilha Aberta Integrada)
+3. Arsenal Tecnológico & Fichas Técnicas do Quinteto Soberano (15 ferramentas completas)
+4. Camada de Cola & Orquestração (SSO, Traefik, Barramento & Blueprints n8n em JSON)
+5. Deploy All-in-One: Guia Passo a Passo para Não-Técnicos (Analogias, Stack & Compose)
+6. Guia Operacional de Modularidade, Expansão & Hot-Swap (Princípio do Lego & FAQ)
+7. Roteiro Prático de Migração de Dados (De-SaaS para Soberano)
+8. Segurança Corporativa, Backup 3-2-1 & Conformidade LGPD
+9. Cronograma Executivo de Implementação em 30 Dias (Roadmap de 4 semanas)
+10. Painel de Monitoramento & Health Check da VPS (Diagnóstico em 1 clique)
 """
 import sys
 import json
@@ -99,11 +101,12 @@ CSS_CANONICO_DIAMANTE = """
   }
   ::-webkit-scrollbar-thumb {
     background: var(--accent);
-    border-radius: 4px;
+    border-radius: 2px;
   }
 
   body {
-    margin: 0; padding: 0;
+    margin: 0;
+    padding: 40px 20px;
     background: var(--paper);
     color: var(--ink);
     font-family: var(--font-sans);
@@ -111,63 +114,135 @@ CSS_CANONICO_DIAMANTE = """
     -webkit-font-smoothing: antialiased;
   }
 
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
-
-  header { margin-bottom: 32px; }
-  .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
-  .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-  .back-link:hover { color: var(--accent); }
-  .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
-
-  .hero { margin: 20px 0 24px; }
-  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 42px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
-  .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
-
-  .hero-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px; margin: 24px 0 32px;
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 48px;
+    box-shadow: var(--shadow);
   }
+
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 32px;
+    margin-bottom: 36px;
+  }
+
+  .meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-size: 38px;
+    line-height: 1.15;
+    margin: 0 0 12px 0;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    color: var(--ink);
+  }
+
+  .deck {
+    font-size: 16px;
+    color: var(--ink-2);
+    margin: 0 0 24px 0;
+    line-height: 1.55;
+    max-width: 95%;
+  }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    border-top: 1px solid var(--rule-soft);
+    padding-top: 20px;
+    margin-top: 20px;
+  }
+
   .stat-card {
-    background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
-    padding: 12px 16px; box-shadow: var(--shadow);
+    background: var(--surface-2);
+    border: 1px solid var(--rule-soft);
+    border-radius: 2px;
+    padding: 12px 14px;
   }
-  .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
-  .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
 
-  .sec-head { margin: 40px 0 16px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
+  .stat-lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .stat-val {
+    font-family: var(--mono);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .stat-val.highlight { color: var(--green); }
+  .stat-val.alert { color: var(--flag); }
+
+  .racional-box {
+    background: var(--surface-2);
+    border-left: 3px solid var(--accent);
+    padding: 14px 18px;
+    margin: 20px 0;
+    font-size: 14px;
+    color: var(--ink-2);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .sec-head {
+    margin: 44px 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
   .sec-info { flex: 1; }
-  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
-  h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
-  .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
-  .pilar-subtotal-badge { font-family: var(--mono); font-size: 12px; background: var(--green-soft); color: var(--green); border: 1px solid var(--green); padding: 6px 12px; border-radius: 3px; font-weight: 700; }
+  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: .08em; }
+  .sec-head h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0 0 0; color: var(--ink); font-weight: 600; }
+  .sec-note { font-size: 13.5px; color: var(--muted); margin-top: 4px; }
+  .pilar-subtotal-badge { font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 4px 10px; background: var(--green-soft); color: var(--green); border-radius: 2px; border: 1px solid var(--green); }
 
-  .search-wrapper { position: relative; margin: 20px 0 24px; }
-  .search-input { width: 100%; padding: 12px 42px 12px 16px; font-family: var(--font-sans); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); outline: none; box-shadow: var(--shadow); }
-  .search-input:focus { border-color: var(--accent); }
-
-  .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
-  table { width: 100%; min-width: 1020px; border-collapse: collapse; font-size: 13.5px; text-align: left; }
-  th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
-  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); vertical-align: middle; }
+  /* TABELA MATRIX */
+  .tablewrap { width: 100%; overflow-x: auto; margin: 20px 0 32px 0; border: 1px solid var(--rule); border-radius: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead { background: var(--surface-2); border-bottom: 1px solid var(--rule); }
+  th { text-align: left; padding: 10px 14px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
-  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 45px; text-align: center; }
-  td.classif-col { font-weight: 600; color: var(--ink-2); font-size: 12.5px; white-space: nowrap; }
-  td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
-  td.tool a:hover { color: var(--accent); }
-  td.pilar-col { min-width: 140px; white-space: nowrap; }
-  td.saas { color: var(--flag); font-size: 12.5px; font-weight: 600; line-height: 1.4; min-width: 200px; }
-  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; font-size: 12.5px; line-height: 1.35; min-width: 120px; }
-  td.lic { font-family: var(--mono); font-size: 11px; text-align: center; width: 85px; }
-  td.code-col { text-align: center; width: 75px; }
-  td.code-col a.code-link { font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
-  td.code-col a.code-link:hover { color: var(--ink); }
+  tr:hover td { background: var(--surface-2); }
+  td.rank { font-family: var(--mono); font-weight: 700; color: var(--muted); font-size: 12px; }
+  td.saas { color: var(--flag); font-weight: 600; }
+  td.econ { font-family: var(--mono); font-weight: 700; color: var(--green); }
+  td.killer { color: var(--flag); font-weight: 700; font-family: var(--mono); }
 
-  .ledger { display: flex; flex-direction: column; gap: 24px; }
-  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
-  .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
-  .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
-  
-  .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  /* CARDS DE FERRAMENTAS */
+  .ledger { display: flex; flex-direction: column; gap: 24px; margin-top: 24px; }
+  .entry { display: grid; grid-template-columns: 48px 1fr; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); padding: 24px; box-shadow: var(--shadow); }
+  .entry-rank { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--muted); padding-top: 2px; }
+  .entry-body { display: flex; flex-direction: column; gap: 16px; }
   .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
   .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
 
@@ -180,38 +255,29 @@ CSS_CANONICO_DIAMANTE = """
   .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
   .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
   .entry-section p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
-  .entry-section p strong { color: var(--ink); font-weight: 600; }
 
-  .racional-box { background: var(--surface-2); border-left: 3px solid var(--accent); border-radius: 2px; padding: 10px 14px; }
-  .racional-box p { font-size: 13.5px; color: var(--ink-2); margin: 0; line-height: 1.5; }
+  .code-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 2px; padding: 12px; font-family: var(--mono); font-size: 12px; overflow-x: auto; color: var(--ink); position: relative; }
+  .code-box pre { margin: 0; font-family: inherit; }
 
-  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
+  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 4px; }
   .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
-  .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
-  .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left: 3px solid var(--flag); }
+  .econ-card.savings { border-left: 3px solid var(--green); }
   .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
-  .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+  .econ-val { font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--ink); }
 
-  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
+  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 4px; }
   .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
-  .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
-  @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
+  .infra-card.verdict { border-left: 3px solid var(--accent); grid-column: 1 / -1; }
   .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
-  .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
+  .infra-val { font-size: 13px; color: var(--ink-2); font-weight: 500; }
 
-  .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
-  pre { margin: 0; padding: 10px 14px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; font-family: var(--mono); font-size: 12px; color: var(--ink); }
-
-  .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
-  .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-
-  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 4px; }
-  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 6px; }
+  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
   .step-head { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: var(--accent); text-transform: uppercase; }
   .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
   .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
 
-  /* DESIGN SYSTEM & WHITE LABEL */
   .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
   .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
   .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
@@ -225,7 +291,6 @@ CSS_CANONICO_DIAMANTE = """
   .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
   .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
 
-  /* MCPs & AGENT ECOSYSTEM */
   .mcp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
   .mcp-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
   .mcp-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
@@ -234,7 +299,6 @@ CSS_CANONICO_DIAMANTE = """
   .mcp-card p { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.4; }
   .mcp-cmd { font-family: var(--mono); font-size: 11px; background: var(--surface); padding: 3px 6px; border-radius: 2px; border: 1px solid var(--rule-soft); color: var(--ink); word-break: break-all; }
 
-  /* CAIXAS DE COLA & DEPLOY */
   .integration-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin: 16px 0; }
   .integ-card { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 3px; padding: 16px; box-shadow: var(--shadow); }
   .integ-card h4 { font-family: var(--font-serif); font-size: 18px; margin: 0 0 8px; color: var(--ink); }
@@ -245,6 +309,18 @@ CSS_CANONICO_DIAMANTE = """
   .tco-col .tco-val { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--ink); }
   .tco-col .tco-val.highlight { color: var(--green); }
   .tco-col .tco-val.killer { color: var(--flag); }
+
+  /* CALCULADORA INTERATIVA TCO */
+  .calc-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 4px; padding: 24px; margin: 20px 0; box-shadow: var(--shadow); }
+  .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 20px; }
+  .calc-slider-group label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .calc-slider-group input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+  .calc-results { background: var(--surface); border: 1px solid var(--green); border-radius: 3px; padding: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+  /* BLUEPRINTS & TIMELINE */
+  .blueprint-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .timeline-card { background: var(--surface-2); border-left: 4px solid var(--accent); padding: 16px; margin-bottom: 12px; border-radius: 0 3px 3px 0; }
+  .timeline-card h4 { margin: 0 0 6px; font-family: var(--font-serif); font-size: 17px; color: var(--ink); }
 """
 
 JS_CANONICO_DIAMANTE = """
@@ -280,6 +356,37 @@ function filterTools(query) {
   }
 }
 
+function updateTcoCalculator() {
+  const leads = parseInt(document.getElementById('slider-leads').value, 10);
+  const sellers = parseInt(document.getElementById('slider-sellers').value, 10);
+  const agents = parseInt(document.getElementById('slider-agents').value, 10);
+
+  document.getElementById('val-leads').innerText = leads.toLocaleString('pt-BR') + ' leads';
+  document.getElementById('val-sellers').innerText = sellers + ' vendedores';
+  document.getElementById('val-agents').innerText = agents + ' atendentes';
+
+  // Cálculos SaaS estimados (RD Marketing escalonado + RD CRM por licença + RD Conversas por operador)
+  const custoMkt = (leads <= 10000) ? 14400 : (leads <= 50000) ? 42000 : (leads <= 100000) ? 78000 : 130000;
+  const custoCrm = sellers * 3600;
+  const custoChat = agents * 3600;
+  const saasTotal = custoMkt + custoCrm + custoChat;
+
+  // Custo VPS Soberana (Cluster Unificado 8 vCPU / 16 GB RAM)
+  const custoVps = 4200;
+  const economiaLiquida = saasTotal - custoVps;
+  const economiaPct = ((economiaLiquida / saasTotal) * 100).toFixed(1);
+
+  document.getElementById('calc-saas-total').innerText = 'R$ ' + saasTotal.toLocaleString('pt-BR') + '/ano';
+  document.getElementById('calc-vps-total').innerText = 'R$ ' + custoVps.toLocaleString('pt-BR') + '/ano';
+  document.getElementById('calc-savings-total').innerText = 'R$ ' + economiaLiquida.toLocaleString('pt-BR') + '/ano (' + economiaPct + '%)';
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('✅ Código copiado para a área de transferência!');
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('busca-ferramentas');
   if (searchInput) {
@@ -291,86 +398,138 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  const sLeads = document.getElementById('slider-leads');
+  const sSellers = document.getElementById('slider-sellers');
+  const sAgents = document.getElementById('slider-agents');
+  if (sLeads && sSellers && sAgents) {
+    sLeads.addEventListener('input', updateTcoCalculator);
+    sSellers.addEventListener('input', updateTcoCalculator);
+    sAgents.addEventListener('input', updateTcoCalculator);
+    updateTcoCalculator();
+  }
 });
 </script>
 """
 
+def simplificar_classificacao(classificacao: str) -> str:
+    c = classificacao.lower()
+    if "robusta" in c: return "Robusta"
+    if "completa" in c: return "Completa"
+    if "moderna" in c: return "Moderna"
+    if "leve" in c: return "Leve"
+    if "simples" in c: return "Simples"
+    return classificacao
+
 def gerar_markdown_ecossistema(dados: dict) -> str:
     titulo = dados.get("titulo", "Dossiê de Macro-Ecossistema Open Source")
     deck = dados.get("deck", "")
-    nome_eco = dados.get("nome_ecossistema", "")
-    saas_sub = dados.get("saas_substituido", "")
+    saas = dados.get("saas_substituido", "")
     pilares = dados.get("pilares", [])
     integracao = dados.get("camada_integracao", {})
     deploy = dados.get("deploy_consolidado", {})
-    econ = dados.get("analise_economica_global", {})
     guia = dados.get("guia_modularidade_e_expansao", {})
+    econ = dados.get("analise_economica_global", {})
     stack_detalhe = deploy.get("composicao_stack_detalhada", [])
-
-    detalhe_econ = econ.get("detalhamento_por_grupo", [])
-    tabela_econ_md = ""
-    if detalhe_econ:
-        tabela_econ_md = "\n### Demonstrativo de TCO Desmembrado por Grupo Funcional\n\n| Grupo / Frente de Negócio | SaaS de Referência | Custo SaaS Anual | Custo VPS Alocado | Economia Líquida | Economia (%) |\n| :--- | :--- | :---: | :---: | :---: | :---: |\n"
-        for dg in detalhe_econ:
-            tabela_econ_md += f"| **{dg.get('grupo')}** | {dg.get('saas_referencia')} | `{dg.get('custo_saas_anual')}` | `{dg.get('custo_vps_alocado')}` | **{dg.get('economia_anual_liquida')}** | **{dg.get('percentual_economia')}** |\n"
-        tabela_econ_md += "\n"
 
     linhas = [
         f"# {titulo}",
         f"",
-        f"> **Macro-Ecossistema Soberano · Desmantelamento {nome_eco} · Quinteto Soberano por Grupo**  ",
-        f"> {deck}",
+        f"> **Macro-Ecossistema SaaS Desmantelado:** {saas}  ",
+        f"> **Data de Emissão:** {datetime.date.today().strftime('%d/%m/%Y')} | **Padrão:** Diamante R5-E Tripartite",
+        f"",
+        f"## Resumo Executivo",
+        f"{deck}",
         f"",
         f"---",
         f"",
-        f"## 1. Visão Executiva & Demonstrativo Financeiro de TCO",
+        f"## 1. Demonstrativo Financeiro Consolidado (TCO Global & Payback)",
         f"",
-        f"### Consolidado Global da Suíte",
-        f"- **Macro-SaaS Substituído:** {saas_sub}",
-        f"- **Custo SaaS Estimado:** {econ.get('custo_saas_anual', 'N/A')}",
-        f"- **Custo da Infraestrutura Soberana:** {econ.get('custo_vps_anual', 'N/A')}",
-        f"- **Economia Líquida Anual:** {econ.get('economia_anual_liquida', 'N/A')}",
-        f"- **Payback Estimado:** {econ.get('roi_meses', 'N/A')}",
+        f"- **Custo SaaS Anual:** {econ.get('custo_saas_anual', '')}",
+        f"- **Custo VPS Soberana (Cluster Unificado):** {econ.get('custo_vps_anual', '')}",
+        f"- **Economia Líquida Anual:** {econ.get('economia_anual_liquida', '')}",
+        f"- **Payback / ROI:** {econ.get('roi_meses', '')}",
         f"",
-        f"{tabela_econ_md}",
-        f"---",
-        f"",
-        f"## 2. Pilares Funcionais & Quinteto Soberano por Grupo",
-        f""
+        f"### Desmembramento Financeiro por Grupo",
+        f"| Grupo | SaaS de Referência | Custo SaaS Anual | Custo VPS Alocado | Economia Líquida Anual | Economia (%) |",
+        f"|---|---|---|---|---|---|"
     ]
+
+    for dg in econ.get("detalhamento_por_grupo", []):
+        linhas.append(f"| {dg.get('grupo')} | {dg.get('saas_referencia')} | {dg.get('custo_saas_anual')} | {dg.get('custo_vps_alocado')} | {dg.get('economia_anual_liquida')} | {dg.get('percentual_economia')} |")
+
+    linhas.extend([
+        f"",
+        f"---",
+        f"",
+        f"## 2. Matriz Geral do Quinteto Soberano por Grupo",
+        f"",
+        f"| # | Grupo / Pilar | Classificação | Ferramenta | Módulo SaaS Substituído | Economia Anual | Código |",
+        f"|---|---|---|---|---|---|---|"
+    ])
+
+    global_rank = 1
+    for p in pilares:
+        for f in p.get("ferramentas", []):
+            c_simp = simplificar_classificacao(f.get('classificacao', ''))
+            linhas.append(f"| {global_rank:02d} | {p.get('nome_pilar').split(':')[0]} | {c_simp} | **{f['nome']}** | {f['saas_substituido_direto']} | {f['economia_anual_str']} | [GitHub]({f['repositorio_github']}) |")
+            global_rank += 1
+
+    linhas.extend([
+        f"",
+        f"---",
+        f"",
+        f"## 3. Arsenal Tecnológico & Fichas Técnicas do Quinteto Soberano",
+        f""
+    ])
 
     for p in pilares:
         linhas.extend([
-            f"### {p.get('nome_pilar')}",
-            f"- **Módulo SaaS Alvo:** `{p.get('modulo_saas_alvo')}`",
-            f"- **Subtotal de Economia do Grupo:** **{p.get('subtotal_economia_anual', 'N/A')}**",
-            f"- **Escopo:** *{p.get('descricao_pilar')}*",
-            f"",
-            f"| # | Classificação | Ferramenta | Substitui Diretamente | Economia Estimada | Licença |",
-            f"| :---: | :--- | :--- | :--- | :---: | :---: |"
+            f"### Pilar: {p.get('nome_pilar')} (Alvo: {p.get('modulo_saas_alvo')})",
+            f"*{p.get('descricao_pilar')}* - **Subtotal de Economia: {p.get('subtotal_economia_anual')}**",
+            f""
         ])
         for f in p.get("ferramentas", []):
-            classif_simples = simplificar_classificacao(f.get('classificacao', ''))
-            linhas.append(f"| {f['rank']} | **{classif_simples}** | **{f['nome']}** | {f['saas_substituido_direto']} | **{f['economia_anual_str']}** | `{f['licenca_osi']}` |")
-        linhas.append("")
+            c_simp = simplificar_classificacao(f.get('classificacao', ''))
+            linhas.extend([
+                f"#### {f['rank']:02d}. {f['nome']} · {f['subtitulo']} (Persona: {c_simp})",
+                f"- **Substitui:** `{f['saas_substituido_direto']}` | **Economia:** `{f['economia_anual_str']}` | **Licença:** `{f['licenca_osi']}`",
+                f"- **O Que Faz:** {f['o_que_faz']}",
+                f"- **Como Funciona:** {f['como_funciona']}",
+                f"- **Comando Rápido:** `{f['comando_rapido']}`",
+                f"- **Veredito Técnico:** {f['veredito']}",
+                f"- **Repositório:** {f['repositorio_github']}",
+                f""
+            ])
 
     linhas.extend([
         f"---",
         f"",
-        f"## 3. Camada de Cola, SSO & Orquestração Integrada",
+        f"## 4. Camada de Cola & Orquestração (SSO, Traefik & Blueprints n8n)",
         f"",
-        f"- **Autenticação Unificada (SSO):** {integracao.get('autenticacao_sso')}",
-        f"- **Barramento de Eventos:** {integracao.get('barramento_eventos')}",
-        f"- **Reverse Proxy & TLS:** {integracao.get('gateway_reverse_proxy')}",
+        f"- **🔑 Autenticação Única (SSO):** {integracao.get('autenticacao_sso')}",
+        f"- **⚡ Barramento de Eventos:** {integracao.get('barramento_eventos')}",
+        f"- **🛡️ Reverse Proxy:** {integracao.get('gateway_reverse_proxy')}",
         f"",
-        f"### Fluxo de Dados Integrado",
-        f"```",
-        f"{integracao.get('fluxo_integracao_descricao', '')}",
-        f"```",
-        f"",
+        f"### Blueprints de Workflows Prontos para n8n",
+        f""
+    ])
+
+    for bp in dados.get("blueprints_n8n", []):
+        linhas.extend([
+            f"#### {bp.get('nome')}",
+            f"- *Descrição:* {bp.get('descricao')}",
+            f"- *Gatilho:* `{bp.get('gatilho')}`",
+            f"```json",
+            f"{bp.get('json_blueprint')}",
+            f"```",
+            f""
+        ])
+
+    linhas.extend([
         f"---",
         f"",
-        f"## 4. Deploy All-in-One: Guia Passo a Passo para Não-Técnicos",
+        f"## 5. Deploy All-in-One: Guia Passo a Passo para Não-Técnicos",
         f"",
         f"### 💡 Entendendo os 4 Pilares da Infraestrutura (Sem Jargões)",
         f"- **1. O que é VPS?** {deploy.get('analogia_didatica_stack', {}).get('o_que_e_vps', '')}",
@@ -416,7 +575,7 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
         f"",
         f"---",
         f"",
-        f"## 5. Guia de Modularidade, Expansão & Hot-Swap de Ferramentas (Princípio do Lego)",
+        f"## 6. Guia de Modularidade, Expansão & Hot-Swap de Ferramentas (Princípio do Lego)",
         f"",
         f"> **O Princípio das Tomadas Independentes:**  ",
         f"> {guia.get('filosofia_modular', '')}",
@@ -447,70 +606,127 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
             f""
         ])
 
+    linhas.extend([
+        f"---",
+        f"",
+        f"## 7. Roteiro Prático de Migração de Dados (De-SaaS para Soberano)",
+        f""
+    ])
+
+    for mig in dados.get("guia_migracao_dados", []):
+        linhas.extend([
+            f"### {mig.get('modulo')}",
+            f"- **O que migrar:** {mig.get('o_que_migrar')}",
+            f"- **Passos:**"
+        ])
+        for p in mig.get("passos", []):
+            linhas.append(f"  1. {p}")
+        linhas.extend([
+            f"- **⚠️ Cuidados:** {mig.get('cuidados')}",
+            f""
+        ])
+
+    seg = dados.get("seguranca_backup_lgpd", {})
+    linhas.extend([
+        f"---",
+        f"",
+        f"## 8. Segurança Corporativa, Backup 3-2-1 & Conformidade LGPD",
+        f"",
+        f"> **Arquitetura 3-2-1:** {seg.get('arquitetura_backup_321')}",
+        f"",
+        f"### Script de Backup Diário Automatizado",
+        f"```bash",
+        f"{seg.get('script_backup_diario')}",
+        f"```",
+        f"",
+        f"### Checklist de Conformidade LGPD",
+        f""
+    ])
+
+    for chk in seg.get("checklist_conformidade_lgpd", []):
+        linhas.append(f"- **{chk.get('item')}:** {chk.get('status')}")
+
+    linhas.extend([
+        f"",
+        f"---",
+        f"",
+        f"## 9. Cronograma Executivo de Implementação em 30 Dias",
+        f""
+    ])
+
+    for cron in dados.get("cronograma_implantacao_30_dias", []):
+        linhas.extend([
+            f"### {cron.get('semana')} · {cron.get('fase')}",
+            f"- **Atividades:** {cron.get('atividades')}",
+            f"- **🎯 Marco de Entrega:** {cron.get('marco_entrega')}",
+            f""
+        ])
+
+    mon = dados.get("monitoramento_e_saude_vps", {})
+    linhas.extend([
+        f"---",
+        f"",
+        f"## 10. Painel de Monitoramento & Health Check da VPS",
+        f"",
+        f"> **Painel Recomendado:** {mon.get('painel_recomendado')}",
+        f"",
+        f"### Comandos de Diagnóstico em 1 Clique",
+        f""
+    ])
+
+    for cmd in mon.get("comandos_diagnostico_1clique", []):
+        linhas.append(f"- `{cmd.get('comando')}`: {cmd.get('finalidade')}")
+
+    linhas.extend([
+        f"",
+        f"### Métricas de Alerta & Ações Recomendadas",
+        f""
+    ])
+
+    for met in mon.get("metricas_alerta", []):
+        linhas.append(f"- **{met.get('metrica')}** ({met.get('limite_alerta')}): {met.get('acao_recomendada')}")
+
     return "\n".join(linhas) + "\n"
-
-def persona_classe(classificacao: str) -> str:
-    c = classificacao.lower()
-    if "robusta" in c: return "robusta"
-    if "completa" in c: return "completa"
-    if "moderna" in c: return "moderna"
-    if "leve" in c: return "leve"
-    if "simples" in c: return "simples"
-    return "completa"
-
-def simplificar_classificacao(classificacao: str) -> str:
-    c = classificacao.strip()
-    for prefixo in ["A Mais ", "O Mais ", "Mais "]:
-        if c.startswith(prefixo):
-            return c[len(prefixo):].strip().capitalize()
-    return c.capitalize()
 
 def gerar_html_ecossistema_diamante(dados: dict) -> str:
     titulo = dados.get("titulo", "Dossiê de Macro-Ecossistema Open Source")
+    subtitulo = dados.get("subtitulo", "")
     deck = dados.get("deck", "")
+    saas = dados.get("saas_substituido", "")
     stats = dados.get("stats", {})
     pilares = dados.get("pilares", [])
     integracao = dados.get("camada_integracao", {})
     deploy = dados.get("deploy_consolidado", {})
+    guia = dados.get("guia_modularidade_e_expansao", {})
     econ = dados.get("analise_economica_global", {})
+    stack_detalhe = deploy.get("composicao_stack_detalhada", [])
 
-    total_ferramentas = sum(len(p.get("ferramentas", [])) for p in pilares)
-
-    # Tabela Síntese Geral
-    tabela_linhas = ""
+    # TABELA MATRIZ GERAL
+    linhas_tabela = ""
+    global_rank = 1
     for p in pilares:
-        nome_pilar_completo = p.get('nome_pilar', '')
-        partes = nome_pilar_completo.split(":")
-        if len(partes) > 1:
-            grupo_num = partes[0].strip()
-            tema_curto = partes[1].split(",")[0].split("&")[0].strip()
-            pilar_label = f"{grupo_num} · {tema_curto}"
-        else:
-            pilar_label = nome_pilar_completo
-
         for f in p.get("ferramentas", []):
-            classif_simples = simplificar_classificacao(f.get('classificacao', ''))
-            tabela_linhas += f"""
+            c_simp = simplificar_classificacao(f.get('classificacao', ''))
+            linhas_tabela += f"""
             <tr>
-              <td class="rank">{f['rank']:02d}</td>
-              <td class="classif-col">{classif_simples}</td>
-              <td class="tool"><a href="#{f['slug']}">{f['nome']}</a></td>
-              <td class="pilar-col"><span class="pilar-badge">{pilar_label}</span></td>
+              <td class="rank">{global_rank:02d}</td>
+              <td><strong>{p.get('nome_pilar').split(':')[0]}</strong></td>
+              <td>{c_simp}</td>
+              <td><strong>{f['nome']}</strong></td>
               <td class="saas">{f['saas_substituido_direto']}</td>
               <td class="econ">{f['economia_anual_str']}</td>
-              <td class="lic"><code>{f['licenca_osi']}</code></td>
-              <td class="code-col"><a href="{f['repositorio_github']}" target="_blank" rel="noopener" class="code-link">GitHub</a></td>
+              <td><a href="{f['repositorio_github']}" target="_blank" style="color: var(--accent); font-family: var(--mono); font-size: 11px; text-decoration: none; font-weight: 700;">GitHub ↗</a></td>
             </tr>
             """
+            global_rank += 1
 
-    # Seções de Pilares com Fichas Técnicas Diamante Completas
+    # CARDS DOS PILARES
     pilares_conteudo = ""
     for p_idx, p in enumerate(pilares, 1):
         entries_pilar = ""
         for f in p.get("ferramentas", []):
             classif_simples = simplificar_classificacao(f.get('classificacao', ''))
             
-            # Passos Práticos
             passos_f_html = "".join([
                 f"""
                 <div class="step-card">
@@ -521,10 +737,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
                 for idx, passo in enumerate(f.get("passos_praticos", []), 1)
             ])
 
-            # Design System / White-Label
             ds = f.get("design_system", {})
-            
-            # MCPs & Skills
             mcp_cards_html = "".join([
                 f"""
                 <div class="mcp-card">
@@ -568,73 +781,81 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
                   <div class="econ-grid">
                     <div class="econ-card killer">
                       <span class="econ-lbl">🎯 Módulo SaaS Proprietário Substituído</span>
-                      <div class="econ-val"><strong>{f['saas_substituido_direto']}</strong></div>
+                      <span class="econ-val">{f['saas_substituido_direto']}</span>
                     </div>
-                    <div class="econ-card highlight">
-                      <span class="econ-lbl">💰 Economia Direta Estimada</span>
-                      <div class="econ-val"><strong>{f['economia_anual_str']}</strong></div>
+                    <div class="econ-card savings">
+                      <span class="econ-lbl">💰 Economia Anual Individual</span>
+                      <span class="econ-val">{f['economia_anual_str']}</span>
                     </div>
-                  </div>
-                  <div class="racional-box" style="margin-top: 6px;">
-                    <p><strong>💡 Racional Técnico da Eleição:</strong> {f['racional_escolha']}</p>
+                    <div class="econ-card" style="grid-column: 1 / -1;">
+                      <span class="econ-lbl">💡 Racional de Seleção</span>
+                      <p style="font-size: 13px; margin: 4px 0 0; color: var(--ink-2);">{f['racional_escolha']}</p>
+                    </div>
                   </div>
                 </div>
 
-                <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+                <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO TÉCNICO -->
                 <div class="entry-section">
                   <div class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito Técnico</div>
                   <div class="infra-grid">
                     <div class="infra-card">
-                      <div class="infra-lbl">🖥️ Recursos Mínimos</div>
-                      <div class="infra-val">{f.get('requisitos_infra', {}).get('cpu_minima', '1 vCPU')} / {f.get('requisitos_infra', {}).get('ram_minima', '2 GB RAM')}</div>
+                      <span class="infra-lbl">💾 Memória RAM Mínima</span>
+                      <span class="infra-val">{f.get('requisitos_infra', {}).get('ram_minima', '1 GB')}</span>
                     </div>
                     <div class="infra-card">
-                      <div class="infra-lbl">🔗 Padrão &amp; Licença</div>
-                      <div class="infra-val">{f['licenca_osi']} · 100% Código Aberto</div>
+                      <span class="infra-lbl">⚙️ CPU Recomendada</span>
+                      <span class="infra-val">{f.get('requisitos_infra', {}).get('cpu_recomendada', '1 vCPU')}</span>
+                    </div>
+                    <div class="infra-card">
+                      <span class="infra-lbl">📦 Imagem Docker Oficial</span>
+                      <span class="infra-val"><code>{f.get('requisitos_infra', {}).get('docker_image', 'oficial')}</code></span>
+                    </div>
+                    <div class="infra-card">
+                      <span class="infra-lbl">🗄️ Persistência / Banco</span>
+                      <span class="infra-val">{f.get('requisitos_infra', {}).get('banco_dados', 'PostgreSQL')}</span>
                     </div>
                     <div class="infra-card verdict">
-                      <div class="infra-lbl">🏆 Veredito do Arquiteto</div>
-                      <p><strong>Por que adotar:</strong> {f.get('veredito')}</p>
+                      <span class="infra-lbl">⚖️ Veredito Técnico da Engenharia</span>
+                      <p style="font-size: 13px; margin: 4px 0 0; color: var(--ink-2);">{f.get('veredito')}</p>
                     </div>
                   </div>
-                  <div style="margin-top: 6px;">
-                    <a href="{f['repositorio_github']}" target="_blank" rel="noopener" class="repo-btn">
-                      <span>Ver Repositório Oficial no GitHub ↗</span>
+                  <div style="margin-top: 8px;">
+                    <a href="{f['repositorio_github']}" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; font-weight: 700; color: var(--accent); text-decoration: none; padding: 6px 12px; border: 1px solid var(--accent); border-radius: 2px;">
+                      📦 Repositório Oficial no GitHub ↗
                     </a>
                   </div>
                 </div>
 
-                <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+                <!-- SEÇÃO 4: GUIA PRÁTICO EM 3 PASSOS -->
                 <div class="entry-section">
-                  <div class="label">4. Como Usar no Dia a Dia (Guia Prático em 3 Passos)</div>
+                  <div class="label">4. Como Usar no Dia a Dia · Guia Prático em 3 Passos</div>
                   <div class="steps-grid">
                     {passos_f_html}
                   </div>
                 </div>
 
-                <!-- SEÇÃO 5: WHITE-LABEL & DESIGN SYSTEM -->
+                <!-- SEÇÃO 5: DESIGN SYSTEM & WHITE-LABEL -->
                 <div class="entry-section">
-                  <div class="label">5. White-Label &amp; Aderência ao Design System Corporativo</div>
                   <div class="ds-header">
+                    <div class="label">5. White-Label &amp; Aderência ao Design System Corporativo</div>
                     <div class="ds-badges">
-                      <span class="ds-badge esforco-minimo">Esforço: {ds.get('esforco', 'Mínimo')}</span>
-                      <span class="ds-badge stack-ui">UI Stack: {ds.get('stack_ui', 'Web')}</span>
-                      <span class="ds-badge wl-ready">White-Label: {'Sim' if ds.get('white_label_nativo') else 'Parcial'}</span>
+                      <span class="ds-badge esforco-minimo">Esforço: {ds.get('esforco_whitelabel', 'Baixo')}</span>
+                      <span class="ds-badge stack-ui">UI: {ds.get('stack_ui', 'Web')}</span>
                     </div>
                   </div>
                   <div class="ds-grid">
                     <div class="ds-card">
                       <span class="ds-lbl">Mecânica de Customização</span>
-                      <p>{ds.get('mecanica_customizacao')}</p>
+                      <p>{ds.get('mecanica_customizacao', 'Suporte a temas e logos')}</p>
                     </div>
                     <div class="ds-card">
-                      <span class="ds-lbl">Manutenibilidade &amp; Upgrades</span>
-                      <p>{ds.get('manutenibilidade_upgrades')}</p>
+                      <span class="ds-lbl">Facilidade de Manutenção</span>
+                      <p>{ds.get('manutenibilidade_tema', 'Alta aderência')}</p>
                     </div>
                   </div>
                 </div>
 
-                <!-- SEÇÃO 6: ECOSSISTEMA AGÊNTICO (MCPs & SKILLS) -->
+                <!-- SEÇÃO 6: USO COMPLEMENTAR & ECOSSISTEMA AGÊNTICO -->
                 <div class="entry-section">
                   <div class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; CLI)</div>
                   <div class="mcp-grid">
@@ -665,7 +886,6 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
         for idx, passo in enumerate(deploy.get("passos_deploy", []), 1)
     ])
 
-    # Desmembramento Financeiro por Grupo
     detalhe_econ = econ.get("detalhamento_por_grupo", [])
     tabela_tco_grupos = ""
     if detalhe_econ:
@@ -702,9 +922,6 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
         </div>
         """
 
-    guia = dados.get("guia_modularidade_e_expansao", {})
-    stack_detalhe = deploy.get("composicao_stack_detalhada", [])
-    
     stack_linhas_tabela = "".join([
         f"""
         <tr>
@@ -801,6 +1018,98 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
 
     caso_pratico = guia.get("exemplo_caso_pratico_hotswap", {})
 
+    # BLUEPRINTS N8N
+    blueprints_html = "".join([
+        f"""
+        <div class="blueprint-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+            <h4 style="margin: 0; font-family: var(--font-serif); font-size: 18px; color: var(--ink);">{bp.get('nome')}</h4>
+            <span class="persona-badge">Template Pronto</span>
+          </div>
+          <p style="font-size: 13.5px; color: var(--ink-2); margin: 0 0 10px;">{bp.get('descricao')}</p>
+          <div style="display: flex; gap: 12px; margin-bottom: 10px; font-family: var(--mono); font-size: 11px; color: var(--muted); flex-wrap: wrap;">
+            <span>⚡ <strong>Gatilho:</strong> <code>{bp.get('gatilho')}</code></span>
+          </div>
+          <div class="code-box">
+            <pre><code>{bp.get('json_blueprint')}</code></pre>
+          </div>
+        </div>
+        """
+        for bp in dados.get("blueprints_n8n", [])
+    ])
+
+    # GUIA MIGRAÇÃO DE DADOS
+    migracao_cards_html = "".join([
+        f"""
+        <div class="integ-card" style="margin-bottom: 14px;">
+          <h4>{mig.get('modulo')}</h4>
+          <p><strong>O que é migrado:</strong> {mig.get('o_que_migrar')}</p>
+          <div class="steps-grid" style="margin: 10px 0;">
+            {''.join([f'<div class="step-card"><div class="step-head"><span class="step-badge">{idx}</span> Etapa {idx}</div><p>{p}</p></div>' for idx, p in enumerate(mig.get('passos', []), 1)])}
+          </div>
+          <div style="background: var(--flag-soft); border-left: 3px solid var(--flag); padding: 8px 12px; border-radius: 2px; font-size: 12.5px; color: var(--flag); margin-top: 6px;">
+            <strong>⚠️ Cuidado Essencial:</strong> {mig.get('cuidados')}
+          </div>
+        </div>
+        """
+        for mig in dados.get("guia_migracao_dados", [])
+    ])
+
+    # SEGURANÇA, BACKUP & LGPD
+    seg = dados.get("seguranca_backup_lgpd", {})
+    checklist_lgpd_html = "".join([
+        f"""
+        <div class="stat-card" style="margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <strong style="color: var(--ink); font-size: 13.5px;">{chk.get('item')}</strong>
+            <span class="econ-badge" style="font-size: 9.5px;">Auditado</span>
+          </div>
+          <p style="margin: 0; font-size: 12.5px; color: var(--ink-2);">{chk.get('status')}</p>
+        </div>
+        """
+        for chk in seg.get("checklist_conformidade_lgpd", [])
+    ])
+
+    # CRONOGRAMA 30 DIAS
+    cronograma_html = "".join([
+        f"""
+        <div class="timeline-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap;">
+            <h4>{cron.get('semana')} · {cron.get('fase')}</h4>
+            <span class="persona-badge" style="font-size: 9.5px;">Meta</span>
+          </div>
+          <p style="font-size: 13px; margin: 0 0 6px; color: var(--ink-2);">{cron.get('atividades')}</p>
+          <div style="font-family: var(--mono); font-size: 11.5px; color: var(--green); font-weight: 700;">
+            🎯 Marco de Entrega: {cron.get('marco_entrega')}
+          </div>
+        </div>
+        """
+        for cron in dados.get("cronograma_implantacao_30_dias", [])
+    ])
+
+    # MONITORAMENTO & HEALTH CHECK
+    mon = dados.get("monitoramento_e_saude_vps", {})
+    comandos_mon_html = "".join([
+        f"""
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+          <code style="font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--ink);">{cmd.get('comando')}</code>
+          <span style="font-size: 12.5px; color: var(--muted);">{cmd.get('finalidade')}</span>
+        </div>
+        """
+        for cmd in mon.get("comandos_diagnostico_1clique", [])
+    ])
+
+    metricas_mon_html = "".join([
+        f"""
+        <div class="stat-card">
+          <div class="stat-lbl">{met.get('metrica')}</div>
+          <div style="font-family: var(--mono); font-size: 12px; color: var(--flag); font-weight: 700; margin: 2px 0;">Alerta: {met.get('limite_alerta')}</div>
+          <p style="margin: 0; font-size: 12px; color: var(--ink-2);"><strong>Ação:</strong> {met.get('acao_recomendada')}</p>
+        </div>
+        """
+        for met in mon.get("metricas_alerta", [])
+    ])
+
     html = f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -814,61 +1123,112 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
 <body>
 <div class="wrap">
   <header>
-    <div class="header-top">
-      <a href="../../../INDICE-MESTRE.html" class="back-link">← Catálogo Mestre</a>
-      <span class="camada-pill">Macro-Ecossistema Soberano</span>
+    <div class="meta">
+      <span>Macro-Ecossistema Soberano · Padrão Diamante R5-E</span>
+      <span>Fábrica Universal AIDD · {datetime.date.today().strftime('%d/%m/%Y')}</span>
     </div>
-    <div class="hero">
-      <h1>{titulo}</h1>
-      <p class="deck">{deck}</p>
-    </div>
-    <div class="hero-stats">
-      <div class="stat-card"><div class="num">{len(pilares)}</div><div class="lbl">Grupos Funcionais</div></div>
-      <div class="stat-card"><div class="num">{total_ferramentas}</div><div class="lbl">Ferramentas Mapeadas</div></div>
-      <div class="stat-card"><div class="num">{stats.get('licencas_osi', '100%')}</div><div class="lbl">Licenças OSI</div></div>
-      <div class="stat-card"><div class="num">{stats.get('economia_media', '96%')}</div><div class="lbl">Economia Média</div></div>
+    <h1>{titulo}</h1>
+    <p class="deck">{deck}</p>
+    
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-lbl">Pilares de Negócio</div>
+        <div class="stat-val">{stats.get('total_pilares', 3)} Grupos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Arsenal Total</div>
+        <div class="stat-val highlight">{stats.get('total_ferramentas', 15)} Ferramentas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Economia Média</div>
+        <div class="stat-val highlight">{stats.get('economia_media', '96%')}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">SaaS Desmantelado</div>
+        <div class="stat-val alert">{saas}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">Licenças OSI</div>
+        <div class="stat-val">{stats.get('licencas_osi', '100% OSI')}</div>
+      </div>
     </div>
   </header>
 
+  <!-- SEÇÃO 01: TCO & CALCULADORA -->
   <div class="sec-head">
     <div class="sec-info">
-      <span class="sec-num">Seção 01 · Demonstrativo Financeiro de TCO Desmembrado</span>
-      <h2>Análise de TCO por Grupo &amp; Payback Consolidado</h2>
-      <p class="sec-note">Comparativo financeiro detalhado por frente de negócio (Marketing, CRM, Comunicação) versus infraestrutura aberta autônoma.</p>
+      <span class="sec-num">Seção 01 · Demonstrativo Financeiro Consolidado</span>
+      <h2>Análise de TCO Global &amp; Calculadora Interativa de Payback</h2>
+      <p class="sec-note">Demonstrativo comparativo de desmantelamento de custos de licenças de software.</p>
     </div>
   </div>
 
   <div class="tco-banner">
     <div class="tco-col">
-      <div class="tco-lbl">Custo SaaS Total (3 Grupos)</div>
-      <div class="tco-val killer">{econ.get('custo_saas_anual', 'R$ 114.000/ano')}</div>
+      <div class="tco-lbl">Custo SaaS Proprietário Anual</div>
+      <div class="tco-val killer">{econ.get('custo_saas_anual')}</div>
     </div>
     <div class="tco-col">
-      <div class="tco-lbl">Custo VPS Soberana Total</div>
-      <div class="tco-val">{econ.get('custo_vps_anual', 'R$ 4.200/ano')}</div>
+      <div class="tco-lbl">Custo VPS Soberana Unificada</div>
+      <div class="tco-val">{econ.get('custo_vps_anual')}</div>
     </div>
     <div class="tco-col">
-      <div class="tco-lbl">Economia Líquida Total</div>
-      <div class="tco-val highlight">{econ.get('economia_anual_liquida', 'R$ 109.800/ano')}</div>
+      <div class="tco-lbl">Economia Líquida Anual</div>
+      <div class="tco-val highlight">{econ.get('economia_anual_liquida')}</div>
     </div>
     <div class="tco-col">
-      <div class="tco-lbl">Retorno do Investimento (ROI)</div>
-      <div class="tco-val highlight">{econ.get('roi_meses', '14 dias')}</div>
+      <div class="tco-lbl">Payback Estimado</div>
+      <div class="tco-val highlight">{econ.get('roi_meses')}</div>
     </div>
   </div>
 
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">🧮 Simule a Economia da sua Empresa em Tempo Real</h3>
+  <div class="calc-box">
+    <div class="calc-grid">
+      <div class="calc-slider-group">
+        <label><span>Base de Leads Ativos</span> <strong id="val-leads" style="color: var(--accent);">50.000 leads</strong></label>
+        <input type="range" id="slider-leads" min="5000" max="200000" step="5000" value="50000">
+      </div>
+      <div class="calc-slider-group">
+        <label><span>Vendedores no CRM</span> <strong id="val-sellers" style="color: var(--accent);">10 vendedores</strong></label>
+        <input type="range" id="slider-sellers" min="1" max="50" step="1" value="10">
+      </div>
+      <div class="calc-slider-group">
+        <label><span>Atendentes de WhatsApp</span> <strong id="val-agents" style="color: var(--accent);">10 atendentes</strong></label>
+        <input type="range" id="slider-agents" min="1" max="50" step="1" value="10">
+      </div>
+    </div>
+    <div class="calc-results">
+      <div>
+        <div class="stat-lbl">Seu Custo SaaS Atual</div>
+        <div class="stat-val alert" id="calc-saas-total">R$ 114.000/ano</div>
+      </div>
+      <div>
+        <div class="stat-lbl">Seu Custo na VPS Própria</div>
+        <div class="stat-val" id="calc-vps-total">R$ 4.200/ano</div>
+      </div>
+      <div>
+        <div class="stat-lbl">Dinheiro que Fica no seu Caixa</div>
+        <div class="stat-val highlight" id="calc-savings-total">R$ 109.800/ano (96.3%)</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">Desmembramento por Frente de Negócio</h3>
   {tabela_tco_grupos}
 
+  <!-- SEÇÃO 02: MATRIZ GERAL -->
   <div class="sec-head">
     <div class="sec-info">
       <span class="sec-num">Seção 02 · Matriz Geral do Quinteto Soberano por Grupo</span>
       <h2>Pilha Aberta Integrada</h2>
-      <p class="sec-note">Mapeamento direto de cada módulo proprietário para a ferramenta correspondente nas 5 personas arquetípicas.</p>
+      <p class="sec-note">Visão consolidada das 15 ferramentas que compõem os 3 pilares estratégicos da suíte.</p>
     </div>
   </div>
 
-  <div class="search-wrapper">
-    <input type="text" id="busca-ferramentas" class="search-input" placeholder="Filtrar ferramentas por nome, persona, pilar ou licença... (Pressione '/' para buscar)">
+  <div style="margin: 16px 0 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+    <input type="text" id="busca-ferramentas" placeholder="Pressione '/' para buscar por nome, módulo ou palavra-chave..." style="flex: 1; min-width: 280px; padding: 10px 14px; font-family: var(--font-sans); font-size: 13.5px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface-2); color: var(--ink);">
+    <span id="search-count" style="font-family: var(--mono); font-size: 12px; color: var(--muted);">15 ferramentas listadas</span>
   </div>
 
   <div class="tablewrap">
@@ -876,36 +1236,37 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
       <thead>
         <tr>
           <th>#</th>
+          <th>Grupo</th>
           <th>Classificação</th>
           <th>Ferramenta</th>
-          <th>Grupo</th>
-          <th>Substitui Diretamente no SaaS</th>
+          <th>Substitui</th>
           <th>Economia Estimada</th>
-          <th>Licença</th>
           <th>Código</th>
         </tr>
       </thead>
       <tbody>
-        {tabela_linhas}
+        {linhas_tabela}
       </tbody>
     </table>
   </div>
 
+  <!-- SEÇÃO 03: FICHAS TÉCNICAS -->
   <div class="sec-head">
     <div class="sec-info">
-      <span class="sec-num">Seção 03 · Análise Detalhada dos Quintetos por Frente de Negócio</span>
-      <h2>Fichas Técnicas dos Quintetos Soberanos</h2>
-      <p class="sec-note">Especificação de engenharia completa com White-Label, guias práticos e ecossistema de MCPs/Skills.</p>
+      <span class="sec-num">Seção 03 · Arsenal Tecnológico &amp; Fichas Técnicas</span>
+      <h2>Quinteto Soberano por Grupo Funcional</h2>
+      <p class="sec-note">Especificação de engenharia completa para cada uma das 15 ferramentas do macro-ecossistema.</p>
     </div>
   </div>
 
   {pilares_conteudo}
 
+  <!-- SEÇÃO 04: INTEGRAÇÃO & BLUEPRINTS -->
   <div class="sec-head">
     <div class="sec-info">
       <span class="sec-num">Seção 04 · Camada de Cola &amp; Orquestração</span>
-      <h2>Integração, SSO &amp; Barramento de Eventos</h2>
-      <p class="sec-note">Como os módulos dialogam de forma transparente sem silos de dados.</p>
+      <h2>Integração, SSO &amp; Blueprints n8n</h2>
+      <p class="sec-note">Como os módulos dialogam de forma transparente com fluxos automatizados prontos para uso.</p>
     </div>
   </div>
 
@@ -924,11 +1285,16 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
     </div>
   </div>
 
-  <div class="integ-card" style="margin-top: 12px;">
+  <div class="integ-card" style="margin-top: 12px; margin-bottom: 24px;">
     <h4>🔄 Fluxo de Integração Operacional</h4>
     <p style="white-space: pre-line; margin-top: 8px;">{integracao.get('fluxo_integracao_descricao')}</p>
   </div>
 
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">📦 Blueprints de Workflows Prontos para n8n (Importação Instantânea)</h3>
+  <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 14px;">Basta copiar o JSON abaixo e colar no painel do seu n8n para que todos os módulos comecem a conversar automaticamente.</p>
+  {blueprints_html}
+
+  <!-- SEÇÃO 05: DEPLOY ALL-IN-ONE -->
   <div class="sec-head">
     <div class="sec-info">
       <span class="sec-num">Seção 05 · Deploy All-in-One: Guia Passo a Passo para Não-Técnicos</span>
@@ -964,6 +1330,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
     {passos_cards}
   </div>
 
+  <!-- SEÇÃO 06: MODULARIDADE & HOT-SWAP -->
   <div class="sec-head" style="margin-top: 48px;">
     <div class="sec-info">
       <span class="sec-num">Seção 06 · Guia de Modularidade, Expansão &amp; Hot-Swap</span>
@@ -1004,6 +1371,64 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
   <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 12px; color: var(--ink);">5. Perguntas Frequentes (FAQ Operacional para Não-Técnicos)</h3>
   {faq_cards_html}
 
+  <!-- SEÇÃO 07: MIGRAÇÃO DE DADOS -->
+  <div class="sec-head" style="margin-top: 48px;">
+    <div class="sec-info">
+      <span class="sec-num">Seção 07 · Guia de Migração de Dados Históricos</span>
+      <h2>De-SaaS para Soberano (Transição Segura sem Perdas)</h2>
+      <p class="sec-note">Roteiro passo a passo para exportar dados do RD Station e importar no Mautic, Twenty e Chatwoot.</p>
+    </div>
+  </div>
+  {migracao_cards_html}
+
+  <!-- SEÇÃO 08: SEGURANÇA & LGPD -->
+  <div class="sec-head" style="margin-top: 48px;">
+    <div class="sec-info">
+      <span class="sec-num">Seção 08 · Governança, Backup 3-2-1 &amp; LGPD</span>
+      <h2>Soberania de Dados &amp; Proteção Corporativa</h2>
+      <p class="sec-note">Conformidade jurídica estrita com a LGPD e política de backup com criptografia AES-256 em nuvem fria.</p>
+    </div>
+  </div>
+
+  <div class="racional-box">
+    <p><strong>🛡️ Regra de Ouro do Backup (3-2-1):</strong> {seg.get('arquitetura_backup_321')}</p>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 10px; color: var(--ink);">Script de Backup Diário Automatizado (PostgreSQL + Mídias)</h3>
+  <div class="code-box" style="margin-bottom: 20px;">
+    <pre><code>{seg.get('script_backup_diario')}</code></pre>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">Checklist de Conformidade com a LGPD</h3>
+  {checklist_lgpd_html}
+
+  <!-- SEÇÃO 09: CRONOGRAMA 30 DIAS -->
+  <div class="sec-head" style="margin-top: 48px;">
+    <div class="sec-info">
+      <span class="sec-num">Seção 09 · Plano Executivo de Implementação</span>
+      <h2>Cronograma de 30 Dias para Virada de Chave</h2>
+      <p class="sec-note">Planejamento semana a semana para migrar com segurança sem interromper as operações comerciais.</p>
+    </div>
+  </div>
+  {cronograma_html}
+
+  <!-- SEÇÃO 10: MONITORAMENTO -->
+  <div class="sec-head" style="margin-top: 48px;">
+    <div class="sec-info">
+      <span class="sec-num">Seção 10 · Monitoramento &amp; Health Check da VPS</span>
+      <h2>Painel de Diagnóstico &amp; Métricas de Alerta</h2>
+      <p class="sec-note">Comandos em 1 clique para inspecionar memória, conexões de banco e status do WhatsApp.</p>
+    </div>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 16px 0 10px; color: var(--ink);">Comandos de Diagnóstico Rápido (1 Clique)</h3>
+  {comandos_mon_html}
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">Métricas Críticas &amp; Protocolo de Resolução</h3>
+  <div class="integration-grid">
+    {metricas_mon_html}
+  </div>
+
 </div>
 {JS_CANONICO_DIAMANTE}
 </body>
@@ -1017,6 +1442,7 @@ def gerar_typst_ecossistema(dados: dict) -> str:
     pilares = dados.get("pilares", [])
     integracao = dados.get("camada_integracao", {})
     deploy = dados.get("deploy_consolidado", {})
+    guia = dados.get("guia_modularidade_e_expansao", {})
     econ = dados.get("analise_economica_global", {})
 
     def sanitizar_typ(txt: str) -> str:
@@ -1048,189 +1474,124 @@ def gerar_typst_ecossistema(dados: dict) -> str:
     econ_liq = sanitizar_typ(econ.get('economia_anual_liquida', ''))
     roi = sanitizar_typ(econ.get('roi_meses', ''))
 
-    detalhe_econ = econ.get("detalhamento_por_grupo", [])
-    linhas_tco_typ = ""
-    if detalhe_econ:
-        linhas_tco_typ = """
-=== Demonstrativo de TCO Desmembrado por Grupo Funcional
-#table(
-  columns: (2.5fr, 2.5fr, 1.8fr, 1.8fr, 1.8fr),
-  fill: (x, y) => if y == 0 { rgb("#f1f5f9") } else { none },
-  stroke: 0.5pt + rgb("#e2e8f0"),
-  inset: 4.5pt,
-  [*Grupo Funcional*], [*SaaS de Referência*], [*Custo SaaS*], [*Custo VPS*], [*Economia Líq.*],
-"""
-        for dg in detalhe_econ:
-            linhas_tco_typ += f"  [*{dg.get('grupo')}*], [{dg.get('saas_referencia')}], [{sanitizar_typ(dg.get('custo_saas_anual'))}], [{sanitizar_typ(dg.get('custo_vps_alocado'))}], [*{sanitizar_typ(dg.get('economia_anual_liquida'))}*],\n"
-        linhas_tco_typ += ")\n#v(8pt)\n"
-        linhas_tco_typ = linhas_tco_typ.replace('{ rgb("#f1f5f9") }', '{{ rgb("#f1f5f9") }}').replace('{ none }', '{{ none }}')
+    typ = f"""#set page(paper: "a4", flipped: true, margin: (x: 1.2cm, top: 1.2cm, bottom: 1.2cm))
+#set text(font: "Liberation Sans", size: 9pt, lang: "pt")
 
-    typst = f"""#set page(
-  paper: "a4",
-  margin: (x: 1.5cm, y: 1.8cm),
-  header: align(right)[
-    #text(size: 8pt, fill: rgb("#64748b"))[Fábrica Universal AIDD · Macro-Ecossistema Soberano]
-  ],
-  footer: [
-    #line(length: 100%, stroke: 0.5pt + rgb("#cbd5e1"))
-    #grid(
-      columns: (1fr, 1fr),
-      text(size: 8pt, fill: rgb("#94a3b8"))[Confidencial & Soberano],
-      align(right, text(size: 8pt, fill: rgb("#94a3b8"))[Página #context counter(page).display()])
-    )
-  ]
-)
-
-#set text(
-  font: ("Segoe UI", "Arial", "Liberation Sans"),
-  size: 8.5pt,
-  fill: rgb("#0f172a"),
-  lang: "pt"
-)
-
-#block(
-  fill: rgb("#0f172a"),
-  inset: 14pt,
-  radius: 6pt,
-  width: 100%,
-  [
-    #text(size: 7.5pt, weight: "bold", fill: rgb("#38bdf8"))[MACRO-ECOSSISTEMA SOBERANO · FLUXO 4 AIDD] \\
-    #v(3pt)
-    #text(size: 15pt, weight: "bold", fill: white)[{titulo}] \\
-    #v(2pt)
-    #text(size: 8.5pt, fill: rgb("#cbd5e1"))[{subtitulo}]
-  ]
-)
-
-#v(8pt)
-
-== 1. Demonstrativo Financeiro de TCO Desmembrado & Consolidado
-
-#table(
-  columns: (2.5fr, 2.5fr, 2.5fr, 2.5fr),
-  fill: rgb("#f8fafc"),
-  stroke: 0.5pt + rgb("#cbd5e1"),
-  inset: 6pt,
-  [*Custo SaaS Total*], [*Custo VPS Total*], [*Economia Líquida*], [*Payback*],
-  [{custo_saas}], [{custo_vps}], [*{econ_liq}*], [{roi}]
-)
-
-#v(8pt)
-
-{linhas_tco_typ}
-
-== 2. Análise Detalhada dos Quintetos por Grupos de Negócio
-
-{linhas_pilares}
-
-== 3. Camada de Cola, SSO & Orquestração
-
-- *Autenticação Unificada (SSO):* {integracao.get('autenticacao_sso')}
-- *Barramento de Eventos:* {integracao.get('barramento_eventos')}
-- *Reverse Proxy & TLS:* {integracao.get('gateway_reverse_proxy')}
-
-#v(8pt)
-
-== 4. Deploy All-in-One & Composição da Stack
-
-- *Hardware Recomendado:* {deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('armazenamento_minimo')}
-- *Isolamento de Rede:* Rede Docker `ecosystem_net` com portas 80/443 públicas via Traefik v3.
-
+#text(size: 8pt, fill: rgb("#64748b"), weight: "bold")[FÁBRICA UNIVERSAL AIDD · DOSSIÊ DE MACRO-ECOSSISTEMA SOBERANO (PADRÃO DIAMANTE R5-E)]
+#v(2pt)
+#text(size: 16pt, weight: "bold", fill: rgb("#0f172a"))[{sanitizar_typ(titulo)}]
+#v(-2pt)
+#text(size: 10pt, fill: rgb("#00875A"), weight: "bold")[{sanitizar_typ(subtitulo)}]
 #v(6pt)
 
-== 5. Guia de Modularidade & Hot-Swap de Serviços
+#grid(
+  columns: (1fr, 1fr, 1.2fr, 1fr),
+  gutter: 8pt,
+  rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#e2e8f0"), inset: 6pt)[
+    #text(size: 7.5pt, fill: rgb("#64748b"))[CUSTO SAAS ANUAL] \\
+    #text(size: 11pt, weight: "bold", fill: rgb("#dc2626"))[{custo_saas}]
+  ],
+  rect(fill: rgb("#f8fafc"), stroke: 0.5pt + rgb("#e2e8f0"), inset: 6pt)[
+    #text(size: 7.5pt, fill: rgb("#64748b"))[CUSTO VPS SOBERANA] \\
+    #text(size: 11pt, weight: "bold", fill: rgb("#0f172a"))[{custo_vps}]
+  ],
+  rect(fill: rgb("#f0fdf4"), stroke: 0.5pt + rgb("#bbf7d0"), inset: 6pt)[
+    #text(size: 7.5pt, fill: rgb("#166534"))[ECONOMIA LÍQUIDA ANUAL] \\
+    #text(size: 11pt, weight: "bold", fill: rgb("#16a34a"))[{econ_liq}]
+  ],
+  rect(fill: rgb("#f0fdf4"), stroke: 0.5pt + rgb("#bbf7d0"), inset: 6pt)[
+    #text(size: 7.5pt, fill: rgb("#166534"))[PAYBACK ESTIMADO] \\
+    #text(size: 11pt, weight: "bold", fill: rgb("#16a34a"))[{roi}]
+  ]
+)
 
-- *Acoplamento Fraco:* Todos os módulos dialogam via webhooks no n8n e autenticação OIDC no Keycloak.
-- *Inserção de Nova Ferramenta:* Declare o contêiner no `docker-compose.override.yml`, conecte à rede `ecosystem_net` e configure labels do Traefik.
-- *Hot-Swap de Ferramenta:* Suba o novo serviço em paralelo, aponte os nós no n8n e altere a rota no Traefik com zero downtime.
+#v(8pt)
+== Pilares Estratégicos & Quinteto Soberano por Grupo
+{linhas_pilares}
+
+#v(8pt)
+== Camada de Cola, SSO & Barramento de Eventos
+- *Autenticação Única:* {sanitizar_typ(integracao.get('autenticacao_sso', ''))}
+- *Barramento:* {sanitizar_typ(integracao.get('barramento_eventos', ''))}
+- *Reverse Proxy:* {sanitizar_typ(integracao.get('gateway_reverse_proxy', ''))}
+
+#v(8pt)
+== Deploy All-in-One & Modularidade Operacional
+- *Topologia:* {sanitizar_typ(deploy.get('arquitetura_rede_seguranca', ''))}
+- *Princípio Modular:* {sanitizar_typ(guia.get('filosofia_modular', ''))}
 """
-    return typst
+    return typ
 
-def compilar_ecossistema_tripartite(slug: str) -> bool:
-    slug_limpo = slug.strip().replace("ecos-", "").replace(".json", "")
-    json_path = BASE_DIR / "scripts" / "data" / f"ecos-{slug_limpo}.json"
-
+def compilar_ecossistema_tripartite(slug: str):
+    json_path = BASE_DIR / "scripts" / "data" / f"ecos-{slug}.json"
     if not json_path.exists():
-        print(f"❌ Arquivo de ecossistema não encontrado: {json_path}")
-        return False
+        json_path = BASE_DIR / "scripts" / "data" / f"{slug}.json"
+    if not json_path.exists():
+        print(f"❌ Erro: Arquivo de dados do ecossistema não encontrado: {json_path}")
+        sys.exit(1)
 
-    with open(json_path, "r", encoding="utf-8-sig") as f:
+    print(f"\n🚀 Compilando Dossiê de Macro-Ecossistema Tripartite: 'ecos-{slug}'")
+    with open(json_path, "r", encoding="utf-8") as f:
         dados = json.load(f)
 
-    pasta_saida = BASE_DIR / "output" / "04-ecossistemas" / f"ecos-{slug_limpo}"
-    pasta_materiais = pasta_saida / "materiais"
-    pasta_relatorios = pasta_saida / "relatorios"
-    pasta_materiais.mkdir(parents=True, exist_ok=True)
-    pasta_relatorios.mkdir(parents=True, exist_ok=True)
+    out_dir = BASE_DIR / "output" / "04-ecossistemas" / f"ecos-{slug}"
+    mat_dir = out_dir / "materiais"
+    mat_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"\n🚀 Compilando Dossiê de Macro-Ecossistema Tripartite: 'ecos-{slug_limpo}'")
-
-    # 1. HTML Diamante R5-E
+    # 1. HTML
     html_content = gerar_html_ecossistema_diamante(dados)
-    html_file = pasta_materiais / f"ecos-{slug_limpo}.html"
-    with open(html_file, "w", encoding="utf-8") as f:
+    html_path = mat_dir / f"ecos-{slug}.html"
+    with open(html_path, "w", encoding="utf-8") as f:
         f.write(html_content)
-    print(f"   ✅ HTML Diamante R5-E gerado: {html_file.name} ({len(html_content.encode('utf-8'))} bytes)")
+    print(f"   ✅ HTML Diamante R5-E gerado: {html_path.name} ({len(html_content.encode('utf-8'))} bytes)")
 
     # 2. Markdown
     md_content = gerar_markdown_ecossistema(dados)
-    md_file = pasta_materiais / f"ecos-{slug_limpo}.md"
-    with open(md_file, "w", encoding="utf-8") as f:
+    md_path = mat_dir / f"ecos-{slug}.md"
+    with open(md_path, "w", encoding="utf-8") as f:
         f.write(md_content)
-    print(f"   ✅ Markdown gerado: {md_file.name} ({len(md_content.splitlines())} linhas)")
+    print(f"   ✅ Markdown gerado: {md_path.name} ({len(md_content.splitlines())} linhas)")
 
-    # 3. PDF Typst
-    typst_content = gerar_typst_ecossistema(dados)
-    typ_file = pasta_saida / f"ecos-{slug_limpo}.typ"
-    pdf_file = pasta_materiais / f"ecos-{slug_limpo}.pdf"
-    with open(typ_file, "w", encoding="utf-8") as f:
-        f.write(typst_content)
+    # 3. Typst / PDF
+    typ_content = gerar_typst_ecossistema(dados)
+    typ_path = out_dir / f"ecos-{slug}.typ"
+    pdf_path = mat_dir / f"ecos-{slug}.pdf"
+    with open(typ_path, "w", encoding="utf-8") as f:
+        f.write(typ_content)
 
     try:
-        res = subprocess.run(["typst", "compile", str(typ_file), str(pdf_file)], capture_output=True, text=True, check=True)
-        print(f"   ✅ PDF Typst compilado: {pdf_file.name}")
+        res = subprocess.run(["typst", "compile", str(typ_path), str(pdf_path)], capture_output=True, text=True, check=True)
+        print(f"   ✅ PDF Typst compilado: {pdf_path.name}")
     except Exception as e:
-        print(f"   ⚠️ Aviso na compilação Typst: {e}")
+        print(f"   ⚠️ Typst não encontrado ou falha na compilação do PDF: {e}")
 
-    # 4. Relatório Tripartite
-    hoje = datetime.date.today().strftime("%d-%m-%Y")
-    rel_md_file = pasta_relatorios / f"{hoje}-relatorio-execucao-ecos-{slug_limpo}.md"
-    rel_md_content = f"""# Relatório de Execução · Fluxo 4: Macro-Ecossistema Soberano
+    # 4. Registro no SQLite (Regra R11)
+    try:
+        registrar_ecossistema({
+            "slug": f"ecos-{slug}",
+            "nome_ecossistema": dados.get("nome_ecossistema", slug),
+            "titulo": dados.get("titulo", ""),
+            "saas_substituido": dados.get("saas_substituido", ""),
+            "total_pilares": dados.get("stats", {}).get("total_pilares", len(dados.get("pilares", []))),
+            "total_ferramentas": dados.get("stats", {}).get("total_ferramentas", sum(len(p.get("ferramentas", [])) for p in dados.get("pilares", []))),
+            "economia_anual_liquida": dados.get("analise_economica_global", {}).get("economia_anual_liquida", ""),
+            "caminho_html": f"output/04-ecossistemas/ecos-{slug}/materiais/ecos-{slug}.html",
+            "caminho_md": f"output/04-ecossistemas/ecos-{slug}/materiais/ecos-{slug}.md",
+            "caminho_pdf": f"output/04-ecossistemas/ecos-{slug}/materiais/ecos-{slug}.pdf"
+        })
+        print(f"💾 Ecossistema persistido com sucesso no SQLite (estado_esteira.db - Regra R11)")
+    except Exception as e:
+        print(f"⚠️ Erro ao registrar ecossistema no SQLite: {e}")
 
-> **Ecossistema:** {dados.get('nome_ecossistema')}  
-> **Data:** {hoje}  
-> **Status:** 100% Concluído & Auditado (Quinteto Soberano por Grupo, White-Label & MCPs)
-
-### Métricas da Suíte:
-- Total de Grupos Funcionais: {dados.get('stats', {}).get('total_pilares')}
-- Total de Ferramentas no Quinteto: {dados.get('stats', {}).get('total_ferramentas')} (5 por grupo)
-- Economia Líquida Anual: {dados.get('analise_economica_global', {}).get('economia_anual_liquida')}
-- Gate R5-E (Padrão Diamante): APROVADO
-- Gate R18 (Higiene Soberana): APROVADO
-"""
-    with open(rel_md_file, "w", encoding="utf-8") as f:
-        f.write(rel_md_content)
-
-    # 5. Persistência no SQLite
-    total_ferrs = sum(len(p.get("ferramentas", [])) for p in dados.get("pilares", []))
-    registrar_ecossistema({
-        "slug": slug_limpo,
-        "nome_ecossistema": dados.get("nome_ecossistema", slug_limpo),
-        "titulo": dados.get("titulo", slug_limpo),
-        "saas_substituido": dados.get("saas_substituido", "Macro-SaaS"),
-        "total_pilares": len(dados.get("pilares", [])),
-        "total_ferramentas": total_ferrs,
-        "economia_anual_liquida": dados.get("analise_economica_global", {}).get("economia_anual_liquida", "N/A"),
-        "gate_r5e": "APROVADO",
-        "gate_r18": "APROVADO"
-    })
-    print(f"💾 Ecossistema persistido com sucesso no SQLite (estado_esteira.db - Regra R11)")
-    print(f"🏆 COMPILAÇÃO TRIPARTITE CONCLUÍDA: {pasta_saida}\n")
+    print(f"🏆 COMPILAÇÃO TRIPARTITE CONCLUÍDA: {out_dir}")
     return True
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description="Compilador Tripartite de Macro-Ecossistemas (Fluxo 4)")
-    parser.add_argument("--slug", type=str, required=True, help="Slug do ecossistema (ex: rd-station-suite)")
+    parser.add_argument("--ecossistema", "--slug", dest="slug", required=True, help="Slug do macro-ecossistema (ex: rd-station-suite)")
     args = parser.parse_args()
-    sucesso = compilar_ecossistema_tripartite(args.slug)
-    sys.exit(0 if sucesso else 1)
+    slug_limpo = args.slug.replace("ecos-", "")
+    compilar_ecossistema_tripartite(slug_limpo)
+
+if __name__ == "__main__":
+    main()
