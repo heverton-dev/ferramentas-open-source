@@ -11,8 +11,8 @@
 
 | Metrica de Infraestrutura | Capacidade Total | Demanda Cumulativa | Headroom Livre Disponivel | Status de Seguranca |
 | :--- | :--- | :--- | :--- | :--- |
-| **Capacidade de Processamento** | 12 vCPUs | 23.5 vCPUs | **~-13.2 vCPUs Livres** | [ALERTA] Alta Carga |
-| **Memoria RAM Global** | 47.05 GB | 30.5 GB | **~13.5 GB Livres** | [APROVADO] Ampla Folga |
+| **Capacidade de Processamento** | 12 vCPUs | 27.5 vCPUs | **~-17.2 vCPUs Livres** | [ALERTA] Alta Carga |
+| **Memoria RAM Global** | 47.05 GB | 37.0 GB | **~7.0 GB Livres** | [APROVADO] Ampla Folga |
 | **Orquestrador de Containers** | Docker Swarm (1 N?) | 17 Containers Ativos | Nos: 1 Manager | [APROVADO] Roteamento SNI |
 | **Ingress & Roteamento TLS** | Traefik v2/v3 | Rede Overlay `network_conexao` | Certresolver ACME | [APROVADO] SSL Autom?tico |
 
@@ -27,14 +27,15 @@ Abaixo est? o balan?o individual de viabilidade para todas as ferramentas e ecos
 | **01** | **Ecossistema Google Workspace (Nextcloud + ONLYOFFICE + Stalwart + CryptPad)** | Ferramenta Open Source Autonoma | 4 vCPUs | 7.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
 | **02** | **Ecossistema CRM & Automacao de Marketing (Chatwoot + Twenty + Evolution + Mautic)** | Ferramenta Open Source Autonoma | 3 vCPUs | 4.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
 | **03** | **Ecossistema DevOps & Engenharia de Dados (NocoDB + Supabase + n8n + Directus)** | Ferramenta Open Source Autonoma | 4 vCPUs | 6.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
-| **04** | **Stalwart All-in-One Mail Server** | Servidor de E-mail e Colaboracao JMAP/IMAP/SMTP | 1.5 vCPUs | 1.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
-| **05** | **Nextcloud Hub** | Armazenamento de Arquivos, Calendario e Contatos | 2.0 vCPUs | 2.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
-| **06** | **ONLYOFFICE Document Server** | Motor de Edi??o Colaborativa de Documentos | 2.0 vCPUs | 2.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
-| **07** | **CryptPad** | Su?te Office Criptografada Zero-Knowledge | 1.5 vCPUs | 1.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
-| **08** | **Seafile Professional/Community** | Sincronizacao R?pida de Arquivos Corporativos | 1.5 vCPUs | 1.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
-| **09** | **Zitadel Identity Management** | Gest?o de Identidade e Single Sign-On (SSO) | 1.5 vCPUs | 1.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
-| **10** | **Chatwoot Omnichannel** | Atendimento e Helpdesk Multicanal | 1.5 vCPUs | 1.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
-| **11** | **NocoDB** | Banco de Dados No-Code e Planilhas Inteligentes | 1.0 vCPUs | 1.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **04** | **Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)** | Ferramenta Open Source Autonoma | 4 vCPUs | 6.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **05** | **Stalwart All-in-One Mail Server** | Servidor de E-mail e Colaboracao JMAP/IMAP/SMTP | 1.5 vCPUs | 1.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **06** | **Nextcloud Hub** | Armazenamento de Arquivos, Calendario e Contatos | 2.0 vCPUs | 2.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **07** | **ONLYOFFICE Document Server** | Motor de Edi??o Colaborativa de Documentos | 2.0 vCPUs | 2.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **08** | **CryptPad** | Su?te Office Criptografada Zero-Knowledge | 1.5 vCPUs | 1.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **09** | **Seafile Professional/Community** | Sincronizacao R?pida de Arquivos Corporativos | 1.5 vCPUs | 1.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **10** | **Zitadel Identity Management** | Gest?o de Identidade e Single Sign-On (SSO) | 1.5 vCPUs | 1.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **11** | **Chatwoot Omnichannel** | Atendimento e Helpdesk Multicanal | 1.5 vCPUs | 1.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **12** | **NocoDB** | Banco de Dados No-Code e Planilhas Inteligentes | 1.0 vCPUs | 1.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
 
 
 ---

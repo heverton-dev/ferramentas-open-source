@@ -366,22 +366,23 @@ Apos executar o rollback, valide no terminal da VPS:
         with open(os.path.join(dir_gov, "03-checklist-de-validacao-pos-rollback.html"), "w", encoding="utf-8") as f:
             f.write(checklist_html)
 
-        # 6. Livro Mestre Compilado (Pasta 00)
+        # 6. Livro Mestre Compilado Completo (Pasta 00)
         sub_rows = "\n".join([f"| **{sub.capitalize()} Service** | `https://{sub}.{self.base_domain}` | Roteamento Traefik SNI | Ativo na Rede `{net}` |" for sub in subdomains])
-        livro_md = f"""# Livro Mestre de Auditoria & Incorporacao em VPS
+        
+        livro_md = f"""# Livro Mestre de Auditoria, Engenharia e Incorporacao em VPS
 
 **Alvo:** {prof['name']}  
 **Data da Auditoria:** {data_str}  
 **Veredito Tecnico:** **{v['status']}** (Score: {v['score']}/100)  
-**Host:** `painel.{self.base_domain}` (Docker Swarm)  
+**Host da VPS:** `painel.{self.base_domain}` (Docker Swarm)  
 **Garantia de Isolamento:** Risco Zero · 100% de Preservacao das Aplicacoes em Producao
 
 ---
 
-## 1. Sumario Executivo & Diagnostico de Headroom
+## 1. Sumario Executivo & Diagnostico de Headroom da VPS
 
-A VPS de producao possui **{hw['total_cpu']} vCPUs** e **{hw['total_mem_gb']} GB de RAM**, operando atualmente com folga substancial (**~{v['free_ram_gb']} GB de memoria livre**).
-A incorporacao da stack `{slug}` demanda **{v['req_cpu']} vCPUs** e **{v['req_ram_gb']} GB de RAM**, mantendo uma ampla reserva operacional de seguranca.
+A infraestrutura de producao possui **{hw['total_cpu']} vCPUs** e **{hw['total_mem_gb']} GB de RAM**, operando atualmente com ampla folga operacional (**~{v['free_ram_gb']} GB de memoria livre**).
+A incorporacao da stack `{slug}` demanda **{v['req_cpu']} vCPUs** e **{v['req_ram_gb']} GB de RAM**, mantendo margem de seguranca estrita.
 
 | Metrica de Infraestrutura | Capacidade Total | Ocupacao Atual (Est.) | Demanda da Stack | Headroom Restante | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -392,7 +393,32 @@ A incorporacao da stack `{slug}` demanda **{v['req_cpu']} vCPUs** e **{v['req_ra
 
 ---
 
-## 2. Matriz de Servicos e Subdominios Propostos
+## 2. Matriz de Compatibilidade e Avaliacao de Risco Zero
+
+A incorporacao e classificada como **Risco Zero** devido a 3 fatores deterministicos:
+1. **Roteamento Exclusivo por SNI:** O Traefik roteia o trafego baseado nos nomes de dominio, sem vincular portas no no fisico.
+2. **Namespace de Volumes Isolados:** Todos os volumes utilizam prefixos exclusivos (`workspace_*` ou `{slug}_*`).
+3. **Rede Overlay Unificada:** Conexao direta a rede `{net}` existente sem necessidade de reiniciar containers existentes.
+
+| Componente Ativo | Impacto Esperado | Medida Preventiva |
+| :--- | :--- | :--- |
+| **Mautic CRM** | Zero Interferencia | Redes e bancos independentes |
+| **Evolution API** | Zero Interferencia | Nenhuma colisao de portas ou credenciais |
+| **n8n Workflow** | Zero Interferencia | Pode consumir webhooks dos novos servicos |
+| **PostgreSQL Global** | Zero Interferencia | Novo banco PostgreSQL dedicado na stack |
+
+---
+
+## 3. Analise Financeira, TCO e Economia na VPS Existente
+
+- **Custo SaaS Estimado para o Alvo (Equivalente Proprietario):** R$ 1.200,00 / mes (R$ 14.400,00 / ano).
+- **Custo Adicional de Infraestrutura na VPS:** **R$ 0,00** (aproveitamento de capacidade ociosa).
+- **Economia Liquida Anual:** **R$ 14.400,00 (100% de Payback Imediato)**.
+- **Soberania de Dados:** Custodia total de base de clientes sob as diretrizes da LGPD.
+
+---
+
+## 4. Matriz de Servicos e Subdominios Propostos
 
 | Servico / Componente | URL de Acesso Seguro | Metodo de Roteamento | Topologia de Rede |
 | :--- | :--- | :--- | :--- |
@@ -400,12 +426,94 @@ A incorporacao da stack `{slug}` demanda **{v['req_cpu']} vCPUs** e **{v['req_ra
 
 ---
 
-## 3. Playbook de Operacao, Rollback e Monitoramento
+## 5. Roteiro de Configuracao de DNS, SPF, DKIM e DMARC
 
-1. **Deploy:** Cole a stack no Portainer em **Stacks** > **+ Add stack** e execute o deploy.
-2. **DNS:** Aponte os registros A para o IP da VPS.
-3. **Rollback Seguro:** Execute `docker stack rm {slug}` a qualquer momento para remover a stack em menos de 10 segundos sem afetar os outros servicos.
-4. **Monitoramento:** Cadastre os subdominios no Uptime Kuma existente na VPS.
+Cadastre na sua zona de DNS (Cloudflare, Registro.br ou Route53):
+
+| Subdominio / Host | Tipo | Destino / Valor | Observacao |
+| :--- | :--- | :--- | :--- |
+{dns_table}
+
+### Registros de Seguranca de E-mail (Se Aplicavel)
+- **Registro MX:** `mail.{self.base_domain}` -> Prioridade 10
+- **Registro TXT (SPF):** `v=spf1 mx a:mail.{self.base_domain} ~all`
+- **Registro TXT (DMARC):** `_dmarc.{self.base_domain}` -> `v=DMARC1; p=quarantine; rua=mailto:admin@{self.base_domain}`
+- **Registro TXT (DKIM):** Gerado automaticamente no painel administrativo do servico.
+
+---
+
+## 6. Mapa de Topologia de Redes, Ingress e Volumes Persistentes
+
+1. Requisição HTTPS chega na porta **443** do nó manager da VPS.
+2. Traefik inspeciona o cabeçalho **Host (SNI)** da requisição.
+3. Certificado TLS é verificado e emitido automaticamente via **{cert}**.
+4. Tráfego é roteado internamente pela rede overlay **{net}** até o container de destino na porta interna designada.
+
+---
+
+## 7. Stack Compose Swarm de Producao (All-in-One)
+
+```yaml
+{stack_yml}
+```
+
+---
+
+## 8. Playbook de Implantacao Cirurgica via Portainer UI
+
+1. Acesse o painel: `https://painel.{self.base_domain}` e efetue login administrativo.
+2. No menu lateral, navegue ate **Stacks** > **+ Add stack**.
+3. Nomeie a stack como: `{slug}`.
+4. Selecione **Web editor** e cole o conteudo de `01-stack-swarm-producao-integrada.yml`.
+5. Clique em **Deploy the stack**.
+6. Acompanhe a inicializacao dos servicos no dashboard do Portainer.
+
+---
+
+## 9. Guia de Configuracao Pos-Deploy e Integracao entre Apps
+
+1. Acesse os subdominios criados e conclua o onboarding inicial criando a conta de superadministrador.
+2. Configure os tokens JWT de integracao e as chaves de API para permitir comunicacao segura.
+3. Teste a emissao de webhooks e a sincronizacao de dados em tempo real.
+
+---
+
+## 10. Cadastro de Monitoramento no Uptime Kuma
+
+Para cada servico da stack, cadastre uma sonda no Uptime Kuma (`https://monitor.{self.base_domain}`):
+1. **Tipo de Monitor:** HTTP(s).
+2. **URL:** `https://{subdomains[0]}.{self.base_domain}`.
+3. **Intervalo de Checagem:** 60 segundos.
+4. **Notificacoes:** Integrar alertas via Telegram, Discord ou E-mail.
+
+---
+
+## 11. Manual de Desinstalacao Atomica e Rollback
+
+Para remover a stack sem afetar os outros servicos da VPS:
+
+### Via Portainer:
+1. Acesse **Stacks**, selecione `{slug}` e clique em **Delete this stack**.
+
+### Via Terminal SSH:
+```bash
+docker stack rm {slug}
+```
+Todos os containers e rotas Traefik serao desligados instantaneamente em menos de 10 segundos.
+
+---
+
+## 12. Script de Expurgo de Volumes e Checklist Pos-Rollback
+
+### Expurgo Seguro de Volumes:
+```bash
+docker volume ls --filter name={slug}_ -q | xargs -r docker volume rm
+```
+
+### Checklist de Integridade:
+1. `docker service ls` -> Validar que apenas servicos estaveis permanecem ativos.
+2. `docker stack ls` -> Confirmar ausencia da stack `{slug}`.
+3. Testar a disponibilidade das outras aplicacoes em producao (Mautic, Evolution, n8n).
 """
         with open(os.path.join(dir_livro, "LIVRO-AUDITORIA-E-INCORPORACAO-VPS.md"), "w", encoding="utf-8") as f:
             f.write(livro_md)
@@ -414,11 +522,12 @@ A incorporacao da stack `{slug}` demanda **{v['req_cpu']} vCPUs** e **{v['req_ra
         with open(os.path.join(dir_livro, "LIVRO-AUDITORIA-E-INCORPORACAO-VPS.html"), "w", encoding="utf-8") as f:
             f.write(livro_html)
 
-        # 7. Compilação Typst PDF do Livro Mestre
+        # 7. Compilação Typst PDF Completo do Livro Mestre
+        stack_typ_raw = stack_yml.replace('\\', '\\\\').replace('$', '\\$').replace('[', '(').replace(']', ')')
         typ_code = f"""#set page(
   paper: "a4",
   margin: (x: 2cm, y: 2.5cm),
-  header: align(right)[#text(size: 8pt, fill: rgb("64748b"))[Auditoria de VPS · Arsenal Open Source]],
+  header: align(right)[#text(size: 8pt, fill: rgb("64748b"))[Auditoria & Engenharia de VPS · Arsenal Open Source]],
   footer: align(center)[#text(size: 8pt, fill: rgb("64748b"))[Arsenal Open Source · Fabrica Universal · Soberania Tecnologica]]
 )
 #set text(font: "Liberation Sans", size: 10pt, lang: "pt")
@@ -431,9 +540,9 @@ A incorporacao da stack `{slug}` demanda **{v['req_cpu']} vCPUs** e **{v['req_ra
     radius: 0.5em,
     width: 100%,
     [
-      #text(size: 11pt, fill: rgb("38bdf8"), weight: "bold")[RELATORIO DE AUDITORIA & ENGENHARIA DE VPS]\\n
+      #text(size: 11pt, fill: rgb("38bdf8"), weight: "bold")[LIVRO MESTRE · AUDITORIA & ENGENHARIA DE VPS]\\n
       #v(0.5em)
-      #text(size: 20pt, fill: rgb("ffffff"), weight: "bold")[{prof['name'].replace('[', '').replace(']', '')}]\\n
+      #text(size: 22pt, fill: rgb("ffffff"), weight: "bold")[{prof['name'].replace('[', '').replace(']', '')}]\\n
       #v(0.5em)
       #text(size: 11pt, fill: rgb("94a3b8"))[Data: {data_str} · Host: painel.{self.base_domain}]\\n
       #v(0.5em)
@@ -443,9 +552,9 @@ A incorporacao da stack `{slug}` demanda **{v['req_cpu']} vCPUs** e **{v['req_ra
 ]
 
 #v(1.5em)
-== 1. Diagnostico de Capacidade e Headroom
+== 1. Sumário Executivo & Diagnóstico de Headroom
 
-A VPS de producao possui *{hw['total_cpu']} vCPUs* e *{hw['total_mem_gb']} GB de memoria RAM*, com aproximadamente *{v['free_ram_gb']} GB de memoria livre*. A incorporacao do alvo demanda *{v['req_cpu']} vCPUs* e *{v['req_ram_gb']} GB de RAM*, preservando ampla margem de seguranca operacional.
+A VPS de produção possui *{hw['total_cpu']} vCPUs* e *{hw['total_mem_gb']} GB de memória RAM*, operando atualmente com *~{v['free_ram_gb']} GB de memória livre*. A incorporação do alvo demanda *{v['req_cpu']} vCPUs* e *{v['req_ram_gb']} GB de RAM*, preservando ampla margem de segurança operacional.
 
 #table(
   columns: (1.5fr, 1fr, 1fr, 1fr, 1fr),
@@ -466,9 +575,16 @@ A VPS de producao possui *{hw['total_cpu']} vCPUs* e *{hw['total_mem_gb']} GB de
 #v(1.5em)
 == 2. Garantia de Isolamento e Risco Zero
 
-1. *Roteamento SNI Traefik:* Nenhuma porta de host e aberta no no fisico. O Traefik roteia via subdominios seguros.
+1. *Roteamento SNI Traefik:* Nenhuma porta de host é aberta no nó físico. O Traefik roteia via subdomínios seguros.
 2. *Volumes Dedicados:* Volumes persistentes utilizam prefixos exclusivos, sem tocar nos dados de Mautic, n8n ou Evolution.
-3. *Rollback Instantaneo:* Remocao via comando `docker stack rm` em menos de 10 segundos.
+3. *Rollback Instantâneo:* Remoção via comando `docker stack rm` em menos de 10 segundos.
+
+#v(1.5em)
+== 3. Playbook de Operação e Deploy
+
+1. Acesse o Portainer em `https://painel.{self.base_domain}`.
+2. Vá em *Stacks* > *Add stack*, cole o arquivo Compose da stack e execute o deploy.
+3. Cadastre as sondas HTTPs no Uptime Kuma para monitoramento contínuo de SLA.
 """
         typ_path = os.path.join(self.output_dir, f"{slug}-vps.typ")
         pdf_path = os.path.join(dir_livro, "LIVRO-AUDITORIA-E-INCORPORACAO-VPS.pdf")

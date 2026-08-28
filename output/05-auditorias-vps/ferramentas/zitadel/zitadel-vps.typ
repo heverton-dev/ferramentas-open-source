@@ -1,7 +1,7 @@
 #set page(
   paper: "a4",
   margin: (x: 2cm, y: 2.5cm),
-  header: align(right)[#text(size: 8pt, fill: rgb("64748b"))[Auditoria de VPS · Arsenal Open Source]],
+  header: align(right)[#text(size: 8pt, fill: rgb("64748b"))[Auditoria & Engenharia de VPS · Arsenal Open Source]],
   footer: align(center)[#text(size: 8pt, fill: rgb("64748b"))[Arsenal Open Source · Fabrica Universal · Soberania Tecnologica]]
 )
 #set text(font: "Liberation Sans", size: 10pt, lang: "pt")
@@ -14,9 +14,9 @@
     radius: 0.5em,
     width: 100%,
     [
-      #text(size: 11pt, fill: rgb("38bdf8"), weight: "bold")[RELATORIO DE AUDITORIA & ENGENHARIA DE VPS]\n
+      #text(size: 11pt, fill: rgb("38bdf8"), weight: "bold")[LIVRO MESTRE · AUDITORIA & ENGENHARIA DE VPS]\n
       #v(0.5em)
-      #text(size: 20pt, fill: rgb("ffffff"), weight: "bold")[Zitadel Identity Management]\n
+      #text(size: 22pt, fill: rgb("ffffff"), weight: "bold")[Zitadel Identity Management]\n
       #v(0.5em)
       #text(size: 11pt, fill: rgb("94a3b8"))[Data: 28/08/2026 · Host: painel.vpsconexao.org]\n
       #v(0.5em)
@@ -26,9 +26,9 @@
 ]
 
 #v(1.5em)
-== 1. Diagnostico de Capacidade e Headroom
+== 1. Sumário Executivo & Diagnóstico de Headroom
 
-A VPS de producao possui *12 vCPUs* e *47.05 GB de memoria RAM*, com aproximadamente *43.99 GB de memoria livre*. A incorporacao do alvo demanda *1.5 vCPUs* e *1.5 GB de RAM*, preservando ampla margem de seguranca operacional.
+A VPS de produção possui *12 vCPUs* e *47.05 GB de memória RAM*, operando atualmente com *~43.99 GB de memória livre*. A incorporação do alvo demanda *1.5 vCPUs* e *1.5 GB de RAM*, preservando ampla margem de segurança operacional.
 
 #table(
   columns: (1.5fr, 1fr, 1fr, 1fr, 1fr),
@@ -49,6 +49,13 @@ A VPS de producao possui *12 vCPUs* e *47.05 GB de memoria RAM*, com aproximadam
 #v(1.5em)
 == 2. Garantia de Isolamento e Risco Zero
 
-1. *Roteamento SNI Traefik:* Nenhuma porta de host e aberta no no fisico. O Traefik roteia via subdominios seguros.
+1. *Roteamento SNI Traefik:* Nenhuma porta de host é aberta no nó físico. O Traefik roteia via subdomínios seguros.
 2. *Volumes Dedicados:* Volumes persistentes utilizam prefixos exclusivos, sem tocar nos dados de Mautic, n8n ou Evolution.
-3. *Rollback Instantaneo:* Remocao via comando `docker stack rm` em menos de 10 segundos.
+3. *Rollback Instantâneo:* Remoção via comando `docker stack rm` em menos de 10 segundos.
+
+#v(1.5em)
+== 3. Playbook de Operação e Deploy
+
+1. Acesse o Portainer em `https://painel.vpsconexao.org`.
+2. Vá em *Stacks* > *Add stack*, cole o arquivo Compose da stack e execute o deploy.
+3. Cadastre as sondas HTTPs no Uptime Kuma para monitoramento contínuo de SLA.
