@@ -2,10 +2,12 @@
   paper: "a4",
   margin: (x: 1.8cm, top: 2.2cm, bottom: 2.2cm),
   header: align(right)[
-    #text(size: 7.5pt, fill: rgb("#94a3b8"), font: "Liberation Sans")[FÁBRICA UNIVERSAL AIDD · LIVRO-TEXTO DE MACRO-ECOSSISTEMA SOBERANO (PADRÃO DIAMANTE R5-E)]
+    #set par(leading: 0.65em)
+    #text(size: 10pt, fill: rgb("#94a3b8"), font: "Liberation Sans")[FÁBRICA UNIVERSAL AIDD · LIVRO-TEXTO DE MACRO-ECOSSISTEMA SOBERANO (PADRÃO DIAMANTE R5-E)]
   ],
   footer: [
-    #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[
+    #set par(leading: 0.65em)
+    #text(size: 10pt, fill: rgb("#64748b"), font: "Liberation Sans")[
       #grid(
         columns: (1fr, 1fr),
         [Suíte do Ecossistema Soberano · RD Station Suite (Marketing Pro + CRM Pro + Conversas Enterprise + Zapier)],
