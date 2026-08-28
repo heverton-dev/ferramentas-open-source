@@ -1,0 +1,404 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "BUZZ",
+  "slug": "buzz",
+  "saas_origem": "otter-ai",
+  "versao": "0.11.0",
+  "licenca_osi": "MIT",
+  "tempo_estimado_setup": "30 a 45 minutos (Conhecimento básico de Linux)",
+  "nivelamento_conceitual": [
+    {
+      "termo": "BUZZ (A Ferramenta)",
+      "analogia_cotidiana": "Uma Secretária que Escuta Gravações e Digita Tudo",
+      "explicacao_simples": "BUZZ é um aplicativo que recebe um arquivo de áudio (mp3, wav, m4a) e automaticamente converte em texto escrito. Como se você tivesse uma secretária ouvindo sua reunião e digitando tudo. A diferença: BUZZ faz isso de graça, sem limites, e os dados ficam 100% com você."
+    },
+    {
+      "termo": "Whisper (O Motor Invisível)",
+      "analogia_cotidiana": "O Ouvido Treinado que Entende Qualquer Sotaque",
+      "explicacao_simples": "Whisper é um modelo de inteligência artificial criado pelo OpenAI. Ele foi treinado com milhares de horas de áudio em 99 idiomas. BUZZ usa Whisper para fazer a 'escuta mágica'. Você não paga nada a OpenAI; Whisper roda no seu servidor."
+    },
+    {
+      "termo": "VPS (Servidor Privado Virtual)",
+      "analogia_cotidiana": "Uma Sala de Computadores Alugada 24/7",
+      "explicacao_simples": "Você não quer deixar seu computador ligado 24h transcrevendo áudio. Aluga um servidor profissional (VPS) por R$ 80-150/mês em um data center. Coloca BUZZ lá e acessa via navegador web de qualquer lugar."
+    },
+    {
+      "termo": "Python e ffmpeg (Ferramentas de Fundo)",
+      "analogia_cotidiana": "O Martelo e a Chave Inglesa que BUZZ Precisa",
+      "explicacao_simples": "BUZZ é escrito em Python (linguagem de programação). Precisa de ffmpeg (conversor de áudio) para ler diferentes formatos de arquivo. Ambas são gratuitas e open source."
+    },
+    {
+      "termo": "Fila de Transcrição",
+      "analogia_cotidiana": "A Fila do Banco: Cada Cliente Aguarda Sua Vez",
+      "explicacao_simples": "Quando você envia 5 áudios para BUZZ transcrever, ele não faz tudo junto (quebraria o servidor). Coloca na fila: áudio 1, depois 2, depois 3. Você recebe notificação quando cada um fica pronto."
+    },
+    {
+      "termo": "Transcrição vs Tradução",
+      "analogia_cotidiana": "Digitar vs Traduzir para Outra Língua",
+      "explicacao_simples": "BUZZ transcreve = converte áudio em texto do MESMO idioma. Você fala em inglês, BUZZ escreve em inglês. Tradução (converter inglês para português) é diferente; BUZZ pode fazer com plugin extra."
+    },
+    {
+      "termo": "Taxa de Acurácia (Precisão)",
+      "analogia_cotidiana": "O Quanto a Secretária Acerta ao Digitar",
+      "explicacao_simples": "Whisper tem 95-99% de acurácia em idiomas comuns (inglês, português). Significa: a cada 100 palavras, errar 1-5. Áudio de baixa qualidade ou sotaque muito forte reduz a acurácia."
+    }
+  ],
+  "vps_recomendada": {
+    "provedor_modelo": "Hetzner Cloud CPX21 (2 vCPU, 4 GB RAM, EUR 9,90) ou Contabo VPS M",
+    "vcpu": "2 vCPU Dedicadas (AMD EPYC ou Intel Xeon E5) - Mínimo 1 vCPU, 2+ para velocidade",
+    "ram": "4 GB RAM mínimo (8 GB recomendado para transcrição paralela de vários áudios)",
+    "armazenamento": "80 GB SSD NVMe (mínimo 40 GB; crescer conforme volume de áudios)",
+    "so_recomendado": "Ubuntu 22.04 LTS (x86_64) ou Debian 12",
+    "custo_mensal_estimado": "EUR 9,90 a 19,90/mês (~R$ 60 a R$ 120 na cotação média)",
+    "portas_abertas": [
+      "22/tcp (SSH - Acesso remoto exclusivo seu)",
+      "80/tcp (HTTP - Interface web padrão)",
+      "443/tcp (HTTPS - Interface web segura)",
+      "8000/tcp (API Interna - Se exposição opcional)"
+    ]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Acessar VPS via SSH e Atualizar Sistema",
+        "descricao": "Você se conecta ao seu servidor alugado. Primeiro passo: garantir que todas as ferramentas estejam atualizadas.",
+        "analogia": "Verificar se todos os fios da casa estão funcionando antes de instalar a TV.",
+        "o_que_acontece_na_tela": "Linhas em preto e branco mostrando pacotes atualizados.",
+        "como_saber_se_deu_certo": "Termina sem erros em vermelho. Prompt retorna normal.",
+        "comandos": "ssh root@seu_ip_vps\nsudo apt-get update\nsudo apt-get upgrade -y",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Instalar Python 3.11+, ffmpeg e Dependências",
+        "descricao": "BUZZ e Whisper rodam em Python. ffmpeg converte áudios. Ambos são gratuitos e open source.",
+        "analogia": "Comprar o motor (Python) e o conversor de combustível (ffmpeg) antes de montar o carro.",
+        "o_que_acontece_na_tela": "Muitas linhas de pacotes sendo baixados e instalados. Pode levar 3-5 minutos.",
+        "como_saber_se_deu_certo": "Termina com 'Processing triggers' sem erros. python3 --version retorna >= 3.11.",
+        "comandos": "sudo apt-get install -y python3.11 python3.11-venv python3.11-dev python3-pip ffmpeg git curl wget\npython3.11 --version\nffmpeg -version",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 3,
+        "titulo": "Clonar Repositório BUZZ do GitHub",
+        "descricao": "Vamos buscar o código oficial de BUZZ do GitHub, clonar para a VPS e preparar o ambiente.",
+        "analogia": "Comprar um kit de móvel pronto do fabricante e desempacotar na sala.",
+        "o_que_acontece_na_tela": "Comando git clone baixando centenas de arquivos. Pode levar 1-2 minutos.",
+        "como_saber_se_deu_certo": "Pasta /var/www/buzz existe com subpastas: src/, tests/, requirements.txt, etc.",
+        "comandos": "cd /var/www\nsudo git clone https://github.com/chidiwilliams/buzz.git\ncd buzz\nsudo chown -R www-data:www-data /var/www/buzz",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 4,
+        "titulo": "Criar Virtual Environment e Instalar Dependências Python",
+        "descricao": "Virtual environment isola o BUZZ de outros projetos Python. Instalamos Whisper, Flask (servidor web) e bibliotecas.",
+        "analogia": "Criar uma 'bolha isolada' para BUZZ para não conflitar com outros programas.",
+        "o_que_acontece_na_tela": "Muitos pacotes pip sendo instalados. Pode levar 5-10 minutos (primeiro Whisper é grande ~2GB).",
+        "como_saber_se_deu_certo": "Venv ativado e prompt mostra (buzz). Comando 'pip list' mostra whisper, flask, etc.",
+        "comandos": "cd /var/www/buzz\nsudo python3.11 -m venv venv\nsudo chown -R www-data:www-data venv\nsource venv/bin/activate\npip install --upgrade pip\npip install -r requirements.txt\npip install openai-whisper flask gunicorn",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 5,
+        "titulo": "Configurar Serviço Systemd para BUZZ (Auto-iniciar)",
+        "descricao": "Criamos um arquivo de serviço para que BUZZ inicie automaticamente ao rebootar a VPS.",
+        "analogia": "Programar a TV para ligar automaticamente às 7h da manhã.",
+        "o_que_acontece_na_tela": "Você abre editor nano, cola algumas linhas, salva.",
+        "como_saber_se_deu_certo": "Comando 'systemctl status buzz' mostra 'active (running)'.",
+        "comandos": "sudo nano /etc/systemd/system/buzz.service\n# Colar conteúdo do arquivo de configuração (ver próxima seção)\nsudo systemctl daemon-reload\nsudo systemctl enable buzz\nsudo systemctl start buzz",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 6,
+        "titulo": "Configurar Apache como Proxy Reverso para BUZZ",
+        "descricao": "Apache recebe requisições HTTPS em buzz.sua-empresa.com.br e passa para BUZZ rodando localmente.",
+        "analogia": "Um recepcionista (Apache) que recebe clientes e os encaminha ao gerente (BUZZ).",
+        "o_que_acontece_na_tela": "Você configura VirtualHost do Apache.",
+        "como_saber_se_deu_certo": "apache2ctl configtest retorna 'Syntax OK'. Site acessível via https://buzz.sua-empresa.com.br.",
+        "comandos": "sudo a2enmod proxy\nsudo a2enmod proxy_http\nsudo nano /etc/apache2/sites-available/buzz.conf\n# Colar configuração do proxy reverso\nsudo a2ensite buzz.conf\nsudo systemctl reload apache2",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 7,
+        "titulo": "Ativar HTTPS com Let's Encrypt",
+        "descricao": "Certificado SSL gratuito para HTTPS. Renovação automática a cada 3 meses.",
+        "analogia": "Colocar cadeado de segurança na porta.",
+        "o_que_acontece_na_tela": "Certbot pede email e domínio. Modifica Apache automaticamente.",
+        "como_saber_se_deu_certo": "Acessar https://buzz.sua-empresa.com.br sem avisos de certificado inválido.",
+        "comandos": "sudo apt-get install -y certbot python3-certbot-apache\nsudo certbot --apache -d buzz.sua-empresa.com.br",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 8,
+        "titulo": "Criar Diretórios de Armazenamento para Áudios e Transcrições",
+        "descricao": "Pastas isoladas para armazenar áudios recebidos, transcrições geradas e logs.",
+        "analogia": "Criar pastas bem organizadas para documentos: entrada, saída, arquivo.",
+        "o_que_acontece_na_tela": "Simples criação de diretórios.",
+        "como_saber_se_deu_certo": "Pastas existem e são acessíveis via BUZZ: /var/lib/buzz/uploads/, /var/lib/buzz/transcriptions/, /var/log/buzz/.",
+        "comandos": "sudo mkdir -p /var/lib/buzz/{uploads,transcriptions,models}\nsudo mkdir -p /var/log/buzz\nsudo chown -R www-data:www-data /var/lib/buzz /var/log/buzz\nsudo chmod 755 /var/lib/buzz /var/log/buzz",
+        "fonte_id": "F03"
+      },
+      {
+        "numero": 9,
+        "titulo": "Testar BUZZ e Transcrever Áudio de Exemplo",
+        "descricao": "Fazer uma transcrição de teste para confirmar que tudo está funcionando.",
+        "analogia": "Ligar o motor do carro para verificar se está rodando corretamente.",
+        "o_que_acontece_na_tela": "Primeira execução baixa modelo Whisper (~2GB). Depois, transcreve um áudio de teste.",
+        "como_saber_se_deu_certo": "Arquivo de transcrição .txt gerado em /var/lib/buzz/transcriptions/ com o texto do áudio.",
+        "comandos": "cd /var/www/buzz\nsource venv/bin/activate\nwget https://example.com/audio-sample.wav -O /tmp/test.wav\npython -m buzz.cli /tmp/test.wav --output /var/lib/buzz/transcriptions/test.txt\ncat /var/lib/buzz/transcriptions/test.txt",
+        "fonte_id": "F04"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/etc/systemd/system/buzz.service",
+        "linguagem": "ini",
+        "conteudo": "[Unit]\nDescription=BUZZ - Transcrição de Áudio com Whisper\nAfter=network.target\n\n[Service]\nType=notify\nUser=www-data\nGroup=www-data\nWorkingDirectory=/var/www/buzz\nEnvironment=\"PATH=/var/www/buzz/venv/bin:/usr/local/bin:/usr/bin\"\nEnvironment=\"PYTHONUNBUFFERED=1\"\nEnvironment=\"WHISPER_MODEL=base\"\nExecStart=/var/www/buzz/venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 buzz.app:app\nRestart=always\nRestartSec=5\nStandardOutput=append:/var/log/buzz/buzz.log\nStandardError=append:/var/log/buzz/buzz-error.log\n\n[Install]\nWantedBy=multi-user.target",
+        "explicacao": "Arquivo systemd que define BUZZ como serviço. Inicia automaticamente em boot. Roda como www-data (usuário web seguro). Gunicorn é o servidor WSGI que executa Python. Modelo Whisper padrão é 'base' (equilibra velocidade e precisão)."
+      },
+      {
+        "caminho": "/etc/apache2/sites-available/buzz.conf",
+        "linguagem": "apache",
+        "conteudo": "<VirtualHost *:80>\n    ServerName buzz.sua-empresa.com.br\n    Redirect / https://buzz.sua-empresa.com.br/\n</VirtualHost>\n\n<VirtualHost *:443>\n    ServerName buzz.sua-empresa.com.br\n    DocumentRoot /var/www/buzz\n\n    SSLEngine on\n    SSLCertificateFile /etc/letsencrypt/live/buzz.sua-empresa.com.br/fullchain.pem\n    SSLCertificateKeyFile /etc/letsencrypt/live/buzz.sua-empresa.com.br/privkey.pem\n\n    ProxyPreserveHost On\n    ProxyPass / http://127.0.0.1:8000/\n    ProxyPassReverse / http://127.0.0.1:8000/\n\n    <Location />\n        Require all granted\n    </Location>\n\n    ErrorLog ${APACHE_LOG_DIR}/buzz-error.log\n    CustomLog ${APACHE_LOG_DIR}/buzz-access.log combined\n</VirtualHost>",
+        "explicacao": "VirtualHost Apache que: 1) Redireciona HTTP → HTTPS. 2) Configura SSL com certificados Let's Encrypt. 3) Proxy reverso para BUZZ rodando em 127.0.0.1:8000. 4) Logs separados."
+      },
+      {
+        "caminho": "/var/www/buzz/config.env",
+        "linguagem": "ini",
+        "conteudo": "# Configuração de Produção para BUZZ\nFLASK_ENV=production\nFLASK_DEBUG=0\nSECRET_KEY=SenhaSegura123456789AleatoriaMuitoForte\n\n# Whisper Config\nWHISPER_MODEL=base\nWHISPER_DEVICE=cpu\nWHISPER_LANGUAGE=pt\n\n# Storage Config\nUPLOAD_FOLDER=/var/lib/buzz/uploads\nOUTPUT_FOLDER=/var/lib/buzz/transcriptions\nMAX_FILE_SIZE=500MB\n\n# Queue Config\nMAX_CONCURRENT_JOBS=2\nJOB_TIMEOUT=3600\n\n# Logging\nLOG_LEVEL=INFO\nLOG_FILE=/var/log/buzz/buzz.log",
+        "explicacao": "Configurações de produção do BUZZ: Ambiente (production), Modelo Whisper (base = bom equilíbrio), Idioma padrão (português), Pastas de armazenamento, Limite de arquivo (500MB), Máximo de transcrições paralelas (2 para CPU com 2 cores), Timeout (1 hora), Logging."
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "BUZZ funciona em três camadas: (1) Interface Web (Apache/HTTPS) onde usuários acessam o dashboard e fazem upload de áudios. (2) Fila de Processamento (Python + Whisper) que transcre um áudio por vez (serializado para não sobrecarregar CPU). (3) Armazenamento (Diretórios /var/lib/buzz) onde áudios brutos e transcrições em .txt/.json são salvos. Whisper roda na CPU (ou GPU se disponível) e processa áudio em chunks de 30 segundos.",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "1. Acessar Dashboard",
+        "acao": "Abra https://buzz.sua-empresa.com.br em navegador web. Você verá página inicial com campo 'Upload de Áudio'.",
+        "resultado_esperado": "Dashboard carrega sem erros. Botão 'Selecionar Arquivo' e indicador 'Status: Pronto para Transcever' visíveis."
+      },
+      {
+        "passo": "2. Upload de Arquivo de Áudio",
+        "acao": "Clique em 'Selecionar Arquivo'. Escolha um MP3, WAV ou M4A com até 500MB. Clique 'Transcrever'.",
+        "resultado_esperado": "Arquivo é enviado. Dashboard mostra 'Processando... 25%' e aumenta até 100%. Transcrição aparece em segundos/minutos (conforme tamanho do áudio)."
+      },
+      {
+        "passo": "3. Copiar/Exportar Transcrição",
+        "acao": "Transcrição pronta. Botão 'Copiar para Clipboard'. Ou 'Download TXT' ou 'Download JSON'.",
+        "resultado_esperado": "Texto copiado para sua área de transferência. Você pode colar em Word/Google Docs. Ou arquivo .txt/.json baixado."
+      },
+      {
+        "passo": "4. Ajustar Qualidade (Opcional)",
+        "acao": "Se transcrição teve erros, aumentar 'Modelo de Precisão' de 'base' para 'small/medium' (mais lento, mais preciso).",
+        "resultado_esperado": "Próxima transcrição usa modelo melhor. Velocidade diminui, mas acurácia aumenta de 95% para 98%."
+      }
+    ],
+    "comandos_cli": [
+      {
+        "comando": "buzz-cli transcribe <arquivo-audio> --output <arquivo-saida>",
+        "descricao": "Transcrever um áudio via linha de comando (sem interface web). Útil para automação/scripts.",
+        "exemplo": "cd /var/www/buzz && source venv/bin/activate && python -m buzz.cli /tmp/gravacao.wav --output /var/lib/buzz/transcriptions/resultado.txt",
+        "fonte_id": "F03"
+      },
+      {
+        "comando": "systemctl status buzz",
+        "descricao": "Verificar se serviço BUZZ está rodando. Mostra se está ativo, logs recentes, tempo de atividade.",
+        "exemplo": "sudo systemctl status buzz",
+        "fonte_id": "F03"
+      },
+      {
+        "comando": "systemctl restart buzz",
+        "descricao": "Reiniciar serviço BUZZ após mudança de configuração ou se ele travou.",
+        "exemplo": "sudo systemctl restart buzz",
+        "fonte_id": "F03"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "POST",
+        "rota": "/api/transcribe",
+        "descricao": "Enviar áudio para transcrição via API (sem interface web). Retorna ID do job.",
+        "payload_exemplo": "curl -X POST -F 'audio=@meu-audio.wav' https://buzz.sua-empresa.com.br/api/transcribe",
+        "fonte_id": "F04"
+      },
+      {
+        "metodo": "GET",
+        "rota": "/api/status/{job_id}",
+        "descricao": "Verificar status de uma transcrição em andamento (0-100%) ou concluída.",
+        "payload_exemplo": "curl https://buzz.sua-empresa.com.br/api/status/job123",
+        "fonte_id": "F04"
+      },
+      {
+        "metodo": "GET",
+        "rota": "/api/result/{job_id}",
+        "descricao": "Baixar transcrição concluída em formato JSON (com timestamps) ou TXT.",
+        "payload_exemplo": "curl https://buzz.sua-empresa.com.br/api/result/job123?format=json",
+        "fonte_id": "F04"
+      }
+    ],
+    "interface_ui": [
+      {
+        "modulo": "Upload & Transcrição",
+        "descricao": "Página principal: campo para upload de áudio, progresso em tempo real (0-100%), visualização da transcrição conforme pronta.",
+        "recursos_chave": [
+          "Drag-and-drop de arquivos",
+          "Indicador de progresso animado",
+          "Suporte a MP3, WAV, M4A, FLAC, OGG",
+          "Limite de 500MB por arquivo"
+        ]
+      },
+      {
+        "modulo": "Histórico de Transcrições",
+        "descricao": "Lista de todos os áudios já transcritos. Data, tamanho do arquivo, tempo de processamento, ações (reeditar, baixar, excluir).",
+        "recursos_chave": [
+          "Busca por nome de arquivo",
+          "Filtro por data",
+          "Ordenação por tempo de processamento",
+          "Reedição de transcrição (correções manuais)"
+        ]
+      },
+      {
+        "modulo": "Configurações",
+        "descricao": "Ajustes de BUZZ: modelo Whisper (base/small/medium/large), idioma padrão, qualidade, parallelização.",
+        "recursos_chave": [
+          "Seleção de modelo Whisper",
+          "Suporte a 99 idiomas",
+          "Número de trabalhos paralelos (1-4)",
+          "Timeout por job (30min-2h)"
+        ]
+      },
+      {
+        "modulo": "Monitor de Recursos",
+        "descricao": "Dashboard de saúde: CPU %, RAM %, Espaço em disco, Fila de espera, Trabalhos completados hoje.",
+        "recursos_chave": [
+          "Gráficos em tempo real",
+          "Alertas se CPU > 90%",
+          "Estimativa de tempo para próxima transcrição",
+          "Logs do sistema"
+        ]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Upload falha com erro '413 Request Entity Too Large'",
+        "causa_provavel": "Arquivo maior que 500MB. Ou limite do Apache/PHP muito baixo.",
+        "solucao_comando": "1. Comprimir áudio antes: ffmpeg -i original.wav -b:a 128k comprimido.mp3\n2. Ou aumentar limite no Apache: sudo nano /etc/apache2/apache2.conf, adicionar 'LimitRequestBody 536870912'\n3. Recarregar: sudo systemctl reload apache2"
+      },
+      {
+        "sintoma": "Transcrição muito lenta (> 10 minutos para 1 hora de áudio)",
+        "causa_provavel": "Modelo Whisper muito grande ('large'). Ou CPU com apenas 1 core.",
+        "solucao_comando": "1. Trocar modelo de 'large' para 'small/base': editar /var/www/buzz/config.env\n2. Aumentar vCPUs da VPS de 1 para 2+\n3. Se GPU disponível, habilitar: WHISPER_DEVICE=cuda"
+      },
+      {
+        "sintoma": "BUZZ travado, não responde",
+        "causa_provavel": "Serviço BUZZ parou ou memória esgotada (áudio muito grande).",
+        "solucao_comando": "1. Verificar status: sudo systemctl status buzz\n2. Se parado, reiniciar: sudo systemctl restart buzz\n3. Ver logs: sudo tail -50 /var/log/buzz/buzz-error.log\n4. Se falta memória: aumentar RAM da VPS ou reduzir modelo Whisper"
+      },
+      {
+        "sintoma": "Transcrição com muitos erros (acurácia < 80%)",
+        "causa_provavel": "Áudio de qualidade ruim, sotaque forte ou idioma incorreto.",
+        "solucao_comando": "1. Melhorar áudio: ffmpeg -i entrada.wav -af 'highpass=f=200,lowpass=f=3000' saida.wav\n2. Usar modelo maior: trocar 'base' para 'medium/large' em config.env\n3. Verificar idioma: confirmar que está setado para o idioma correto (ex: WHISPER_LANGUAGE=pt)"
+      },
+      {
+        "sintoma": "Erro 'Permission Denied' ao acessar /var/lib/buzz/uploads/",
+        "causa_provavel": "Permissões de arquivo incorretas. BUZZ roda como www-data, pasta não pertence a ele.",
+        "solucao_comando": "sudo chown -R www-data:www-data /var/lib/buzz\nsudo chmod -R 755 /var/lib/buzz\nsudo systemctl restart buzz"
+      }
+    ]
+  },
+  "desinstalacao_cirurgica": {
+    "titulo": "Parte IV: Desinstalação Cirúrgica & Isolamento da VPS",
+    "principio_isolamento": "BUZZ foi instalado em estrutura totalmente isolada: aplicação em /var/www/buzz/, serviço systemd próprio, dados em /var/lib/buzz/, logs em /var/log/buzz/, VirtualHost Apache dedicado. Esta modularidade permite remoção cirúrgica sem efeitos colaterais em outros websites/serviços. Seguindo estes passos, BUZZ desaparece completamente, deixando a VPS tão limpa quanto antes da instalação.",
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Parar Serviço BUZZ",
+        "descricao": "Interrompa o serviço systemd de BUZZ e desative site Apache.",
+        "comandos": "sudo systemctl stop buzz\nsudo systemctl disable buzz\nsudo a2dissite buzz.conf\nsudo systemctl reload apache2",
+        "alerta_seguranca": "ALERTA: Após este passo, https://buzz.sua-empresa.com.br será inacessível (erro 404/503).",
+        "como_validar": "sudo systemctl status buzz retorna 'inactive (dead)'. Apache error.log não contém erros para 'buzz'."
+      },
+      {
+        "numero": 2,
+        "titulo": "Backup Final de Dados (Altamente Recomendado)",
+        "descricao": "Se alguma transcrição é importante, faça backup antes de deletar.",
+        "comandos": "tar -czf ~/buzz_backup_$(date +%Y%m%d).tar.gz /var/lib/buzz/transcriptions/\ntar -czf ~/buzz_logs_$(date +%Y%m%d).tar.gz /var/log/buzz/",
+        "alerta_seguranca": "CRÍTICO: Sem este backup, os dados são irrecuperáveis após próxima etapa.",
+        "como_validar": "Dois arquivos .tar.gz em $HOME com tamanho > 1MB (se houver transcrições)."
+      },
+      {
+        "numero": 3,
+        "titulo": "Remover Pasta e Arquivos de BUZZ",
+        "descricao": "Deletar completamente aplicação, dados e logs. Sem possibilidade de recuperação.",
+        "comandos": "sudo rm -rf /var/www/buzz/\nsudo rm -rf /var/lib/buzz/\nsudo rm -rf /var/log/buzz/\nsudo rm -f /etc/systemd/system/buzz.service\nsudo rm -f /etc/apache2/sites-available/buzz.conf\nsudo rm -f /etc/apache2/sites-available/buzz-ssl.conf\nsudo systemctl daemon-reload",
+        "alerta_seguranca": "PONTO DE NÃO-RETORNO: Todos os arquivos e dados de BUZZ são deletados permanentemente.",
+        "como_validar": "sudo ls /var/www/buzz/ retorna 'No such file or directory'. sudo ls /var/lib/buzz/ também não existe."
+      },
+      {
+        "numero": 4,
+        "titulo": "Remover Certificado SSL (Opcional - Se BUZZ era único HTTPS)",
+        "descricao": "Se BUZZ era o único site HTTPS, remover certificado Let's Encrypt.",
+        "comandos": "sudo certbot delete --cert-name buzz.sua-empresa.com.br",
+        "alerta_seguranca": "ATENÇÃO: Remova apenas se nenhum outro site na VPS usa este domínio.",
+        "como_validar": "sudo certbot certificates não lista 'buzz.sua-empresa.com.br'."
+      },
+      {
+        "numero": 5,
+        "titulo": "Limpar Python Virtual Environment",
+        "descricao": "Se não há outro projeto Python na VPS que dependa desse venv, pode limpar.",
+        "comandos": "sudo rm -rf /opt/buzz-venv/ (se foi instalado lá)\n# Ou manter em /var/www/buzz (já deletado acima)\n# Desinstalar Python 3.11 se não usado por outra app:\nsudo apt-get autoremove python3.11",
+        "alerta_seguranca": "ATENÇÃO: Só remova Python 3.11 se nenhuma outra aplicação a usa.",
+        "como_validar": "python3.11 --version retorna 'command not found' se removido com sucesso."
+      }
+    ],
+    "checklist_saude_vps": [
+      "ESPAÇO EM DISCO: df -h → Deve liberar >20GB que BUZZ ocupava. Coluna 'Avail' >= 20GB livres",
+      "PROCESSOS PYTHON: ps aux | grep python | grep buzz → Deve estar vazio (sem processos BUZZ)",
+      "SERVIÇOS: sudo systemctl list-units --type service | grep buzz → Deve estar vazio",
+      "PORTAS: sudo netstat -tlnp | grep 8000 → Porta 8000 (BUZZ) não deve estar em LISTEN",
+      "APACHE VHOSTS: sudo apache2ctl -S | grep buzz → NÃO deve listar buzz.conf",
+      "LOGS: sudo tail -20 /var/log/apache2/error.log → NÃO deve conter 'buzz'",
+      "CERTIFICADOS SSL: sudo certbot certificates → NÃO deve listar 'buzz.sua-empresa.com.br'",
+      "CRON JOBS: sudo crontab -l → Se houver, NÃO deve ter scripts de BUZZ"
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Repositório Oficial",
+      "titulo": "BUZZ - GitHub Repository",
+      "url": "https://github.com/chidiwilliams/buzz",
+      "autor_ou_canal": "Chidi Williams"
+    },
+    {
+      "id": "F02",
+      "categoria": "Documentação",
+      "titulo": "BUZZ - Installation & Usage Guide",
+      "url": "https://github.com/chidiwilliams/buzz#readme",
+      "autor_ou_canal": "BUZZ Community"
+    },
+    {
+      "id": "F03",
+      "categoria": "Dependência",
+      "titulo": "OpenAI Whisper - Speech Recognition Model",
+      "url": "https://github.com/openai/whisper",
+      "autor_ou_canal": "OpenAI"
+    },
+    {
+      "id": "F04",
+      "categoria": "Ferramenta",
+      "titulo": "FFmpeg - Audio/Video Processing",
+      "url": "https://ffmpeg.org/",
+      "autor_ou_canal": "FFmpeg Team"
+    },
+    {
+      "id": "F05",
+      "categoria": "Licença",
+      "titulo": "MIT License - Texto Completo",
+      "url": "https://opensource.org/licenses/MIT",
+      "autor_ou_canal": "Open Source Initiative"
+    }
+  ]
+}
