@@ -1534,11 +1534,11 @@ def gerar_typst_ecossistema(dados: dict) -> str:
   margin: (x: 1.8cm, top: 2.2cm, bottom: 2.2cm),
   header: align(right)[
     #set par(leading: 0.65em)
-    #text(size: 10pt, fill: rgb("#94a3b8"), font: "Liberation Sans")[FÁBRICA UNIVERSAL AIDD · LIVRO-TEXTO DE MACRO-ECOSSISTEMA SOBERANO (PADRÃO DIAMANTE R5-E)]
+    #text(size: 8pt, fill: rgb("#94a3b8"), font: "Liberation Sans")[FÁBRICA UNIVERSAL AIDD · LIVRO-TEXTO DE MACRO-ECOSSISTEMA SOBERANO (PADRÃO DIAMANTE R5-E)]
   ],
   footer: [
     #set par(leading: 0.65em)
-    #text(size: 10pt, fill: rgb("#64748b"), font: "Liberation Sans")[
+    #text(size: 8pt, fill: rgb("#64748b"), font: "Liberation Sans")[
       #grid(
         columns: (1fr, 1fr),
         [Suíte do Ecossistema Soberano · {sanitizar_typ(saas)}],
