@@ -581,7 +581,14 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
       for m in f.get("uso_complementar", []):
         linhas.append(f"- **[{m.get('tipo')}] {m.get('nome')}:** {m.get('descricao')} (`{m.get('comando_ou_repo')}`)")
       
-      linhas.append(f"\n- **Repositório Oficial:** [{f['repositorio_github']}]({f['repositorio_github']})\n")
+      linhas.extend([
+        f"",
+        f"**7. Documentação Operacional & Capacitação Técnica Dedicada:** ",
+        f"- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/{f['slug']}/manuais/manual-{f['slug']}-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/{f['slug']}/manuais/manual-{f['slug']}-vps-e-uso.md)",
+        f"- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/{f['slug']}/trilhas/trilha-{f['slug']}-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/{f['slug']}/trilhas/trilha-{f['slug']}-aprendizado.md)",
+        f"",
+        f"- **Repositório Oficial:** [{f['repositorio_github']}]({f['repositorio_github']})\n"
+      ])
 
   linhas.extend([
     f"---",
@@ -962,6 +969,19 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
          <div class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; CLI)</div>
          <div class="mcp-grid">
           {mcp_cards_html}
+         </div>
+        </div>
+
+        <!-- SEÇÃO 7: MANUAIS DE ENGENHARIA & TRILHAS DIDÁTICAS -->
+        <div class="entry-section" style="background: var(--surface-2); border: 1px solid var(--rule); border-radius: 2px; padding: 14px 16px;">
+         <div class="label" style="margin-bottom: 8px;">7. Documentação Operacional &amp; Capacitação Técnica (Padrão Fluxo 3)</div>
+         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="../05-manuais-e-trilhas-individuais/{f['slug']}/manuais/manual-{f['slug']}-vps-e-uso.html" style="display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; font-weight: 700; color: var(--accent); text-decoration: none; padding: 7px 14px; background: var(--surface); border: 1px solid var(--accent); border-radius: 2px;">
+           Manual de Engenharia de VPS &amp; Desinstalação Cirúrgica ↗
+          </a>
+          <a href="../05-manuais-e-trilhas-individuais/{f['slug']}/trilhas/trilha-{f['slug']}-aprendizado.html" style="display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; font-weight: 700; color: var(--green); text-decoration: none; padding: 7px 14px; background: var(--surface); border: 1px solid var(--green); border-radius: 2px;">
+           Trilha Didática de Aprendizado (5 Aulas Práticas) ↗
+          </a>
          </div>
         </div>
 
@@ -1967,6 +1987,309 @@ def renderizar_fasciculo_html(titulo: str, subtitulo: str, tag: str, conteudo_bo
 </html>
 """
 
+def gerar_manual_individual_conteudo(f: dict, pilar_nome: str, saas_suite: str) -> tuple[str, str]:
+  slug = f.get('slug', '')
+  nome = f.get('nome', '')
+  subtitulo = f.get('subtitulo', '')
+  licenca = f.get('licenca_osi', 'GPL-3.0')
+  saas_sub = f.get('saas_substituido_direto', '')
+  ram = f.get('requisitos_infra', {}).get('ram_minima', '2 GB')
+  cpu = f.get('requisitos_infra', {}).get('cpu_recomendada', '1 vCPU')
+  banco = f.get('requisitos_infra', {}).get('banco_dados', 'PostgreSQL / SQLite')
+  docker_img = f.get('requisitos_infra', {}).get('docker_image', f'{slug}:latest')
+
+  # HTML DO MANUAL
+  body_manual_html = f"""
+  <div class="racional-box">
+   <p><strong>Objetivo de Engenharia:</strong> Este manual fornece o roteiro completo de implantação em produção, configuração de variáveis de ambiente, rotinas de backup e o protocolo de <strong>Desinstalação Cirúrgica</strong> para a ferramenta <strong>{nome}</strong> dentro do ecossistema <strong>{saas_suite}</strong>.</p>
+  </div>
+
+  <div class="tco-banner" style="margin-bottom: 24px;">
+   <div class="tco-col"><div class="tco-lbl">Ferramenta Open Source</div><div class="tco-val highlight">{nome}</div></div>
+   <div class="tco-col"><div class="tco-lbl">SaaS Substituído</div><div class="tco-val killer">{saas_sub}</div></div>
+   <div class="tco-col"><div class="tco-lbl">Licença OSI</div><div class="tco-val">{licenca}</div></div>
+   <div class="tco-col"><div class="tco-lbl">VPS Recomendada</div><div class="tco-val">{cpu} / {ram} RAM</div></div>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px;">Parte I: Instalação e Deploy em Produção na VPS (4 Passos)</h3>
+  <div class="steps-grid" style="margin-bottom: 24px;">
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">01</span> Preparação do Diretório &amp; Rede</div>
+    <p>Crie o diretório isolado da aplicação e garanta que o Docker e a rede compartilhada estejam ativos:</p>
+    <div class="code-box"><pre><code>mkdir -p /opt/{slug} &amp;&amp; cd /opt/{slug}
+docker network create ecosystem_net || true</code></pre></div>
+   </div>
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">02</span> Arquivo de Variáveis (.env)</div>
+    <p>Configure as variáveis de ambiente seguras com senhas fortes e chaves de criptografia:</p>
+    <div class="code-box"><pre><code>cat &lt;&lt;EOF &gt; .env
+APP_NAME={nome}
+APP_PORT=8080
+DATABASE_URL=postgresql://user:secret@postgres:5432/db_{slug}
+SECRET_KEY=$(openssl rand -hex 32)
+EOF</code></pre></div>
+   </div>
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">03</span> Manifesto docker-compose.yml</div>
+    <p>Crie a especificação com persistência de volumes e roteamento TLS automático:</p>
+    <div class="code-box"><pre><code>version: '3.8'
+services:
+  {slug}:
+    image: {docker_img}
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./{slug}_data:/data
+    networks:
+      - ecosystem_net</code></pre></div>
+   </div>
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">04</span> Inicialização &amp; Health Check</div>
+    <p>Suba o contêiner em segundo plano e valide a saúde do serviço:</p>
+    <div class="code-box"><pre><code>docker compose up -d
+docker compose ps
+docker compose logs -f --tail=50</code></pre></div>
+   </div>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 10px;">Parte II: Protocolo de Desinstalação Cirúrgica (Isolamento Total da VPS)</h3>
+  <div class="racional-box" style="border-left-color: var(--flag);">
+   <p><strong>Garantia de Zero Efeito Colateral:</strong> A remoção deste módulo afeta exclusivamente os contêineres e pastas de <code>/opt/{slug}</code>. Nenhum outro banco de dados, proxy Traefik ou aplicação rodando na mesma VPS será impactado.</p>
+  </div>
+  <div class="steps-grid" style="margin-bottom: 24px;">
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">01</span> Parada dos Contêineres</div>
+    <p>Interrompa e remova os contêineres dedicados sem derrubar a rede compartilhada:</p>
+    <div class="code-box"><pre><code>cd /opt/{slug}
+docker compose down</code></pre></div>
+   </div>
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">02</span> Remoção de Volumes &amp; Dados</div>
+    <p>Exclua os volumes de persistência locais e arquivos de configuração:</p>
+    <div class="code-box"><pre><code>cd /opt
+rm -rf /opt/{slug}
+docker volume rm {slug}_data 2>/dev/null || true</code></pre></div>
+   </div>
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">03</span> Limpeza de Roteamento Proxy</div>
+    <p>Se você configurou rotas dedicadas no Traefik ou Nginx, remova as entradas correspondentes e recarregue o proxy.</p>
+   </div>
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">04</span> Checklist de Verificação Pós-Remoção</div>
+    <p>Confirme no terminal que nenhuma porta ou processo residual permaneceu ativo:</p>
+    <div class="code-box"><pre><code>docker ps | grep {slug}
+ss -tulpn | grep 8080</code></pre></div>
+   </div>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 10px;">Parte III: Rotina de Backup Criptografado &amp; Recuperação</h3>
+  <div class="code-box" style="margin-bottom: 20px;">
+   <pre><code># Script de Backup Automatizado Diário
+tar -czf /var/backups/{slug}-$(date +%Y%m%d).tar.gz -C /opt/{slug} .
+openssl enc -aes-256-cbc -salt -in /var/backups/{slug}-$(date +%Y%m%d).tar.gz -out /var/backups/{slug}-$(date +%Y%m%d).enc -k SegredoBackup2026</code></pre>
+  </div>
+  """
+
+  html_manual = renderizar_fasciculo_html(
+    f"Manual de Engenharia VPS: {nome}",
+    f"{subtitulo} — Roteiro de Deploy, Desinstalação Cirúrgica e Backup ({pilar_nome})",
+    f"Engenharia · {nome}",
+    body_manual_html
+  )
+
+  # MARKDOWN DO MANUAL
+  md_manual = f"""# Manual de Engenharia de VPS & Desinstalação Cirúrgica: {nome}
+
+> **Ferramenta:** {nome} ({subtitulo})  
+> **Pilar do Ecossistema:** {pilar_nome} | **SaaS Substituído:** `{saas_sub}`  
+> **Licença OSI:** `{licenca}` | **Hardware Recomendado:** `{cpu} / {ram} RAM / {banco}`  
+
+---
+
+## 1. Visão Geral & Papel no Ecossistema
+{f.get('o_que_faz', '')} {f.get('como_funciona', '')}
+
+---
+
+## 2. Instalação e Deploy em Produção na VPS
+
+### Passo 1: Preparação do Diretório & Rede
+```bash
+mkdir -p /opt/{slug} && cd /opt/{slug}
+docker network create ecosystem_net || true
+```
+
+### Passo 2: Arquivo de Variáveis de Ambiente (.env)
+```bash
+cat <<EOF > .env
+APP_NAME={nome}
+APP_PORT=8080
+DATABASE_URL=postgresql://user:secret@postgres:5432/db_{slug}
+SECRET_KEY=$(openssl rand -hex 32)
+EOF
+```
+
+### Passo 3: Manifesto docker-compose.yml
+```yaml
+version: '3.8'
+services:
+  {slug}:
+    image: {docker_img}
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./{slug}_data:/data
+    networks:
+      - ecosystem_net
+```
+
+### Passo 4: Inicialização & Validação
+```bash
+docker compose up -d
+docker compose ps
+docker compose logs -f --tail=50
+```
+
+---
+
+## 3. Protocolo de Desinstalação Cirúrgica (Isolamento Total da VPS)
+
+> **Garantia de Zero Efeito Colateral:** A remoção deste módulo afeta exclusivamente os contêineres e pastas de `/opt/{slug}`. Nenhum outro banco de dados, proxy Traefik ou aplicação rodando na mesma VPS será impactado.
+
+1. **Parada dos Contêineres:**
+   ```bash
+   cd /opt/{slug} && docker compose down
+   ```
+2. **Remoção de Volumes e Dados:**
+   ```bash
+   cd /opt && rm -rf /opt/{slug}
+   docker volume rm {slug}_data 2>/dev/null || true
+   ```
+3. **Limpeza de Portas e Checklist:**
+   ```bash
+   docker ps | grep {slug}
+   ```
+
+---
+
+## 4. Rotina de Backup & Disaster Recovery
+```bash
+tar -czf /var/backups/{slug}-$(date +%Y%m%d).tar.gz -C /opt/{slug} .
+openssl enc -aes-256-cbc -salt -in /var/backups/{slug}-$(date +%Y%m%d).tar.gz -out /var/backups/{slug}-$(date +%Y%m%d).enc -k SegredoBackup2026
+```
+"""
+
+  return html_manual, md_manual
+
+def gerar_trilha_individual_conteudo(f: dict, pilar_nome: str, saas_suite: str) -> tuple[str, str]:
+  nome = f.get('nome', '')
+  subtitulo = f.get('subtitulo', '')
+  saas_sub = f.get('saas_substituido_direto', '')
+
+  # HTML DA TRILHA
+  body_trilha_html = f"""
+  <div class="racional-box">
+   <p><strong>Metodologia de Capacitação:</strong> Trilha prática estruturada em 5 aulas progressivas, desenhada para capacitar operadores, gestores e desenvolvedores na transição do SaaS proprietário <strong>{saas_sub}</strong> para a solução open source soberana <strong>{nome}</strong>.</p>
+  </div>
+
+  <div class="timeline-card" style="margin-bottom: 16px;">
+   <div style="display: flex; justify-content: space-between;"><h4>Aula 01: Fundamentos &amp; O que a Ferramenta Substitui</h4><span class="persona-badge">Nível Básico</span></div>
+   <p style="font-size: 13.5px; margin: 6px 0;">Compreenda o papel do {nome} no pilar {pilar_nome}. Analise o desmantelamento de custos em relação ao {saas_sub} e as vantagens de possuir os dados em infraestrutura própria.</p>
+   <div style="font-family: var(--mono); font-size: 11.5px; color: var(--accent); font-weight: 700;">Marco: Domínio do modelo conceitual e mapa de funcionalidades.</div>
+  </div>
+
+  <div class="timeline-card" style="margin-bottom: 16px;">
+   <div style="display: flex; justify-content: space-between;"><h4>Aula 02: Configuração Inicial &amp; Primeiro Acesso</h4><span class="persona-badge">Nível Prático</span></div>
+   <p style="font-size: 13.5px; margin: 6px 0;">Acesse o painel de administração via navegador. Crie a conta de administrador mestre, configure as permissões de equipe e valide a integração com o banco de dados e envio de e-mails/webhooks.</p>
+   <div style="font-family: var(--mono); font-size: 11.5px; color: var(--green); font-weight: 700;">Marco: Painel operacional configurado com autenticação segura.</div>
+  </div>
+
+  <div class="timeline-card" style="margin-bottom: 16px;">
+   <div style="display: flex; justify-content: space-between;"><h4>Aula 03: Operação no Dia a Dia &amp; Melhores Práticas</h4><span class="persona-badge">Nível Operacional</span></div>
+   <p style="font-size: 13.5px; margin: 6px 0;">Execução dos fluxos diários de trabalho: cadastro de registros, importação de contatos históricos, disparo de ações e visualização de relatórios de métricas comerciais.</p>
+   <div style="font-family: var(--mono); font-size: 11.5px; color: var(--accent); font-weight: 700;">Marco: Time comercial e de marketing operando sem fricção.</div>
+  </div>
+
+  <div class="timeline-card" style="margin-bottom: 16px;">
+   <div style="display: flex; justify-content: space-between;"><h4>Aula 04: Automação, Webhooks &amp; Integração com n8n</h4><span class="persona-badge">Nível Avançado</span></div>
+   <p style="font-size: 13.5px; margin: 6px 0;">Conecte o {nome} ao barramento de automação n8n via webhooks e APIs REST/GraphQL. Crie fluxos automáticos que disparam mensagens de WhatsApp e atualizam o CRM em tempo real.</p>
+   <div style="font-family: var(--mono); font-size: 11.5px; color: var(--green); font-weight: 700;">Marco: Ecossistema conversando sem silos de dados.</div>
+  </div>
+
+  <div class="timeline-card" style="margin-bottom: 16px;">
+   <div style="display: flex; justify-content: space-between;"><h4>Aula 05: Governança, Políticas de Backup &amp; Manutenção</h4><span class="persona-badge">Nível Gestão &amp; TI</span></div>
+   <p style="font-size: 13.5px; margin: 6px 0;">Estabeleça rotinas de auditoria de acessos, monitoramento de saúde de contêineres, testes periódicos de restauração de backup e adequação às diretrizes da LGPD.</p>
+   <div style="font-family: var(--mono); font-size: 11.5px; color: var(--accent); font-weight: 700;">Marco: Soberania e segurança operacional garantidas em longo prazo.</div>
+  </div>
+  """
+
+  html_trilha = renderizar_fasciculo_html(
+    f"Trilha de Aprendizado: {nome}",
+    f"{subtitulo} — Programa de Capacitação Prática em 5 Aulas ({pilar_nome})",
+    f"Capacitação · {nome}",
+    body_trilha_html
+  )
+
+  # MARKDOWN DA TRILHA
+  md_trilha = f"""# Trilha Didática de Aprendizado (5 Aulas Práticas): {nome}
+
+> **Ferramenta:** {nome} ({subtitulo})  
+> **Pilar:** {pilar_nome} | **Substitui:** `{saas_sub}`  
+> **Carga Horária Estimada:** 5 horas (1 hora por aula prática)  
+
+---
+
+## Aula 01: Fundamentos & O que a Ferramenta Substitui
+- **Objetivo:** Compreender o papel do {nome} na infraestrutura soberana da empresa.
+- **Tópicos:**
+  1. Comparativo de recursos: {nome} vs. {saas_sub};
+  2. Arquitetura em contêiner e segurança de dados;
+  3. Mapeamento de papéis e responsabilidades na equipe.
+- **Marco de Entrega:** Domínio conceitual da solução.
+
+---
+
+## Aula 02: Configuração Inicial & Primeiro Acesso
+- **Objetivo:** Inicializar o sistema e parametrizar as configurações essenciais.
+- **Tópicos:**
+  1. Criação do usuário administrador mestre;
+  2. Configuração de domínio próprio e certificado SSL;
+  3. Definição de perfis e permissões de acesso por departamento.
+- **Marco de Entrega:** Painel online e pronto para uso da equipe.
+
+---
+
+## Aula 03: Operação no Dia a Dia & Melhores Práticas
+- **Objetivo:** Capacitar os operadores para os processos rotineiros de trabalho.
+- **Tópicos:**
+  1. Criação e edição de registros principais;
+  2. Importação e higienização de bases de dados do SaaS antigo;
+  3. Monitoramento de painéis e métricas de desempenho.
+- **Marco de Entrega:** Equipe operando com autonomia e sem suporte constante.
+
+---
+
+## Aula 04: Automação, Webhooks & Integração com n8n
+- **Objetivo:** Integrar o {nome} com os demais módulos do ecossistema.
+- **Tópicos:**
+  1. Geração de tokens de API e autenticação OIDC;
+  2. Configuração de gatilhos (triggers) de webhook;
+  3. Execução de pipelines integrados de Marketing, CRM e WhatsApp no n8n.
+- **Marco de Entrega:** Fluxo de dados contínuo e sem silos operacionais.
+
+---
+
+## Aula 05: Governança, Políticas de Backup & Manutenção
+- **Objetivo:** Blindar a operação corporativa com segurança e alta disponibilidade.
+- **Tópicos:**
+  1. Rotinas automatizadas de backup 3-2-1 criptografado;
+  2. Testes práticos de recuperação de desastre (DRP);
+  3. Conformidade com a LGPD e gestão de logs de auditoria.
+- **Marco de Entrega:** Infraestrutura resiliente e auditada.
+"""
+
+  return html_trilha, md_trilha
+
 def compilar_ecossistema_tripartite(slug: str):
   json_path = BASE_DIR / "scripts" / "data" / f"ecos-{slug}.json"
   if not json_path.exists():
@@ -2152,9 +2475,42 @@ def compilar_ecossistema_tripartite(slug: str):
     with open(dir_pilares / f"{pilar_slug}.html", "w", encoding="utf-8") as f:
       f.write(renderizar_fasciculo_html(f"{p.get('nome_pilar')}", f"Arsenal do Quinteto Soberano para {p.get('modulo_saas_alvo')} · Subtotal: {p.get('subtotal_economia_anual')}", f"Pilar 0{p_idx}", f'<div class="ledger">{entries_single_pilar}</div>'))
 
-  print(f"  Todos os 10 Fascículos Especializados e Pilares individuais foram compilados com sucesso!")
+  print(f"  Todos os Fascículos Especializados e Pilares individuais foram compilados com sucesso!")
 
-  # 4. Registro no SQLite (Regra R11)
+  # 6. CAMADA INCORPORADA: MANUAIS E TRILHAS INDIVIDUAIS (PADRÃO FLUXO 3)
+  dir_manuais_trilhas = out_dir / "05-manuais-e-trilhas-individuais"
+  dir_manuais_trilhas.mkdir(parents=True, exist_ok=True)
+  
+  total_manuais_gerados = 0
+  total_trilhas_geradas = 0
+
+  for p in pilares:
+    pilar_nome = p.get("nome_pilar", "Pilar Integrado")
+    for f_item in p.get("ferramentas", []):
+      f_slug = f_item.get("slug", "")
+      dir_f_manual = dir_manuais_trilhas / f_slug / "manuais"
+      dir_f_trilha = dir_manuais_trilhas / f_slug / "trilhas"
+      dir_f_manual.mkdir(parents=True, exist_ok=True)
+      dir_f_trilha.mkdir(parents=True, exist_ok=True)
+
+      h_man, m_man = gerar_manual_individual_conteudo(f_item, pilar_nome, dados.get("saas_substituido", ""))
+      h_tri, m_tri = gerar_trilha_individual_conteudo(f_item, pilar_nome, dados.get("saas_substituido", ""))
+
+      with open(dir_f_manual / f"manual-{f_slug}-vps-e-uso.html", "w", encoding="utf-8") as f_out:
+        f_out.write(h_man)
+      with open(dir_f_manual / f"manual-{f_slug}-vps-e-uso.md", "w", encoding="utf-8") as f_out:
+        f_out.write(m_man)
+      total_manuais_gerados += 1
+
+      with open(dir_f_trilha / f"trilha-{f_slug}-aprendizado.html", "w", encoding="utf-8") as f_out:
+        f_out.write(h_tri)
+      with open(dir_f_trilha / f"trilha-{f_slug}-aprendizado.md", "w", encoding="utf-8") as f_out:
+        f_out.write(m_tri)
+      total_trilhas_geradas += 1
+
+  print(f"  {total_manuais_gerados} Manuais de Engenharia VPS e {total_trilhas_geradas} Trilhas de 5 Aulas gerados em '05-manuais-e-trilhas-individuais/'!")
+
+  # 7. Registro no SQLite (Regra R11)
   try:
     registrar_ecossistema({
       "slug": f"ecos-{slug}",

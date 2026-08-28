@@ -142,6 +142,10 @@ docker run -d -p 8080:80 --name mautic mautic/mautic:latest
 - **[Agent Skill] skill-mautic-lead-enrichment:** Skill para agentes LLM enriquecerem contatos no Mautic a partir de pesquisas públicas no LinkedIn. (`.claude/skills/mautic-enrichment/SKILL.md`)
 - **[CLI Tool] mautic-cli:** CLI para execução determinística de tarefas cron de segmentação e disparo de campanhas. (`php bin/console mautic:segments:update`)
 
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/mautic/manuais/manual-mautic-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/mautic/manuais/manual-mautic-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/mautic/trilhas/trilha-mautic-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/mautic/trilhas/trilha-mautic-aprendizado.md)
+
 - **Repositório Oficial:** [https://github.com/mautic/mautic](https://github.com/mautic/mautic)
 
 #### 02. Listmonk · Disparador de E-mails & Newsletters de Alta Performance (Classificação: Persona Leve)
@@ -180,6 +184,10 @@ Desenvolvido em Go puro, entrega milhões de e-mails consumindo menos de 50 MB d
 - **[MCP Server] listmonk-mcp:** Interface MCP para agentes agendarem e validarem campanhas de e-mail via linguagem natural. (`npx -y listmonk-mcp-server`)
 - **[Agent Skill] skill-newsletter-compiler:** Compila newsletters semanais a partir de dados do banco e despacha via Listmonk. (`.claude/skills/newsletter-compiler/SKILL.md`)
 - **[CLI Tool] listmonk-cli:** Gerenciador de linha de comando para automação de rotinas de manutenção. (`listmonk --config config.toml`)
+
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/listmonk/manuais/manual-listmonk-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/listmonk/manuais/manual-listmonk-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/listmonk/trilhas/trilha-listmonk-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/listmonk/trilhas/trilha-listmonk-aprendizado.md)
 
 - **Repositório Oficial:** [https://github.com/knadh/listmonk](https://github.com/knadh/listmonk)
 
@@ -220,6 +228,10 @@ Converte qualquer banco de dados relacional em uma interface no-code intuitiva p
 - **[Agent Skill] skill-landing-page-generator:** Gera novas páginas promocionais e cadastra diretamente no Directus. (`.claude/skills/lp-generator/SKILL.md`)
 - **[CLI Tool] directus-cli:** Sincroniza modelos de landing pages entre ambientes de homologação e produção. (`npx directus schema apply ./schema.yaml`)
 
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/directus/manuais/manual-directus-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/directus/manuais/manual-directus-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/directus/trilhas/trilha-directus-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/directus/trilhas/trilha-directus-aprendizado.md)
+
 - **Repositório Oficial:** [https://github.com/directus/directus](https://github.com/directus/directus)
 
 #### 04. Novu · Infraestrutura Moderna de Notificações Multicanal (Classificação: Persona Moderna)
@@ -259,6 +271,10 @@ Arquitetura reativa moderna em TypeScript/React com centro de preferências do u
 - **[Agent Skill] skill-notification-optimizer:** Skill para otimização de copy e horários de envio de notificações. (`.claude/skills/notification-optimizer/SKILL.md`)
 - **[CLI Tool] novu-cli:** Emulador local para teste de templates de notificação antes do deploy. (`novu dev`)
 
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/novu/manuais/manual-novu-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/novu/manuais/manual-novu-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/novu/trilhas/trilha-novu-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/novu/trilhas/trilha-novu-aprendizado.md)
+
 - **Repositório Oficial:** [https://github.com/novuhq/novu](https://github.com/novuhq/novu)
 
 #### 05. Plunk · Automação de E-mails Minimalista & Rápida (Classificação: Persona Simples)
@@ -297,6 +313,10 @@ Setup de 2 minutos com interface minimalista focada exclusivamente em disparos b
 - **[MCP Server] plunk-mcp:** Servidor MCP para disparo direto de e-mails por agentes inteligentes. (`npx -y plunk-mcp`)
 - **[Agent Skill] skill-quick-email:** Gera respostas de suporte e envia via Plunk. (`.claude/skills/quick-email/SKILL.md`)
 - **[CLI Tool] plunk-cli:** Envio de eventos via chamadas HTTP simples. (`curl -X POST https://plunk.empresa/api/track`)
+
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/plunk/manuais/manual-plunk-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/plunk/manuais/manual-plunk-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/plunk/trilhas/trilha-plunk-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/plunk/trilhas/trilha-plunk-aprendizado.md)
 
 - **Repositório Oficial:** [https://github.com/useplunk/plunk](https://github.com/useplunk/plunk)
 
@@ -341,6 +361,10 @@ Arquitetura reativa ultrarrápida em React/TypeScript com sincronização bidire
 - **[Agent Skill] skill-crm-deal-analyst:** Analisa negócios parados no pipeline e sugere ações de reativação para vendedores. (`.claude/skills/crm-deal-analyst/SKILL.md`)
 - **[CLI Tool] twenty-cli:** CLI para gestão de migrações e extensões de banco. (`yarn twenty db:migrate`)
 
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/twenty/manuais/manual-twenty-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/twenty/manuais/manual-twenty-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/twenty/trilhas/trilha-twenty-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/twenty/trilhas/trilha-twenty-aprendizado.md)
+
 - **Repositório Oficial:** [https://github.com/twentyhq/twenty](https://github.com/twentyhq/twenty)
 
 #### 02. EspoCRM · Motor de Regras Corporativas B2B & Workflows (Classificação: Persona Robusta)
@@ -379,6 +403,10 @@ Mecanismo BPM no-code maduro para operações B2B que necessitam de regras de ap
 - **[MCP Server] espocrm-mcp-server:** Servidor MCP para integração de dados comerciais complexos com LLMs. (`npx -y espocrm-mcp`)
 - **[Agent Skill] skill-b2b-lead-routing:** Roteamento inteligente de leads corporativos baseado em regras financeiras. (`.claude/skills/b2b-lead-routing/SKILL.md`)
 - **[CLI Tool] espocrm-console:** Executor de jobs em background para sincronização corporativa. (`php command.php run-job`)
+
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/espocrm/manuais/manual-espocrm-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/espocrm/manuais/manual-espocrm-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/espocrm/trilhas/trilha-espocrm-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/espocrm/trilhas/trilha-espocrm-aprendizado.md)
 
 - **Repositório Oficial:** [https://github.com/espocrm/espocrm](https://github.com/espocrm/espocrm)
 
@@ -419,6 +447,10 @@ A alternativa open source mais madura e completa do mercado corporativo, possuin
 - **[Agent Skill] skill-quote-generator:** Gera cotações automáticas a partir de mensagens trocadas com o lead. (`.claude/skills/quote-gen/SKILL.md`)
 - **[CLI Tool] suitecrm-cli:** Instalador automatizado de pacotes e extensões. (`bin/console suitecrm:app:install`)
 
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/suitecrm/manuais/manual-suitecrm-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/suitecrm/manuais/manual-suitecrm-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/suitecrm/trilhas/trilha-suitecrm-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/suitecrm/trilhas/trilha-suitecrm-aprendizado.md)
+
 - **Repositório Oficial:** [https://github.com/salesagility/SuiteCRM](https://github.com/salesagility/SuiteCRM)
 
 #### 04. Documenso · Assinatura Eletrônica Soberana de Contratos e Propostas (Classificação: Persona Leve)
@@ -458,6 +490,10 @@ Garante soberania jurídica dos documentos com trilha de auditoria criptográfic
 - **[Agent Skill] skill-contract-auditor:** Audita cláusulas contratuais antes do envio para assinatura. (`.claude/skills/contract-auditor/SKILL.md`)
 - **[CLI Tool] documenso-cli:** Criação de templates via linha de comando. (`documenso template create ./contrato.pdf`)
 
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/documenso/manuais/manual-documenso-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/documenso/manuais/manual-documenso-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/documenso/trilhas/trilha-documenso-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/documenso/trilhas/trilha-documenso-aprendizado.md)
+
 - **Repositório Oficial:** [https://github.com/documenso/documenso](https://github.com/documenso/documenso)
 
 #### 05. Cal.com · Agendamento Automatizado de Demonstrações Comerciais (Classificação: Persona Simples)
@@ -496,6 +532,10 @@ Suporte a distribuição round-robin entre múltiplos corretores/vendedores, int
 - **[MCP Server] @calcom/mcp-server:** Permite que assistentes de IA agendem reuniões diretamente na conversa com o lead. (`npx -y @calcom/mcp-server`)
 - **[Agent Skill] skill-auto-scheduler:** Negocia horários disponíveis no WhatsApp e conclui o agendamento. (`.claude/skills/auto-scheduler/SKILL.md`)
 - **[CLI Tool] calcom-cli:** Inicialização rápida de ambientes corporativos. (`yarn calcom db-seed`)
+
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/cal-com/manuais/manual-cal-com-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/cal-com/manuais/manual-cal-com-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/cal-com/trilhas/trilha-cal-com-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/cal-com/trilhas/trilha-cal-com-aprendizado.md)
 
 - **Repositório Oficial:** [https://github.com/calcom/cal.com](https://github.com/calcom/cal.com)
 
@@ -540,6 +580,10 @@ Software líder global em suporte omnicanal aberto, eliminando a cobrança por l
 - **[Agent Skill] skill-sentiment-analyst:** Analisa o sentimento do cliente em tempo real no Chatwoot e alerta supervisores. (`.claude/skills/sentiment-analyst/SKILL.md`)
 - **[CLI Tool] chatwoot-ctl:** Gerenciamento de contas e instâncias via terminal. (`bundle exec rails runner 'Account.all'`)
 
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/chatwoot/manuais/manual-chatwoot-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/chatwoot/manuais/manual-chatwoot-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/chatwoot/trilhas/trilha-chatwoot-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/chatwoot/trilhas/trilha-chatwoot-aprendizado.md)
+
 - **Repositório Oficial:** [https://github.com/chatwoot/chatwoot](https://github.com/chatwoot/chatwoot)
 
 #### 02. Evolution API · Gateway Profissional de WhatsApp Baileys com Webhooks (Classificação: Persona Robusta)
@@ -578,6 +622,10 @@ API brasileira madura com suporte a múltiplas instâncias simultâneas, convers
 - **[MCP Server] evolution-api-mcp:** Permite que agentes LLM enviem mensagens e mídias de WhatsApp de forma autônoma. (`npx -y evolution-api-mcp`)
 - **[Agent Skill] skill-wa-audio-transcriber:** Transcreve áudios recebidos no WhatsApp e envia o resumo ao vendedor. (`.claude/skills/wa-transcriber/SKILL.md`)
 - **[CLI Tool] evolution-cli:** Criação programática de novas instâncias de WhatsApp. (`curl -X POST https://wa.empresa/instance/create`)
+
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/evolution-api/manuais/manual-evolution-api-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/evolution-api/manuais/manual-evolution-api-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/evolution-api/trilhas/trilha-evolution-api-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/evolution-api/trilhas/trilha-evolution-api-aprendizado.md)
 
 - **Repositório Oficial:** [https://github.com/EvolutionAPI/evolution-api](https://github.com/EvolutionAPI/evolution-api)
 
@@ -618,6 +666,10 @@ Melhor construtor visual de fluxos conversacionais do mercado, com suporte a var
 - **[Agent Skill] skill-bot-flow-optimizer:** Analisa taxa de abandono nas perguntas do bot e otimiza as mensagens. (`.claude/skills/bot-optimizer/SKILL.md`)
 - **[CLI Tool] typebot-export:** Exportação de fluxos em formato JSON para controle de versão. (`typebot export --id flow-lead-qualification`)
 
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/typebot/manuais/manual-typebot-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/typebot/manuais/manual-typebot-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/typebot/trilhas/trilha-typebot-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/typebot/trilhas/trilha-typebot-aprendizado.md)
+
 - **Repositório Oficial:** [https://github.com/baptisteArno/typebot.io](https://github.com/baptisteArno/typebot.io)
 
 #### 04. WAHA · Gateway Headless Secundário de Alta Disponibilidade (Classificação: Persona Leve)
@@ -657,6 +709,10 @@ Solução headless ultra-estável em contêiner isolado para garantir que mensag
 - **[Agent Skill] skill-wa-delivery-checker:** Verifica status de entrega e leitura de notificações críticas. (`.claude/skills/delivery-checker/SKILL.md`)
 - **[CLI Tool] waha-cli:** Disparo direto de mensagens de terminal. (`curl -X POST https://waha.empresa/api/sendText`)
 
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/waha/manuais/manual-waha-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/waha/manuais/manual-waha-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/waha/trilhas/trilha-waha-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/waha/trilhas/trilha-waha-aprendizado.md)
+
 - **Repositório Oficial:** [https://github.com/devlikeapro/waha](https://github.com/devlikeapro/waha)
 
 #### 05. Papercups · Livechat & Suporte Direto sem Burocracia (Classificação: Persona Simples)
@@ -695,6 +751,10 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 - **[MCP Server] papercups-mcp:** Consulta de conversas de livechat em tempo real por agentes. (`npx -y papercups-mcp`)
 - **[Agent Skill] skill-livechat-responder:** Responde dúvidas de produtos no chat ao vivo do site. (`.claude/skills/livechat-responder/SKILL.md`)
 - **[CLI Tool] papercups-cli:** Extração de histórico de conversas. (`curl -X GET https://chat.empresa/api/v1/conversations`)
+
+**7. Documentação Operacional & Capacitação Técnica Dedicada:** 
+- [Manual de Engenharia de VPS & Desinstalação Cirúrgica (HTML)](../05-manuais-e-trilhas-individuais/papercups/manuais/manual-papercups-vps-e-uso.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/papercups/manuais/manual-papercups-vps-e-uso.md)
+- [Trilha Didática de Aprendizado em 5 Aulas (HTML)](../05-manuais-e-trilhas-individuais/papercups/trilhas/trilha-papercups-aprendizado.html) | [Versão Markdown](../05-manuais-e-trilhas-individuais/papercups/trilhas/trilha-papercups-aprendizado.md)
 
 - **Repositório Oficial:** [https://github.com/papercups-io/papercups](https://github.com/papercups-io/papercups)
 

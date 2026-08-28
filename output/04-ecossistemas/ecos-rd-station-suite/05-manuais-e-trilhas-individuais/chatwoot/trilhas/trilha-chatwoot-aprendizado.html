@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Trilha de Aprendizado: Chatwoot · Suíte do Ecossistema Soberano</title>
+<style>
+
+ :root {
+  --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+  --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  --paper: #F6F4EF;
+  --surface: #FFFFFF;
+  --surface-2: #FBF9F4;
+  --surface-dark: #0A0F1D;
+  --ink: #1B1E23;
+  --ink-2: #383D45;
+  --muted: #666E7A;
+  --rule: #D8D2C4;
+  --rule-soft: #EAE5D9;
+  --accent: #00875A;
+  --accent-dark: #57D9A3;
+  --accent-soft: #E3FCEF;
+  --accent-soft-dark: #162B22;
+  --green: #00875A;
+  --green-soft: #E3FCEF;
+  --gold: #FFAB00;
+  --gold-soft: #FFF0B3;
+  --flag: #DE350B;
+  --flag-soft: #FFEBE6;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04);
+ }
+
+ @media (prefers-color-scheme: dark) {
+  :root {
+   --paper: #0E121B;
+   --surface: #141924;
+   --surface-2: #1A2130;
+   --ink: #E6E8ED;
+   --ink-2: #B0B5C0;
+   --muted: #7E8695;
+   --rule: #262F40;
+   --rule-soft: #1E2533;
+   --accent: var(--accent-dark);
+   --accent-soft: var(--accent-soft-dark);
+   --green: #57D9A3;
+   --green-soft: #162B22;
+   --gold: #FFC400;
+   --gold-soft: #332600;
+   --flag: #FF7452;
+   --flag-soft: #361B15;
+   --shadow: 0 1px 3px rgba(0,0,0,0.25);
+  }
+ }
+
+ *, *::before, *::after { box-sizing: border-box; }
+ html { font-size: 16px; scroll-behavior: smooth; }
+
+ * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+ }
+ ::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+ }
+ ::-webkit-scrollbar-track {
+  background: transparent;
+ }
+ ::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 2px;
+ }
+
+ body {
+  margin: 0;
+  padding: 40px 20px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+ }
+
+ h1 { font-family: var(--font-serif); font-size: 32px; margin: 38px 0 18px 0; color: var(--ink); line-height: 1.2; font-weight: 700; }
+ h2 { font-family: var(--font-serif); font-size: 26px; margin: 32px 0 16px 0; color: var(--ink); line-height: 1.25; font-weight: 700; }
+ h3 { font-family: var(--font-serif); font-size: 21px; margin: 26px 0 12px 0; color: var(--ink); line-height: 1.3; font-weight: 600; }
+ h4 { font-family: var(--font-sans); font-size: 17px; margin: 22px 0 10px 0; color: var(--ink); line-height: 1.35; font-weight: 700; }
+ h5 { font-family: var(--font-sans); font-size: 14.5px; margin: 18px 0 8px 0; color: var(--ink-2); line-height: 1.4; font-weight: 700; }
+ h6 { font-family: var(--font-sans); font-size: 12.5px; margin: 14px 0 6px 0; color: var(--muted); line-height: 1.4; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+ p { margin: 0 0 14px 0; }
+
+ .wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 48px;
+  box-shadow: var(--shadow);
+ }
+
+ /* CAPA DO LIVRO MESTRE */
+ .book-cover {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  padding: 48px 36px;
+  margin-bottom: 40px;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+ }
+ .book-tagline { font-family: var(--mono); font-size: 12px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 12px; }
+ .book-title { font-family: var(--font-serif); font-size: 42px; line-height: 1.1; margin: 0 0 12px; color: var(--ink); font-weight: 700; letter-spacing: -.02em; }
+ .book-subtitle { font-size: 18px; color: var(--ink-2); line-height: 1.5; margin-bottom: 24px; max-width: 90%; }
+ .book-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; border-top: 1px solid var(--rule); padding-top: 20px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+ .book-meta-item strong { display: block; color: var(--ink); font-size: 13px; margin-top: 2px; }
+
+ /* SUMÁRIO DO LIVRO */
+ .toc-box {
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 24px;
+  margin: 28px 0 40px;
+ }
+ .toc-box h3 { font-family: var(--font-serif); font-size: 22px; margin: 0 0 16px; color: var(--ink); border-bottom: 1px solid var(--rule-soft); padding-bottom: 8px; }
+ .toc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px 24px; }
+ .toc-item { font-size: 13.5px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--rule-soft); padding: 4px 0; }
+ .toc-item a { color: var(--ink); text-decoration: none; font-weight: 500; }
+ .toc-item a:hover { color: var(--accent); }
+ .toc-item span { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+ .stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+ }
+
+ .stat-card {
+  background: var(--surface-2);
+  border: 1px solid var(--rule-soft);
+  border-radius: 2px;
+  padding: 12px 14px;
+ }
+
+ .stat-lbl {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted);
+  margin-bottom: 4px;
+ }
+
+ .stat-val {
+  font-family: var(--mono);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+ }
+
+ .stat-val.highlight { color: var(--green); }
+ .stat-val.alert { color: var(--flag); }
+
+ .racional-box {
+  background: var(--surface-2);
+  border-left: 4px solid var(--accent);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-size: 14px;
+  color: var(--ink-2);
+  border-radius: 0 3px 3px 0;
+  line-height: 1.6;
+ }
+
+ .sec-head {
+  margin: 54px 0 24px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+ }
+
+ .sec-info { flex: 1; }
+ .sec-num { font-family: var(--mono); font-size: 11.5px; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: .1em; }
+ .sec-head h2 { font-family: var(--font-serif); font-size: 28px; margin: 4px 0 0 0; color: var(--ink); font-weight: 700; }
+ .sec-note { font-size: 14px; color: var(--muted); margin-top: 4px; }
+ .pilar-subtotal-badge { font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 4px 10px; background: var(--green-soft); color: var(--green); border-radius: 2px; border: 1px solid var(--green); }
+
+ /* TABELA MATRIX */
+ .tablewrap { width: 100%; overflow-x: auto; margin: 20px 0 32px 0; border: 1px solid var(--rule); border-radius: 2px; }
+ table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+ thead { background: var(--surface-2); border-bottom: 1px solid var(--rule); }
+ th { text-align: left; padding: 10px 14px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; white-space: nowrap; }
+ td { padding: 12px 14px; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; }
+ tr:last-child td { border-bottom: none; }
+ tr:hover td { background: var(--surface-2); }
+ td.rank { font-family: var(--mono); font-weight: 700; color: var(--muted); font-size: 12px; }
+ td.saas { color: var(--flag); font-weight: 600; }
+ td.econ { font-family: var(--mono); font-weight: 700; color: var(--green); }
+ td.killer { color: var(--flag); font-weight: 700; font-family: var(--mono); }
+
+ /* CARDS DE FERRAMENTAS */
+ .ledger { display: flex; flex-direction: column; gap: 24px; margin-top: 24px; }
+ .entry { display: grid; grid-template-columns: 48px 1fr; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); padding: 24px; box-shadow: var(--shadow); }
+ .entry-rank { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--muted); padding-top: 2px; }
+ .entry-body { display: flex; flex-direction: column; gap: 16px; }
+ .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+ .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+
+ .persona-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+ .pilar-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--gold-soft); color: #8A6100; border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent); font-weight: 700; white-space: nowrap; }
+ .killer-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; white-space: nowrap; }
+ .econ-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; white-space: nowrap; }
+ .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule-soft); font-weight: 600; white-space: nowrap; }
+
+ .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+ .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+ .entry-section p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+
+ .code-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 2px; padding: 12px; font-family: var(--mono); font-size: 12px; overflow-x: auto; color: var(--ink); position: relative; }
+ .code-box pre { margin: 0; font-family: inherit; }
+
+ .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 4px; }
+ .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+ .econ-card.killer { border-left: 3px solid var(--flag); }
+ .econ-card.savings { border-left: 3px solid var(--green); }
+ .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+ .econ-val { font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--ink); }
+
+ .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 4px; }
+ .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+ .infra-card.verdict { border-left: 3px solid var(--accent); grid-column: 1 / -1; }
+ .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+ .infra-val { font-size: 13px; color: var(--ink-2); font-weight: 500; }
+
+ .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 6px; }
+ .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+ .step-head { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: var(--accent); text-transform: uppercase; }
+ .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+ .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+
+ .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+ .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+ .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
+ .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+ .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+ .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+ .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
+
+ .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+ .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+ .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+ .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+ .mcp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+ .mcp-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+ .mcp-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+ .mcp-pill { font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase; padding: 1px 6px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); }
+ .mcp-name { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--ink); }
+ .mcp-card p { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.4; }
+ .mcp-cmd { font-family: var(--mono); font-size: 11px; background: var(--surface); padding: 3px 6px; border-radius: 2px; border: 1px solid var(--rule-soft); color: var(--ink); word-break: break-all; }
+
+ .integration-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin: 16px 0; }
+ .integ-card { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 3px; padding: 16px; box-shadow: var(--shadow); }
+ .integ-card h4 { font-family: var(--font-serif); font-size: 18px; margin: 0 0 8px; color: var(--ink); }
+ .integ-card p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+
+ .tco-banner { background: var(--surface); border: 1px solid var(--green); border-radius: 3px; padding: 20px; margin: 20px 0; box-shadow: var(--shadow); display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+ .tco-col .tco-lbl { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+ .tco-col .tco-val { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--ink); }
+ .tco-col .tco-val.highlight { color: var(--green); }
+ .tco-col .tco-val.killer { color: var(--flag); }
+
+ /* CALCULADORA INTERATIVA TCO */
+ .calc-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 4px; padding: 24px; margin: 20px 0; box-shadow: var(--shadow); }
+ .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 20px; }
+ .calc-slider-group label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+ .calc-slider-group input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+ .calc-results { background: var(--surface); border: 1px solid var(--green); border-radius: 3px; padding: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+ /* BLUEPRINTS & TIMELINE */
+ .blueprint-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow); }
+ .timeline-card { background: var(--surface-2); border-left: 4px solid var(--accent); padding: 16px; margin-bottom: 12px; border-radius: 0 3px 3px 0; }
+ .timeline-card h4 { margin: 0 0 6px; font-family: var(--font-serif); font-size: 17px; color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+  <a href="../00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.html" style="font-family: var(--mono); font-size: 11.5px; color: var(--accent); text-decoration: none; font-weight: 700;">← Voltar ao Livro-Texto Completo</a>
+  <span class="persona-badge">Capacitação · Chatwoot</span>
+ </div>
+ <header style="border-bottom: 1px solid var(--rule); padding-bottom: 20px; margin-bottom: 24px;">
+  <div class="meta">
+   <span>Fascículo Especializado · Fábrica Universal AIDD</span>
+   <span>28/08/2026</span>
+  </div>
+  <h1 style="font-size: 30px; margin-bottom: 6px;">Trilha de Aprendizado: Chatwoot</h1>
+  <p class="deck" style="font-size: 14.5px; margin-bottom: 0;">Central de Atendimento Omnicanal & Livechat Colaborativo — Programa de Capacitação Prática em 5 Aulas (Grupo 3: Atendimento Omnichannel & WhatsApp)</p>
+ </header>
+ 
+ 
+  <div class="racional-box">
+   <p><strong>Metodologia de Capacitação:</strong> Trilha prática estruturada em 5 aulas progressivas, desenhada para capacitar operadores, gestores e desenvolvedores na transição do SaaS proprietário <strong>RD Station Conversas (Painel de Atendimento Multiatendente)</strong> para a solução open source soberana <strong>Chatwoot</strong>.</p>
+  </div>
+
+  <div class="timeline-card" style="margin-bottom: 16px;">
+   <div style="display: flex; justify-content: space-between;"><h4>Aula 01: Fundamentos &amp; O que a Ferramenta Substitui</h4><span class="persona-badge">Nível Básico</span></div>
+   <p style="font-size: 13.5px; margin: 6px 0;">Compreenda o papel do Chatwoot no pilar Grupo 3: Atendimento Omnichannel & WhatsApp. Analise o desmantelamento de custos em relação ao RD Station Conversas (Painel de Atendimento Multiatendente) e as vantagens de possuir os dados em infraestrutura própria.</p>
+   <div style="font-family: var(--mono); font-size: 11.5px; color: var(--accent); font-weight: 700;">Marco: Domínio do modelo conceitual e mapa de funcionalidades.</div>
+  </div>
+
+  <div class="timeline-card" style="margin-bottom: 16px;">
+   <div style="display: flex; justify-content: space-between;"><h4>Aula 02: Configuração Inicial &amp; Primeiro Acesso</h4><span class="persona-badge">Nível Prático</span></div>
+   <p style="font-size: 13.5px; margin: 6px 0;">Acesse o painel de administração via navegador. Crie a conta de administrador mestre, configure as permissões de equipe e valide a integração com o banco de dados e envio de e-mails/webhooks.</p>
+   <div style="font-family: var(--mono); font-size: 11.5px; color: var(--green); font-weight: 700;">Marco: Painel operacional configurado com autenticação segura.</div>
+  </div>
+
+  <div class="timeline-card" style="margin-bottom: 16px;">
+   <div style="display: flex; justify-content: space-between;"><h4>Aula 03: Operação no Dia a Dia &amp; Melhores Práticas</h4><span class="persona-badge">Nível Operacional</span></div>
+   <p style="font-size: 13.5px; margin: 6px 0;">Execução dos fluxos diários de trabalho: cadastro de registros, importação de contatos históricos, disparo de ações e visualização de relatórios de métricas comerciais.</p>
+   <div style="font-family: var(--mono); font-size: 11.5px; color: var(--accent); font-weight: 700;">Marco: Time comercial e de marketing operando sem fricção.</div>
+  </div>
+
+  <div class="timeline-card" style="margin-bottom: 16px;">
+   <div style="display: flex; justify-content: space-between;"><h4>Aula 04: Automação, Webhooks &amp; Integração com n8n</h4><span class="persona-badge">Nível Avançado</span></div>
+   <p style="font-size: 13.5px; margin: 6px 0;">Conecte o Chatwoot ao barramento de automação n8n via webhooks e APIs REST/GraphQL. Crie fluxos automáticos que disparam mensagens de WhatsApp e atualizam o CRM em tempo real.</p>
+   <div style="font-family: var(--mono); font-size: 11.5px; color: var(--green); font-weight: 700;">Marco: Ecossistema conversando sem silos de dados.</div>
+  </div>
+
+  <div class="timeline-card" style="margin-bottom: 16px;">
+   <div style="display: flex; justify-content: space-between;"><h4>Aula 05: Governança, Políticas de Backup &amp; Manutenção</h4><span class="persona-badge">Nível Gestão &amp; TI</span></div>
+   <p style="font-size: 13.5px; margin: 6px 0;">Estabeleça rotinas de auditoria de acessos, monitoramento de saúde de contêineres, testes periódicos de restauração de backup e adequação às diretrizes da LGPD.</p>
+   <div style="font-family: var(--mono); font-size: 11.5px; color: var(--accent); font-weight: 700;">Marco: Soberania e segurança operacional garantidas em longo prazo.</div>
+  </div>
+  
+ 
+ <footer style="margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--rule-soft); display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 11px; color: var(--muted);">
+  <span>Suíte do Ecossistema Soberano · Padrão Diamante R5-E</span>
+  <a href="../00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.html" style="color: var(--accent); text-decoration: none; font-weight: 700;">Ver Livro Completo ↗</a>
+ </footer>
+</div>
+
+<script>
+function filterTools(query) {
+ const q = query.toLowerCase().trim();
+ const entries = document.querySelectorAll('.entry');
+ const rows = document.querySelectorAll('.tablewrap tbody tr');
+ let visibleCount = 0;
+
+ entries.forEach(entry => {
+  const text = entry.innerText.toLowerCase();
+  if (!q || text.includes(q)) {
+   entry.style.display = 'grid';
+   visibleCount++;
+  } else {
+   entry.style.display = 'none';
+  }
+ });
+
+ rows.forEach(row => {
+  const text = row.innerText.toLowerCase();
+  if (!q || text.includes(q)) {
+   row.style.display = '';
+  } else {
+   row.style.display = 'none';
+  }
+ });
+
+ const countEl = document.getElementById('search-count');
+ if (countEl) {
+  countEl.innerText = `${visibleCount} ferramentas encontradas`;
+ }
+}
+
+function updateTcoCalculator() {
+ const leads = parseInt(document.getElementById('slider-leads').value, 10);
+ const sellers = parseInt(document.getElementById('slider-sellers').value, 10);
+ const agents = parseInt(document.getElementById('slider-agents').value, 10);
+
+ document.getElementById('val-leads').innerText = leads.toLocaleString('pt-BR') + ' leads';
+ document.getElementById('val-sellers').innerText = sellers + ' vendedores';
+ document.getElementById('val-agents').innerText = agents + ' atendentes';
+
+ // Cálculos SaaS estimados (RD Marketing escalonado + RD CRM por licença + RD Conversas por operador)
+ const custoMkt = (leads <= 10000) ? 14400 : (leads <= 50000) ? 42000 : (leads <= 100000) ? 78000 : 130000;
+ const custoCrm = sellers * 3600;
+ const custoChat = agents * 3600;
+ const saasTotal = custoMkt + custoCrm + custoChat;
+
+ // Custo VPS Soberana (Cluster Unificado 8 vCPU / 16 GB RAM)
+ const custoVps = 4200;
+ const economiaLiquida = saasTotal - custoVps;
+ const economiaPct = ((economiaLiquida / saasTotal) * 100).toFixed(1);
+
+ document.getElementById('calc-saas-total').innerText = 'R$ ' + saasTotal.toLocaleString('pt-BR') + '/ano';
+ document.getElementById('calc-vps-total').innerText = 'R$ ' + custoVps.toLocaleString('pt-BR') + '/ano';
+ document.getElementById('calc-savings-total').innerText = 'R$ ' + economiaLiquida.toLocaleString('pt-BR') + '/ano (' + economiaPct + '%)';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+ const searchInput = document.getElementById('busca-ferramentas');
+ if (searchInput) {
+  searchInput.addEventListener('input', (e) => filterTools(e.target.value));
+  document.addEventListener('keydown', (e) => {
+   if (e.key === '/' && document.activeElement !== searchInput) {
+    e.preventDefault();
+    searchInput.focus();
+   }
+  });
+ }
+
+ const sLeads = document.getElementById('slider-leads');
+ const sSellers = document.getElementById('slider-sellers');
+ const sAgents = document.getElementById('slider-agents');
+ if (sLeads && sSellers && sAgents) {
+  sLeads.addEventListener('input', updateTcoCalculator);
+  sSellers.addEventListener('input', updateTcoCalculator);
+  sAgents.addEventListener('input', updateTcoCalculator);
+  updateTcoCalculator();
+ }
+});
+</script>
+
+</body>
+</html>
