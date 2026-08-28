@@ -99,54 +99,43 @@ Set-Junction ".agents\agents"                             ".claude\agents"
 Set-Junction ".agents\commands"                           ".claude\commands"
 
 Write-Output "`n== Skills da Fabrica Universal (.agents\skills -> .claude\skills) =="
-$skillsLocais = @("fluxo1-listas-horizontais", "fluxo2-dossies-verticais", "fluxo3-manuais-e-trilhas", "fluxo4-ecossistemas", "fluxo-total-aidd")
+$skillsLocais = @("fluxo1-listas-horizontais", "fluxo2-dossies-verticais", "fluxo3-manuais-e-trilhas", "fluxo4-ecossistemas", "fluxo5-auditoria-vps", "fluxo-total-aidd")
 foreach ($sk in $skillsLocais) {
     Set-Junction ".claude\skills\$sk" ".agents\skills\$sk"
 }
 
-Write-Output "`n== Sincronizacao Global de Skills (Antigravity, Gemini CLI, Claude Code Global) =="
-$geminiSkillsDir = "$env:USERPROFILE\.gemini\config\skills"
-$claudeGlobalSkillsDir = "$env:USERPROFILE\.claude\skills"
+Write-Output "`n== Sincronizacao Global de Skills (Antigravity, Gemini CLI, Claude Code Global, OpenCode, Cursor, Windsurf) =="
+$globalSkillDirs = @(
+    "$env:USERPROFILE\.gemini\config\skills",
+    "$env:USERPROFILE\.gemini\antigravity-cli\skills",
+    "$env:USERPROFILE\.claude\skills",
+    "$env:USERPROFILE\.opencode\skills",
+    "$env:USERPROFILE\.config\opencode\skills",
+    "$env:USERPROFILE\.cursor\skills",
+    "$env:USERPROFILE\.windsurf\skills",
+    "$env:USERPROFILE\.agents\skills"
+)
 
-if (Test-Path $geminiSkillsDir) {
-    Write-Output "Disponibilizando skills em $geminiSkillsDir (Antigravity & Gemini)..."
-    foreach ($sk in $skillsLocais) {
-        $targetSkill = Join-Path $raiz ".agents\skills\$sk"
-        $destSkill = Join-Path $geminiSkillsDir $sk
-        if (Test-Path $targetSkill) {
-            if (Test-Path $destSkill) {
-                $item = Get-Item $destSkill -Force
-                if ($item.LinkType -eq "Junction") {
-                    Write-Output "OK (ja e junction global Gemini): $sk"
-                } else {
-                    Write-Output "Atualizando skill global Gemini: $sk"
-                    Copy-Item -Path $targetSkill -Destination $destSkill -Recurse -Force
-                }
-            } else {
-                New-Item -ItemType Junction -Path $destSkill -Target $targetSkill -Force | Out-Null
-                Write-Output "Criada junction global Gemini: $sk"
-            }
-        }
+foreach ($gdir in $globalSkillDirs) {
+    if (-not (Test-Path $gdir)) {
+        New-Item -ItemType Directory -Force -Path $gdir | Out-Null
     }
-}
-
-if (Test-Path $claudeGlobalSkillsDir) {
-    Write-Output "Disponibilizando skills em $claudeGlobalSkillsDir (Claude Code Global)..."
+    Write-Output "Disponibilizando skills em $gdir..."
     foreach ($sk in $skillsLocais) {
         $targetSkill = Join-Path $raiz ".agents\skills\$sk"
-        $destSkill = Join-Path $claudeGlobalSkillsDir $sk
+        $destSkill = Join-Path $gdir $sk
         if (Test-Path $targetSkill) {
             if (Test-Path $destSkill) {
                 $item = Get-Item $destSkill -Force
                 if ($item.LinkType -eq "Junction") {
-                    Write-Output "OK (ja e junction global Claude): $sk"
+                    Write-Output "OK (ja e junction global): $sk"
                 } else {
-                    Write-Output "Atualizando skill global Claude: $sk"
+                    Write-Output "Atualizando skill global: $sk"
                     Copy-Item -Path $targetSkill -Destination $destSkill -Recurse -Force
                 }
             } else {
                 New-Item -ItemType Junction -Path $destSkill -Target $targetSkill -Force | Out-Null
-                Write-Output "Criada junction global Claude: $sk"
+                Write-Output "Criada junction global: $sk"
             }
         }
     }
