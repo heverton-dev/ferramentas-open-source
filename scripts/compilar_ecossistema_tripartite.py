@@ -370,7 +370,13 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
         f"",
         f"---",
         f"",
-        f"## 4. Deploy All-in-One: Orquestração Unificada (Docker Compose)",
+        f"## 4. Deploy All-in-One: Guia Passo a Passo para Não-Técnicos",
+        f"",
+        f"### 💡 Entendendo os 4 Pilares da Infraestrutura (Sem Jargões)",
+        f"- **1. O que é VPS?** {deploy.get('analogia_didatica_stack', {}).get('o_que_e_vps', '')}",
+        f"- **2. O que é Docker Compose?** {deploy.get('analogia_didatica_stack', {}).get('o_que_e_docker', '')}",
+        f"- **3. O que é Traefik?** {deploy.get('analogia_didatica_stack', {}).get('o_que_e_traefik', '')}",
+        f"- **4. O que é n8n?** {deploy.get('analogia_didatica_stack', {}).get('o_que_e_n8n', '')}",
         f"",
         f"> **Topologia & Segurança de Rede:** {deploy.get('arquitetura_rede_seguranca', '')}",
         f"",
@@ -399,7 +405,7 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
         f"{deploy.get('docker_compose_exemplo', '')}",
         f"```",
         f"",
-        f"### Passos de Instalação e Subida",
+        f"### Roteiro de Instalação Rápida (4 Passos Simples)",
         f""
     ])
 
@@ -410,15 +416,15 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
         f"",
         f"---",
         f"",
-        f"## 5. Guia de Modularidade, Expansão & Hot-Swap de Ferramentas",
+        f"## 5. Guia de Modularidade, Expansão & Hot-Swap de Ferramentas (Princípio do Lego)",
         f"",
-        f"> **Filosofia de Arquitetura Desacoplada (Loose Coupling):**  ",
+        f"> **O Princípio das Tomadas Independentes:**  ",
         f"> {guia.get('filosofia_modular', '')}",
         f"",
-        f"### Como Adicionar uma Nova Ferramenta ao Ecossistema",
+        f"### Como Adicionar uma Nova Ferramenta ao Ecossistema (Plug-and-Play)",
         f"{guia.get('passo_a_passo_adicionar_ferramenta', '')}",
         f"",
-        f"### Como Substituir uma Ferramenta em Produção (Hot-Swap sem Downtime)",
+        f"### Como Substituir uma Ferramenta em Produção (Hot-Swap sem Parar o Negócio)",
         f"{guia.get('passo_a_passo_substituir_hotswap', '')}",
         f"",
         f"### Como Remover um Módulo com Segurança",
@@ -429,8 +435,17 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
         f"- **2. Novo Serviço:** {guia.get('exemplo_caso_pratico_hotswap', {}).get('passo_2_novo_servico')}",
         f"- **3. Chaveamento no n8n:** {guia.get('exemplo_caso_pratico_hotswap', {}).get('passo_3_chaveamento_n8n')}",
         f"- **4. Resultado Final:** {guia.get('exemplo_caso_pratico_hotswap', {}).get('passo_4_resultado')}",
+        f"",
+        f"### Perguntas Frequentes (FAQ Operacional para Não-Técnicos)",
         f""
     ])
+
+    for faq in guia.get("faq_nao_tecnicos", []):
+        linhas.extend([
+            f"- **❓ {faq.get('pergunta')}**",
+            f"  - *Resposta:* {faq.get('resposta')}",
+            f""
+        ])
 
     return "\n".join(linhas) + "\n"
 
@@ -742,6 +757,38 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
         for s in stack_detalhe
     ])
 
+    analogias = deploy.get("analogia_didatica_stack", {})
+    analogias_cards_html = f"""
+    <div class="integration-grid" style="margin: 16px 0 24px;">
+      <div class="integ-card">
+        <h4>🏢 1. O que é a VPS?</h4>
+        <p>{analogias.get('o_que_e_vps', 'Seu servidor potente na nuvem que fica ligado 24h por dia.')}</p>
+      </div>
+      <div class="integ-card">
+        <h4>📦 2. O que é o Docker Compose?</h4>
+        <p>{analogias.get('o_que_e_docker', 'A receita pronta que instala e liga todas as ferramentas automaticamente.')}</p>
+      </div>
+      <div class="integ-card">
+        <h4>🛡️ 3. O que é o Traefik?</h4>
+        <p>{analogias.get('o_que_e_traefik', 'O porteiro inteligente que coloca o cadeado verde SSL e distribui os links.')}</p>
+      </div>
+      <div class="integ-card">
+        <h4>⚡ 4. O que é o n8n?</h4>
+        <p>{analogias.get('o_que_e_n8n', 'O mensageiro que leva as informações de uma ferramenta para outra sem código.')}</p>
+      </div>
+    </div>
+    """
+
+    faq_cards_html = "".join([
+        f"""
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <h4>❓ {faq.get('pergunta')}</h4>
+          <p style="margin-top: 6px;"><strong>Resposta:</strong> {faq.get('resposta')}</p>
+        </div>
+        """
+        for faq in guia.get("faq_nao_tecnicos", [])
+    ])
+
     passos_add_html = "".join([
         f"""
         <div class="step-card">
@@ -884,17 +931,21 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
 
   <div class="sec-head">
     <div class="sec-info">
-      <span class="sec-num">Seção 05 · Deploy All-in-One: Orquestração Unificada</span>
-      <h2>Composição da Stack Tecnológica &amp; Docker Compose</h2>
-      <p class="sec-note">Especificação de engenharia de cada um dos 9 serviços que compõem o cluster consolidado em VPS ({deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')}).</p>
+      <span class="sec-num">Seção 05 · Deploy All-in-One: Guia Passo a Passo para Não-Técnicos</span>
+      <h2>Como o Sistema Funciona &amp; Roteiro de Subida Plug-and-Play</h2>
+      <p class="sec-note">Conceitos explicados sem jargões para gestores de marketing, vendas e diretores ({deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')}).</p>
     </div>
   </div>
 
-  <div class="racional-box" style="margin-bottom: 16px;">
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 16px 0 10px; color: var(--ink);">💡 Entendendo os 4 Pilares da Infraestrutura (Sem Jargões)</h3>
+  <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 12px;">Como cada peça se encaixa para que a sua empresa tenha autonomia completa sem depender de planos SaaS caros.</p>
+  {analogias_cards_html}
+
+  <div class="racional-box" style="margin-bottom: 20px;">
     <p><strong>🛡️ Segurança e Topologia de Rede:</strong> {deploy.get('arquitetura_rede_seguranca')}</p>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 10px; color: var(--ink);">1. Matriz dos Serviços da Stack (docker-compose.yml)</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">1. Matriz dos Serviços da Stack (docker-compose.yml)</h3>
   <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 12px;">Visão tabular de todas as ferramentas de infraestrutura, aplicação, banco e filas presentes no orquestrador.</p>
   {tabela_stack_html}
 
@@ -908,29 +959,29 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
     <pre><code>{deploy.get('docker_compose_exemplo')}</code></pre>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">4. Passos de Inicialização &amp; Subida do Ambiente</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">4. Roteiro de Instalação Rápida (4 Passos Simples)</h3>
   <div class="steps-grid">
     {passos_cards}
   </div>
 
   <div class="sec-head" style="margin-top: 48px;">
     <div class="sec-info">
-      <span class="sec-num">Seção 06 · Guia de Modularidade &amp; Hot-Swap</span>
-      <h2>Adição, Substituição &amp; Remoção de Módulos</h2>
-      <p class="sec-note">Como personalizar o ecossistema e trocar ferramentas sem quebrar o cluster nem interromper a operação.</p>
+      <span class="sec-num">Seção 06 · Guia de Modularidade, Expansão &amp; Hot-Swap</span>
+      <h2>Adição, Substituição &amp; Remoção de Ferramentas (Princípio do Lego)</h2>
+      <p class="sec-note">Como personalizar o ecossistema e trocar ferramentas sem quebrar o cluster nem interromper a operação comercial.</p>
     </div>
   </div>
 
   <div class="racional-box" style="margin-bottom: 20px;">
-    <p><strong>🧩 Princípio de Acoplamento Fraco:</strong> {guia.get('filosofia_modular')}</p>
+    <p><strong>🧩 O Princípio das Tomadas Independentes:</strong> {guia.get('filosofia_modular')}</p>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">1. Protocolo de Inserção de Novas Ferramentas</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">1. Protocolo de Inserção de Novas Ferramentas (Plug-and-Play)</h3>
   <div class="steps-grid">
     {passos_add_html}
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 12px; color: var(--ink);">2. Protocolo de Hot-Swap (Substituição de Ferramenta sem Downtime)</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 12px; color: var(--ink);">2. Protocolo de Hot-Swap (Substituição de Ferramenta sem Parar o Negócio)</h3>
   <div class="integ-card" style="margin-bottom: 16px;">
     <p style="white-space: pre-line;">{guia.get('passo_a_passo_substituir_hotswap')}</p>
   </div>
@@ -941,7 +992,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
   </div>
 
   <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 12px; color: var(--ink);">4. Estudo de Caso Prático: {caso_pratico.get('cenario')}</h3>
-  <div class="entry" style="grid-template-columns: 1fr;">
+  <div class="entry" style="grid-template-columns: 1fr; margin-bottom: 24px;">
     <div class="entry-body">
       <p><strong>1. Isolamento Operacional:</strong> {caso_pratico.get('passo_1_isolamento')}</p>
       <p><strong>2. Início do Novo Contêiner:</strong> <code>{caso_pratico.get('passo_2_novo_servico')}</code></p>
@@ -949,6 +1000,9 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
       <p style="color: var(--green); font-weight: 600;"><strong>4. Veredito Final:</strong> {caso_pratico.get('passo_4_resultado')}</p>
     </div>
   </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 12px; color: var(--ink);">5. Perguntas Frequentes (FAQ Operacional para Não-Técnicos)</h3>
+  {faq_cards_html}
 
 </div>
 {JS_CANONICO_DIAMANTE}

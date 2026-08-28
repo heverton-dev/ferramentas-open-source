@@ -2795,17 +2795,40 @@
 
   <div class="sec-head">
     <div class="sec-info">
-      <span class="sec-num">Seção 05 · Deploy All-in-One: Orquestração Unificada</span>
-      <h2>Composição da Stack Tecnológica &amp; Docker Compose</h2>
-      <p class="sec-note">Especificação de engenharia de cada um dos 9 serviços que compõem o cluster consolidado em VPS (8 vCPU / 16 GB RAM).</p>
+      <span class="sec-num">Seção 05 · Deploy All-in-One: Guia Passo a Passo para Não-Técnicos</span>
+      <h2>Como o Sistema Funciona &amp; Roteiro de Subida Plug-and-Play</h2>
+      <p class="sec-note">Conceitos explicados sem jargões para gestores de marketing, vendas e diretores (8 vCPU / 16 GB RAM).</p>
     </div>
   </div>
 
-  <div class="racional-box" style="margin-bottom: 16px;">
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 16px 0 10px; color: var(--ink);">💡 Entendendo os 4 Pilares da Infraestrutura (Sem Jargões)</h3>
+  <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 12px;">Como cada peça se encaixa para que a sua empresa tenha autonomia completa sem depender de planos SaaS caros.</p>
+  
+    <div class="integration-grid" style="margin: 16px 0 24px;">
+      <div class="integ-card">
+        <h4>🏢 1. O que é a VPS?</h4>
+        <p>🏢 A VPS é o seu 'apartamento alugado na nuvem'. Em vez de manter um computador físico ligado no escritório gastando luz, você aluga um servidor ultra-rápido que fica ligado 24 horas por dia, 7 dias por semana, com gerador e internet de fibra ótica.</p>
+      </div>
+      <div class="integ-card">
+        <h4>📦 2. O que é o Docker Compose?</h4>
+        <p>📦 O Docker Compose é o 'manual de montagem e mobília automática'. Você não precisa instalar programas um por um nem entender de Linux. Ao rodar um único comando, o Docker baixa todos os módulos prontos e os liga automaticamente.</p>
+      </div>
+      <div class="integ-card">
+        <h4>🛡️ 3. O que é o Traefik?</h4>
+        <p>🛡️ O Traefik é o 'porteiro inteligente do condomínio'. Ele atende os visitantes na internet, verifica a segurança, coloca o cadeado verde (certificado SSL HTTPS gratuito) e encaminha cada pessoa para o apartamento certo (mkt, crm, chat ou sso).</p>
+      </div>
+      <div class="integ-card">
+        <h4>⚡ 4. O que é o n8n?</h4>
+        <p>⚡ O n8n é o 'carteiro e mensageiro da empresa'. Ele fica vigiando os formulários: quando um cliente preenche um cadastro, o n8n pega as informações na hora e entrega no WhatsApp do vendedor e no funil do CRM automaticamente.</p>
+      </div>
+    </div>
+    
+
+  <div class="racional-box" style="margin-bottom: 20px;">
     <p><strong>🛡️ Segurança e Topologia de Rede:</strong> A infraestrutura opera sobre uma rede bridge isolada do Docker (`ecosystem_net`). Apenas o reverse proxy Traefik expõe as portas públicas 80 (HTTP com redirect) e 443 (HTTPS TLS automático via ACME/Let's Encrypt). Todas as ferramentas (Mautic, Twenty, Chatwoot, Evolution, n8n, Keycloak e PostgreSQL) comunicam-se exclusivamente pela rede interna através de seus nomes DNS de serviço (ex: `http://chatwoot:3000`, `postgres:5432`), eliminando vetores de ataque externos e exposição de portas desnecessárias.</p>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 10px; color: var(--ink);">1. Matriz dos Serviços da Stack (docker-compose.yml)</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">1. Matriz dos Serviços da Stack (docker-compose.yml)</h3>
   <p style="font-size: 13.5px; color: var(--muted); margin: 0 0 12px;">Visão tabular de todas as ferramentas de infraestrutura, aplicação, banco e filas presentes no orquestrador.</p>
   
     <div class="tablewrap" style="margin: 14px 0 20px;">
@@ -3152,74 +3175,86 @@ volumes:
   redis_data:</code></pre>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">4. Passos de Inicialização &amp; Subida do Ambiente</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px; color: var(--ink);">4. Roteiro de Instalação Rápida (4 Passos Simples)</h3>
   <div class="steps-grid">
-    <div class="step-card"><div class="step-head"><span class="step-badge">01</span> Provisionamento do Host</div><p>Contrate uma VPS de 8 vCPU / 16 GB RAM com Ubuntu 22.04 LTS e instale Docker Engine e Docker Compose.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">02</span> Configuração de DNS Wildcard</div><p>Crie uma entrada DNS tipo A apontando `*.suaempresa.com.br` para o IP público da VPS.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">03</span> Subida do Cluster Integrado</div><p>Execute `docker compose up -d` na pasta do ecossistema e acesse os painéis com certificados SSL automáticos.</p></div>
+    <div class="step-card"><div class="step-head"><span class="step-badge">01</span> Passo 1: Contratar a VPS (Tempo estimado: 3 minutos)</div><p>Acesse um provedor de nuvem confiável (como Hetzner Cloud, DigitalOcean, Contabo ou AWS Lightsail). Escolha o plano com 8 vCPU e 16 GB RAM, selecione o sistema operacional Ubuntu 22.04 LTS e clique em 'Criar Servidor'. Você receberá o IP da máquina por e-mail.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">02</span> Passo 2: Apontar o seu Domínio (Tempo estimado: 2 minutos)</div><p>No site onde você comprou seu domínio (Registro.br, Cloudflare, GoDaddy ou Hostinger), vá na aba DNS e crie um apontamento Tipo A com o nome `*` (asterisco) apontando para o IP da sua VPS. Isso garante que `mkt.suaempresa.com.br`, `crm.suaempresa.com.br` e `chat.suaempresa.com.br` funcionem sozinhos.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">03</span> Passo 3: Rodar o Comando de 1 Clique (Tempo estimado: 1 minuto)</div><p>Abra o terminal da VPS e cole o comando automático de inicialização. O sistema fará o download de todas as ferramentas, configurará os bancos de dados e ativará os certificados de segurança SSL em menos de 120 segundos.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">04</span> Passo 4: Acessar os Painéis no seu Navegador</div><p>Abra o navegador no seu computador e acerte o endereço: `crm.suaempresa.com.br` para seus vendedores, `chat.suaempresa.com.br` para o atendimento e `mkt.suaempresa.com.br` para as campanhas de marketing.</p></div>
   </div>
 
   <div class="sec-head" style="margin-top: 48px;">
     <div class="sec-info">
-      <span class="sec-num">Seção 06 · Guia de Modularidade &amp; Hot-Swap</span>
-      <h2>Adição, Substituição &amp; Remoção de Módulos</h2>
-      <p class="sec-note">Como personalizar o ecossistema e trocar ferramentas sem quebrar o cluster nem interromper a operação.</p>
+      <span class="sec-num">Seção 06 · Guia de Modularidade, Expansão &amp; Hot-Swap</span>
+      <h2>Adição, Substituição &amp; Remoção de Ferramentas (Princípio do Lego)</h2>
+      <p class="sec-note">Como personalizar o ecossistema e trocar ferramentas sem quebrar o cluster nem interromper a operação comercial.</p>
     </div>
   </div>
 
   <div class="racional-box" style="margin-bottom: 20px;">
-    <p><strong>🧩 Princípio de Acoplamento Fraco:</strong> A arquitetura foi projetada sob o princípio de Acoplamento Fraco (Loose Coupling). Nenhuma ferramenta conversa com outra de forma proprietária rígida. Todas as trocas de informação ocorrem através de Webhooks padronizados no barramento n8n e autenticação federada via OpenID Connect no Keycloak. Isso significa que qualquer componente da stack pode ser inserido, substituído ou removido como um bloco de Lego, sem afetar o funcionamento dos outros serviços.</p>
+    <p><strong>🧩 O Princípio das Tomadas Independentes:</strong> A arquitetura opera sob o princípio de 'Tomadas e Aparelhos Independentes'. Nenhuma ferramenta fica grudada ou dependente da outra com código travado. Imagine uma régua de tomadas na sua sala: a sua TV (Twenty CRM) e a sua Caixa de Som (Chatwoot) funcionam perfeitamente mesmo se você desligar o Abajur (Mautic). Se você quiser trocar o abajur por uma luminária moderna, basta tirar da tomada e plugar a nova. Nada na sua sala quebra.</p>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">1. Protocolo de Inserção de Novas Ferramentas</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 20px 0 12px; color: var(--ink);">1. Protocolo de Inserção de Novas Ferramentas (Plug-and-Play)</h3>
   <div class="steps-grid">
     
         <div class="step-card">
-          <div class="step-head">1. Definição do Serviço no Docker Compose</div>
-          <p>Adicione o novo serviço ao arquivo `docker-compose.override.yml` (evitando alterar o arquivo principal). Vincule-o obrigatoriamente à rede `ecosystem_net` e defina as labels do Traefik para roteamento sob o subdomínio desejado (ex: `forms.suaempresa.com.br`).</p>
+          <div class="step-head">1. Escolha a Nova Ferramenta</div>
+          <p>Selecione o módulo open source desejado (por exemplo, um gerador de formulários como o Typebot ou uma ferramenta de agendamento como o Cal.com).</p>
         </div>
         
         <div class="step-card">
-          <div class="step-head">2. Provisionamento do Banco de Dados</div>
-          <p>Caso a ferramenta necessite de persistência relacional, crie uma base de dados dedicada no cluster PostgreSQL existente (`CREATE DATABASE db_nova_ferramenta;`) em vez de subir outro contêiner de banco.</p>
+          <div class="step-head">2. Plugue na Rede com 4 Linhas</div>
+          <p>Abra o arquivo de extensão `docker-compose.override.yml`, cole o bloco pronto da ferramenta e defina o endereço web desejado (ex: `forms.suaempresa.com.br`).</p>
         </div>
         
         <div class="step-card">
-          <div class="step-head">3. Conexão ao Barramento de Eventos (n8n)</div>
-          <p>Configure o webhook de saída da nova ferramenta apontando para um endpoint de gatilho no n8n (`http://n8n:5678/webhook/novo-evento`), integrando-a instantaneamente ao CRM e WhatsApp.</p>
-        </div>
-        
-        <div class="step-card">
-          <div class="step-head">4. Federação de Identidade no Keycloak (Opcional)</div>
-          <p>Se a ferramenta suportar OIDC/OAuth2, crie um novo Client no realm corporativo do Keycloak para que a equipe utilize a mesma credencial de login.</p>
+          <div class="step-head">3. Conecte no Painel Visual do n8n</div>
+          <p>No n8n, conecte a 'caixinha' da nova ferramenta ao seu CRM e WhatsApp arrastando uma linha no editor visual, sem escrever uma única linha de código de programação.</p>
         </div>
         
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 12px; color: var(--ink);">2. Protocolo de Hot-Swap (Substituição de Ferramenta sem Downtime)</h3>
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 12px; color: var(--ink);">2. Protocolo de Hot-Swap (Substituição de Ferramenta sem Parar o Negócio)</h3>
   <div class="integ-card" style="margin-bottom: 16px;">
-    <p style="white-space: pre-line;">1. Subir o Novo Serviço em Paralelo: Inicie o novo contêiner em um subdomínio temporário (ex: `novo-mkt.empresa.com.br`) na mesma rede `ecosystem_net`;
-2. Replicar os Fluxos no n8n: Crie uma versão paralela do workflow no n8n apontando para a nova ferramenta;
-3. Migração de Dados: Exporte os contatos/histórico do serviço antigo e importe no novo;
-4. Virada de Rota no Traefik: Altere a label do Traefik no `docker-compose.yml` para que o subdomínio principal (`mkt.empresa.com.br`) passe a apontar para o novo contêiner;
-5. Descomissionamento Seguro: Desligue o contêiner antigo com `docker compose stop <servico_antigo>` e preserve o volume de backup.</p>
+    <p style="white-space: pre-line;">1. Suba a Nova Ferramenta em Paralelo: Inicie a nova solução em um endereço temporário (ex: `novo-mkt.empresa.com.br`) mantendo a antiga funcionando;
+2. Transfira a Conexão no n8n: No painel visual do n8n, mude o nó de disparo para apontar para a nova ferramenta;
+3. Importe os Contatos: Faça o download da planilha de contatos da ferramenta antiga e importe na nova;
+4. Mude o Endereço Oficial: Altere a rota para que `mkt.empresa.com.br` aponte para a nova ferramenta;
+5. Desligue a Antiga com Segurança: Pare o serviço antigo digitando `docker compose stop <servico_antigo>`. Seus vendedores e clientes nem notarão a troca!</p>
   </div>
 
   <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 12px; color: var(--ink);">3. Protocolo de Remoção Segura de Serviços</h3>
   <div class="integ-card" style="margin-bottom: 16px;">
-    <p style="white-space: pre-line;">1. Desative os nós correspondentes no n8n para evitar erros de webhooks não respondidos;
-2. Remova as labels do Traefik para liberar a rota pública;
-3. Execute `docker compose stop <servico>` e `docker compose rm <servico>`;
-4. Mantenha os volumes de dados arquivados em storage secundário para histórico.</p>
+    <p style="white-space: pre-line;">1. No painel visual do n8n, desligue os gatilhos vinculados à ferramenta que deseja remover;
+2. No terminal da VPS, digite `docker compose stop <nome_ferramenta>`;
+3. Os dados históricos continuam guardados com segurança na pasta de backup da VPS para você consultar quando quiser.</p>
   </div>
 
-  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 12px; color: var(--ink);">4. Estudo de Caso Prático: Substituição do Mautic por outra ferramenta de automação (ex: Activepieces ou Novu)</h3>
-  <div class="entry" style="grid-template-columns: 1fr;">
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 12px; color: var(--ink);">4. Estudo de Caso Prático: Substituição do Mautic por outra ferramenta de e-mail marketing (ex: Novu ou Listmonk)</h3>
+  <div class="entry" style="grid-template-columns: 1fr; margin-bottom: 24px;">
     <div class="entry-body">
-      <p><strong>1. Isolamento Operacional:</strong> O Twenty CRM e o Chatwoot não conversam diretamente com o Mautic; eles conversam com o n8n. Logo, o CRM e o WhatsApp continuam operando 100% normalmente.</p>
-      <p><strong>2. Início do Novo Contêiner:</strong> <code>Sobe-se o novo contêiner no `docker-compose.override.yml` com a label `traefik.http.routers.automacao.rule=Host('automacao.empresa.com.br')`.</code></p>
-      <p><strong>3. Chaveamento no n8n:</strong> No n8n, substitui-se o nó 'Mautic: Create Lead' pelo nó 'Activepieces: Trigger Flow'. Nenhuma linha de código ou configuração nos outros módulos precisa ser alterada.</p>
-      <p style="color: var(--green); font-weight: 600;"><strong>4. Veredito Final:</strong> A migração ocorre com ZERO impacto para vendedores no CRM e ZERO impacto para operadores no Chatwoot.</p>
+      <p><strong>1. Isolamento Operacional:</strong> O Twenty CRM e o Chatwoot não conversam com o Mautic diretamente, eles conversam com o n8n. Por isso, a sua equipe de vendas e seus operadores no WhatsApp continuam trabalhando normalmente sem nenhuma parada.</p>
+      <p><strong>2. Início do Novo Contêiner:</strong> <code>O técnico ou gestor sobe a nova ferramenta de e-mail no arquivo de extensão sem mexer nas ferramentas existentes.</code></p>
+      <p><strong>3. Chaveamento no n8n:</strong> No painel visual do n8n, basta trocar a caixinha do Mautic pela caixinha do Listmonk com 2 cliques.</p>
+      <p style="color: var(--green); font-weight: 600;"><strong>4. Veredito Final:</strong> A troca é concluída com ZERO minutos de parada no atendimento e ZERO perda de leads comerciais.</p>
     </div>
   </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 12px; color: var(--ink);">5. Perguntas Frequentes (FAQ Operacional para Não-Técnicos)</h3>
+  
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <h4>❓ E se a VPS for reiniciada por falta de luz no datacenter?</h4>
+          <p style="margin-top: 6px;"><strong>Resposta:</strong> Todos os serviços possuem configuração de auto-recuperação (restart: always). Quando o servidor ligar novamente, todas as ferramentas e bancos de dados sobem sozinhos sem você precisar fazer nada.</p>
+        </div>
+        
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <h4>❓ Como funcionam os backups dos meus clientes e conversas?</h4>
+          <p style="margin-top: 6px;"><strong>Resposta:</strong> Todas as informações de leads, negociações e mensagens de WhatsApp ficam armazenadas em uma pasta segura de dados (`/var/lib/postgresql/data`). Um script diário gera cópias automáticas que podem ser enviadas para o seu Google Drive ou Amazon S3.</p>
+        </div>
+        
+        <div class="integ-card" style="margin-bottom: 12px;">
+          <h4>❓ Preciso contratar um desenvolvedor para usar no dia a dia?</h4>
+          <p style="margin-top: 6px;"><strong>Resposta:</strong> Não! O uso rotineiro da sua equipe é 100% feito pelo navegador web em telas modernas e em português, exatamente como se estivesse usando o RD Station, Trello ou WhatsApp Web.</p>
+        </div>
+        
 
 </div>
 
