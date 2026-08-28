@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Manual de Instalacao Cirurgica no Portainer · Arsenal Open Source</title>
+<title>Manual de Instalação Cirúrgica no Portainer · Arsenal Open Source</title>
 <style>
 
  :root {
@@ -171,10 +171,10 @@
   <header>
     <div class="header-top">
       <a class="back-link" href="../00-painel-consolidado-multialvo.html">← Painel Consolidado de Auditoria VPS</a>
-      <span class="camada-pill">FLUXO 5 · Playbook de Instalacao</span>
+      <span class="camada-pill">FLUXO 5 · Playbook de Instalação</span>
     </div>
     <div class="hero">
-      <h1>Manual de Instalacao Cirurgica no Portainer & Playbook de Operacao</h1>
+      <h1>Manual de Instalação Cirúrgica no Portainer & Playbook de Operação</h1>
       <p class="deck"><strong>Alvo:</strong> CryptPad</p>
     </div>
     <div class="hero-stats">
@@ -198,7 +198,7 @@
     <div class="target-box">
   <div class="target-tag">Alvo de Auditoria &amp; Incorporação</div>
   <h4>CryptPad</h4>
-  <p>Su?te Office Criptografada Zero-Knowledge · Garantia de Risco Zero e Isolamento Estrito da VPS.</p>
+  <p>Suíte Office Criptografada Zero-Knowledge · Garantia de Risco Zero e Isolamento Estrito da VPS.</p>
   <div class="target-pills">
     <span class="target-pill">Host: painel.vpsconexao.org</span>
     <span class="target-pill">Ingress: Traefik SNI</span>
@@ -209,46 +209,46 @@
   </header>
 
   <main>
-    <p><strong>P?blico-Alvo:</strong> Gestores, Consultores e Engenheiros de TI</p>
-<p><strong>Tempo Estimado de Execucao:</strong> 5 a 10 minutos</p>
-<p><strong>Garantia Arquitetural:</strong> Zero interferencia nas aplicacoes existentes (<code>mautic</code>, <code>evolution</code>, <code>n8n</code>, <code>mysql</code>, <code>postgres</code>)</p>
-<h2>1. Entendendo a Arquitetura Cirurgica (Para N?o-Tecnicos)</h2>
-<p>Pense na sua VPS como um <strong>edificio corporativo de alta seguran?a</strong>. As aplicacoes em produ??o (como seu CRM Mautic, o n8n e o Evolution API) j? ocupam salas estruturadas nesse edificio.</p>
-<p>A <strong>instala??o cir?rgica</strong> significa abrir uma nova sala independente para a nova su?te de ferramentas, com seus proprios arm?rios e cofres (volumes dedicados e banco isolado), conectando-se apenas ao <strong>corredor central</strong> (a rede <code>network_conexao</code>) e ? <strong>portaria central com identificacao automatica</strong> (o Traefik existente).</p>
-<p>Nenhuma sala existente ? tocada, nenhum dado ? exposto e nenhuma porta ? alterada.</p>
+    <p><strong>Público-Alvo:</strong> Gestores, Consultores e Engenheiros de TI</p>
+<p><strong>Tempo Estimado de Execução:</strong> 5 a 10 minutos</p>
+<p><strong>Garantia Arquitetural:</strong> Zero interferência nas aplicações existentes (<code>mautic</code>, <code>evolution</code>, <code>n8n</code>, <code>mysql</code>, <code>postgres</code>)</p>
+<h2>1. Entendendo a Arquitetura Cirúrgica (Para Não-Técnicos)</h2>
+<p>Pense na sua VPS como um <strong>edifício corporativo de alta segurança</strong>. As aplicações em produção (como seu CRM Mautic, o n8n e o Evolution API) já ocupam salas estruturadas nesse edifício.</p>
+<p>A <strong>instalação cirúrgica</strong> significa abrir uma nova sala independente para a nova suíte de ferramentas, com seus próprios armários e cofres (volumes dedicados e banco isolado), conectando-se apenas ao <strong>corredor central</strong> (a rede <code>network_conexao</code>) e à <strong>portaria central com identificação automática</strong> (o Traefik existente).</p>
+<p>Nenhuma sala existente é tocada, nenhum dado é exposto e nenhuma porta é alterada.</p>
 <h2>2. Fase 1: Apontamento de DNS no seu Provedor</h2>
-<p>Antes de subir a stack, acesse o painel de controle do seu dom?nio (Cloudflare, Registro.br, Hostinger ou AWS Route53) e crie os apontamentos do tipo <strong>A</strong>:</p>
+<p>Antes de subir a stack, acesse o painel de controle do seu domínio (Cloudflare, Registro.br, Hostinger ou AWS Route53) e crie os apontamentos do tipo <strong>A</strong>:</p>
 <p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Registro A: <code>docs.vpsconexao.org</code> -> IP da VPS</p>
 <div class='racional-box'>**Nota:** Se estiver utilizando Cloudflare, certifique-se de que a nuvem esteja inicialmente cinza (DNS Only) ou laranja com SSL/TLS configurado em modo **Full (Strict)**.</div>
-<h2>3. Fase 2: Implantacao da Stack no Painel Portainer</h2>
+<h2>3. Fase 2: Implantação da Stack no Painel Portainer</h2>
 <p>Siga o roteiro passo a passo:</p>
 <p>1. Acesse o seu painel de controle: <code>https://painel.vpsconexao.org</code>.</p>
-<p>2. Fa?a login com suas credenciais de administrador.</p>
+<p>2. Faça login com suas credenciais de administrador.</p>
 <p>3. No menu lateral esquerdo, clique em <strong>Stacks</strong>.</p>
-<p>4. Clique no bot?o azul superior <strong>+ Add stack</strong>.</p>
+<p>4. Clique no botão azul superior <strong>+ Add stack</strong>.</p>
 <p>5. No campo <strong>Name</strong>, digite exatamente: <code>cryptpad</code>.</p>
-<p>6. Na caixa de texto do <strong>Web editor</strong>, cole o conte?do integral do arquivo <code>02-stack-integrada-portainer.yml</code>.</p>
-<p>7. Role a p?gina at? o rodap? e clique no bot?o <strong>Deploy the stack</strong>.</p>
-<p>8. O Swarm baixar? as imagens oficiais, criar? os volumes nomeados e registrar? os novos subdom?nios no Traefik.</p>
-<h2>4. Fase 3: Wizard de Primeiro Acesso e Configuracao</h2>
-<p>Aguarde 60 a 90 segundos para a emissao automatica do certificado TLS Let's Encrypt. Em seguida, acesse as URLs:</p>
+<p>6. Na caixa de texto do <strong>Web editor</strong>, cole o conteúdo integral do arquivo <code>01-stack-swarm-producao-integrada.yml</code>.</p>
+<p>7. Role a página até o rodapé e clique no botão <strong>Deploy the stack</strong>.</p>
+<p>8. O Swarm baixará as imagens oficiais, criará os volumes nomeados e registrará os novos subdomínios no Traefik.</p>
+<h2>4. Fase 3: Wizard de Primeiro Acesso e Configuração</h2>
+<p>Aguarde 60 a 90 segundos para a emissão automática do certificado TLS Let's Encrypt. Em seguida, acesse as URLs:</p>
 <p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• <code>https://docs.vpsconexao.org</code></p>
-<h3>Procedimento para o Ecossistema Google Workspace (Se Aplic?vel):</h3>
-<p>1. <strong>Configuracao do Nextcloud (<code>https://drive.vpsconexao.org</code>):</strong></p>
-<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Crie o usu?rio administrador e senha.</p>
-<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• O banco de dados PostgreSQL j? estar? configurado automaticamente via vari?veis de ambiente.</p>
-<p>2. <strong>Integra??o do ONLYOFFICE com Nextcloud:</strong></p>
-<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Acesse o Nextcloud com usu?rio administrador, v? em <strong>Aplicativos</strong> e ative o app <strong>ONLYOFFICE</strong>.</p>
-<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Em <strong>Configura??es de Administracao</strong> > <strong>ONLYOFFICE</strong>, defina:</p>
-<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Endere?o do Servidor: <code>https://office.vpsconexao.org</code></p>
+<h3>Procedimento para o Ecossistema Google Workspace (Se Aplicável):</h3>
+<p>1. <strong>Configuração do Nextcloud (<code>https://drive.vpsconexao.org</code>):</strong></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Crie o usuário administrador e senha.</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• O banco de dados PostgreSQL já estará configurado automaticamente via variáveis de ambiente.</p>
+<p>2. <strong>Integração do ONLYOFFICE com Nextcloud:</strong></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Acesse o Nextcloud com usuário administrador, vá em <strong>Aplicativos</strong> e ative o app <strong>ONLYOFFICE</strong>.</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Em <strong>Configurações de Administração</strong> > <strong>ONLYOFFICE</strong>, defina:</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Endereço do Servidor: <code>https://office.vpsconexao.org</code></p>
 <p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Chave Secreta (JWT): <code>OnlyOfficeSecretKey2026_SecureToken!</code></p>
-<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Endere?o interno do Nextcloud: <code>http://workspace_nextcloud:80</code></p>
-<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Clique em <strong>Salvar</strong>. A edi??o colaborativa de documentos estar? 100% operacional.</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Endereço interno do Nextcloud: <code>http://workspace_nextcloud:80</code></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Clique em <strong>Salvar</strong>. A edição colaborativa de documentos estará 100% operacional.</p>
 <h2>5. Fase 4: Cadastro de Monitoramento no Uptime Kuma</h2>
-<p>No painel do seu Uptime Kuma j? em execu??o (<code>https://monitor.vpsconexao.org</code>):</p>
+<p>No painel do seu Uptime Kuma já em execução (<code>https://monitor.vpsconexao.org</code>):</p>
 <p>1. Clique em <strong>Adicionar Novo Monitor</strong>.</p>
 <p>2. Tipo de Monitor: <strong>HTTP(s)</strong>.</p>
-<p>3. Cadastre a URL de cada subdom?nio com intervalo de verifica??o de <strong>60 segundos</strong>.</p>
+<p>3. Cadastre a URL de cada subdomínio com intervalo de verificação de <strong>60 segundos</strong>.</p>
   </main>
 
   <footer class="report-footer">

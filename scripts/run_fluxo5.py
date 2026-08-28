@@ -87,7 +87,7 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    print("[FLUXO 5] Conectando ? API do Portainer para auditoria mec?nica da VPS...")
+    print("[FLUXO 5] Conectando à API do Portainer para auditoria mecânica da VPS...")
     client = PortainerClient()
     client.authenticate()
 
@@ -96,12 +96,12 @@ def main():
 
     engine = VPSDecisionEngine(audit_data)
 
-    print(f"[FLUXO 5] Auditoria conclu?da. Iniciando an?lise encadeada para {len(targets_to_run)} alvo(s)...\n")
+    print(f"[FLUXO 5] Auditoria concluída. Iniciando análise encadeada para {len(targets_to_run)} alvo(s)...\n")
 
     root_vps_output = os.path.join("output", "05-auditorias-vps")
     os.makedirs(root_vps_output, exist_ok=True)
 
-    # Executar avalia??o individual de cada alvo
+    # Executar avaliação individual de cada alvo
     for target in targets_to_run:
         t_tipo = target["tipo"]
         t_slug = target["slug"]
@@ -120,7 +120,7 @@ def main():
         save_db(t_tipo, t_slug, v["status"], v["score"], out_dir)
         print(f" -> [{t_tipo.upper()}] {decision['profile']['name']}: {v['status']} (Score: {v['score']}/100)")
 
-    # Se houver mais de 1 alvo, gerar relat?rio consolidado multi-alvo
+    # Se houver mais de 1 alvo, gerar relatório consolidado multi-alvo
     if len(targets_to_run) > 1:
         multi_decision = engine.evaluate_multi_target(targets_to_run)
         dummy_gen = VPSGenerator(audit_data, multi_decision["evaluations"][0], root_vps_output, base_domain=args.base_domain)

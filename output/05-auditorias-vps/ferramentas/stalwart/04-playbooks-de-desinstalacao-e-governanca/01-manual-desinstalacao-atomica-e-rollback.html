@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Manual de Desinstalacao Atomica e Rollback · Arsenal Open Source</title>
+<title>Manual de Desinstalação Atômica e Rollback · Arsenal Open Source</title>
 <style>
 
  :root {
@@ -171,10 +171,10 @@
   <header>
     <div class="header-top">
       <a class="back-link" href="../00-painel-consolidado-multialvo.html">← Painel Consolidado de Auditoria VPS</a>
-      <span class="camada-pill">FLUXO 5 · Playbook de Desinstalacao</span>
+      <span class="camada-pill">FLUXO 5 · Playbook de Desinstalação</span>
     </div>
     <div class="hero">
-      <h1>Manual de Desinstalacao Cirurgica e Rollback</h1>
+      <h1>Manual de Desinstalação Cirúrgica e Rollback</h1>
       <p class="deck"><strong>Alvo:</strong> Stalwart All-in-One Mail Server</p>
     </div>
     <div class="hero-stats">
@@ -209,41 +209,41 @@
   </header>
 
   <main>
-    <p><strong>Garantia de Isolamento:</strong> 100% de preservacao dos demais containers da VPS</p>
-<p><strong>Tempo de Execucao:</strong> Menos de 10 segundos</p>
-<h2>1. Principios de Seguranca e Isolamento</h2>
+    <p><strong>Garantia de Isolamento:</strong> 100% de preservação dos demais containers da VPS</p>
+<p><strong>Tempo de Execução:</strong> Menos de 10 segundos</p>
+<h2>1. Princípios de Segurança e Isolamento</h2>
 <p>Todos os recursos criados para o alvo <code>Stalwart All-in-One Mail Server</code> foram encapsulados no namespace <code>stalwart</code>.</p>
-<p>A remo??o da stack desconecta os servicos da rede <code>network_conexao</code> e revoga os roteadores do Traefik de forma atomica.</p>
-<p><strong>Mautic, Evolution, n8n, MySQL, PostgreSQL global e Portainer continuam operando normalmente sem nenhuma interrupcao.</strong></p>
-<h2>2. Procedimento 1: Remocao via Painel Portainer (Interface Gr?fica)</h2>
+<p>A remoção da stack desconecta os serviços da rede <code>network_conexao</code> e revoga os roteadores do Traefik de forma atômica.</p>
+<p><strong>Mautic, Evolution, n8n, MySQL, PostgreSQL global e Portainer continuam operando normalmente sem nenhuma interrupção.</strong></p>
+<h2>2. Procedimento 1: Remoção via Painel Portainer (Interface Gráfica)</h2>
 <p>1. Acesse: <code>https://painel.vpsconexao.org</code>.</p>
 <p>2. Clique em <strong>Stacks</strong> no menu lateral esquerdo.</p>
-<p>3. Localize a stack <code>stalwart</code> e marque a caixa de sele??o ao lado dela.</p>
-<p>4. Clique no bot?o vermelho <strong>Delete this stack</strong>.</p>
-<p>5. Confirme a exclusao na janela pop-up.</p>
-<p>6. Em menos de 10 segundos, todos os containers serao finalizados e as rotas web desligadas.</p>
-<h2>3. Procedimento 2: Remocao via Linha de Comando (CLI / SSH)</h2>
+<p>3. Localize a stack <code>stalwart</code> e marque a caixa de seleção ao lado dela.</p>
+<p>4. Clique no botão vermelho <strong>Delete this stack</strong>.</p>
+<p>5. Confirme a exclusão na janela pop-up.</p>
+<p>6. Em menos de 10 segundos, todos os containers serão finalizados e as rotas web desligadas.</p>
+<h2>3. Procedimento 2: Remoção via Linha de Comando (CLI / SSH)</h2>
 <p>Caso prefira executar via terminal SSH ou Termius:</p>
 <div class="code-box">
   <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
   <pre><code># 1. Remover a stack do Docker Swarm
 docker stack rm stalwart
 
-# 2. Aguardar 10 segundos para finalizacao completa dos processos
+# 2. Aguardar 10 segundos para finalização completa dos processos
 sleep 10
 
 # 3. Verificar que as demais stacks continuam 100% operacionais
 docker stack ls
 docker service ls</code></pre>
 </div>
-<h2>4. Limpeza Opcional de Volumes Persistentes (Liberacao de Disco)</h2>
-<p>Se voc? n?o planeja restaurar a aplica??o e deseja liberar espa?o em disco:</p>
+<h2>4. Limpeza Opcional de Volumes Persistentes (Liberação de Disco)</h2>
+<p>Se você não planeja restaurar a aplicação e deseja liberar espaço em disco:</p>
 <div class="code-box">
   <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
   <pre><code># Listar e remover apenas os volumes exclusivos da stack removida
 docker volume ls --filter name=stalwart -q | xargs -r docker volume rm</code></pre>
 </div>
-<p>*(Nenhum volume do Mautic, n8n, PostgreSQL global ou MySQL sera afetado).*</p>
+<p>*(Nenhum volume do Mautic, n8n, PostgreSQL global ou MySQL será afetado).*</p>
   </main>
 
   <footer class="report-footer">

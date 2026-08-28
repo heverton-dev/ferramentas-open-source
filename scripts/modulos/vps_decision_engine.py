@@ -83,7 +83,7 @@ class VPSDecisionEngine:
             "req_ram_gb": 2.5,
             "host_ports": [],
             "subdomains": ["office"],
-            "role": "Motor de Edi??o Colaborativa de Documentos"
+            "role": "Motor de Edição Colaborativa de Documentos"
         },
         "cryptpad": {
             "name": "CryptPad",
@@ -91,7 +91,7 @@ class VPSDecisionEngine:
             "req_ram_gb": 1.0,
             "host_ports": [],
             "subdomains": ["docs"],
-            "role": "Su?te Office Criptografada Zero-Knowledge"
+            "role": "Suíte Office Criptografada Zero-Knowledge"
         },
         "seafile": {
             "name": "Seafile Professional/Community",
@@ -99,7 +99,7 @@ class VPSDecisionEngine:
             "req_ram_gb": 1.5,
             "host_ports": [],
             "subdomains": ["drive"],
-            "role": "Sincronizacao R?pida de Arquivos Corporativos"
+            "role": "Sincronização Rápida de Arquivos Corporativos"
         },
         "zitadel": {
             "name": "Zitadel Identity Management",
@@ -107,7 +107,7 @@ class VPSDecisionEngine:
             "req_ram_gb": 1.5,
             "host_ports": [],
             "subdomains": ["sso"],
-            "role": "Gest?o de Identidade e Single Sign-On (SSO)"
+            "role": "Gestão de Identidade e Single Sign-On (SSO)"
         },
         "chatwoot": {
             "name": "Chatwoot Omnichannel",

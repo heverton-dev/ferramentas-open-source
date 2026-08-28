@@ -1,18 +1,18 @@
-# Matriz de Compatibilidade e Avaliacao de Risco Zero
+# Matriz de Compatibilidade e Avaliação de Risco Zero
 
-**Garantia de Isolamento:** 100% de Preservacao do Ecossistema em Producao  
+**Garantia de Isolamento:** 100% de Preservação do Ecossistema em Produção  
 **Alvo:** ONLYOFFICE Document Server | **Data:** 28/08/2026
 
-## 1. Principio do Isolamento Estrito
-A incorporacao e classificada como **Risco Zero** devido a 3 fatores deterministicos:
-1. **Roteamento Exclusivo por SNI:** O Traefik roteia o trafego baseado nos nomes de dominio, sem vincular portas no no fisico.
+## 1. Princípio do Isolamento Estrito
+A incorporação é classificada como **Risco Zero** devido a 3 fatores determinísticos:
+1. **Roteamento Exclusivo por SNI:** O Traefik roteia o tráfego baseado nos nomes de domínio, sem vincular portas no nó físico.
 2. **Namespace de Volumes Isolados:** Todos os volumes utilizam prefixos exclusivos (`workspace_*` ou `onlyoffice_*`).
-3. **Rede Overlay Unificada:** Conexao direta a rede `network_conexao` existente sem necessidade de reiniciar containers existentes.
+3. **Rede Overlay Unificada:** Conexão direta à rede `network_conexao` existente sem necessidade de reiniciar containers existentes.
 
 ## 2. Matriz de Risco por Componente
 | Componente Ativo | Impacto Esperado | Medida Preventiva |
 | :--- | :--- | :--- |
-| **Mautic CRM** | Zero Interferencia | Redes e bancos independentes |
-| **Evolution API** | Zero Interferencia | Nenhuma colisao de portas ou credenciais |
-| **n8n Workflow** | Zero Interferencia | Pode consumir webhooks dos novos servicos |
-| **PostgreSQL Global** | Zero Interferencia | Novo banco PostgreSQL dedicado na stack |
+| **Mautic CRM** | Zero Interferência | Redes e bancos independentes |
+| **Evolution API** | Zero Interferência | Nenhuma colisão de portas ou credenciais |
+| **n8n Workflow** | Zero Interferência | Pode consumir webhooks dos novos serviços |
+| **PostgreSQL Global** | Zero Interferência | Novo banco PostgreSQL dedicado na stack |
