@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Manual de Instalacao Cirurgica no Portainer · Arsenal Open Source</title>
+<style>
+
+ :root {
+ --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+ --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+ --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+ --paper: #F6F4EF;
+ --surface: #FFFFFF;
+ --surface-2: #FBF9F4;
+ --surface-dark: #0A0F1D;
+ --ink: #1B1E23;
+ --ink-2: #383D45;
+ --muted: #666E7A;
+ --rule: #D8D2C4;
+ --rule-soft: #EAE5D9;
+ --accent: #0284C7;
+ --accent-dark: #38BDF8;
+ --accent-soft: #E0F2FE;
+ --accent-soft-dark: #0C4A6E;
+ --green: #00875A;
+ --green-soft: #E3FCEF;
+ --gold: #FFAB00;
+ --gold-soft: #FFF0B3;
+ --flag: #DE350B;
+ --flag-soft: #FFEBE6;
+ --shadow: 0 1px 3px rgba(0,0,0,0.04);
+ }
+
+ @media (prefers-color-scheme: dark) {
+ :root {
+ --paper: #0E121B;
+ --surface: #141924;
+ --surface-2: #1A2130;
+ --ink: #E6E8ED;
+ --ink-2: #B0B5C0;
+ --muted: #7E8695;
+ --rule: #262F40;
+ --rule-soft: #1E2533;
+ --accent: var(--accent-dark);
+ --accent-soft: var(--accent-soft-dark);
+ --green: #57D9A3;
+ --green-soft: #162B22;
+ --gold: #FFC400;
+ --gold-soft: #332600;
+ --flag: #FF7452;
+ --flag-soft: #361B15;
+ --shadow: 0 1px 3px rgba(0,0,0,0.25);
+ }
+ }
+
+ *, *::before, *::after { box-sizing: border-box; }
+ html { font-size: 16px; scroll-behavior: smooth; }
+
+ * {
+ scrollbar-width: thin;
+ scrollbar-color: var(--accent) transparent;
+ }
+ ::-webkit-scrollbar {
+ width: 4px;
+ height: 4px;
+ }
+ ::-webkit-scrollbar-track {
+ background: transparent;
+ }
+ ::-webkit-scrollbar-thumb {
+ background: var(--accent);
+ border-radius: 4px;
+ }
+
+ body {
+ margin: 0; padding: 0;
+ background: var(--paper);
+ color: var(--ink);
+ font-family: var(--font-sans);
+ line-height: 1.6;
+ -webkit-font-smoothing: antialiased;
+ }
+
+ .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+
+ header { margin-bottom: 32px; }
+ .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+ .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+ .back-link:hover { color: var(--accent); }
+ .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+
+ .hero { margin: 20px 0 24px; }
+ h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 38px); line-height: 1.18; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
+ h2 { font-family: var(--font-serif); font-size: 24px; margin: 32px 0 16px; color: var(--ink); border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+ h3 { font-family: var(--font-serif); font-size: 19px; margin: 24px 0 12px; color: var(--ink); }
+ .deck { font-size: 16px; line-height: 1.65; color: var(--ink-2); margin: 0 0 20px; }
+
+ .hero-stats {
+ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+ gap: 12px; margin: 24px 0 32px;
+ }
+ .stat-card {
+ background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+ padding: 12px 16px; box-shadow: var(--shadow);
+ }
+ .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+ .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+
+ .target-box { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 3px; padding: 18px 20px; margin: 24px 0; }
+ .target-tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--accent); }
+ .target-box h4 { font-family: var(--font-serif); font-size: 20px; margin: 6px 0 8px; color: var(--ink); }
+ .target-box p { margin: 0 0 10px; font-size: 14px; color: var(--ink-2); }
+ .target-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+ .target-pill { font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+ .racional-box {
+ background: var(--surface-2);
+ border-left: 4px solid var(--green);
+ padding: 16px 20px;
+ margin: 24px 0;
+ font-size: 14px;
+ color: var(--ink-2);
+ border-radius: 0 3px 3px 0;
+ line-height: 1.6;
+ }
+
+ .tablewrap { width: 100%; overflow-x: auto; margin: 20px 0 32px 0; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
+ table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+ thead { background: var(--surface-2); border-bottom: 1px solid var(--rule); }
+ th { text-align: left; padding: 10px 14px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; white-space: nowrap; }
+ td { padding: 12px 14px; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; color: var(--ink); }
+ tr:last-child td { border-bottom: none; }
+ tr:hover td { background: var(--surface-2); }
+
+ .code-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 3px; padding: 16px; font-family: var(--mono); font-size: 12.5px; overflow-x: auto; color: var(--ink); position: relative; margin: 16px 0 24px; }
+ .code-box pre { margin: 0; font-family: inherit; }
+ code { font-family: var(--mono); font-size: 0.9em; background: var(--surface-2); padding: 2px 5px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+
+ .copy-btn {
+ position: absolute;
+ top: 8px;
+ right: 8px;
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ color: var(--muted);
+ font-family: var(--mono);
+ font-size: 10.5px;
+ font-weight: 600;
+ padding: 3px 8px;
+ border-radius: 3px;
+ cursor: pointer;
+ transition: all 0.2s ease;
+ }
+ .copy-btn:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+ .report-footer {
+ text-align: center;
+ font-size: 12px;
+ color: var(--muted);
+ font-family: var(--mono);
+ margin-top: 48px;
+ padding-top: 24px;
+ border-top: 1px solid var(--rule);
+ }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="header-top">
+      <a class="back-link" href="../00-painel-consolidado-multialvo.html">← Painel Consolidado de Auditoria VPS</a>
+      <span class="camada-pill">FLUXO 5 · Playbook de Instalacao</span>
+    </div>
+    <div class="hero">
+      <h1>Manual de Instalacao Cirurgica no Portainer & Playbook de Operacao</h1>
+      <p class="deck"><strong>Alvo:</strong> Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)</p>
+    </div>
+    <div class="hero-stats">
+  <div class="stat-card">
+    <div class="num">12 vCPUs</div>
+    <div class="lbl">Capacidade de CPU</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">47.05 GB</div>
+    <div class="lbl">Memória RAM Global</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color: var(--green);">~43.99 GB</div>
+    <div class="lbl">Headroom Livre</div>
+  </div>
+  <div class="stat-card">
+    <div class="num" style="color: var(--accent);">100/100</div>
+    <div class="lbl">Score de Viabilidade</div>
+  </div>
+</div>
+    <div class="target-box">
+  <div class="target-tag">Alvo de Auditoria &amp; Incorporação</div>
+  <h4>Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)</h4>
+  <p>Stack e Módulos de Produção · Garantia de Risco Zero e Isolamento Estrito da VPS.</p>
+  <div class="target-pills">
+    <span class="target-pill">Host: painel.vpsconexao.org</span>
+    <span class="target-pill">Ingress: Traefik SNI</span>
+    <span class="target-pill">Docker Swarm</span>
+    <span class="target-pill">Isolamento: 100%</span>
+  </div>
+</div>
+  </header>
+
+  <main>
+    <p><strong>P?blico-Alvo:</strong> Gestores, Consultores e Engenheiros de TI</p>
+<p><strong>Tempo Estimado de Execucao:</strong> 5 a 10 minutos</p>
+<p><strong>Garantia Arquitetural:</strong> Zero interferencia nas aplicacoes existentes (<code>mautic</code>, <code>evolution</code>, <code>n8n</code>, <code>mysql</code>, <code>postgres</code>)</p>
+<h2>1. Entendendo a Arquitetura Cirurgica (Para N?o-Tecnicos)</h2>
+<p>Pense na sua VPS como um <strong>edificio corporativo de alta seguran?a</strong>. As aplicacoes em produ??o (como seu CRM Mautic, o n8n e o Evolution API) j? ocupam salas estruturadas nesse edificio.</p>
+<p>A <strong>instala??o cir?rgica</strong> significa abrir uma nova sala independente para a nova su?te de ferramentas, com seus proprios arm?rios e cofres (volumes dedicados e banco isolado), conectando-se apenas ao <strong>corredor central</strong> (a rede <code>network_conexao</code>) e ? <strong>portaria central com identificacao automatica</strong> (o Traefik existente).</p>
+<p>Nenhuma sala existente ? tocada, nenhum dado ? exposto e nenhuma porta ? alterada.</p>
+<h2>2. Fase 1: Apontamento de DNS no seu Provedor</h2>
+<p>Antes de subir a stack, acesse o painel de controle do seu dom?nio (Cloudflare, Registro.br, Hostinger ou AWS Route53) e crie os apontamentos do tipo <strong>A</strong>:</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Registro A: <code>campaigns.vpsconexao.org</code> -> IP da VPS</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Registro A: <code>crm.vpsconexao.org</code> -> IP da VPS</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Registro A: <code>chat.vpsconexao.org</code> -> IP da VPS</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Registro A: <code>wpp.vpsconexao.org</code> -> IP da VPS</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Registro A: <code>news.vpsconexao.org</code> -> IP da VPS</p>
+<div class='racional-box'>**Nota:** Se estiver utilizando Cloudflare, certifique-se de que a nuvem esteja inicialmente cinza (DNS Only) ou laranja com SSL/TLS configurado em modo **Full (Strict)**.</div>
+<h2>3. Fase 2: Implantacao da Stack no Painel Portainer</h2>
+<p>Siga o roteiro passo a passo:</p>
+<p>1. Acesse o seu painel de controle: <code>https://painel.vpsconexao.org</code>.</p>
+<p>2. Fa?a login com suas credenciais de administrador.</p>
+<p>3. No menu lateral esquerdo, clique em <strong>Stacks</strong>.</p>
+<p>4. Clique no bot?o azul superior <strong>+ Add stack</strong>.</p>
+<p>5. No campo <strong>Name</strong>, digite exatamente: <code>ecos-rd-station-suite</code>.</p>
+<p>6. Na caixa de texto do <strong>Web editor</strong>, cole o conte?do integral do arquivo <code>02-stack-integrada-portainer.yml</code>.</p>
+<p>7. Role a p?gina at? o rodap? e clique no bot?o <strong>Deploy the stack</strong>.</p>
+<p>8. O Swarm baixar? as imagens oficiais, criar? os volumes nomeados e registrar? os novos subdom?nios no Traefik.</p>
+<h2>4. Fase 3: Wizard de Primeiro Acesso e Configuracao</h2>
+<p>Aguarde 60 a 90 segundos para a emissao automatica do certificado TLS Let's Encrypt. Em seguida, acesse as URLs:</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• <code>https://campaigns.vpsconexao.org</code></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• <code>https://crm.vpsconexao.org</code></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• <code>https://chat.vpsconexao.org</code></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• <code>https://wpp.vpsconexao.org</code></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• <code>https://news.vpsconexao.org</code></p>
+<h3>Procedimento para o Ecossistema Google Workspace (Se Aplic?vel):</h3>
+<p>1. <strong>Configuracao do Nextcloud (<code>https://drive.vpsconexao.org</code>):</strong></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Crie o usu?rio administrador e senha.</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• O banco de dados PostgreSQL j? estar? configurado automaticamente via vari?veis de ambiente.</p>
+<p>2. <strong>Integra??o do ONLYOFFICE com Nextcloud:</strong></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Acesse o Nextcloud com usu?rio administrador, v? em <strong>Aplicativos</strong> e ative o app <strong>ONLYOFFICE</strong>.</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Em <strong>Configura??es de Administracao</strong> > <strong>ONLYOFFICE</strong>, defina:</p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Endere?o do Servidor: <code>https://office.vpsconexao.org</code></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Chave Secreta (JWT): <code>OnlyOfficeSecretKey2026_SecureToken!</code></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Endere?o interno do Nextcloud: <code>http://workspace_nextcloud:80</code></p>
+<p style='margin-left: 1rem; margin-bottom: 0.4rem;'>• Clique em <strong>Salvar</strong>. A edi??o colaborativa de documentos estar? 100% operacional.</p>
+<h2>5. Fase 4: Cadastro de Monitoramento no Uptime Kuma</h2>
+<p>No painel do seu Uptime Kuma j? em execu??o (<code>https://monitor.vpsconexao.org</code>):</p>
+<p>1. Clique em <strong>Adicionar Novo Monitor</strong>.</p>
+<p>2. Tipo de Monitor: <strong>HTTP(s)</strong>.</p>
+<p>3. Cadastre a URL de cada subdom?nio com intervalo de verifica??o de <strong>60 segundos</strong>.</p>
+  </main>
+
+  <footer class="report-footer">
+    <p>Arsenal Open Source · Fábrica Universal AIDD · Governança e Engenharia de VPS · 2026</p>
+  </footer>
+</div>
+
+<script>
+function copyCode(btn) {
+  const code = btn.nextElementSibling.innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const originalText = btn.innerText;
+    btn.innerText = 'Copiado!';
+    btn.style.background = 'var(--green)';
+    btn.style.color = '#FFFFFF';
+    setTimeout(() => {
+      btn.innerText = originalText;
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

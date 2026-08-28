@@ -42,6 +42,21 @@ class VPSDecisionEngine:
                 {"name": "Directus", "ram_gb": 1.5, "role": "Headless CMS & API de Dados"},
                 {"name": "n8n", "ram_gb": 1.5, "role": "Orquestrador de Workflows (Ja Ativo na VPS)"}
             ]
+        },
+        "ecos-rd-station-suite": {
+            "name": "Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)",
+            "req_cpu": 4,
+            "req_ram_gb": 6.5,
+            "host_ports": [],
+            "subdomains": ["campaigns", "crm", "chat", "wpp", "news"],
+            "recommended_db": "postgres",
+            "components": [
+                {"name": "Mautic", "ram_gb": 1.5, "role": "Automacao de Marketing e Lead Scoring (Ja Ativo na VPS)"},
+                {"name": "Twenty CRM", "ram_gb": 1.5, "role": "Pipeline Comercial e Gestao de Contatos"},
+                {"name": "Chatwoot", "ram_gb": 1.5, "role": "Atendimento Omnichannel e Inbox Unificada"},
+                {"name": "Evolution API", "ram_gb": 1.0, "role": "Gateway WhatsApp (Ja Ativo na VPS)"},
+                {"name": "Listmonk", "ram_gb": 1.0, "role": "Newsletters e E-mail em Massa"}
+            ]
         }
     }
 
