@@ -166,7 +166,7 @@ class VPSDecisionEngine:
             "role": "Engine Corporativo de Extracao RAG e OCR Avancado"
         },
         "buzz": {
-            "name": "Block Buzz Messaging Workspace",
+            "name": "Block Buzz Messaging Platform",
             "req_cpu": 2.0,
             "req_ram_gb": 3.0,
             "host_ports": [],

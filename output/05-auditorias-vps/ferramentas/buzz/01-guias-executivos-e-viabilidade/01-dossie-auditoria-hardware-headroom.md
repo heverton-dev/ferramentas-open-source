@@ -1,6 +1,6 @@
 # Relatório Executivo de Auditoria e Viabilidade da VPS
 
-**Alvo de Incorporação:** Block Buzz Messaging Workspace  
+**Alvo de Incorporação:** Block Buzz Messaging Platform  
 **Data da Auditoria:** 28/08/2026  
 **Veredito Técnico:** **TOTALMENTE VIAVEL (100% HOMOLOGADO)** (Score: 100/100)  
 **Host Auditado:** `painel.vpsconexao.org` (Docker Swarm Ativo)
@@ -35,5 +35,5 @@
 
 | Serviço / Componente | Papel Operacional | Subdomínio de Acesso | Método de Roteamento |
 | :--- | :--- | :--- | :--- |
-| **Buzz Service** | Componente da Stack Block Buzz Messaging Workspace | `https://buzz.vpsconexao.org` | Roteamento Traefik SNI |
+| **Buzz Service** | Componente da Stack Block Buzz Messaging Platform | `https://buzz.vpsconexao.org` | Roteamento Traefik SNI |
 

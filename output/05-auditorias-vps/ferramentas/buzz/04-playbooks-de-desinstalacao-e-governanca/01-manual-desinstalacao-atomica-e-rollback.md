@@ -1,6 +1,6 @@
 # Manual de Desinstalação Cirúrgica e Rollback
 
-**Alvo:** Block Buzz Messaging Workspace  
+**Alvo:** Block Buzz Messaging Platform  
 **Garantia de Isolamento:** 100% de preservação dos demais containers da VPS  
 **Tempo de Execução:** Menos de 10 segundos
 
@@ -8,7 +8,7 @@
 
 ## 1. Princípios de Segurança e Isolamento
 
-Todos os recursos criados para o alvo `Block Buzz Messaging Workspace` foram encapsulados no namespace `buzz`.
+Todos os recursos criados para o alvo `Block Buzz Messaging Platform` foram encapsulados no namespace `buzz`.
 A remoção da stack desconecta os serviços da rede `network_conexao` e revoga os roteadores do Traefik de forma atômica.
 **Mautic, Evolution, n8n, MySQL, PostgreSQL global e Portainer continuam operando normalmente sem nenhuma interrupção.**
 
