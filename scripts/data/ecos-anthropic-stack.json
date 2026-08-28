@@ -1,0 +1,1308 @@
+{
+  "slug": "anthropic-stack",
+  "nome_ecossistema": "Anthropic Stack Soberano",
+  "titulo": "Macro-Ecossistema de IA Aberta: Modelos, Agentes, Orquestração & Inferência",
+  "subtitulo": "Arquitetura Aberta Integrada para Substituição Soberana do Ecossistema Anthropic (Claude Code, API, MCP) com Quinteto Soberano por Grupo, SSO, Barramento de Eventos e MCPs",
+  "deck": "Dossiê completo de desmantelamento soberano para o Macro-Ecossistema Anthropic (Claude Code, Claude API, Model Context Protocol, AI Gateway e Managed Agents). Cada frente de desenvolvimento é estruturada com seu próprio Quinteto Soberano (A Mais Robusta, Mais Completa, Mais Moderna, Mais Leve e Mais Simples), acompanhada de análise de TCO, guias práticos de deploy, aderência white-label e ecossistema agêntico de MCPs nativos para integração.",
+  "saas_substituido": "Anthropic Claude API + Claude Code + MCP Protocol + AI Gateway + Managed Agents",
+  "stats": {
+    "total_pilares": 3,
+    "total_ferramentas": 15,
+    "licencas_osi": "100%",
+    "economia_media": "98.4%",
+    "autonomia": "100% Self-Hosted & Open Source"
+  },
+  "pilares": [
+    {
+      "pilar_id": "orchestration_agents",
+      "nome_pilar": "Grupo 1: Orchestração de Agentes & Modelos LLM",
+      "modulo_saas_alvo": "Anthropic Claude API + Claude Code + Managed Agents",
+      "descricao_pilar": "Frente responsável pela construção autônoma de agentes de IA, orquestração de modelos abertos, construção visual de workflows sem código e gerenciamento de memória de longo prazo (RAG).",
+      "subtotal_economia_anual": "R$ 156.000/ano",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "classificacao": "A Mais Completa",
+          "slug": "ollama",
+          "nome": "Ollama",
+          "subtitulo": "Executor Local de Modelos LLM Abertos (Llama 2, Mistral, Neural Chat)",
+          "papel_no_pilar": "Motor central de inferência local para rodar modelos de linguagem abertos sem requisição à API Anthropic.",
+          "saas_substituido_direto": "Anthropic Claude API (Tier Enterprise / Managed Agents)",
+          "racional_escolha": "Permite rodar modelos de 7B a 70B parâmetros localmente com qualidade comparable aos modelos proprietários, eliminando dependência de API remota e acesso seguro a dados sensíveis.",
+          "economia_anual_str": "R$ 84.000/ano (Economia em API calls + Enterprise licensing)",
+          "licenca_osi": "MIT",
+          "repositorio_github": "https://github.com/ollama/ollama",
+          "o_que_faz": "Fornece CLI e servidor HTTP para executar modelos LLM abertos em uma única máquina ou cluster.",
+          "como_funciona": "Binário Go estático que compacta modelos em formato proprietário otimizado e executa inferência em paralelo com quantização.",
+          "comando_rapido": "ollama run mistral",
+          "requisitos_infra": {
+            "ram_minima": "8 GB RAM",
+            "cpu_minima": "4 vCPU (GPU NVIDIA recomendado)"
+          },
+          "veredito": "Substitui completamente a necessidade de chamadas remotas à Claude API para operações de raciocínio e geração de texto padrão.",
+          "passos_praticos": [
+            {
+              "titulo": "Instalação",
+              "descricao": "Baixe o binário para Linux/Mac/Windows e execute `ollama serve`."
+            },
+            {
+              "titulo": "Download de Modelos",
+              "descricao": "Execute `ollama pull mistral` ou `ollama pull neural-chat` para download automático de modelos 7B otimizados."
+            },
+            {
+              "titulo": "Teste Local",
+              "descricao": "Chame a API em http://localhost:11434/api/generate com seus prompts e receba inferência instantânea."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Headless)",
+            "stack_ui": "API REST / Swagger",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Serviço de backend puro sem UI, operando sob domínio corporativo (ex: `llm.empresa.com.br`).",
+            "manutenibilidade_upgrades": "Excelente: Atualizações de modelos via `ollama pull` sem risco de downtime."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "mcp-ollama",
+              "comando_ou_repo": "npx -y @modelcontextprotocol/server-ollama",
+              "descricao": "Servidor MCP para agentes de IA consultarem modelos locais sem latência."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-ollama-inference",
+              "comando_ou_repo": ".claude/skills/ollama-inference/SKILL.md",
+              "descricao": "Skill para agentes LLM executarem inferência em Ollama com fallback à API remota."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "ollama-cli",
+              "comando_ou_repo": "ollama ls && ollama run llama2",
+              "descricao": "Gerenciamento de modelos e execução interativa."
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "classificacao": "A Mais Robusta",
+          "slug": "langchain",
+          "nome": "LangChain",
+          "subtitulo": "Framework de Composição de Agentes, Chains & Memory para LLMs",
+          "papel_no_pilar": "Infraestrutura de desenvolvimento de agentes com suporte a tools, memory e fallback automático entre modelos.",
+          "saas_substituido_direto": "Anthropic Claude Code / Managed Agents Runtime",
+          "racional_escolha": "Oferece abstrações robustas para construir agentes complexos sobre Ollama, OpenAI, Anthropic ou qualquer LLM, com suporte nativo a vector stores, caching e rastreamento de custos.",
+          "economia_anual_str": "R$ 24.000/ano",
+          "licenca_osi": "MIT",
+          "repositorio_github": "https://github.com/langchain-ai/langchain",
+          "o_que_faz": "Fornece abstrações Python e TypeScript para construir agentes de IA compostos com memory e tool calling.",
+          "como_funciona": "SDK Python/TypeScript com suporte nativo a chain execution, memory backends (Redis, PostgreSQL) e vector stores (Pinecone, Weaviate, Milvus).",
+          "comando_rapido": "pip install langchain && python -c \"from langchain.chat_models import ChatOpenAI; chain = ...\"",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "2 vCPU"
+          },
+          "veredito": "Framework padrão de fato para desenvolvimento de agentes em produção, sustentado pela comunidade global e empresas como Stripe e Hugging Face.",
+          "passos_praticos": [
+            {
+              "titulo": "Criação de Chain Simples",
+              "descricao": "Defina um prompt template e conecte ao Ollama ou Anthropic API com fallback automático."
+            },
+            {
+              "titulo": "Adição de Tools",
+              "descricao": "Integre ferramentas como busca na web, cálculo e acesso a banco de dados para o agente raciocinar."
+            },
+            {
+              "titulo": "Memory & RAG",
+              "descricao": "Configure suporte a long-term memory em Redis e retrieval de documentos em vector store."
+            }
+          ],
+          "design_system": {
+            "esforco": "Médio (SDK Integration)",
+            "stack_ui": "Python / TypeScript SDK",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Totalmente customizável via código Python/TypeScript com suporte a prompts corporativos e personas de agentes.",
+            "manutenibilidade_upgrades": "Excelente: Atualizações de SDK sem breaking changes garantidas."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "mcp-langchain",
+              "comando_ou_repo": "npx -y @modelcontextprotocol/server-langchain",
+              "descricao": "Servidor MCP para agentes construídos com LangChain se comunicarem entre si."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-chain-builder",
+              "comando_ou_repo": ".claude/skills/chain-builder/SKILL.md",
+              "descricao": "Skill para criar chains complexas a partir de descrições em linguagem natural."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "langchain-cli",
+              "comando_ou_repo": "langchain serve",
+              "descricao": "Servidor de chains para deploy rápido de agentes."
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "classificacao": "A Mais Moderna",
+          "slug": "llamaindex",
+          "nome": "LlamaIndex",
+          "subtitulo": "Framework de RAG (Retrieval-Augmented Generation) com Vector Stores",
+          "papel_no_pilar": "Camada de knowledge retrieval para agentes acessarem documentos corporativos sem sobrecarga de context window.",
+          "saas_substituido_direto": "Anthropic Claude Code / Knowledge Base Built-in",
+          "racional_escolha": "Indexação automática de PDFs, markdowns e bases de dados com chunking inteligente e reranking para recuperação precisa de contexto.",
+          "economia_anual_str": "R$ 18.000/ano",
+          "licenca_osi": "MIT",
+          "repositorio_github": "https://github.com/run-llama/llama_index",
+          "o_que_faz": "Ingere documentos, cria índices vetoriais e recupera contexto relevante para agentes consultarem bases de conhecimento.",
+          "como_funciona": "SDK Python com suporte a loaders de múltiplos formatos (PDF, Docx, HTML) e integração com vector stores (Pinecone, Weaviate, Chroma).",
+          "comando_rapido": "pip install llama-index && from llama_index import GPTVectorStoreIndex, SimpleDirectoryReader",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "1 vCPU"
+          },
+          "veredito": "Padrão de fato para RAG, usado por startups de AI e enterprises para document QA e knowledge discovery.",
+          "passos_praticos": [
+            {
+              "titulo": "Carregamento de Documentos",
+              "descricao": "Crie um loader customizado para ler PDFs da pasta corporativa."
+            },
+            {
+              "titulo": "Criação de Índice Vetorial",
+              "descricao": "Gere embeddings com Ollama (MiniLM) e armazene em Chroma ou Weaviate."
+            },
+            {
+              "titulo": "Query & Raciocínio",
+              "descricao": "Consulte o índice e passe o contexto recuperado para o Ollama/Anthropic raciocinar."
+            }
+          ],
+          "design_system": {
+            "esforco": "Médio (SDK)",
+            "stack_ui": "Python SDK + Web UI (LlamaIndex Cloud opcional)",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Customização total de prompts de retrieval e parsing de documentos.",
+            "manutenibilidade_upgrades": "Estável com suporte contínuo."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "mcp-llamaindex",
+              "comando_ou_repo": "npx -y @modelcontextprotocol/server-llamaindex",
+              "descricao": "Servidor MCP para agentes consultarem índices de conhecimento."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-document-qa",
+              "comando_ou_repo": ".claude/skills/doc-qa/SKILL.md",
+              "descricao": "Responde perguntas sobre documentos corporativos indexados."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "llama-index-cli",
+              "comando_ou_repo": "python scripts/index_documents.py",
+              "descricao": "Geração de índices em batch."
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "classificacao": "A Mais Leve",
+          "slug": "flowise",
+          "nome": "Flowise",
+          "subtitulo": "Construtor Visual Drag-and-Drop de Workflows de IA",
+          "papel_no_pilar": "Interface visual para time não-técnico desenhar fluxos de agentes sem código Python.",
+          "saas_substituido_direto": "Anthropic Claude Code (Visual Agent Builder)",
+          "racional_escolha": "Oferece editor visual parecido com Make/Zapier especialmente otimizado para LLMs, com suporte a Ollama, OpenAI e Anthropic.",
+          "economia_anual_str": "R$ 14.400/ano",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/FlowiseAI/Flowise",
+          "o_que_faz": "Cria workflows de IA complexos arrastando nós de modelos, tools e lógica condicional.",
+          "como_funciona": "Node.js e React com execução de workflows em background via Bull Queue.",
+          "comando_rapido": "npm install -g flowise && flowise start",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "1 vCPU"
+          },
+          "veredito": "Melhor solução visual para prototipagem rápida de agentes complexos com múltiplas integrações.",
+          "passos_praticos": [
+            {
+              "titulo": "Criação de Nó de Modelo",
+              "descricao": "Adicione um nó do Ollama ou Anthropic apontando para seu endpoint local."
+            },
+            {
+              "titulo": "Adição de Tools",
+              "descricao": "Conecte ferramentas como HTTP, Calculator, SQL e Web Search ao fluxo."
+            },
+            {
+              "titulo": "Teste & Deploy",
+              "descricao": "Teste o workflow no editor e exporte como API REST ou chatbot embarcado."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Visual)",
+            "stack_ui": "React + Node.js",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Workflows completamente customizáveis com suporte a prompts corporativos.",
+            "manutenibilidade_upgrades": "Excelente: Workflows salvos em JSON são portáveis."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "flowise-mcp",
+              "comando_ou_repo": "npx -y flowise-mcp-server",
+              "descricao": "Servidor MCP para agentes dispararem workflows Flowise."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-workflow-executor",
+              "comando_ou_repo": ".claude/skills/workflow-executor/SKILL.md",
+              "descricao": "Executa workflows Flowise em resposta a eventos."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "flowise-cli",
+              "comando_ou_repo": "flowise export --id workflow-id",
+              "descricao": "Exportação de workflows para controle de versão."
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "classificacao": "A Mais Simples",
+          "slug": "anythingllm",
+          "nome": "AnythingLLM",
+          "subtitulo": "RAG Platform All-in-One com Chat Interface",
+          "papel_no_pilar": "Plataforma integrada de RAG com interface de chat pronta para hospedar conhecimento corporativo.",
+          "saas_substituido_direto": "ChatGPT / Claude Cloud (Knowledge Base)",
+          "racional_escolha": "Single-binary Go que encapsula Ollama, vector store, chunking e UI de chat em uma solução zero-dependencies.",
+          "economia_anual_str": "R$ 12.000/ano",
+          "licenca_osi": "MIT",
+          "repositorio_github": "https://github.com/Mintplex-Labs/anything-llm",
+          "o_que_faz": "Cria um sistema de chat que responde perguntas sobre documentos corporativos uploadados.",
+          "como_funciona": "Binário Go estático com SQLite embarcado e embeddings locais via Ollama.",
+          "comando_rapido": "docker run -d -p 3001:3001 --name anythingllm mintplexlabs/anythingllm:latest",
+          "requisitos_infra": {
+            "ram_minima": "4 GB RAM",
+            "cpu_minima": "2 vCPU"
+          },
+          "veredito": "A forma mais rápida e simples de deployar um knowledge base corporativo sem conhecimento técnico.",
+          "passos_praticos": [
+            {
+              "titulo": "Upload de Documentos",
+              "descricao": "Arraste PDFs e Markdowns para a interface e configure o modelo Ollama."
+            },
+            {
+              "titulo": "Criação de Workspace",
+              "descricao": "Isole diferentes bases de conhecimento por departamento ou projeto."
+            },
+            {
+              "titulo": "Chat & Embed",
+              "descricao": "Converse com o chat e embargue o widget em sites corporativos."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (UI Nativa)",
+            "stack_ui": "React + Tailwind",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "White-label completo com logo e cores corporativas.",
+            "manutenibilidade_upgrades": "Excelente: Binário único sem dependências externas."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "anythingllm-mcp",
+              "comando_ou_repo": "npx -y anythingllm-mcp-server",
+              "descricao": "Interface MCP para agentes consultarem workspaces."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-kb-search",
+              "comando_ou_repo": ".claude/skills/kb-search/SKILL.md",
+              "descricao": "Busca semântica em knowledge bases do AnythingLLM."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "anythingllm-api",
+              "comando_ou_repo": "curl -X POST http://anythingllm:3001/api/query",
+              "descricao": "API HTTP para integração externa."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pilar_id": "infrastructure_devops",
+      "nome_pilar": "Grupo 2: Infraestrutura de Desenvolvimento, CI/CD & Versionamento",
+      "modulo_saas_alvo": "GitHub / GitLab / Claude Code (IDE Integration) / GitHub Actions",
+      "descricao_pilar": "Frente responsável pela gestão de código-fonte distribuído, automação de builds e testes, registro de imagens Docker e orquestração de pipelines de deployment.",
+      "subtotal_economia_anual": "R$ 60.000/ano",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "classificacao": "A Mais Completa",
+          "slug": "gitea",
+          "nome": "Gitea",
+          "subtitulo": "Servidor Git Auto-Hospedado Leve com Interface Web",
+          "papel_no_pilar": "Repositório centralizado de código para equipes substituindo GitHub/GitLab SaaS.",
+          "saas_substituido_direto": "GitHub (Team Plan) / GitLab (Premium)",
+          "racional_escolha": "Binário Go ultra-leve que substitui GitHub em 100% dos casos, com suporte a webhooks, integração SSH/HTTPS e pull requests nativas.",
+          "economia_anual_str": "R$ 24.000/ano (10 usuários)",
+          "licenca_osi": "MIT",
+          "repositorio_github": "https://github.com/go-gitea/gitea",
+          "o_que_faz": "Fornece servidor Git completo com interface web para gerenciar repositórios e colaboração.",
+          "como_funciona": "Binário Go estático sobre SQLite ou PostgreSQL com suporte a organizações e equipas.",
+          "comando_rapido": "docker run -d -p 3000:3000 --name gitea gitea/gitea:latest",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "1 vCPU"
+          },
+          "veredito": "GitHub/GitLab on-premises mais simples e rápido de operar em produção, consumindo menos de 100 MB RAM.",
+          "passos_praticos": [
+            {
+              "titulo": "Inicialização",
+              "descricao": "Configure o banco de dados e crie a conta de administrador."
+            },
+            {
+              "titulo": "Criação de Organização",
+              "descricao": "Organize repositórios por projeto ou squad."
+            },
+            {
+              "titulo": "Webhooks para CI/CD",
+              "descricao": "Configure webhooks apontando para Woodpecker ou Jenkins."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Interface Moderno)",
+            "stack_ui": "Vue.js + Bootstrap",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Logo corporativa e domínio próprio (ex: `git.empresa.com.br`).",
+            "manutenibilidade_upgrades": "Excelente: Migrações automáticas de banco de dados."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "gitea-mcp",
+              "comando_ou_repo": "npx -y gitea-mcp-server",
+              "descricao": "Servidor MCP para agentes criarem/atualizarem repositórios e PRs."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-pr-reviewer",
+              "comando_ou_repo": ".claude/skills/pr-reviewer/SKILL.md",
+              "descricao": "Agente que revisa pull requests automaticamente."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "gitea-cli",
+              "comando_ou_repo": "tea repo create --name novo-projeto",
+              "descricao": "CLI para operações de repositório."
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "classificacao": "A Mais Robusta",
+          "slug": "woodpecker",
+          "nome": "Woodpecker CI",
+          "subtitulo": "Motor de CI/CD Moderno com Suporte a Containers & Kubernetes",
+          "papel_no_pilar": "Automação de builds, testes e deployments disparados por webhooks Gitea.",
+          "saas_substituido_direto": "GitHub Actions / GitLab CI / Jenkins",
+          "racional_escolha": "Alternativa moderna a Jenkins com suporte nativo a Docker, Kubernetes e pipelines YAML declarativas aprovadas no Gitea.",
+          "economia_anual_str": "R$ 18.000/ano",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/woodpecker-ci/woodpecker",
+          "o_que_faz": "Executa pipelines de build, teste e deploy em containers Docker isolados disparados por push/PR.",
+          "como_funciona": "Go + Docker API com suporte a secretos e variáveis de ambiente criptografadas.",
+          "comando_rapido": "docker run -d -p 8000:8000 --name woodpecker woodpeckerci/woodpecker-server:latest",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "2 vCPU"
+          },
+          "veredito": "Substituição direta de GitHub Actions com melhor experiência operacional e logs de pipeline.",
+          "passos_praticos": [
+            {
+              "titulo": "Configuração de Webhook",
+              "descricao": "Conecte o Gitea e o Woodpecker para sincronizar repositórios."
+            },
+            {
+              "titulo": "Escrita de Pipeline",
+              "descricao": "Crie arquivo `.woodpecker.yml` com etapas de build, teste e deploy."
+            },
+            {
+              "titulo": "Execução",
+              "descricao": "Push de código dispara o pipeline automaticamente."
+            }
+          ],
+          "design_system": {
+            "esforco": "Médio (YAML)",
+            "stack_ui": "Vue.js + Go API",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Pipelines totalmente customizáveis em YAML com suporte a secrets corporativos.",
+            "manutenibilidade_upgrades": "Excelente: Compatibilidade com pipelines Drone."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "woodpecker-mcp",
+              "comando_ou_repo": "npx -y woodpecker-mcp-server",
+              "descricao": "Servidor MCP para agentes dispararem e monitorarem builds."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-pipeline-optimizer",
+              "comando_ou_repo": ".claude/skills/pipeline-opt/SKILL.md",
+              "descricao": "Otimiza pipelines para reduzir tempo de build."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "woodpecker-cli",
+              "comando_ou_repo": "woodpecker-cli build start owner/repo 1",
+              "descricao": "Controle de builds via terminal."
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "classificacao": "A Mais Moderna",
+          "slug": "minio",
+          "nome": "MinIO",
+          "subtitulo": "Object Storage S3-Compatible para Artefatos & Backups",
+          "papel_no_pilar": "Armazenamento distribuído de artefatos de build, modelos treinados e backups de banco de dados.",
+          "saas_substituido_direto": "AWS S3 / Google Cloud Storage",
+          "racional_escolha": "API 100% compatível com S3 permitindo trocar de fornecedor sem mudança de código, com suporte a replicação geo-distribuída.",
+          "economia_anual_str": "R$ 12.000/ano",
+          "licenca_osi": "AGPL-3.0",
+          "repositorio_github": "https://github.com/minio/minio",
+          "o_que_faz": "Fornece armazenamento de objetos escalável com API S3-compatible.",
+          "como_funciona": "Binário Go com suporte a multi-node clustering e replicação.",
+          "comando_rapido": "docker run -d -p 9000:9000 --name minio minio/minio:latest server /data",
+          "requisitos_infra": {
+            "ram_minima": "1 GB RAM",
+            "cpu_minima": "1 vCPU"
+          },
+          "veredito": "S3 local com performance igual ou superior, eliminando vendor lock-in.",
+          "passos_praticos": [
+            {
+              "titulo": "Configuração de Storage",
+              "descricao": "Alinhe volumes de disco para armazenamento distribuído."
+            },
+            {
+              "titulo": "Credenciais",
+              "descricao": "Gere chaves de acesso para aplicações."
+            },
+            {
+              "titulo": "Buckets",
+              "descricao": "Crie buckets para artefatos, backups e datasets."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Headless)",
+            "stack_ui": "Web UI + S3 API",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Interface web customizável com suporte a SSO OIDC.",
+            "manutenibilidade_upgrades": "Excelente: Backward-compatibility total com S3."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "minio-mcp",
+              "comando_ou_repo": "npx -y minio-mcp-server",
+              "descricao": "Servidor MCP para agentes manipularem arquivos no MinIO."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-artifact-manager",
+              "comando_ou_repo": ".claude/skills/artifact-mgr/SKILL.md",
+              "descricao": "Gerencia artefatos de build automaticamente."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "mc",
+              "comando_ou_repo": "mc ls minio/bucket",
+              "descricao": "CLI oficial do MinIO para operações de arquivo."
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "classificacao": "A Mais Leve",
+          "slug": "registry",
+          "nome": "Docker Registry",
+          "subtitulo": "Registro Privado de Imagens Docker",
+          "papel_no_pilar": "Armazenamento centralizado de imagens de containers para deploy distribuído.",
+          "saas_substituido_direto": "Docker Hub (Private Repos) / ECR / GCR",
+          "racional_escolha": "Registrador oficial da Docker focado em performance e simplicidade, com suporte a pull/push sobre HTTPS TLS.",
+          "economia_anual_str": "R$ 9.600/ano",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/distribution/distribution",
+          "o_que_faz": "Fornece repositório centralizado de imagens Docker com autenticação básica.",
+          "como_funciona": "Go com armazenamento em filesystem ou object storage S3 (MinIO).",
+          "comando_rapido": "docker run -d -p 5000:5000 --name registry registry:2",
+          "requisitos_infra": {
+            "ram_minima": "1 GB RAM",
+            "cpu_minima": "1 vCPU"
+          },
+          "veredito": "Registro Docker leve e confiável para equipes pequenas até médias.",
+          "passos_praticos": [
+            {
+              "titulo": "Configuração de TLS",
+              "descricao": "Configure certificados auto-assinados via Traefik."
+            },
+            {
+              "titulo": "Push de Imagens",
+              "descricao": "Faça tag e push das imagens de build: `docker push registry.empresa.com.br/app:latest`."
+            },
+            {
+              "titulo": "Pull em Deploy",
+              "descricao": "Puxe imagens durante deployment em produção."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Headless)",
+            "stack_ui": "Docker API",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Serviço puro de backend sem UI.",
+            "manutenibilidade_upgrades": "Excelente: Armazenamento persistente em volumes."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "registry-mcp",
+              "comando_ou_repo": "npx -y registry-mcp-server",
+              "descricao": "Servidor MCP para agentes listarem/removarem imagens."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-image-tagger",
+              "comando_ou_repo": ".claude/skills/image-tagger/SKILL.md",
+              "descricao": "Cria tags automáticas em imagens com versionamento semântico."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "registry-cli",
+              "comando_ou_repo": "docker push registry.empresa.com.br/service:v1.0",
+              "descricao": "Operações diretas via CLI Docker."
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "classificacao": "A Mais Simples",
+          "slug": "deno",
+          "nome": "Deno",
+          "subtitulo": "Runtime JavaScript/TypeScript Moderno com Permissões Granulares",
+          "papel_no_pilar": "Alternativa leve ao Node.js para scripts de automação e microserviços sem npm.",
+          "saas_substituido_direto": "Node.js (elimina dependência de npm/package.json)",
+          "racional_escolha": "Runtime TypeScript nativo com URLs imutáveis, sem arquivo package.json e permissões explícitas, reduzindo risco de supply chain.",
+          "economia_anual_str": "R$ 6.000/ano",
+          "licenca_osi": "MIT",
+          "repositorio_github": "https://github.com/denoland/deno",
+          "o_que_faz": "Executa scripts TypeScript/JavaScript com controle fino de permissões (arquivo, rede, variáveis de ambiente).",
+          "como_funciona": "Binário Rust estático com bundler integrado e cache imutável via URLs.",
+          "comando_rapido": "deno run --allow-net https://deno.land/std/examples/echo_server.ts",
+          "requisitos_infra": {
+            "ram_minima": "256 MB RAM",
+            "cpu_minima": "1 vCPU"
+          },
+          "veredito": "Excelente para scripts de automação corporativa sem risco de supply chain (sem node_modules).",
+          "passos_praticos": [
+            {
+              "titulo": "Script Simples",
+              "descricao": "Escreva um script TypeScript fazendo HTTP request sem npm."
+            },
+            {
+              "titulo": "Permissões",
+              "descricao": "Declare explicitamente `--allow-net` e `--allow-env`."
+            },
+            {
+              "titulo": "Deploy",
+              "descricao": "Execute diretamente sem instalar dependências."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Binário Único)",
+            "stack_ui": "Headless CLI",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Scripts totalmente customizáveis em TypeScript puro.",
+            "manutenibilidade_upgrades": "Excelente: Zero dependências externas."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "deno-mcp",
+              "comando_ou_repo": "npx -y deno-mcp-server",
+              "descricao": "Servidor MCP para agentes executarem scripts Deno."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-script-executor",
+              "comando_ou_repo": ".claude/skills/script-executor/SKILL.md",
+              "descricao": "Executa scripts TypeScript de forma segura."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "deno-cli",
+              "comando_ou_repo": "deno run script.ts",
+              "descricao": "Execução direta de scripts."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pilar_id": "observability_monitoring",
+      "nome_pilar": "Grupo 3: Observabilidade, Monitoramento & Suporte",
+      "modulo_saas_alvo": "DataDog / New Relic / Sentry (Error Tracking) / PagerDuty",
+      "descricao_pilar": "Frente responsável pela coleta de métricas, logs e traces distribuídos, alertas proativos e análise de performance em tempo real.",
+      "subtotal_economia_anual": "R$ 48.000/ano",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "classificacao": "A Mais Completa",
+          "slug": "prometheus",
+          "nome": "Prometheus",
+          "subtitulo": "Time-Series Database & Scraper de Métricas",
+          "papel_no_pilar": "Coleta e armazenamento de métricas de CPU, memória, request latency e taxa de erro.",
+          "saas_substituido_direto": "DataDog / New Relic (Infrastructure Monitoring)",
+          "racional_escolha": "Padrão de fato do CNCF para observabilidade em Kubernetes e containers, com pull-based scraping nativo.",
+          "economia_anual_str": "R$ 24.000/ano",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/prometheus/prometheus",
+          "o_que_faz": "Scrape de endpoints `/metrics` em intervalos regulares, armazenando séries temporais e fornecendo SQL-like PromQL.",
+          "como_funciona": "Binário Go estático com armazenamento em disco local e compressão de dados.",
+          "comando_rapido": "docker run -d -p 9090:9090 --name prometheus prom/prometheus",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "1 vCPU"
+          },
+          "veredito": "Substituição completa de DataDog/New Relic para equipes que não precisam de observabilidade SaaS.",
+          "passos_praticos": [
+            {
+              "titulo": "Configuração de Targets",
+              "descricao": "Aponte para endpoints Prometheus de aplicações e infraestrutura."
+            },
+            {
+              "titulo": "Recording Rules",
+              "descricao": "Defina regras de pre-agregação para reduzir latência de queries."
+            },
+            {
+              "titulo": "Alertas",
+              "descricao": "Configure regras de alert disparando webhooks para Alertmanager."
+            }
+          ],
+          "design_system": {
+            "esforco": "Médio (YAML)",
+            "stack_ui": "Go + Prometheus Expression Browser",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Totalmente customizável via YAML e PromQL.",
+            "manutenibilidade_upgrades": "Excelente: Backward-compatible com versões antigas."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "prometheus-mcp",
+              "comando_ou_repo": "npx -y prometheus-mcp-server",
+              "descricao": "Servidor MCP para agentes consultarem métricas."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-metric-analyzer",
+              "comando_ou_repo": ".claude/skills/metric-analyzer/SKILL.md",
+              "descricao": "Analisa anomalias de desempenho automaticamente."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "promtool",
+              "comando_ou_repo": "promtool check config prometheus.yml",
+              "descricao": "Validação de configurações Prometheus."
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "classificacao": "A Mais Robusta",
+          "slug": "grafana",
+          "nome": "Grafana",
+          "subtitulo": "Plataforma de Dashboards & Alertas para Observabilidade",
+          "papel_no_pilar": "Visualização de métricas em dashboards em tempo real com alertas e anotações.",
+          "saas_substituido_direto": "DataDog / New Relic (Dashboarding)",
+          "racional_escolha": "Dashboard builder visual mais poderoso, suportando Prometheus, Loki, Elasticsearch e 100+ data sources.",
+          "economia_anual_str": "R$ 18.000/ano",
+          "licenca_osi": "AGPL-3.0 (Enterprise: Proprietary)",
+          "repositorio_github": "https://github.com/grafana/grafana",
+          "o_que_faz": "Constrói dashboards interativos consumindo dados de Prometheus, Loki e outras fontes.",
+          "como_funciona": "Go backend com React frontend e suporte a plugins customizados.",
+          "comando_rapido": "docker run -d -p 3000:3000 --name grafana grafana/grafana",
+          "requisitos_infra": {
+            "ram_minima": "1 GB RAM",
+            "cpu_minima": "1 vCPU"
+          },
+          "veredito": "Melhor dashboard open source do mercado, com UX comparável a SaaS premium.",
+          "passos_praticos": [
+            {
+              "titulo": "Adição de Data Source",
+              "descricao": "Conecte Prometheus, Loki e InfluxDB como fontes."
+            },
+            {
+              "titulo": "Criação de Dashboard",
+              "descricao": "Arraste painéis de gráficos, heat maps e tabelas."
+            },
+            {
+              "titulo": "Alertas",
+              "descricao": "Configure regras de alerta disparando notificações no Slack/Discord."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Visual)",
+            "stack_ui": "React + Go",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "White-label completo com logo e domínio corporativo.",
+            "manutenibilidade_upgrades": "Excelente: Dashboards salvos em JSON."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "grafana-mcp",
+              "comando_ou_repo": "npx -y grafana-mcp-server",
+              "descricao": "Servidor MCP para agentes consultarem dashboards e criarem alertas."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-dashboard-generator",
+              "comando_ou_repo": ".claude/skills/dashboard-gen/SKILL.md",
+              "descricao": "Cria dashboards automaticamente a partir de descrições."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "grafana-cli",
+              "comando_ou_repo": "grafana-cli admin reset-admin-password newpassword",
+              "descricao": "Operações administrativas via CLI."
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "classificacao": "A Mais Moderna",
+          "slug": "loki",
+          "nome": "Loki",
+          "subtitulo": "Log Aggregation System com Índices Otimizados",
+          "papel_no_pilar": "Centralização de logs de todas as aplicações com indexação otimizada para buscas rápidas.",
+          "saas_substituido_direto": "DataDog / Splunk / Elasticsearch (Logging)",
+          "racional_escolha": "Alternativa leve ao Elasticsearch reduzindo em 10x o storage necessário via índices inteligentes baseados em labels.",
+          "economia_anual_str": "R$ 14.400/ano",
+          "licenca_osi": "AGPL-3.0",
+          "repositorio_github": "https://github.com/grafana/loki",
+          "o_que_faz": "Ingere logs de containers, estrutura-os por labels e fornece buscas rápidas com LogQL.",
+          "como_funciona": "Go com armazenamento em S3 (MinIO) e índices em memória.",
+          "comando_rapido": "docker run -d -p 3100:3100 --name loki grafana/loki",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "1 vCPU"
+          },
+          "veredito": "Alternativa superior ao ELK stack para organismos não-gigantes, com 90% menos storage.",
+          "passos_praticos": [
+            {
+              "titulo": "Configuração de Promtail",
+              "descricao": "Deploy agentes Promtail em cada máquina para envio de logs."
+            },
+            {
+              "titulo": "Label Strategy",
+              "descricao": "Defina labels (app, env, level) para indexação eficiente."
+            },
+            {
+              "titulo": "Alertas",
+              "descricao": "Configure alertas baseados em padrões de log."
+            }
+          ],
+          "design_system": {
+            "esforco": "Médio (YAML + LogQL)",
+            "stack_ui": "Go + Promtail Agent",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Totalmente customizável via YAML.",
+            "manutenibilidade_upgrades": "Excelente: Zero dependências de indices."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "loki-mcp",
+              "comando_ou_repo": "npx -y loki-mcp-server",
+              "descricao": "Servidor MCP para agentes buscarem logs."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-log-analyzer",
+              "comando_ou_repo": ".claude/skills/log-analyzer/SKILL.md",
+              "descricao": "Analisa padrões de erro em logs."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "logcli",
+              "comando_ou_repo": "logcli query '{job=\"app\"}'",
+              "descricao": "CLI para buscas de log."
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "classificacao": "A Mais Leve",
+          "slug": "alertmanager",
+          "nome": "Alertmanager",
+          "subtitulo": "Gerenciador de Alertas & Deduplicação",
+          "papel_no_pilar": "Centraliza alertas de Prometheus, deduplica e roteia para Slack, Discord, PagerDuty.",
+          "saas_substituido_direto": "PagerDuty (Alert Routing)",
+          "racional_escolha": "Complemento oficial ao Prometheus com suporte a grouping, silenciamento e escalonamento de alertas.",
+          "economia_anual_str": "R$ 12.000/ano",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/prometheus/alertmanager",
+          "o_que_faz": "Agrupa alertas similares, deduplica e envia notificações via múltiplos canais.",
+          "como_funciona": "Go com armazenamento em memória e replicação opcional.",
+          "comando_rapido": "docker run -d -p 9093:9093 --name alertmanager prom/alertmanager",
+          "requisitos_infra": {
+            "ram_minima": "512 MB RAM",
+            "cpu_minima": "1 vCPU"
+          },
+          "veredito": "Essential companion ao Prometheus para evitar alertas repetitivos.",
+          "passos_praticos": [
+            {
+              "titulo": "Configuração de Routes",
+              "descricao": "Defina regras de roteamento por severidade e label."
+            },
+            {
+              "titulo": "Integrações",
+              "descricao": "Configure webhooks para Slack, Discord ou PagerDuty."
+            },
+            {
+              "titulo": "Silenciamentos",
+              "descricao": "Mute alertas durante manutenção programada."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (YAML)",
+            "stack_ui": "Go",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Templates de notificação customizáveis.",
+            "manutenibilidade_upgrades": "Excelente: Configurações em YAML."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "alertmanager-mcp",
+              "comando_ou_repo": "npx -y alertmanager-mcp-server",
+              "descricao": "Servidor MCP para agentes silenciarem alertas."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-alert-responder",
+              "comando_ou_repo": ".claude/skills/alert-responder/SKILL.md",
+              "descricao": "Responde automaticamente a alertas com ações remediadores."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "amtool",
+              "comando_ou_repo": "amtool alert query",
+              "descricao": "CLI para operações de alertas."
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "classificacao": "A Mais Simples",
+          "slug": "opentelemetry",
+          "nome": "OpenTelemetry Collector",
+          "subtitulo": "Coleta & Processamento Agnóstico de Traces, Métricas & Logs",
+          "papel_no_pilar": "Pipeline neutro para ingestão de sinais observáveis de todas as aplicações.",
+          "saas_substituido_direto": "Datadog / New Relic / Sentry (Tracing & Collection)",
+          "racional_escolha": "Padrão CNCF agnóstico de backend, permitindo enviar dados para Prometheus, Loki, Jaeger ou qualquer sistema sem reescrever código.",
+          "economia_anual_str": "R$ 9.600/ano",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/open-telemetry/opentelemetry-collector",
+          "o_que_faz": "Coleta traces, métricas e logs em formato OpenTelemetry e exporta para múltiplos backends.",
+          "como_funciona": "Go com suporte a OTLP protocol e receiversexportadores plugáveis.",
+          "comando_rapido": "docker run -d -p 4317:4317 -p 4318:4318 --name otel-collector otel/opentelemetry-collector",
+          "requisitos_infra": {
+            "ram_minima": "1 GB RAM",
+            "cpu_minima": "1 vCPU"
+          },
+          "veredito": "Agnóstico de backend ideal para evitar lock-in em uma solução comercial.",
+          "passos_praticos": [
+            {
+              "titulo": "Configuração de Receivers",
+              "descricao": "Ative OTLP, Jaeger e Prometheus receivers."
+            },
+            {
+              "titulo": "Processadores",
+              "descricao": "Adicione processadores para sampling e enriquecimento de atributos."
+            },
+            {
+              "titulo": "Exportadores",
+              "descricao": "Aponte para Prometheus, Loki, Jaeger e sistemas legados."
+            }
+          ],
+          "design_system": {
+            "esforco": "Médio (YAML)",
+            "stack_ui": "Go + YAML",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Totalmente customizável via YAML.",
+            "manutenibilidade_upgrades": "Excelente: Padrão aberto sem vendor lock-in."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "otel-mcp",
+              "comando_ou_repo": "npx -y otel-mcp-server",
+              "descricao": "Servidor MCP para agentes consultarem traces."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-trace-debugger",
+              "comando_ou_repo": ".claude/skills/trace-debugger/SKILL.md",
+              "descricao": "Debugga requests distribuídas via traces."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "otelcontribcol",
+              "comando_ou_repo": "otelcontribcol validate --config config.yaml",
+              "descricao": "Validação de configurações."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "camada_integracao": {
+    "autenticacao_sso": "Keycloak / Authentik (OpenID Connect / SAML) unificando o login de engenheiros e agentes de IA no Gitea, Woodpecker, Grafana, Ollama Web UI e Flowise.",
+    "barramento_eventos": "n8n Community Edition atuando como orquestrador central de eventos assíncronos (Build concluído no Woodpecker -> Modelo treinado no Ollama -> Teste executado em LlamaIndex -> Alerta enviado no Slack via Alertmanager).",
+    "gateway_reverse_proxy": "Traefik Proxy v3 com terminação TLS automática via Let's Encrypt e roteamento por subdomínios corporativos (git.empresa.com.br, ci.empresa.com.br, llm.empresa.com.br, obs.empresa.com.br, sso.empresa.com.br).",
+    "fluxo_integracao_descricao": "1. Commit de Código: Engenheiro faz push no Gitea;\n2. Trigger CI/CD: Webhook dispara no Woodpecker que executa testes e builds;\n3. Artefatos: Build artifacts são armazenados no MinIO e imagem Docker no Registry privado;\n4. Deploy de Agentes: n8n dispara o deploy dos novos agentes LLM via Flowise/LangChain;\n5. Testes de Agente: LangChain executa testes de agente consultando Ollama local e LlamaIndex;\n6. Observabilidade: Prometheus coleta métricas de latência do agente, Loki ingere logs de erro, Alertmanager notifica no Slack;\n7. Feedback Loop: Agentes consultam Grafana para decidir se retrainam ou escalam.",
+    "diagrama_arquitetura": "graph TD\n Engenheiro([Engenheiro]) -->|git push| Gitea[Gitea SCM]\n Gitea -->|Webhook| Woodpecker[Woodpecker CI]\n \n Woodpecker -->|Docker build| Registry[Docker Registry]\n Woodpecker -->|Artifacts| MinIO[MinIO S3]\n \n n8n[n8n Orquestrador] -->|Deploy| Flowise[Flowise AI]\n n8n -->|Webhook| LangChain[LangChain Agentes]\n \n LangChain <--> Ollama[Ollama LLM]\n LangChain <--> LlamaIndex[LlamaIndex RAG]\n \n Flowise <--> Ollama\n Flowise <--> AnythingLLM[AnythingLLM KB]\n \n Ollama -->|Métricas| Prometheus[Prometheus]\n LangChain -->|Métricas| Prometheus\n Flowise -->|Logs| Loki[Loki Logs]\n \n Prometheus -->|Alertas| AlertManager[Alertmanager]\n Loki -->|Padrões| AlertManager\n AlertManager -->|Notificações| Slack([Slack / Discord])\n \n Prometheus -->|Visualização| Grafana[Grafana Dashboards]\n Loki -->|Visualização| Grafana\n \n Keycloak[Keycloak SSO OIDC] -.->|Autenticação Única| Gitea\n Keycloak -.->|Autenticação Única| Woodpecker\n Keycloak -.->|Autenticação Única| Grafana"
+  },
+  "deploy_consolidado": {
+    "docker_compose_exemplo": "version: '3.8'\n\nnetworks:\n  ai_ecosystem_net:\n    driver: bridge\n\nservices:\n  # 1. Reverse Proxy & TLS Automático\n  traefik:\n    image: traefik:v3.0\n    command:\n      - '--providers.docker=true'\n      - '--entrypoints.web.address=:80'\n      - '--entrypoints.websecure.address=:443'\n      - '--certificatesresolvers.myresolver.acme.tlschallenge=true'\n      - '--certificatesresolvers.myresolver.acme.email=admin@empresa.com'\n      - '--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json'\n    ports:\n      - '80:80'\n      - '443:443'\n    volumes:\n      - '/var/run/docker.sock:/var/run/docker.sock:ro'\n      - './letsencrypt:/letsencrypt'\n    networks:\n      - ai_ecosystem_net\n\n  # 2. Ollama LLM Server\n  ollama:\n    image: ollama/ollama:latest\n    environment:\n      - OLLAMA_HOST=0.0.0.0:11434\n    volumes:\n      - ollama_data:/root/.ollama\n    networks:\n      - ai_ecosystem_net\n\n  # 3. Flowise AI Builder\n  flowise:\n    image: flowiseai/flowise:latest\n    ports:\n      - '3001:3001'\n    volumes:\n      - flowise_data:/root/.flowise\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.flowise.rule=Host(`ai-builder.empresa.com.br`)'\n    networks:\n      - ai_ecosystem_net\n\n  # 4. Gitea Repository\n  gitea:\n    image: gitea/gitea:latest\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.gitea.rule=Host(`git.empresa.com.br`)'\n    volumes:\n      - gitea_data:/data\n    networks:\n      - ai_ecosystem_net\n\n  # 5. Woodpecker CI\n  woodpecker-server:\n    image: woodpeckerci/woodpecker-server:latest\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.woodpecker.rule=Host(`ci.empresa.com.br`)'\n    networks:\n      - ai_ecosystem_net\n\n  # 6. Prometheus Metrics\n  prometheus:\n    image: prom/prometheus:latest\n    ports:\n      - '9090:9090'\n    volumes:\n      - prometheus_data:/prometheus\n    networks:\n      - ai_ecosystem_net\n\n  # 7. Grafana Dashboards\n  grafana:\n    image: grafana/grafana:latest\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.grafana.rule=Host(`monitoring.empresa.com.br`)'\n    volumes:\n      - grafana_data:/var/lib/grafana\n    networks:\n      - ai_ecosystem_net\n\nvolumes:\n  ollama_data:\n  flowise_data:\n  gitea_data:\n  prometheus_data:\n  grafana_data:",
+    "passos_deploy": [
+      {
+        "titulo": "Passo 1: Contratar a VPS (Tempo estimado: 3 minutos)",
+        "descricao": "Acesse um provedor de nuvem confiável (Hetzner Cloud, DigitalOcean, Contabo ou AWS Lightsail). Escolha o plano com 8 vCPU e 16 GB RAM, selecione Ubuntu 24.04 LTS x86_64 e clique em 'Criar Servidor'."
+      },
+      {
+        "titulo": "Passo 2: Apontar o Domínio (Tempo estimado: 2 minutos)",
+        "descricao": "No site onde você comprou seu domínio, vá na aba DNS e crie um apontamento Tipo A com o nome `*` (asterisco) apontando para o IP da sua VPS."
+      },
+      {
+        "titulo": "Passo 3: Rodar Docker Compose (Tempo estimado: 2 minutos)",
+        "descricao": "Abra o terminal SSH da VPS e cole o comando automático. O sistema fará download de todas as ferramentas e ativará os certificados SSL em menos de 120 segundos."
+      },
+      {
+        "titulo": "Passo 4: Acessar os Painéis",
+        "descricao": "Abra o navegador e acesse: `git.empresa.com.br` para versionamento, `ai-builder.empresa.com.br` para construir workflows e `monitoring.empresa.com.br` para observabilidade."
+      }
+    ],
+    "arquitetura_rede_seguranca": "A infraestrutura opera sobre uma rede bridge isolada do Docker (`ai_ecosystem_net`). Apenas o reverse proxy Traefik expõe as portas públicas 80 (HTTP com redirect) e 443 (HTTPS TLS automático via ACME/Let's Encrypt). Todas as ferramentas (Ollama, LangChain, Flowise, Gitea, Woodpecker, Prometheus, Grafana, Loki e Keycloak) comunicam-se exclusivamente pela rede interna através de seus nomes DNS de serviço, eliminando vetores de ataque externos.",
+    "composicao_stack_detalhada": [
+      {
+        "servico": "Traefik Proxy v3",
+        "imagem_docker": "traefik:v3.0",
+        "papel_na_stack": "Ingress Controller & Reverse Proxy com TLS automático",
+        "racional_escolha": "Descobre contêineres dinamicamente via labels do Docker sem necessidade de recarregar manualmente.",
+        "portas_expostas": "80:80 e 443:443 (HTTPS)",
+        "persistencia": "Volume `/letsencrypt/acme.json` para certificados SSL"
+      },
+      {
+        "servico": "Keycloak SSO",
+        "imagem_docker": "quay.io/keycloak/keycloak:latest",
+        "papel_na_stack": "Provedor Central de Identidade (IdP) & Single Sign-On",
+        "racional_escolha": "Unifica autenticação de engenheiros e agentes com controle fino de roles.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik)",
+        "persistencia": "Banco dedicado no PostgreSQL"
+      },
+      {
+        "servico": "Ollama LLM Server",
+        "imagem_docker": "ollama/ollama:latest",
+        "papel_na_stack": "Inferência de Modelos Abertos (Llama, Mistral, etc)",
+        "racional_escolha": "Core de execução de LLMs locais sem requisição remota.",
+        "portas_expostas": "Apenas rede interna (11434:11434)",
+        "persistencia": "Volume `/root/.ollama` para modelos e cache"
+      },
+      {
+        "servico": "Flowise AI Builder",
+        "imagem_docker": "flowiseai/flowise:latest",
+        "papel_na_stack": "Construtor Visual de Workflows de IA",
+        "racional_escolha": "UI visual para prototipagem rápida de agentes.",
+        "portas_expostas": "Apenas rede interna (3001:3001)",
+        "persistencia": "Volume `/root/.flowise` para workflows"
+      },
+      {
+        "servico": "Gitea Repository",
+        "imagem_docker": "gitea/gitea:latest",
+        "papel_na_stack": "Repositório Centralizado de Código",
+        "racional_escolha": "Git self-hosted para controle de versão de agentes e documentação.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik)",
+        "persistencia": "Volume `/data` para repositórios"
+      },
+      {
+        "servico": "Woodpecker CI",
+        "imagem_docker": "woodpeckerci/woodpecker-server:latest",
+        "papel_na_stack": "Pipeline de CI/CD para Builds & Testes",
+        "racional_escolha": "Automação de testes de agentes e deploys.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik)",
+        "persistencia": "Banco `db_woodpecker` no PostgreSQL"
+      },
+      {
+        "servico": "Prometheus Metrics",
+        "imagem_docker": "prom/prometheus:latest",
+        "papel_na_stack": "Time-Series Database de Observabilidade",
+        "racional_escolha": "Coleta de métricas de latência, erros e performance.",
+        "portas_expostas": "Apenas rede interna (9090:9090)",
+        "persistencia": "Volume `/prometheus` para dados"
+      },
+      {
+        "servico": "Grafana Dashboards",
+        "imagem_docker": "grafana/grafana:latest",
+        "papel_na_stack": "Visualização em Tempo Real de Métricas",
+        "racional_escolha": "Dashboards interativos de observabilidade.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik)",
+        "persistencia": "Banco `db_grafana` no PostgreSQL"
+      },
+      {
+        "servico": "Loki Log Aggregation",
+        "imagem_docker": "grafana/loki:latest",
+        "papel_na_stack": "Agregação Centralizada de Logs",
+        "racional_escolha": "Busca rápida de logs com armazenamento otimizado.",
+        "portas_expostas": "Apenas rede interna (3100:3100)",
+        "persistencia": "Storage no MinIO (S3-compatible)"
+      },
+      {
+        "servico": "PostgreSQL Cluster",
+        "imagem_docker": "postgres:16",
+        "papel_na_stack": "Banco de Dados Relacional Centralizado",
+        "racional_escolha": "Consolidação de dados de Keycloak, Gitea, Woodpecker, Grafana.",
+        "portas_expostas": "Apenas rede interna (5432:5432)",
+        "persistencia": "Volume `/var/lib/postgresql/data`"
+      }
+    ]
+  },
+  "prompts_mestres_para_nao_tecnicos": [
+    {
+      "nome": "Prompt Mestre 1: Explicação de Componentes do Stack",
+      "contexto": "Para gestores e stakeholders que precisam entender o ecossistema sem jargão técnico.",
+      "prompt": "Explique de forma simples como o nosso novo stack de IA funciona, comparando cada ferramenta com ferramentas que o usuário conhece do dia a dia. Use analogias de restaurante, fábrica ou hospital. Não use termos técnicos como 'container', 'API', 'microserviço'."
+    },
+    {
+      "nome": "Prompt Mestre 2: Guia de Troubleshooting para Não-Técnicos",
+      "contexto": "Para operadores que precisam diagnosticar problemas sem acesso a logs.",
+      "prompt": "Se um agente de IA não responde rápido, liste as 3 coisas mais prováveis que podem estar erradas e como o usuário pode verificar cada uma delas usando apenas cliques no navegador (sem terminal)."
+    },
+    {
+      "nome": "Prompt Mestre 3: ROI & TCO para CFO/Board",
+      "contexto": "Para discussões de investimento e aprovação orçamentária.",
+      "prompt": "Calcule o ROI de migrar de Anthropic API para este stack aberto considerando: custo mensal de API, tempo de engenheiro para manutenção, economia de storage, redução de vendor lock-in e isenção de escalabilidade. Apresente em tabela com comparação 3 anos."
+    },
+    {
+      "nome": "Prompt Mestre 4: Roadmap de Implementação Passo-a-Passo",
+      "contexto": "Para CTOs que precisam de um plano de migração executável.",
+      "prompt": "Crie um plano de 12 semanas para migrar de Anthropic para este stack, com milestones semanais, recursos necessários, riscos por etapa e critérios de sucesso. Use linguagem de projeto, não técnica."
+    }
+  ],
+  "analise_economica_global": {
+    "custo_saas_anual": "R$ 156.000/ano (Anthropic API Tier Enterprise R$ 84k + Claude Code licensing R$ 48k + AI Gateway/Managed Agents R$ 24k)",
+    "custo_vps_anual": "R$ 4.200/ano (VPS 8 vCPU / 16 GB RAM a R$ 350/mês em Hetzner Cloud)",
+    "economia_anual_liquida": "R$ 151.800/ano (Economia Líquida de 97.3%)",
+    "roi_meses": "Payback positivo em apenas 10 dias de operação unificada (VPS paga-se em 3-5 dias vs economia mensal).",
+    "detalhamento_por_grupo": [
+      {
+        "grupo": "Grupo 1: Orchestração & Agentes LLM",
+        "saas_referencia": "Anthropic Claude API + Managed Agents",
+        "custo_saas_anual": "R$ 84.000/ano",
+        "custo_vps_alocado": "R$ 1.440/ano (Fraqueza de ~3 vCPU / 6 GB RAM para Ollama + LangChain)",
+        "economia_anual_liquida": "R$ 82.560/ano",
+        "percentual_economia": "98.3%"
+      },
+      {
+        "grupo": "Grupo 2: Infraestrutura Dev & CI/CD",
+        "saas_referencia": "GitHub Enterprise + Docker Hub Private + CI/CD SaaS",
+        "custo_saas_anual": "R$ 48.000/ano",
+        "custo_vps_alocado": "R$ 1.320/ano (Fraqueza de ~2 vCPU / 4 GB RAM para Gitea + Woodpecker)",
+        "economia_anual_liquida": "R$ 46.680/ano",
+        "percentual_economia": "97.2%"
+      },
+      {
+        "grupo": "Grupo 3: Observabilidade & Monitoramento",
+        "saas_referencia": "DataDog / New Relic (Professional Tier)",
+        "custo_saas_anual": "R$ 24.000/ano",
+        "custo_vps_alocado": "R$ 1.440/ano (Fraqueza de ~2 vCPU / 4 GB RAM para Prometheus + Grafana + Loki)",
+        "economia_anual_liquida": "R$ 22.560/ano",
+        "percentual_economia": "94.0%"
+      }
+    ]
+  },
+  "docker_compose_exemplo": "version: '3.8'\n\nnetworks:\n  ai_ecosystem_net:\n    driver: bridge\n\nservices:\n  # 1. Reverse Proxy & TLS Automático\n  traefik:\n    image: traefik:v3.0\n    command:\n      - '--providers.docker=true'\n      - '--entrypoints.web.address=:80'\n      - '--entrypoints.websecure.address=:443'\n      - '--certificatesresolvers.myresolver.acme.tlschallenge=true'\n      - '--certificatesresolvers.myresolver.acme.email=admin@empresa.com'\n      - '--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json'\n    ports:\n      - '80:80'\n      - '443:443'\n    volumes:\n      - '/var/run/docker.sock:/var/run/docker.sock:ro'\n      - './letsencrypt:/letsencrypt'\n    networks:\n      - ai_ecosystem_net\n\n  # 2. Provedor de Identidade & SSO\n  keycloak:\n    image: quay.io/keycloak/keycloak:latest\n    command: start-dev\n    environment:\n      - KEYCLOAK_ADMIN=admin\n      - KEYCLOAK_ADMIN_PASSWORD=SenhaSegura2026\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.keycloak.rule=Host(`sso.empresa.com.br`)'\n    networks:\n      - ai_ecosystem_net\n\n  # 3. Ollama LLM Server\n  ollama:\n    image: ollama/ollama:latest\n    environment:\n      - OLLAMA_HOST=0.0.0.0:11434\n    ports:\n      - '11434:11434'\n    volumes:\n      - ollama_data:/root/.ollama\n    networks:\n      - ai_ecosystem_net\n\n  # 4. Flowise AI Builder\n  flowise:\n    image: flowiseai/flowise:latest\n    environment:\n      - DATABASE_PATH=/data\n    ports:\n      - '3001:3001'\n    volumes:\n      - flowise_data:/root/.flowise\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.flowise.rule=Host(`ai-builder.empresa.com.br`)'\n    networks:\n      - ai_ecosystem_net\n\n  # 5. Gitea Repository\n  gitea:\n    image: gitea/gitea:latest\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.gitea.rule=Host(`git.empresa.com.br`)'\n    volumes:\n      - gitea_data:/data\n    networks:\n      - ai_ecosystem_net\n\n  # 6. Woodpecker CI\n  woodpecker-server:\n    image: woodpeckerci/woodpecker-server:latest\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.woodpecker.rule=Host(`ci.empresa.com.br`)'\n    networks:\n      - ai_ecosystem_net\n\n  # 7. Prometheus Metrics\n  prometheus:\n    image: prom/prometheus:latest\n    ports:\n      - '9090:9090'\n    volumes:\n      - prometheus_data:/prometheus\n    networks:\n      - ai_ecosystem_net\n\n  # 8. Grafana Dashboards\n  grafana:\n    image: grafana/grafana:latest\n    labels:\n      - 'traefik.enable=true'\n      - 'traefik.http.routers.grafana.rule=Host(`monitoring.empresa.com.br`)'\n    volumes:\n      - grafana_data:/var/lib/grafana\n    networks:\n      - ai_ecosystem_net\n\n  # 9. Loki Logs\n  loki:\n    image: grafana/loki:latest\n    ports:\n      - '3100:3100'\n    volumes:\n      - loki_data:/loki\n    networks:\n      - ai_ecosystem_net\n\n  # 10. PostgreSQL Cluster\n  postgres:\n    image: postgres:16-alpine\n    environment:\n      - POSTGRES_USER=postgres\n      - POSTGRES_PASSWORD=SenhaDb2026\n    volumes:\n      - postgres_data:/var/lib/postgresql/data\n    networks:\n      - ai_ecosystem_net\n\nvolumes:\n  ollama_data:\n  flowise_data:\n  gitea_data:\n  prometheus_data:\n  grafana_data:\n  loki_data:\n  postgres_data:",
+  "passos_deploy": [
+    {
+      "titulo": "Passo 1: Contratar a VPS (Tempo estimado: 3 minutos)",
+      "descricao": "Acesse um provedor de nuvem confiável (Hetzner Cloud, DigitalOcean, Contabo ou AWS Lightsail). Escolha o plano com 8 vCPU e 16 GB RAM, selecione Ubuntu 24.04 LTS x86_64 e clique em 'Criar Servidor'. Você receberá o IP por e-mail."
+    },
+    {
+      "titulo": "Passo 2: Apontar o seu Domínio (Tempo estimado: 2 minutos)",
+      "descricao": "No site onde você comprou seu domínio, vá na aba DNS e crie um apontamento Tipo A com o nome `*` (asterisco) apontando para o IP da sua VPS. Isso garante que `git.empresa.com.br`, `ai-builder.empresa.com.br` e `monitoring.empresa.com.br` funcionem sozinhos."
+    },
+    {
+      "titulo": "Passo 3: Rodar o Comando de 1 Clique (Tempo estimado: 2 minutos)",
+      "descricao": "Abra o terminal SSH da VPS e cole o comando automático. O sistema fará download de todas as ferramentas, configurará os bancos de dados e ativará os certificados de segurança SSL em menos de 120 segundos."
+    },
+    {
+      "titulo": "Passo 4: Acessar os Painéis no Navegador",
+      "descricao": "Abra o navegador e acesse: `git.empresa.com.br` para versionamento, `ai-builder.empresa.com.br` para construir workflows de IA e `monitoring.empresa.com.br` para observabilidade."
+    }
+  ],
+  "guia_modularidade_e_expansao": {
+    "filosofia_modular": "A arquitetura opera sob o princípio de 'Tomadas e Aparelhos Independentes'. Nenhuma ferramenta fica grudada ou dependente da outra com código travado. Imagine uma régua de tomadas: Ollama (LLM) e LangChain (Framework) funcionam perfeitamente mesmo se você desligar Flowise (Builder). Se quiser trocar Ollama por outro LLM, basta desconectar e plugar o novo. Nada quebra.",
+    "passo_a_passo_adicionar_ferramenta": "1. Abra o arquivo `docker-compose.override.yml` e cole o bloco pronto da ferramenta;\n2. Execute `docker compose up -d` no terminal;\n3. O sistema cria o endereço web e o cadeado verde SSL automaticamente em 30 segundos;\n4. Abra o painel do n8n e conecte o novo módulo aos fluxos existentes arrastando o mouse.",
+    "passo_a_passo_substituir_hotswap": "1. Suba a Nova Ferramenta em Paralelo: Inicie a nova solução em um endereço temporário (ex: `novo-llm.empresa.com.br`) mantendo a antiga funcionando;\n2. Transfira a Conexão em Flowise/LangChain: No painel visual, mude o nó de conexão para apontar para a nova ferramenta;\n3. Importe Configurações: Faça o download dos workflows/modelos da ferramenta antiga e importe na nova;\n4. Mude o Endereço Oficial: Altere a rota para que `llm.empresa.com.br` aponte para a nova ferramenta;\n5. Desligue a Antiga com Segurança: Pare o serviço antigo digitando `docker compose stop <servico_antigo>`. Os seus agentes nem notarão a troca!",
+    "passo_a_passo_remover_ferramenta": "1. No painel visual do Flowise/LangChain, desligue os gatilhos vinculados à ferramenta que deseja remover;\n2. No terminal da VPS, digite `docker compose stop <nome_ferramenta>`;\n3. Os dados históricos continuam guardados com segurança na pasta de backup da VPS para você consultar quando quiser.",
+    "exemplo_caso_pratico_hotswap": {
+      "cenario": "Substituição do Ollama por outro modelo LLM (ex: Vllm ou LocalAI)",
+      "passo_1_isolamento": "O Flowise e LangChain não conversam com o Ollama diretamente via hardcode, eles conversam via URL configurável. Por isso, os seus agentes continuam trabalhando normalmente sem nenhuma parada.",
+      "passo_2_novo_servico": "O técnico sobe a nova ferramenta LLM no arquivo de extensão sem mexer em Flowise/LangChain.",
+      "passo_3_chaveamento": "No painel do Flowise, basta trocar a URL do Ollama (`http://ollama:11434`) pela URL do novo LLM com 2 cliques.",
+      "passo_4_resultado": "A troca é concluída com ZERO minutos de parada nos agentes e ZERO perda de contexto de conversas."
+    }
+  },
+  "blueprints_n8n": [
+    {
+      "id": "wf-ollama-inference",
+      "nome": "Fluxo 1 · Inference em Ollama com Fallback à Anthropic API",
+      "descricao": "Recebe prompt de um agente, tenta executar localmente no Ollama, se falhar por indisponibilidade faz fallback para a Anthropic API como backup.",
+      "gatilho": "Webhook HTTP POST `/webhook/chat`",
+      "acoes": [
+        "Tentar Ollama: POST http://ollama:11434/api/generate",
+        "Se falhar: Fallback para Anthropic API",
+        "Retornar resposta ao cliente"
+      ]
+    },
+    {
+      "id": "wf-train-model",
+      "nome": "Fluxo 2 · Treinamento Autônomo de Modelo com LlamaIndex RAG",
+      "descricao": "Quando novo documento é uploadado no Gitea, o sistema indexa automaticamente em LlamaIndex e disponibiliza para consulta em agentes.",
+      "gatilho": "Webhook Gitea `push` com arquivo .pdf / .md",
+      "acoes": [
+        "LlamaIndex: Indexar documento",
+        "Gerar embeddings com Ollama",
+        "Notificar agentes que nova base disponível"
+      ]
+    }
+  ],
+  "guia_migracao_dados": [
+    {
+      "modulo": "1. Migração de Agentes de Claude Code para Stack Aberto",
+      "o_que_migrar": "Configurações de agentes, prompts base, MCP servers registrados, histórico de conversas e modelos treinados.",
+      "passos": [
+        "Exporte as definições de agentes de Claude Code em formato JSON;",
+        "Converta os prompts para o formato OpenAI/Anthropic padrão;",
+        "Importe os MCPs no ambiente LangChain/Flowise;",
+        "Execute testes de regressão garantindo que os agentes behave identicamente."
+      ],
+      "cuidados": "Preserve a lógica de fallback para garantir que agentes funcionem tanto localmente quanto com API remota."
+    },
+    {
+      "modulo": "2. Migração de Knowledge Bases (RAG) para LlamaIndex",
+      "o_que_migrar": "Documentações, PDFs treinados, embeddings vetoriais e configurações de retrieval.",
+      "passos": [
+        "Exporte as bases de conhecimento de Claude Code;",
+        "Converta para formato suportado (PDF, Markdown, TXT);",
+        "Configure o LlamaIndex apontando para o vector store (Chroma, Weaviate ou Milvus);",
+        "Regenere embeddings com o Ollama local."
+      ],
+      "cuidados": "Teste a qualidade de retrieval com queries conhecidas antes de descomissionar a base antiga."
+    },
+    {
+      "modulo": "3. Migração de Pipelines CI/CD de GitHub Actions para Woodpecker",
+      "o_que_migrar": "Workflows de teste, build e deploy, secrets e variáveis de ambiente.",
+      "passos": [
+        "Converta os arquivos `.github/workflows/*.yml` para `.woodpecker.yml`;",
+        "Migre os secrets no painel do Woodpecker;",
+        "Dispare um teste de build para validar;",
+        "Desligue os workflows antigos no GitHub."
+      ],
+      "cuidados": "Mantenha GitHub Actions ativo por uma semana em paralelo para contingência."
+    }
+  ],
+  "seguranca_backup_lgpd": {
+    "arquitetura_backup_321": "A política de proteção de dados opera na regra de ouro 3-2-1: (3) cópias de dados em (2) tipos de mídias diferentes, com (1) cópia externa criptografada em nuvem fria (Wasabi / AWS S3).",
+    "script_backup_diario": "#!/bin/bash\nTIMESTAMP=$(date +\"%Y%m%d_%H%M%S\")\nBACKUP_DIR=\"/opt/backups/$TIMESTAMP\"\nmkdir -p $BACKUP_DIR\n\n# 1. Dump de todos os bancos (Keycloak, Gitea, Woodpecker)\ndocker exec postgres pg_dumpall -U postgres | gzip > $BACKUP_DIR/db_cluster.sql.gz\n\n# 2. Compactação dos modelos Ollama e configurações\ntar -czf $BACKUP_DIR/ollama_models.tar.gz -C /var/lib/docker/volumes ollama_data/_data\n\n# 3. Criptografia AES-256\ngpg --batch --yes --passphrase \"SenhaChaveMestreSegura2026\" -c $BACKUP_DIR/db_cluster.sql.gz\n\n# 4. Envio para Storage Externo via rclone\nrclone copy $BACKUP_DIR remote-s3:backups-empresa/$TIMESTAMP/\n\n# 5. Limpeza de backups locais com mais de 7 dias\nfind /opt/backups/* -mtime +7 -exec rm -rf {} \\;\necho \"Backup soberano concluído!\"\n",
+    "checklist_conformidade_lgpd": [
+      {
+        "item": "Soberania Física dos Dados",
+        "status": "Em conformidade: Banco reside em servidor exclusivo, sem compartilhamento ou venda de dados a terceiros."
+      },
+      {
+        "item": "Direito de Exclusão do Titular",
+        "status": "Em conformidade: Script automatizado permite deletar dados via CLI com 1 comando."
+      },
+      {
+        "item": "Criptografia em Trânsito & Repouso",
+        "status": "Em conformidade: TLS 1.3 + AES-256 / Volumes LUKS-encrypted."
+      },
+      {
+        "item": "Trilha de Auditoria",
+        "status": "Em conformidade: Keycloak e PostgreSQL gravam logs imutáveis de acessos."
+      }
+    ]
+  },
+  "cronograma_implantacao_30_dias": [
+    {
+      "semana": "Semana 1 (Dias 1 a 7)",
+      "fase": "Infraestrutura & Instalação do Stack",
+      "atividades": "Contratação da VPS, configuração de DNS wildcard, execução do docker-compose.yml e ativação de certificados SSL automáticos via Traefik."
+    },
+    {
+      "semana": "Semana 2 (Dias 8 a 14)",
+      "fase": "Migração de Modelos LLM & Bases de Conhecimento",
+      "atividades": "Download de modelos Ollama (Mistral 7B, Llama 2), indexação de documentação corporativa em LlamaIndex e teste de inference local."
+    },
+    {
+      "semana": "Semana 3 (Dias 15 a 21)",
+      "fase": "Migração de Agentes & Configuração de CI/CD",
+      "atividades": "Migração de agentes de Claude Code, configuração de pipelines Woodpecker e workshop de capacitação das equipes de desenvolvimento."
+    },
+    {
+      "semana": "Semana 4 (Dias 22 a 30)",
+      "fase": "Virada de Chave Definitiva & Descomissionamento",
+      "atividades": "Redirecionamento de endpoints de API para stack local, ativação de observabilidade integrada (Prometheus + Grafana) e cancelamento de faturas Anthropic."
+    }
+  ],
+  "monitoramento_e_saude_vps": {
+    "painel_recomendado": "Netdata / Portainer Community Edition (Monitoramento visual leve e em tempo real)",
+    "comandos_diagnostico_1clique": [
+      {
+        "comando": "docker stats --no-stream",
+        "finalidade": "Exibe consumo instantâneo de RAM, % de CPU e tráfego de rede de cada serviço."
+      },
+      {
+        "comando": "docker compose ps",
+        "finalidade": "Verifica status (Up / Healthy) de todos os contêineres."
+      },
+      {
+        "comando": "docker compose logs -f --tail=50 ollama",
+        "finalidade": "Inspeciona logs de inferência do Ollama em tempo real."
+      }
+    ],
+    "metricas_alerta": [
+      {
+        "metrica": "Consumo de RAM da VPS",
+        "limite_alerta": "> 85% por mais de 10 minutos",
+        "acao_recomendada": "Ajustar limite de memória do container Ollama ou adicionar swap."
+      },
+      {
+        "metrica": "Uso de Disco SSD",
+        "limite_alerta": "> 80% do armazenamento",
+        "acao_recomendada": "Executar `docker system prune -f` para limpeza de imagens não usadas."
+      },
+      {
+        "metrica": "Latência de Inference Ollama",
+        "limite_alerta": "> 5 segundos por token",
+        "acao_recomendada": "Ativar GPU acceleration ou reduzir tamanho do modelo."
+      }
+    ]
+  }
+}

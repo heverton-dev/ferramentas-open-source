@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Grupo 3: Observabilidade, Monitoramento & Suporte · Suíte do Ecossistema Soberano</title>
+<style>
+
+ :root {
+  --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+  --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  --paper: #F6F4EF;
+  --surface: #FFFFFF;
+  --surface-2: #FBF9F4;
+  --surface-dark: #0A0F1D;
+  --ink: #1B1E23;
+  --ink-2: #383D45;
+  --muted: #666E7A;
+  --rule: #D8D2C4;
+  --rule-soft: #EAE5D9;
+  --accent: #00875A;
+  --accent-dark: #57D9A3;
+  --accent-soft: #E3FCEF;
+  --accent-soft-dark: #162B22;
+  --green: #00875A;
+  --green-soft: #E3FCEF;
+  --gold: #FFAB00;
+  --gold-soft: #FFF0B3;
+  --flag: #DE350B;
+  --flag-soft: #FFEBE6;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04);
+ }
+
+ @media (prefers-color-scheme: dark) {
+  :root {
+   --paper: #0E121B;
+   --surface: #141924;
+   --surface-2: #1A2130;
+   --ink: #E6E8ED;
+   --ink-2: #B0B5C0;
+   --muted: #7E8695;
+   --rule: #262F40;
+   --rule-soft: #1E2533;
+   --accent: var(--accent-dark);
+   --accent-soft: var(--accent-soft-dark);
+   --green: #57D9A3;
+   --green-soft: #162B22;
+   --gold: #FFC400;
+   --gold-soft: #332600;
+   --flag: #FF7452;
+   --flag-soft: #361B15;
+   --shadow: 0 1px 3px rgba(0,0,0,0.25);
+  }
+ }
+
+ *, *::before, *::after { box-sizing: border-box; }
+ html { font-size: 16px; scroll-behavior: smooth; }
+
+ * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+ }
+ ::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+ }
+ ::-webkit-scrollbar-track {
+  background: transparent;
+ }
+ ::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 2px;
+ }
+
+ body {
+  margin: 0;
+  padding: 40px 20px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+ }
+
+ h1 { font-family: var(--font-serif); font-size: 32px; margin: 38px 0 18px 0; color: var(--ink); line-height: 1.2; font-weight: 700; }
+ h2 { font-family: var(--font-serif); font-size: 26px; margin: 32px 0 16px 0; color: var(--ink); line-height: 1.25; font-weight: 700; }
+ h3 { font-family: var(--font-serif); font-size: 21px; margin: 26px 0 12px 0; color: var(--ink); line-height: 1.3; font-weight: 600; }
+ h4 { font-family: var(--font-sans); font-size: 17px; margin: 22px 0 10px 0; color: var(--ink); line-height: 1.35; font-weight: 700; }
+ h5 { font-family: var(--font-sans); font-size: 14.5px; margin: 18px 0 8px 0; color: var(--ink-2); line-height: 1.4; font-weight: 700; }
+ h6 { font-family: var(--font-sans); font-size: 12.5px; margin: 14px 0 6px 0; color: var(--muted); line-height: 1.4; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+ p { margin: 0 0 14px 0; }
+
+ .wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 48px;
+  box-shadow: var(--shadow);
+ }
+
+ /* CAPA DO LIVRO MESTRE */
+ .book-cover {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  padding: 48px 36px;
+  margin-bottom: 40px;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+ }
+ .book-tagline { font-family: var(--mono); font-size: 12px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 12px; }
+ .book-title { font-family: var(--font-serif); font-size: 42px; line-height: 1.1; margin: 0 0 12px; color: var(--ink); font-weight: 700; letter-spacing: -.02em; }
+ .book-subtitle { font-size: 18px; color: var(--ink-2); line-height: 1.5; margin-bottom: 24px; max-width: 90%; }
+ .book-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; border-top: 1px solid var(--rule); padding-top: 20px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+ .book-meta-item strong { display: block; color: var(--ink); font-size: 13px; margin-top: 2px; }
+
+ /* SUMÁRIO DO LIVRO */
+ .toc-box {
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 24px;
+  margin: 28px 0 40px;
+ }
+ .toc-box h3 { font-family: var(--font-serif); font-size: 22px; margin: 0 0 16px; color: var(--ink); border-bottom: 1px solid var(--rule-soft); padding-bottom: 8px; }
+ .toc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px 24px; }
+ .toc-item { font-size: 13.5px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--rule-soft); padding: 4px 0; }
+ .toc-item a { color: var(--ink); text-decoration: none; font-weight: 500; }
+ .toc-item a:hover { color: var(--accent); }
+ .toc-item span { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+ .stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+ }
+
+ .stat-card {
+  background: var(--surface-2);
+  border: 1px solid var(--rule-soft);
+  border-radius: 2px;
+  padding: 12px 14px;
+ }
+
+ .stat-lbl {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted);
+  margin-bottom: 4px;
+ }
+
+ .stat-val {
+  font-family: var(--mono);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+ }
+
+ .stat-val.highlight { color: var(--green); }
+ .stat-val.alert { color: var(--flag); }
+
+ .racional-box {
+  background: var(--surface-2);
+  border-left: 4px solid var(--accent);
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-size: 14px;
+  color: var(--ink-2);
+  border-radius: 0 3px 3px 0;
+  line-height: 1.6;
+ }
+
+ .sec-head {
+  margin: 54px 0 24px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+ }
+
+ .sec-info { flex: 1; }
+ .sec-num { font-family: var(--mono); font-size: 11.5px; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: .1em; }
+ .sec-head h2 { font-family: var(--font-serif); font-size: 28px; margin: 4px 0 0 0; color: var(--ink); font-weight: 700; }
+ .sec-note { font-size: 14px; color: var(--muted); margin-top: 4px; }
+ .pilar-subtotal-badge { font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 4px 10px; background: var(--green-soft); color: var(--green); border-radius: 2px; border: 1px solid var(--green); }
+
+ /* TABELA MATRIX */
+ .tablewrap { width: 100%; overflow-x: auto; margin: 20px 0 32px 0; border: 1px solid var(--rule); border-radius: 2px; }
+ table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+ thead { background: var(--surface-2); border-bottom: 1px solid var(--rule); }
+ th { text-align: left; padding: 10px 14px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; white-space: nowrap; }
+ td { padding: 12px 14px; border-bottom: 1px solid var(--rule-soft); vertical-align: middle; }
+ tr:last-child td { border-bottom: none; }
+ tr:hover td { background: var(--surface-2); }
+ td.rank { font-family: var(--mono); font-weight: 700; color: var(--muted); font-size: 12px; }
+ td.saas { color: var(--flag); font-weight: 600; }
+ td.econ { font-family: var(--mono); font-weight: 700; color: var(--green); }
+ td.killer { color: var(--flag); font-weight: 700; font-family: var(--mono); }
+
+ /* CARDS DE FERRAMENTAS */
+ .ledger { display: flex; flex-direction: column; gap: 24px; margin-top: 24px; }
+ .entry { display: grid; grid-template-columns: 48px 1fr; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); padding: 24px; box-shadow: var(--shadow); }
+ .entry-rank { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--muted); padding-top: 2px; }
+ .entry-body { display: flex; flex-direction: column; gap: 16px; }
+ .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+ .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+
+ .persona-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+ .pilar-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--gold-soft); color: #8A6100; border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent); font-weight: 700; white-space: nowrap; }
+ .killer-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; white-space: nowrap; }
+ .econ-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; white-space: nowrap; }
+ .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--rule-soft); font-weight: 600; white-space: nowrap; }
+
+ .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+ .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+ .entry-section p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
+
+ .code-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 2px; padding: 16px; font-family: var(--mono); font-size: 12px; overflow-x: auto; color: var(--ink); position: relative; }
+ .code-box pre { margin: 0; font-family: inherit; }
+ pre { position: relative; }
+ .copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+ }
+ .copy-btn:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+ }
+ .copy-btn.copied {
+  background: var(--green);
+  color: #FFFFFF;
+  border-color: var(--green);
+ }
+
+ .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 4px; }
+ .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+ .econ-card.killer { border-left: 3px solid var(--flag); }
+ .econ-card.savings { border-left: 3px solid var(--green); }
+ .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+ .econ-val { font-family: var(--mono); font-size: 13.5px; font-weight: 700; color: var(--ink); }
+
+ .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 4px; }
+ .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+ .infra-card.verdict { border-left: 3px solid var(--accent); grid-column: 1 / -1; }
+ .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+ .infra-val { font-size: 13px; color: var(--ink-2); font-weight: 500; }
+
+ .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 6px; }
+ .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+ .step-head { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: var(--accent); text-transform: uppercase; }
+ .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+ .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+
+ .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+ .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+ .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
+ .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+ .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+ .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+ .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
+
+ .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+ .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+ .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+ .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+ .mcp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+ .mcp-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+ .mcp-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+ .mcp-pill { font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase; padding: 1px 6px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); }
+ .mcp-name { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--ink); }
+ .mcp-card p { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.4; }
+ .mcp-cmd { font-family: var(--mono); font-size: 11px; background: var(--surface); padding: 3px 6px; border-radius: 2px; border: 1px solid var(--rule-soft); color: var(--ink); word-break: break-all; }
+
+ .integration-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin: 16px 0; }
+ .integ-card { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 3px; padding: 16px; box-shadow: var(--shadow); }
+ .integ-card h4 { font-family: var(--font-serif); font-size: 18px; margin: 0 0 8px; color: var(--ink); }
+ .integ-card p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+
+ .tco-banner { background: var(--surface); border: 1px solid var(--green); border-radius: 3px; padding: 20px; margin: 20px 0; box-shadow: var(--shadow); display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+ .tco-col .tco-lbl { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
+ .tco-col .tco-val { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--ink); }
+ .tco-col .tco-val.highlight { color: var(--green); }
+ .tco-col .tco-val.killer { color: var(--flag); }
+
+ /* CALCULADORA INTERATIVA TCO */
+ .calc-box { background: var(--surface-2); border: 1px solid var(--rule); border-radius: 4px; padding: 24px; margin: 20px 0; box-shadow: var(--shadow); }
+ .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 20px; }
+ .calc-slider-group label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+ .calc-slider-group input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+ .calc-results { background: var(--surface); border: 1px solid var(--green); border-radius: 3px; padding: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+ /* BLUEPRINTS & TIMELINE */
+ .blueprint-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow); }
+ .timeline-card { background: var(--surface-2); border-left: 4px solid var(--accent); padding: 16px; margin-bottom: 12px; border-radius: 0 3px 3px 0; }
+ .timeline-card h4 { margin: 0 0 6px; font-family: var(--font-serif); font-size: 17px; color: var(--ink); }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+  <a href="../00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.html" style="font-family: var(--mono); font-size: 11.5px; color: var(--accent); text-decoration: none; font-weight: 700;">← Voltar ao Livro-Texto Completo</a>
+  <span class="persona-badge">Pilar 03</span>
+ </div>
+ <header style="border-bottom: 1px solid var(--rule); padding-bottom: 20px; margin-bottom: 24px;">
+  <div class="meta">
+   <span>Fascículo Especializado · Fábrica Universal AIDD</span>
+   <span>28/08/2026</span>
+  </div>
+  <h1 style="font-size: 30px; margin-bottom: 6px;">Grupo 3: Observabilidade, Monitoramento & Suporte</h1>
+  <p class="deck" style="font-size: 14.5px; margin-bottom: 0;">Arsenal do Quinteto Soberano para DataDog / New Relic / Sentry (Error Tracking) / PagerDuty · Subtotal: R$ 48.000/ano</p>
+ </header>
+ 
+ <div class="ledger">
+      <article class="entry" id="prometheus">
+       <div class="entry-rank">01</div>
+       <div class="entry-body">
+        <div class="entry-top">
+         <h3>Prometheus · Time-Series Database & Scraper de Métricas</h3>
+         <span class="persona-badge">Persona: Completa</span>
+         <span class="killer-badge">Substitui: DataDog / New Relic (Infrastructure Monitoring)</span>
+         <span class="econ-badge">R$ 24.000/ano</span>
+         <span class="lic-badge">Apache-2.0</span>
+        </div>
+        <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Scrape de endpoints `/metrics` em intervalos regulares, armazenando séries temporais e fornecendo SQL-like PromQL. Binário Go estático com armazenamento em disco local e compressão de dados.</p><div class="code-box"><pre><code>docker run -d -p 9090:9090 --name prometheus prom/prometheus</code></pre></div></div>
+        <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">DataDog / New Relic (Infrastructure Monitoring)</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 24.000/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Padrão de fato do CNCF para observabilidade em Kubernetes e containers, com pull-based scraping nativo.</p></div></div></div>
+        <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">2 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">Substituição completa de DataDog/New Relic para equipes que não precisam de observabilidade SaaS.</p></div></div></div>
+        <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Configuração de Targets</div><p>Aponte para endpoints Prometheus de aplicações e infraestrutura.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Recording Rules</div><p>Defina regras de pre-agregação para reduzir latência de queries.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Alertas</div><p>Configure regras de alert disparando webhooks para Alertmanager.</p></div></div></div>
+        <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Totalmente customizável via YAML e PromQL.</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+        <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">prometheus-mcp</span></div><p>Servidor MCP para agentes consultarem métricas.</p><div class="mcp-cmd"><code>npx -y prometheus-mcp-server</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-metric-analyzer</span></div><p>Analisa anomalias de desempenho automaticamente.</p><div class="mcp-cmd"><code>.claude/skills/metric-analyzer/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">promtool</span></div><p>Validação de configurações Prometheus.</p><div class="mcp-cmd"><code>promtool check config prometheus.yml</code></div></div></div></div>
+       </div>
+      </article>
+      
+      <article class="entry" id="grafana">
+       <div class="entry-rank">02</div>
+       <div class="entry-body">
+        <div class="entry-top">
+         <h3>Grafana · Plataforma de Dashboards & Alertas para Observabilidade</h3>
+         <span class="persona-badge">Persona: Robusta</span>
+         <span class="killer-badge">Substitui: DataDog / New Relic (Dashboarding)</span>
+         <span class="econ-badge">R$ 18.000/ano</span>
+         <span class="lic-badge">AGPL-3.0 (Enterprise: Proprietary)</span>
+        </div>
+        <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Constrói dashboards interativos consumindo dados de Prometheus, Loki e outras fontes. Go backend com React frontend e suporte a plugins customizados.</p><div class="code-box"><pre><code>docker run -d -p 3000:3000 --name grafana grafana/grafana</code></pre></div></div>
+        <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">DataDog / New Relic (Dashboarding)</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 18.000/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Dashboard builder visual mais poderoso, suportando Prometheus, Loki, Elasticsearch e 100+ data sources.</p></div></div></div>
+        <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">1 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">Melhor dashboard open source do mercado, com UX comparável a SaaS premium.</p></div></div></div>
+        <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Adição de Data Source</div><p>Conecte Prometheus, Loki e InfluxDB como fontes.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Criação de Dashboard</div><p>Arraste painéis de gráficos, heat maps e tabelas.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Alertas</div><p>Configure regras de alerta disparando notificações no Slack/Discord.</p></div></div></div>
+        <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>White-label completo com logo e domínio corporativo.</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+        <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">grafana-mcp</span></div><p>Servidor MCP para agentes consultarem dashboards e criarem alertas.</p><div class="mcp-cmd"><code>npx -y grafana-mcp-server</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-dashboard-generator</span></div><p>Cria dashboards automaticamente a partir de descrições.</p><div class="mcp-cmd"><code>.claude/skills/dashboard-gen/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">grafana-cli</span></div><p>Operações administrativas via CLI.</p><div class="mcp-cmd"><code>grafana-cli admin reset-admin-password newpassword</code></div></div></div></div>
+       </div>
+      </article>
+      
+      <article class="entry" id="loki">
+       <div class="entry-rank">03</div>
+       <div class="entry-body">
+        <div class="entry-top">
+         <h3>Loki · Log Aggregation System com Índices Otimizados</h3>
+         <span class="persona-badge">Persona: Moderna</span>
+         <span class="killer-badge">Substitui: DataDog / Splunk / Elasticsearch (Logging)</span>
+         <span class="econ-badge">R$ 14.400/ano</span>
+         <span class="lic-badge">AGPL-3.0</span>
+        </div>
+        <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Ingere logs de containers, estrutura-os por labels e fornece buscas rápidas com LogQL. Go com armazenamento em S3 (MinIO) e índices em memória.</p><div class="code-box"><pre><code>docker run -d -p 3100:3100 --name loki grafana/loki</code></pre></div></div>
+        <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">DataDog / Splunk / Elasticsearch (Logging)</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 14.400/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Alternativa leve ao Elasticsearch reduzindo em 10x o storage necessário via índices inteligentes baseados em labels.</p></div></div></div>
+        <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">2 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">Alternativa superior ao ELK stack para organismos não-gigantes, com 90% menos storage.</p></div></div></div>
+        <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Configuração de Promtail</div><p>Deploy agentes Promtail em cada máquina para envio de logs.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Label Strategy</div><p>Defina labels (app, env, level) para indexação eficiente.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Alertas</div><p>Configure alertas baseados em padrões de log.</p></div></div></div>
+        <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Totalmente customizável via YAML.</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+        <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">loki-mcp</span></div><p>Servidor MCP para agentes buscarem logs.</p><div class="mcp-cmd"><code>npx -y loki-mcp-server</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-log-analyzer</span></div><p>Analisa padrões de erro em logs.</p><div class="mcp-cmd"><code>.claude/skills/log-analyzer/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">logcli</span></div><p>CLI para buscas de log.</p><div class="mcp-cmd"><code>logcli query '{job="app"}'</code></div></div></div></div>
+       </div>
+      </article>
+      
+      <article class="entry" id="alertmanager">
+       <div class="entry-rank">04</div>
+       <div class="entry-body">
+        <div class="entry-top">
+         <h3>Alertmanager · Gerenciador de Alertas & Deduplicação</h3>
+         <span class="persona-badge">Persona: Leve</span>
+         <span class="killer-badge">Substitui: PagerDuty (Alert Routing)</span>
+         <span class="econ-badge">R$ 12.000/ano</span>
+         <span class="lic-badge">Apache-2.0</span>
+        </div>
+        <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Agrupa alertas similares, deduplica e envia notificações via múltiplos canais. Go com armazenamento em memória e replicação opcional.</p><div class="code-box"><pre><code>docker run -d -p 9093:9093 --name alertmanager prom/alertmanager</code></pre></div></div>
+        <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">PagerDuty (Alert Routing)</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 12.000/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Complemento oficial ao Prometheus com suporte a grouping, silenciamento e escalonamento de alertas.</p></div></div></div>
+        <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">512 MB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">Essential companion ao Prometheus para evitar alertas repetitivos.</p></div></div></div>
+        <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Configuração de Routes</div><p>Defina regras de roteamento por severidade e label.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Integrações</div><p>Configure webhooks para Slack, Discord ou PagerDuty.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Silenciamentos</div><p>Mute alertas durante manutenção programada.</p></div></div></div>
+        <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Templates de notificação customizáveis.</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+        <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">alertmanager-mcp</span></div><p>Servidor MCP para agentes silenciarem alertas.</p><div class="mcp-cmd"><code>npx -y alertmanager-mcp-server</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-alert-responder</span></div><p>Responde automaticamente a alertas com ações remediadores.</p><div class="mcp-cmd"><code>.claude/skills/alert-responder/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">amtool</span></div><p>CLI para operações de alertas.</p><div class="mcp-cmd"><code>amtool alert query</code></div></div></div></div>
+       </div>
+      </article>
+      
+      <article class="entry" id="opentelemetry">
+       <div class="entry-rank">05</div>
+       <div class="entry-body">
+        <div class="entry-top">
+         <h3>OpenTelemetry Collector · Coleta & Processamento Agnóstico de Traces, Métricas & Logs</h3>
+         <span class="persona-badge">Persona: Simples</span>
+         <span class="killer-badge">Substitui: Datadog / New Relic / Sentry (Tracing & Collection)</span>
+         <span class="econ-badge">R$ 9.600/ano</span>
+         <span class="lic-badge">Apache-2.0</span>
+        </div>
+        <div class="entry-section"><div class="label">1. O Que Faz &amp; Como Funciona</div><p>Coleta traces, métricas e logs em formato OpenTelemetry e exporta para múltiplos backends. Go com suporte a OTLP protocol e receiversexportadores plugáveis.</p><div class="code-box"><pre><code>docker run -d -p 4317:4317 -p 4318:4318 --name otel-collector otel/opentelemetry-collector</code></pre></div></div>
+        <div class="entry-section"><div class="label">2. Análise Econômica &amp; Racional</div><div class="econ-grid"><div class="econ-card killer"><span class="econ-lbl">SaaS Substituído</span><span class="econ-val">Datadog / New Relic / Sentry (Tracing & Collection)</span></div><div class="econ-card savings"><span class="econ-lbl">Economia</span><span class="econ-val">R$ 9.600/ano</span></div><div class="econ-card" style="grid-column: 1 / -1;"><span class="econ-lbl">Racional</span><p style="font-size: 13px; margin: 4px 0 0;">Padrão CNCF agnóstico de backend, permitindo enviar dados para Prometheus, Loki, Jaeger ou qualquer sistema sem reescrever código.</p></div></div></div>
+        <div class="entry-section"><div class="label">3. Infraestrutura &amp; Veredito</div><div class="infra-grid"><div class="infra-card"><span class="infra-lbl">RAM</span><span class="infra-val">1 GB RAM</span></div><div class="infra-card"><span class="infra-lbl">Docker</span><span class="infra-val"><code>oficial</code></span></div><div class="infra-card verdict"><span class="infra-lbl">Veredito</span><p style="font-size: 13px; margin: 4px 0 0;">Agnóstico de backend ideal para evitar lock-in em uma solução comercial.</p></div></div></div>
+        <div class="entry-section"><div class="label">4. Guia Prático em 3 Passos</div><div class="steps-grid"><div class="step-card"><div class="step-head"><span class="step-badge">1</span> Configuração de Receivers</div><p>Ative OTLP, Jaeger e Prometheus receivers.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">2</span> Processadores</div><p>Adicione processadores para sampling e enriquecimento de atributos.</p></div><div class="step-card"><div class="step-head"><span class="step-badge">3</span> Exportadores</div><p>Aponte para Prometheus, Loki, Jaeger e sistemas legados.</p></div></div></div>
+        <div class="entry-section"><div class="label">5. White-Label</div><div class="ds-grid"><div class="ds-card"><span class="ds-lbl">Mecânica</span><p>Totalmente customizável via YAML.</p></div><div class="ds-card"><span class="ds-lbl">Manutenção</span><p>None</p></div></div></div>
+        <div class="entry-section"><div class="label">6. Ecossistema Agêntico &amp; MCPs</div><div class="mcp-grid"><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">MCP Server</span><span class="mcp-name">otel-mcp</span></div><p>Servidor MCP para agentes consultarem traces.</p><div class="mcp-cmd"><code>npx -y otel-mcp-server</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">Agent Skill</span><span class="mcp-name">skill-trace-debugger</span></div><p>Debugga requests distribuídas via traces.</p><div class="mcp-cmd"><code>.claude/skills/trace-debugger/SKILL.md</code></div></div><div class="mcp-card"><div class="mcp-top"><span class="mcp-pill">CLI Tool</span><span class="mcp-name">otelcontribcol</span></div><p>Validação de configurações.</p><div class="mcp-cmd"><code>otelcontribcol validate --config config.yaml</code></div></div></div></div>
+       </div>
+      </article>
+      </div>
+ 
+ <footer style="margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--rule-soft); display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 11px; color: var(--muted);">
+  <span>Suíte do Ecossistema Soberano · Padrão Diamante R5-E</span>
+  <a href="../00-livro-mestre-compilado/LIVRO-ECOSSISTEMA-COMPLETO.html" style="color: var(--accent); text-decoration: none; font-weight: 700;">Ver Livro Completo ↗</a>
+ </footer>
+</div>
+
+<script>
+function filterTools(query) {
+ const q = query.toLowerCase().trim();
+ const entries = document.querySelectorAll('.entry');
+ const rows = document.querySelectorAll('.tablewrap tbody tr');
+ let visibleCount = 0;
+
+ entries.forEach(entry => {
+  const text = entry.innerText.toLowerCase();
+  if (!q || text.includes(q)) {
+   entry.style.display = 'grid';
+   visibleCount++;
+  } else {
+   entry.style.display = 'none';
+  }
+ });
+
+ rows.forEach(row => {
+  const text = row.innerText.toLowerCase();
+  if (!q || text.includes(q)) {
+   row.style.display = '';
+  } else {
+   row.style.display = 'none';
+  }
+ });
+
+ const countEl = document.getElementById('search-count');
+ if (countEl) {
+  countEl.innerText = `${visibleCount} ferramentas encontradas`;
+ }
+}
+
+function updateTcoCalculator() {
+ const leads = parseInt(document.getElementById('slider-leads').value, 10);
+ const sellers = parseInt(document.getElementById('slider-sellers').value, 10);
+ const agents = parseInt(document.getElementById('slider-agents').value, 10);
+
+ document.getElementById('val-leads').innerText = leads.toLocaleString('pt-BR') + ' leads';
+ document.getElementById('val-sellers').innerText = sellers + ' vendedores';
+ document.getElementById('val-agents').innerText = agents + ' atendentes';
+
+ // Cálculos SaaS estimados (RD Marketing escalonado + RD CRM por licença + RD Conversas por operador)
+ const custoMkt = (leads <= 10000) ? 14400 : (leads <= 50000) ? 42000 : (leads <= 100000) ? 78000 : 130000;
+ const custoCrm = sellers * 3600;
+ const custoChat = agents * 3600;
+ const saasTotal = custoMkt + custoCrm + custoChat;
+
+ // Custo VPS Soberana (Cluster Unificado 8 vCPU / 16 GB RAM)
+ const custoVps = 4200;
+ const economiaLiquida = saasTotal - custoVps;
+ const economiaPct = ((economiaLiquida / saasTotal) * 100).toFixed(1);
+
+ document.getElementById('calc-saas-total').innerText = 'R$ ' + saasTotal.toLocaleString('pt-BR') + '/ano';
+ document.getElementById('calc-vps-total').innerText = 'R$ ' + custoVps.toLocaleString('pt-BR') + '/ano';
+ document.getElementById('calc-savings-total').innerText = 'R$ ' + economiaLiquida.toLocaleString('pt-BR') + '/ano (' + economiaPct + '%)';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+ const searchInput = document.getElementById('busca-ferramentas');
+ if (searchInput) {
+  searchInput.addEventListener('input', (e) => filterTools(e.target.value));
+  document.addEventListener('keydown', (e) => {
+   if (e.key === '/' && document.activeElement !== searchInput) {
+    e.preventDefault();
+    searchInput.focus();
+   }
+  });
+ }
+
+ const sLeads = document.getElementById('slider-leads');
+ const sSellers = document.getElementById('slider-sellers');
+ const sAgents = document.getElementById('slider-agents');
+ if (sLeads && sSellers && sAgents) {
+  sLeads.addEventListener('input', updateTcoCalculator);
+  sSellers.addEventListener('input', updateTcoCalculator);
+  sAgents.addEventListener('input', updateTcoCalculator);
+  updateTcoCalculator();
+ }
+
+ // Injeção automática de botão ÚNICO de cópia em cada bloco de código ou prompt
+ const targets = [];
+ document.querySelectorAll('.code-box').forEach(box => targets.push(box));
+ document.querySelectorAll('pre').forEach(pre => {
+  if (!pre.closest('.code-box')) {
+   targets.push(pre);
+  }
+ });
+
+ targets.forEach((block) => {
+  if (block.querySelector('.copy-btn')) return;
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.type = 'button';
+  btn.innerText = 'Copiar';
+  btn.setAttribute('aria-label', 'Copiar código ou prompt');
+  
+  btn.addEventListener('click', async (e) => {
+   e.stopPropagation();
+   let textToCopy = '';
+   const codeElem = block.querySelector('pre') || block.querySelector('code');
+   if (codeElem) {
+    textToCopy = codeElem.innerText.replace(/Copiar/g, '').trim();
+   } else {
+    textToCopy = block.innerText.replace(/Copiar/g, '').trim();
+   }
+
+   try {
+    await navigator.clipboard.writeText(textToCopy);
+    btn.innerText = 'Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+     btn.innerText = 'Copiar';
+     btn.classList.remove('copied');
+    }, 2000);
+   } catch (err) {
+    console.error('Falha ao copiar:', err);
+   }
+  });
+
+  block.style.position = 'relative';
+  block.appendChild(btn);
+ });
+});
+</script>
+
+</body>
+</html>
