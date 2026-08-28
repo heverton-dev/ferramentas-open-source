@@ -7,6 +7,10 @@
 
 ## 📌 Aprendizados Registrados
 
+### [2026-08-28] Playbook do Engenheiro Agêntico, Termius & Observabilidade Uptime Kuma (Camada 06)
+* **Decisão & Arquitetura:** O Fluxo 4 agora inclui formalmente a camada `06-playbook-engenharia-agentica/` com 4 Prompts Mestres executáveis por agentes de IA e configuração de Servidores MCP (`server-ssh`, `server-docker`), permitindo que a IA suba 100% da infraestrutura em produção de forma autônoma.
+* **Padrão de Observabilidade & Acesso:** Toda suíte possui obrigatoriamente o fascículo `07-guia-operacao-vps-termius-e-monitoramento-uptime-kuma.html` com Termius (chaves Ed25519, túneis SSH seguros para portas internas e SFTP) e contêiner Uptime Kuma integrado ao Compose para monitoramento 24/7 com alertas de queda e expiração de certificados TLS via Webhook.
+
 ### [2026-08-28] Incorporação dos Manuais e Trilhas Individuais no Fluxo 4 (Camada 05)
 * **Decisão & Arquitetura:** O Fluxo 4 foi elevado para uma entrega ponta a ponta chave na mão (*Turnkey*). Além dos 12 capítulos do Livro Mestre e dos fascículos executivos/infraestrutura, a pasta `05-manuais-e-trilhas-individuais/<ferramenta>/` agora compila automaticamente o **Manual de Engenharia de VPS** (com protocolo de Desinstalação Cirúrgica de 4 passos) e a **Trilha Didática de Aprendizado em 5 Aulas** para cada uma das ferramentas que compõem o macro-ecossistema, com links bidirecionais diretos a partir do Livro Mestre.
 

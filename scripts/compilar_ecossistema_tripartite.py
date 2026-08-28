@@ -2477,6 +2477,78 @@ def compilar_ecossistema_tripartite(slug: str):
 
   print(f"  Todos os Fascículos Especializados e Pilares individuais foram compilados com sucesso!")
 
+  # 3. FASCÍCULOS 02: ENGENHARIA & INFRAESTRUTURA (Adição de 07: Termius & Uptime Kuma)
+  body_termius_kuma = f"""
+  <div class="racional-box">
+   <p><strong>Padrão de Engenharia Operacional:</strong> Toda infraestrutura soberana corporativa exige uma camada de <strong>manipulação remota segura e criptografada (Termius)</strong> e um <strong>painel de observabilidade em tempo real (Uptime Kuma)</strong> com alertas instantâneos de queda de serviço, expiração de certificados SSL e latência de rede.</p>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px;">1. Operação &amp; Acesso Seguro da VPS com Termius</h3>
+  <div class="steps-grid" style="margin-bottom: 24px;">
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">01</span> Par de Chaves Ed25519</div>
+    <p>Gere uma chave criptográfica moderna Ed25519 no Termius e desative o login por senha no <code>/etc/ssh/sshd_config</code> (PasswordAuthentication no).</p>
+   </div>
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">02</span> Gerenciamento SFTP Integrado</div>
+    <p>Utilize o cliente SFTP nativo do Termius para transferência rápida de arquivos <code>.env</code>, manifestos compose e certificados SSL sem expor portas extras.</p>
+   </div>
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">03</span> Port Forwarding &amp; Túneis SSH</div>
+    <p>Acesse bancos de dados PostgreSQL/Redis e painéis internos (ex: Keycloak, n8n, Redis Commander) via túnel seguro SSH local (Local Port Forwarding) sem abrir portas no firewall público.</p>
+   </div>
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">04</span> Snippets de Automação em 1 Clique</div>
+    <p>Cadastre comandos rotineiros (diagnóstico de contêineres, limpeza de logs, backup sob demanda) no cofre de snippets do Termius para execução instantânea em qualquer dispositivo.</p>
+   </div>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 10px;">2. Observabilidade em Tempo Real com Uptime Kuma</h3>
+  <div class="racional-box">
+   <p><strong>Uptime Kuma em Produção:</strong> Servidor de monitoramento leve, moderno e autônomo. Roda em contêiner dedicado, monitorando periodicamente todas as URLs públicas da suíte, portas TCP e expiração de certificados TLS.</p>
+  </div>
+
+  <div class="code-box" style="margin-bottom: 20px;">
+   <pre><code># Bloco de Deploy do Uptime Kuma no docker-compose.yml
+uptime-kuma:
+  image: louislam/uptime-kuma:1
+  container_name: uptime_kuma_monitor
+  restart: always
+  volumes:
+    - ./uptime_kuma_data:/app/data
+  labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.kuma.rule=Host(`status.empresa.com.br`)"
+    - "traefik.http.routers.kuma.entrypoints=websecure"
+    - "traefik.http.routers.kuma.tls.certresolver=letsencrypt"
+  networks:
+    - default</code></pre>
+  </div>
+
+  <h4 style="margin: 16px 0 8px; color: var(--ink);">Matriz de Monitores Recomendados para a Suíte</h4>
+  <div class="tablewrap" style="margin-bottom: 20px;">
+   <table>
+    <thead>
+     <tr>
+      <th>Serviço Monitorado</th>
+      <th>Tipo de Monitor</th>
+      <th>Intervalo</th>
+      <th>Alerta de Queda</th>
+     </tr>
+    </thead>
+    <tbody>
+     <tr><td><strong>Gateway Traefik / HTTPS</strong></td><td>HTTP(s) com Validação TLS</td><td>30 segundos</td><td>Canal #alerta-ti (Mattermost / WhatsApp)</td></tr>
+     <tr><td><strong>Servidor de E-mail (SMTP/IMAP)</strong></td><td>Porta TCP (587, 993, 25)</td><td>60 segundos</td><td>Notificação imediata</td></tr>
+     <tr><td><strong>Nuvem de Arquivos (Nextcloud / Drive)</strong></td><td>HTTP(s) Status 200</td><td>45 segundos</td><td>Alerta de latência > 2000ms</td></tr>
+     <tr><td><strong>Painel de Autenticação (Keycloak SSO)</strong></td><td>HTTP(s) Health Endpoint</td><td>30 segundos</td><td>Alerta Crítico P0</td></tr>
+     <tr><td><strong>Certificados SSL/TLS</strong></td><td>Certificate Expiry Check</td><td>24 horas</td><td>Aviso prévio se < 15 dias de expiração</td></tr>
+    </tbody>
+   </table>
+  </div>
+  """
+  with open(dir_eng / "07-guia-operacao-vps-termius-e-monitoramento-uptime-kuma.html", "w", encoding="utf-8") as f:
+    f.write(renderizar_fasciculo_html("Guia de Operação VPS com Termius & Uptime Kuma", "Manipulação Remota Segura e Observabilidade em Tempo Real da Infraestrutura", "DevOps & SRE", body_termius_kuma))
+
   # 6. CAMADA INCORPORADA: MANUAIS E TRILHAS INDIVIDUAIS (PADRÃO FLUXO 3)
   dir_manuais_trilhas = out_dir / "05-manuais-e-trilhas-individuais"
   dir_manuais_trilhas.mkdir(parents=True, exist_ok=True)
@@ -2510,7 +2582,215 @@ def compilar_ecossistema_tripartite(slug: str):
 
   print(f"  {total_manuais_gerados} Manuais de Engenharia VPS e {total_trilhas_geradas} Trilhas de 5 Aulas gerados em '05-manuais-e-trilhas-individuais/'!")
 
-  # 7. Registro no SQLite (Regra R11)
+  # 7. NOVA CAMADA 06: PLAYBOOK PARA ENGENHEIROS AGÊNTICOS & PROMPTS MESTRES
+  dir_agentic = out_dir / "06-playbook-engenharia-agentica"
+  dir_agentic_prompts = dir_agentic / "prompts-mestres"
+  dir_agentic_config = dir_agentic / "agents-config"
+  for d_ag in [dir_agentic, dir_agentic_prompts, dir_agentic_config]:
+    d_ag.mkdir(parents=True, exist_ok=True)
+
+  # Prompts Mestres Específicos
+  p1_vps = f"""# PROMPT MESTRE 01 · PROVISIONAMENTO & HARDENING DA VPS
+Você é um Engenheiro de Infraestrutura e Segurança Sênior operando como Agente Autônomo.
+Objetivo: Preparar e blindar a VPS Ubuntu 24.04 LTS para hospedar a suíte {dados.get('nome_ecossistema')}.
+
+Protocolo de Execução:
+1. Conecte-se na VPS via SSH usando autenticação por chave Ed25519 (Termius / OpenSSH);
+2. Atualize os pacotes do sistema: apt update && apt upgrade -y;
+3. Configure o Firewall UFW:
+   ufw default deny incoming
+   ufw default allow outgoing
+   ufw allow 22/tcp (ou porta SSH customizada)
+   ufw allow 80/tcp
+   ufw allow 443/tcp
+   ufw --force enable
+4. Instale e configure o Fail2ban para proteção contra força bruta no SSH;
+5. Instale a versão mais recente do Docker Engine e Docker Compose Plugin oficial;
+6. Crie a rede interna isolada: docker network create sovereign_net;
+7. Valide a instalação executando: docker info && ufw status.
+"""
+
+  p2_cluster = f"""# PROMPT MESTRE 02 · DEPLOY ALL-IN-ONE DA SUÍTE SOBERANA
+Você é um Engenheiro DevOps Sênior operando como Agente Autônomo.
+Objetivo: Realizar o deploy completo da suíte {dados.get('nome_ecossistema')} ({dados.get('saas_substituido')}).
+
+Protocolo de Execução:
+1. Crie o diretório base: mkdir -p /opt/sovereign-suite && cd /opt/sovereign-suite;
+2. Escreva o arquivo de variáveis .env com credenciais de produção criptograficamente seguras;
+3. Escreva o manifesto docker-compose.yml canônico unificado (Traefik, Keycloak SSO, módulos do Quinteto e bancos PostgreSQL/Redis);
+4. Configure as labels de roteamento do Traefik para emissão automática de certificados SSL Let's Encrypt para os subdomínios da empresa;
+5. Suba o cluster: docker compose up -d;
+6. Monitore a inicialização dos contêineres: docker compose logs -f --tail=100;
+7. Valide que todos os serviços estão com status 'healthy' ou 'running'.
+"""
+
+  p3_monitor = f"""# PROMPT MESTRE 03 · MONITORAMENTO EM TEMPO REAL (UPTIME KUMA)
+Você é um Engenheiro SRE / Observabilidade operando como Agente Autônomo.
+Objetivo: Configurar a observabilidade em tempo real e os canais de alerta da suíte {dados.get('nome_ecossistema')}.
+
+Protocolo de Execução:
+1. Adicione o serviço Uptime Kuma ao docker-compose.yml da suíte e suba o contêiner;
+2. Acesse a API ou crie via script os monitores para:
+   - Traefik HTTPS Gateway (Validação de resposta HTTP 200 e expiração de certificado SSL);
+   - Serviços do Pilar 01, 02 e 03 (E-mail, Drive e Chat);
+   - Keycloak SSO Endpoint;
+3. Configure o canal de notificação de incidentes (Webhook para Mattermost / WhatsApp via n8n);
+4. Execute um teste de disparo de alerta simulando parada temporária de um contêiner;
+5. Disponibilize a Status Page corporativa pública ou interna para a equipe.
+"""
+
+  p4_smoke = f"""# PROMPT MESTRE 04 · SMOKE TESTS & VALIDAÇÃO DE DISASTER RECOVERY (DRP)
+Você é um Engenheiro de QA & Auditoria de Infraestrutura operando como Agente Autônomo.
+Objetivo: Executar os testes de fumaça (Smoke Tests) e auditoria de backup da suíte {dados.get('nome_ecossistema')}.
+
+Protocolo de Execução:
+1. Valide a resolução de DNS e certificados HTTPS de todos os subdomínios corporativos;
+2. Teste o fluxo de login único OIDC via Keycloak;
+3. Teste o upload de arquivos no Drive corporativo e envio/recebimento de mensagens de e-mail e chat;
+4. Execute o script de backup automatizado 3-2-1 (/opt/scripts/backup.sh) e verifique a integridade do arquivo gerado;
+5. Simule a restauração do banco de dados em um banco de testes para garantir 100% de recuperabilidade em caso de desastre;
+6. Emita o Relatório Executivo de Homologação em Produção com veredito final.
+"""
+
+  with open(dir_agentic_prompts / "01-prompt-mestre-provisionamento-vps-e-hardened-ssh.md", "w", encoding="utf-8") as f_p:
+    f_p.write(p1_vps)
+  with open(dir_agentic_prompts / "02-prompt-mestre-deploy-cluster-compose-e-traefik.md", "w", encoding="utf-8") as f_p:
+    f_p.write(p2_cluster)
+  with open(dir_agentic_prompts / "03-prompt-mestre-configuracao-uptime-kuma-e-alertas.md", "w", encoding="utf-8") as f_p:
+    f_p.write(p3_monitor)
+  with open(dir_agentic_prompts / "04-prompt-mestre-validacao-saude-e-smoke-tests.md", "w", encoding="utf-8") as f_p:
+    f_p.write(p4_smoke)
+
+  # Configurações de Agente (.mcp.json e AGENT-INSTRUCTIONS.md)
+  mcp_config = """{
+  "mcpServers": {
+    "ssh_vps_executor": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-ssh"],
+      "env": {
+        "SSH_HOST": "seu-ip-vps",
+        "SSH_USER": "root",
+        "SSH_KEY_PATH": "~/.ssh/id_ed25519"
+      }
+    },
+    "docker_manager": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-docker"]
+    }
+  }
+}"""
+  with open(dir_agentic_config / ".mcp.json", "w", encoding="utf-8") as f_mcp:
+    f_mcp.write(mcp_config)
+
+  agent_instructions = f"""# Instruções Canônicas para o Agente de IA · Orquestração Autônoma da Suíte Soberana
+Ecossistema Alvo: {dados.get('nome_ecossistema')} (Substitui {dados.get('saas_substituido')})
+
+Você é o Agente Autônomo de Engenharia AIDD encarregado de provisionar e validar esta infraestrutura.
+Siga rigidamente os 4 Prompts Mestres em sequência:
+1. Execute `01-prompt-mestre-provisionamento-vps-e-hardened-ssh.md`;
+2. Execute `02-prompt-mestre-deploy-cluster-compose-e-traefik.md`;
+3. Execute `03-prompt-mestre-configuracao-uptime-kuma-e-alertas.md`;
+4. Execute `04-prompt-mestre-validacao-saude-e-smoke-tests.md`.
+
+Regras de Operação:
+- Nunca exponha senhas ou chaves em texto claro em logs;
+- Sempre valide o status dos contêineres antes de prosseguir para a próxima etapa;
+- Use o Termius para sessões manuais e o Uptime Kuma para monitoramento contínuo pós-deploy.
+"""
+  with open(dir_agentic_config / "AGENT-INSTRUCTIONS.md", "w", encoding="utf-8") as f_inst:
+    f_inst.write(agent_instructions)
+
+  # Playbook Master (HTML e MD)
+  body_playbook_html = f"""
+  <div class="racional-box">
+   <p><strong>Playbook de Automação com Agentes de IA:</strong> Este guia orienta o <strong>Engenheiro Agêntico</strong> a utilizar agentes de IA (Claude Code, Cursor, Antigravity, OpenCode ou Windsurf) com Servidores MCP para realizar o deploy, parametrização e testes da suíte <strong>{dados.get('nome_ecossistema')}</strong> de forma 100% automatizada e autônoma.</p>
+  </div>
+
+  <div class="tco-banner" style="margin-bottom: 24px;">
+   <div class="tco-col"><div class="tco-lbl">Perfil Operador</div><div class="tco-val highlight">Engenheiro Agêntico</div></div>
+   <div class="tco-col"><div class="tco-lbl">Tempo de Deploy por IA</div><div class="tco-val">~ 15 minutos</div></div>
+   <div class="tco-col"><div class="tco-lbl">Manipulação VPS</div><div class="tco-val">Termius (SSH/SFTP)</div></div>
+   <div class="tco-col"><div class="tco-lbl">Observabilidade</div><div class="tco-val">Uptime Kuma</div></div>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 24px 0 10px;">Os 4 Prompts Mestres de Orquestração Agêntica</h3>
+  <div class="steps-grid" style="margin-bottom: 24px;">
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">01</span> Provisionamento &amp; Hardening</div>
+    <p>O agente acessa a VPS via SSH MCP, atualiza o Ubuntu, ativa o UFW restritivo, Fail2ban e instala o Docker Engine oficial com rede isolada.</p>
+   </div>
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">02</span> Deploy do Cluster Soberano</div>
+    <p>O agente gera os arquivos <code>.env</code> com chaves criptográficas seguras, escreve o <code>docker-compose.yml</code> e inicializa a stack com Traefik TLS.</p>
+   </div>
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">03</span> Observabilidade com Uptime Kuma</div>
+    <p>O agente provisiona o Uptime Kuma, cadastra os endpoints de monitoramento de cada ferramenta e configura os webhooks de alerta em caso de queda.</p>
+   </div>
+   <div class="step-card">
+    <div class="step-head"><span class="step-badge">04</span> Smoke Tests &amp; DRP</div>
+    <p>O agente executa testes ponta a ponta (verificação de SSL, teste de login OIDC, rotina de backup 3-2-1) e emite o relatório de conformidade.</p>
+   </div>
+  </div>
+
+  <h3 style="font-family: var(--font-serif); font-size: 20px; margin: 28px 0 10px;">Kit de Ferramentas do Engenheiro Agêntico</h3>
+  <div class="ds-grid">
+   <div class="ds-card">
+    <span class="ds-lbl">Termius (Gestão de Acesso Seguro)</span>
+    <p>Gerenciamento de conexões SSH por chaves Ed25519, túneis criptografados para portas internas (5432, 6379, 8080) e SFTP integrado para auditoria.</p>
+   </div>
+   <div class="ds-card">
+    <span class="ds-lbl">Uptime Kuma (Monitoramento em Tempo Real)</span>
+    <p>Monitoramento 24/7 com checagem de HTTP 200, portas de rede, expiração de certificados TLS e página de status corporativa pública.</p>
+   </div>
+   <div class="ds-card">
+    <span class="ds-lbl">Servidores MCP para Agentes</span>
+    <p>Permite que agentes de IA executem comandos remotos com isolamento e controlem contêineres Docker de forma declarativa.</p>
+   </div>
+  </div>
+  """
+
+  html_playbook = renderizar_fasciculo_html(
+    f"Playbook do Engenheiro Agêntico: {dados.get('nome_ecossistema')}",
+    "Guia de Orquestração com Agentes de IA, Termius e Uptime Kuma",
+    "Engenharia Agêntica & IA",
+    body_playbook_html
+  )
+
+  md_playbook = f"""# Playbook do Engenheiro Agêntico: {dados.get('nome_ecossistema')}
+
+> **Objetivo:** Subir e gerenciar 100% do ecossistema utilizando Agentes de IA autônomos, Termius para acesso seguro e Uptime Kuma para monitoramento contínuo em tempo real.  
+> **SaaS Substituído:** `{dados.get('saas_substituido')}` | **Economia:** `{dados.get('analise_economica_global', {}).get('economia_anual_liquida')}`  
+
+---
+
+## 1. Visão Geral da Abordagem Agêntica
+O Engenheiro Agêntico não executa comandos manuais repetitivos: ele orquestra agentes de IA equipados com ferramentas (MCPs) que executam o ciclo completo de vida da infraestrutura.
+
+---
+
+## 2. Estrutura de Prompts Mestres (Disponíveis em `prompts-mestres/`)
+1. `01-prompt-mestre-provisionamento-vps-e-hardened-ssh.md`: Hardening da VPS, UFW, Fail2ban e Docker;
+2. `02-prompt-mestre-deploy-cluster-compose-e-traefik.md`: Geração de manifestos, variáveis seguras e subida do cluster;
+3. `03-prompt-mestre-configuracao-uptime-kuma-e-alertas.md`: Configuração do monitoramento em tempo real com Uptime Kuma;
+4. `04-prompt-mestre-validacao-saude-e-smoke-tests.md`: Testes de fumaça, validação OIDC e teste prático de backup 3-2-1.
+
+---
+
+## 3. Ferramentas Obrigatórias de Gestão & Observabilidade
+- **Termius:** Gestão de credenciais SSH (Ed25519), túneis seguros para portas internas e SFTP corporativo;
+- **Uptime Kuma:** Monitoramento de saúde 24/7 de todos os serviços com alertas via Webhook no Mattermost / WhatsApp;
+- **Servidores MCP:** `@modelcontextprotocol/server-ssh` e `@modelcontextprotocol/server-docker` configurados em `agents-config/.mcp.json`.
+"""
+
+  with open(dir_agentic / "PLAYBOOK-ENGENHEIRO-AGENTICO.html", "w", encoding="utf-8") as f_pl:
+    f_pl.write(html_playbook)
+  with open(dir_agentic / "PLAYBOOK-ENGENHEIRO-AGENTICO.md", "w", encoding="utf-8") as f_pl:
+    f_pl.write(md_playbook)
+
+  print(f"  Camada 06 (Playbook do Engenheiro Agêntico, Prompts Mestres e Configs MCP) gerada com sucesso!")
+
+  # 8. Registro no SQLite (Regra R11)
   try:
     registrar_ecossistema({
       "slug": f"ecos-{slug}",
