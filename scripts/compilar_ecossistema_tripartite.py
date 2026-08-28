@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-COMPILADOR TRIPARTITE DE MACRO-ECOSSISTEMAS SAAS (FLUXO 4 - PADRÃO DIAMANTE R5-E)
+COMPILADOR TRIPARTITE DE MACRO-ECOSSISTEMAS SAAS (FLUXO 4 - PADRÃO DIAMANTE R5-E & QUINTETO SOBERANO)
 Gera o HTML final, Markdown denso e PDF Typst com 100% de paridade de design aos Fluxos 1, 2 e 3.
-Inclui análise por Grupos de Negócio e triangulação explícita de cada ferramenta:
-- Qual módulo substitui diretamente;
-- Racional técnico da escolha open source;
-- Economia financeira individual e subtotal por pilar.
+Estrutura cada grupo com seu próprio QUINTETO SOBERANO (5 personas canônicas) e fichas técnicas completas:
+1. O Que Faz & Como Funciona
+2. Análise Econômica & Impacto Financeiro
+3. Requisitos de Infraestrutura & Veredito Técnico
+4. Como Usar no Dia a Dia · Guia Prático
+5. White-Label & Aderência ao Design System Corporativo
+6. Uso Complementar & Ecossistema Agêntico (MCPs, Skills e Plugins)
+7. Deploy Consolidado All-in-One com Anatomia da Stack
+8. Guia Operacional de Modularidade & Hot-Swap
 """
 import sys
 import json
@@ -141,18 +146,18 @@ CSS_CANONICO_DIAMANTE = """
   .search-input:focus { border-color: var(--accent); }
 
   .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
-  table { width: 100%; min-width: 980px; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+  table { width: 100%; min-width: 1020px; border-collapse: collapse; font-size: 13.5px; text-align: left; }
   th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
   td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 45px; text-align: center; }
   td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
   td.tool a:hover { color: var(--accent); }
-  td.pilar-col { min-width: 160px; white-space: nowrap; }
-  td.saas { color: var(--flag); font-size: 12.5px; font-weight: 600; line-height: 1.4; min-width: 240px; }
-  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; white-space: nowrap; min-width: 140px; }
-  td.lic { font-family: var(--mono); font-size: 11px; text-align: center; width: 90px; }
-  td.code-col { text-align: center; width: 95px; }
+  td.pilar-col { min-width: 150px; white-space: nowrap; }
+  td.saas { color: var(--flag); font-size: 12.5px; font-weight: 600; line-height: 1.4; min-width: 230px; }
+  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; white-space: nowrap; min-width: 130px; }
+  td.lic { font-family: var(--mono); font-size: 11px; text-align: center; width: 85px; }
+  td.code-col { text-align: center; width: 90px; }
 
   .ledger { display: flex; flex-direction: column; gap: 24px; }
   .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
@@ -163,22 +168,37 @@ CSS_CANONICO_DIAMANTE = """
   .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
   .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
 
+  .persona-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
+  .persona-badge.robusta { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+  .persona-badge.completa { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+  .persona-badge.moderna { background: #EAE6FF; color: #403294; border: 1px solid #C0B6F2; }
+  .persona-badge.leve { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+  .persona-badge.simples { background: #E6FCFF; color: #00667A; border: 1px solid #B3F5FF; }
+
   .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
   .pilar-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; background: var(--gold-soft); color: #8A6100; border: 1px solid var(--gold); font-weight: 700; white-space: nowrap; display: inline-block; }
   .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
   .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
-  .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
 
   .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
   .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
-  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+  .entry-section p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-2); }
   .entry-section p strong { color: var(--ink); font-weight: 600; }
 
   .racional-box { background: var(--surface-2); border-left: 3px solid var(--accent); border-radius: 2px; padding: 10px 14px; }
   .racional-box p { font-size: 13.5px; color: var(--ink-2); margin: 0; line-height: 1.5; }
 
+  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
+  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+  .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+  .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+
   .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
   .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
+  @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
   .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
   .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
 
@@ -188,16 +208,40 @@ CSS_CANONICO_DIAMANTE = """
   .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
   .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
 
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 4px; }
+  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+  .step-head { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: var(--accent); text-transform: uppercase; }
+  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+  .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+
+  /* DESIGN SYSTEM & WHITE LABEL */
+  .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
+  .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+  .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+  .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+  .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
+
+  .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+  .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
+  /* MCPs & AGENT ECOSYSTEM */
+  .mcp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+  .mcp-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+  .mcp-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+  .mcp-pill { font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase; padding: 1px 6px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); }
+  .mcp-name { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--ink); }
+  .mcp-card p { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.4; }
+  .mcp-cmd { font-family: var(--mono); font-size: 11px; background: var(--surface); padding: 3px 6px; border-radius: 2px; border: 1px solid var(--rule-soft); color: var(--ink); word-break: break-all; }
+
+  /* CAIXAS DE COLA & DEPLOY */
   .integration-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin: 16px 0; }
   .integ-card { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--accent); border-radius: 3px; padding: 16px; box-shadow: var(--shadow); }
   .integ-card h4 { font-family: var(--font-serif); font-size: 18px; margin: 0 0 8px; color: var(--ink); }
   .integ-card p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
-
-  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 8px; }
-  .step-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; box-shadow: var(--shadow); }
-  .step-head { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; }
-  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 6px; font-size: 10px; }
-  .step-card p { margin: 0; font-size: 13px; color: var(--ink-2); }
 
   .tco-banner { background: var(--surface); border: 1px solid var(--green); border-radius: 3px; padding: 20px; margin: 20px 0; box-shadow: var(--shadow); display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
   .tco-col .tco-lbl { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 600; margin-bottom: 4px; }
@@ -263,6 +307,8 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
     integracao = dados.get("camada_integracao", {})
     deploy = dados.get("deploy_consolidado", {})
     econ = dados.get("analise_economica_global", {})
+    guia = dados.get("guia_modularidade_e_expansao", {})
+    stack_detalhe = deploy.get("composicao_stack_detalhada", [])
 
     detalhe_econ = econ.get("detalhamento_por_grupo", [])
     tabela_econ_md = ""
@@ -275,7 +321,7 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
     linhas = [
         f"# {titulo}",
         f"",
-        f"> **Macro-Ecossistema Soberano · Desmantelamento {nome_eco} · Padrão Diamante R5-E**  ",
+        f"> **Macro-Ecossistema Soberano · Desmantelamento {nome_eco} · Quinteto Soberano por Grupo**  ",
         f"> {deck}",
         f"",
         f"---",
@@ -292,7 +338,7 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
         f"{tabela_econ_md}",
         f"---",
         f"",
-        f"## 2. Pilares Funcionais & Frentes de Negócio",
+        f"## 2. Pilares Funcionais & Quinteto Soberano por Grupo",
         f""
     ]
 
@@ -303,15 +349,12 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
             f"- **Subtotal de Economia do Grupo:** **{p.get('subtotal_economia_anual', 'N/A')}**",
             f"- **Escopo:** *{p.get('descricao_pilar')}*",
             f"",
-            f"| # | Ferramenta | Substitui Diretamente | Racional da Escolha | Economia Estimada | Licença |",
+            f"| # | Classificação | Ferramenta | Substitui Diretamente | Economia Estimada | Licença |",
             f"| :---: | :--- | :--- | :--- | :---: | :---: |"
         ])
         for f in p.get("ferramentas", []):
-            linhas.append(f"| {f['rank']} | **{f['nome']}** | {f['saas_substituido_direto']} | {f['racional_escolha']} | **{f['economia_anual_str']}** | `{f['licenca_osi']}` |")
+            linhas.append(f"| {f['rank']} | **{f.get('classificacao')}** | **{f['nome']}** | {f['saas_substituido_direto']} | **{f['economia_anual_str']}** | `{f['licenca_osi']}` |")
         linhas.append("")
-
-    guia = dados.get("guia_modularidade_e_expansao", {})
-    stack_detalhe = deploy.get("composicao_stack_detalhada", [])
 
     linhas.extend([
         f"---",
@@ -393,6 +436,15 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
 
     return "\n".join(linhas) + "\n"
 
+def persona_classe(classificacao: str) -> str:
+    c = classificacao.lower()
+    if "robusta" in c: return "robusta"
+    if "completa" in c: return "completa"
+    if "moderna" in c: return "moderna"
+    if "leve" in c: return "leve"
+    if "simples" in c: return "simples"
+    return "completa"
+
 def gerar_html_ecossistema_diamante(dados: dict) -> str:
     titulo = dados.get("titulo", "Dossiê de Macro-Ecossistema Open Source")
     deck = dados.get("deck", "")
@@ -417,9 +469,11 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
             pilar_label = nome_pilar_completo
 
         for f in p.get("ferramentas", []):
+            p_cls = persona_classe(f.get('classificacao', ''))
             tabela_linhas += f"""
             <tr>
               <td class="rank">{f['rank']:02d}</td>
+              <td><span class="persona-badge {p_cls}">{f.get('classificacao')}</span></td>
               <td class="tool"><a href="#{f['slug']}">{f['nome']}</a></td>
               <td class="pilar-col"><span class="pilar-badge">{pilar_label}</span></td>
               <td class="saas">{f['saas_substituido_direto']}</td>
@@ -429,65 +483,145 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
             </tr>
             """
 
-    # Seções de Pilares com Fichas Técnicas
+    # Seções de Pilares com Fichas Técnicas Diamante Completas
     pilares_conteudo = ""
     for p_idx, p in enumerate(pilares, 1):
         entries_pilar = ""
         for f in p.get("ferramentas", []):
+            p_cls = persona_classe(f.get('classificacao', ''))
+            
+            # Passos Práticos
+            passos_f_html = "".join([
+                f"""
+                <div class="step-card">
+                  <div class="step-head"><span class="step-badge">{idx}</span> {passo.get('titulo')}</div>
+                  <p>{passo.get('descricao')}</p>
+                </div>
+                """
+                for idx, passo in enumerate(f.get("passos_praticos", []), 1)
+            ])
+
+            # Design System / White-Label
+            ds = f.get("design_system", {})
+            
+            # MCPs & Skills
+            mcp_cards_html = "".join([
+                f"""
+                <div class="mcp-card">
+                  <div class="mcp-top">
+                    <span class="mcp-pill">{m.get('tipo')}</span>
+                    <span class="mcp-name">{m.get('nome')}</span>
+                  </div>
+                  <p>{m.get('descricao')}</p>
+                  <div class="mcp-cmd"><code>{m.get('comando_ou_repo')}</code></div>
+                </div>
+                """
+                for m in f.get("uso_complementar", [])
+            ])
+
             entries_pilar += f"""
             <article class="entry" id="{f['slug']}">
               <div class="entry-rank">{f['rank']:02d}</div>
               <div class="entry-body">
                 <div class="entry-top">
-                  <h3>{f['nome']}</h3>
+                  <h3>{f['nome']} · {f['subtitulo']}</h3>
+                  <span class="persona-badge {p_cls}">{f.get('classificacao')}</span>
                   <span class="pilar-badge">{p.get('nome_pilar').split(':')[0]}</span>
                   <span class="killer-badge">Substitui: {f['saas_substituido_direto']}</span>
                   <span class="econ-badge">{f['economia_anual_str']}</span>
                   <span class="lic-badge">{f['licenca_osi']}</span>
                 </div>
 
+                <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
                 <div class="entry-section">
-                  <div class="label">🎯 Substituição Direta no Ecossistema</div>
-                  <p><strong>Substitui:</strong> {f['saas_substituido_direto']}</p>
-                </div>
-
-                <div class="entry-section">
-                  <div class="label">💡 Racional da Escolha Open Source</div>
-                  <div class="racional-box">
-                    <p>{f['racional_escolha']}</p>
-                  </div>
-                </div>
-
-                <div class="entry-section">
-                  <div class="label">Papel no Pilar &amp; Funcionamento</div>
-                  <p><strong>Papel:</strong> {f['papel_no_pilar']}</p>
+                  <div class="label">1. O Que Faz &amp; Como Funciona</div>
+                  <p><strong>Papel no Ecossistema:</strong> {f['papel_no_pilar']}</p>
                   <p>{f['o_que_faz']} {f['como_funciona']}</p>
-                </div>
-
-                <div class="entry-section">
-                  <div class="label">Comando de Inicialização Rápida</div>
                   <div class="code-box">
                     <pre><code>{f['comando_rapido']}</code></pre>
                   </div>
                 </div>
 
+                <!-- SEÇÃO 2: ANÁLISE ECONÔMICA & IMPACTO FINANCEIRO -->
                 <div class="entry-section">
-                  <div class="label">Requisitos de Infraestrutura &amp; Código Fonte</div>
+                  <div class="label">2. Análise Econômica &amp; Racional da Escolha</div>
+                  <div class="econ-grid">
+                    <div class="econ-card killer">
+                      <span class="econ-lbl">🎯 Módulo SaaS Proprietário Substituído</span>
+                      <div class="econ-val"><strong>{f['saas_substituido_direto']}</strong></div>
+                    </div>
+                    <div class="econ-card highlight">
+                      <span class="econ-lbl">💰 Economia Direta Estimada</span>
+                      <div class="econ-val"><strong>{f['economia_anual_str']}</strong></div>
+                    </div>
+                  </div>
+                  <div class="racional-box" style="margin-top: 6px;">
+                    <p><strong>💡 Racional Técnico da Eleição:</strong> {f['racional_escolha']}</p>
+                  </div>
+                </div>
+
+                <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+                <div class="entry-section">
+                  <div class="label">3. Requisitos de Infraestrutura, Ecossistema &amp; Veredito Técnico</div>
                   <div class="infra-grid">
                     <div class="infra-card">
-                      <div class="infra-lbl">Recursos Mínimos</div>
+                      <div class="infra-lbl">🖥️ Recursos Mínimos</div>
                       <div class="infra-val">{f.get('requisitos_infra', {}).get('cpu_minima', '1 vCPU')} / {f.get('requisitos_infra', {}).get('ram_minima', '2 GB RAM')}</div>
                     </div>
                     <div class="infra-card">
-                      <div class="infra-lbl">Economia Direta</div>
-                      <div class="infra-val" style="color: var(--green);">{f['economia_anual_str']}</div>
+                      <div class="infra-lbl">🔗 Padrão &amp; Licença</div>
+                      <div class="infra-val">{f['licenca_osi']} · 100% Código Aberto</div>
                     </div>
-                    <div class="infra-card">
-                      <div class="infra-lbl">Repositório Oficial</div>
-                      <div class="infra-val"><a href="{f['repositorio_github']}" target="_blank" rel="noopener" class="repo-btn">Ver no GitHub ↗</a></div>
+                    <div class="infra-card verdict">
+                      <div class="infra-lbl">🏆 Veredito do Arquiteto</div>
+                      <p><strong>Por que adotar:</strong> {f.get('veredito')}</p>
+                    </div>
+                  </div>
+                  <div style="margin-top: 6px;">
+                    <a href="{f['repositorio_github']}" target="_blank" rel="noopener" class="repo-btn">
+                      <span>Ver Repositório Oficial no GitHub ↗</span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+                <div class="entry-section">
+                  <div class="label">4. Como Usar no Dia a Dia (Guia Prático em 3 Passos)</div>
+                  <div class="steps-grid">
+                    {passos_f_html}
+                  </div>
+                </div>
+
+                <!-- SEÇÃO 5: WHITE-LABEL & DESIGN SYSTEM -->
+                <div class="entry-section">
+                  <div class="label">5. White-Label &amp; Aderência ao Design System Corporativo</div>
+                  <div class="ds-header">
+                    <div class="ds-badges">
+                      <span class="ds-badge esforco-minimo">Esforço: {ds.get('esforco', 'Mínimo')}</span>
+                      <span class="ds-badge stack-ui">UI Stack: {ds.get('stack_ui', 'Web')}</span>
+                      <span class="ds-badge wl-ready">White-Label: {'Sim' if ds.get('white_label_nativo') else 'Parcial'}</span>
+                    </div>
+                  </div>
+                  <div class="ds-grid">
+                    <div class="ds-card">
+                      <span class="ds-lbl">Mecânica de Customização</span>
+                      <p>{ds.get('mecanica_customizacao')}</p>
+                    </div>
+                    <div class="ds-card">
+                      <span class="ds-lbl">Manutenibilidade &amp; Upgrades</span>
+                      <p>{ds.get('manutenibilidade_upgrades')}</p>
                     </div>
                   </div>
                 </div>
+
+                <!-- SEÇÃO 6: ECOSSISTEMA AGÊNTICO (MCPs & SKILLS) -->
+                <div class="entry-section">
+                  <div class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; CLI)</div>
+                  <div class="mcp-grid">
+                    {mcp_cards_html}
+                  </div>
+                </div>
+
               </div>
             </article>
             """
@@ -499,7 +633,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
             <h2>{p.get('nome_pilar')}</h2>
             <p class="sec-note">{p.get('descricao_pilar')}</p>
           </div>
-          <div class="pilar-subtotal-badge">Subtotal: {p.get('subtotal_economia_anual')}</div>
+          <div class="pilar-subtotal-badge">Subtotal do Grupo: {p.get('subtotal_economia_anual')}</div>
         </div>
         <div class="ledger">
           {entries_pilar}
@@ -641,14 +775,14 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
 
   <div class="sec-head">
     <div class="sec-info">
-      <span class="sec-num">Seção 02 · Matriz Geral de Substituição por Grupo</span>
+      <span class="sec-num">Seção 02 · Matriz Geral do Quinteto Soberano por Grupo</span>
       <h2>Pilha Aberta Integrada</h2>
-      <p class="sec-note">Mapeamento direto de cada módulo proprietário para a ferramenta open source soberana correspondente.</p>
+      <p class="sec-note">Mapeamento direto de cada módulo proprietário para a ferramenta correspondente nas 5 personas arquetípicas.</p>
     </div>
   </div>
 
   <div class="search-wrapper">
-    <input type="text" id="busca-ferramentas" class="search-input" placeholder="Filtrar ferramentas por nome, pilar ou licença... (Pressione '/' para buscar)">
+    <input type="text" id="busca-ferramentas" class="search-input" placeholder="Filtrar ferramentas por nome, persona, pilar ou licença... (Pressione '/' para buscar)">
   </div>
 
   <div class="tablewrap">
@@ -656,6 +790,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
       <thead>
         <tr>
           <th>#</th>
+          <th>Classificação</th>
           <th>Ferramenta Open Source</th>
           <th>Grupo</th>
           <th>Substitui Diretamente no SaaS</th>
@@ -672,9 +807,9 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
 
   <div class="sec-head">
     <div class="sec-info">
-      <span class="sec-num">Seção 03 · Análise Detalhada por Frentes de Negócio</span>
-      <h2>Detalhamento dos Grupos Funcionais</h2>
-      <p class="sec-note">Triangulação técnica com justificativa da escolha e detalhamento do papel de cada solução.</p>
+      <span class="sec-num">Seção 03 · Análise Detalhada dos Quintetos por Frente de Negócio</span>
+      <h2>Fichas Técnicas dos Quintetos Soberanos</h2>
+      <p class="sec-note">Especificação de engenharia completa com White-Label, guias práticos e ecossistema de MCPs/Skills.</p>
     </div>
   </div>
 
@@ -798,14 +933,14 @@ def gerar_typst_ecossistema(dados: dict) -> str:
 #v(4pt)
 
 #table(
-  columns: (0.6fr, 1.8fr, 2.8fr, 1.8fr, 1.0fr),
+  columns: (0.5fr, 1.4fr, 1.8fr, 2.5fr, 1.4fr, 0.9fr),
   fill: (x, y) => if y == 0 {{ rgb("#f1f5f9") }} else {{ none }},
   stroke: 0.5pt + rgb("#e2e8f0"),
-  inset: 4.5pt,
-  [*Nº*], [*Ferramenta*], [*Substitui Diretamente*], [*Economia*], [*Licença*],
+  inset: 4pt,
+  [*Nº*], [*Classificação*], [*Ferramenta*], [*Substitui Diretamente*], [*Economia*], [*Licença*],
 """
         for f in p.get("ferramentas", []):
-            linhas_pilares += f"  [{f['rank']}], [*{f['nome']}*], [{f['saas_substituido_direto']}], [{sanitizar_typ(f['economia_anual_str'])}], [`{f['licenca_osi']}`],\n"
+            linhas_pilares += f"  [{f['rank']}], [{f.get('classificacao')}], [*{f['nome']}*], [{f['saas_substituido_direto']}], [{sanitizar_typ(f['economia_anual_str'])}], [`{f['licenca_osi']}`],\n"
         linhas_pilares += ")\n#v(8pt)\n"
 
     custo_saas = sanitizar_typ(econ.get('custo_saas_anual', ''))
@@ -828,7 +963,6 @@ def gerar_typst_ecossistema(dados: dict) -> str:
         for dg in detalhe_econ:
             linhas_tco_typ += f"  [*{dg.get('grupo')}*], [{dg.get('saas_referencia')}], [{sanitizar_typ(dg.get('custo_saas_anual'))}], [{sanitizar_typ(dg.get('custo_vps_alocado'))}], [*{sanitizar_typ(dg.get('economia_anual_liquida'))}*],\n"
         linhas_tco_typ += ")\n#v(8pt)\n"
-        # Escapa as chaves para não colidir com a f-string
         linhas_tco_typ = linhas_tco_typ.replace('{ rgb("#f1f5f9") }', '{{ rgb("#f1f5f9") }}').replace('{ none }', '{{ none }}')
 
     typst = f"""#set page(
@@ -885,7 +1019,7 @@ def gerar_typst_ecossistema(dados: dict) -> str:
 
 {linhas_tco_typ}
 
-== 2. Análise Detalhada por Grupos de Negócio
+== 2. Análise Detalhada dos Quintetos por Grupos de Negócio
 
 {linhas_pilares}
 
@@ -965,11 +1099,11 @@ def compilar_ecossistema_tripartite(slug: str) -> bool:
 
 > **Ecossistema:** {dados.get('nome_ecossistema')}  
 > **Data:** {hoje}  
-> **Status:** 100% Concluído & Auditado (Padrão Diamante R5-E com Análise por Grupos)
+> **Status:** 100% Concluído & Auditado (Quinteto Soberano por Grupo, White-Label & MCPs)
 
 ### Métricas da Suíte:
 - Total de Grupos Funcionais: {dados.get('stats', {}).get('total_pilares')}
-- Total de Ferramentas Mapeadas: {dados.get('stats', {}).get('total_ferramentas')}
+- Total de Ferramentas no Quinteto: {dados.get('stats', {}).get('total_ferramentas')} (5 por grupo)
 - Economia Líquida Anual: {dados.get('analise_economica_global', {}).get('economia_anual_liquida')}
 - Gate R5-E (Padrão Diamante): APROVADO
 - Gate R18 (Higiene Soberana): APROVADO

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "SchemaDossieEcossistema",
-  "description": "Schema canônico para validação de dossiês de macro-ecossistemas SaaS com análise por grupos, anatomia de stack e guia de modularidade/hot-swap (Fluxo 4 AIDD)",
+  "description": "Schema canônico para validação de dossiês de macro-ecossistemas SaaS com Quinteto Soberano por grupo (5 ferramentas por pilar), white-label, MCPs, stack explicada e hot-swap (Fluxo 4 AIDD)",
   "type": "object",
   "required": [
     "slug",
@@ -29,7 +29,7 @@
       "required": ["total_pilares", "total_ferramentas", "licencas_osi", "economia_media", "autonomia"],
       "properties": {
         "total_pilares": { "type": "integer", "minimum": 2 },
-        "total_ferramentas": { "type": "integer", "minimum": 4 },
+        "total_ferramentas": { "type": "integer", "minimum": 10 },
         "licencas_osi": { "type": "string" },
         "economia_media": { "type": "string" },
         "autonomia": { "type": "string" }
@@ -56,11 +56,12 @@
           "subtotal_economia_anual": { "type": "string" },
           "ferramentas": {
             "type": "array",
-            "minItems": 2,
+            "minItems": 5,
             "items": {
               "type": "object",
               "required": [
                 "rank",
+                "classificacao",
                 "slug",
                 "nome",
                 "subtitulo",
@@ -73,7 +74,11 @@
                 "o_que_faz",
                 "como_funciona",
                 "comando_rapido",
-                "requisitos_infra"
+                "requisitos_infra",
+                "veredito",
+                "passos_praticos",
+                "design_system",
+                "uso_complementar"
               ]
             }
           }
@@ -124,7 +129,20 @@
     },
     "analise_economica_global": {
       "type": "object",
-      "required": ["custo_saas_anual", "custo_vps_anual", "economia_anual_liquida", "roi_meses"]
+      "required": ["custo_saas_anual", "custo_vps_anual", "economia_anual_liquida", "roi_meses"],
+      "properties": {
+        "custo_saas_anual": { "type": "string" },
+        "custo_vps_anual": { "type": "string" },
+        "economia_anual_liquida": { "type": "string" },
+        "roi_meses": { "type": "string" },
+        "detalhamento_por_grupo": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["grupo", "saas_referencia", "custo_saas_anual", "custo_vps_alocado", "economia_anual_liquida", "percentual_economia"]
+          }
+        }
+      }
     }
   }
 }

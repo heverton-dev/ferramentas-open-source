@@ -175,15 +175,22 @@ def validar_ecossistema(dados: Dict[str, Any]) -> Tuple[bool, List[str]]:
             erros.append(f"{prefixo_p} Deve conter 'subtotal_economia_anual' do grupo.")
         
         ferrs = pilar.get("ferramentas", [])
-        if len(ferrs) < 2:
-            erros.append(f"{prefixo_p} Deve conter no mínimo 2 ferramentas recomendadas (encontradas: {len(ferrs)}).")
+        if len(ferrs) < 5:
+            erros.append(f"{prefixo_p} Deve conter o Quinteto Soberano completo (mínimo 5 ferramentas, encontradas: {len(ferrs)}).")
         total_ferramentas += len(ferrs)
 
         for f_idx, f in enumerate(ferrs, 1):
             prefixo_f = f"{prefixo_p} Ferramenta #{f_idx} ({f.get('nome', 'Sem Nome')}):"
-            for campo in ["slug", "nome", "papel_no_pilar", "saas_substituido_direto", "racional_escolha", "economia_anual_str", "licenca_osi", "o_que_faz", "como_funciona", "comando_rapido"]:
+            for campo in ["slug", "nome", "classificacao", "papel_no_pilar", "saas_substituido_direto", "racional_escolha", "economia_anual_str", "licenca_osi", "o_que_faz", "como_funciona", "comando_rapido", "veredito"]:
                 if campo not in f or not f[campo]:
                     erros.append(f"{prefixo_f} Campo obrigatório '{campo}' ausente ou vazio.")
+            
+            if not f.get("passos_praticos") or len(f.get("passos_praticos", [])) < 3:
+                erros.append(f"{prefixo_f} 'passos_praticos' deve conter os 3 passos de uso diário.")
+            if not f.get("design_system"):
+                erros.append(f"{prefixo_f} 'design_system' (white-label) é obrigatório.")
+            if not f.get("uso_complementar"):
+                erros.append(f"{prefixo_f} 'uso_complementar' (MCPs, Skills e Plugins) é obrigatório.")
 
     integracao = dados.get("camada_integracao", {})
     for ci in ["autenticacao_sso", "barramento_eventos", "gateway_reverse_proxy", "fluxo_integracao_descricao"]:
