@@ -1,0 +1,414 @@
+{
+  "$schema": "../schemas/schema_manual_operacional.json",
+  "produto_foco": "Mautic",
+  "slug": "mautic",
+  "saas_origem": "activecampaign",
+  "versao": "5.1.2",
+  "licenca_osi": "OSL-3.0",
+  "tempo_estimado_setup": "45 a 90 minutos (Conhecimento intermediário de Linux e MySQL)",
+  "nivelamento_conceitual": [
+    {
+      "termo": "Mautic (A Ferramenta)",
+      "analogia_cotidiana": "O Gerenciador de Relacionamento Automático da Sua Empresa",
+      "explicacao_simples": "Mautic é como ter um assistente pessoal que monitora todos os visitantes do seu site, envia emails automaticamente quando alguém demonstra interesse, segmenta contatos por comportamento e gera relatórios sobre o que funcionou. Sem pagar nada a plataformas estrangeiras. Você é o dono absoluto dos seus dados de clientes."
+    },
+    {
+      "termo": "VPS (Servidor Privado Virtual)",
+      "analogia_cotidiana": "Uma Sala Comercial Alugada que Nunca Apaga a Luz",
+      "explicacao_simples": "Em vez de deixar um computador ligado no escritório como servidor, você aluga por R$ 80 a R$ 200 por mês um computador profissional 24/7 em um data center na nuvem (como Hetzner, Contabo ou DigitalOcean). Ele fica sempre conectado com internet de altíssima velocidade."
+    },
+    {
+      "termo": "MariaDB / MySQL (Banco de Dados)",
+      "analogia_cotidiana": "O Arquivo de Caixas de Contatos e Eventos",
+      "explicacao_simples": "Mautic precisa guardar milhares de contatos, históricos de cliques, emails enviados e pontuação de leads. MariaDB é o grande arquivo organizado onde tudo isso fica registrado. Sem ele, Mautic não teria memória."
+    },
+    {
+      "termo": "Apache / Nginx (Servidor Web)",
+      "analogia_cotidiana": "O Recepcionista que Atende as Chamadas",
+      "explicacao_simples": "Quando alguém digita mautic.sua-empresa.com.br no navegador, Apache ou Nginx são quem recebem a chamada, pegam o Mautic e mostram a tela. Também servem os scripts de rastreamento que identificam seus visitantes."
+    },
+    {
+      "termo": "Pixel de Rastreamento",
+      "analogia_cotidiana": "O Vendedor Invisível que Segue o Cliente",
+      "explicacao_simples": "Você coloca um código HTML minúsculo no seu site. Quando um visitante chega, esse código 'vê' tudo que a pessoa faz: qual página visitou, por quanto tempo ficou, se preencheu um formulário. Mautic guarda tudo isso automaticamente."
+    },
+    {
+      "termo": "Automação de Email",
+      "analogia_cotidiana": "Um Sistema de Resposta Automática que Aprendia",
+      "explicacao_simples": "Configurar que, quando um contato preenche um formulário, ele automaticamente recebe um email em 5 minutos é fácil em Mautic. Se ele clicar no email, recebe outro. Se não clicar em 3 dias, recebe algo diferente. Tudo sem você digitar um comando manual."
+    },
+    {
+      "termo": "Leads & Pontuação (Lead Scoring)",
+      "analogia_cotidiana": "Anotações de Temperamento no Caderno do Vendedor",
+      "explicacao_simples": "Vendedores experientes anotam: 'Este cliente clicou 5 vezes, visitou a página de preços, preencheu seus dados = está quente, ligue agora'. Mautic faz exatamente isso automaticamente, marcando quem está quente para vender."
+    }
+  ],
+  "vps_recomendada": {
+    "provedor_modelo": "Hetzner Cloud CX21 (2 vCPU, 4 GB RAM, EUR 9,90) ou Contabo Cloud VPS M",
+    "vcpu": "2 vCPU Dedicadas (AMD EPYC ou Intel Xeon E5)",
+    "ram": "4 GB RAM mínimo (8 GB recomendado para até 50k leads ativos)",
+    "armazenamento": "80 GB SSD NVMe (mínimo 40 GB, crescer conforme volume de dados)",
+    "so_recomendado": "Ubuntu 22.04 LTS (x86_64) ou Debian 12",
+    "custo_mensal_estimado": "EUR 9,90 a 19,90/mês (~R$ 60 a R$ 120 na cotação média)",
+    "portas_abertas": [
+      "22/tcp (SSH - Acesso remoto exclusivo seu)",
+      "80/tcp (HTTP - Tráfego web padrão)",
+      "443/tcp (HTTPS - Tráfego web seguro obrigatório)",
+      "3306/tcp (MySQL/MariaDB - NÃO expor, apenas localhost)"
+    ]
+  },
+  "instalacao_producao": {
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Acessar a VPS via SSH e Atualizar o Sistema",
+        "descricao": "Você se conecta ao seu servidor alugado como o 'dono da casa'. O primeiro passo é garantir que todas as ferramentas já instaladas estejam atualizadas e seguras.",
+        "analogia": "Como dar uma olhada geral na casa alugada antes de começar a obra.",
+        "o_que_acontece_na_tela": "Você verá linhas em preto e branco mostrando quais pacotes foram atualizados.",
+        "como_saber_se_deu_certo": "Termina com 'Setting up...' sem mensagens de ERRO em vermelho.",
+        "comandos": "ssh root@seu_ip_vps\nsudo apt-get update\nsudo apt-get upgrade -y",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 2,
+        "titulo": "Instalar Apache2, PHP 8.2 e Extensões Obrigatórias",
+        "descricao": "Mautic é escrito em PHP e precisa do Apache para funcionar. Também precisamos de bibliotecas extras que o Mautic depende para fazer análises e processamento de dados.",
+        "analogia": "Comprar as ferramentas específicas (martelo, chave inglesa, nível) antes de montar a prateleira.",
+        "o_que_acontece_na_tela": "Vará muitas linhas com pacotes sendo baixados e descompactados. Pode levar 2-3 minutos.",
+        "como_saber_se_deu_certo": "Termina com 'Processing triggers' e apache2 aparece como 'active (running)'.",
+        "comandos": "sudo apt-get install -y apache2 libapache2-mod-php php8.2-cli php8.2-fpm php8.2-mysql php8.2-curl php8.2-gd php8.2-xml php8.2-mbstring php8.2-zip php8.2-bcmath php8.2-intl\nsudo systemctl start apache2\nsudo systemctl enable apache2",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 3,
+        "titulo": "Instalar MariaDB e Criar Banco de Dados para Mautic",
+        "descricao": "MariaDB é o arquivo gigante onde Mautic guarda todos os contatos, emails, históricos. Vamos instalá-lo, criar um banco chamado 'mautic_db' e um usuário exclusivo.",
+        "analogia": "Montar o grande arquivo da empresa com gavetas (banco de dados), pastas (tabelas) e etiquetas (usuário exclusivo).",
+        "o_que_acontece_na_tela": "Será pedida uma senha para o administrador do MariaDB. Digite algo seguro.",
+        "como_saber_se_deu_certo": "Após digitar a senha, MariaDB abre um prompt mysql> ou retorna à linha de comando sem erros.",
+        "comandos": "sudo apt-get install -y mariadb-server\nsudo systemctl start mariadb\nsudo systemctl enable mariadb\nsudo mysql -u root -e \"CREATE DATABASE mautic_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\"\nsudo mysql -u root -e \"CREATE USER 'mautic_user'@'localhost' IDENTIFIED BY 'SenhaSegura123!MauticVPS';\"\nsudo mysql -u root -e \"GRANT ALL PRIVILEGES ON mautic_db.* TO 'mautic_user'@'localhost';\"\nsudo mysql -u root -e \"FLUSH PRIVILEGES;\"",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 4,
+        "titulo": "Baixar e Descompactar Mautic 5.1.2",
+        "descricao": "Vamos buscar o Mautic pronto do repositório oficial no GitHub, descompactar na pasta de aplicações e preparar as permissões.",
+        "analogia": "Comprar um kit de móvel pronto do fabricante e desempacotar na sala.",
+        "o_que_acontece_na_tela": "Verá um comando wget ou curl baixando um arquivo .zip grande (~130 MB). Depois, a descompactação mostrará centenas de arquivos.",
+        "como_saber_se_deu_certo": "A pasta /var/www/mautic existe com subdirectórios app/, core/, plugins/, etc.",
+        "comandos": "cd /tmp\nwget https://github.com/mautic/mautic/releases/download/5.1.2/mautic-5.1.2.zip\nunzip mautic-5.1.2.zip\nsudo mkdir -p /var/www/mautic\nsudo mv mautic/* /var/www/mautic/\nsudo chown -R www-data:www-data /var/www/mautic\nsudo chmod -R 755 /var/www/mautic",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 5,
+        "titulo": "Configurar Apache para Servir Mautic",
+        "descricao": "Criamos um arquivo de configuração do Apache que diz: 'Quando alguém digita mautic.sua-empresa.com.br, serve os arquivos de /var/www/mautic'.",
+        "analogia": "Colocar a placa com o endereço da loja na porta da rua.",
+        "o_que_acontece_na_tela": "Você abrirá um editor de texto (nano) e colará configurações. Depois ativa o site com a2ensite.",
+        "como_saber_se_deu_certo": "O comando 'apache2ctl configtest' retorna 'Syntax OK'.",
+        "comandos": "sudo nano /etc/apache2/sites-available/mautic.conf\nsudo a2ensite mautic.conf\nsudo systemctl reload apache2",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 6,
+        "titulo": "Ativar HTTPS com Let's Encrypt (SSL Gratuito)",
+        "descricao": "Mautic NUNCA funciona em HTTP puro (sem criptografia). Precisamos de um certificado SSL gratuito do Let's Encrypt. Será gerado automaticamente e renovado a cada 3 meses.",
+        "analogia": "Colocar um cadeado de segurança na porta de entrada da loja.",
+        "o_que_acontece_na_tela": "Certbot fará perguntas sobre seu email e domínio. Depois, modificará automaticamente o arquivo do Apache.",
+        "como_saber_se_deu_certo": "Acessar https://mautic.sua-empresa.com.br no navegador sem avisos de certificado inválido.",
+        "comandos": "sudo apt-get install -y certbot python3-certbot-apache\nsudo certbot --apache -d mautic.sua-empresa.com.br",
+        "fonte_id": "F01"
+      },
+      {
+        "numero": 7,
+        "titulo": "Acessar o Mautic Web Installer e Completar Configuração",
+        "descricao": "Agora você acessa https://mautic.sua-empresa.com.br e segue um assistente passo a passo que testa tudo, conecta o banco de dados e cria o primeiro usuário administrador.",
+        "analogia": "O primeiro boot de um novo smartphone: perguntas sobre idioma, conta, preferências.",
+        "o_que_acontece_na_tela": "Uma página HTML bonita pedindo seus dados: Email do Admin, Senha, Informações da Empresa, etc.",
+        "como_saber_se_deu_certo": "Você consegue fazer login com email/senha criados e vê o dashboard do Mautic.",
+        "comandos": "Nenhum comando. Tudo é feito via navegador web em https://mautic.sua-empresa.com.br",
+        "fonte_id": "F02"
+      },
+      {
+        "numero": 8,
+        "titulo": "Configurar Cron Jobs para Processamento Automático",
+        "descricao": "Mautic precisa de tarefas agendadas para enviar emails em lote, processar rastreamento e atualizar pontuação de leads. Configuramos isso no Crontab do Linux.",
+        "analogia": "Um gerenciador de projetos que acorda às 7h, 9h, 12h e 15h para despachar tarefas.",
+        "o_que_acontece_na_tela": "Abre-se um arquivo de texto com linhas que começam com asteriscos. Você adiciona as novas linhas.",
+        "como_saber_se_deu_certo": "O comando 'crontab -l' mostra as linhas adicionadas. Logs em /var/log/syslog confirmam execução.",
+        "comandos": "sudo crontab -e\n# Adicionar estas linhas:\n*/5 * * * * /usr/bin/php /var/www/mautic/bin/console mautic:queue:process --env=prod\n*/5 * * * * /usr/bin/php /var/www/mautic/bin/console mautic:import:create --env=prod",
+        "fonte_id": "F03"
+      },
+      {
+        "numero": 9,
+        "titulo": "Configurar Backup Automatizado do Banco de Dados",
+        "descricao": "Dados de clientes são ouro. Configuramos um script que faz backup completo do MariaDB toda noite e envia para armazenamento externo (opcional).",
+        "analogia": "Tirar uma fotografia de toda a caixa de arquivos todo dia e guardar em local seguro.",
+        "o_que_acontece_na_tela": "Você cria um script bash em /usr/local/bin e o adiciona ao crontab.",
+        "como_saber_se_deu_certo": "Arquivo .sql.gz existe em /backups/ com timestamp de hoje.",
+        "comandos": "sudo mkdir -p /backups\nsudo nano /usr/local/bin/backup-mautic.sh\n# Adicionar conteúdo do script\nsudo chmod +x /usr/local/bin/backup-mautic.sh\nsudo crontab -e\n# Adicionar: 0 2 * * * /usr/local/bin/backup-mautic.sh",
+        "fonte_id": "F04"
+      }
+    ],
+    "arquivos_configuracao": [
+      {
+        "caminho": "/etc/apache2/sites-available/mautic.conf",
+        "linguagem": "apache",
+        "conteudo": "<VirtualHost *:80>\n    ServerName mautic.sua-empresa.com.br\n    DocumentRoot /var/www/mautic/\n    <Directory /var/www/mautic/>\n        Options -Indexes +FollowSymLinks\n        AllowOverride All\n        Require all granted\n        <IfModule mod_rewrite.c>\n            RewriteEngine On\n            RewriteBase /\n            RewriteCond %{REQUEST_FILENAME} !-f\n            RewriteCond %{REQUEST_FILENAME} !-d\n            RewriteRule ^(.*) index.php [L]\n        </IfModule>\n    </Directory>\n    ErrorLog ${APACHE_LOG_DIR}/mautic-error.log\n    CustomLog ${APACHE_LOG_DIR}/mautic-access.log combined\n</VirtualHost>",
+        "explicacao": "Este arquivo diz ao Apache como servir o Mautic. Ativa mod_rewrite (necessário para URLs amigáveis), define permissões e logs. Certbot modificará isso para adicionar HTTPS automaticamente."
+      },
+      {
+        "caminho": "/var/www/mautic/.env.local",
+        "linguagem": "ini",
+        "conteudo": "APP_ENV=prod\nAPP_DEBUG=0\nAPP_SECRET=SenhaSeguraAleatoria123456789\nDB_DRIVER=pdo_mysql\nDB_HOST=localhost\nDB_PORT=3306\nDB_NAME=mautic_db\nDB_USER=mautic_user\nDB_PASSWORD=SenhaSegura123!MauticVPS\nDB_TABLE_PREFIX=mt_\nSMTP_HOST=smtp.seuservidor.com.br\nSMTP_PORT=587\nSMTP_USER=seu-email@seuservidor.com.br\nSMTP_PASSWORD=senhadoemail\nSMTP_ENCRYPTION=tls\nSMTP_AUTH_MODE=login",
+        "explicacao": "Configurações críticas do Mautic: ambiente de produção, banco de dados e email. O APP_SECRET deve ser gerado com: openssl rand -hex 32. Substitua os valores SMTP com seus dados reais de email."
+      },
+      {
+        "caminho": "/usr/local/bin/backup-mautic.sh",
+        "linguagem": "bash",
+        "conteudo": "#!/bin/bash\nBACKUP_DIR=\"/backups\"\nDATE=$(date +%Y%m%d_%H%M%S)\nDB_NAME=\"mautic_db\"\nDB_USER=\"mautic_user\"\nDB_PASSWORD=\"SenhaSegura123!MauticVPS\"\nFILES_DIR=\"/var/www/mautic\"\n\necho \"[$(date)] Iniciando backup de Mautic...\" >> /var/log/mautic-backup.log\n\nmysqldump -u $DB_USER -p$DB_PASSWORD $DB_NAME | gzip > $BACKUP_DIR/mautic_db_$DATE.sql.gz\n\ntar --exclude='cache' --exclude='logs' --exclude='tmp' -czf $BACKUP_DIR/mautic_files_$DATE.tar.gz -C /var/www mautic/\n\nfind $BACKUP_DIR -name 'mautic_*' -mtime +30 -delete\n\necho \"[$(date)] Backup concluído com sucesso.\" >> /var/log/mautic-backup.log",
+        "explicacao": "Script que automatiza backup diário do banco de dados (SQL comprimido) e arquivos do Mautic. Exclui pastas temporárias e de cache. Deleta backups com mais de 30 dias para economizar espaço."
+      }
+    ]
+  },
+  "manual_uso_exaustivo": {
+    "arquitetura_uso": "Mautic funciona em três camadas: (1) Interface Web (Apache/PHP) para usuários acessarem dashboard e configurar campanhas. (2) Banco de Dados (MariaDB) armazenando leads, eventos, histórico de campanhas. (3) Cron Jobs processando tarefas de fundo: envio de emails, rastreamento de visitantes, atualização de pontuação. O Pixel de Rastreamento (JavaScript) embutido no site do cliente captura comportamento e envia para Mautic em tempo real.",
+    "roteiro_primeiro_voo": [
+      {
+        "passo": "1. Fazer login no dashboard",
+        "acao": "Abra https://mautic.sua-empresa.com.br em um navegador. Digite seu email e senha de admin.",
+        "resultado_esperado": "Você vê a página inicial do Mautic com 4 blocos (Leads, Campanhas, Formulários, Gráfico de Atividade)"
+      },
+      {
+        "passo": "2. Instalar Pixel de Rastreamento",
+        "acao": "Menu esquerdo > Tracking > Copie o código HTML. Cole no rodapé de TODAS as páginas do seu site.",
+        "resultado_esperado": "Abra seu site em outro navegador/aba. Volte ao Mautic. Em Tracking, 'Visitantes Anônimos' > 0"
+      },
+      {
+        "passo": "3. Criar Formulário de Captura",
+        "acao": "Menu esquerdo > Forms > Novo Formulário. Adicione campo Email (obrigatório). Defina ação: 'Adicionar a Segmento Newsletter'. Publique.",
+        "resultado_esperado": "Copie o código HTML gerado. Cole em uma página do seu site e preencha o formulário com seu email. Voltando ao Mautic, vê um novo lead com seu email."
+      },
+      {
+        "passo": "4. Criar Primeira Campanha de Email",
+        "acao": "Menu esquerdo > Campaigns > Novo. Arraste bloco 'Send Email'. Configure Email de Boas-vindas. Adicione Delay (5 minutos). Adicione outro Email. Selecione segmento Newsletter. Publique.",
+        "resultado_esperado": "Teste preenchendo o formulário com novo email. Aguarde 5 minutos. Esse email deve chegar em sua caixa de entrada com título 'Bem-vindo à nossa Newsletter'."
+      }
+    ],
+    "comandos_cli": [
+      {
+        "comando": "php /var/www/mautic/bin/console mautic:queue:process --env=prod",
+        "descricao": "Processa fila de email pendente, rastreamento e leads não-sincronizados. Execute manualmente se cron não estiver rodando ou para teste.",
+        "exemplo": "sudo -u www-data php /var/www/mautic/bin/console mautic:queue:process --env=prod",
+        "fonte_id": "F03"
+      },
+      {
+        "comando": "php /var/www/mautic/bin/console cache:clear --env=prod",
+        "descricao": "Limpa cache (arquivos temporários de velocidade). Use se Mautic estiver lento ou após atualizar.",
+        "exemplo": "sudo -u www-data php /var/www/mautic/bin/console cache:clear --env=prod",
+        "fonte_id": "F03"
+      },
+      {
+        "comando": "php /var/www/mautic/bin/console mautic:update:apply --env=prod",
+        "descricao": "Aplicar atualizações de versão do Mautic (quando nova versão disponível).",
+        "exemplo": "sudo -u www-data php /var/www/mautic/bin/console mautic:update:apply --env=prod",
+        "fonte_id": "F03"
+      }
+    ],
+    "rotas_api": [
+      {
+        "metodo": "GET",
+        "rota": "/api/leads",
+        "descricao": "Listar todos os leads da conta. Retorna array JSON com id, email, nome, etc.",
+        "payload_exemplo": "curl -X GET https://mautic.sua-empresa.com.br/api/leads -H 'Authorization: Bearer YOUR_API_TOKEN'",
+        "fonte_id": "F05"
+      },
+      {
+        "metodo": "POST",
+        "rota": "/api/leads",
+        "descricao": "Criar novo lead via API. Útil para integrar com formulários externos.",
+        "payload_exemplo": "curl -X POST https://mautic.sua-empresa.com.br/api/leads -H 'Content-Type: application/json' -d '{\"email\":\"novo@empresa.com\",\"firstname\":\"João\"}'",
+        "fonte_id": "F05"
+      },
+      {
+        "metodo": "GET",
+        "rota": "/api/campaigns",
+        "descricao": "Listar campanhas. Use para monitorar campanhas ativas via programação.",
+        "payload_exemplo": "curl -X GET https://mautic.sua-empresa.com.br/api/campaigns -H 'Authorization: Bearer YOUR_API_TOKEN'",
+        "fonte_id": "F05"
+      }
+    ],
+    "interface_ui": [
+      {
+        "modulo": "Dashboard",
+        "descricao": "Página inicial com resumo em tempo real: Leads novos, Campanhas ativas, Emails enviados hoje, Taxa de abertura.",
+        "recursos_chave": [
+          "Indicador de 'Visitantes Anônimos' (pessoas em seu site não capturadas ainda)",
+          "Indicador de 'Leads Conhecidos' (emails capturados)",
+          "Gráfico de atividade diária",
+          "Atalhos para funcionalidades principais"
+        ]
+      },
+      {
+        "modulo": "Leads",
+        "descricao": "Banco de dados de todos os contatos. Permite pesquisar, filtrar, segmentar, editar leads individualmente.",
+        "recursos_chave": [
+          "Filtros avançados (por email, nome, score, atividade, etc)",
+          "Visualizar histórico completo de cada lead",
+          "Tags e segmentação automática",
+          "Importar/Exportar leads em CSV"
+        ]
+      },
+      {
+        "modulo": "Campaigns",
+        "descricao": "Construtor visual de automações. Arraste blocos (Email, Decision, Delay) para criar fluxos automáticos.",
+        "recursos_chave": [
+          "Editor drag-and-drop visual",
+          "Decisões condicionais (if/then)",
+          "Delays e agendamento",
+          "A/B testing automático"
+        ]
+      },
+      {
+        "modulo": "Forms",
+        "descricao": "Criador de formulários de captura. Defina campos, ações pós-envio e estilo.",
+        "recursos_chave": [
+          "Campos customizáveis (Email, Nome, Telefone, etc)",
+          "Ações: Adicionar a segmento, Aplicar tag, Disparar campanha",
+          "Pré-preenchimento para leads já conhecidos",
+          "Embed code para website"
+        ]
+      },
+      {
+        "modulo": "Reports",
+        "descricao": "Análise detalhada de performance: Taxa de abertura por email, Leads por fonte, Atividade por campanha.",
+        "recursos_chave": [
+          "Filtros de data customizáveis",
+          "Exportar relatórios em PDF",
+          "Gráficos comparativos",
+          "Análise de ROI de campanhas"
+        ]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "sintoma": "Mautic carrega muito lento (mais de 5 segundos)",
+        "causa_provavel": "Banco de dados com muitos leads (>100k) sem índices otimizados. Ou VPS com RAM insuficiente (2GB em vez de 4GB).",
+        "solucao_comando": "1. Aumentar RAM: Contrate upgrade da VPS\n2. Otimizar DB: sudo mysql -u mautic_user -p mautic_db < optimize.sql\n3. Limpar cache: php /var/www/mautic/bin/console cache:clear --env=prod\n4. Verificar logs: tail -50 /var/log/apache2/mautic-error.log"
+      },
+      {
+        "sintoma": "Emails não estão sendo enviados",
+        "causa_provavel": "Cron jobs não rodando. Ou configuração SMTP incorreta (servidor de email rejeitando).",
+        "solucao_comando": "1. Verificar cron: sudo crontab -l | grep mautic\n2. Se vazio, adicionar: sudo crontab -e\n3. Testar envio SMTP: telnet smtp.seuservidor.com.br 587\n4. Ver logs: tail -20 /var/log/syslog | grep cron"
+      },
+      {
+        "sintoma": "Pixel de rastreamento não captura visitantes",
+        "causa_provavel": "Código HTML do pixel não foi colado corretamente. Ou JavaScript bloqueado por Ad-blocker.",
+        "solucao_comando": "1. Verificar HTML do pixel em sua página (Ctrl+U no navegador)\n2. Procurar por 'mtc.js' ou 'tracking.gif'\n3. Se ausente, colar novamente em todas páginas\n4. Testar em navegador sem Ad-blocker\n5. Ver console do navegador (F12) para erros JavaScript"
+      },
+      {
+        "sintoma": "Erro 404 ao acessar mautic.sua-empresa.com.br",
+        "causa_provavel": "Apache não recarregou após criar arquivo mautic.conf. Ou domínio não aponta para VPS.",
+        "solucao_comando": "1. Recarregar Apache: sudo systemctl reload apache2\n2. Verificar DNS: nslookup mautic.sua-empresa.com.br\n3. Se não encontrar, atualizar DNS do domínio para apontar ao IP da VPS\n4. Verificar vhost: sudo apache2ctl -S | grep mautic"
+      },
+      {
+        "sintoma": "Aviso de certificado SSL inválido no navegador",
+        "causa_provavel": "Let's Encrypt não renovou ou foi instalado incorretamente.",
+        "solucao_comando": "1. Renovar manualmente: sudo certbot renew --dry-run\n2. Se seco passou, renovar de fato: sudo certbot renew\n3. Recarregar Apache: sudo systemctl reload apache2\n4. Verificar data vencimento: sudo certbot certificates"
+      }
+    ]
+  },
+  "desinstalacao_cirurgica": {
+    "titulo": "Parte IV: Desinstalação Cirúrgica & Isolamento da VPS",
+    "principio_isolamento": "Mautic foi instalado em estrutura totalmente isolada: aplicação em /var/www/mautic/, banco de dados em schema 'mautic_db', usuário MySQL dedicado, configurações em /etc/apache2/sites-available/mautic.conf. Esta modularidade permite remoção cirúrgica sem efeitos colaterais. Outros websites/aplicações na VPS não serão afetadas. Seguindo estes passos, Mautic desaparece completamente, deixando a VPS tão limpa quanto antes.",
+    "passos": [
+      {
+        "numero": 1,
+        "titulo": "Parar Serviços do Mautic",
+        "descricao": "Interrompa os cron jobs que executam tarefas de Mautic e desative o site no Apache.",
+        "comandos": "sudo crontab -e\n# Remover ou comentar (com #) as linhas:\n# */5 * * * * /usr/bin/php /var/www/mautic/bin/console mautic:queue:process --env=prod\n\nsudo a2dissite mautic.conf\nsudo systemctl reload apache2\nsudo systemctl stop php8.2-fpm",
+        "alerta_seguranca": "ALERTA: Após este passo, mautic.sua-empresa.com.br será inacessível (erro 404/503).",
+        "como_validar": "Digitar https://mautic.sua-empresa.com.br em outro navegador deve retornar erro 404 ou 'site indisponível'"
+      },
+      {
+        "numero": 2,
+        "titulo": "Backup Final de Segurança (Altamente Recomendado)",
+        "descricao": "Se houver qualquer chance de precisar dos dados depois, faz um backup final antes de deletar.",
+        "comandos": "mysqldump -u mautic_user -p mautic_db | gzip > ~/mautic_backup_final_$(date +%Y%m%d).sql.gz\ntar -czf ~/mautic_files_backup_final_$(date +%Y%m%d).tar.gz /var/www/mautic/",
+        "alerta_seguranca": "CRÍTICO: Sem este backup, os dados são irrecuperáveis após próximas etapas.",
+        "como_validar": "Dois arquivos .gz existem em $HOME com tamanho > 10MB"
+      },
+      {
+        "numero": 3,
+        "titulo": "Remover Banco de Dados do Mautic do MariaDB",
+        "descricao": "Deletar completamente o banco de dados e o usuário do MariaDB. Sem possibilidade de recuperação.",
+        "comandos": "sudo mysql -u root\nDROP DATABASE mautic_db;\nDROP USER 'mautic_user'@'localhost';\nFLUSH PRIVILEGES;\nEXIT;",
+        "alerta_seguranca": "PONTO DE NÃO-RETORNO: Após este comando, banco de dados é deletado permanentemente.",
+        "como_validar": "sudo mysql -u root -e 'SELECT user FROM mysql.user;' deve NÃO conter 'mautic_user'"
+      },
+      {
+        "numero": 4,
+        "titulo": "Remover Pasta e Arquivos do Mautic",
+        "descricao": "Deletar todos os arquivos da aplicação Mautic da VPS. Sem possibilidade de recuperação sem backup.",
+        "comandos": "sudo rm -rf /var/www/mautic/\nsudo rm -f /etc/apache2/sites-available/mautic.conf\nsudo rm -f /etc/apache2/sites-available/mautic-ssl.conf\nsudo rm -f /usr/local/bin/backup-mautic.sh\nsudo rm -rf /var/log/mautic*",
+        "alerta_seguranca": "PONTO DE NÃO-RETORNO: Todos os arquivos de Mautic são deletados permanentemente.",
+        "como_validar": "sudo ls -la /var/www/ NÃO deve conter pasta 'mautic'. sudo ls /usr/local/bin/backup* retorna 'file not found'"
+      },
+      {
+        "numero": 5,
+        "titulo": "Remover Certificado SSL (Opcional - Apenas se Mautic era único HTTPS)",
+        "descricao": "Se Mautic era o único site HTTPS na VPS, pode remover o certificado Let's Encrypt.",
+        "comandos": "sudo certbot delete --cert-name mautic.sua-empresa.com.br",
+        "alerta_seguranca": "ATENÇÃO: Remova apenas se nenhum outro site na VPS usa este domínio.",
+        "como_validar": "sudo certbot certificates não deve listar 'mautic.sua-empresa.com.br'"
+      }
+    ],
+    "checklist_saude_vps": [
+      "ESPAÇO EM DISCO: df -h | grep /dev/sda → Coluna 'Avail' deve ter >= 20GB livres",
+      "PROCESSOS PHP: ps aux | grep php | grep mautic → Deve estar vazio (sem processos)",
+      "PORTAS ESCUTANDO: sudo netstat -tlnp | grep LISTEN → Deve conter :22 (SSH), :80 (HTTP), :443 (HTTPS) apenas",
+      "BANCO DE DADOS: sudo mysql -u root -e 'SHOW DATABASES;' → NÃO deve listar 'mautic_db'",
+      "CRON JOBS: sudo crontab -l | grep mautic → Deve estar vazio",
+      "ERROS APACHE: sudo tail -20 /var/log/apache2/error.log → NÃO deve conter 'mautic'",
+      "SEGURANÇA SSH: sudo sshd -T | grep PermitRootLogin → Deve ser 'no' (boas práticas)",
+      "FIREWALL: sudo ufw status → Se ativo, deve permitir :22, :80, :443 apenas"
+    ]
+  },
+  "referencias_bibliograficas": [
+    {
+      "id": "F01",
+      "categoria": "Documentação Oficial",
+      "titulo": "Mautic 5.1 - Guia de Instalação no Ubuntu",
+      "url": "https://docs.mautic.org/en/5.1/setup/",
+      "autor_ou_canal": "Mautic Community"
+    },
+    {
+      "id": "F02",
+      "categoria": "Documentação Oficial",
+      "titulo": "Mautic Web Installer - Configuração Inicial",
+      "url": "https://docs.mautic.org/en/5.1/setup/web_installer/",
+      "autor_ou_canal": "Mautic Community"
+    },
+    {
+      "id": "F03",
+      "categoria": "Documentação Oficial",
+      "titulo": "Cron Jobs e Processamento em Background",
+      "url": "https://docs.mautic.org/en/5.1/setup/cron_jobs/",
+      "autor_ou_canal": "Mautic Community"
+    },
+    {
+      "id": "F04",
+      "categoria": "Guia de Operação",
+      "titulo": "Backup e Recuperação de Dados",
+      "url": "https://docs.mautic.org/en/5.1/setup/database_backup/",
+      "autor_ou_canal": "Mautic Community"
+    },
+    {
+      "id": "F05",
+      "categoria": "API Documentation",
+      "titulo": "API de Leads e Campanhas Mautic",
+      "url": "https://docs.mautic.org/en/5.1/api/",
+      "autor_ou_canal": "Mautic Developer Docs"
+    }
+  ]
+}

@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trilha Cronológica de Aprendizado: Mautic</title>
+  <style>
+
+  :root {
+    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --paper: #F8FAFC;
+    --surface: #FFFFFF;
+    --ink: #0F172A;
+    --ink-2: #334155;
+    --muted: #64748B;
+    --rule: #CBD5E1;
+    --rule-soft: #E2E8F0;
+    --accent: #0284C7;
+    --accent-dark: #0369A1;
+    --accent-soft: #E0F2FE;
+    --green: #10B981;
+    --green-dark: #065F46;
+    --green-soft: #D1FAE5;
+    --gold: #F59E0B;
+    --gold-soft: #FEF3C7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .container { max-width: 980px; margin: 0 auto; }
+  .header-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .badge-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    margin-bottom: 12px;
+  }
+  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    background: var(--paper);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--rule-soft);
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+  .stat-val { font-size: 15px; font-weight: 800; color: var(--ink); }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    bottom: 20px;
+    left: 11px;
+    width: 2px;
+    background: var(--rule);
+  }
+  .timeline-node {
+    position: relative;
+    margin-bottom: 36px;
+  }
+  .timeline-marker {
+    position: absolute;
+    left: -32px;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 4px var(--paper);
+  }
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .phase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--rule-soft);
+    padding-bottom: 8px;
+  }
+  .phase-title { font-size: 18px; font-weight: 800; color: var(--ink); }
+  .phase-time { font-size: 12px; font-weight: 700; color: var(--accent-dark); background: var(--accent-soft); padding: 2px 8px; border-radius: 4px; }
+  .phase-goal { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
+
+  .resource-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--paper);
+    border: 1px solid var(--rule-soft);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    transition: background 0.2s;
+  }
+  .resource-item:hover { background: #F1F5F9; }
+  .chk-item {
+    margin-top: 4px;
+    cursor: pointer;
+    width: 17px;
+    height: 17px;
+    accent-color: var(--green);
+  }
+  .resource-content { flex: 1; }
+  .resource-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .resource-title a { color: var(--ink); text-decoration: none; }
+  .resource-title a:hover { color: var(--accent); }
+  .resource-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--rule-soft);
+    color: var(--ink-2);
+  }
+  .lang-badge-br { background: #DCFCE7; color: #166534; font-weight: 800; }
+  .lang-badge-en { background: #EFF6FF; color: #1E40AF; font-weight: 800; }
+
+  .resource-takeaway {
+    font-size: 13px;
+    color: var(--ink-2);
+    margin-top: 5px;
+  }
+  .resource-dica-ptbr {
+    font-size: 12px;
+    color: #92400E;
+    background: #FEF3C7;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    display: inline-block;
+  }
+  .resource-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+    display: flex;
+    gap: 12px;
+  }
+  .btn-link {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-dark);
+    text-decoration: none;
+  }
+  .btn-link:hover { text-decoration: underline; }
+
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- CABEÇALHO -->
+  <div class="header-card">
+    <div class="breadcrumb">
+      <a href="../../listas-open-source/vert-activecampaign.html">← Voltar ao Dossiê Vertical Activecampaign</a>
+      &nbsp;·&nbsp;
+      <a href="../manuais/manual-mautic-vps-e-uso.html">Ver Manual de Engenharia 📖</a>
+    </div>
+    <span class="badge-tag">Jornada Pedagógica Autoguiada · Brasil First</span>
+    <h1>Trilha de Aprendizado: Mautic</h1>
+    <p class="deck">
+      Roteiro cronológico passo a passo para dominar a ferramenta a partir de fontes verificadas, priorizando materiais em língua portuguesa (PT-BR) e fornecendo orientações práticas de tradução assistida para conteúdos internacionais.
+    </p>
+
+    <!-- HERO STATS -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-lbl">Tempo Total Estimado</span>
+        <span class="stat-val" style="color:var(--accent-dark);">8 a 12 horas (1 semana a 2 horas diárias)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Fases de Estudo</span>
+        <span class="stat-val">5 Módulos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Recursos Auditados</span>
+        <span class="stat-val">20 Conteúdos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-lbl">Progresso do Operador</span>
+        <span class="stat-val" id="progresso-txt" style="color:var(--green);">0 de 20</span>
+      </div>
+    </div>
+
+    <!-- BARRA DE PROGRESSO -->
+    <div style="margin-top: 16px; background: var(--rule-soft); border-radius: 4px; height: 8px; overflow: hidden;">
+      <div id="progresso-bar" style="width: 0%; height: 100%; background: var(--green); transition: width 0.3s;"></div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+    
+        <div class="timeline-node">
+          <div class="timeline-marker">1</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Fundação: Entender o Ecossistema Mautic do Zero</h2>
+              <span class="phase-time">⏱️ ~2 horas</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Saber exatamente o que é Mautic, por que é diferente de SaaS pago (ActiveCampaign, HubSpot), e os 4 pilares que fazem tudo funcionar: Leads, Formulários, Campanhas e Rastreamento.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://www.youtube.com/results?search_query=mautic+explicacao+portugues" target="_blank" rel="noopener noreferrer">O que é Mautic? Explicação para Não-Técnicos</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Video YouTube</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T01]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Mautic é uma plataforma open source de marketing automation que você instala no seu próprio servidor (não SaaS). Você é o dono dos dados. Não há limite de contatos, emails ou campanhas. Tudo é automatizável.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 12 minutos</span>
+                  <span>👤 Mautic Brasil Community</span>
+                  <a href="https://www.youtube.com/results?search_query=mautic+explicacao+portugues" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://www.mautic.org/blog/" target="_blank" rel="noopener noreferrer">Mautic vs ActiveCampaign vs HubSpot - Comparação Completa</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Inglês</span>
+                  <span class="resource-badge">Artigo de Blog</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T02]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> ActiveCampaign e HubSpot cobram por contato (USD 50-100/mês para 10k leads). Mautic é grátis, open source, sem limite de contatos. Você paga apenas a VPS (R$ 80/mês). ROI = 10x melhor.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Use Google Translate - conceitos são universais</div>
+                <div class="resource-meta">
+                  <span>⏱️ 8 minutos de leitura</span>
+                  <span>👤 Mautic Official Blog</span>
+                  <a href="https://www.mautic.org/blog/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://youtube.com/c/ArsenalOpenSource" target="_blank" rel="noopener noreferrer">Os 4 Pilares do Mautic - Vídeo Didático</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Video YouTube</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T03]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Pilar 1: Leads (banco de dados de contatos). Pilar 2: Formulários (captura de emails). Pilar 3: Campanhas (automação de email). Pilar 4: Rastreamento (saber quem visitou o site).</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 15 minutos</span>
+                  <span>👤 Arsenal Open Source</span>
+                  <a href="https://youtube.com/c/ArsenalOpenSource" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/" target="_blank" rel="noopener noreferrer">Documentação Oficial: Introdução ao Mautic</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Inglês</span>
+                  <span class="resource-badge">Documentação Oficial</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T04]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Mautic é modulado (você ativa/desativa features). Dashboard mostra KPIs em tempo real. Tudo é configurável sem código.</div>
+                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Chrome oferece tradução automática da página</div>
+                <div class="resource-meta">
+                  <span>⏱️ 5 minutos de leitura</span>
+                  <span>👤 Mautic Community</span>
+                  <a href="https://docs.mautic.org/en/5.1/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">2</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Prática Básica: Instalar, Acessar e Configurar Seu Mautic</h2>
+              <span class="phase-time">⏱️ ~3 horas</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Ter uma instância de Mautic rodando em VPS, acessível via HTTPS, com o primeiro usuário criado e o dashboard pronto para usar.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="file:///output/03-manuais-e-trilhas/activecampaign/mautic/manuais/manual-mautic-vps-e-uso.html" target="_blank" rel="noopener noreferrer">Guia Passo-a-Passo: Instalação de Mautic em Ubuntu 22.04</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Manual Técnico (Documento)</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T05]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> SSH → Atualizar Sistema → Instalar Apache, PHP, MariaDB → Baixar Mautic → Configurar Apache → SSL com Let's Encrypt → Acessar Web Installer. Cada passo testado.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 45 minutos de execução</span>
+                  <span>👤 Arsenal Open Source</span>
+                  <a href="file:///output/03-manuais-e-trilhas/activecampaign/mautic/manuais/manual-mautic-vps-e-uso.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://www.youtube.com/results?search_query=mautic+usuario+admin+email" target="_blank" rel="noopener noreferrer">Primeira Configuração: Criar Usuário Admin e Conectar Email</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Video Tutorial</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T06]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Após instalar, o Web Installer pede: Email do Admin, Senha, Nome da Empresa, Configurações SMTP (para enviar emails). Tudo feito via interface web, sem linha de comando.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 20 minutos</span>
+                  <span>👤 Comunidade Mautic Brasil</span>
+                  <a href="https://www.youtube.com/results?search_query=mautic+usuario+admin+email" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/setup/system_requirements/" target="_blank" rel="noopener noreferrer">Verificar Saúde da Instalação - Testes de Conectividade</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Checklist Interativo</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T07]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Testar: PHP 8.2+, MySQL/MariaDB conectando, permissões de arquivo, SSL válido, Cron jobs funcionando. Um teste falhando = VPS não está pronta.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 10 minutos</span>
+                  <span>👤 Arsenal Open Source</span>
+                  <a href="https://docs.mautic.org/en/5.1/setup/system_requirements/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/setup/cron_jobs/" target="_blank" rel="noopener noreferrer">Configuração de Cron Jobs (Automação de Tarefas)</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Tutorial Técnico</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T08]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Cron = agendador de Linux. Mautic precisa de cron jobs a cada 5 minutos para enviar emails, processar rastreamento e atualizar leads. Sem cron, Mautic fica 'dormindo'.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 15 minutos</span>
+                  <span>👤 Arsenal Open Source</span>
+                  <a href="https://docs.mautic.org/en/5.1/setup/cron_jobs/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">3</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Captura de Leads: Formulários, Pixels de Rastreamento e Segmentação</h2>
+              <span class="phase-time">⏱️ ~2 horas</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Instalar o pixel de rastreamento no seu site, criar seu primeiro formulário de captura, e começar a ver leads chegando automaticamente em tempo real.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/plugins/integrations/" target="_blank" rel="noopener noreferrer">Instalando o Pixel de Rastreamento Mautic no Seu Site</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Guia Passo-a-Passo</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T09]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Copiar código HTML pequeno do Mautic (Tracking Pixel). Colar em TODAS as páginas do seu site (idealmente no footer). Resultado: cada visitante é rastreado automaticamente sem pedir consentimento (sempre verifique LGPD).</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 10 minutos</span>
+                  <span>👤 Arsenal Open Source</span>
+                  <a href="https://docs.mautic.org/en/5.1/plugins/integrations/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://www.youtube.com/results?search_query=mautic+forms+tutorial" target="_blank" rel="noopener noreferrer">Criar Formulário de Captura - Email + Nome</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Video Tutorial (Hands-On)</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T10]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Menu Forms → Novo Formulário. Campos: Email (obrigatório), Nome. Ação pós-envio: Adicionar a Segmento 'Newsletter'. Publicar. Copiar código HTML. Colar no site. Pronto!</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 15 minutos</span>
+                  <span>👤 Comunidade Mautic</span>
+                  <a href="https://www.youtube.com/results?search_query=mautic+forms+tutorial" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/leads/" target="_blank" rel="noopener noreferrer">Entender Leads - O Banco de Dados Dinâmico</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Documentação + Prática</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T11]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Um Lead = um contato no banco de dados. Mautic rastreia: Nome, Email, Telefone, Endereço, Histórico de visitação, Emails recebidos, Abertura/Cliques, Última atividade. Tudo armazenado automaticamente.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 20 minutos</span>
+                  <span>👤 Arsenal Open Source</span>
+                  <a href="https://docs.mautic.org/en/5.1/leads/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/segments/" target="_blank" rel="noopener noreferrer">Segmentação de Leads - Criar Grupos Automáticos</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Tutorial Interativo</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T12]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Segmento = grupo automático. Ex: 'Visitaram Página de Preços' = todos os leads que visitaram /pricing. Uso: enviar email de desconto apenas para este grupo. Mautic atualiza automaticamente.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 15 minutos</span>
+                  <span>👤 Comunidade Mautic Brasil</span>
+                  <a href="https://docs.mautic.org/en/5.1/segments/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">4</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Automação Avançada: Campanhas, Sequências de Email e Gatilhos</h2>
+              <span class="phase-time">⏱️ ~2 horas</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Criar sua primeira campanha de email automática que envia uma sequência de 3 emails baseada no comportamento do visitante (autoresponder inteligente).</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/campaigns/" target="_blank" rel="noopener noreferrer">O que é Campaign (Campanha) no Mautic - Conceitos</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Artigo Didático</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T13]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Campaign = fluxo de automação visual. Você arrasta blocos (ações, decisões, delays). Exemplo: Lead preenche formulário → Aguarda 5 min → Recebe Email 1 → Aguarda 2 dias → Verifica se abriu → Se abriu: Email 2. Se não abriu: Email de 'última chance'.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 8 minutos de leitura</span>
+                  <span>👤 Arsenal Open Source</span>
+                  <a href="https://docs.mautic.org/en/5.1/campaigns/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://www.youtube.com/results?search_query=mautic+campaign+autoresponder" target="_blank" rel="noopener noreferrer">Tutorial Hands-On: Criar Sequência de 3 Emails (Autoresponder)</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Video Tutorial</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T14]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Criar Campaign > Arrastar 'Send Email' > Criar Email 1 > Agendar delay 5 min > Email 2 > Delay 2 dias > Email 3. Adicionar segmento (quem entra). Publicar. Testar preenchendo próprio formulário.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 25 minutos</span>
+                  <span>👤 Comunidade Mautic</span>
+                  <a href="https://www.youtube.com/results?search_query=mautic+campaign+autoresponder" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/leads/lead_scoring/" target="_blank" rel="noopener noreferrer">Lead Scoring - Pontuar Leads por Atividade</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Guia Técnico</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T15]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Visita página = +2 pts. Abre email = +5 pts. Clica em link = +10 pts. Preenche formulário = +20 pts. Lead com 50+ pontos = QUENTE = ligar agora. Mautic calcula automaticamente.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 15 minutos</span>
+                  <span>👤 Arsenal Open Source</span>
+                  <a href="https://docs.mautic.org/en/5.1/leads/lead_scoring/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/campaigns/conditional_logic/" target="_blank" rel="noopener noreferrer">Decisões e Lógica Condicional em Campanhas</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Tutorial Avançado</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T16]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Bloco 'Decision': Se lead tem score >= 50, ir para 'Email de Vendas'. Se score < 50, ir para 'Email de Educação'. Lógica if/then sem código.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 20 minutos</span>
+                  <span>👤 Comunidade Mautic</span>
+                  <a href="https://docs.mautic.org/en/5.1/campaigns/conditional_logic/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+        <div class="timeline-node">
+          <div class="timeline-marker">5</div>
+          <div class="phase-card">
+            <div class="phase-header">
+              <h2 class="phase-title">Análise e Otimização: Relatórios, Métricas e Ajustes Contínuos</h2>
+              <span class="phase-time">⏱️ ~1 hora</span>
+            </div>
+            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Interpretar relatórios de Mautic (taxa de abertura, cliques, conversão), identificar o que funciona, e fazer ajustes para melhorar resultados mês a mês.</p>
+            <div class="resource-list">
+              
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/reports/" target="_blank" rel="noopener noreferrer">Dashboard Executivo do Mautic - Interpretando as Métricas</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Guia Visual</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T17]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Dashboard mostra: Visitantes hoje, Leads novos, Emails enviados, Taxa de abertura (%), Taxa de cliques (%), Campanhas ativas. Tudo em tempo real. Compare semana a semana.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 12 minutos</span>
+                  <span>👤 Arsenal Open Source</span>
+                  <a href="https://docs.mautic.org/en/5.1/reports/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/reports/" target="_blank" rel="noopener noreferrer">Relatórios Detalhados - Email Performance, Lead Source</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Tutorial Prático</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T18]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Relatório de Email: qual email teve maior taxa de abertura? Qual link foi mais clicado? De qual campanha vieram os leads mais quentes? Relatório de Lead Source: Google, Facebook, Email, Formulário?</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 15 minutos</span>
+                  <span>👤 Comunidade Mautic Brasil</span>
+                  <a href="https://docs.mautic.org/en/5.1/reports/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/campaigns/" target="_blank" rel="noopener noreferrer">A/B Testing - Testar 2 Versões de Email</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Guia Técnico</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T19]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Enviar Email A para 50% dos leads, Email B para 50%. Comparar taxa de abertura. A venceu? Use A para todos daqui em diante. Iteração contínua melhora resultados.</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 10 minutos</span>
+                  <span>👤 Arsenal Open Source</span>
+                  <a href="https://docs.mautic.org/en/5.1/campaigns/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="resource-item">
+              <input type="checkbox" class="chk-item">
+              <div class="resource-content">
+                <div class="resource-title">
+                  <a href="https://docs.mautic.org/en/5.1/dashboard/" target="_blank" rel="noopener noreferrer">Checklist Mensal - 10 Ajustes para Maximizar ROI</a>
+                  <span class="resource-badge lang-badge-en">🇺🇸 Português</span>
+                  <span class="resource-badge">Checklist + Dicas</span>
+                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[T20]</span>
+                </div>
+                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> 1. Aumentar formulários no site? 2. Melhorar copy do email? 3. Segmentar melhor? 4. Testar novo tipo de automação? 5. Otimizar landing pages para mobile? 6. Aumentar frequência de emails? 7. Remover leads inativos? 8. Integrar com CRM? 9. Melhorar pontuação de leads? 10. Aumentar bot para 2 vCPU se lento?</div>
+                
+                <div class="resource-meta">
+                  <span>⏱️ 5 minutos de leitura</span>
+                  <span>👤 Arsenal Open Source</span>
+                  <a href="https://docs.mautic.org/en/5.1/dashboard/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+                </div>
+              </div>
+            </div>
+            
+            </div>
+          </div>
+        </div>
+        
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const checkboxes = document.querySelectorAll('.chk-item');
+  checkboxes.forEach((chk, idx) => {
+    const key = 'trilha_chk_' + idx;
+    chk.checked = localStorage.getItem(key) === 'true';
+    chk.addEventListener('change', () => {
+      localStorage.setItem(key, chk.checked);
+      atualizarProgresso();
+    });
+  });
+  atualizarProgresso();
+
+  function atualizarProgresso() {
+    const total = checkboxes.length;
+    const marcados = Array.from(checkboxes).filter(c => c.checked).length;
+    const pct = total ? Math.round((marcados / total) * 100) : 0;
+    const bar = document.getElementById('progresso-bar');
+    const txt = document.getElementById('progresso-txt');
+    if (bar) bar.style.width = pct + '%';
+    if (txt) txt.innerText = marcados + ' de ' + total + ' concluídos (' + pct + '%)';
+  }
+});
+</script>
+
+</body>
+</html>
