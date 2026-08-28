@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  khoj_app:
+    image: khoj:latest
+    networks:
+      - network_conexao
+    volumes:
+      - khoj_data:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_conexao"
+        - "traefik.http.routers.khoj.rule=Host(`khoj.vpsconexao.org`)"
+        - "traefik.http.routers.khoj.entrypoints=websecure"
+        - "traefik.http.routers.khoj.tls=true"
+        - "traefik.http.routers.khoj.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.khoj.loadbalancer.server.port=80"
+        - "traefik.http.services.khoj.loadbalancer.passHostHeader=true"
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+
+networks:
+  network_conexao:
+    external: true
+
+volumes:
+  khoj_data:

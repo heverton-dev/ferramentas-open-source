@@ -133,12 +133,21 @@ def main():
         print(f"Veredito Global Conjunto: {cumul['status']} (Score: {cumul['score']}/100)")
         print(f"Demanda Total Conjunta: {cumul['total_req_cpu']} vCPUs | {cumul['total_req_ram']} GB RAM")
         print(f"Headroom Livre Restante: ~{cumul['free_cpu'] - cumul['total_req_cpu']:.1f} vCPUs | ~{cumul['free_ram'] - cumul['total_req_ram']:.1f} GB RAM")
-        print("Relat?rio Consolidado:")
+        print("Relatório Consolidado:")
         for cf in consolidated_files:
             print(f"  - {cf}")
         print("========================================================\n")
+        commit_msg = f"feat(fluxo5): auditoria multi-alvo vps ({len(targets_to_run)} alvos)"
     else:
-        print(f"\nExecu??o conclu?da com sucesso para o alvo ?nico. Artefatos em: {out_dir}\n")
+        print(f"\nExecução concluída com sucesso para o alvo único. Artefatos em: {out_dir}\n")
+        commit_msg = f"feat(fluxo5): auditoria e integracao vps ({targets_to_run[0]['slug']})"
+
+    # Sincronização Git Automatizada R16
+    try:
+        from git_sync import executar_commit_e_push
+        executar_commit_e_push(commit_msg)
+    except Exception as e:
+        print(f"[FLUXO 5] Aviso ao executar git sync: {e}")
 
 if __name__ == "__main__":
     main()
