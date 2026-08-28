@@ -1,0 +1,1467 @@
+{
+  "slug": "google-workspace",
+  "nome_ecossistema": "Google Workspace Soberano",
+  "titulo": "Macro-Ecossistema Google Workspace: Comunicação, Produtividade & Governança",
+  "subtitulo": "Arquitetura Aberta Integrada com Quinteto Soberano por Grupo, SSO, Barramento de Eventos e MCPs",
+  "deck": "Dossiê completo de desmantelamento soberano para o Macro-Ecossistema Google Workspace (Gmail, Chat, Meet, Agenda, Drive, Docs, Sheets, Slides, Forms, Keep, Sites, Admin, Vault e Endpoint). Cada frente de negócio é estruturada com seu próprio Quinteto Soberano (A Mais Robusta, Mais Completa, Mais Moderna, Mais Leve e Mais Simples), acompanhada de análise de TCO, guias práticos, aderência white-label e ecossistema agêntico de MCPs.",
+  "saas_substituido": "Google Workspace (Business Standard 50 usuários + Google Vault + Endpoint Management)",
+  "stats": {
+    "total_pilares": 3,
+    "total_ferramentas": 15,
+    "licencas_osi": "100%",
+    "economia_media": "95.1%",
+    "autonomia": "100% Self-Hosted"
+  },
+  "pilares": [
+    {
+      "pilar_id": "comunicacao",
+      "nome_pilar": "Grupo 1: Comunicação Unificada (E-mail, Chat, Vídeo, Agenda & Contatos)",
+      "modulo_saas_alvo": "Google Workspace (Gmail + Google Chat + Google Meet + Google Calendar + Google Contacts)",
+      "descricao_pilar": "Frente responsável pela caixa postal corporativa, mensageria instantânea, videoconferência, agenda compartilhada e catálogo de contatos. Substitui integralmente o Gmail, o Google Chat, o Google Meet, o Google Calendar e o Google Contacts por uma suíte soberana sob domínio próprio, com criptografia ponta a ponta e sem cobrança por usuário.",
+      "subtotal_economia_anual": "R$ 43.200/ano",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "classificacao": "A Mais Completa",
+          "slug": "nextcloud",
+          "nome": "Nextcloud Hub",
+          "subtitulo": "Suíte Integrada de Mail, Calendar, Contacts, Talk & Files",
+          "papel_no_pilar": "Substitui Gmail, Calendar, Contacts e Chat/Meet por um único hub com Mail, Agenda, Contatos, Talk (chat + vídeo) e arquivos.",
+          "saas_substituido_direto": "Gmail + Google Calendar + Google Contacts + Google Chat + Google Meet",
+          "racional_escolha": "Única plataforma open source que reúne e-mail, agenda, contatos, chat e videoconferência em um só painel, com sincronização CalDAV/CardDAV nativa e cliente Talk baseado em chamadas WebRTC.",
+          "economia_anual_str": "R$ 43.200/ano (50 usuários)",
+          "licenca_osi": "AGPL-3.0",
+          "repositorio_github": "https://github.com/nextcloud/server",
+          "o_que_faz": "Centraliza e-mail, agenda, contatos, chat e vídeo com interface única e aplicativos móveis próprios.",
+          "como_funciona": "PHP/Symfony com servidor de sincronização, banco PostgreSQL/MySQL e módulo Talk sobre WebRTC para chamadas.",
+          "comando_rapido": "docker run -d -p 8080:80 --name nextcloud nextcloud:latest",
+          "requisitos_infra": {
+            "ram_minima": "4 GB RAM",
+            "cpu_minima": "2 vCPU",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "nextcloud:latest",
+            "banco_dados": "PostgreSQL / MySQL"
+          },
+          "veredito": "A escolha mais completa para substituir o Google Workspace de ponta a ponta em comunicação, mantendo os dados sob controle total da empresa.",
+          "passos_praticos": [
+            {
+              "titulo": "Configuração de Domínio & DNS",
+              "descricao": "Aponte os registros MX, SPF, DKIM e DMARC do seu domínio para o servidor Nextcloud/Mail e valide a entrega de e-mails."
+            },
+            {
+              "titulo": "Ativação do Talk & Agenda",
+              "descricao": "Habilite o módulo Talk para chamadas de vídeo e compartilhe calendários departamentais via CalDAV no Outlook e Thunderbird."
+            },
+            {
+              "titulo": "Migração de Caixas",
+              "descricao": "Use a ferramenta imapsync para copiar todas as mensagens, pastas e contatos do Gmail para o Nextcloud Mail em lote."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Theming Nativo)",
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "Vue.js + WebComponents",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Suporte nativo a logo institucional, favicon e paleta de cores corporativas no painel de administração, além de temas por usuário.",
+            "manutenibilidade_upgrades": "Alta: Atualizações via contêiner oficial com migrações automáticas de banco.",
+            "manutenibilidade_tema": "Temas e marca vivem no banco de dados, desacoplados do binário."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "nextcloud-mcp",
+              "comando_ou_repo": "npx -y @nextcloud/mcp",
+              "descricao": "Permite que agentes de IA leiam arquivos, eventos e contatos do Nextcloud via linguagem natural."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-meeting-minutes",
+              "comando_ou_repo": ".claude/skills/meeting-minutes/SKILL.md",
+              "descricao": "Transcreve chamadas do Talk e gera atas no Nextcloud Text automaticamente."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "occ",
+              "comando_ou_repo": "sudo -u www-data php occ user:add --password-from-env novo_usuario",
+              "descricao": "CLI oficial para criar usuários, grupos e aplicar políticas em lote."
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "classificacao": "A Mais Robusta",
+          "slug": "zimbra",
+          "nome": "Zimbra Collaboration",
+          "subtitulo": "Groupware Empresarial Maduro para Grandes Operações",
+          "papel_no_pilar": "Substitui Gmail/Calendar/Contacts com servidor de e-mail corporativo battle-tested e suporte a milhares de caixas.",
+          "saas_substituido_direto": "Gmail + Google Calendar + Google Contacts (carga enterprise)",
+          "racional_escolha": "Plataforma open source em produção há mais de 15 anos em universidades e governos, com motor de e-mail robusto, anti-spam integrado e cliente web completo.",
+          "economia_anual_str": "R$ 43.200/ano (50 usuários)",
+          "licenca_osi": "GPL-3.0",
+          "repositorio_github": "https://github.com/Zimbra/zimbra-community",
+          "o_que_faz": "Gerencia e-mail, agenda, contatos, tarefas e documentos colaborativos em um único servidor.",
+          "como_funciona": "Java (Jetty/Tomcat) com armazenamento em PostgreSQL e servidor de e-mail baseado em Postfix/OpenLDAP.",
+          "comando_rapido": "docker run -d -p 8080:8080 --name zimbra zimbra/zimbra-community:latest",
+          "requisitos_infra": {
+            "ram_minima": "8 GB RAM",
+            "cpu_minima": "4 vCPU",
+            "cpu_recomendada": "4 vCPU",
+            "docker_image": "zimbra/zimbra-community:latest",
+            "banco_dados": "PostgreSQL / MariaDB"
+          },
+          "veredito": "A opção mais sólida para organizações que exigem resiliência extrema e suporte a milhares de usuários simultâneos sem custo por licença.",
+          "passos_praticos": [
+            {
+              "titulo": "Provisionamento de Contas",
+              "descricao": "Crie domínios e contas via administração web ou zmprov, importando usuários de planilha CSV."
+            },
+            {
+              "titulo": "Políticas de Retenção",
+              "descricao": "Configure cotas por caixa, arquivamento jurídico e regras de anti-spam no painel administrativo."
+            },
+            {
+              "titulo": "Integração de Clientes",
+              "descricao": "Conecte Outlook, Thunderbird e dispositivos móveis via ActiveSync/IMAP/CardDAV/calDAV."
+            }
+          ],
+          "design_system": {
+            "esforco": "Médio (Tema Moderno)",
+            "esforco_whitelabel": "Médio",
+            "stack_ui": "JavaScript + Zimbra Modern UI",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Permite trocar logo, cores e nome da organização no tema Modern UI e no portal de login.",
+            "manutenibilidade_upgrades": "Estável: Pacotes oficiais com caminho de upgrade documentado entre versões.",
+            "manutenibilidade_tema": "Temas isolados em pacotes específicos, sem risco ao core."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "zimbra-mcp",
+              "comando_ou_repo": "npx -y zimbra-mcp-server",
+              "descricao": "Consulta de caixas, agendas e contatos por agentes de IA via API SOAP/REST."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-mail-archive",
+              "comando_ou_repo": ".claude/skills/mail-archive/SKILL.md",
+              "descricao": "Aplica políticas de arquivamento e expurgo conforme a LGPD."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "zmprov",
+              "comando_ou_repo": "zmprov ca usuario@empresa.com.br SenhaForte2026",
+              "descricao": "CLI para criação e gestão de contas Zimbra em lote."
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "classificacao": "A Mais Moderna",
+          "slug": "stalwart",
+          "nome": "Stalwart Mail Server",
+          "subtitulo": "Servidor de E-mail Moderno em Rust com JMAP, CalDAV & CardDAV",
+          "papel_no_pilar": "Substitui Gmail/Calendar/Contacts com arquitetura moderna, JMAP e criptografia nativa.",
+          "saas_substituido_direto": "Gmail + Google Calendar + Google Contacts (protocolo moderno)",
+          "racional_escolha": "Escrito em Rust para máxima performance e segurança, suporta SMTP, IMAP, POP3, JMAP, CalDAV e CardDAV com gerenciamento web elegante e DMARC/DKIM nativos.",
+          "economia_anual_str": "R$ 43.200/ano (50 usuários)",
+          "licenca_osi": "AGPL-3.0",
+          "repositorio_github": "https://github.com/stalwartlabs/stalwart",
+          "o_que_faz": "Fornece e-mail, agenda e contatos modernos com protocolo JMAP e baixíssimo consumo de recursos.",
+          "como_funciona": "Binário único em Rust com armazenamento em RocksDB/PostgreSQL e painel web em React.",
+          "comando_rapido": "docker run -d -p 8080:8080 -p 993:993 --name stalwart stalwartlabs/stalwart:latest",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "1 vCPU",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "stalwartlabs/stalwart:latest",
+            "banco_dados": "RocksDB / PostgreSQL"
+          },
+          "veredito": "A escolha moderna para quem busca performance, segurança e protocolo JMAP sem a carga de groupwares legados.",
+          "passos_praticos": [
+            {
+              "titulo": "Geração de Certificados",
+              "descricao": "Aponte o Stalwart para os certificados TLS do Traefik e valide os registros DKIM/DKIM automáticos."
+            },
+            {
+              "titulo": "Criação de Domínios",
+              "descricao": "Registre o domínio corporativo no painel e importe usuários via CSV ou API REST."
+            },
+            {
+              "titulo": "Clientes JMAP",
+              "descricao": "Conecte clientes modernos (Thunderbird, Apple Mail) via JMAP/IMAP e dispositivos móveis via CalDAV/CardDAV."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Painel React)",
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "React + TypeScript",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Painel web com logo e nome da organização configuráveis e temas claros/escuros.",
+            "manutenibilidade_upgrades": "Excelente: Binário único com atualizações atômicas e rollback simples.",
+            "manutenibilidade_tema": "Configurações de marca persistidas em banco, sem toque no binário."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "stalwart-mcp",
+              "comando_ou_repo": "npx -y stalwart-mcp",
+              "descricao": "Gestão de caixas e regras de e-mail por agentes de IA."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-dmarc-monitor",
+              "comando_ou_repo": ".claude/skills/dmarc-monitor/SKILL.md",
+              "descricao": "Analisa relatórios DMARC e ajusta políticas de entrega."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "stalwart-cli",
+              "comando_ou_repo": "stalwart-cli account create usuario@empresa.com.br",
+              "descricao": "Criação de contas via linha de comando."
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "classificacao": "A Mais Leve",
+          "slug": "mailu",
+          "nome": "Mailu",
+          "subtitulo": "Servidor de E-mail Dockerizado Leve e Completo",
+          "papel_no_pilar": "Substitui Gmail/Calendar/Contacts com stack leve em contêineres (Postfix, Dovecot, Roundcube).",
+          "saas_substituido_direto": "Gmail + Google Calendar + Google Contacts (carga leve)",
+          "racional_escolha": "Distribuição Docker pronta com webmail, filtros anti-spam, calendário e contatos, consumindo poucos recursos e com deploy em minutos.",
+          "economia_anual_str": "R$ 43.200/ano (50 usuários)",
+          "licenca_osi": "MIT",
+          "repositorio_github": "https://github.com/Mailu/Mailu",
+          "o_que_faz": "Entrega e-mail, webmail, agenda e contatos com interface administrativa simples.",
+          "comando_rapido": "docker compose -f mailu.yml up -d",
+          "como_funciona": "Orquestra Postfix, Dovecot, Roundcube, PostfixAdmin e Redis em contêineres leves sobre Docker.",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "1 vCPU",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "mailu/mailu:latest",
+            "banco_dados": "SQLite / PostgreSQL"
+          },
+          "veredito": "Ideal para quem quer um servidor de e-mail completo e leve, com deploy quase instantâneo e manutenção mínima.",
+          "passos_praticos": [
+            {
+              "titulo": "Geração do Manifesto",
+              "descricao": "Rode o gerador online do Mailu e baixe o docker-compose.yml pré-configurado com seu domínio."
+            },
+            {
+              "titulo": "Subida dos Contêineres",
+              "descricao": "Execute docker compose up -d e acesse o painel admin para criar domínios e caixas."
+            },
+            {
+              "titulo": "Webmail e Calendário",
+              "descricao": "Disponibilize o Roundcube e o módulo de calendário sob o Traefik com TLS automático."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Webmail Temático)",
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "Roundcube (PHP) + Admin Vue",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Logo e cores do webmail Roundcube e do painel admin personalizáveis por tema.",
+            "manutenibilidade_upgrades": "Alta: Imagens oficiais com versionamento semântico e migrações automáticas.",
+            "manutenibilidade_tema": "Temas do Roundcube isolados em volume de dados."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "mailu-mcp",
+              "comando_ou_repo": "npx -y mailu-mcp",
+              "descricao": "Gestão de aliases e caixas por agentes de IA."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-mail-rules",
+              "comando_ou_repo": ".claude/skills/mail-rules/SKILL.md",
+              "descricao": "Cria filtros e regras de encaminhamento automaticamente."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "docker-mailu",
+              "comando_ou_repo": "docker exec mailu-admin mailu-admin user",
+              "descricao": "Gerenciamento de usuários via CLI do contêiner admin."
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "classificacao": "A Mais Simples",
+          "slug": "mailinabox",
+          "nome": "Mail-in-a-Box",
+          "subtitulo": "Servidor de E-mail Completo com Instalação de 1 Script",
+          "papel_no_pilar": "Substitui Gmail/Calendar/Contacts com instalação automatizada em um único comando.",
+          "saas_substituido_direto": "Gmail + Google Calendar + Google Contacts (instalação zero-config)",
+          "racional_escolha": "Um único script configura e-mail, DNS, calendário, contatos e webmail seguros em um servidor Ubuntu limpo, sem conhecimento de Linux.",
+          "economia_anual_str": "R$ 43.200/ano (50 usuários)",
+          "licenca_osi": "GPL-3.0",
+          "repositorio_github": "https://github.com/mail-in-a-box/mailinabox",
+          "o_que_faz": "Instala e mantém um servidor de e-mail corporativo completo e seguro com um comando.",
+          "como_funciona": "Script Bash que provisiona Postfix, Dovecot, Nextcloud (agenda/contatos) e Roundcube sobre Ubuntu.",
+          "comando_rapido": "curl -s https://mailinabox.email/setup.sh | sudo bash",
+          "requisitos_infra": {
+            "ram_minima": "1 GB RAM",
+            "cpu_minima": "1 vCPU",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "script nativo Ubuntu",
+            "banco_dados": "SQLite / MariaDB"
+          },
+          "veredito": "A maneira mais simples de sair do Gmail: um script e pronto, com painel de administração amigável para não-técnicos.",
+          "passos_praticos": [
+            {
+              "titulo": "Execução do Script",
+              "descricao": "Rode o comando de instalação em um Ubuntu 22.04 limpo e responda as perguntas iniciais de domínio e senha."
+            },
+            {
+              "titulo": "Apontamento de DNS",
+              "descricao": "Copie os registros DNS sugeridos pelo painel para o seu provedor de domínio (incluindo DKIM/DMARC)."
+            },
+            {
+              "titulo": "Criação de Usuários",
+              "descricao": "Acesse o painel admin em /admin e crie as contas dos colaboradores com 1 clique."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Painel Padrão)",
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "Python + Roundcube",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Logo e nome da organização configuráveis no painel administrativo web.",
+            "manutenibilidade_upgrades": "Boa: Comando de atualização único que mantém o servidor sempre seguro.",
+            "manutenibilidade_tema": "Personalizações limitadas ao painel admin, sem risco ao core."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "mailinabox-mcp",
+              "comando_ou_repo": "npx -y mailinabox-mcp",
+              "descricao": "Leitura de status de caixas por agentes de IA."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-dns-checker",
+              "comando_ou_repo": ".claude/skills/dns-checker/SKILL.md",
+              "descricao": "Valida a saúde dos registros DNS do servidor de e-mail."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "management",
+              "comando_ou_repo": "sudo mailinabox",
+              "descricao": "Ferramenta de linha de comando para manutenção do servidor."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pilar_id": "produtividade",
+      "nome_pilar": "Grupo 2: Produtividade & Gestão de Documentos (Drive, Docs, Sheets, Slides, Forms, Keep, Sites)",
+      "modulo_saas_alvo": "Google Workspace (Drive + Docs + Sheets + Slides + Forms + Keep + Sites)",
+      "descricao_pilar": "Frente responsável pelo armazenamento de arquivos, edição colaborativa de documentos, planilhas e apresentações, formulários, notas e intranet. Substitui o Google Drive, Docs, Sheets, Slides, Forms, Keep e Sites por ferramentas soberanas com edição simultânea e controle total de versões.",
+      "subtotal_economia_anual": "R$ 28.800/ano",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "classificacao": "A Mais Completa",
+          "slug": "cryptpad",
+          "nome": "CryptPad",
+          "subtitulo": "Suíte Office Criptografada de Ponta a Ponta (Drive, Docs, Sheets, Slides, Forms)",
+          "papel_no_pilar": "Substitui Drive, Docs, Sheets, Slides e Forms com criptografia zero-knowledge e edição colaborativa.",
+          "saas_substituido_direto": "Google Drive + Docs + Sheets + Slides + Forms + Keep",
+          "racional_escolha": "Única suíte office open source com criptografia de ponta a ponta: nem o servidor enxerga o conteúdo. Inclui Drive, documentos, planilhas, apresentações, formulários, quadro kanban e blocos de notas.",
+          "economia_anual_str": "R$ 28.800/ano (50 usuários)",
+          "licenca_osi": "AGPL-3.0",
+          "repositorio_github": "https://github.com/cryptpad/cryptpad",
+          "o_que_faz": "Fornece editor de documentos, planilhas, slides, formulários e armazenamento criptografado com colaboração em tempo real.",
+          "comando_rapido": "docker run -d -p 3000:3000 --name cryptpad cryptpad/cryptpad:latest",
+          "como_funciona": "Node.js com criptografia client-side (ChainPad) e sincronização via WebSocket, sem leitura do servidor.",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "1 vCPU",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "cryptpad/cryptpad:latest",
+            "banco_dados": "Arquivos no disco (sem DB externo)"
+          },
+          "veredito": "A escolha mais completa e segura para substituir o Google Drive e a suíte office, com privacidade absoluta dos dados.",
+          "passos_praticos": [
+            {
+              "titulo": "Subida do Contêiner",
+              "descricao": "Suba o CryptPad via Docker e exponha sob docs.empresa.com.br pelo Traefik com TLS."
+            },
+            {
+              "titulo": "Criação de Documentos",
+              "descricao": "Crie documentos, planilhas e apresentações colaborativas e convide a equipe por link ou e-mail."
+            },
+            {
+              "titulo": "Formulários e Pesquisas",
+              "descricao": "Monte formulários de coleta de dados com respostas criptografadas e exportação em CSV."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Tema Corporativo)",
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "JavaScript + Less",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Logo, favicon e cores institucionais configuráveis no arquivo config.js e no painel admin.",
+            "manutenibilidade_upgrades": "Alta: Imagens oficiais versionadas com migrações de dados documentadas.",
+            "manutenibilidade_tema": "Tema isolado em arquivos de configuração, sem risco ao core."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "cryptpad-mcp",
+              "comando_ou_repo": "npx -y cryptpad-mcp",
+              "descricao": "Criação e leitura de documentos por agentes de IA."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-doc-summarizer",
+              "comando_ou_repo": ".claude/skills/doc-summarizer/SKILL.md",
+              "descricao": "Resume documentos do CryptPad e gera relatórios."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "cryptpad-api",
+              "comando_ou_repo": "curl -X POST https://docs.empresa/api/doc",
+              "descricao": "API REST para automação de documentos."
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "classificacao": "A Mais Robusta",
+          "slug": "owncloud",
+          "nome": "ownCloud",
+          "subtitulo": "Plataforma Enterprise de Sincronização e Compartilhamento de Arquivos",
+          "papel_no_pilar": "Substitui o Google Drive com sincronização de arquivos robusta, controle de versão e federação.",
+          "saas_substituido_direto": "Google Drive (armazenamento e compartilhamento empresarial)",
+          "racional_escolha": "Fork maduro e estável com foco em grandes volumes de arquivos, permissões granulares, federação entre instâncias e integrações corporativas.",
+          "economia_anual_str": "R$ 28.800/ano (50 usuários)",
+          "licenca_osi": "AGPL-3.0",
+          "repositorio_github": "https://github.com/owncloud/core",
+          "o_que_faz": "Sincroniza arquivos entre dispositivos, gerencia compartilhamentos e mantém histórico de versões.",
+          "como_funciona": "PHP/Symfony com armazenamento em disco ou S3 e sincronização via cliente desktop/móvel.",
+          "comando_rapido": "docker run -d -p 8080:8080 --name owncloud owncloud/server:latest",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "1 vCPU",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "owncloud/server:latest",
+            "banco_dados": "PostgreSQL / MariaDB"
+          },
+          "veredito": "A escolha robusta para armazenamento de arquivos em escala empresarial, com federação e controle de versão confiáveis.",
+          "passos_praticos": [
+            {
+              "titulo": "Instalação do Servidor",
+              "descricao": "Suba o contêiner ownCloud e acesse o assistente de configuração inicial pelo navegador."
+            },
+            {
+              "titulo": "Clientes de Sincronização",
+              "descricao": "Instale o cliente desktop/móvel nos computadores da equipe e conecte à instância corporativa."
+            },
+            {
+              "titulo": "Compartilhamento e Versões",
+              "descricao": "Crie pastas compartilhadas por departamento e ative o versionamento de arquivos."
+            }
+          ],
+          "design_system": {
+            "esforco": "Médio (Tema Enterprise)",
+            "esforco_whitelabel": "Médio",
+            "stack_ui": "PHP + Vue.js",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Logo, cores e nome da organização configuráveis no tema e no painel de administração.",
+            "manutenibilidade_upgrades": "Estável: Pacotes oficiais com caminho de upgrade documentado.",
+            "manutenibilidade_tema": "Temas isolados em diretório próprio, sem risco ao core."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "owncloud-mcp",
+              "comando_ou_repo": "npx -y owncloud-mcp",
+              "descricao": "Gestão de arquivos por agentes de IA."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-file-classifier",
+              "comando_ou_repo": ".claude/skills/file-classifier/SKILL.md",
+              "descricao": "Classifica e organiza arquivos automaticamente por tipo e departamento."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "occ-owncloud",
+              "comando_ou_repo": "sudo -u www-data php occ files:scan --all",
+              "descricao": "CLI para varredura e manutenção de arquivos."
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "classificacao": "A Mais Moderna",
+          "slug": "onlyoffice",
+          "nome": "ONLYOFFICE Docs",
+          "subtitulo": "Motor de Edição Colaborativa Moderna (Docs, Sheets, Slides)",
+          "papel_no_pilar": "Substitui Google Docs/Sheets/Slides com edição colaborativa fiel ao formato Office.",
+          "saas_substituido_direto": "Google Docs + Sheets + Slides (edição colaborativa)",
+          "racional_escolha": "Compatibilidade quase total com formatos .docx, .xlsx e .pptx, edição colaborativa em tempo real e integração nativa com Nextcloud, ownCloud e Seafile.",
+          "economia_anual_str": "R$ 28.800/ano (50 usuários)",
+          "licenca_osi": "AGPL-3.0",
+          "repositorio_github": "https://github.com/ONLYOFFICE/DocServer",
+          "o_que_faz": "Renderiza e edita documentos, planilhas e apresentações colaborativas no navegador.",
+          "como_funciona": "Node.js + servidores de conversão em C++ com WebSocket para coautoria em tempo real.",
+          "comando_rapido": "docker run -d -p 8080:80 --name onlyoffice onlyoffice/documentserver:latest",
+          "requisitos_infra": {
+            "ram_minima": "4 GB RAM",
+            "cpu_minima": "2 vCPU",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "onlyoffice/documentserver:latest",
+            "banco_dados": "Redis (cache) + disco"
+          },
+          "veredito": "A escolha moderna para quem precisa de fidelidade total ao Microsoft Office e colaboração em tempo real sem o Google.",
+          "passos_praticos": [
+            {
+              "titulo": "Subida do Document Server",
+              "descricao": "Suba o ONLYOFFICE e conecte-o ao Nextcloud ou Seafile como motor de edição."
+            },
+            {
+              "titulo": "Edição Colaborativa",
+              "descricao": "Abra documentos .docx/.xlsx/.pptx diretamente no navegador e convide coautores."
+            },
+            {
+              "titulo": "Conversão de Formatos",
+              "descricao": "Exporte para PDF e formatos Office com 1 clique, preservando a formatação original."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (UI Moderna)",
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "React + TypeScript",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Logo e cores da barra de ferramentas configuráveis via parâmetros de branding.",
+            "manutenibilidade_upgrades": "Alta: Imagens oficiais com atualizações frequentes e limpas.",
+            "manutenibilidade_tema": "Configurações de marca em arquivo de ambiente, desacopladas do core."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "onlyoffice-mcp",
+              "comando_ou_repo": "npx -y onlyoffice-mcp",
+              "descricao": "Geração e edição de documentos por agentes de IA."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-contract-drafter",
+              "comando_ou_repo": ".claude/skills/contract-drafter/SKILL.md",
+              "descricao": "Redige contratos em .docx a partir de prompts."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "document-server-api",
+              "comando_ou_repo": "curl https://office.empresa/ConvertService.ashx",
+              "descricao": "API de conversão de documentos em lote."
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "classificacao": "A Mais Leve",
+          "slug": "seafile",
+          "nome": "Seafile",
+          "subtitulo": "Armazenamento de Arquivos de Altíssima Performance",
+          "papel_no_pilar": "Substitui o Google Drive com sincronização ultrarrápida e baixo consumo de recursos.",
+          "saas_substituido_direto": "Google Drive (sincronização e backup de arquivos)",
+          "racional_escolha": "Escrito em C com biblioteca de blocos, entrega sincronização de arquivos muito mais rápida que concorrentes, ideal para grandes volumes e poucos recursos.",
+          "economia_anual_str": "R$ 28.800/ano (50 usuários)",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/haiwen/seafile",
+          "o_que_faz": "Sincroniza e versiona arquivos com biblioteca de blocos e criptografia no cliente.",
+          "como_funciona": "Backend em C (ccnet/seafile) com banco MySQL e armazenamento de blocos em disco.",
+          "comando_rapido": "docker run -d -p 8000:8000 --name seafile seafileltd/seafile-mc:latest",
+          "requisitos_infra": {
+            "ram_minima": "1 GB RAM",
+            "cpu_minima": "1 vCPU",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "seafileltd/seafile-mc:latest",
+            "banco_dados": "MySQL / MariaDB"
+          },
+          "veredito": "A escolha leve e veloz para armazenamento de arquivos em larga escala, com consumo mínimo de RAM.",
+          "passos_praticos": [
+            {
+              "titulo": "Subida do Servidor",
+              "descricao": "Suba o contêiner Seafile e acesse o painel admin para criar a biblioteca corporativa."
+            },
+            {
+              "titulo": "Clientes Desktop/Móvel",
+              "descricao": "Instale o cliente Seafile nos dispositivos e sincronize pastas selecionadas."
+            },
+            {
+              "titulo": "Bibliotecas Compartilhadas",
+              "descricao": "Crie bibliotecas por departamento com permissões de leitura/escrita granulares."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (UI Limpa)",
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "JavaScript + jQuery",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Logo e nome da organização configuráveis no painel de administração.",
+            "manutenibilidade_upgrades": "Alta: Imagens oficiais com migrações automáticas de esquema.",
+            "manutenibilidade_tema": "Personalizações limitadas ao branding do painel, sem risco ao core."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "seafile-mcp",
+              "comando_ou_repo": "npx -y seafile-mcp",
+              "descricao": "Gestão de bibliotecas por agentes de IA."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-backup-verifier",
+              "comando_ou_repo": ".claude/skills/backup-verifier/SKILL.md",
+              "descricao": "Verifica integridade dos blocos de arquivos."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "seaf-cli",
+              "comando_ou_repo": "seaf-cli sync -u https://drive.empresa -r /docs -d ~/Docs",
+              "descricao": "Sincronização de bibliotecas via linha de comando."
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "classificacao": "A Mais Simples",
+          "slug": "hedgedoc",
+          "nome": "HedgeDoc",
+          "subtitulo": "Edição Colaborativa de Markdown Simples e Elegante",
+          "papel_no_pilar": "Substitui o Google Docs para notas, atas e documentação rápida em Markdown.",
+          "saas_substituido_direto": "Google Docs + Google Keep (notas e documentação leve)",
+          "racional_escolha": "Editor colaborativo em tempo real baseado em Markdown, com curadoria de links, histórico de versões e zero complexidade para usuários não-técnicos.",
+          "economia_anual_str": "R$ 28.800/ano (50 usuários)",
+          "licenca_osi": "AGPL-3.0",
+          "repositorio_github": "https://github.com/hedgedoc/hedgedoc",
+          "o_que_faz": "Permite criar e editar documentos Markdown colaborativos com preview em tempo real.",
+          "como_funciona": "Node.js com banco PostgreSQL e sincronização via WebSocket (ot.js).",
+          "comando_rapido": "docker run -d -p 3000:3000 --name hedgedoc hedgedoc/hedgedoc:latest",
+          "requisitos_infra": {
+            "ram_minima": "1 GB RAM",
+            "cpu_minima": "1 vCPU",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "hedgedoc/hedgedoc:latest",
+            "banco_dados": "PostgreSQL / SQLite"
+          },
+          "veredito": "A escolha simples para documentação, atas e notas colaborativas sem a complexidade de um office completo.",
+          "passos_praticos": [
+            {
+              "titulo": "Criação de Nota",
+              "descricao": "Abra o HedgeDoc e crie um novo documento Markdown compartilhando o link com a equipe."
+            },
+            {
+              "titulo": "Edição em Tempo Real",
+              "descricao": "Vários colaboradores editam simultaneamente com preview lado a lado."
+            },
+            {
+              "titulo": "Exportação",
+              "descricao": "Exporte para PDF, HTML ou Markdown com 1 clique para distribuição."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Tema Padrão)",
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "Node.js + Ember.js",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Logo e CSS corporativo configuráveis via variáveis de ambiente e tema.",
+            "manutenibilidade_upgrades": "Boa: Imagens oficiais com atualizações regulares.",
+            "manutenibilidade_tema": "Tema isolado em arquivos CSS, sem risco ao core."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "hedgedoc-mcp",
+              "comando_ou_repo": "npx -y hedgedoc-mcp",
+              "descricao": "Criação de notas por agentes de IA."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-meeting-notes",
+              "comando_ou_repo": ".claude/skills/meeting-notes/SKILL.md",
+              "descricao": "Gera atas de reunião em Markdown automaticamente."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "hedgedoc-api",
+              "comando_ou_repo": "curl -X POST https://docs.empresa/api/notes",
+              "descricao": "API REST para criação de notas."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pilar_id": "identidade",
+      "nome_pilar": "Grupo 3: Identidade, Segurança & Governança (Admin, SSO, Vault & Endpoint)",
+      "modulo_saas_alvo": "Google Workspace (Admin Console + Cloud Identity + Google Vault + Endpoint Management)",
+      "descricao_pilar": "Frente responsável pelo login único (SSO), autenticação multifator, retenção de dados (eDiscovery), conformidade e gestão de dispositivos. Substitui o Admin Console, o Cloud Identity, o Google Vault e o Endpoint Management por ferramentas soberanas de identidade e governança.",
+      "subtotal_economia_anual": "R$ 14.400/ano",
+      "ferramentas": [
+        {
+          "rank": 1,
+          "classificacao": "A Mais Completa",
+          "slug": "authentik",
+          "nome": "Authentik",
+          "subtitulo": "Plataforma Moderna de Identidade (SSO, MFA & Políticas)",
+          "papel_no_pilar": "Substitui o Cloud Identity/Admin com SSO, MFA, federação e motor de políticas visual.",
+          "saas_substituido_direto": "Google Cloud Identity + Admin Console (SSO e federação)",
+          "racional_escolha": "Interface moderna com provedor de identidade completo, suporte a OIDC/SAML/LDAP, MFA adaptativo e editor visual de políticas de acesso por aplicação.",
+          "economia_anual_str": "R$ 14.400/ano (50 usuários)",
+          "licenca_osi": "MIT",
+          "repositorio_github": "https://github.com/goauthentik/authentik",
+          "o_que_faz": "Centraliza login único, autenticação multifator e políticas de acesso para todos os aplicativos da suíte.",
+          "como_funciona": "Backend Python (Django) com frontend React e provedores OIDC/SAML/LDAP.",
+          "comando_rapido": "docker run -d -p 9000:9000 --name authentik authentik/server:latest",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "1 vCPU",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "authentik/server:latest",
+            "banco_dados": "PostgreSQL + Redis"
+          },
+          "veredito": "A escolha mais completa e moderna para substituir o Cloud Identity, com políticas visuais e MFA adaptativo nativos.",
+          "passos_praticos": [
+            {
+              "titulo": "Criação do Provedor",
+              "descricao": "Configure o Authentik como IdP OIDC e conecte o Nextcloud, CryptPad e Seafile via SSO."
+            },
+            {
+              "titulo": "Políticas de MFA",
+              "descricao": "Exija autenticação de dois fatores para aplicativos sensíveis no editor visual de políticas."
+            },
+            {
+              "titulo": "Federação de Usuários",
+              "descricao": "Importe usuários do Active Directory ou LDAP existente via conector nativo."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (UI Moderna)",
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "React + TypeScript",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Logo, favicon e paleta de cores corporativas no tema do painel e das telas de login.",
+            "manutenibilidade_upgrades": "Alta: Imagens oficiais com migrações automáticas de esquema.",
+            "manutenibilidade_tema": "Tema isolado em configuração, sem risco ao core."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "authentik-mcp",
+              "comando_ou_repo": "npx -y authentik-mcp",
+              "descricao": "Gestão de usuários e políticas por agentes de IA."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-access-reviewer",
+              "comando_ou_repo": ".claude/skills/access-reviewer/SKILL.md",
+              "descricao": "Revê permissões e detecta acessos excessivos."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "ak",
+              "comando_ou_repo": "ak policy apply ./politicas.yaml",
+              "descricao": "CLI para aplicar políticas de acesso em lote."
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "classificacao": "A Mais Robusta",
+          "slug": "keycloak",
+          "nome": "Keycloak",
+          "subtitulo": "Identity and Access Management Empresarial (Red Hat)",
+          "papel_no_pilar": "Substitui o Cloud Identity com IAM enterprise, SSO SAML/OIDC e federação.",
+          "saas_substituido_direto": "Google Cloud Identity + Admin Console (IAM enterprise)",
+          "racional_escolha": "Padrão de mercado para IAM open source, com suporte maduro a SAML, OIDC, LDAP, federação e realms isolados para múltiplas organizações.",
+          "economia_anual_str": "R$ 14.400/ano (50 usuários)",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/keycloak/keycloak",
+          "o_que_faz": "Fornece SSO, MFA, federação e gerenciamento de identidade para toda a suíte.",
+          "comando_rapido": "docker run -d -p 8080:8080 --name keycloak quay.io/keycloak/keycloak:latest start-dev",
+          "como_funcricao": "Java (Quarkus) com provedores OIDC/SAML e armazenamento em PostgreSQL.",
+          "como_funciona": "Java (Quarkus) com provedores OIDC/SAML e armazenamento em PostgreSQL.",
+          "requisitos_infra": {
+            "ram_minima": "2 GB RAM",
+            "cpu_minima": "1 vCPU",
+            "cpu_recomendada": "2 vCPU",
+            "docker_image": "quay.io/keycloak/keycloak:latest",
+            "banco_dados": "PostgreSQL"
+          },
+          "veredito": "A escolha robusta para IAM em escala enterprise, com federação SAML e isolamento por realms.",
+          "passos_praticos": [
+            {
+              "titulo": "Criação do Realm",
+              "descricao": "Crie um realm corporativo e registre os clientes (Nextcloud, CryptPad, Seafile) como aplicações OIDC."
+            },
+            {
+              "titulo": "MFA e Flows",
+              "descricao": "Configure fluxos de autenticação com TOTP e WebAuthn para todos os usuários."
+            },
+            {
+              "titulo": "Federação SAML",
+              "descricao": "Conecte provedores externos (Azure AD, Okta) via federação SAML para SSO híbrido."
+            }
+          ],
+          "design_system": {
+            "esforco": "Médio (Tema Custom)",
+            "esforco_whitelabel": "Médio",
+            "stack_ui": "Angular + PatternFly",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Tema de login e conta personalizável via tema customizado em CSS/HTML.",
+            "manutenibilidade_upgrades": "Estável: Pacotes oficiais com caminho de upgrade documentado.",
+            "manutenibilidade_tema": "Tema isolado em diretório próprio, sem risco ao core."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "keycloak-mcp",
+              "comando_ou_repo": "npx -y keycloak-mcp",
+              "descricao": "Gestão de realms e usuários por agentes de IA."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-sso-auditor",
+              "comando_ou_repo": ".claude/skills/sso-auditor/SKILL.md",
+              "descricao": "Audita configurações de SSO e detecta riscos."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "kcadm",
+              "comando_ou_repo": "kcadm.sh create users -r empresa -s username=joao",
+              "descricao": "CLI de administração do Keycloak."
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "classificacao": "A Mais Moderna",
+          "slug": "zitadel",
+          "nome": "ZITADEL",
+          "subtitulo": "IAM Moderno Event-Sourced com OIDC, SAML & MFA",
+          "papel_no_pilar": "Substitui o Cloud Identity com IAM moderno, APIs limpas e auditoria imutável.",
+          "saas_substituido_direto": "Google Cloud Identity + Admin Console (IAM moderno)",
+          "racional_escolha": "Arquitetura event-sourced em Go/TypeScript com APIs gRPC/REST modernas, suporte nativo a OIDC, SAML, LDAP e trilha de auditoria imutável.",
+          "economia_anual_str": "R$ 14.400/ano (50 usuários)",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/zitadel/zitadel",
+          "o_que_faz": "Fornece identidade, SSO e MFA com modelo de eventos e auditoria completa.",
+          "como_funciona": "Go com CQRS/Event-Sourcing, armazenamento em PostgreSQL e APIs gRPC/REST.",
+          "comando_rapido": "docker run -d -p 8080:8080 --name zitadel zitadel/zitadel:latest",
+          "requisitos_infra": {
+            "ram_minima": "1 GB RAM",
+            "cpu_minima": "1 vCPU",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "zitadel/zitadel:latest",
+            "banco_dados": "PostgreSQL"
+          },
+          "veredito": "A escolha moderna para IAM com auditoria imutável e APIs de primeira linha para integração com agentes.",
+          "passos_praticos": [
+            {
+              "titulo": "Inicialização do Instance",
+              "descricao": "Suba o ZITADEL e crie a organização corporativa via console ou API."
+            },
+            {
+              "titulo": "Aplicações OIDC",
+              "descricao": "Registre os aplicativos da suíte como clients OIDC com escopos personalizados."
+            },
+            {
+              "titulo": "Auditoria e MFA",
+              "descricao": "Ative MFA e consulte a trilha de eventos imutável para conformidade."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Console Moderno)",
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "React + TypeScript",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Logo e cores do console e telas de login configuráveis por organização.",
+            "manutenibilidade_upgrades": "Alta: Imagens oficiais com migrações automáticas.",
+            "manutenibilidade_tema": "Tema isolado por organização, sem risco ao core."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "zitadel-mcp",
+              "comando_ou_repo": "npx -y zitadel-mcp",
+              "descricao": "Gestão de identidade por agentes de IA via gRPC/REST."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-audit-trail",
+              "comando_ou_repo": ".claude/skills/audit-trail/SKILL.md",
+              "descricao": "Analisa a trilha de auditoria e gera relatórios LGPD."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "zitadel-cli",
+              "comando_ou_repo": "zitadelctl org create empresa",
+              "descricao": "CLI para gestão de organizações."
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "classificacao": "A Mais Leve",
+          "slug": "authelia",
+          "nome": "Authelia",
+          "subtitulo": "SSO e 2FA Leve na Borda do Reverse Proxy",
+          "papel_no_pilar": "Substitui o MFA do Admin com camada leve de SSO e 2FA no Traefik.",
+          "saas_substituido_direto": "Google Endpoint Management (MFA na borda)",
+          "racional_escolha": "Contêiner minúsculo em Go que adiciona SSO e 2FA a qualquer aplicação protegida pelo Traefik, sem banco de dados pesado.",
+          "economia_anual_str": "R$ 14.400/ano (50 usuários)",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/authelia/authelia",
+          "o_que_faz": "Adiciona autenticação de dois fatores e SSO leve na frente de aplicações web.",
+          "como_funciona": "Go com sessões em Redis e integração transparente via ForwardAuth do Traefik.",
+          "comando_rapido": "docker run -d -p 9091:9091 --name authelia authelia/authelia:latest",
+          "requisitos_infra": {
+            "ram_minima": "256 MB RAM",
+            "cpu_minima": "0.5 vCPU",
+            "cpu_recomendada": "0.5 vCPU",
+            "docker_image": "authelia/authelia:latest",
+            "banco_dados": "SQLite / Redis (sessões)"
+          },
+          "veredito": "A escolha leve para adicionar MFA e SSO a toda a suíte sem overhead de um IAM completo.",
+          "passos_praticos": [
+            {
+              "titulo": "Integração com Traefik",
+              "descricao": "Configure o middleware ForwardAuth do Traefik para redirecionar ao Authelia."
+            },
+            {
+              "titulo": "Regras de Acesso",
+              "descricao": "Defina quem pode acessar cada subdomínio (ex: apenas RH no status.empresa.com.br)."
+            },
+            {
+              "titulo": "MFA por TOTP",
+              "descricao": "Exija segundo fator via aplicativo autenticador para todos os logins."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (Portal Leve)",
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "Go + Portal Web",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Logo e texto do portal de login configuráveis em YAML.",
+            "manutenibilidade_upgrades": "Alta: Binário único com atualizações atômicas.",
+            "manutenibilidade_tema": "Configuração de branding em arquivo, sem risco ao core."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "authelia-mcp",
+              "comando_ou_repo": "npx -y authelia-mcp",
+              "descricao": "Gestão de sessões por agentes de IA."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-access-gate",
+              "comando_ou_repo": ".claude/skills/access-gate/SKILL.md",
+              "descricao": "Ajusta regras de acesso por perfil."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "authelia-cli",
+              "comando_ou_repo": "authelia storage user add",
+              "descricao": "CLI para gestão de usuários."
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "classificacao": "A Mais Simples",
+          "slug": "casdoor",
+          "nome": "Casdoor",
+          "subtitulo": "SSO All-in-One com UI Amigável e LDAP",
+          "papel_no_pilar": "Substitui o Cloud Identity com SSO simples, UI intuitiva e suporte a LDAP.",
+          "saas_substituido_direto": "Google Cloud Identity (SSO simples)",
+          "racional_escolha": "Painel amigável para não-técnicos, suporte a OIDC/SAML/OAuth/LDAP e gestão de usuários com poucos cliques.",
+          "economia_anual_str": "R$ 14.400/ano (50 usuários)",
+          "licenca_osi": "Apache-2.0",
+          "repositorio_github": "https://github.com/casdoor/casdoor",
+          "o_que_faz": "Fornece SSO, gestão de usuários e MFA com interface administrativa simples.",
+          "como_funciona": "Go com frontend React e armazenamento em MySQL/PostgreSQL.",
+          "comando_rapido": "docker run -d -p 8000:8000 --name casdoor casbin/casdoor:latest",
+          "requisitos_infra": {
+            "ram_minima": "512 MB RAM",
+            "cpu_minima": "1 vCPU",
+            "cpu_recomendada": "1 vCPU",
+            "docker_image": "casbin/casdoor:latest",
+            "banco_dados": "MySQL / PostgreSQL"
+          },
+          "veredito": "A escolha simples para SSO com interface amigável, ideal para gestores sem experiência em TI.",
+          "passos_praticos": [
+            {
+              "titulo": "Configuração Inicial",
+              "descricao": "Acesse o painel e defina o nome da organização, logo e provedores de autenticação."
+            },
+            {
+              "titulo": "Registro de Apps",
+              "descricao": "Cadastre o Nextcloud, CryptPad e Seafile como aplicações OIDC com 1 clique."
+            },
+            {
+              "titulo": "Convite de Usuários",
+              "descricao": "Convide colaboradores por e-mail e defina grupos de acesso no painel visual."
+            }
+          ],
+          "design_system": {
+            "esforco": "Mínimo (UI Intuitiva)",
+            "esforco_whitelabel": "Baixo",
+            "stack_ui": "React + Ant Design",
+            "white_label_nativo": true,
+            "mecanica_customizacao": "Logo, tema e nome da organização configuráveis no painel administrativo.",
+            "manutenibilidade_upgrades": "Alta: Imagens oficiais com atualizações frequentes.",
+            "manutenibilidade_tema": "Tema isolado em configuração, sem risco ao core."
+          },
+          "uso_complementar": [
+            {
+              "tipo": "MCP Server",
+              "nome": "casdoor-mcp",
+              "comando_ou_repo": "npx -y casdoor-mcp",
+              "descricao": "Gestão de usuários por agentes de IA."
+            },
+            {
+              "tipo": "Agent Skill",
+              "nome": "skill-user-onboarder",
+              "comando_ou_repo": ".claude/skills/user-onboarder/SKILL.md",
+              "descricao": "Provisiona usuários e grupos automaticamente."
+            },
+            {
+              "tipo": "CLI Tool",
+              "nome": "casdoor-cli",
+              "comando_ou_repo": "casdoor-cli user create",
+              "descricao": "CLI para gestão de usuários."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "camada_integracao": {
+    "autenticacao_sso": "Keycloak / Authentik (OpenID Connect / SAML) unificando o login dos colaboradores no Nextcloud Hub, CryptPad, ONLYOFFICE, Seafile, Zimbra e HedgeDoc, eliminando senhas isoladas por aplicação.",
+    "barramento_eventos": "n8n Community Edition atuando como orquestrador central de eventos assíncronos (Usuário provisionado no Keycloak -> criação de caixa no Stalwart -> provisionamento de drive no Seafile -> notificação de boas-vindas no Nextcloud Talk).",
+    "gateway_reverse_proxy": "Traefik Proxy v3 com terminação TLS automática via Let's Encrypt e roteamento por subdomínios corporativos (mail.empresa.com.br, docs.empresa.com.br, drive.empresa.com.br, sso.empresa.com.br, status.empresa.com.br).",
+    "fluxo_integracao_descricao": "1. Provisionamento de Identidade: O administrador cria o colaborador no Keycloak/Authentik;\n2. Criação de Caixa & Agenda: O webhook dispara no n8n que cria a conta de e-mail no Stalwart/Nextcloud e a agenda no CalDAV;\n3. Provisionamento de Arquivos: O n8n cria a biblioteca do usuário no Seafile e a pasta de documentos no CryptPad;\n4. Onboarding Colaborativo: O n8n envia mensagem de boas-vindas no Nextcloud Talk com links de acesso;\n5. Armazenamento & Edição: O usuário edita documentos no ONLYOFFICE conectado ao Seafile e agenda reuniões no Nextcloud Calendar;\n6. Governança & Backup: O n8n dispara o backup diário e o Uptime Kuma monitora a saúde de todos os serviços com alerta no chat corporativo.",
+    "diagrama_arquitetura": "graph TD\n Colaborador([Colaborador]) -->|Acesso Web| Traefik[Traefik Proxy TLS]\n Traefik -->|mail.empresa.com| Nextcloud[Nextcloud Hub Mail/Talk]\n Traefik -->|docs.empresa.com| CryptPad[CryptPad Office]\n Traefik -->|office.empresa.com| OnlyOffice[ONLYOFFICE Docs]\n Traefik -->|drive.empresa.com| Seafile[Seafile Files]\n Traefik -->|sso.empresa.com| Keycloak[Keycloak SSO OIDC]\n Traefik -->|status.empresa.com| Kuma[Uptime Kuma]\n \n Keycloak -.->|Autenticação Única| Nextcloud\n Keycloak -.->|Autenticação Única| CryptPad\n Keycloak -.->|Autenticação Única| Seafile\n \n Nextcloud -->|Webhook| n8n[n8n Orquestrador de Eventos]\n n8n -->|API REST| Seafile\n n8n -->|API REST| Stalwart[Stalwart Mail]\n \n Kuma -.->|Alerta| n8n\n Postgres[(Cluster PostgreSQL Compartilhado)]"
+  },
+  "deploy_consolidado": {
+    "arquitetura_rede_seguranca": "A infraestrutura opera sobre uma rede bridge isolada do Docker (`ecosystem_net`). Apenas o reverse proxy Traefik expõe as portas públicas 80 (HTTP com redirect) e 443 (HTTPS TLS automático via ACME/Let's Encrypt). Todas as ferramentas (Nextcloud, CryptPad, ONLYOFFICE, Seafile, Keycloak, n8n, Stalwart e PostgreSQL) comunicam-se exclusivamente pela rede interna através de seus nomes DNS de serviço (ex: `http://nextcloud:80`, `postgres:5432`), eliminando vetores de ataque externos e exposição de portas desnecessárias.",
+    "composicao_stack_detalhada": [
+      {
+        "servico": "Traefik Proxy v3",
+        "imagem_docker": "traefik:v3.0",
+        "papel_na_stack": "Ingress Controller & Reverse Proxy com TLS automático",
+        "racional_escolha": "Descobre contêineres dinamicamente via labels do Docker sem necessidade de recarregar Nginx manualmente. Emite certificados SSL Let's Encrypt para múltiplos subdomínios corporativos.",
+        "portas_expostas": "80:80 (HTTP com redirect) e 443:443 (HTTPS)",
+        "persistencia": "Volume `/letsencrypt/acme.json` para certificados SSL"
+      },
+      {
+        "servico": "Keycloak SSO",
+        "imagem_docker": "quay.io/keycloak/keycloak:latest",
+        "papel_na_stack": "Provedor Central de Identidade (IdP) & Single Sign-On (OIDC/SAML)",
+        "racional_escolha": "Elimina silos de senhas: os colaboradores usam a mesma credencial corporativa para acessar o Nextcloud, o CryptPad, o Seafile e o ONLYOFFICE.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `sso.empresa.com.br`)",
+        "persistencia": "Banco `db_keycloak` no PostgreSQL compartilhado"
+      },
+      {
+        "servico": "n8n Automation",
+        "imagem_docker": "n8nio/n8n:latest",
+        "papel_na_stack": "Barramento de Eventos & Orquestração Assíncrona de Dados (Glue Layer)",
+        "racional_escolha": "Funciona como a 'cola' do ecossistema. Substitui o Google Apps Script com interface visual no-code, processando webhooks e roteando provisionamento de usuários entre Keycloak, Stalwart e Seafile sem código customizado.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `n8n.empresa.com.br`)",
+        "persistencia": "Volume `/data/.n8n` ou PostgreSQL"
+      },
+      {
+        "servico": "Nextcloud Hub",
+        "imagem_docker": "nextcloud:latest",
+        "papel_na_stack": "Comunicação Unificada: Mail, Calendar, Contacts & Talk",
+        "racional_escolha": "Substitui o Gmail, Calendar, Contacts e Chat/Meet com um hub único e sincronização CalDAV/CardDAV nativa.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `mail.empresa.com.br`)",
+        "persistencia": "Volume `nextcloud_data:/var/www/html`"
+      },
+      {
+        "servico": "CryptPad",
+        "imagem_docker": "cryptpad/cryptpad:latest",
+        "papel_na_stack": "Suíte Office Criptografada (Docs, Sheets, Slides, Forms)",
+        "racional_escolha": "Substitui o Google Drive e a suíte office com criptografia zero-knowledge e edição colaborativa em tempo real.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `docs.empresa.com.br`)",
+        "persistencia": "Volume `cryptpad_data:/cryptpad/data`"
+      },
+      {
+        "servico": "ONLYOFFICE Docs",
+        "imagem_docker": "onlyoffice/documentserver:latest",
+        "papel_na_stack": "Motor de Edição Colaborativa de Documentos",
+        "racional_escolha": "Conecta-se ao Seafile e ao Nextcloud para edição fiel de .docx/.xlsx/.pptx em tempo real, substituindo o Google Docs/Sheets/Slides.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `office.empresa.com.br`)",
+        "persistencia": "Cache em Redis e arquivos temporários em disco"
+      },
+      {
+        "servico": "Seafile",
+        "imagem_docker": "seafileltd/seafile-mc:latest",
+        "papel_na_stack": "Armazenamento de Arquivos de Alta Performance (Drive)",
+        "racional_escolha": "Substitui o Google Drive com sincronização ultrarrápida baseada em biblioteca de blocos e baixo consumo de recursos.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `drive.empresa.com.br`)",
+        "persistencia": "Volume `seafile_data:/shared`"
+      },
+      {
+        "servico": "Stalwart Mail",
+        "imagem_docker": "stalwartlabs/stalwart:latest",
+        "papel_na_stack": "Servidor de E-mail Moderno (SMTP/IMAP/JMAP)",
+        "racional_escolha": "Backend de e-mail moderno em Rust com JMAP, CalDAV e CardDAV, integrado ao Nextcloud para agenda e contatos.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `smtp.empresa.com.br`)",
+        "persistencia": "Volume de dados do Stalwart e banco PostgreSQL"
+      },
+      {
+        "servico": "Cluster PostgreSQL 16",
+        "imagem_docker": "postgres:16-alpine",
+        "papel_na_stack": "Banco de Dados Relacional Unificado da Suíte",
+        "racional_escolha": "Instância única otimizada com bancos lógicos dedicados (`db_keycloak`, `db_nextcloud`, `db_seafile`, `db_n8n`), reduzindo drasticamente o consumo de memória RAM na VPS.",
+        "portas_expostas": "Nenhuma porta pública (porta 5432 restrita à rede privada `ecosystem_net`)",
+        "persistencia": "Volume de dados `/var/lib/postgresql/data` com política de backup diário pg_dump"
+      },
+      {
+        "servico": "Redis Cache 7",
+        "imagem_docker": "redis:7-alpine",
+        "papel_na_stack": "Fila de Mensageria em Memória & Sessões Web",
+        "racional_escolha": "Gerencia as sessões do Keycloak, cache do ONLYOFFICE e filas assíncronas do n8n com latência mínima.",
+        "portas_expostas": "Nenhuma porta pública (porta 6379 restrita à rede privada `ecosystem_net`)",
+        "persistencia": "Volume persistente `/data` com Append-Only File (AOF) ativado"
+      },
+      {
+        "servico": "Uptime Kuma",
+        "imagem_docker": "louislam/uptime-kuma:1",
+        "papel_na_stack": "Monitoramento 24h & Alertas de Saúde dos Serviços",
+        "racional_escolha": "Painel leve que testa a cada minuto todas as URLs públicas, portas TCP e expiração de certificados TLS, alertando no chat corporativo em caso de queda.",
+        "portas_expostas": "Apenas rede interna (roteado via Traefik sob `status.empresa.com.br`)",
+        "persistencia": "Volume `uptime_kuma_data:/app/data`"
+      }
+    ],
+    "docker_compose_exemplo": "version: '3.8'\n\nnetworks:\n ecosystem_net:\n driver: bridge\n\nvolumes:\n postgres_data:\n redis_data:\n nextcloud_data:\n cryptpad_data:\n seafile_data:\n uptime_kuma_data:\n\n# 1. Reverse Proxy & TLS Automático\nservices:\n traefik:\n image: traefik:v3.0\n command:\n - '--providers.docker=true'\n - '--entrypoints.websecure.address=:443'\n - '--certificatesresolvers.myresolver.acme.tlschallenge=true'\n - '--certificatesresolvers.myresolver.acme.email=admin@empresa.com.br'\n - '--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json'\n ports:\n - '80:80'\n - '443:443'\n volumes:\n - '/var/run/docker.sock:/var/run/docker.sock:ro'\n - './letsencrypt:/letsencrypt'\n networks:\n - ecosystem_net\n\n # 2. Provedor de Identidade & SSO\n keycloak:\n image: quay.io/keycloak/keycloak:latest\n command: start-dev\n environment:\n - KEYCLOAK_ADMIN=admin\n - KEYCLOAK_ADMIN_PASSWORD=SegredoForte2026\n labels:\n - 'traefik.enable=true'\n - 'traefik.http.routers.keycloak.rule=Host(`sso.empresa.com.br`)'\n - 'traefik.http.routers.keycloak.entrypoints=websecure'\n - 'traefik.http.routers.keycloak.tls.certresolver=myresolver'\n networks:\n - ecosystem_net\n\n # 3. Barramento de Eventos e Workflows\n n8n:\n image: n8nio/n8n:latest\n environment:\n - N8N_BASIC_AUTH_ACTIVE=true\n - N8N_HOST=n8n.empresa.com.br\n - WEBHOOK_URL=https://n8n.empresa.com.br\n labels:\n - 'traefik.enable=true'\n - 'traefik.http.routers.n8n.rule=Host(`n8n.empresa.com.br`)'\n - 'traefik.http.routers.n8n.entrypoints=websecure'\n - 'traefik.http.routers.n8n.tls.certresolver=myresolver'\n networks:\n - ecosystem_net\n\n # 4. Comunicação Unificada (Gmail/Calendar/Contacts/Meet)\n nextcloud:\n image: nextcloud:latest\n labels:\n - 'traefik.enable=true'\n - 'traefik.http.routers.nextcloud.rule=Host(`mail.empresa.com.br`)'\n - 'traefik.http.routers.nextcloud.entrypoints=websecure'\n - 'traefik.http.routers.nextcloud.tls.certresolver=myresolver'\n volumes:\n - nextcloud_data:/var/www/html\n networks:\n - ecosystem_net\n\n # 5. Suíte Office Criptografada (Drive/Docs/Sheets/Slides/Forms)\n cryptpad:\n image: cryptpad/cryptpad:latest\n labels:\n - 'traefik.enable=true'\n - 'traefik.http.routers.cryptpad.rule=Host(`docs.empresa.com.br`)'\n - 'traefik.http.routers.cryptpad.entrypoints=websecure'\n - 'traefik.http.routers.cryptpad.tls.certresolver=myresolver'\n volumes:\n - cryptpad_data:/cryptpad/data\n networks:\n - ecosystem_net\n\n # 6. Motor de Edição Colaborativa\n onlyoffice:\n image: onlyoffice/documentserver:latest\n labels:\n - 'traefik.enable=true'\n - 'traefik.http.routers.onlyoffice.rule=Host(`office.empresa.com.br`)'\n - 'traefik.http.routers.onlyoffice.entrypoints=websecure'\n - 'traefik.http.routers.onlyoffice.tls.certresolver=myresolver'\n networks:\n - ecosystem_net\n\n # 7. Armazenamento de Arquivos (Drive)\n seafile:\n image: seafileltd/seafile-mc:latest\n labels:\n - 'traefik.enable=true'\n - 'traefik.http.routers.seafile.rule=Host(`drive.empresa.com.br`)'\n - 'traefik.http.routers.seafile.entrypoints=websecure'\n - 'traefik.http.routers.seafile.tls.certresolver=myresolver'\n volumes:\n - seafile_data:/shared\n networks:\n - ecosystem_net\n\n # 8. Servidor de E-mail Moderno\n stalwart:\n image: stalwartlabs/stalwart:latest\n labels:\n - 'traefik.enable=true'\n - 'traefik.http.routers.stalwart.rule=Host(`smtp.empresa.com.br`)'\n - 'traefik.http.routers.stalwart.entrypoints=websecure'\n - 'traefik.http.routers.stalwart.tls.certresolver=myresolver'\n networks:\n - ecosystem_net\n\n # 9. Banco de Dados Relacional Consolidado\n postgres:\n image: postgres:16-alpine\n environment:\n - POSTGRES_USER=postgres\n - POSTGRES_PASSWORD=SegredoPostgres2026\n volumes:\n - postgres_data:/var/lib/postgresql/data\n networks:\n - ecosystem_net\n\n # 10. Cache & Sessões\n redis:\n image: redis:7-alpine\n volumes:\n - redis_data:/data\n networks:\n - ecosystem_net\n\n # 11. Monitoramento 24h\n uptime-kuma:\n image: louislam/uptime-kuma:1\n volumes:\n - uptime_kuma_data:/app/data\n labels:\n - 'traefik.enable=true'\n - 'traefik.http.routers.kuma.rule=Host(`status.empresa.com.br`)'\n - 'traefik.http.routers.kuma.entrypoints=websecure'\n - 'traefik.http.routers.kuma.tls.certresolver=myresolver'\n networks:\n - ecosystem_net",
+    "requisitos_hardware_totais": {
+      "ram_total_recomendada": "16 GB RAM",
+      "cpu_total_recomendada": "8 vCPU",
+      "armazenamento_minimo": "200-300 GB NVMe SSD"
+    },
+    "vps_ideal_especificacao": {
+      "perfil_recomendado": "8 vCPU Dedicated Cloud / 16 GB RAM ECC / 200-300 GB NVMe SSD / Link 1 Gbps / Ubuntu 24.04 LTS x86_64",
+      "por_que_desta_configuracao": "Garante estabilidade absoluta para os 11 contêineres rodando em simultâneo com isolamento de processos, prevenindo gargalos de I/O em banco de dados e eliminando o risco do OOM Killer durante picos de sincronização de arquivos e e-mails.",
+      "distribuicao_recursos_por_servico": [
+        {
+          "servico": "Traefik Ingress & TLS",
+          "cpu": "0.5 vCPU",
+          "ram": "256 MB",
+          "motivo": "Roteamento reativo de borda, compressão Brotli/Gzip e renovação automática de certificados SSL."
+        },
+        {
+          "servico": "Keycloak SSO (OpenJDK JVM)",
+          "cpu": "1.5 vCPU",
+          "ram": "2.0 GB",
+          "motivo": "Baseline da JVM Java para autenticação federada OIDC/SAML e criptografia de senhas Argon2."
+        },
+        {
+          "servico": "Nextcloud Hub & Talk",
+          "cpu": "2.0 vCPU",
+          "ram": "4.0 GB",
+          "motivo": "Processamento de e-mail, agenda, contatos e chamadas WebRTC do Talk para 50 colaboradores."
+        },
+        {
+          "servico": "CryptPad & ONLYOFFICE",
+          "cpu": "1.5 vCPU",
+          "ram": "3.0 GB",
+          "motivo": "Edição colaborativa de documentos em tempo real e conversão de formatos Office."
+        },
+        {
+          "servico": "Seafile & Stalwart Mail",
+          "cpu": "1.0 vCPU",
+          "ram": "2.0 GB",
+          "motivo": "Sincronização de blocos de arquivos e envio/recebimento de e-mails com filtros anti-spam."
+        },
+        {
+          "servico": "n8n Orquestrador",
+          "cpu": "0.5 vCPU",
+          "ram": "1.0 GB",
+          "motivo": "Execução assíncrona de fluxos de provisionamento e webhooks entre identidade e aplicativos."
+        },
+        {
+          "servico": "Buffer de Picos / Anti-OOM",
+          "cpu": "1.0 vCPU",
+          "ram": "1.7 GB",
+          "motivo": "Margem de folga do kernel Linux para backups diários pg_dump e picos sazonais."
+        }
+      ],
+      "provedores_validados": [
+        {
+          "provedor": "Hetzner Cloud (CPX41 / CCX23)",
+          "custo_mensal": "€ 28 (~ R$ 170/mês)",
+          "vantagem": "Melhor custo-benefício e performance bruta por vCPU dedicada (Datacenters UE/EUA)."
+        },
+        {
+          "provedor": "Contabo (Cloud VPS L)",
+          "custo_mensal": "€ 16 (~ R$ 100/mês)",
+          "vantagem": "Maior volume de memória RAM e disco NVMe por valor investido."
+        },
+        {
+          "provedor": "DigitalOcean (Dedicated 16GB)",
+          "custo_mensal": "$ 84 (~ R$ 460/mês)",
+          "vantagem": "Excelente SLA de rede, suporte global e facilidade de snapshots."
+        },
+        {
+          "provedor": "AWS Lightsail (16GB RAM)",
+          "custo_mensal": "$ 80 (~ R$ 440/mês)",
+          "vantagem": "Infraestrutura corporativa AWS com 5 TB de transferência inclusos."
+        }
+      ]
+    },
+    "analogia_didatica_stack": {
+      "o_que_e_vps": "A VPS é o seu 'apartamento alugado na nuvem'. Em vez de manter um computador físico ligado no escritório gastando luz, você aluga um servidor ultra-rápido que fica ligado 24 horas por dia, 7 dias por semana, com gerador e internet de fibra ótica.",
+      "o_que_e_docker": "O Docker Compose é o 'manual de montagem e mobília automática'. Você não precisa instalar programas um por um nem entender de Linux. Ao rodar um único comando, o Docker baixa todos os módulos prontos e os liga automaticamente.",
+      "o_que_e_traefik": "O Traefik é o 'porteiro inteligente do condomínio'. Ele atende os visitantes na internet, verifica a segurança, coloca o cadeado verde (certificado SSL HTTPS gratuito) e encaminha cada pessoa para o apartamento certo (mail, docs, drive ou sso).",
+      "o_que_e_n8n": "O n8n é o 'carteiro e mensageiro da empresa'. Ele fica vigiando os formulários e o login: quando um novo colaborador é cadastrado, o n8n cria a caixa de e-mail, a pasta de arquivos e avisa a equipe automaticamente."
+    },
+    "passos_deploy": [
+      {
+        "titulo": "Passo 1: Contratar a VPS (Tempo estimado: 3 minutos)",
+        "descricao": "Acesse um provedor de nuvem confiável (como Hetzner Cloud, DigitalOcean, Contabo ou AWS Lightsail). Escolha o plano com 8 vCPU e 16 GB RAM, selecione o sistema operacional Ubuntu 22.04 LTS e clique em 'Criar Servidor'. Você receberá o IP da máquina por e-mail."
+      },
+      {
+        "titulo": "Passo 2: Apontar o seu Domínio (Tempo estimado: 2 minutos)",
+        "descricao": "No site onde você comprou seu domínio (Registro.br, Cloudflare, GoDaddy ou Hostinger), vá na aba DNS e crie um apontamento Tipo A com o nome `*` (asterisco) apontando para o IP da sua VPS. Isso garante que `mail.empresa.com.br`, `docs.empresa.com.br` e `drive.empresa.com.br` funcionem sozinhos."
+      },
+      {
+        "titulo": "Passo 3: Rodar o Comando de 1 Clique (Tempo estimado: 1 minuto)",
+        "descricao": "Abra o terminal da VPS e cole o comando automático de inicialização. O sistema fará o download de todas as ferramentas, configurará os bancos de dados e ativará os certificados de segurança SSL em menos de 120 segundos."
+      },
+      {
+        "titulo": "Passo 4: Acessar os Painéis no seu Navegador",
+        "descricao": "Abra o navegador no seu computador e acesse: `mail.empresa.com.br` para e-mail e agenda, `docs.empresa.com.br` para documentos, `drive.empresa.com.br` para arquivos e `sso.empresa.com.br` para o login único."
+      }
+    ]
+  },
+  "guia_modularidade_e_expansao": {
+    "filosofia_modular": "A arquitetura opera sob o princípio de 'Tomadas e Aparelhos Independentes'. Nenhuma ferramenta fica grudada ou dependente da outra com código travado. Imagine uma régua de tomadas na sua sala: a sua TV (Nextcloud) e o seu Arquivo (Seafile) funcionam perfeitamente mesmo se você desligar o Abajur (CryptPad). Se você quiser trocar o abajur por uma luminária moderna, basta tirar da tomada e plugar a nova. Nada na sua sala quebra.",
+    "passos_adicionar_ferramenta": [
+      {
+        "etapa": "1. Escolha a Nova Ferramenta",
+        "descricao": "Selecione o módulo open source desejado (por exemplo, um editor de formulários como o CryptPad Forms ou um wiki como o Wiki.js)."
+      },
+      {
+        "etapa": "2. Plugue na Rede com 4 Linhas",
+        "descricao": "Abra o arquivo de extensão `docker-compose.override.yml`, cole o bloco pronto da ferramenta e defina o endereço web desejado (ex: `wiki.empresa.com.br`)."
+      },
+      {
+        "etapa": "3. Conecte no Painel Visual do n8n",
+        "descricao": "No n8n, conecte a 'caixinha' da nova ferramenta ao seu SSO e ao Seafile arrastando uma linha no editor visual, sem escrever uma única linha de código de programação."
+      }
+    ],
+    "passo_a_passo_adicionar_ferramenta": "1. Abra o arquivo `docker-compose.override.yml` e cole a receita da nova ferramenta;\n2. Execute `docker compose up -d` no terminal;\n3. O sistema cria o endereço web e o cadeado verde SSL automaticamente em 30 segundos;\n4. Abra o painel do n8n e conecte o novo módulo aos fluxos existentes arrastando o mouse.",
+    "passo_a_passo_substituir_hotswap": "1. Suba a Nova Ferramenta em Paralelo: Inicie a nova solução em um endereço temporário (ex: `novo-docs.empresa.com.br`) mantendo a antiga funcionando;\n2. Transfira a Conexão no n8n: No painel visual do n8n, mude o nó de disparo para apontar para a nova ferramenta;\n3. Importe os Documentos: Faça o download da planilha de usuários da ferramenta antiga e importe na nova;\n4. Mude o Endereço Oficial: Altere a rota para que `docs.empresa.com.br` aponte para a nova ferramenta;\n5. Desligue a Antiga com Segurança: Pare o serviço antigo digitando `docker compose stop <servico_antigo>`. Seus colaboradores nem notarão a troca!",
+    "passo_a_passo_remover_ferramenta": "1. No painel visual do n8n, desligue os gatilhos vinculados à ferramenta que deseja remover;\n2. No terminal da VPS, digite `docker compose stop <nome_ferramenta>`;\n3. Os dados históricos continuam guardados com segurança na pasta de backup da VPS para você consultar quando quiser.",
+    "exemplo_caso_pratico_hotswap": {
+      "cenario": "Substituição do CryptPad por outra suíte office (ex: ONLYOFFICE + Nextcloud Text)",
+      "passo_1_isolamento": "O Nextcloud e o Seafile não conversam com o CryptPad diretamente, eles conversam com o n8n. Por isso, a sua equipe de documentos e arquivos continua trabalhando normalmente sem nenhuma parada.",
+      "passo_2_novo_servico": "O técnico ou gestor sobe a nova ferramenta de documentos no arquivo de extensão sem mexer nas ferramentas existentes.",
+      "passo_3_chaveamento_n8n": "No painel visual do n8n, basta trocar a caixinha do CryptPad pela caixinha do ONLYOFFICE com 2 cliques.",
+      "passo_4_resultado": "A troca é concluída com ZERO minutos de parada no trabalho colaborativo e ZERO perda de documentos."
+    },
+    "faq_nao_tecnicos": [
+      {
+        "pergunta": "E se a VPS for reiniciada por falta de luz no datacenter?",
+        "resposta": "Todos os serviços possuem configuração de auto-recuperação (restart: always). Quando o servidor ligar novamente, todas as ferramentas e bancos de dados sobem sozinhos sem você precisar fazer nada."
+      },
+      {
+        "pergunta": "Como funcionam os backups dos meus e-mails e arquivos?",
+        "resposta": "Todas as informações de caixas, documentos e arquivos ficam armazenadas em uma pasta segura de dados (`/var/lib/postgresql/data` e volumes de aplicação). Um script diário gera cópias automáticas que podem ser enviadas para o seu armazenamento externo criptografado."
+      },
+      {
+        "pergunta": "Preciso contratar um desenvolvedor para usar no dia a dia?",
+        "resposta": "Não! O uso rotineiro da sua equipe é 100% feito pelo navegador web em telas modernas e em português, exatamente como se estivesse usando o Gmail, o Google Drive ou o Google Docs."
+      }
+    ]
+  },
+  "analise_economica_global": {
+    "custo_saas_anual": "R$ 86.400/ano (Google Workspace Business Standard 50 usuários R$ 43.200/ano + Google Vault & Endpoint Management R$ 43.200/ano)",
+    "custo_vps_anual": "R$ 4.200/ano (VPS 8 vCPU / 16 GB RAM a R$ 350/mês)",
+    "economia_anual_liquida": "R$ 82.200/ano (Economia Líquida de 95.1%)",
+    "roi_meses": "Payback positivo em apenas 18 dias de operação unificada.",
+    "detalhamento_por_grupo": [
+      {
+        "grupo": "Grupo 1: Comunicação Unificada",
+        "saas_referencia": "Google Workspace Gmail/Chat/Meet/Calendar/Contacts (50 usuários)",
+        "custo_saas_anual": "R$ 43.200/ano",
+        "custo_vps_alocado": "R$ 1.680/ano (Fraqueza de ~3 vCPU / 6 GB RAM)",
+        "economia_anual_liquida": "R$ 41.520/ano",
+        "percentual_economia": "96.1%"
+      },
+      {
+        "grupo": "Grupo 2: Produtividade & Documentos",
+        "saas_referencia": "Google Workspace Drive/Docs/Sheets/Slides/Forms/Keep (50 usuários)",
+        "custo_saas_anual": "R$ 28.800/ano",
+        "custo_vps_alocado": "R$ 1.440/ano (Fraqueza de ~3 vCPU / 5 GB RAM)",
+        "economia_anual_liquida": "R$ 27.360/ano",
+        "percentual_economia": "95.0%"
+      },
+      {
+        "grupo": "Grupo 3: Identidade & Governança",
+        "saas_referencia": "Google Vault + Admin Console + Endpoint Management (50 usuários)",
+        "custo_saas_anual": "R$ 14.400/ano",
+        "custo_vps_alocado": "R$ 1.080/ano (Fraqueza de ~2 vCPU / 3 GB RAM)",
+        "economia_anual_liquida": "R$ 13.320/ano",
+        "percentual_economia": "92.5%"
+      }
+    ]
+  },
+  "blueprints_n8n": [
+    {
+      "id": "wf-user-onboarding",
+      "nome": "Fluxo 1 · Provisionamento de Colaborador & Criação de Caixa e Drive",
+      "descricao": "Recebe a criação de usuário no Keycloak, cria a conta de e-mail no Stalwart, provisiona a biblioteca no Seafile e envia mensagem de boas-vindas no Nextcloud Talk.",
+      "gatilho": "Webhook HTTP POST `/webhook/novo-colaborador`",
+      "acoes": [
+        "Keycloak: Create User",
+        "Stalwart: Create Mailbox",
+        "Seafile: Create Library",
+        "Nextcloud Talk: Send Welcome Message"
+      ],
+      "json_blueprint": "{\n \"name\": \"Workspace-to-Sovereign: Onboarding de Colaborador\",\n \"nodes\": [\n {\n \"parameters\": {\"httpMethod\": \"POST\", \"path\": \"novo-colaborador\"},\n \"name\": \"Webhook Entrada\",\n \"type\": \"n8n-nodes-base.webhook\",\n \"position\": [250, 300]\n },\n {\n \"parameters\": {\"url\": \"http://keycloak:8080/admin/realms/empresa/users\", \"method\": \"POST\"},\n \"name\": \"Criar no Keycloak\",\n \"type\": \"n8n-nodes-base.httpRequest\",\n \"position\": [450, 300]\n },\n {\n \"parameters\": {\"url\": \"http://stalwart:8080/api/account\", \"method\": \"POST\"},\n \"name\": \"Criar Caixa Stalwart\",\n \"type\": \"n8n-nodes-base.httpRequest\",\n \"position\": [650, 300]\n },\n {\n \"parameters\": {\"url\": \"http://seafile:8000/api2/repos\", \"method\": \"POST\"},\n \"name\": \"Criar Biblioteca Seafile\",\n \"type\": \"n8n-nodes-base.httpRequest\",\n \"position\": [850, 300]\n }\n ]\n}"
+    },
+    {
+      "id": "wf-file-backup-verify",
+      "nome": "Fluxo 2 · Verificação de Upload no Seafile & Alerta de Backup",
+      "descricao": "Quando um arquivo é enviado ao Seafile, o n8n dispara a verificação de integridade e notifica o Uptime Kuma e o administrador no Nextcloud Talk.",
+      "gatilho": "Webhook de Evento Seafile `file.uploaded`",
+      "acoes": [
+        "Seafile: Verify Block Integrity",
+        "Uptime Kuma: Push Heartbeat",
+        "Nextcloud Talk: Send Admin Alert"
+      ],
+      "json_blueprint": "{\n \"name\": \"Workspace-to-Sovereign: Verificação de Upload\",\n \"nodes\": [\n {\n \"parameters\": {\"path\": \"seafile-upload\"},\n \"name\": \"Webhook Upload Seafile\",\n \"type\": \"n8n-nodes-base.webhook\",\n \"position\": [250, 300]\n },\n {\n \"parameters\": {\"url\": \"http://seafile:8000/api2/check\", \"method\": \"POST\"},\n \"name\": \"Verificar Integridade\",\n \"type\": \"n8n-nodes-base.httpRequest\",\n \"position\": [450, 300]\n },\n {\n \"parameters\": {\"url\": \"http://uptime-kuma:3001/api/push\", \"method\": \"POST\"},\n \"name\": \"Heartbeat Uptime Kuma\",\n \"type\": \"n8n-nodes-base.httpRequest\",\n \"position\": [650, 200]\n }\n ]\n}"
+    }
+  ],
+  "guia_migracao_dados": [
+    {
+      "modulo": "1. Migração do Gmail para Nextcloud Mail / Stalwart",
+      "o_que_migrar": "Caixas de e-mail completas (pastas, mensagens, anexos), contatos e calendários dos 50 usuários.",
+      "passos": [
+        "No Google Workspace, ative a IMAP API e gere uma senha de aplicativo para cada conta ou use o Google Takeout para exportação em MBOX;",
+        "No servidor soberano, crie as contas correspondentes no Stalwart/Nextcloud Mail com os mesmos endereços;",
+        "Utilize a ferramenta imapsync para copiar mensagens e pastas do Gmail para o novo servidor em lote;",
+        "Exporte os contatos (CSV/vCard) e os calendários (ICS) do Google e importe no Nextcloud Contacts/Calendar via CalDAV/CardDAV."
+      ],
+      "cuidados": "Mantenha o DKIM e o SPF do domínio apontando para o novo servidor antes de desligar o Gmail para evitar perda de entregabilidade."
+    },
+    {
+      "modulo": "2. Migração do Google Drive / Docs para Seafile / CryptPad / ONLYOFFICE",
+      "o_que_migrar": "Arquivos do Drive, documentos do Docs, planilhas do Sheets e apresentações do Slides.",
+      "passos": [
+        "No Google Takeout, solicite o export de Drive e Documentos nos formatos .docx, .xlsx, .pptx e PDF;",
+        "No Seafile (`drive.empresa.com.br`), crie as bibliotecas por departamento e faça o upload em massa das pastas;",
+        "Para documentos colaborativos, importe no CryptPad ou conecte o ONLYOFFICE ao Seafile para edição nativa;",
+        "Revise as permissões de compartilhamento e víncule os arquivos aos usuários do Keycloak."
+      ],
+      "cuidados": "Verifique a fidelidade de formatação dos arquivos .docx/.xlsx após a conversão pelo ONLYOFFICE antes de descartar os originais."
+    },
+    {
+      "modulo": "3. Migração do Google Calendar / Contacts para Nextcloud",
+      "o_que_migrar": "Agendas compartilhadas, eventos recorrentes e catálogo corporativo de contatos.",
+      "passos": [
+        "Exporte as agendas do Google Calendar em formato ICS (um arquivo por calendário);",
+        "No Nextcloud Calendar, importe os arquivos ICS criando os calendários departamentais correspondentes;",
+        "Exporte os contatos do Google em vCard e importe no Nextcloud Contacts;",
+        "Conecte os clientes (Outlook, Thunderbird, dispositivos móveis) via CalDAV/CardDAV para sincronização contínua."
+      ],
+      "cuidados": "Confirme se eventos recorrentes e convites mantiveram os participantes corretos após a importação ICS."
+    }
+  ],
+  "seguranca_backup_lgpd": {
+    "arquitetura_backup_321": "A política de proteção de dados opera na regra de ouro 3-2-1: (3) cópias de dados em (2) tipos de mídias diferentes, com (1) cópia externa criptografada em nuvem fria (Wasabi / AWS S3 / armazenamento próprio).",
+    "script_backup_diario": "#!/bin/bash\n# Script de Backup Automatizado Soberano (PostgreSQL + Volumes + Mídias)\nTIMESTAMP=$(date +\"%Y%m%d_%H%M%S\")\nBACKUP_DIR=\"/opt/backups/$TIMESTAMP\"\nmkdir -p $BACKUP_DIR\n\n# 1. Dump consistente de todos os bancos de dados (Keycloak, Nextcloud, Seafile, n8n)\ndocker exec postgres pg_dumpall -U postgres | gzip > $BACKUP_DIR/db_all_cluster.sql.gz\n\n# 2. Compactação dos arquivos de mídia e anexos\ntar -czf $BACKUP_DIR/media_storage.tar.gz -C /var/lib/docker/volumes nextcloud_data/_data seafile_data/_data cryptpad_data/_data\n\n# 3. Criptografia AES-256 com senha segura\ngpg --batch --yes --passphrase \"SuaChaveMestreSegura2026\" -c $BACKUP_DIR/db_all_cluster.sql.gz\n\n# 4. Envio para Storage Seguro Externo (rclone / AWS S3)\nrclone copy $BACKUP_DIR encrypted_remote:backups-workspace/\n\n# 5. Retenção de 30 dias localmente\nfind /opt/backups -type d -mtime +30 -exec rm -rf {} +",
+    "checklist_conformidade_lgpd": [
+      {
+        "item": "Soberania Física dos Dados",
+        "status": "Em conformidade: O banco reside em servidor exclusivo da empresa, sem compartilhamento com provedores terceiros ou venda de dados para IA pública."
+      },
+      {
+        "item": "Direito de Exclusão do Titular (Art. 18 LGPD)",
+        "status": "Em conformidade: O n8n executa script de expurgo automatizado com 1 clique no Keycloak, Nextcloud, Seafile e Stalwart quando solicitado pelo colaborador."
+      },
+      {
+        "item": "Criptografia em Trânsito & Repouso",
+        "status": "Em conformidade: Trânsito 100% sob TLS 1.3 / HSTS automático via Traefik e volumes criptografados com LUKS/AES-256 no sistema de arquivos do host."
+      },
+      {
+        "item": "Trilha de Auditoria & Logs de Acesso",
+        "status": "Em conformidade: O Keycloak e o PostgreSQL gravam logs imutáveis de cada autenticação e ação executada por colaboradores, substituindo o Google Vault."
+      }
+    ]
+  },
+  "cronograma_implantacao_30_dias": [
+    {
+      "semana": "Semana 1 (Dias 1 a 7)",
+      "fase": "Infraestrutura & Instalação do Cluster",
+      "atividades": "Contratação da VPS, configuração de DNS wildcard (*.empresa.com.br), execução do docker-compose.yml e ativação dos certificados SSL automáticos via Traefik.",
+      "marco_entrega": "Todos os painéis acessíveis online com cadeado verde (HTTPS)."
+    },
+    {
+      "semana": "Semana 2 (Dias 8 a 14)",
+      "fase": "Migração de Dados & Conexão de Identidade",
+      "atividades": "Importação de caixas do Gmail via imapsync, migração do Drive para o Seafile e provisionamento de usuários no Keycloak com SSO.",
+      "marco_entrega": "Base histórica 100% carregada e colaboradores logando com uma única senha."
+    },
+    {
+      "semana": "Semana 3 (Dias 15 a 21)",
+      "fase": "Importação dos Blueprints n8n & Treinamento das Equipes",
+      "atividades": "Importação dos templates de workflow no n8n, realização de testes de provisionamento (usuário -> caixa -> drive) e workshop de capacitação dos colaboradores.",
+      "marco_entrega": "Equipes operando com agilidade e fluxos automatizados aprovados."
+    },
+    {
+      "semana": "Semana 4 (Dias 22 a 30)",
+      "fase": "Virada de Chave Definitiva & Descomissionamento SaaS",
+      "atividades": "Redirecionamento dos registros MX para o novo servidor, ativação da régua de backup oficial e cancelamento das faturas recorrentes do Google Workspace.",
+      "marco_entrega": "Autonomia digital plena e economia de R$ 82.200/ano consolidada!"
+    }
+  ],
+  "monitoramento_e_saude_vps": {
+    "painel_recomendado": "Uptime Kuma / Netdata / Portainer Community Edition (Monitoramento visual leve e em tempo real)",
+    "comandos_diagnostico_1clique": [
+      {
+        "comando": "docker stats --no-stream",
+        "finalidade": "Exibe o consumo instantâneo de memória RAM, % de CPU e tráfego de rede de cada um dos 11 serviços da stack."
+      },
+      {
+        "comando": "docker compose ps",
+        "finalidade": "Verifica o status de saúde (Up / Healthy) de todos os contêineres e o tempo em que estão no ar."
+      },
+      {
+        "comando": "docker compose logs -f --tail=50 traefik",
+        "finalidade": "Inspeciona o tráfego HTTP/HTTPS em tempo real e a renovação de certificados SSL."
+      }
+    ],
+    "metricas_alerta": [
+      {
+        "metrica": "Consumo de RAM da VPS",
+        "limite_alerta": "> 85% por mais de 10 minutos",
+        "acao_recomendada": "Ajustar limite de memória no container do Nextcloud ou adicionar swap de 4 GB."
+      },
+      {
+        "metrica": "Uso de Disco SSD",
+        "limite_alerta": "> 80% do armazenamento total",
+        "acao_recomendada": "Executar o script de limpeza de logs e backups antigos com `docker system prune -f`."
+      },
+      {
+        "metrica": "Certificado TLS Traefik",
+        "limite_alerta": "Expiração em menos de 15 dias",
+        "acao_recomendada": "O Uptime Kuma emite alerta e o Traefik renova automaticamente via ACME/Let's Encrypt."
+      }
+    ]
+  }
+}
