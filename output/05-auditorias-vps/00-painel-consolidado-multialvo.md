@@ -2,18 +2,18 @@
 
 **Destino da Infraestrutura:** VPS de Produ??o (`painel.vpsconexao.org`)  
 **Data da Auditoria:** 28/08/2026  
-**Veredito Global Conjunto:** **CONJUNTO VIAVEL COM ADAPTA??ES** (Score M?dio/Global: 70/100)  
-**N?vel de Risco Operacional:** Risco Zero ? Isolamento Total por Namespaces no Docker Swarm
+**Veredito Global Conjunto:** **CONJUNTO VIAVEL COM ADAPTA??ES** (Score Medio/Global: 70/100)  
+**Nivel de Risco Operacional:** Risco Zero ? Isolamento Total por Namespaces no Docker Swarm
 
 ---
 
-## 1. Hero Stats Bar ? M?tricas de Capacidade e Headroom
+## 1. Hero Stats Bar ? Metricas de Capacidade e Headroom
 
-| M?trica de Infraestrutura | Capacidade Total | Demanda Cumulativa | Headroom Livre Dispon?vel | Status de Seguran?a |
+| Metrica de Infraestrutura | Capacidade Total | Demanda Cumulativa | Headroom Livre Disponivel | Status de Seguranca |
 | :--- | :--- | :--- | :--- | :--- |
 | **Capacidade de Processamento** | 12 vCPUs | 23.5 vCPUs | **~-13.2 vCPUs Livres** | [ALERTA] Alta Carga |
-| **Mem?ria RAM Global** | 47.05 GB | 30.5 GB | **~13.5 GB Livres** | [APROVADO] Ampla Folga |
-| **Orquestrador de Containers** | Docker Swarm (1 N?) | 17 Containers Ativos | N?s: 1 Manager | [APROVADO] Roteamento SNI |
+| **Memoria RAM Global** | 47.05 GB | 30.5 GB | **~13.5 GB Livres** | [APROVADO] Ampla Folga |
+| **Orquestrador de Containers** | Docker Swarm (1 N?) | 17 Containers Ativos | Nos: 1 Manager | [APROVADO] Roteamento SNI |
 | **Ingress & Roteamento TLS** | Traefik v2/v3 | Rede Overlay `network_conexao` | Certresolver ACME | [APROVADO] SSL Autom?tico |
 
 ---
@@ -24,9 +24,9 @@ Abaixo est? o balan?o individual de viabilidade para todas as ferramentas e ecos
 
 | Rank | Alvo Auditado | Categoria Operacional | Requisito vCPU | Requisito RAM | Status Individual | Score |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **01** | **Ecossistema Google Workspace (Nextcloud + ONLYOFFICE + Stalwart + CryptPad)** | Ferramenta Open Source Aut?noma | 4 vCPUs | 7.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
-| **02** | **Ecossistema CRM & Automacao de Marketing (Chatwoot + Twenty + Evolution + Mautic)** | Ferramenta Open Source Aut?noma | 3 vCPUs | 4.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
-| **03** | **Ecossistema DevOps & Engenharia de Dados (NocoDB + Supabase + n8n + Directus)** | Ferramenta Open Source Aut?noma | 4 vCPUs | 6.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **01** | **Ecossistema Google Workspace (Nextcloud + ONLYOFFICE + Stalwart + CryptPad)** | Ferramenta Open Source Autonoma | 4 vCPUs | 7.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **02** | **Ecossistema CRM & Automacao de Marketing (Chatwoot + Twenty + Evolution + Mautic)** | Ferramenta Open Source Autonoma | 3 vCPUs | 4.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
+| **03** | **Ecossistema DevOps & Engenharia de Dados (NocoDB + Supabase + n8n + Directus)** | Ferramenta Open Source Autonoma | 4 vCPUs | 6.0 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
 | **04** | **Stalwart All-in-One Mail Server** | Servidor de E-mail e Colaboracao JMAP/IMAP/SMTP | 1.5 vCPUs | 1.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
 | **05** | **Nextcloud Hub** | Armazenamento de Arquivos, Calendario e Contatos | 2.0 vCPUs | 2.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
 | **06** | **ONLYOFFICE Document Server** | Motor de Edi??o Colaborativa de Documentos | 2.0 vCPUs | 2.5 GB | TOTALMENTE VIAVEL (100% HOMOLOGADO) | 100/100 |
@@ -41,7 +41,7 @@ Abaixo est? o balan?o individual de viabilidade para todas as ferramentas e ecos
 
 ## 3. Diretrizes de Engenharia e Garantia de Isolamento
 
-1. **Topologia de Rede Compartilhada:** Todos os novos servi?os conectam-se ? rede overlay existente `network_conexao` como rede externa (`external: true`), garantindo comunica??o direta com o Traefik sem pontes adicionais.
+1. **Topologia de Rede Compartilhada:** Todos os novos servicos conectam-se ? rede overlay existente `network_conexao` como rede externa (`external: true`), garantindo comunicacao direta com o Traefik sem pontes adicionais.
 2. **Zero Conflito de Portas de Host:** Todo tr?fego HTTP/HTTPS ? delegado ao roteador Traefik existente via Host Header (SNI), eliminando portas expostas diretamente no host da VPS.
-3. **Persist?ncia Segura e Isolada:** Cada aplica??o possui seus volumes com prefixo pr?prio (`<slug>_data`), garantindo que nenhuma base existente (Mautic, Evolution, n8n, MySQL, PostgreSQL global) seja sobrescrita ou corrompida.
-4. **Desinstala??o At?mica:** Cada stack ou ferramenta pode ser removida individualmente via `docker stack rm <slug>` em menos de 10 segundos, mantendo a VPS 100% ?ntegra.
+3. **Persistencia Segura e Isolada:** Cada aplica??o possui seus volumes com prefixo proprio (`<slug>_data`), garantindo que nenhuma base existente (Mautic, Evolution, n8n, MySQL, PostgreSQL global) seja sobrescrita ou corrompida.
+4. **Desinstalacao At?mica:** Cada stack ou ferramenta pode ser removida individualmente via `docker stack rm <slug>` em menos de 10 segundos, mantendo a VPS 100% integra.

@@ -1,16 +1,16 @@
-# Manual de Instala??o Cir?rgica no Portainer & Playbook de Opera??o
+# Manual de Instalacao Cirurgica no Portainer & Playbook de Operacao
 
 **Alvo:** Ecossistema DevOps & Engenharia de Dados (NocoDB + Supabase + n8n + Directus)  
 **P?blico-Alvo:** Gestores, Consultores e Engenheiros de TI  
-**Tempo Estimado de Execu??o:** 5 a 10 minutos  
-**Garantia Arquitetural:** Zero interfer?ncia nas aplica??es existentes (`mautic`, `evolution`, `n8n`, `mysql`, `postgres`)
+**Tempo Estimado de Execucao:** 5 a 10 minutos  
+**Garantia Arquitetural:** Zero interferencia nas aplicacoes existentes (`mautic`, `evolution`, `n8n`, `mysql`, `postgres`)
 
 ---
 
-## 1. Entendendo a Arquitetura Cir?rgica (Para N?o-T?cnicos)
+## 1. Entendendo a Arquitetura Cirurgica (Para N?o-Tecnicos)
 
-Pense na sua VPS como um **edif?cio corporativo de alta seguran?a**. As aplica??es em produ??o (como seu CRM Mautic, o n8n e o Evolution API) j? ocupam salas estruturadas nesse edif?cio.
-A **instala??o cir?rgica** significa abrir uma nova sala independente para a nova su?te de ferramentas, com seus pr?prios arm?rios e cofres (volumes dedicados e banco isolado), conectando-se apenas ao **corredor central** (a rede `network_conexao`) e ? **portaria central com identifica??o autom?tica** (o Traefik existente).
+Pense na sua VPS como um **edificio corporativo de alta seguran?a**. As aplicacoes em produ??o (como seu CRM Mautic, o n8n e o Evolution API) j? ocupam salas estruturadas nesse edificio.
+A **instala??o cir?rgica** significa abrir uma nova sala independente para a nova su?te de ferramentas, com seus proprios arm?rios e cofres (volumes dedicados e banco isolado), conectando-se apenas ao **corredor central** (a rede `network_conexao`) e ? **portaria central com identificacao automatica** (o Traefik existente).
 Nenhuma sala existente ? tocada, nenhum dado ? exposto e nenhuma porta ? alterada.
 
 ---
@@ -27,7 +27,7 @@ Antes de subir a stack, acesse o painel de controle do seu dom?nio (Cloudflare, 
 
 ---
 
-## 3. Fase 2: Implanta??o da Stack no Painel Portainer
+## 3. Fase 2: Implantacao da Stack no Painel Portainer
 
 Siga o roteiro passo a passo:
 
@@ -42,21 +42,21 @@ Siga o roteiro passo a passo:
 
 ---
 
-## 4. Fase 3: Wizard de Primeiro Acesso e Configura??o
+## 4. Fase 3: Wizard de Primeiro Acesso e Configuracao
 
-Aguarde 60 a 90 segundos para a emiss?o autom?tica do certificado TLS Let's Encrypt. Em seguida, acesse as URLs:
+Aguarde 60 a 90 segundos para a emissao automatica do certificado TLS Let's Encrypt. Em seguida, acesse as URLs:
 
 - `https://nocodb.vpsconexao.org`
 - `https://supabase.vpsconexao.org`
 - `https://directus.vpsconexao.org`
 
 ### Procedimento para o Ecossistema Google Workspace (Se Aplic?vel):
-1. **Configura??o do Nextcloud (`https://drive.vpsconexao.org`):**
+1. **Configuracao do Nextcloud (`https://drive.vpsconexao.org`):**
    - Crie o usu?rio administrador e senha.
    - O banco de dados PostgreSQL j? estar? configurado automaticamente via vari?veis de ambiente.
 2. **Integra??o do ONLYOFFICE com Nextcloud:**
    - Acesse o Nextcloud com usu?rio administrador, v? em **Aplicativos** e ative o app **ONLYOFFICE**.
-   - Em **Configura??es de Administra??o** > **ONLYOFFICE**, defina:
+   - Em **Configura??es de Administracao** > **ONLYOFFICE**, defina:
      - Endere?o do Servidor: `https://office.vpsconexao.org`
      - Chave Secreta (JWT): `OnlyOfficeSecretKey2026_SecureToken!`
      - Endere?o interno do Nextcloud: `http://workspace_nextcloud:80`

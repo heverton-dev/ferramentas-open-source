@@ -313,7 +313,7 @@ class VPSGenerator:
     def generate_all(self):
         # 1. Relatorio de Auditoria e Viabilidade
         rel_md = self._build_relatorio_md()
-        rel_html = self._build_html_page("Relat?rio Executivo de Auditoria e Viabilidade", rel_md, badge="Auditoria de Infraestrutura")
+        rel_html = self._build_html_page("Relatorio Executivo de Auditoria e Viabilidade", rel_md, badge="Auditoria de Infraestrutura")
         with open(os.path.join(self.output_dir, "01-relatorio-auditoria-viabilidade.md"), "w", encoding="utf-8") as f:
             f.write(rel_md)
         with open(os.path.join(self.output_dir, "01-relatorio-auditoria-viabilidade.html"), "w", encoding="utf-8") as f:
@@ -326,7 +326,7 @@ class VPSGenerator:
 
         # 3. Manual Passo a Passo de Instalacao Cirurgica
         inst_md = self._build_manual_instalacao_md()
-        inst_html = self._build_html_page("Manual de Instala??o Cir?rgica e Integra??o", inst_md, badge="Playbook de Engenharia")
+        inst_html = self._build_html_page("Manual de Instalacao Cirurgica e Integra??o", inst_md, badge="Playbook de Engenharia")
         with open(os.path.join(self.output_dir, "03-manual-instalacao-cirurgica.md"), "w", encoding="utf-8") as f:
             f.write(inst_md)
         with open(os.path.join(self.output_dir, "03-manual-instalacao-cirurgica.html"), "w", encoding="utf-8") as f:
@@ -334,7 +334,7 @@ class VPSGenerator:
 
         # 4. Manual de Desinstalacao e Rollback
         desinst_md = self._build_manual_desinstalacao_md()
-        desinst_html = self._build_html_page("Manual de Desinstala??o Cir?rgica e Rollback", desinst_md, badge="Governan?a e Rollback")
+        desinst_html = self._build_html_page("Manual de Desinstalacao Cirurgica e Rollback", desinst_md, badge="Governan?a e Rollback")
         with open(os.path.join(self.output_dir, "04-manual-desinstalacao-e-rollback.md"), "w", encoding="utf-8") as f:
             f.write(desinst_md)
         with open(os.path.join(self.output_dir, "04-manual-desinstalacao-e-rollback.html"), "w", encoding="utf-8") as f:
@@ -362,25 +362,25 @@ class VPSGenerator:
             p = ev["profile"]
             v = ev["verdict"]
             rank_str = f"{idx:02d}"
-            role = p.get("role", "Ferramenta Open Source Aut?noma")
+            role = p.get("role", "Ferramenta Open Source Autonoma")
             table_rows_md += f"| **{rank_str}** | **{p['name']}** | {role} | {p['req_cpu']} vCPUs | {p['req_ram_gb']} GB | {v['status']} | {v['score']}/100 |\n"
 
         md = f"""# Painel Executivo Consolidado: Auditoria Multi-Alvo na VPS
 
 **Destino da Infraestrutura:** VPS de Produ??o (`painel.{self.base_domain}`)  
 **Data da Auditoria:** {data_str}  
-**Veredito Global Conjunto:** **{cumul['status']}** (Score M?dio/Global: {cumul['score']}/100)  
-**N?vel de Risco Operacional:** Risco Zero ? Isolamento Total por Namespaces no Docker Swarm
+**Veredito Global Conjunto:** **{cumul['status']}** (Score Medio/Global: {cumul['score']}/100)  
+**Nivel de Risco Operacional:** Risco Zero ? Isolamento Total por Namespaces no Docker Swarm
 
 ---
 
-## 1. Hero Stats Bar ? M?tricas de Capacidade e Headroom
+## 1. Hero Stats Bar ? Metricas de Capacidade e Headroom
 
-| M?trica de Infraestrutura | Capacidade Total | Demanda Cumulativa | Headroom Livre Dispon?vel | Status de Seguran?a |
+| Metrica de Infraestrutura | Capacidade Total | Demanda Cumulativa | Headroom Livre Disponivel | Status de Seguranca |
 | :--- | :--- | :--- | :--- | :--- |
-| **Capacidade de Processamento** | {hw['total_cpu']} vCPUs | {cumul['total_req_cpu']} vCPUs | **~{cumul['free_cpu'] - cumul['total_req_cpu']:.1f} vCPUs Livres** | {'[APROVADO] Opera??o Est?vel' if cumul['cumul_cpu_ok'] else '[ALERTA] Alta Carga'} |
-| **Mem?ria RAM Global** | {hw['total_mem_gb']} GB | {cumul['total_req_ram']} GB | **~{cumul['free_ram'] - cumul['total_req_ram']:.1f} GB Livres** | {'[APROVADO] Ampla Folga' if cumul['cumul_ram_ok'] else '[REPROVADO] Mem?ria Insuficiente'} |
-| **Orquestrador de Containers** | Docker Swarm (1 N?) | {hw['running_containers']} Containers Ativos | N?s: 1 Manager | [APROVADO] Roteamento SNI |
+| **Capacidade de Processamento** | {hw['total_cpu']} vCPUs | {cumul['total_req_cpu']} vCPUs | **~{cumul['free_cpu'] - cumul['total_req_cpu']:.1f} vCPUs Livres** | {'[APROVADO] Operacao Est?vel' if cumul['cumul_cpu_ok'] else '[ALERTA] Alta Carga'} |
+| **Memoria RAM Global** | {hw['total_mem_gb']} GB | {cumul['total_req_ram']} GB | **~{cumul['free_ram'] - cumul['total_req_ram']:.1f} GB Livres** | {'[APROVADO] Ampla Folga' if cumul['cumul_ram_ok'] else '[REPROVADO] Memoria Insuficiente'} |
+| **Orquestrador de Containers** | Docker Swarm (1 N?) | {hw['running_containers']} Containers Ativos | Nos: 1 Manager | [APROVADO] Roteamento SNI |
 | **Ingress & Roteamento TLS** | Traefik v2/v3 | Rede Overlay `{net}` | Certresolver ACME | [APROVADO] SSL Autom?tico |
 
 ---
@@ -397,10 +397,10 @@ Abaixo est? o balan?o individual de viabilidade para todas as ferramentas e ecos
 
 ## 3. Diretrizes de Engenharia e Garantia de Isolamento
 
-1. **Topologia de Rede Compartilhada:** Todos os novos servi?os conectam-se ? rede overlay existente `{net}` como rede externa (`external: true`), garantindo comunica??o direta com o Traefik sem pontes adicionais.
+1. **Topologia de Rede Compartilhada:** Todos os novos servicos conectam-se ? rede overlay existente `{net}` como rede externa (`external: true`), garantindo comunicacao direta com o Traefik sem pontes adicionais.
 2. **Zero Conflito de Portas de Host:** Todo tr?fego HTTP/HTTPS ? delegado ao roteador Traefik existente via Host Header (SNI), eliminando portas expostas diretamente no host da VPS.
-3. **Persist?ncia Segura e Isolada:** Cada aplica??o possui seus volumes com prefixo pr?prio (`<slug>_data`), garantindo que nenhuma base existente (Mautic, Evolution, n8n, MySQL, PostgreSQL global) seja sobrescrita ou corrompida.
-4. **Desinstala??o At?mica:** Cada stack ou ferramenta pode ser removida individualmente via `docker stack rm <slug>` em menos de 10 segundos, mantendo a VPS 100% ?ntegra.
+3. **Persistencia Segura e Isolada:** Cada aplica??o possui seus volumes com prefixo proprio (`<slug>_data`), garantindo que nenhuma base existente (Mautic, Evolution, n8n, MySQL, PostgreSQL global) seja sobrescrita ou corrompida.
+4. **Desinstalacao At?mica:** Cada stack ou ferramenta pode ser removida individualmente via `docker stack rm <slug>` em menos de 10 segundos, mantendo a VPS 100% integra.
 """
 
         html = self._build_html_page("Painel Executivo Consolidado Multi-Alvo VPS", md, badge="Painel de Auditoria Global")
@@ -429,39 +429,39 @@ Abaixo est? o balan?o individual de viabilidade para todas as ferramentas e ecos
         for sub in prof.get('subdomains', []):
             sub_rows += f"| **{sub.capitalize()} Service** | Componente da Stack {prof['name']} | `https://{sub}.{self.base_domain}` | Roteamento Traefik SNI |\n"
 
-        return f"""# Relat?rio Executivo de Auditoria e Viabilidade da VPS
+        return f"""# Relatorio Executivo de Auditoria e Viabilidade da VPS
 
-**Alvo de Incorpora??o:** {prof['name']}  
+**Alvo de Incorporacao:** {prof['name']}  
 **Data da Auditoria:** {data_str}  
-**Veredito T?cnico:** **{v['status']}** (Score: {v['score']}/100)  
+**Veredito Tecnico:** **{v['status']}** (Score: {v['score']}/100)  
 **Host Auditado:** `painel.{self.base_domain}` (Docker Swarm Ativo)
 
 ---
 
-## 1. Diagn?stico de Capacidade e Headroom da VPS
+## 1. Diagnostico de Capacidade e Headroom da VPS
 
-| Dimens?o de Hardware | Capacidade Total | Ocupa??o Atual (Est.) | Dispon?vel (Headroom) | Requisito da Stack | Veredito |
+| Dimens?o de Hardware | Capacidade Total | Ocupacao Atual (Est.) | Disponivel (Headroom) | Requisito da Stack | Veredito |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Processamento (vCPU)** | {hw['total_cpu']} vCPUs | ~1.5 vCPUs | **~{v['free_cpu']} vCPUs** | {v['req_cpu']} vCPUs | {'APROVADO' if v['cpu_ok'] else 'REPROVADO'} |
-| **Mem?ria RAM Global** | {hw['total_mem_gb']} GB | ~{hw['est_mem_used_gb']} GB | **~{v['free_ram_gb']} GB** | {v['req_ram_gb']} GB | {'APROVADO' if v['ram_ok'] else 'REPROVADO'} |
-| **Modo de Orquestra??o** | Docker Swarm | {hw['running_containers']} containers ativos | N?s: 1 Manager | Swarm Nativo | APROVADO |
+| **Memoria RAM Global** | {hw['total_mem_gb']} GB | ~{hw['est_mem_used_gb']} GB | **~{v['free_ram_gb']} GB** | {v['req_ram_gb']} GB | {'APROVADO' if v['ram_ok'] else 'REPROVADO'} |
+| **Modo de Orquestracao** | Docker Swarm | {hw['running_containers']} containers ativos | Nos: 1 Manager | Swarm Nativo | APROVADO |
 | **Ingress & Roteamento TLS** | Traefik | Certresolver: `{cert}` | Rede: `{net}` | Roteamento SNI | APROVADO |
 
 ---
 
-## 2. Parecer T?cnico de Viabilidade e Toler?ncia a Carga
+## 2. Parecer Tecnico de Viabilidade e Tolerancia a Carga
 
-### 2.1 Recomenda??es Estruturais e Oportunidades
+### 2.1 Recomendacoes Estruturais e Oportunidades
 {recs_md}
 
-### 2.2 Alertas de Seguran?a e Limites de Carga
+### 2.2 Alertas de Seguranca e Limites de Carga
 {alerts_md}
 
 ---
 
-## 3. Matriz de Subdom?nios e Roteamento de Ingress
+## 3. Matriz de Subdominios e Roteamento de Ingress
 
-| Servi?o / Componente | Papel Operacional | Subdom?nio de Acesso | M?todo de Roteamento |
+| Servico / Componente | Papel Operacional | Subdominio de Acesso | Metodo de Roteamento |
 | :--- | :--- | :--- | :--- |
 {sub_rows}
 """
@@ -694,19 +694,19 @@ volumes:
         dns_lines = "\n".join([f"- Registro A: `{sub}.{self.base_domain}` -> IP da VPS" for sub in subdomains])
         url_lines = "\n".join([f"- `https://{sub}.{self.base_domain}`" for sub in subdomains])
 
-        return f"""# Manual de Instala??o Cir?rgica no Portainer & Playbook de Opera??o
+        return f"""# Manual de Instalacao Cirurgica no Portainer & Playbook de Operacao
 
 **Alvo:** {prof['name']}  
 **P?blico-Alvo:** Gestores, Consultores e Engenheiros de TI  
-**Tempo Estimado de Execu??o:** 5 a 10 minutos  
-**Garantia Arquitetural:** Zero interfer?ncia nas aplica??es existentes (`mautic`, `evolution`, `n8n`, `mysql`, `postgres`)
+**Tempo Estimado de Execucao:** 5 a 10 minutos  
+**Garantia Arquitetural:** Zero interferencia nas aplicacoes existentes (`mautic`, `evolution`, `n8n`, `mysql`, `postgres`)
 
 ---
 
-## 1. Entendendo a Arquitetura Cir?rgica (Para N?o-T?cnicos)
+## 1. Entendendo a Arquitetura Cirurgica (Para N?o-Tecnicos)
 
-Pense na sua VPS como um **edif?cio corporativo de alta seguran?a**. As aplica??es em produ??o (como seu CRM Mautic, o n8n e o Evolution API) j? ocupam salas estruturadas nesse edif?cio.
-A **instala??o cir?rgica** significa abrir uma nova sala independente para a nova su?te de ferramentas, com seus pr?prios arm?rios e cofres (volumes dedicados e banco isolado), conectando-se apenas ao **corredor central** (a rede `{net}`) e ? **portaria central com identifica??o autom?tica** (o Traefik existente).
+Pense na sua VPS como um **edificio corporativo de alta seguran?a**. As aplicacoes em produ??o (como seu CRM Mautic, o n8n e o Evolution API) j? ocupam salas estruturadas nesse edificio.
+A **instala??o cir?rgica** significa abrir uma nova sala independente para a nova su?te de ferramentas, com seus proprios arm?rios e cofres (volumes dedicados e banco isolado), conectando-se apenas ao **corredor central** (a rede `{net}`) e ? **portaria central com identificacao automatica** (o Traefik existente).
 Nenhuma sala existente ? tocada, nenhum dado ? exposto e nenhuma porta ? alterada.
 
 ---
@@ -721,7 +721,7 @@ Antes de subir a stack, acesse o painel de controle do seu dom?nio (Cloudflare, 
 
 ---
 
-## 3. Fase 2: Implanta??o da Stack no Painel Portainer
+## 3. Fase 2: Implantacao da Stack no Painel Portainer
 
 Siga o roteiro passo a passo:
 
@@ -736,19 +736,19 @@ Siga o roteiro passo a passo:
 
 ---
 
-## 4. Fase 3: Wizard de Primeiro Acesso e Configura??o
+## 4. Fase 3: Wizard de Primeiro Acesso e Configuracao
 
-Aguarde 60 a 90 segundos para a emiss?o autom?tica do certificado TLS Let's Encrypt. Em seguida, acesse as URLs:
+Aguarde 60 a 90 segundos para a emissao automatica do certificado TLS Let's Encrypt. Em seguida, acesse as URLs:
 
 {url_lines}
 
 ### Procedimento para o Ecossistema Google Workspace (Se Aplic?vel):
-1. **Configura??o do Nextcloud (`https://drive.{self.base_domain}`):**
+1. **Configuracao do Nextcloud (`https://drive.{self.base_domain}`):**
    - Crie o usu?rio administrador e senha.
    - O banco de dados PostgreSQL j? estar? configurado automaticamente via vari?veis de ambiente.
 2. **Integra??o do ONLYOFFICE com Nextcloud:**
    - Acesse o Nextcloud com usu?rio administrador, v? em **Aplicativos** e ative o app **ONLYOFFICE**.
-   - Em **Configura??es de Administra??o** > **ONLYOFFICE**, defina:
+   - Em **Configura??es de Administracao** > **ONLYOFFICE**, defina:
      - Endere?o do Servidor: `https://office.{self.base_domain}`
      - Chave Secreta (JWT): `OnlyOfficeSecretKey2026_SecureToken!`
      - Endere?o interno do Nextcloud: `http://workspace_nextcloud:80`
@@ -769,34 +769,34 @@ No painel do seu Uptime Kuma j? em execu??o (`https://monitor.{self.base_domain}
         slug_clean = os.path.basename(self.output_dir)
         net = self.audit['ingress'].get('default_overlay', 'network_conexao')
 
-        return f"""# Manual de Desinstala??o Cir?rgica e Rollback
+        return f"""# Manual de Desinstalacao Cirurgica e Rollback
 
 **Alvo:** {prof['name']}  
-**Garantia de Isolamento:** 100% de preserva??o dos demais containers da VPS  
-**Tempo de Execu??o:** Menos de 10 segundos
+**Garantia de Isolamento:** 100% de preservacao dos demais containers da VPS  
+**Tempo de Execucao:** Menos de 10 segundos
 
 ---
 
-## 1. Princ?pios de Seguran?a e Isolamento
+## 1. Principios de Seguranca e Isolamento
 
 Todos os recursos criados para o alvo `{prof['name']}` foram encapsulados no namespace `{slug_clean}`.
-A remo??o da stack desconecta os servi?os da rede `{net}` e revoga os roteadores do Traefik de forma at?mica.
-**Mautic, Evolution, n8n, MySQL, PostgreSQL global e Portainer continuam operando normalmente sem nenhuma interrup??o.**
+A remo??o da stack desconecta os servicos da rede `{net}` e revoga os roteadores do Traefik de forma atomica.
+**Mautic, Evolution, n8n, MySQL, PostgreSQL global e Portainer continuam operando normalmente sem nenhuma interrupcao.**
 
 ---
 
-## 2. Procedimento 1: Remo??o via Painel Portainer (Interface Gr?fica)
+## 2. Procedimento 1: Remocao via Painel Portainer (Interface Gr?fica)
 
 1. Acesse: `https://painel.{self.base_domain}`.
 2. Clique em **Stacks** no menu lateral esquerdo.
 3. Localize a stack `{slug_clean}` e marque a caixa de sele??o ao lado dela.
 4. Clique no bot?o vermelho **Delete this stack**.
-5. Confirme a exclus?o na janela pop-up.
-6. Em menos de 10 segundos, todos os containers ser?o finalizados e as rotas web desligadas.
+5. Confirme a exclusao na janela pop-up.
+6. Em menos de 10 segundos, todos os containers serao finalizados e as rotas web desligadas.
 
 ---
 
-## 3. Procedimento 2: Remo??o via Linha de Comando (CLI / SSH)
+## 3. Procedimento 2: Remocao via Linha de Comando (CLI / SSH)
 
 Caso prefira executar via terminal SSH ou Termius:
 
@@ -814,7 +814,7 @@ docker service ls
 
 ---
 
-## 4. Limpeza Opcional de Volumes Persistentes (Libera??o de Disco)
+## 4. Limpeza Opcional de Volumes Persistentes (Liberacao de Disco)
 
 Se voc? n?o planeja restaurar a aplica??o e deseja liberar espa?o em disco:
 
@@ -823,7 +823,7 @@ Se voc? n?o planeja restaurar a aplica??o e deseja liberar espa?o em disco:
 docker volume ls --filter name={slug_clean} -q | xargs -r docker volume rm
 ```
 
-*(Nenhum volume do Mautic, n8n, PostgreSQL global ou MySQL ser? afetado).*
+*(Nenhum volume do Mautic, n8n, PostgreSQL global ou MySQL sera afetado).*
 """
 
     def _build_html_page(self, title, md_content, badge="Dossiê Executivo"):
