@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  nextcloud_app:
+    image: nextcloud:latest
+    networks:
+      - network_conexao
+    volumes:
+      - nextcloud_data:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_conexao"
+        - "traefik.http.routers.nextcloud.rule=Host(`drive.vpsconexao.org`)"
+        - "traefik.http.routers.nextcloud.entrypoints=websecure"
+        - "traefik.http.routers.nextcloud.tls=true"
+        - "traefik.http.routers.nextcloud.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
+        - "traefik.http.services.nextcloud.loadbalancer.passHostHeader=true"
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+
+networks:
+  network_conexao:
+    external: true
+
+volumes:
+  nextcloud_data:

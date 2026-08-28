@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  cryptpad_app:
+    image: cryptpad:latest
+    networks:
+      - network_conexao
+    volumes:
+      - cryptpad_data:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_conexao"
+        - "traefik.http.routers.cryptpad.rule=Host(`docs.vpsconexao.org`)"
+        - "traefik.http.routers.cryptpad.entrypoints=websecure"
+        - "traefik.http.routers.cryptpad.tls=true"
+        - "traefik.http.routers.cryptpad.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.cryptpad.loadbalancer.server.port=80"
+        - "traefik.http.services.cryptpad.loadbalancer.passHostHeader=true"
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+
+networks:
+  network_conexao:
+    external: true
+
+volumes:
+  cryptpad_data:

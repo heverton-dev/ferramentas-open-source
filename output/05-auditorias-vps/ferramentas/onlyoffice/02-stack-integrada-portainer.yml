@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  onlyoffice_app:
+    image: onlyoffice:latest
+    networks:
+      - network_conexao
+    volumes:
+      - onlyoffice_data:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_conexao"
+        - "traefik.http.routers.onlyoffice.rule=Host(`office.vpsconexao.org`)"
+        - "traefik.http.routers.onlyoffice.entrypoints=websecure"
+        - "traefik.http.routers.onlyoffice.tls=true"
+        - "traefik.http.routers.onlyoffice.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.onlyoffice.loadbalancer.server.port=80"
+        - "traefik.http.services.onlyoffice.loadbalancer.passHostHeader=true"
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+
+networks:
+  network_conexao:
+    external: true
+
+volumes:
+  onlyoffice_data:
