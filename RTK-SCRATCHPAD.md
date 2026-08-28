@@ -7,6 +7,9 @@
 
 ## 📌 Aprendizados Registrados
 
+### [2026-08-28] Regra R21 Permanente: Didática Universal & Foco no Usuário Não-Técnico
+* **Decisão & Arquitetura:** Instituída a Regra R21 em toda a governança mestre. Todos os materiais gerados em todos os fluxos (1, 2, 3 e 4) devem ser hiper-detalhados e 100% compreensíveis para públicos não-técnicos (advogados, médicos, analistas de marketing, consultores e tomadores de decisão). Exige uso obrigatório de analogias do mundo real para desmistificar conceitos complexos (VPS, Docker, Traefik, SSL, Termius, Uptime Kuma, SSO), glossário descomplicado e priorização de Prompts Mestres para orquestração por Agentes de IA.
+
 ### [2026-08-28] Playbook do Engenheiro Agêntico, Termius & Observabilidade Uptime Kuma (Camada 06)
 * **Decisão & Arquitetura:** O Fluxo 4 agora inclui formalmente a camada `06-playbook-engenharia-agentica/` com 4 Prompts Mestres executáveis por agentes de IA e configuração de Servidores MCP (`server-ssh`, `server-docker`), permitindo que a IA suba 100% da infraestrutura em produção de forma autônoma.
 * **Padrão de Observabilidade & Acesso:** Toda suíte possui obrigatoriamente o fascículo `07-guia-operacao-vps-termius-e-monitoramento-uptime-kuma.html` com Termius (chaves Ed25519, túneis SSH seguros para portas internas e SFTP) e contêiner Uptime Kuma integrado ao Compose para monitoramento 24/7 com alertas de queda e expiração de certificados TLS via Webhook.

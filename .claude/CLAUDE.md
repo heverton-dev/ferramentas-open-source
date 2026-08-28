@@ -43,6 +43,7 @@ alwaysApply: true
 - **R18 (Higiene Soberana):** Zero `.tmp`/`.bak`/`.typ`. Pasta soberana única `output/` (`01-listas-horizontais/`, `02-dossies-verticais/`, `03-manuais-e-trilhas/`, `04-ecossistemas/`). Proibido auto-fork em lote.
 - **R19 (Comunicação Direta):** Resultado na primeira linha. Uma sentença por tópico. Verbos de ação. Zero clichês.
 - **R20 (Visual Corporativo Estrito & Proibição de Emojis):** Proibição absoluta do uso de emojis ou pictogramas em todos os materiais gerados em todos os fluxos (HTML, Markdown, PDF Typst, relatórios executivos, manuais e trilhas). O visual deve ser 100% corporativo, sóbrio, elegante e técnico, utilizando tipografia formal, badges, numeração e tabelas.
+- **R21 (Didática Universal & Foco no Usuário Não-Técnico):** Todos os materiais gerados em todos os fluxos (1, 2, 3 e 4) devem ser hiper-detalhados e acessíveis para profissionais sem formação em TI (advogados, médicos, analistas de marketing, consultores e gestores). Exige glossário descomplicado, analogias do mundo real para termos técnicos (VPS, Docker, Traefik, SSL, Termius, Uptime Kuma, SSO), procedimentos passo a passo sem código manual e foco em Prompts Mestres para Agentes de IA.
 
 ## 2. Squad & Especialistas
 
