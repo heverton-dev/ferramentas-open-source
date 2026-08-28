@@ -366,9 +366,7 @@ Apos executar o rollback, valide no terminal da VPS:
         with open(os.path.join(dir_gov, "03-checklist-de-validacao-pos-rollback.html"), "w", encoding="utf-8") as f:
             f.write(checklist_html)
 
-        # 6. Livro Mestre Compilado Completo (Pasta 00)
-        sub_rows = "\n".join([f"| **{sub.capitalize()} Service** | `https://{sub}.{self.base_domain}` | Roteamento Traefik SNI | Ativo na Rede `{net}` |" for sub in subdomains])
-        
+        # 6. Livro Mestre Compilado Integral (Pasta 00 - Unificação Total dos 12 Guias)
         livro_md = f"""# Livro Mestre de Auditoria, Engenharia e Incorporacao em VPS
 
 **Alvo:** {prof['name']}  
@@ -379,79 +377,43 @@ Apos executar o rollback, valide no terminal da VPS:
 
 ---
 
-## 1. Sumario Executivo & Diagnostico de Headroom da VPS
-
-A infraestrutura de producao possui **{hw['total_cpu']} vCPUs** e **{hw['total_mem_gb']} GB de RAM**, operando atualmente com ampla folga operacional (**~{v['free_ram_gb']} GB de memoria livre**).
-A incorporacao da stack `{slug}` demanda **{v['req_cpu']} vCPUs** e **{v['req_ram_gb']} GB de RAM**, mantendo margem de seguranca estrita.
-
-| Metrica de Infraestrutura | Capacidade Total | Ocupacao Atual (Est.) | Demanda da Stack | Headroom Restante | Status |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Processamento (vCPU)** | {hw['total_cpu']} vCPUs | ~1.5 vCPUs | {v['req_cpu']} vCPUs | **~{v['free_cpu'] - v['req_cpu']:.1f} vCPUs Livres** | APROVADO |
-| **Memoria RAM Global** | {hw['total_mem_gb']} GB | ~{hw['est_mem_used_gb']} GB | {v['req_ram_gb']} GB | **~{v['free_ram_gb'] - v['req_ram_gb']:.1f} GB Livres** | APROVADO |
-| **Orquestrador Swarm** | Docker Swarm (1 No) | {hw['running_containers']} Containers Ativos | Stacks Isoladas | Namespaces Dedicados | APROVADO |
-| **Ingress & TLS** | Traefik v2/v3 | Rede `{net}` | Certresolver `{cert}` | Roteamento SNI | APROVADO |
-
----
-
-## 2. Matriz de Compatibilidade e Avaliacao de Risco Zero
-
-A incorporacao e classificada como **Risco Zero** devido a 3 fatores deterministicos:
-1. **Roteamento Exclusivo por SNI:** O Traefik roteia o trafego baseado nos nomes de dominio, sem vincular portas no no fisico.
-2. **Namespace de Volumes Isolados:** Todos os volumes utilizam prefixos exclusivos (`workspace_*` ou `{slug}_*`).
-3. **Rede Overlay Unificada:** Conexao direta a rede `{net}` existente sem necessidade de reiniciar containers existentes.
-
-| Componente Ativo | Impacto Esperado | Medida Preventiva |
-| :--- | :--- | :--- |
-| **Mautic CRM** | Zero Interferencia | Redes e bancos independentes |
-| **Evolution API** | Zero Interferencia | Nenhuma colisao de portas ou credenciais |
-| **n8n Workflow** | Zero Interferencia | Pode consumir webhooks dos novos servicos |
-| **PostgreSQL Global** | Zero Interferencia | Novo banco PostgreSQL dedicado na stack |
+## Sumario Executivo do Livro Mestre
+- **Parte I · Guias Executivos & Viabilidade Estrategica**
+  - Capitulo 01: Dossie de Auditoria de Hardware e Headroom
+  - Capitulo 02: Matriz de Compatibilidade e Avaliacao de Risco Zero
+  - Capitulo 03: Analise Financeira, TCO e Economia na VPS Existente
+- **Parte II · Guias de Engenharia & Infraestrutura**
+  - Capitulo 04: Stack Compose Swarm de Producao Integrada
+  - Capitulo 05: Roteiro de Configuracao de DNS, SPF, DKIM e DMARC
+  - Capitulo 06: Mapa de Topologia de Redes, Ingress e Volumes Persistentes
+- **Parte III · Playbooks de Instalacao & Operacao**
+  - Capitulo 07: Playbook de Implantacao Cirurgica via Portainer UI
+  - Capitulo 08: Guia de Configuracao Pos-Deploy e Integracao entre Apps
+  - Capitulo 09: Protocolo de Monitoramento e Health Checks no Uptime Kuma
+- **Parte IV · Playbooks de Desinstalacao & Governanca**
+  - Capitulo 10: Manual de Desinstalacao Atomica e Rollback Instantaneo
+  - Capitulo 11: Script de Expurgo Seguro de Volumes e Higiene de Disco
+  - Capitulo 12: Checklist de Validacao de Saude Pos-Rollback
 
 ---
 
-## 3. Analise Financeira, TCO e Economia na VPS Existente
+# PARTE I · GUIAS EXECUTIVOS & VIABILIDADE ESTRATÉGICA
 
-- **Custo SaaS Estimado para o Alvo (Equivalente Proprietario):** R$ 1.200,00 / mes (R$ 14.400,00 / ano).
-- **Custo Adicional de Infraestrutura na VPS:** **R$ 0,00** (aproveitamento de capacidade ociosa).
-- **Economia Liquida Anual:** **R$ 14.400,00 (100% de Payback Imediato)**.
-- **Soberania de Dados:** Custodia total de base de clientes sob as diretrizes da LGPD.
+{rel_md}
 
 ---
 
-## 4. Matriz de Servicos e Subdominios Propostos
-
-| Servico / Componente | URL de Acesso Seguro | Metodo de Roteamento | Topologia de Rede |
-| :--- | :--- | :--- | :--- |
-{sub_rows}
+{matriz_md}
 
 ---
 
-## 5. Roteiro de Configuracao de DNS, SPF, DKIM e DMARC
-
-Cadastre na sua zona de DNS (Cloudflare, Registro.br ou Route53):
-
-| Subdominio / Host | Tipo | Destino / Valor | Observacao |
-| :--- | :--- | :--- | :--- |
-{dns_table}
-
-### Registros de Seguranca de E-mail (Se Aplicavel)
-- **Registro MX:** `mail.{self.base_domain}` -> Prioridade 10
-- **Registro TXT (SPF):** `v=spf1 mx a:mail.{self.base_domain} ~all`
-- **Registro TXT (DMARC):** `_dmarc.{self.base_domain}` -> `v=DMARC1; p=quarantine; rua=mailto:admin@{self.base_domain}`
-- **Registro TXT (DKIM):** Gerado automaticamente no painel administrativo do servico.
+{tco_md}
 
 ---
 
-## 6. Mapa de Topologia de Redes, Ingress e Volumes Persistentes
+# PARTE II · GUIAS DE ENGENHARIA & INFRAESTRUTURA
 
-1. Requisição HTTPS chega na porta **443** do nó manager da VPS.
-2. Traefik inspeciona o cabeçalho **Host (SNI)** da requisição.
-3. Certificado TLS é verificado e emitido automaticamente via **{cert}**.
-4. Tráfego é roteado internamente pela rede overlay **{net}** até o container de destino na porta interna designada.
-
----
-
-## 7. Stack Compose Swarm de Producao (All-in-One)
+## Capitulo 04: Stack Swarm de Producao Oficial (YAML)
 
 ```yaml
 {stack_yml}
@@ -459,61 +421,39 @@ Cadastre na sua zona de DNS (Cloudflare, Registro.br ou Route53):
 
 ---
 
-## 8. Playbook de Implantacao Cirurgica via Portainer UI
-
-1. Acesse o painel: `https://painel.{self.base_domain}` e efetue login administrativo.
-2. No menu lateral, navegue ate **Stacks** > **+ Add stack**.
-3. Nomeie a stack como: `{slug}`.
-4. Selecione **Web editor** e cole o conteudo de `01-stack-swarm-producao-integrada.yml`.
-5. Clique em **Deploy the stack**.
-6. Acompanhe a inicializacao dos servicos no dashboard do Portainer.
+{dns_md}
 
 ---
 
-## 9. Guia de Configuracao Pos-Deploy e Integracao entre Apps
-
-1. Acesse os subdominios criados e conclua o onboarding inicial criando a conta de superadministrador.
-2. Configure os tokens JWT de integracao e as chaves de API para permitir comunicacao segura.
-3. Teste a emissao de webhooks e a sincronizacao de dados em tempo real.
+{topologia_md}
 
 ---
 
-## 10. Cadastro de Monitoramento no Uptime Kuma
+# PARTE III · PLAYBOOKS DE INSTALAÇÃO & OPERAÇÃO
 
-Para cada servico da stack, cadastre uma sonda no Uptime Kuma (`https://monitor.{self.base_domain}`):
-1. **Tipo de Monitor:** HTTP(s).
-2. **URL:** `https://{subdomains[0]}.{self.base_domain}`.
-3. **Intervalo de Checagem:** 60 segundos.
-4. **Notificacoes:** Integrar alertas via Telegram, Discord ou E-mail.
+{inst_md}
 
 ---
 
-## 11. Manual de Desinstalacao Atomica e Rollback
-
-Para remover a stack sem afetar os outros servicos da VPS:
-
-### Via Portainer:
-1. Acesse **Stacks**, selecione `{slug}` e clique em **Delete this stack**.
-
-### Via Terminal SSH:
-```bash
-docker stack rm {slug}
-```
-Todos os containers e rotas Traefik serao desligados instantaneamente em menos de 10 segundos.
+{wizard_md}
 
 ---
 
-## 12. Script de Expurgo de Volumes e Checklist Pos-Rollback
+{kuma_md}
 
-### Expurgo Seguro de Volumes:
-```bash
-docker volume ls --filter name={slug}_ -q | xargs -r docker volume rm
-```
+---
 
-### Checklist de Integridade:
-1. `docker service ls` -> Validar que apenas servicos estaveis permanecem ativos.
-2. `docker stack ls` -> Confirmar ausencia da stack `{slug}`.
-3. Testar a disponibilidade das outras aplicacoes em producao (Mautic, Evolution, n8n).
+# PARTE IV · PLAYBOOKS DE DESINSTALAÇÃO & GOVERNANÇA
+
+{desinst_md}
+
+---
+
+{expurgo_md}
+
+---
+
+{checklist_md}
 """
         with open(os.path.join(dir_livro, "LIVRO-AUDITORIA-E-INCORPORACAO-VPS.md"), "w", encoding="utf-8") as f:
             f.write(livro_md)
