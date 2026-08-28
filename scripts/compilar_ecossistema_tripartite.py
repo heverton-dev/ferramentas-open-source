@@ -356,7 +356,8 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
             f"| :---: | :--- | :--- | :--- | :---: | :---: |"
         ])
         for f in p.get("ferramentas", []):
-            linhas.append(f"| {f['rank']} | **{f.get('classificacao')}** | **{f['nome']}** | {f['saas_substituido_direto']} | **{f['economia_anual_str']}** | `{f['licenca_osi']}` |")
+            classif_simples = simplificar_classificacao(f.get('classificacao', ''))
+            linhas.append(f"| {f['rank']} | **{classif_simples}** | **{f['nome']}** | {f['saas_substituido_direto']} | **{f['economia_anual_str']}** | `{f['licenca_osi']}` |")
         linhas.append("")
 
     linhas.extend([
@@ -448,6 +449,13 @@ def persona_classe(classificacao: str) -> str:
     if "simples" in c: return "simples"
     return "completa"
 
+def simplificar_classificacao(classificacao: str) -> str:
+    c = classificacao.strip()
+    for prefixo in ["A Mais ", "O Mais ", "Mais "]:
+        if c.startswith(prefixo):
+            return c[len(prefixo):].strip().capitalize()
+    return c.capitalize()
+
 def gerar_html_ecossistema_diamante(dados: dict) -> str:
     titulo = dados.get("titulo", "Dossiê de Macro-Ecossistema Open Source")
     deck = dados.get("deck", "")
@@ -472,10 +480,11 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
             pilar_label = nome_pilar_completo
 
         for f in p.get("ferramentas", []):
+            classif_simples = simplificar_classificacao(f.get('classificacao', ''))
             tabela_linhas += f"""
             <tr>
               <td class="rank">{f['rank']:02d}</td>
-              <td class="classif-col">{f.get('classificacao')}</td>
+              <td class="classif-col">{classif_simples}</td>
               <td class="tool"><a href="#{f['slug']}">{f['nome']}</a></td>
               <td class="pilar-col"><span class="pilar-badge">{pilar_label}</span></td>
               <td class="saas">{f['saas_substituido_direto']}</td>
@@ -942,7 +951,8 @@ def gerar_typst_ecossistema(dados: dict) -> str:
   [*Nº*], [*Classificação*], [*Ferramenta*], [*Substitui Diretamente*], [*Economia*], [*Licença*],
 """
         for f in p.get("ferramentas", []):
-            linhas_pilares += f"  [{f['rank']}], [{f.get('classificacao')}], [*{f['nome']}*], [{f['saas_substituido_direto']}], [{sanitizar_typ(f['economia_anual_str'])}], [`{f['licenca_osi']}`],\n"
+            c_simp = simplificar_classificacao(f.get('classificacao', ''))
+            linhas_pilares += f"  [{f['rank']}], [{c_simp}], [*{f['nome']}*], [{f['saas_substituido_direto']}], [{sanitizar_typ(f['economia_anual_str'])}], [`{f['licenca_osi']}`],\n"
         linhas_pilares += ")\n#v(8pt)\n"
 
     custo_saas = sanitizar_typ(econ.get('custo_saas_anual', ''))

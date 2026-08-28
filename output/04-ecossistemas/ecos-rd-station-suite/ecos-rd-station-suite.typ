@@ -80,11 +80,11 @@
   stroke: 0.5pt + rgb("#e2e8f0"),
   inset: 4pt,
   [*Nº*], [*Classificação*], [*Ferramenta*], [*Substitui Diretamente*], [*Economia*], [*Licença*],
-  [1], [A Mais Completa], [*Mautic*], [RD Station Marketing (Módulo de Automação de Fluxos & Lead Scoring)], [R\$ 42.000/ano (Base de 50.000 leads)], [`GPL-3.0`],
-  [2], [A Mais Leve], [*Listmonk*], [RD Station Marketing (Módulo de Disparos de E-mail & Broadcast)], [R\$ 18.000/ano], [`AGPL-3.0`],
-  [3], [A Mais Robusta], [*Directus*], [RD Station Marketing (Construtor de Landing Pages & Formulários Estáticos)], [R\$ 12.000/ano], [`GPL-3.0`],
-  [4], [A Mais Moderna], [*Novu*], [RD Station Notificações / OneSignal / Courier], [R\$ 14.400/ano], [`Apache-2.0`],
-  [5], [A Mais Simples], [*Plunk*], [RD Station Marketing (Plano Light / Automações Básicas)], [R\$ 9.600/ano], [`MIT`],
+  [1], [Completa], [*Mautic*], [RD Station Marketing (Módulo de Automação de Fluxos & Lead Scoring)], [R\$ 42.000/ano (Base de 50.000 leads)], [`GPL-3.0`],
+  [2], [Leve], [*Listmonk*], [RD Station Marketing (Módulo de Disparos de E-mail & Broadcast)], [R\$ 18.000/ano], [`AGPL-3.0`],
+  [3], [Robusta], [*Directus*], [RD Station Marketing (Construtor de Landing Pages & Formulários Estáticos)], [R\$ 12.000/ano], [`GPL-3.0`],
+  [4], [Moderna], [*Novu*], [RD Station Notificações / OneSignal / Courier], [R\$ 14.400/ano], [`Apache-2.0`],
+  [5], [Simples], [*Plunk*], [RD Station Marketing (Plano Light / Automações Básicas)], [R\$ 9.600/ano], [`MIT`],
 )
 #v(8pt)
 
@@ -100,11 +100,11 @@
   stroke: 0.5pt + rgb("#e2e8f0"),
   inset: 4pt,
   [*Nº*], [*Classificação*], [*Ferramenta*], [*Substitui Diretamente*], [*Economia*], [*Licença*],
-  [1], [A Mais Moderna], [*Twenty*], [RD Station CRM (Módulo de Pipeline Kanban, Oportunidades & Tarefas)], [R\$ 24.000/ano (Equipe de 10 vendedores)], [`AGPL-3.0`],
-  [2], [A Mais Robusta], [*EspoCRM*], [RD Station CRM (Módulos Corporativos Avançados & Múltiplos Pipelines)], [R\$ 18.000/ano], [`GPL-3.0`],
-  [3], [A Mais Completa], [*SuiteCRM*], [Salesforce Sales Cloud / SugarCRM Enterprise], [R\$ 36.000/ano], [`AGPL-3.0`],
-  [4], [A Mais Leve], [*Documenso*], [Clicksign / DocuSign / Módulo de Propostas Comerciais], [R\$ 18.000/ano], [`AGPL-3.0`],
-  [5], [A Mais Simples], [*Cal.com*], [RD Station CRM (Agendamentos) / Calendly Integrado], [R\$ 12.000/ano], [`AGPL-3.0`],
+  [1], [Moderna], [*Twenty*], [RD Station CRM (Módulo de Pipeline Kanban, Oportunidades & Tarefas)], [R\$ 24.000/ano (Equipe de 10 vendedores)], [`AGPL-3.0`],
+  [2], [Robusta], [*EspoCRM*], [RD Station CRM (Módulos Corporativos Avançados & Múltiplos Pipelines)], [R\$ 18.000/ano], [`GPL-3.0`],
+  [3], [Completa], [*SuiteCRM*], [Salesforce Sales Cloud / SugarCRM Enterprise], [R\$ 36.000/ano], [`AGPL-3.0`],
+  [4], [Leve], [*Documenso*], [Clicksign / DocuSign / Módulo de Propostas Comerciais], [R\$ 18.000/ano], [`AGPL-3.0`],
+  [5], [Simples], [*Cal.com*], [RD Station CRM (Agendamentos) / Calendly Integrado], [R\$ 12.000/ano], [`AGPL-3.0`],
 )
 #v(8pt)
 
@@ -120,11 +120,11 @@
   stroke: 0.5pt + rgb("#e2e8f0"),
   inset: 4pt,
   [*Nº*], [*Classificação*], [*Ferramenta*], [*Substitui Diretamente*], [*Economia*], [*Licença*],
-  [1], [A Mais Completa], [*Chatwoot*], [RD Station Conversas (Painel de Atendimento Multiatendente)], [R\$ 36.000/ano (10 operadores)], [`MIT`],
-  [2], [A Mais Robusta], [*Evolution API*], [RD Station Conversas (Conectores Proprietários Z-API / Gupshup)], [R\$ 18.000/ano], [`Apache-2.0`],
-  [3], [A Mais Moderna], [*Typebot*], [RD Station Conversas (Chatbots de Triagem) / Landbot], [R\$ 14.400/ano], [`AGPL-3.0`],
-  [4], [A Mais Leve], [*WAHA*], [RD Station Notificações WhatsApp / Twilio Messaging], [R\$ 12.000/ano], [`Apache-2.0`],
-  [5], [A Mais Simples], [*Papercups*], [Intercom / Crisp / Chat Básico do RD], [R\$ 10.800/ano], [`MIT`],
+  [1], [Completa], [*Chatwoot*], [RD Station Conversas (Painel de Atendimento Multiatendente)], [R\$ 36.000/ano (10 operadores)], [`MIT`],
+  [2], [Robusta], [*Evolution API*], [RD Station Conversas (Conectores Proprietários Z-API / Gupshup)], [R\$ 18.000/ano], [`Apache-2.0`],
+  [3], [Moderna], [*Typebot*], [RD Station Conversas (Chatbots de Triagem) / Landbot], [R\$ 14.400/ano], [`AGPL-3.0`],
+  [4], [Leve], [*WAHA*], [RD Station Notificações WhatsApp / Twilio Messaging], [R\$ 12.000/ano], [`Apache-2.0`],
+  [5], [Simples], [*Papercups*], [Intercom / Crisp / Chat Básico do RD], [R\$ 10.800/ano], [`MIT`],
 )
 #v(8pt)
 
