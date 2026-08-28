@@ -1,21 +1,21 @@
 # Manual Operacional Completo: Whisper.cpp
 
-> **Padrão Diamante · Guia de Engenharia & Adoção Descomplicada**  
-> **Licença:** MIT | **Versão:** 1.7.1 | **Setup Estimado:** 8 min (Zero conhecimento prévio)  
-> **VPS Recomendada:** Hetzner Cloud CX22 (ou qualquer VPS de entrada) (2 vCPU, 2 GB RAM (Usa menos de 200 MB), 40 GB SSD, Ubuntu 24.04 LTS)  
+> **Padrão Diamante · Guia de Engenharia & Adoção Descomplicada** 
+> **Licença:** MIT | **Versão:** 1.7.1 | **Setup Estimado:** 8 min (Zero conhecimento prévio) 
+> **VPS Recomendada:** Hetzner Cloud CX22 (ou qualquer VPS de entrada) (2 vCPU, 2 GB RAM (Usa menos de 200 MB), 40 GB SSD, Ubuntu 24.04 LTS) 
 > **Custo Mensal Estimado:** EUR 4,00/mês (~R$ 24,00/mês)
 
 ---
 
 ## Módulo 0: Nivelamento Conceitual (Analogias do Dia a Dia)
 
-### 💡 Código C/C++ Nativo *(Analogia: Um Motor de Alta Eficiência sem Peso Morto)*
+### Código C/C++ Nativo *(Analogia: Um Motor de Alta Eficiência sem Peso Morto)*
 Diferente de sistemas pesados que exigem dezenas de bibliotecas instaladas, o whisper.cpp é um único arquivo binário enxuto. Ele conversa diretamente com o processador da sua máquina sem intermediários.
 
-### 💡 Consumo de Menos de 200 MB de RAM *(Analogia: Uma Bicicleta Elétrica Leve em Vez de um Caminhão)*
+### Consumo de Menos de 200 MB de RAM *(Analogia: Uma Bicicleta Elétrica Leve em Vez de um Caminhão)*
 Enquanto outras soluções de IA precisam de computadores potentes com placas de vídeo caras, o whisper.cpp roda suave até em computadores antigos ou de baixo custo sem travar o navegador ou o Word.
 
-### 💡 Modelos Quantizados GGML *(Analogia: A Foto Comprimida em Alta Resolução)*
+### Modelos Quantizados GGML *(Analogia: A Foto Comprimida em Alta Resolução)*
 O arquivo do modelo de inteligência artificial é reduzido matematicamente para ocupar 4 vezes menos espaço no disco, mantendo mais de 98% da precisão de fala.
 
 ## Parte I: Instalação em Produção na VPS (Passo a Passo Rígido)
@@ -23,7 +23,7 @@ O arquivo do modelo de inteligência artificial é reduzido matematicamente para
 ### Passo 1: Compilação Nativa Otimizada para o Processador `[F01]`
 Clone e compilação em C/C++ puro com instruções vetoriais AVX2.
 
-> 💡 **Entenda com uma analogia:** Ajustar o motor com chave de precisão para o modelo exato do seu carro.
+> **Entenda com uma analogia:** Ajustar o motor com chave de precisão para o modelo exato do seu carro.
 
 ```bash
 apt-get update && apt-get install -y build-essential git
@@ -32,32 +32,32 @@ git clone https://github.com/ggerganov/whisper.cpp .
 make -j4
 ```
 
-- 🖥️ **O que você verá na tela:** Linhas de compilação C++ gerando o binário executável 'main'.
-- ✅ **Como saber se deu certo:** O comando 'ls -l main' exibe o arquivo executável pronto.
+- **O que você verá na tela:** Linhas de compilação C++ gerando o binário executável 'main'.
+- **Como saber se deu certo:** O comando 'ls -l main' exibe o arquivo executável pronto.
 
 ### Passo 2: Download do Modelo Compacto Quantizado GGML `[F02]`
 Download do modelo whisper GGML em formato binário estático.
 
-> 💡 **Entenda com uma analogia:** Baixar o dicionário de inteligência artificial compacto em disco.
+> **Entenda com uma analogia:** Baixar o dicionário de inteligência artificial compacto em disco.
 
 ```bash
 bash ./models/download-ggml-model.sh base
 ```
 
-- 🖥️ **O que você verá na tela:** Barra de download do modelo base de cerca de 140 MB.
-- ✅ **Como saber se deu certo:** Arquivo ggml-base.bin presente na pasta models.
+- **O que você verá na tela:** Barra de download do modelo base de cerca de 140 MB.
+- **Como saber se deu certo:** Arquivo ggml-base.bin presente na pasta models.
 
 ### Passo 3: Execução da Transcrição Ultrarrápida `[F04]`
 Transcrição de áudio em segundos consumindo menos de 200 MB de RAM.
 
-> 💡 **Entenda com uma analogia:** Ligar a esteira e ver as palavras saindo na velocidade da fala.
+> **Entenda com uma analogia:** Ligar a esteira e ver as palavras saindo na velocidade da fala.
 
 ```bash
 ./main -m models/ggml-base.bin -f reuniao.wav -l pt -otxt
 ```
 
-- 🖥️ **O que você verá na tela:** Texto transcrito com marcação de segundos impresso no terminal.
-- ✅ **Como saber se deu certo:** Arquivo .txt gerado com o conteúdo da fala.
+- **O que você verá na tela:** Texto transcrito com marcação de segundos impresso no terminal.
+- **Como saber se deu certo:** Arquivo .txt gerado com o conteúdo da fala.
 
 ## Arquivos de Configuração de Produção
 
@@ -76,13 +76,13 @@ Transcrição de áudio em segundos consumindo menos de 200 MB de RAM.
 ### Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)
 
 1. **Passo 1: Gravar Áudio de Teste em WAV:** Grave 20 segundos de fala e salve como teste.wav a 16kHz mono.
-   - 🎯 **Resultado Esperado:** Arquivo teste.wav pronto na pasta.
+ - **Resultado Esperado:** Arquivo teste.wav pronto na pasta.
 
 1. **Passo 2: Rodar o Binário Whisper.cpp:** Execute './main -m models/ggml-base.bin -f teste.wav -l pt'.
-   - 🎯 **Resultado Esperado:** A transcrição surge na tela em menos de 2 segundos.
+ - **Resultado Esperado:** A transcrição surge na tela em menos de 2 segundos.
 
 1. **Passo 3: Conferir o Texto Gerado:** Abra o arquivo teste.wav.txt gerado automaticamente.
-   - 🎯 **Resultado Esperado:** Texto idêntico às palavras faladas com pontuação correta.
+ - **Resultado Esperado:** Texto idêntico às palavras faladas com pontuação correta.
 
 ### Dicionário Completo de Comandos (CLI)
 
@@ -101,11 +101,11 @@ Transcrição de áudio em segundos consumindo menos de 200 MB de RAM.
 
 ### Matriz de Resolução de Problemas (Troubleshooting)
 
-- **⚠️ Sintoma:** Áudio em formato MP3 rejeitado
-  - **Causa:** Whisper.cpp requer áudio em formato WAV 16kHz mono.
+- ** Sintoma:** Áudio em formato MP3 rejeitado
+ - **Causa:** Whisper.cpp requer áudio em formato WAV 16kHz mono.
 ## Parte III: Desinstalação Cirúrgica & Isolamento da VPS (Zero Efeito Colateral)
 
-> 🛡️ **Princípio de Isolamento:** O whisper.cpp é compilado como binário autocontido em C/C++. A remoção consiste na eliminação dos arquivos executáveis e modelos ggml sem afetar nenhuma biblioteca compartilhada do sistema operacional.
+> **Princípio de Isolamento:** O whisper.cpp é compilado como binário autocontido em C/C++. A remoção consiste na eliminação dos arquivos executáveis e modelos ggml sem afetar nenhuma biblioteca compartilhada do sistema operacional.
 
 ### Passo 1: Parada do Servidor HTTP caso Ativado
 Interrompe a execução do whisper-server se rodando como daemon.
@@ -115,8 +115,8 @@ sudo systemctl stop whisper-server.service 2>/dev/null || true
 sudo systemctl disable whisper-server.service 2>/dev/null || true
 ```
 
-- ⚠️ **Alerta de Segurança:** Ignora se a ferramenta foi usada apenas via linha de comando.
-- ✅ **Como Validar:** `pkill -f whisper-server || true`
+- **Alerta de Segurança:** Ignora se a ferramenta foi usada apenas via linha de comando.
+- **Como Validar:** `pkill -f whisper-server || true`
 
 ### Passo 2: Remoção dos Binários em /usr/local/bin
 Remove os executáveis compilados whisper-cli e whisper-server.
@@ -125,8 +125,8 @@ Remove os executáveis compilados whisper-cli e whisper-server.
 sudo rm -f /usr/local/bin/whisper-cli /usr/local/bin/whisper-server
 ```
 
-- ⚠️ **Alerta de Segurança:** Remova apenas os binários com prefixo whisper-*. Não toque em outros executáveis da pasta.
-- ✅ **Como Validar:** `which whisper-cli # Retorna vazio`
+- **Alerta de Segurança:** Remova apenas os binários com prefixo whisper-*. Não toque em outros executáveis da pasta.
+- **Como Validar:** `which whisper-cli # Retorna vazio`
 
 ### Passo 3: Exclusão do Repositório de Compilação e Modelos GGML
 Libera espaço em disco removendo o código-fonte C++ e os arquivos de pesos binários ggml.
@@ -135,8 +135,8 @@ Libera espaço em disco removendo o código-fonte C++ e os arquivos de pesos bin
 sudo rm -rf /opt/whisper.cpp
 ```
 
-- ⚠️ **Alerta de Segurança:** Garante liberação de até 3GB de modelos salvos.
-- ✅ **Como Validar:** `ls -d /opt/whisper.cpp 2>/dev/null || echo 'Diretório removido'`
+- **Alerta de Segurança:** Garante liberação de até 3GB de modelos salvos.
+- **Como Validar:** `ls -d /opt/whisper.cpp 2>/dev/null || echo 'Diretório removido'`
 
 ### Passo 4: Revogação da Porta 8080 (se aplicável)
 Fecha a porta de rede do servidor HTTP leve do whisper.cpp.
@@ -146,8 +146,8 @@ sudo ufw delete allow 8080/tcp 2>/dev/null || true
 sudo ufw reload
 ```
 
-- ⚠️ **Alerta de Segurança:** Se houver outro serviço utilizando a porta 8080, mantenha a regra.
-- ✅ **Como Validar:** `ss -tulpn | grep 8080 # Retorna vazio`
+- **Alerta de Segurança:** Se houver outro serviço utilizando a porta 8080, mantenha a regra.
+- **Como Validar:** `ss -tulpn | grep 8080 # Retorna vazio`
 
 ### Checklist de Saúde da VPS (Outros Projetos)
 

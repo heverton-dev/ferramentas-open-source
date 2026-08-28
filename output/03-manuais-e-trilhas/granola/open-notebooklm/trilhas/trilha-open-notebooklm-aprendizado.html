@@ -1,360 +1,360 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Trilha Cronológica de Aprendizado: Open-NotebookLM</title>
-  <style>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Trilha Cronológica de Aprendizado: Open-NotebookLM</title>
+ <style>
 
-  :root {
-    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
-    --paper: #F8FAFC;
-    --surface: #FFFFFF;
-    --ink: #0F172A;
-    --ink-2: #334155;
-    --muted: #64748B;
-    --rule: #CBD5E1;
-    --rule-soft: #E2E8F0;
-    --accent: #0284C7;
-    --accent-dark: #0369A1;
-    --accent-soft: #E0F2FE;
-    --green: #10B981;
-    --green-dark: #065F46;
-    --green-soft: #D1FAE5;
-    --gold: #F59E0B;
-    --gold-soft: #FEF3C7;
-  }
+ :root {
+ --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+ --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+ --paper: #F8FAFC;
+ --surface: #FFFFFF;
+ --ink: #0F172A;
+ --ink-2: #334155;
+ --muted: #64748B;
+ --rule: #CBD5E1;
+ --rule-soft: #E2E8F0;
+ --accent: #0284C7;
+ --accent-dark: #0369A1;
+ --accent-soft: #E0F2FE;
+ --green: #10B981;
+ --green-dark: #065F46;
+ --green-soft: #D1FAE5;
+ --gold: #F59E0B;
+ --gold-soft: #FEF3C7;
+ }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: var(--font-sans);
-    background: var(--paper);
-    color: var(--ink);
-    line-height: 1.6;
-    padding: 24px 16px 60px;
-  }
-  .container { max-width: 980px; margin: 0 auto; }
-  .header-card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 32px;
-    margin-bottom: 32px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
-  .badge-tag {
-    display: inline-block;
-    padding: 4px 10px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: 4px;
-    background: var(--accent-soft);
-    color: var(--accent-dark);
-    margin-bottom: 12px;
-  }
-  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
-  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+ * { box-sizing: border-box; margin: 0; padding: 0; }
+ body {
+ font-family: var(--font-sans);
+ background: var(--paper);
+ color: var(--ink);
+ line-height: 1.6;
+ padding: 24px 16px 60px;
+ }
+ .container { max-width: 980px; margin: 0 auto; }
+ .header-card {
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ border-radius: 8px;
+ padding: 32px;
+ margin-bottom: 32px;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+ }
+ .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+ .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+ .badge-tag {
+ display: inline-block;
+ padding: 4px 10px;
+ font-size: 12px;
+ font-weight: 700;
+ text-transform: uppercase;
+ letter-spacing: 0.05em;
+ border-radius: 4px;
+ background: var(--accent-soft);
+ color: var(--accent-dark);
+ margin-bottom: 12px;
+ }
+ h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+ .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
 
-  .hero-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    background: var(--paper);
-    padding: 16px;
-    border-radius: 6px;
-    border: 1px solid var(--rule-soft);
-  }
-  .stat-item { display: flex; flex-direction: column; }
-  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
-  .stat-val { font-size: 15px; font-weight: 800; color: var(--ink); }
+ .hero-stats {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+ gap: 12px;
+ background: var(--paper);
+ padding: 16px;
+ border-radius: 6px;
+ border: 1px solid var(--rule-soft);
+ }
+ .stat-item { display: flex; flex-direction: column; }
+ .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+ .stat-val { font-size: 15px; font-weight: 800; color: var(--ink); }
 
-  /* TIMELINE */
-  .timeline {
-    position: relative;
-    padding-left: 32px;
-  }
-  .timeline::before {
-    content: "";
-    position: absolute;
-    top: 10px;
-    bottom: 20px;
-    left: 11px;
-    width: 2px;
-    background: var(--rule);
-  }
-  .timeline-node {
-    position: relative;
-    margin-bottom: 36px;
-  }
-  .timeline-marker {
-    position: absolute;
-    left: -32px;
-    top: 0;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: #FFF;
-    font-size: 12px;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 0 4px var(--paper);
-  }
-  .phase-card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .phase-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 8px;
-    border-bottom: 1px solid var(--rule-soft);
-    padding-bottom: 8px;
-  }
-  .phase-title { font-size: 18px; font-weight: 800; color: var(--ink); }
-  .phase-time { font-size: 12px; font-weight: 700; color: var(--accent-dark); background: var(--accent-soft); padding: 2px 8px; border-radius: 4px; }
-  .phase-goal { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
+ /* TIMELINE */
+ .timeline {
+ position: relative;
+ padding-left: 32px;
+ }
+ .timeline::before {
+ content: "";
+ position: absolute;
+ top: 10px;
+ bottom: 20px;
+ left: 11px;
+ width: 2px;
+ background: var(--rule);
+ }
+ .timeline-node {
+ position: relative;
+ margin-bottom: 36px;
+ }
+ .timeline-marker {
+ position: absolute;
+ left: -32px;
+ top: 0;
+ width: 24px;
+ height: 24px;
+ border-radius: 50%;
+ background: var(--accent);
+ color: #FFF;
+ font-size: 12px;
+ font-weight: 800;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ box-shadow: 0 0 0 4px var(--paper);
+ }
+ .phase-card {
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ border-radius: 8px;
+ padding: 24px;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+ }
+ .phase-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: baseline;
+ margin-bottom: 8px;
+ border-bottom: 1px solid var(--rule-soft);
+ padding-bottom: 8px;
+ }
+ .phase-title { font-size: 18px; font-weight: 800; color: var(--ink); }
+ .phase-time { font-size: 12px; font-weight: 700; color: var(--accent-dark); background: var(--accent-soft); padding: 2px 8px; border-radius: 4px; }
+ .phase-goal { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
 
-  .resource-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 14px 16px;
-    background: var(--paper);
-    border: 1px solid var(--rule-soft);
-    border-radius: 6px;
-    margin-bottom: 12px;
-    transition: background 0.2s;
-  }
-  .resource-item:hover { background: #F1F5F9; }
-  .chk-item {
-    margin-top: 4px;
-    cursor: pointer;
-    width: 17px;
-    height: 17px;
-    accent-color: var(--green);
-  }
-  .resource-content { flex: 1; }
-  .resource-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--ink);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .resource-title a { color: var(--ink); text-decoration: none; }
-  .resource-title a:hover { color: var(--accent); }
-  .resource-badge {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 3px;
-    background: var(--rule-soft);
-    color: var(--ink-2);
-  }
-  .lang-badge-br { background: #DCFCE7; color: #166534; font-weight: 800; }
-  .lang-badge-en { background: #EFF6FF; color: #1E40AF; font-weight: 800; }
+ .resource-item {
+ display: flex;
+ align-items: flex-start;
+ gap: 12px;
+ padding: 14px 16px;
+ background: var(--paper);
+ border: 1px solid var(--rule-soft);
+ border-radius: 6px;
+ margin-bottom: 12px;
+ transition: background 0.2s;
+ }
+ .resource-item:hover { background: #F1F5F9; }
+ .chk-item {
+ margin-top: 4px;
+ cursor: pointer;
+ width: 17px;
+ height: 17px;
+ accent-color: var(--green);
+ }
+ .resource-content { flex: 1; }
+ .resource-title {
+ font-size: 14px;
+ font-weight: 700;
+ color: var(--ink);
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ flex-wrap: wrap;
+ }
+ .resource-title a { color: var(--ink); text-decoration: none; }
+ .resource-title a:hover { color: var(--accent); }
+ .resource-badge {
+ font-size: 10px;
+ font-weight: 700;
+ padding: 2px 6px;
+ border-radius: 3px;
+ background: var(--rule-soft);
+ color: var(--ink-2);
+ }
+ .lang-badge-br { background: #DCFCE7; color: #166534; font-weight: 800; }
+ .lang-badge-en { background: #EFF6FF; color: #1E40AF; font-weight: 800; }
 
-  .resource-takeaway {
-    font-size: 13px;
-    color: var(--ink-2);
-    margin-top: 5px;
-  }
-  .resource-dica-ptbr {
-    font-size: 12px;
-    color: #92400E;
-    background: #FEF3C7;
-    padding: 4px 8px;
-    border-radius: 4px;
-    margin-top: 6px;
-    display: inline-block;
-  }
-  .resource-meta {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 6px;
-    display: flex;
-    gap: 12px;
-  }
-  .btn-link {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--accent-dark);
-    text-decoration: none;
-  }
-  .btn-link:hover { text-decoration: underline; }
+ .resource-takeaway {
+ font-size: 13px;
+ color: var(--ink-2);
+ margin-top: 5px;
+ }
+ .resource-dica-ptbr {
+ font-size: 12px;
+ color: #92400E;
+ background: #FEF3C7;
+ padding: 4px 8px;
+ border-radius: 4px;
+ margin-top: 6px;
+ display: inline-block;
+ }
+ .resource-meta {
+ font-size: 12px;
+ color: var(--muted);
+ margin-top: 6px;
+ display: flex;
+ gap: 12px;
+ }
+ .btn-link {
+ font-size: 12px;
+ font-weight: 700;
+ color: var(--accent-dark);
+ text-decoration: none;
+ }
+ .btn-link:hover { text-decoration: underline; }
 
-  </style>
+ </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- CABEÇALHO -->
-  <div class="header-card">
-    <div class="breadcrumb">
-      <a href="../../listas-open-source/vert-granola.html">← Voltar ao Dossiê Vertical Granola</a>
-      &nbsp;·&nbsp;
-      <a href="../manuais/manual-open-notebooklm-vps-e-uso.html">Ver Manual de Engenharia 📖</a>
-    </div>
-    <span class="badge-tag">Jornada Pedagógica Autoguiada · Brasil First</span>
-    <h1>Trilha de Aprendizado: Open-NotebookLM</h1>
-    <p class="deck">
-      Roteiro cronológico passo a passo para dominar a ferramenta a partir de fontes verificadas, priorizando materiais em língua portuguesa (PT-BR) e fornecendo orientações práticas de tradução assistida para conteúdos internacionais.
-    </p>
+ <!-- CABEÇALHO -->
+ <div class="header-card">
+ <div class="breadcrumb">
+ <a href="../../listas-open-source/vert-granola.html">← Voltar ao Dossiê Vertical Granola</a>
+ &nbsp;·&nbsp;
+ <a href="../manuais/manual-open-notebooklm-vps-e-uso.html">Ver Manual de Engenharia </a>
+ </div>
+ <span class="badge-tag">Jornada Pedagógica Autoguiada · Brasil First</span>
+ <h1>Trilha de Aprendizado: Open-NotebookLM</h1>
+ <p class="deck">
+ Roteiro cronológico passo a passo para dominar a ferramenta a partir de fontes verificadas, priorizando materiais em língua portuguesa (PT-BR) e fornecendo orientações práticas de tradução assistida para conteúdos internacionais.
+ </p>
 
-    <!-- HERO STATS -->
-    <div class="hero-stats">
-      <div class="stat-item">
-        <span class="stat-lbl">Tempo Total Estimado</span>
-        <span class="stat-val" style="color:var(--accent-dark);">5 horas de imersão guiada</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Fases de Estudo</span>
-        <span class="stat-val">2 Módulos</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Recursos Auditados</span>
-        <span class="stat-val">3 Conteúdos</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Progresso do Operador</span>
-        <span class="stat-val" id="progresso-txt" style="color:var(--green);">0 de 3</span>
-      </div>
-    </div>
+ <!-- HERO STATS -->
+ <div class="hero-stats">
+ <div class="stat-item">
+ <span class="stat-lbl">Tempo Total Estimado</span>
+ <span class="stat-val" style="color:var(--accent-dark);">5 horas de imersão guiada</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Fases de Estudo</span>
+ <span class="stat-val">2 Módulos</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Recursos Auditados</span>
+ <span class="stat-val">3 Conteúdos</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Progresso do Operador</span>
+ <span class="stat-val" id="progresso-txt" style="color:var(--green);">0 de 3</span>
+ </div>
+ </div>
 
-    <!-- BARRA DE PROGRESSO -->
-    <div style="margin-top: 16px; background: var(--rule-soft); border-radius: 4px; height: 8px; overflow: hidden;">
-      <div id="progresso-bar" style="width: 0%; height: 100%; background: var(--green); transition: width 0.3s;"></div>
-    </div>
-  </div>
+ <!-- BARRA DE PROGRESSO -->
+ <div style="margin-top: 16px; background: var(--rule-soft); border-radius: 4px; height: 8px; overflow: hidden;">
+ <div id="progresso-bar" style="width: 0%; height: 100%; background: var(--green); transition: width 0.3s;"></div>
+ </div>
+ </div>
 
-  <!-- TIMELINE -->
-  <div class="timeline">
-    
-        <div class="timeline-node">
-          <div class="timeline-marker">1</div>
-          <div class="phase-card">
-            <div class="phase-header">
-              <h2 class="phase-title">Fase 1: Fundamentos de Roteirização de Diálogos com IA</h2>
-              <span class="phase-time">⏱️ ~1h 30min</span>
-            </div>
-            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Entender como transformar notas brutas de reunião em roteiros de debate dinâmico.</p>
-            <div class="resource-list">
-              
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://github.com/gabrielchua/open-notebooklm" target="_blank" rel="noopener noreferrer">Open-NotebookLM Architecture Guide</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Documentação Oficial</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Engenharia de prompt para criação de diálogos de podcast.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Consulte o Módulo 0 do nosso manual sobre o conceito do Roteirista de Teatro.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 45 min</span>
-                  <span>👤 Gabriel Chua</span>
-                  <a href="https://github.com/gabrielchua/open-notebooklm" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          </div>
-        </div>
-        
-        <div class="timeline-node">
-          <div class="timeline-marker">2</div>
-          <div class="phase-card">
-            <div class="phase-header">
-              <h2 class="phase-title">Fase 2: Síntese de Voz e Automação de Áudio</h2>
-              <span class="phase-time">⏱️ ~2h 00min</span>
-            </div>
-            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Aprender a clonar vozes e exportar resumos executivos falados.</p>
-            <div class="resource-list">
-              
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer">Open-NotebookLM Setup Walkthrough</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Vídeo Tutorial / YouTube</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F04]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Geração automatizada de podcasts em áudio a partir de Markdown.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Ative as legendas automáticas em português com a tecla 'C' no YouTube.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 14 min de vídeo + 1h prática</span>
-                  <span>👤 AI Engineering Reviews</span>
-                  <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://github.com/SWivid/F5-TTS" target="_blank" rel="noopener noreferrer">F5-TTS Voice Engine Playbook</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Tutorial Prático</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Configuração de síntese de voz em containers.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Siga o passo a passo de deploy do nosso manual em português.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 45 min</span>
-                  <span>👤 F5-TTS Open Community</span>
-                  <a href="https://github.com/SWivid/F5-TTS" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          </div>
-        </div>
-        
-  </div>
+ <!-- TIMELINE -->
+ <div class="timeline">
+ 
+ <div class="timeline-node">
+ <div class="timeline-marker">1</div>
+ <div class="phase-card">
+ <div class="phase-header">
+ <h2 class="phase-title">Fase 1: Fundamentos de Roteirização de Diálogos com IA</h2>
+ <span class="phase-time">⏱ ~1h 30min</span>
+ </div>
+ <p class="phase-goal"> <strong>Meta da Etapa:</strong> Entender como transformar notas brutas de reunião em roteiros de debate dinâmico.</p>
+ <div class="resource-list">
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://github.com/gabrielchua/open-notebooklm" target="_blank" rel="noopener noreferrer">Open-NotebookLM Architecture Guide</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Documentação Oficial</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Engenharia de prompt para criação de diálogos de podcast.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Consulte o Módulo 0 do nosso manual sobre o conceito do Roteirista de Teatro.</div>
+ <div class="resource-meta">
+ <span>⏱ 45 min</span>
+ <span> Gabriel Chua</span>
+ <a href="https://github.com/gabrielchua/open-notebooklm" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div class="timeline-node">
+ <div class="timeline-marker">2</div>
+ <div class="phase-card">
+ <div class="phase-header">
+ <h2 class="phase-title">Fase 2: Síntese de Voz e Automação de Áudio</h2>
+ <span class="phase-time">⏱ ~2h 00min</span>
+ </div>
+ <p class="phase-goal"> <strong>Meta da Etapa:</strong> Aprender a clonar vozes e exportar resumos executivos falados.</p>
+ <div class="resource-list">
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer">Open-NotebookLM Setup Walkthrough</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Vídeo Tutorial / YouTube</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F04]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Geração automatizada de podcasts em áudio a partir de Markdown.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Ative as legendas automáticas em português com a tecla 'C' no YouTube.</div>
+ <div class="resource-meta">
+ <span>⏱ 14 min de vídeo + 1h prática</span>
+ <span> AI Engineering Reviews</span>
+ <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://github.com/SWivid/F5-TTS" target="_blank" rel="noopener noreferrer">F5-TTS Voice Engine Playbook</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Tutorial Prático</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Configuração de síntese de voz em containers.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Siga o passo a passo de deploy do nosso manual em português.</div>
+ <div class="resource-meta">
+ <span>⏱ 45 min</span>
+ <span> F5-TTS Open Community</span>
+ <a href="https://github.com/SWivid/F5-TTS" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ </div>
 
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const checkboxes = document.querySelectorAll('.chk-item');
-  checkboxes.forEach((chk, idx) => {
-    const key = 'trilha_chk_' + idx;
-    chk.checked = localStorage.getItem(key) === 'true';
-    chk.addEventListener('change', () => {
-      localStorage.setItem(key, chk.checked);
-      atualizarProgresso();
-    });
-  });
-  atualizarProgresso();
+ const checkboxes = document.querySelectorAll('.chk-item');
+ checkboxes.forEach((chk, idx) => {
+ const key = 'trilha_chk_' + idx;
+ chk.checked = localStorage.getItem(key) === 'true';
+ chk.addEventListener('change', () => {
+ localStorage.setItem(key, chk.checked);
+ atualizarProgresso();
+ });
+ });
+ atualizarProgresso();
 
-  function atualizarProgresso() {
-    const total = checkboxes.length;
-    const marcados = Array.from(checkboxes).filter(c => c.checked).length;
-    const pct = total ? Math.round((marcados / total) * 100) : 0;
-    const bar = document.getElementById('progresso-bar');
-    const txt = document.getElementById('progresso-txt');
-    if (bar) bar.style.width = pct + '%';
-    if (txt) txt.innerText = marcados + ' de ' + total + ' concluídos (' + pct + '%)';
-  }
+ function atualizarProgresso() {
+ const total = checkboxes.length;
+ const marcados = Array.from(checkboxes).filter(c => c.checked).length;
+ const pct = total ? Math.round((marcados / total) * 100) : 0;
+ const bar = document.getElementById('progresso-bar');
+ const txt = document.getElementById('progresso-txt');
+ if (bar) bar.style.width = pct + '%';
+ if (txt) txt.innerText = marcados + ' de ' + total + ' concluídos (' + pct + '%)';
+ }
 });
 </script>
 

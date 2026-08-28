@@ -1,21 +1,21 @@
 # Manual Operacional Completo: Faster-Whisper CLI
 
-> **Padrão Diamante · Guia de Engenharia & Adoção Descomplicada**  
-> **Licença:** MIT | **Versão:** 1.0.3 | **Setup Estimado:** 5 min (Zero conhecimento prévio)  
-> **VPS Recomendada:** Hetzner Cloud CX22 (2 vCPU, 2 GB RAM, 40 GB SSD, Ubuntu 24.04 LTS)  
+> **Padrão Diamante · Guia de Engenharia & Adoção Descomplicada** 
+> **Licença:** MIT | **Versão:** 1.0.3 | **Setup Estimado:** 5 min (Zero conhecimento prévio) 
+> **VPS Recomendada:** Hetzner Cloud CX22 (2 vCPU, 2 GB RAM, 40 GB SSD, Ubuntu 24.04 LTS) 
 > **Custo Mensal Estimado:** EUR 4,00/mês (~R$ 24,00/mês)
 
 ---
 
 ## Módulo 0: Nivelamento Conceitual (Analogias do Dia a Dia)
 
-### 💡 Motor CTranslate2 *(Analogia: O Compressor de Alta Potência)*
+### Motor CTranslate2 *(Analogia: O Compressor de Alta Potência)*
 É uma tecnologia de aceleração que reescreve as contas matemáticas da inteligência artificial para que elas rodem até 4 vezes mais rápido usando metade da memória RAM.
 
-### 💡 Transcrição via CLI (1 Linha) *(Analogia: O Micro-ondas com Botão Único)*
+### Transcrição via CLI (1 Linha) *(Analogia: O Micro-ondas com Botão Único)*
 Você não precisa abrir telas complexas: basta colar um comando simples com o nome do arquivo de áudio e a transcrição sai na hora na sua frente.
 
-### 💡 Automação de Atas com Fabric *(Analogia: O Secretário Executivo que Resume a Gravação)*
+### Automação de Atas com Fabric *(Analogia: O Secretário Executivo que Resume a Gravação)*
 Pega o texto bruto gerado pela fala e organiza automaticamente em: (1) Decisões tomadas; (2) Prazos combinados; (3) Quem é o responsável por cada tarefa.
 
 ## Parte I: Instalação em Produção na VPS (Passo a Passo Rígido)
@@ -23,39 +23,39 @@ Pega o texto bruto gerado pela fala e organiza automaticamente em: (1) Decisões
 ### Passo 1: Instalação da Engine via Pip `[F01]`
 Instalação do runtime CTranslate2 otimizado com faster-whisper e conversor FFmpeg.
 
-> 💡 **Entenda com uma analogia:** Instalar a ferramenta de precisão com um único clique de download.
+> **Entenda com uma analogia:** Instalar a ferramenta de precisão com um único clique de download.
 
 ```bash
 apt-get update && apt-get install -y python3-pip ffmpeg
 pip install --upgrade faster-whisper
 ```
 
-- 🖥️ **O que você verá na tela:** Download dos pacotes Python oficiais sem erros.
-- ✅ **Como saber se deu certo:** Comando 'python3 -c "import faster_whisper"' executa sem erros.
+- **O que você verá na tela:** Download dos pacotes Python oficiais sem erros.
+- **Como saber se deu certo:** Comando 'python3 -c "import faster_whisper"' executa sem erros.
 
 ### Passo 2: Execução da Primeira Transcrição em 1 Linha `[F04]`
 Processamento imediato de arquivo de áudio com modelo quantizado.
 
-> 💡 **Entenda com uma analogia:** Apertar o botão de ligar e ver o texto saindo imediatamente.
+> **Entenda com uma analogia:** Apertar o botão de ligar e ver o texto saindo imediatamente.
 
 ```bash
 python3 -c "from faster_whisper import WhisperModel; model = WhisperModel('small'); segments, _ = model.transcribe('reuniao.mp3'); print(' '.join([s.text for s in segments]))"
 ```
 
-- 🖥️ **O que você verá na tela:** Texto transcrito com as falas e os segundos de cada trecho.
-- ✅ **Como saber se deu certo:** Texto da conversa impresso na tela.
+- **O que você verá na tela:** Texto transcrito com as falas e os segundos de cada trecho.
+- **Como saber se deu certo:** Texto da conversa impresso na tela.
 
 ### Passo 3: Automação de Atas com o Framework Fabric `[F05]`
 Canalização da transcrição para geração de atas executivas.
 
-> 💡 **Entenda com uma analogia:** Passar o texto bruto pelo filtro que transforma conversa em documento de diretoria.
+> **Entenda com uma analogia:** Passar o texto bruto pelo filtro que transforma conversa em documento de diretoria.
 
 ```bash
 cat transcricao.txt | fabric --pattern create_meeting_minutes
 ```
 
-- 🖥️ **O que você verá na tela:** Ata formatada em tópicos com decisões e pendências.
-- ✅ **Como saber se deu certo:** Arquivo ata_reuniao.md pronto para envio.
+- **O que você verá na tela:** Ata formatada em tópicos com decisões e pendências.
+- **Como saber se deu certo:** Arquivo ata_reuniao.md pronto para envio.
 
 ## Arquivos de Configuração de Produção
 
@@ -69,7 +69,7 @@ from faster_whisper import WhisperModel
 model = WhisperModel('small', device='cpu', compute_type='int8')
 segments, _ = model.transcribe(sys.argv[1], language='pt')
 for s in segments:
-    print(f'[{s.start:.2f}s -> {s.end:.2f}s] {s.text}')
+ print(f'[{s.start:.2f}s -> {s.end:.2f}s] {s.text}')
 ```
 
 ## Parte II: Manual de Uso Exaustivo
@@ -79,13 +79,13 @@ for s in segments:
 ### Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)
 
 1. **Passo 1: Apontar para o Arquivo de Áudio:** Coloque um arquivo audio.mp3 de teste na pasta.
-   - 🎯 **Resultado Esperado:** Arquivo visível na pasta.
+ - **Resultado Esperado:** Arquivo visível na pasta.
 
 1. **Passo 2: Rodar o Script de Transcrição:** Execute 'python transcribe.py audio.mp3'.
-   - 🎯 **Resultado Esperado:** As frases surgem instantaneamente acompanhadas do cronômetro.
+ - **Resultado Esperado:** As frases surgem instantaneamente acompanhadas do cronômetro.
 
 1. **Passo 3: Salvar em Formato de Ata:** Execute 'python transcribe.py audio.mp3 > ata.txt'.
-   - 🎯 **Resultado Esperado:** Arquivo de texto salvo com 100% da reunião transcrita.
+ - **Resultado Esperado:** Arquivo de texto salvo com 100% da reunião transcrita.
 
 ### Dicionário Completo de Comandos (CLI)
 
@@ -102,11 +102,11 @@ for s in segments:
 
 ### Matriz de Resolução de Problemas (Troubleshooting)
 
-- **⚠️ Sintoma:** Erro de ffmpeg não encontrado
-  - **Causa:** Falta do binário FFmpeg no PATH do sistema.
+- ** Sintoma:** Erro de ffmpeg não encontrado
+ - **Causa:** Falta do binário FFmpeg no PATH do sistema.
 ## Parte III: Desinstalação Cirúrgica & Isolamento da VPS (Zero Efeito Colateral)
 
-> 🛡️ **Princípio de Isolamento:** Instalado via pipx ou venv isolada, não possui dependências cruzadas com outros serviços da VPS. Sua remoção é limpa e imediata.
+> **Princípio de Isolamento:** Instalado via pipx ou venv isolada, não possui dependências cruzadas com outros serviços da VPS. Sua remoção é limpa e imediata.
 
 ### Passo 1: Desinstalação do Pacote via Pipx / Pip
 Remove a instalação isolada do CLI do Faster-Whisper.
@@ -115,8 +115,8 @@ Remove a instalação isolada do CLI do Faster-Whisper.
 pipx uninstall faster-whisper 2>/dev/null || pip uninstall -y faster-whisper
 ```
 
-- ⚠️ **Alerta de Segurança:** Se instalado via pipx, remove apenas o ambiente virtual dedicado da ferramenta.
-- ✅ **Como Validar:** `which faster-whisper # Não deve retornar caminho`
+- **Alerta de Segurança:** Se instalado via pipx, remove apenas o ambiente virtual dedicado da ferramenta.
+- **Como Validar:** `which faster-whisper # Não deve retornar caminho`
 
 ### Passo 2: Remoção de Modelos CTranslate2 Cacheados
 Libera espaço em disco eliminando os modelos baixados pelo HuggingFace Hub.
@@ -125,8 +125,8 @@ Libera espaço em disco eliminando os modelos baixados pelo HuggingFace Hub.
 rm -rf ~/.cache/huggingface/hub/models--guillaumekln--faster-whisper*
 ```
 
-- ⚠️ **Alerta de Segurança:** Não apague a pasta ~/.cache/ inteira, apenas a pasta de modelos do faster-whisper.
-- ✅ **Como Validar:** `ls ~/.cache/huggingface/hub/models--guillaumekln* 2>/dev/null || echo 'Cache limpo'`
+- **Alerta de Segurança:** Não apague a pasta ~/.cache/ inteira, apenas a pasta de modelos do faster-whisper.
+- **Como Validar:** `ls ~/.cache/huggingface/hub/models--guillaumekln* 2>/dev/null || echo 'Cache limpo'`
 
 ### Passo 3: Remoção de Scripts Auxiliares de Automação
 Remove scripts bash criados pelo operador para transcrição de pastas.
@@ -135,8 +135,8 @@ Remove scripts bash criados pelo operador para transcrição de pastas.
 sudo rm -f /usr/local/bin/transcrever-lote.sh
 ```
 
-- ⚠️ **Alerta de Segurança:** Remove apenas o script dedicado criado durante o treinamento.
-- ✅ **Como Validar:** `which transcrever-lote.sh 2>/dev/null || echo 'Script removido'`
+- **Alerta de Segurança:** Remove apenas o script dedicado criado durante o treinamento.
+- **Como Validar:** `which transcrever-lote.sh 2>/dev/null || echo 'Script removido'`
 
 ### Passo 4: Limpeza de Arquivos Temporários de Áudio
 Garante que arquivos WAV temporários gerados durante testes sejam expurgados.
@@ -145,8 +145,8 @@ Garante que arquivos WAV temporários gerados durante testes sejam expurgados.
 rm -rf /tmp/faster-whisper* /tmp/*.wav 2>/dev/null || true
 ```
 
-- ⚠️ **Alerta de Segurança:** Remove apenas arquivos da pasta temporária.
-- ✅ **Como Validar:** `ls /tmp/faster-whisper* 2>/dev/null || echo 'Temporários limpos'`
+- **Alerta de Segurança:** Remove apenas arquivos da pasta temporária.
+- **Como Validar:** `ls /tmp/faster-whisper* 2>/dev/null || echo 'Temporários limpos'`
 
 ### Checklist de Saúde da VPS (Outros Projetos)
 

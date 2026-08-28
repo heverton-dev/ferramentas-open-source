@@ -6,224 +6,224 @@
 <title>Camada 52 · Síntese de Voz, Clonagem de Áudio & TTS Neural · Dossiê Executivo</title>
 <style>
 
-  :root {
-    --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
-    --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
-    --paper: #F6F4EF;
-    --surface: #FFFFFF;
-    --surface-2: #FBF9F4;
-    --surface-dark: #0A0F1D;
-    --ink: #1B1E23;
-    --ink-2: #383D45;
-    --muted: #666E7A;
-    --rule: #D8D2C4;
-    --rule-soft: #EAE5D9;
-    --accent: #00875A;
-    --accent-dark: #57D9A3;
-    --accent-soft: #E3FCEF;
-    --accent-soft-dark: #162B22;
-    --green: #00875A;
-    --green-soft: #E3FCEF;
-    --gold: #FFAB00;
-    --gold-soft: #FFF0B3;
-    --flag: #DE350B;
-    --flag-soft: #FFEBE6;
-    --shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
+ :root {
+ --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+ --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+ --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+ --paper: #F6F4EF;
+ --surface: #FFFFFF;
+ --surface-2: #FBF9F4;
+ --surface-dark: #0A0F1D;
+ --ink: #1B1E23;
+ --ink-2: #383D45;
+ --muted: #666E7A;
+ --rule: #D8D2C4;
+ --rule-soft: #EAE5D9;
+ --accent: #00875A;
+ --accent-dark: #57D9A3;
+ --accent-soft: #E3FCEF;
+ --accent-soft-dark: #162B22;
+ --green: #00875A;
+ --green-soft: #E3FCEF;
+ --gold: #FFAB00;
+ --gold-soft: #FFF0B3;
+ --flag: #DE350B;
+ --flag-soft: #FFEBE6;
+ --shadow: 0 1px 3px rgba(0,0,0,0.04);
+ }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --paper: #0E121B;
-      --surface: #141924;
-      --surface-2: #1A2130;
-      --ink: #E6E8ED;
-      --ink-2: #B0B5C0;
-      --muted: #7E8695;
-      --rule: #262F40;
-      --rule-soft: #1E2533;
-      --accent: var(--accent-dark);
-      --accent-soft: var(--accent-soft-dark);
-      --green: #57D9A3;
-      --green-soft: #162B22;
-      --gold: #FFC400;
-      --gold-soft: #332600;
-      --flag: #FF7452;
-      --flag-soft: #361B15;
-      --shadow: 0 1px 3px rgba(0,0,0,0.25);
-    }
-  }
+ @media (prefers-color-scheme: dark) {
+ :root {
+ --paper: #0E121B;
+ --surface: #141924;
+ --surface-2: #1A2130;
+ --ink: #E6E8ED;
+ --ink-2: #B0B5C0;
+ --muted: #7E8695;
+ --rule: #262F40;
+ --rule-soft: #1E2533;
+ --accent: var(--accent-dark);
+ --accent-soft: var(--accent-soft-dark);
+ --green: #57D9A3;
+ --green-soft: #162B22;
+ --gold: #FFC400;
+ --gold-soft: #332600;
+ --flag: #FF7452;
+ --flag-soft: #361B15;
+ --shadow: 0 1px 3px rgba(0,0,0,0.25);
+ }
+ }
 
-  *, *::before, *::after { box-sizing: border-box; }
-  html { font-size: 16px; scroll-behavior: smooth; }
+ *, *::before, *::after { box-sizing: border-box; }
+ html { font-size: 16px; scroll-behavior: smooth; }
 
-  /* SCROLLBAR REFINADA (MAX 4PX & COR ACCENT) */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent) transparent;
-  }
-  ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--accent);
-    border-radius: 4px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--green);
-  }
+ /* SCROLLBAR REFINADA (MAX 4PX & COR ACCENT) */
+ * {
+ scrollbar-width: thin;
+ scrollbar-color: var(--accent) transparent;
+ }
+ ::-webkit-scrollbar {
+ width: 4px;
+ height: 4px;
+ }
+ ::-webkit-scrollbar-track {
+ background: transparent;
+ }
+ ::-webkit-scrollbar-thumb {
+ background: var(--accent);
+ border-radius: 4px;
+ }
+ ::-webkit-scrollbar-thumb:hover {
+ background: var(--green);
+ }
 
-  body {
-    margin: 0; padding: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--font-sans);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
+ body {
+ margin: 0; padding: 0;
+ background: var(--paper);
+ color: var(--ink);
+ font-family: var(--font-sans);
+ line-height: 1.6;
+ -webkit-font-smoothing: antialiased;
+ }
 
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+ .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
 
-  /* HEADER & HERO STATS */
-  header { margin-bottom: 32px; }
-  .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
-  .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-  .back-link:hover { color: var(--accent); }
-  .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+ /* HEADER & HERO STATS */
+ header { margin-bottom: 32px; }
+ .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+ .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+ .back-link:hover { color: var(--accent); }
+ .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
 
-  .hero { margin: 20px 0 24px; }
-  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 42px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
-  .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
+ .hero { margin: 20px 0 24px; }
+ h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 42px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
+ .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
 
-  .hero-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px; margin: 24px 0 32px;
-  }
-  .stat-card {
-    background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
-    padding: 12px 16px; box-shadow: var(--shadow);
-  }
-  .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
-  .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+ .hero-stats {
+ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+ gap: 12px; margin: 24px 0 32px;
+ }
+ .stat-card {
+ background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+ padding: 12px 16px; box-shadow: var(--shadow);
+ }
+ .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+ .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
 
-  /* PILARES */
-  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 24px 0; }
-  .route { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 20px; }
-  .route.red { border-left: 4px solid var(--flag); }
-  .route.green { border-left: 4px solid var(--green); }
-  .route .tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
-  .route.red .tag { color: var(--flag); }
-  .route.green .tag { color: var(--green); }
-  .route h4 { font-family: var(--font-serif); font-size: 19px; margin: 6px 0 8px; color: var(--ink); }
-  .route p { margin: 0; font-size: 14px; color: var(--ink-2); }
+ /* PILARES */
+ .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 24px 0; }
+ .route { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 20px; }
+ .route.red { border-left: 4px solid var(--flag); }
+ .route.green { border-left: 4px solid var(--green); }
+ .route .tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+ .route.red .tag { color: var(--flag); }
+ .route.green .tag { color: var(--green); }
+ .route h4 { font-family: var(--font-serif); font-size: 19px; margin: 6px 0 8px; color: var(--ink); }
+ .route p { margin: 0; font-size: 14px; color: var(--ink-2); }
 
-  /* SEÇÕES */
-  .sec-head { margin: 36px 0 16px; }
-  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
-  h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
-  .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
+ /* SEÇÕES */
+ .sec-head { margin: 36px 0 16px; }
+ .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
+ h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
+ .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
 
-  /* BUSCA */
-  .search-wrapper { position: relative; margin: 20px 0 24px; }
-  .search-input { width: 100%; padding: 12px 42px 12px 16px; font-family: var(--font-sans); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); outline: none; box-shadow: var(--shadow); }
-  .search-input:focus { border-color: var(--accent); }
-  .search-icon { position: absolute; right: 14px; top: 12px; width: 20px; height: 20px; fill: var(--muted); pointer-events: none; }
+ /* BUSCA */
+ .search-wrapper { position: relative; margin: 20px 0 24px; }
+ .search-input { width: 100%; padding: 12px 42px 12px 16px; font-family: var(--font-sans); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); outline: none; box-shadow: var(--shadow); }
+ .search-input:focus { border-color: var(--accent); }
+ .search-icon { position: absolute; right: 14px; top: 12px; width: 20px; height: 20px; fill: var(--muted); pointer-events: none; }
 
-  /* TABELA FLUIDA */
-  .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
-  table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
-  th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
-  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
-  tr:last-child td { border-bottom: none; }
-  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
-  td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
-  td.tool a:hover { color: var(--accent); }
-  td.saas { color: var(--flag); }
-  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
-  td.cat { font-size: 12px; color: var(--muted); }
-  td.lic { font-family: var(--mono); font-size: 11px; }
+ /* TABELA FLUIDA */
+ .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
+ table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+ th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+ td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
+ tr:last-child td { border-bottom: none; }
+ td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
+ td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
+ td.tool a:hover { color: var(--accent); }
+ td.saas { color: var(--flag); }
+ td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
+ td.cat { font-size: 12px; color: var(--muted); }
+ td.lic { font-family: var(--mono); font-size: 11px; }
 
-  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO (MOLDE CAMADA 01) */
-  .ledger { display: flex; flex-direction: column; gap: 24px; }
-  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
-  .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
-  .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
-  
-  .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+ /* CARDS NO FORMATO DOSSIÊ EXECUTIVO (MOLDE CAMADA 01) */
+ .ledger { display: flex; flex-direction: column; gap: 24px; }
+ .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
+ .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+ .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
+ 
+ .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 
-  .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
-  .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+ .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+ .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
 
-  .senior-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
-  .senior-badge.green { background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
-  .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
-  .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
-  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
-  .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
+ .senior-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
+ .senior-badge.green { background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+ .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
+ .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
+ .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+ .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
 
-  .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
-  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
-  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
-  .entry-section p strong { color: var(--ink); font-weight: 600; }
+ .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+ .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+ .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+ .entry-section p strong { color: var(--ink); font-weight: 600; }
 
-  /* GRIDS CANÔNICAS DA CAMADA 01 */
-  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
-  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
-  .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
-  .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
-  .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
-  .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+ /* GRIDS CANÔNICAS DA CAMADA 01 */
+ .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
+ .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+ .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+ .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+ .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+ .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
 
-  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
-  .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
-  .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
-  @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
-  .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
-  .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
-  .infra-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+ .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
+ .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+ .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
+ @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
+ .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+ .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
+ .infra-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
 
-  .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
-  pre { margin: 0; padding: 10px 48px 10px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; }
-  code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); line-height: 1.45; }
-  .copy-btn { position: absolute; top: 6px; right: 6px; background: var(--surface); border: 1px solid var(--rule); color: var(--muted); border-radius: 2px; padding: 3px 6px; font-family: var(--mono); font-size: 10px; cursor: pointer; transition: all .15s ease; }
-  .copy-btn:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+ .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
+ pre { margin: 0; padding: 10px 48px 10px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; }
+ code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); line-height: 1.45; }
+ .copy-btn { position: absolute; top: 6px; right: 6px; background: var(--surface); border: 1px solid var(--rule); color: var(--muted); border-radius: 2px; padding: 3px 6px; font-family: var(--mono); font-size: 10px; cursor: pointer; transition: all .15s ease; }
+ .copy-btn:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
 
-  .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
-  .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-  .repo-btn svg { width: 13px; height: 13px; fill: currentColor; }
+ .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
+ .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+ .repo-btn svg { width: 13px; height: 13px; fill: currentColor; }
 
-  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 2px; }
-  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; transition: transform .12s ease, border-color .12s ease; }
-  .step-card:hover { border-color: var(--accent); transform: translateY(-1px); }
-  .step-head { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; }
-  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
-  .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
-  .step-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+ .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 2px; }
+ .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; transition: transform .12s ease, border-color .12s ease; }
+ .step-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+ .step-head { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; }
+ .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+ .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+ .step-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
 
-  table tr { transition: background .12s ease; }
-  table tbody tr:hover { background: var(--surface-2); }
+ table tr { transition: background .12s ease; }
+ table tbody tr:hover { background: var(--surface-2); }
 
-  /* SEÇÃO DESIGN SYSTEM & WHITE-LABEL */
-  .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
-  .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
-  .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
-  .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
-  .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
-  .ds-badge.esforco-alto { background: #FFEBE6; color: #DE350B; border: 1px solid #FFBDAD; }
-  .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
-  .ds-badge.wl-ready { background: #EAE6FF; color: #403294; border: 1px solid #C0B6F2; }
+ /* SEÇÃO DESIGN SYSTEM & WHITE-LABEL */
+ .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+ .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+ .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
+ .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+ .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+ .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+ .ds-badge.esforco-alto { background: #FFEBE6; color: #DE350B; border: 1px solid #FFBDAD; }
+ .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
+ .ds-badge.wl-ready { background: #EAE6FF; color: #403294; border: 1px solid #C0B6F2; }
 
-  .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
-  .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
-  .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
-  .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
-  .ds-card p strong { color: var(--ink); }
-  .ds-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+ .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+ .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+ .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+ .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+ .ds-card p strong { color: var(--ink); }
+ .ds-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
 
 </style>
 </head>
@@ -231,1002 +231,1002 @@
 
 <div class="wrap">
 
-  <header>
-    <div class="header-top">
-      <a class="back-link" href="index.html">← Voltar ao Hub Central</a>
-      <span class="camada-pill">Camada 52 · Arsenal Open Source</span>
-    </div>
+ <header>
+ <div class="header-top">
+ <a class="back-link" href="index.html">← Voltar ao Hub Central</a>
+ <span class="camada-pill">Camada 52 · Arsenal Open Source</span>
+ </div>
 
-    <div class="hero">
-      <h1>Camada 52 · Síntese de Voz, Clonagem de Áudio & TTS Neural</h1>
-      <p class="deck">Compêndio soberano de ferramentas open-source para geração de fala neural de alta fidelidade, clonagem de voz instantânea em múltiplos idiomas, controle expressivo de emoções e dublagem autônoma, operando 100% on-premise com privacidade absoluta e custo zero de API por caractere.</p>
-    </div>
+ <div class="hero">
+ <h1>Camada 52 · Síntese de Voz, Clonagem de Áudio & TTS Neural</h1>
+ <p class="deck">Compêndio soberano de ferramentas open-source para geração de fala neural de alta fidelidade, clonagem de voz instantânea em múltiplos idiomas, controle expressivo de emoções e dublagem autônoma, operando 100% on-premise com privacidade absoluta e custo zero de API por caractere.</p>
+ </div>
 
-    <div class="hero-stats">
-      <div class="stat-card">
-        <div class="num">8</div>
-        <div class="lbl">Ferramentas Mapeadas</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">100%</div>
-        <div class="lbl">SaaS Substituídos</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">R$ 480.000+</div>
-        <div class="lbl">Economia Estimada/Ano</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">OSI Compliant</div>
-        <div class="lbl">Conformidade OSI</div>
-      </div>
-    </div>
+ <div class="hero-stats">
+ <div class="stat-card">
+ <div class="num">8</div>
+ <div class="lbl">Ferramentas Mapeadas</div>
+ </div>
+ <div class="stat-card">
+ <div class="num">100%</div>
+ <div class="lbl">SaaS Substituídos</div>
+ </div>
+ <div class="stat-card">
+ <div class="num">R$ 480.000+</div>
+ <div class="lbl">Economia Estimada/Ano</div>
+ </div>
+ <div class="stat-card">
+ <div class="num">OSI Compliant</div>
+ <div class="lbl">Conformidade OSI</div>
+ </div>
+ </div>
 
-    <div class="grid2">
-      <div class="route red">
-        <span class="tag">Rota Frágil (Proprietária)</span>
-        <h4>Caminho Proprietário & Frágil</h4>
-        <p>Lock-in de fornecedor com custos crescentes por usuário e dependência de nuvem fechada.</p>
-      </div>
-      <div class="route green">
-        <span class="tag">Rota Soberana (Open Source)</span>
-        <h4>Caminho Open-Source & Soberano</h4>
-        <p>Autonomia de dados, infraestrutura autocontida e economia perpétua de licenciamento.</p>
-      </div>
-    </div>
-  </header>
+ <div class="grid2">
+ <div class="route red">
+ <span class="tag">Rota Frágil (Proprietária)</span>
+ <h4>Caminho Proprietário & Frágil</h4>
+ <p>Lock-in de fornecedor com custos crescentes por usuário e dependência de nuvem fechada.</p>
+ </div>
+ <div class="route green">
+ <span class="tag">Rota Soberana (Open Source)</span>
+ <h4>Caminho Open-Source & Soberano</h4>
+ <p>Autonomia de dados, infraestrutura autocontida e economia perpétua de licenciamento.</p>
+ </div>
+ </div>
+ </header>
 
-  <div class="sec-head">
-    <span class="sec-num">Parte 1</span>
-    <h2>Matriz Comparativa de Ferramentas</h2>
-    <p class="sec-note">Tabela consolidada com todas as 20 ferramentas, licenças e custos comparados.</p>
-  </div>
+ <div class="sec-head">
+ <span class="sec-num">Parte 1</span>
+ <h2>Matriz Comparativa de Ferramentas</h2>
+ <p class="sec-note">Tabela consolidada com todas as 20 ferramentas, licenças e custos comparados.</p>
+ </div>
 
-  <div class="tablewrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Ferramenta</th>
-          <th>SaaS Substituído</th>
-          <th>Economia</th>
-          <th>Categoria</th>
-          <th>Licença</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="rank">01</td>
-          <td class="tool"><a href="#card-01">XTTS-v2 (Coqui)</a></td>
-          <td class="saas">ElevenLabs Voice Lab / Murf.ai</td>
-          <td class="econ">R$ 180.000/ano</td>
-          <td class="cat">Voice Cloning & TTS</td>
-          <td class="lic"><span class="lic-badge">Coqui Public Model License / MPL-2.0</span></td>
-        </tr>
-        <tr>
-          <td class="rank">02</td>
-          <td class="tool"><a href="#card-02">GPT-SoVITS</a></td>
-          <td class="saas">ElevenLabs Professional Voice Clone / Resemble.ai</td>
-          <td class="econ">R$ 144.000/ano</td>
-          <td class="cat">Few-Shot Voice Cloning</td>
-          <td class="lic"><span class="lic-badge">MIT</span></td>
-        </tr>
-        <tr>
-          <td class="rank">03</td>
-          <td class="tool"><a href="#card-03">ChatTTS</a></td>
-          <td class="saas">Play.ht / WellSaid Labs / ElevenLabs Conversational</td>
-          <td class="econ">R$ 120.000/ano</td>
-          <td class="cat">Conversational TTS</td>
-          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
-        </tr>
-        <tr>
-          <td class="rank">04</td>
-          <td class="tool"><a href="#card-04">Piper TTS</a></td>
-          <td class="saas">Amazon Polly / Google Cloud TTS / Azure Speech</td>
-          <td class="econ">R$ 60.000/ano</td>
-          <td class="cat">Edge & Fast TTS</td>
-          <td class="lic"><span class="lic-badge">MIT</span></td>
-        </tr>
-        <tr>
-          <td class="rank">05</td>
-          <td class="tool"><a href="#card-05">Fish Speech</a></td>
-          <td class="saas">ElevenLabs Multilingual v2 / Play3</td>
-          <td class="econ">R$ 130.000/ano</td>
-          <td class="cat">Zero-Shot TTS</td>
-          <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
-        </tr>
-        <tr>
-          <td class="rank">06</td>
-          <td class="tool"><a href="#card-06">F5-TTS</a></td>
-          <td class="saas">ElevenLabs Turbo / Descript Overdub</td>
-          <td class="econ">R$ 96.000/ano</td>
-          <td class="cat">Flow Matching TTS</td>
-          <td class="lic"><span class="lic-badge">MIT</span></td>
-        </tr>
-        <tr>
-          <td class="rank">07</td>
-          <td class="tool"><a href="#card-07">OpenVoice (MyShell)</a></td>
-          <td class="saas">ElevenLabs Voice Changer / Lovo.ai</td>
-          <td class="econ">R$ 84.000/ano</td>
-          <td class="cat">Tone & Emotion Control</td>
-          <td class="lic"><span class="lic-badge">MIT</span></td>
-        </tr>
-        <tr>
-          <td class="rank">08</td>
-          <td class="tool"><a href="#card-08">Bark (Suno)</a></td>
-          <td class="saas">ElevenLabs Sound Effects & Voice / Suno AI</td>
-          <td class="econ">R$ 72.000/ano</td>
-          <td class="cat">Generative Text-to-Audio</td>
-          <td class="lic"><span class="lic-badge">MIT</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+ <div class="tablewrap">
+ <table>
+ <thead>
+ <tr>
+ <th>#</th>
+ <th>Ferramenta</th>
+ <th>SaaS Substituído</th>
+ <th>Economia</th>
+ <th>Categoria</th>
+ <th>Licença</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td class="rank">01</td>
+ <td class="tool"><a href="#card-01">XTTS-v2 (Coqui)</a></td>
+ <td class="saas">ElevenLabs Voice Lab / Murf.ai</td>
+ <td class="econ">R$ 180.000/ano</td>
+ <td class="cat">Voice Cloning & TTS</td>
+ <td class="lic"><span class="lic-badge">Coqui Public Model License / MPL-2.0</span></td>
+ </tr>
+ <tr>
+ <td class="rank">02</td>
+ <td class="tool"><a href="#card-02">GPT-SoVITS</a></td>
+ <td class="saas">ElevenLabs Professional Voice Clone / Resemble.ai</td>
+ <td class="econ">R$ 144.000/ano</td>
+ <td class="cat">Few-Shot Voice Cloning</td>
+ <td class="lic"><span class="lic-badge">MIT</span></td>
+ </tr>
+ <tr>
+ <td class="rank">03</td>
+ <td class="tool"><a href="#card-03">ChatTTS</a></td>
+ <td class="saas">Play.ht / WellSaid Labs / ElevenLabs Conversational</td>
+ <td class="econ">R$ 120.000/ano</td>
+ <td class="cat">Conversational TTS</td>
+ <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+ </tr>
+ <tr>
+ <td class="rank">04</td>
+ <td class="tool"><a href="#card-04">Piper TTS</a></td>
+ <td class="saas">Amazon Polly / Google Cloud TTS / Azure Speech</td>
+ <td class="econ">R$ 60.000/ano</td>
+ <td class="cat">Edge & Fast TTS</td>
+ <td class="lic"><span class="lic-badge">MIT</span></td>
+ </tr>
+ <tr>
+ <td class="rank">05</td>
+ <td class="tool"><a href="#card-05">Fish Speech</a></td>
+ <td class="saas">ElevenLabs Multilingual v2 / Play3</td>
+ <td class="econ">R$ 130.000/ano</td>
+ <td class="cat">Zero-Shot TTS</td>
+ <td class="lic"><span class="lic-badge">Apache-2.0</span></td>
+ </tr>
+ <tr>
+ <td class="rank">06</td>
+ <td class="tool"><a href="#card-06">F5-TTS</a></td>
+ <td class="saas">ElevenLabs Turbo / Descript Overdub</td>
+ <td class="econ">R$ 96.000/ano</td>
+ <td class="cat">Flow Matching TTS</td>
+ <td class="lic"><span class="lic-badge">MIT</span></td>
+ </tr>
+ <tr>
+ <td class="rank">07</td>
+ <td class="tool"><a href="#card-07">OpenVoice (MyShell)</a></td>
+ <td class="saas">ElevenLabs Voice Changer / Lovo.ai</td>
+ <td class="econ">R$ 84.000/ano</td>
+ <td class="cat">Tone & Emotion Control</td>
+ <td class="lic"><span class="lic-badge">MIT</span></td>
+ </tr>
+ <tr>
+ <td class="rank">08</td>
+ <td class="tool"><a href="#card-08">Bark (Suno)</a></td>
+ <td class="saas">ElevenLabs Sound Effects & Voice / Suno AI</td>
+ <td class="econ">R$ 72.000/ano</td>
+ <td class="cat">Generative Text-to-Audio</td>
+ <td class="lic"><span class="lic-badge">MIT</span></td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
 
-  <div class="sec-head" id="fichas">
-    <span class="sec-num">Parte 2</span>
-    <h2>Fichas Técnicas &amp; Guias de Adoção</h2>
-    <p class="sec-note">Detalhamento técnico, comandos de execução rápida, análise de infraestrutura e passos práticos.</p>
-  </div>
+ <div class="sec-head" id="fichas">
+ <span class="sec-num">Parte 2</span>
+ <h2>Fichas Técnicas &amp; Guias de Adoção</h2>
+ <p class="sec-note">Detalhamento técnico, comandos de execução rápida, análise de infraestrutura e passos práticos.</p>
+ </div>
 
-  <div class="search-wrapper">
-    <input class="search-input" id="search-input" onkeyup="filterTools(this.value)" placeholder="Buscar ferramenta, SaaS substituído, licença ou tecnologia..." type="text"/>
-    <svg class="search-icon" viewbox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
-    <div id="search-count" style="margin-top: 6px; font-size: 12px; color: var(--muted); font-family: var(--mono);"></div>
-  </div>
+ <div class="search-wrapper">
+ <input class="search-input" id="search-input" onkeyup="filterTools(this.value)" placeholder="Buscar ferramenta, SaaS substituído, licença ou tecnologia..." type="text"/>
+ <svg class="search-icon" viewbox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
+ <div id="search-count" style="margin-top: 6px; font-size: 12px; color: var(--muted); font-family: var(--mono);"></div>
+ </div>
 
-  <div class="ledger">
-      <article class="entry" id="card-01">
-        <div class="entry-rank">01</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>XTTS-v2 (Coqui)</h3>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: ElevenLabs Voice Lab / Murf.ai</span>
-            <span class="econ-badge">R$ 180.000/ano</span>
-            <span class="lic-badge">Coqui Public Model License / MPL-2.0</span>
-            <span class="kind">Voice Cloning & TTS</span>
-          </div>
+ <div class="ledger">
+ <article class="entry" id="card-01">
+ <div class="entry-rank">01</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>XTTS-v2 (Coqui)</h3>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: ElevenLabs Voice Lab / Murf.ai</span>
+ <span class="econ-badge">R$ 180.000/ano</span>
+ <span class="lic-badge">Coqui Public Model License / MPL-2.0</span>
+ <span class="kind">Voice Cloning & TTS</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> Modelo de Text-to-Speech de ponta capaz de clonar qualquer voz humana em 17 idiomas (incluindo PT-BR) a partir de uma amostra de áudio de apenas 3 segundos, preservando timbre, entonação e dinâmica original.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Combina encoders acústicos neurais com decodificador HiFi-GAN e autoregressive latent transformers. Expõe servidor HTTP REST nativo compatível com APIs de streaming e processamento em lote.</p>
-            <div class="code-box">
-              <pre><code>docker run --gpus all -p 5002:5002 ghcr.io/coqui-ai/tts:latest --model_name tts_models/multilingual/multi-dataset/xtts_v2</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> Modelo de Text-to-Speech de ponta capaz de clonar qualquer voz humana em 17 idiomas (incluindo PT-BR) a partir de uma amostra de áudio de apenas 3 segundos, preservando timbre, entonação e dinâmica original.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Combina encoders acústicos neurais com decodificador HiFi-GAN e autoregressive latent transformers. Expõe servidor HTTP REST nativo compatível com APIs de streaming e processamento em lote.</p>
+ <div class="code-box">
+ <pre><code>docker run --gpus all -p 5002:5002 ghcr.io/coqui-ai/tts:latest --model_name tts_models/multilingual/multi-dataset/xtts_v2</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>ElevenLabs Voice Lab / Murf.ai</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 180.000/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>ElevenLabs Voice Lab / Murf.ai</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 180.000/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">8 GB RAM (4 GB VRAM GPU) / 4 vCPU (NVIDIA CUDA recomendada)</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>Padrão-ouro corporativo absoluto para clonagem e síntese multilíngue com suporte consolidado à comunidade e ecossistema de produção.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://github.com/coqui-ai/TTS" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (coqui-ai/TTS)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">8 GB RAM (4 GB VRAM GPU) / 4 vCPU (NVIDIA CUDA recomendada)</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>Padrão-ouro corporativo absoluto para clonagem e síntese multilíngue com suporte consolidado à comunidade e ecossistema de produção.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://github.com/coqui-ai/TTS" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (coqui-ai/TTS)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Deploy do Servidor GPU</div>
-                <p>Suba o container Docker com suporte a NVIDIA CUDA e carregue os pesos pré-treinados do XTTS-v2.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Amostragem de Voz</div>
-                <p>Envie um arquivo WAV de 6 segundos da voz de referência para o endpoint /clone_voice.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> Síntese em Tempo Real</div>
-                <p>Gere áudio via streaming chunked com latência inferior a 300ms integrada ao seu pipeline de IA.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Deploy do Servidor GPU</div>
+ <p>Suba o container Docker com suporte a NVIDIA CUDA e carregue os pesos pré-treinados do XTTS-v2.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Amostragem de Voz</div>
+ <p>Envie um arquivo WAV de 6 segundos da voz de referência para o endpoint /clone_voice.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> Síntese em Tempo Real</div>
+ <p>Gere áudio via streaming chunked com latência inferior a 300ms integrada ao seu pipeline de IA.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-alto">⚡ API REST / WebUI Gradio</span>
-                <span class="ds-badge stack-ui">FastAPI + React / WebUI</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>Totalmente desacoplado; expõe endpoints REST que podem ser encapsulados em qualquer portal ou aplicativo de voz da sua marca.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Repositório maduro e estável; modelos versionados via HuggingFace com garantia de compatibilidade.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="entry" id="card-02">
-        <div class="entry-rank">02</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>GPT-SoVITS</h3>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: ElevenLabs Professional Voice Clone / Resemble.ai</span>
-            <span class="econ-badge">R$ 144.000/ano</span>
-            <span class="lic-badge">MIT</span>
-            <span class="kind">Few-Shot Voice Cloning</span>
-          </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-alto"> API REST / WebUI Gradio</span>
+ <span class="ds-badge stack-ui">FastAPI + React / WebUI</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>Totalmente desacoplado; expõe endpoints REST que podem ser encapsulados em qualquer portal ou aplicativo de voz da sua marca.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Repositório maduro e estável; modelos versionados via HuggingFace com garantia de compatibilidade.</p>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ <article class="entry" id="card-02">
+ <div class="entry-rank">02</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>GPT-SoVITS</h3>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: ElevenLabs Professional Voice Clone / Resemble.ai</span>
+ <span class="econ-badge">R$ 144.000/ano</span>
+ <span class="lic-badge">MIT</span>
+ <span class="kind">Few-Shot Voice Cloning</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> Sistema de síntese de voz e clonagem capaz de treinar um modelo de voz perfeito com apenas 1 minuto de áudio e 5 minutos de fine-tuning em GPU doméstica, entregando fidelidade idêntica à voz humana.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Combina GPT para predição semântica de tokens de fala com VITS (Variational Inference with adversarial learning for Text-to-Speech) para síntese acústica direta e controle prosódico.</p>
-            <div class="code-box">
-              <pre><code>docker run --gpus all -p 9874:9874 -p 9880:9880 breakstring/gpt-sovits:latest</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> Sistema de síntese de voz e clonagem capaz de treinar um modelo de voz perfeito com apenas 1 minuto de áudio e 5 minutos de fine-tuning em GPU doméstica, entregando fidelidade idêntica à voz humana.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Combina GPT para predição semântica de tokens de fala com VITS (Variational Inference with adversarial learning for Text-to-Speech) para síntese acústica direta e controle prosódico.</p>
+ <div class="code-box">
+ <pre><code>docker run --gpus all -p 9874:9874 -p 9880:9880 breakstring/gpt-sovits:latest</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>ElevenLabs Professional Voice Clone / Resemble.ai</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 144.000/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>ElevenLabs Professional Voice Clone / Resemble.ai</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 144.000/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">12 GB RAM (6 GB VRAM GPU) / 4 vCPU + GPU NVIDIA</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>A melhor ferramenta do mundo para clonagem de precisão de locutores e dublagem profissional onde a voz precisa soar indistinguível da real.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://github.com/RVC-Boss/GPT-SoVITS" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (RVC-Boss/GPT-SoVITS)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">12 GB RAM (6 GB VRAM GPU) / 4 vCPU + GPU NVIDIA</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>A melhor ferramenta do mundo para clonagem de precisão de locutores e dublagem profissional onde a voz precisa soar indistinguível da real.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://github.com/RVC-Boss/GPT-SoVITS" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (RVC-Boss/GPT-SoVITS)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Ingestão de Amostras</div>
-                <p>Faça upload de áudios do locutor na interface web e rode a separação automática de silêncios.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Fine-Tuning de 5 Minutos</div>
-                <p>Dispare o treino conjunto do GPT e do SoVITS diretamente na GPU.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> API de Produção</div>
-                <p>Disponibilize o endpoint REST para geração de áudios em lote ou streaming.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Ingestão de Amostras</div>
+ <p>Faça upload de áudios do locutor na interface web e rode a separação automática de silêncios.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Fine-Tuning de 5 Minutos</div>
+ <p>Dispare o treino conjunto do GPT e do SoVITS diretamente na GPU.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> API de Produção</div>
+ <p>Disponibilize o endpoint REST para geração de áudios em lote ou streaming.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-alto">⚡ WebUI + API REST</span>
-                <span class="ds-badge stack-ui">Gradio / FastAPI</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>Interface web configurável e backend REST desacoplado para integração em estúdios de produção.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Desenvolvimento ativo com releases frequentes e alta compatibilidade com ecossistema CUDA.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="entry" id="card-03">
-        <div class="entry-rank">03</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>ChatTTS</h3>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: Play.ht / WellSaid Labs / ElevenLabs Conversational</span>
-            <span class="econ-badge">R$ 120.000/ano</span>
-            <span class="lic-badge">Apache-2.0</span>
-            <span class="kind">Conversational TTS</span>
-          </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-alto"> WebUI + API REST</span>
+ <span class="ds-badge stack-ui">Gradio / FastAPI</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>Interface web configurável e backend REST desacoplado para integração em estúdios de produção.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Desenvolvimento ativo com releases frequentes e alta compatibilidade com ecossistema CUDA.</p>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ <article class="entry" id="card-03">
+ <div class="entry-rank">03</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>ChatTTS</h3>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: Play.ht / WellSaid Labs / ElevenLabs Conversational</span>
+ <span class="econ-badge">R$ 120.000/ano</span>
+ <span class="lic-badge">Apache-2.0</span>
+ <span class="kind">Conversational TTS</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> Modelo de síntese de fala treinado especificamente para cenários de conversa e diálogo, inserindo risos espontâneos, suspiros, hesitações naturais e entonações dramáticas realistas.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Arquitetura baseada em Transformers autoregressivos que processa marcadores especiais de prosódia e emoção inline no texto, gerando áudio natural sem parecer robótico.</p>
-            <div class="code-box">
-              <pre><code>python -c "import ChatTTS; chat = ChatTTS.Chat(); chat.load(); print('ChatTTS Pronto!')"</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> Modelo de síntese de fala treinado especificamente para cenários de conversa e diálogo, inserindo risos espontâneos, suspiros, hesitações naturais e entonações dramáticas realistas.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Arquitetura baseada em Transformers autoregressivos que processa marcadores especiais de prosódia e emoção inline no texto, gerando áudio natural sem parecer robótico.</p>
+ <div class="code-box">
+ <pre><code>python -c "import ChatTTS; chat = ChatTTS.Chat(); chat.load(); print('ChatTTS Pronto!')"</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>Play.ht / WellSaid Labs / ElevenLabs Conversational</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 120.000/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>Play.ht / WellSaid Labs / ElevenLabs Conversational</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 120.000/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">4 GB RAM (Suporta inferência em CPU) / 4 vCPU ou GPU com 4 GB VRAM</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>Imbatível para chatbots falantes, NPCs de games e agentes de suporte onde a naturalidade de conversa humana supera o modelo formal de locução.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://github.com/2noise/ChatTTS" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (2noise/ChatTTS)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">4 GB RAM (Suporta inferência em CPU) / 4 vCPU ou GPU com 4 GB VRAM</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>Imbatível para chatbots falantes, NPCs de games e agentes de suporte onde a naturalidade de conversa humana supera o modelo formal de locução.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://github.com/2noise/ChatTTS" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (2noise/ChatTTS)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Instalação da Lib</div>
-                <p>Instale via pip ou container e carregue os pesos quantizados.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Marcação de Prosódia</div>
-                <p>Adicione tags de controle de fala e risadas no prompt de texto.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> Geração & Stream</div>
-                <p>Exporte o áudio em WAV/MP3 com baixa latência de resposta.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Instalação da Lib</div>
+ <p>Instale via pip ou container e carregue os pesos quantizados.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Marcação de Prosódia</div>
+ <p>Adicione tags de controle de fala e risadas no prompt de texto.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> Geração & Stream</div>
+ <p>Exporte o áudio em WAV/MP3 com baixa latência de resposta.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-alto">⚡ Python SDK / Microserviço</span>
-                <span class="ds-badge stack-ui">Headless Python</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>SDK puro; integração invisível na camada de backend de qualquer produto.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Código limpo e dependências mínimas em PyTorch e Torchaudio.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="entry" id="card-04">
-        <div class="entry-rank">04</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>Piper TTS</h3>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: Amazon Polly / Google Cloud TTS / Azure Speech</span>
-            <span class="econ-badge">R$ 60.000/ano</span>
-            <span class="lic-badge">MIT</span>
-            <span class="kind">Edge & Fast TTS</span>
-          </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-alto"> Python SDK / Microserviço</span>
+ <span class="ds-badge stack-ui">Headless Python</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>SDK puro; integração invisível na camada de backend de qualquer produto.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Código limpo e dependências mínimas em PyTorch e Torchaudio.</p>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ <article class="entry" id="card-04">
+ <div class="entry-rank">04</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>Piper TTS</h3>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: Amazon Polly / Google Cloud TTS / Azure Speech</span>
+ <span class="econ-badge">R$ 60.000/ano</span>
+ <span class="lic-badge">MIT</span>
+ <span class="kind">Edge & Fast TTS</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> Sistema de Text-to-Speech neural local extremamente rápido e otimizado em C++, capaz de gerar fala em tempo real até em Raspberry Pi 4 sem necessidade de GPU.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Usa VITS simplificado e ONNX Runtime para inferência de alta velocidade com mais de 100 vozes disponíveis em dezenas de idiomas (incluindo vozes em Português do Brasil).</p>
-            <div class="code-box">
-              <pre><code>echo 'Soberania de voz com Piper open source.' | piper --model pt_BR-faber-medium --output_file audio.wav</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> Sistema de Text-to-Speech neural local extremamente rápido e otimizado em C++, capaz de gerar fala em tempo real até em Raspberry Pi 4 sem necessidade de GPU.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Usa VITS simplificado e ONNX Runtime para inferência de alta velocidade com mais de 100 vozes disponíveis em dezenas de idiomas (incluindo vozes em Português do Brasil).</p>
+ <div class="code-box">
+ <pre><code>echo 'Soberania de voz com Piper open source.' | piper --model pt_BR-faber-medium --output_file audio.wav</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>Amazon Polly / Google Cloud TTS / Azure Speech</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 60.000/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>Amazon Polly / Google Cloud TTS / Azure Speech</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 60.000/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">512 MB RAM / 1 vCPU (Zero dependência de GPU)</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>A melhor escolha para aplicações embarcadas, Home Assistant, totens de atendimento e servidores leves onde eficiência e velocidade máxima são mandatórias.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://github.com/rhasspy/piper" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (rhasspy/piper)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">512 MB RAM / 1 vCPU (Zero dependência de GPU)</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>A melhor escolha para aplicações embarcadas, Home Assistant, totens de atendimento e servidores leves onde eficiência e velocidade máxima são mandatórias.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://github.com/rhasspy/piper" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (rhasspy/piper)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Download do Binário</div>
-                <p>Baixe o binário standalone do Piper e o arquivo .onnx da voz em PT-BR.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Sintetização via Pipe</div>
-                <p>Passe o texto via stdin diretamente para o executável com saída para stdout.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> Integração HTTP</div>
-                <p>Suba o servidor embutido do Piper com endpoint compatível com OpenAI Audio.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Download do Binário</div>
+ <p>Baixe o binário standalone do Piper e o arquivo .onnx da voz em PT-BR.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Sintetização via Pipe</div>
+ <p>Passe o texto via stdin diretamente para o executável com saída para stdout.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> Integração HTTP</div>
+ <p>Suba o servidor embutido do Piper com endpoint compatível com OpenAI Audio.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-alto">⚡ CLI / Servidor HTTP Standalone</span>
-                <span class="ds-badge stack-ui">C++ / ONNX / HTTP Server</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>Totalmente headless e sem dependências; embedável em qualquer aplicação C++, Go, Node ou Python.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Estabilidade extrema; arquivos .onnx imutáveis de longa duração.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="entry" id="card-05">
-        <div class="entry-rank">05</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>Fish Speech</h3>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: ElevenLabs Multilingual v2 / Play3</span>
-            <span class="econ-badge">R$ 130.000/ano</span>
-            <span class="lic-badge">Apache-2.0</span>
-            <span class="kind">Zero-Shot TTS</span>
-          </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-alto"> CLI / Servidor HTTP Standalone</span>
+ <span class="ds-badge stack-ui">C++ / ONNX / HTTP Server</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>Totalmente headless e sem dependências; embedável em qualquer aplicação C++, Go, Node ou Python.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Estabilidade extrema; arquivos .onnx imutáveis de longa duração.</p>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ <article class="entry" id="card-05">
+ <div class="entry-rank">05</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>Fish Speech</h3>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: ElevenLabs Multilingual v2 / Play3</span>
+ <span class="econ-badge">R$ 130.000/ano</span>
+ <span class="lic-badge">Apache-2.0</span>
+ <span class="kind">Zero-Shot TTS</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> Arquitetura avançada de Text-to-Speech que trata fala como tokens de linguagem, permitindo clonagem zero-shot com fidelidade acústica impecável e suporte robusto a múltiplos idiomas.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Utiliza um LLaMA adaptado para predição de tokens acústicos quantizados por um codec VQ-GAN de alta resolução, superando artefatos tradicionais de compressão.</p>
-            <div class="code-box">
-              <pre><code>python -m tools.api_server --listen 0.0.0.0:8080 --llama-checkpoint checkpoints/fish-speech-1.5</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> Arquitetura avançada de Text-to-Speech que trata fala como tokens de linguagem, permitindo clonagem zero-shot com fidelidade acústica impecável e suporte robusto a múltiplos idiomas.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Utiliza um LLaMA adaptado para predição de tokens acústicos quantizados por um codec VQ-GAN de alta resolução, superando artefatos tradicionais de compressão.</p>
+ <div class="code-box">
+ <pre><code>python -m tools.api_server --listen 0.0.0.0:8080 --llama-checkpoint checkpoints/fish-speech-1.5</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>ElevenLabs Multilingual v2 / Play3</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 130.000/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>ElevenLabs Multilingual v2 / Play3</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 130.000/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">8 GB RAM (6 GB VRAM GPU) / 4 vCPU + NVIDIA GPU</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>Estado da arte em arquitetura de síntese por tokens de linguagem, oferecendo a mais moderna base técnica para clonagem zero-shot de alta fidelidade.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://github.com/fishaudio/fish-speech" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (fishaudio/fish-speech)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">8 GB RAM (6 GB VRAM GPU) / 4 vCPU + NVIDIA GPU</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>Estado da arte em arquitetura de síntese por tokens de linguagem, oferecendo a mais moderna base técnica para clonagem zero-shot de alta fidelidade.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://github.com/fishaudio/fish-speech" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (fishaudio/fish-speech)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Setup de Checkpoint</div>
-                <p>Baixe os pesos do Fish Speech 1.5 e inicie o servidor de inferência FastAPI.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Prompt Acústico</div>
-                <p>Forneça o áudio de referência e a transcrição para calibrar o estilo da voz.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> Geração em Alta Taxa</div>
-                <p>Sintetize a fala em 44.1kHz pronta para radiodifusão e vídeo.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Setup de Checkpoint</div>
+ <p>Baixe os pesos do Fish Speech 1.5 e inicie o servidor de inferência FastAPI.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Prompt Acústico</div>
+ <p>Forneça o áudio de referência e a transcrição para calibrar o estilo da voz.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> Geração em Alta Taxa</div>
+ <p>Sintetize a fala em 44.1kHz pronta para radiodifusão e vídeo.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-alto">⚡ FastAPI / Gradio Web</span>
-                <span class="ds-badge stack-ui">Python FastAPI + Gradio</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>API REST totalmente customizável para integrar em pipelines de dublagem automatizada.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Evolução acelerada com atualizações constantes de checkpoints no HuggingFace.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="entry" id="card-06">
-        <div class="entry-rank">06</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>F5-TTS</h3>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: ElevenLabs Turbo / Descript Overdub</span>
-            <span class="econ-badge">R$ 96.000/ano</span>
-            <span class="lic-badge">MIT</span>
-            <span class="kind">Flow Matching TTS</span>
-          </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-alto"> FastAPI / Gradio Web</span>
+ <span class="ds-badge stack-ui">Python FastAPI + Gradio</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>API REST totalmente customizável para integrar em pipelines de dublagem automatizada.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Evolução acelerada com atualizações constantes de checkpoints no HuggingFace.</p>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ <article class="entry" id="card-06">
+ <div class="entry-rank">06</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>F5-TTS</h3>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: ElevenLabs Turbo / Descript Overdub</span>
+ <span class="econ-badge">R$ 96.000/ano</span>
+ <span class="lic-badge">MIT</span>
+ <span class="kind">Flow Matching TTS</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> Sistema de síntese de voz não-autoregressivo baseado em Flow Matching com Transformer ConvNeXt, gerando fala ultra-rápida, clonagem de alta fidelidade e controle de emoções sem dependência de alinhadores de fonemas.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Usa Flow Matching contínuo para transformar ruído diretamente em espectrogramas de mel guiados pelo texto e pelo áudio de referência, gerando com menos passos de amostragem.</p>
-            <div class="code-box">
-              <pre><code>f5-tts_infer-cli --model F5-TTS --ref_audio sample.wav --ref_text "texto" --gen_text "Nova fala sintetizada."</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> Sistema de síntese de voz não-autoregressivo baseado em Flow Matching com Transformer ConvNeXt, gerando fala ultra-rápida, clonagem de alta fidelidade e controle de emoções sem dependência de alinhadores de fonemas.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Usa Flow Matching contínuo para transformar ruído diretamente em espectrogramas de mel guiados pelo texto e pelo áudio de referência, gerando com menos passos de amostragem.</p>
+ <div class="code-box">
+ <pre><code>f5-tts_infer-cli --model F5-TTS --ref_audio sample.wav --ref_text "texto" --gen_text "Nova fala sintetizada."</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>ElevenLabs Turbo / Descript Overdub</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 96.000/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>ElevenLabs Turbo / Descript Overdub</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 96.000/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">8 GB RAM (4 GB VRAM GPU) / 4 vCPU</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>Tecnologia de ponta em velocidade e fidelidade por flow matching, eliminando a lentidão dos modelos autoregressivos tradicionais.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://github.com/SWivid/F5-TTS" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (SWivid/F5-TTS)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">8 GB RAM (4 GB VRAM GPU) / 4 vCPU</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>Tecnologia de ponta em velocidade e fidelidade por flow matching, eliminando a lentidão dos modelos autoregressivos tradicionais.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://github.com/SWivid/F5-TTS" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (SWivid/F5-TTS)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Instalação do Pacote</div>
-                <p>Instale via pip o f5-tts e carregue o checkpoint oficial.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Clonagem com 1 Amostra</div>
-                <p>Passe um áudio de referência de 5 segundos e gere qualquer fala.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> Edição de Áudio</div>
-                <p>Substitua palavras pontuais em locuções gravadas mantendo a mesma entonação de estúdio.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Instalação do Pacote</div>
+ <p>Instale via pip o f5-tts e carregue o checkpoint oficial.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Clonagem com 1 Amostra</div>
+ <p>Passe um áudio de referência de 5 segundos e gere qualquer fala.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> Edição de Áudio</div>
+ <p>Substitua palavras pontuais em locuções gravadas mantendo a mesma entonação de estúdio.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-alto">⚡ CLI / Microserviço REST</span>
-                <span class="ds-badge stack-ui">Python CLI / WebUI Gradio</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>Interface por linha de comando ou API REST para acoplamento em softwares de edição de vídeo.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Código moderno e limpo sob licença permissiva MIT.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="entry" id="card-07">
-        <div class="entry-rank">07</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>OpenVoice (MyShell)</h3>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: ElevenLabs Voice Changer / Lovo.ai</span>
-            <span class="econ-badge">R$ 84.000/ano</span>
-            <span class="lic-badge">MIT</span>
-            <span class="kind">Tone & Emotion Control</span>
-          </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-alto"> CLI / Microserviço REST</span>
+ <span class="ds-badge stack-ui">Python CLI / WebUI Gradio</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>Interface por linha de comando ou API REST para acoplamento em softwares de edição de vídeo.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Código moderno e limpo sob licença permissiva MIT.</p>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ <article class="entry" id="card-07">
+ <div class="entry-rank">07</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>OpenVoice (MyShell)</h3>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: ElevenLabs Voice Changer / Lovo.ai</span>
+ <span class="econ-badge">R$ 84.000/ano</span>
+ <span class="lic-badge">MIT</span>
+ <span class="kind">Tone & Emotion Control</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> Framework de clonagem de voz que separa completamente a cor/timbre da voz dos parâmetros de emoção, sotaque, ritmo e entonação, permitindo que uma voz fale em tom sussurrado, triste, alegre ou com raiva.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Usa um modelo base de TTS para gerar a prosódia e emoção desejada, seguido por um Tone Color Converter que transfere o timbre exato da voz de referência para a saída sintetizada.</p>
-            <div class="code-box">
-              <pre><code>python openvoice_app.py --share</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> Framework de clonagem de voz que separa completamente a cor/timbre da voz dos parâmetros de emoção, sotaque, ritmo e entonação, permitindo que uma voz fale em tom sussurrado, triste, alegre ou com raiva.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Usa um modelo base de TTS para gerar a prosódia e emoção desejada, seguido por um Tone Color Converter que transfere o timbre exato da voz de referência para a saída sintetizada.</p>
+ <div class="code-box">
+ <pre><code>python openvoice_app.py --share</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>ElevenLabs Voice Changer / Lovo.ai</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 84.000/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>ElevenLabs Voice Changer / Lovo.ai</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 84.000/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">8 GB RAM (4 GB VRAM) / 4 vCPU</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>A melhor ferramenta do mercado open source para manipular emoções e entonações dramáticas em vozes clonadas.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://github.com/myshell-ai/OpenVoice" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (myshell-ai/OpenVoice)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">8 GB RAM (4 GB VRAM) / 4 vCPU</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>A melhor ferramenta do mercado open source para manipular emoções e entonações dramáticas em vozes clonadas.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://github.com/myshell-ai/OpenVoice" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (myshell-ai/OpenVoice)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Definição de Emoção</div>
-                <p>Gere a fala base selecionando a tag de emoção (alegre, sussurrado, dramático).</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Extração de Timbre</div>
-                <p>Extraia o Tone Color da voz de referência com o extrator neural.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> Fusão Acústica</div>
-                <p>Combine o timbre à fala emocional gerando o áudio final clonado.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Definição de Emoção</div>
+ <p>Gere a fala base selecionando a tag de emoção (alegre, sussurrado, dramático).</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Extração de Timbre</div>
+ <p>Extraia o Tone Color da voz de referência com o extrator neural.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> Fusão Acústica</div>
+ <p>Combine o timbre à fala emocional gerando o áudio final clonado.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-alto">⚡ Python SDK / API REST</span>
-                <span class="ds-badge stack-ui">Python / Gradio</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>Totalmente modular; permite construir estúdios de pós-produção e dublagem white-label.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Mantido pela equipe de IA da MyShell com ampla documentação técnica.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="entry" id="card-08">
-        <div class="entry-rank">08</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>Bark (Suno)</h3>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: ElevenLabs Sound Effects & Voice / Suno AI</span>
-            <span class="econ-badge">R$ 72.000/ano</span>
-            <span class="lic-badge">MIT</span>
-            <span class="kind">Generative Text-to-Audio</span>
-          </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-alto"> Python SDK / API REST</span>
+ <span class="ds-badge stack-ui">Python / Gradio</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>Totalmente modular; permite construir estúdios de pós-produção e dublagem white-label.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Mantido pela equipe de IA da MyShell com ampla documentação técnica.</p>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ <article class="entry" id="card-08">
+ <div class="entry-rank">08</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>Bark (Suno)</h3>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: ElevenLabs Sound Effects & Voice / Suno AI</span>
+ <span class="econ-badge">R$ 72.000/ano</span>
+ <span class="lic-badge">MIT</span>
+ <span class="kind">Generative Text-to-Audio</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> Modelo de geração de áudio baseado em transformers capaz de gerar fala humana ultra-realista, canto, música de fundo, respirações e efeitos sonoros ambientais diretamente a partir de prompts de texto.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Arquitetura GPT-like que opera sobre tokens acústicos EnCodec da Meta, prevendo padrões semânticos e acústicos em camadas hierárquicas de granularidade.</p>
-            <div class="code-box">
-              <pre><code>python -c "from bark import SAMPLE_RATE, generate_audio, preload_models; preload_models(); print('Bark Carregado!')"</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> Modelo de geração de áudio baseado em transformers capaz de gerar fala humana ultra-realista, canto, música de fundo, respirações e efeitos sonoros ambientais diretamente a partir de prompts de texto.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Arquitetura GPT-like que opera sobre tokens acústicos EnCodec da Meta, prevendo padrões semânticos e acústicos em camadas hierárquicas de granularidade.</p>
+ <div class="code-box">
+ <pre><code>python -c "from bark import SAMPLE_RATE, generate_audio, preload_models; preload_models(); print('Bark Carregado!')"</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>ElevenLabs Sound Effects & Voice / Suno AI</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 72.000/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>ElevenLabs Sound Effects & Voice / Suno AI</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 72.000/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">12 GB RAM (8 GB VRAM GPU) / 4 vCPU + NVIDIA GPU</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>Pioneiro absoluto em geração generativa não restrita de áudio, combinando fala humana, canto e ambientação acústica em um único modelo.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://github.com/suno-ai/bark" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (suno-ai/bark)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">12 GB RAM (8 GB VRAM GPU) / 4 vCPU + NVIDIA GPU</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>Pioneiro absoluto em geração generativa não restrita de áudio, combinando fala humana, canto e ambientação acústica em um único modelo.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://github.com/suno-ai/bark" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (suno-ai/bark)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Carga de Modelos</div>
-                <p>Inicialize os pesos do Bark com suporte a quantização FP16 para economia de memória.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Prompt com Tags</div>
-                <p>Escreva textos incluindo tags como [laughs], [sighs], [music] para orientar o modelo.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> Renderização</div>
-                <p>Exporte a faixa de áudio renderizada em 24kHz com fidelidade broadcast.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Carga de Modelos</div>
+ <p>Inicialize os pesos do Bark com suporte a quantização FP16 para economia de memória.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Prompt com Tags</div>
+ <p>Escreva textos incluindo tags como [laughs], [sighs], [music] para orientar o modelo.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> Renderização</div>
+ <p>Exporte a faixa de áudio renderizada em 24kHz com fidelidade broadcast.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-alto">⚡ Python SDK / HuggingFace Transformers</span>
-                <span class="ds-badge stack-ui">Python SDK / API</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>Pode ser acoplado em qualquer pipeline de mídia e estúdio de som automatizado.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Integrado nativamente na biblioteca Transformers da Hugging Face com suporte de longo prazo.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-  </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-alto"> Python SDK / HuggingFace Transformers</span>
+ <span class="ds-badge stack-ui">Python SDK / API</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>Pode ser acoplado em qualquer pipeline de mídia e estúdio de som automatizado.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Integrado nativamente na biblioteca Transformers da Hugging Face com suporte de longo prazo.</p>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ </div>
 
 </div>
 
 
 <script>
 function filterTools(query) {
-  const q = query.toLowerCase().trim();
-  const entries = document.querySelectorAll('.entry');
-  const rows = document.querySelectorAll('.tablewrap tbody tr');
-  let visibleCount = 0;
+ const q = query.toLowerCase().trim();
+ const entries = document.querySelectorAll('.entry');
+ const rows = document.querySelectorAll('.tablewrap tbody tr');
+ let visibleCount = 0;
 
-  entries.forEach(entry => {
-    const text = entry.innerText.toLowerCase();
-    if (!q || text.includes(q)) {
-      entry.style.display = 'grid';
-      visibleCount++;
-    } else {
-      entry.style.display = 'none';
-    }
-  });
+ entries.forEach(entry => {
+ const text = entry.innerText.toLowerCase();
+ if (!q || text.includes(q)) {
+ entry.style.display = 'grid';
+ visibleCount++;
+ } else {
+ entry.style.display = 'none';
+ }
+ });
 
-  rows.forEach(row => {
-    const text = row.innerText.toLowerCase();
-    if (!q || text.includes(q)) {
-      row.style.display = '';
-    } else {
-      row.style.display = 'none';
-    }
-  });
+ rows.forEach(row => {
+ const text = row.innerText.toLowerCase();
+ if (!q || text.includes(q)) {
+ row.style.display = '';
+ } else {
+ row.style.display = 'none';
+ }
+ });
 
-  const countEl = document.getElementById('search-count');
-  if (countEl) {
-    countEl.innerText = q ? `${visibleCount} ferramentas encontradas` : '';
-  }
+ const countEl = document.getElementById('search-count');
+ if (countEl) {
+ countEl.innerText = q ? `${visibleCount} ferramentas encontradas` : '';
+ }
 }
 
 function copyCode(btn) {
-  const code = btn.parentElement.querySelector('code').innerText;
-  navigator.clipboard.writeText(code).then(() => {
-    const orig = btn.innerText;
-    btn.innerText = 'Copiado!';
-    setTimeout(() => btn.innerText = orig, 1500);
-  });
+ const code = btn.parentElement.querySelector('code').innerText;
+ navigator.clipboard.writeText(code).then(() => {
+ const orig = btn.innerText;
+ btn.innerText = 'Copiado!';
+ setTimeout(() => btn.innerText = orig, 1500);
+ });
 }
 </script>
 

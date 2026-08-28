@@ -1,795 +1,795 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Manual Operacional: Coqui XTTS-v2 (Clonagem de Voz Multilingue & TTS Neural) · Deploy VPS &amp; Uso Exaustivo</title>
-  <style>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Manual Operacional: Coqui XTTS-v2 (Clonagem de Voz Multilingue & TTS Neural) · Deploy VPS &amp; Uso Exaustivo</title>
+ <style>
 
-  :root {
-    --font-serif: "Liberation Serif", "Times New Roman", Times, serif;
-    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
-    --paper: #F8FAFC;
-    --surface: #FFFFFF;
-    --ink: #0F172A;
-    --ink-2: #334155;
-    --muted: #64748B;
-    --rule: #CBD5E1;
-    --rule-soft: #E2E8F0;
-    --accent: #0284C7;
-    --accent-dark: #0369A1;
-    --accent-soft: #E0F2FE;
-    --green: #10B981;
-    --green-dark: #065F46;
-    --green-soft: #D1FAE5;
-    --gold: #F59E0B;
-    --gold-soft: #FEF3C7;
-    --purple: #8B5CF6;
-    --purple-soft: #EDE9FE;
-    --code-bg: #0F172A;
-  }
+ :root {
+ --font-serif: "Liberation Serif", "Times New Roman", Times, serif;
+ --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+ --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+ --paper: #F8FAFC;
+ --surface: #FFFFFF;
+ --ink: #0F172A;
+ --ink-2: #334155;
+ --muted: #64748B;
+ --rule: #CBD5E1;
+ --rule-soft: #E2E8F0;
+ --accent: #0284C7;
+ --accent-dark: #0369A1;
+ --accent-soft: #E0F2FE;
+ --green: #10B981;
+ --green-dark: #065F46;
+ --green-soft: #D1FAE5;
+ --gold: #F59E0B;
+ --gold-soft: #FEF3C7;
+ --purple: #8B5CF6;
+ --purple-soft: #EDE9FE;
+ --code-bg: #0F172A;
+ }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: var(--font-sans);
-    background: var(--paper);
-    color: var(--ink);
-    line-height: 1.6;
-    padding: 24px 16px 60px;
-  }
-  .container { max-width: 1060px; margin: 0 auto; }
-  
-  .header-card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 32px;
-    margin-bottom: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
-  .badge-tag {
-    display: inline-block;
-    padding: 4px 10px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: 4px;
-    background: var(--accent-soft);
-    color: var(--accent-dark);
-    margin-bottom: 12px;
-  }
-  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
-  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
-  
-  .hero-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    background: var(--paper);
-    padding: 16px;
-    border-radius: 6px;
-    border: 1px solid var(--rule-soft);
-  }
-  .stat-item { display: flex; flex-direction: column; }
-  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
-  .stat-val { font-size: 14.5px; font-weight: 800; color: var(--ink); }
+ * { box-sizing: border-box; margin: 0; padding: 0; }
+ body {
+ font-family: var(--font-sans);
+ background: var(--paper);
+ color: var(--ink);
+ line-height: 1.6;
+ padding: 24px 16px 60px;
+ }
+ .container { max-width: 1060px; margin: 0 auto; }
+ 
+ .header-card {
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ border-radius: 8px;
+ padding: 32px;
+ margin-bottom: 24px;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+ }
+ .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+ .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+ .badge-tag {
+ display: inline-block;
+ padding: 4px 10px;
+ font-size: 12px;
+ font-weight: 700;
+ text-transform: uppercase;
+ letter-spacing: 0.05em;
+ border-radius: 4px;
+ background: var(--accent-soft);
+ color: var(--accent-dark);
+ margin-bottom: 12px;
+ }
+ h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+ .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+ 
+ .hero-stats {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+ gap: 12px;
+ background: var(--paper);
+ padding: 16px;
+ border-radius: 6px;
+ border: 1px solid var(--rule-soft);
+ }
+ .stat-item { display: flex; flex-direction: column; }
+ .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+ .stat-val { font-size: 14.5px; font-weight: 800; color: var(--ink); }
 
-  .nav-anchors {
-    display: flex;
-    gap: 10px;
-    margin: 20px 0;
-    flex-wrap: wrap;
-  }
-  .nav-anchors a {
-    padding: 8px 14px;
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 6px;
-    color: var(--ink-2);
-    text-decoration: none;
-    font-size: 12.5px;
-    font-weight: 600;
-    transition: all 0.2s;
-  }
-  .nav-anchors a:hover {
-    border-color: var(--accent);
-    color: var(--accent-dark);
-    background: var(--accent-soft);
-  }
+ .nav-anchors {
+ display: flex;
+ gap: 10px;
+ margin: 20px 0;
+ flex-wrap: wrap;
+ }
+ .nav-anchors a {
+ padding: 8px 14px;
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ border-radius: 6px;
+ color: var(--ink-2);
+ text-decoration: none;
+ font-size: 12.5px;
+ font-weight: 600;
+ transition: all 0.2s;
+ }
+ .nav-anchors a:hover {
+ border-color: var(--accent);
+ color: var(--accent-dark);
+ background: var(--accent-soft);
+ }
 
-  .section-card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 28px 32px;
-    margin-bottom: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .section-header {
-    border-bottom: 2px solid var(--rule-soft);
-    padding-bottom: 12px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .section-title { font-size: 20px; font-weight: 800; color: var(--ink); }
+ .section-card {
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ border-radius: 8px;
+ padding: 28px 32px;
+ margin-bottom: 24px;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+ }
+ .section-header {
+ border-bottom: 2px solid var(--rule-soft);
+ padding-bottom: 12px;
+ margin-bottom: 20px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ }
+ .section-title { font-size: 20px; font-weight: 800; color: var(--ink); }
 
-  /* CARDS DE NIVELAMENTO */
-  .grid-conceitos {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-    margin: 16px 0;
-  }
-  .card-conceito {
-    background: var(--paper);
-    border: 1px solid var(--rule-soft);
-    border-radius: 6px;
-    padding: 16px;
-    border-left: 4px solid var(--purple);
-  }
-  .conceito-termo { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
-  .conceito-analogia { font-size: 12.5px; font-weight: 700; color: #6D28D9; background: var(--purple-soft); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
-  .conceito-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+ /* CARDS DE NIVELAMENTO */
+ .grid-conceitos {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+ gap: 16px;
+ margin: 16px 0;
+ }
+ .card-conceito {
+ background: var(--paper);
+ border: 1px solid var(--rule-soft);
+ border-radius: 6px;
+ padding: 16px;
+ border-left: 4px solid var(--purple);
+ }
+ .conceito-termo { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+ .conceito-analogia { font-size: 12.5px; font-weight: 700; color: #6D28D9; background: var(--purple-soft); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+ .conceito-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
 
-  /* PASSOS DE INSTALAÇÃO */
-  .step-box {
-    margin-bottom: 28px;
-    padding-bottom: 24px;
-    border-bottom: 1px dashed var(--rule);
-  }
-  .step-box:last-child { border-bottom: none; }
-  .step-top {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-  }
-  .step-num {
-    background: var(--accent);
-    color: #FFF;
-    font-size: 12px;
-    font-weight: 800;
-    padding: 2px 8px;
-    border-radius: 4px;
-  }
-  .step-heading { font-size: 17px; font-weight: 800; color: var(--ink); }
-  .analogia-box {
-    background: #F0FDF4;
-    border-left: 4px solid var(--green);
-    padding: 8px 12px;
-    border-radius: 0 4px 4px 0;
-    margin: 8px 0;
-    font-size: 13px;
-    color: var(--green-dark);
-  }
-  .feedback-box {
-    background: #FFFBEB;
-    border: 1px solid #FDE68A;
-    padding: 8px 12px;
-    border-radius: 4px;
-    margin: 8px 0;
-    font-size: 12.5px;
-    color: #92400E;
-  }
-  .validacao-box {
-    background: #EFF6FF;
-    border: 1px solid #BFDBFE;
-    padding: 8px 12px;
-    border-radius: 4px;
-    margin: 8px 0;
-    font-size: 12.5px;
-    color: #1E40AF;
-  }
+ /* PASSOS DE INSTALAÇÃO */
+ .step-box {
+ margin-bottom: 28px;
+ padding-bottom: 24px;
+ border-bottom: 1px dashed var(--rule);
+ }
+ .step-box:last-child { border-bottom: none; }
+ .step-top {
+ display: flex;
+ align-items: baseline;
+ gap: 8px;
+ margin-bottom: 8px;
+ flex-wrap: wrap;
+ }
+ .step-num {
+ background: var(--accent);
+ color: #FFF;
+ font-size: 12px;
+ font-weight: 800;
+ padding: 2px 8px;
+ border-radius: 4px;
+ }
+ .step-heading { font-size: 17px; font-weight: 800; color: var(--ink); }
+ .analogia-box {
+ background: #F0FDF4;
+ border-left: 4px solid var(--green);
+ padding: 8px 12px;
+ border-radius: 0 4px 4px 0;
+ margin: 8px 0;
+ font-size: 13px;
+ color: var(--green-dark);
+ }
+ .feedback-box {
+ background: #FFFBEB;
+ border: 1px solid #FDE68A;
+ padding: 8px 12px;
+ border-radius: 4px;
+ margin: 8px 0;
+ font-size: 12.5px;
+ color: #92400E;
+ }
+ .validacao-box {
+ background: #EFF6FF;
+ border: 1px solid #BFDBFE;
+ padding: 8px 12px;
+ border-radius: 4px;
+ margin: 8px 0;
+ font-size: 12.5px;
+ color: #1E40AF;
+ }
 
-  .code-box {
-    position: relative;
-    background: var(--code-bg);
-    border-radius: 6px;
-    margin: 10px 0;
-    overflow: hidden;
-  }
-  .code-box pre {
-    padding: 16px;
-    overflow-x: auto;
-    font-family: var(--mono);
-    font-size: 13px;
-    color: #F8FAFC;
-    line-height: 1.5;
-  }
-  .btn-copy {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    padding: 4px 10px;
-    font-size: 11px;
-    font-weight: 600;
-    background: rgba(255,255,255,0.15);
-    color: #FFF;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-copy:hover { background: rgba(255,255,255,0.3); }
+ .code-box {
+ position: relative;
+ background: var(--code-bg);
+ border-radius: 6px;
+ margin: 10px 0;
+ overflow: hidden;
+ }
+ .code-box pre {
+ padding: 16px;
+ overflow-x: auto;
+ font-family: var(--mono);
+ font-size: 13px;
+ color: #F8FAFC;
+ line-height: 1.5;
+ }
+ .btn-copy {
+ position: absolute;
+ top: 8px;
+ right: 8px;
+ padding: 4px 10px;
+ font-size: 11px;
+ font-weight: 600;
+ background: rgba(255,255,255,0.15);
+ color: #FFF;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ transition: background 0.2s;
+ }
+ .btn-copy:hover { background: rgba(255,255,255,0.3); }
 
-  .cite-badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 3px;
-    background: var(--gold-soft);
-    color: #B45309;
-    vertical-align: super;
-    margin-left: 4px;
-    text-decoration: none;
-  }
+ .cite-badge {
+ display: inline-block;
+ font-size: 10px;
+ font-weight: 700;
+ padding: 1px 6px;
+ border-radius: 3px;
+ background: var(--gold-soft);
+ color: #B45309;
+ vertical-align: super;
+ margin-left: 4px;
+ text-decoration: none;
+ }
 
-  table.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 16px 0;
-    font-size: 13px;
-  }
-  table.data-table th {
-    background: var(--paper);
-    padding: 10px 12px;
-    text-align: left;
-    font-weight: 700;
-    color: var(--ink-2);
-    border-bottom: 2px solid var(--rule);
-  }
-  table.data-table td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--rule-soft);
-    color: var(--ink-2);
-  }
-  table.data-table tr:hover td { background: rgba(2, 132, 199, 0.02); }
+ table.data-table {
+ width: 100%;
+ border-collapse: collapse;
+ margin: 16px 0;
+ font-size: 13px;
+ }
+ table.data-table th {
+ background: var(--paper);
+ padding: 10px 12px;
+ text-align: left;
+ font-weight: 700;
+ color: var(--ink-2);
+ border-bottom: 2px solid var(--rule);
+ }
+ table.data-table td {
+ padding: 10px 12px;
+ border-bottom: 1px solid var(--rule-soft);
+ color: var(--ink-2);
+ }
+ table.data-table tr:hover td { background: rgba(2, 132, 199, 0.02); }
 
-  .trouble-card {
-    background: #FFFBEB;
-    border-left: 4px solid var(--gold);
-    padding: 12px 16px;
-    margin-bottom: 12px;
-    border-radius: 0 4px 4px 0;
-  }
-  .trouble-symptom { font-weight: 700; color: #92400E; font-size: 13.5px; }
-  .trouble-cause { font-size: 13px; color: #78350F; margin: 4px 0; }
-  .trouble-fix { font-family: var(--mono); font-size: 12px; background: #FEF3C7; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+ .trouble-card {
+ background: #FFFBEB;
+ border-left: 4px solid var(--gold);
+ padding: 12px 16px;
+ margin-bottom: 12px;
+ border-radius: 0 4px 4px 0;
+ }
+ .trouble-symptom { font-weight: 700; color: #92400E; font-size: 13.5px; }
+ .trouble-cause { font-size: 13px; color: #78350F; margin: 4px 0; }
+ .trouble-fix { font-family: var(--mono); font-size: 12px; background: #FEF3C7; padding: 4px 8px; border-radius: 4px; display: inline-block; }
 
-  </style>
+ </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- CABEÇALHO -->
-  <div class="header-card">
-    <div class="breadcrumb">
-      <a href="../../listas-open-source/vert-elevenlabs.html">← Voltar ao Dossiê Vertical Elevenlabs</a>
-      &nbsp;·&nbsp;
-      <a href="../trilhas/trilha-xtts-v2-aprendizado.html">Ver Trilha de Aprendizado 🗺️</a>
-    </div>
-    <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
-    <h1>Manual Operacional Completo: Coqui XTTS-v2 (Clonagem de Voz Multilingue & TTS Neural)</h1>
-    <p class="deck">
-      Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
-    </p>
+ <!-- CABEÇALHO -->
+ <div class="header-card">
+ <div class="breadcrumb">
+ <a href="../../listas-open-source/vert-elevenlabs.html">← Voltar ao Dossiê Vertical Elevenlabs</a>
+ &nbsp;·&nbsp;
+ <a href="../trilhas/trilha-xtts-v2-aprendizado.html">Ver Trilha de Aprendizado </a>
+ </div>
+ <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
+ <h1>Manual Operacional Completo: Coqui XTTS-v2 (Clonagem de Voz Multilingue & TTS Neural)</h1>
+ <p class="deck">
+ Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
+ </p>
 
-    <!-- HERO STATS DA VPS -->
-    <div class="hero-stats">
-      <div class="stat-item">
-        <span class="stat-lbl">VPS Recomendada</span>
-        <span class="stat-val">Hetzner Cloud CCX33 / RunPod Secure Cloud / Lambda Labs</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Hardware Mínimo</span>
-        <span class="stat-val">4 vCPU Dedicadas · 16 GB RAM (NVIDIA GPU com 6 GB+ VRAM)</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Armazenamento &amp; SO</span>
-        <span class="stat-val">100 GB SSD NVMe · Ubuntu 24.04 LTS (NVIDIA CUDA 12.2+)</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Custo Mensal Estimado</span>
-        <span class="stat-val" style="color:var(--accent-dark);">EUR 35,00/mes (~R$ 210,00)</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Licença de Uso</span>
-        <span class="stat-val" style="color:var(--green);">MPL-2.0 (Livre &amp; Comercial)</span>
-      </div>
-    </div>
+ <!-- HERO STATS DA VPS -->
+ <div class="hero-stats">
+ <div class="stat-item">
+ <span class="stat-lbl">VPS Recomendada</span>
+ <span class="stat-val">Hetzner Cloud CCX33 / RunPod Secure Cloud / Lambda Labs</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Hardware Mínimo</span>
+ <span class="stat-val">4 vCPU Dedicadas · 16 GB RAM (NVIDIA GPU com 6 GB+ VRAM)</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Armazenamento &amp; SO</span>
+ <span class="stat-val">100 GB SSD NVMe · Ubuntu 24.04 LTS (NVIDIA CUDA 12.2+)</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Custo Mensal Estimado</span>
+ <span class="stat-val" style="color:var(--accent-dark);">EUR 35,00/mes (~R$ 210,00)</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Licença de Uso</span>
+ <span class="stat-val" style="color:var(--green);">MPL-2.0 (Livre &amp; Comercial)</span>
+ </div>
+ </div>
 
-    <!-- NAVEGAÇÃO RÁPIDA -->
-    <div class="nav-anchors">
-      <a href="#nivelamento">💡 Módulo 0: Nivelamento para Iniciantes</a>
-      <a href="#instalacao">📦 Parte I: Instalação Passo a Passo</a>
-      <a href="#configuracao">⚙️ Arquivos de Configuração</a>
-      <a href="#primeiro-voo">✈️ Roteiro de Primeiro Voo</a>
-      <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
-      <a href="#manual-api">🌐 Endpoints de API</a>
-      <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
-      <a href="#desinstalacao">🛡️ Desinstalação Cirúrgica VPS</a>
-      <a href="#bibliografia">📚 Referências Bibliográficas</a>
-    </div>
-  </div>
+ <!-- NAVEGAÇÃO RÁPIDA -->
+ <div class="nav-anchors">
+ <a href="#nivelamento"> Módulo 0: Nivelamento para Iniciantes</a>
+ <a href="#instalacao"> Parte I: Instalação Passo a Passo</a>
+ <a href="#configuracao"> Arquivos de Configuração</a>
+ <a href="#primeiro-voo"> Roteiro de Primeiro Voo</a>
+ <a href="#manual-cli">⌨ Dicionário de Comandos</a>
+ <a href="#manual-api"> Endpoints de API</a>
+ <a href="#troubleshooting"> Socorro! Não Funcionou</a>
+ <a href="#desinstalacao"> Desinstalação Cirúrgica VPS</a>
+ <a href="#bibliografia"> Referências Bibliográficas</a>
+ </div>
+ </div>
 
-  <!-- MÓDULO 0: NIVELAMENTO CONCEITUAL -->
-  <div class="section-card" id="nivelamento">
-    <div class="section-header">
-      <h2 class="section-title">Módulo 0: Nivelamento Conceitual (O que você precisa saber antes de começar)</h2>
-      <span class="badge-tag" style="background:var(--purple-soft); color:#6D28D9;">Zero Programação</span>
-    </div>
-    <p style="font-size:14px; color:var(--ink-2); margin-bottom:16px;">
-      Você não precisa ser engenheiro de software para entender como o sistema funciona. Abaixo explicamos os 5 conceitos-chave usando analogias do cotidiano:
-    </p>
-    <div class="grid-conceitos">
-      
-        <div class="card-conceito">
-          <div class="conceito-termo">💡 Zero-Shot Voice Cloning</div>
-          <div class="conceito-analogia">Analogia: O Mimico Perfeito com Ouvido Absoluto</div>
-          <p class="conceito-desc">O modelo nao precisa de horas de treinamento para aprender uma voz. Ele ouve apenas 3 a 6 segundos de audio e reproduz o mesmo timbre, sotaque e dinamica vocal instantaneamente para qualquer texto digitado.</p>
-        </div>
-        
-        <div class="card-conceito">
-          <div class="conceito-termo">💡 Conditioning Latents & Speaker Encoder</div>
-          <div class="conceito-analogia">Analogia: A Impressao Digital Vocal</div>
-          <p class="conceito-desc">O extrator acustico transforma a amostra de audio em um vetor matematico compacto que representa as caracteristicas fisicas das cordas vocais do locutor, guiando o sintetizador sem re-treinar a rede neural.</p>
-        </div>
-        
-        <div class="card-conceito">
-          <div class="conceito-termo">💡 Streaming Chunked Audio</div>
-          <div class="conceito-analogia">Analogia: A Torneira Aberta vs. O Balde Cheio</div>
-          <p class="conceito-desc">Em vez de esperar todo o paragrafo ser sintetizado para comecar a ouvir, o servidor envia pequenos pedacos de audio (chunks de 200ms) a medida que sao gerados, permitindo conversas fluidas com assistentes virtuais de baixa latencia.</p>
-        </div>
-        
-    </div>
-  </div>
+ <!-- MÓDULO 0: NIVELAMENTO CONCEITUAL -->
+ <div class="section-card" id="nivelamento">
+ <div class="section-header">
+ <h2 class="section-title">Módulo 0: Nivelamento Conceitual (O que você precisa saber antes de começar)</h2>
+ <span class="badge-tag" style="background:var(--purple-soft); color:#6D28D9;">Zero Programação</span>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:16px;">
+ Você não precisa ser engenheiro de software para entender como o sistema funciona. Abaixo explicamos os 5 conceitos-chave usando analogias do cotidiano:
+ </p>
+ <div class="grid-conceitos">
+ 
+ <div class="card-conceito">
+ <div class="conceito-termo"> Zero-Shot Voice Cloning</div>
+ <div class="conceito-analogia">Analogia: O Mimico Perfeito com Ouvido Absoluto</div>
+ <p class="conceito-desc">O modelo nao precisa de horas de treinamento para aprender uma voz. Ele ouve apenas 3 a 6 segundos de audio e reproduz o mesmo timbre, sotaque e dinamica vocal instantaneamente para qualquer texto digitado.</p>
+ </div>
+ 
+ <div class="card-conceito">
+ <div class="conceito-termo"> Conditioning Latents & Speaker Encoder</div>
+ <div class="conceito-analogia">Analogia: A Impressao Digital Vocal</div>
+ <p class="conceito-desc">O extrator acustico transforma a amostra de audio em um vetor matematico compacto que representa as caracteristicas fisicas das cordas vocais do locutor, guiando o sintetizador sem re-treinar a rede neural.</p>
+ </div>
+ 
+ <div class="card-conceito">
+ <div class="conceito-termo"> Streaming Chunked Audio</div>
+ <div class="conceito-analogia">Analogia: A Torneira Aberta vs. O Balde Cheio</div>
+ <p class="conceito-desc">Em vez de esperar todo o paragrafo ser sintetizado para comecar a ouvir, o servidor envia pequenos pedacos de audio (chunks de 200ms) a medida que sao gerados, permitindo conversas fluidas com assistentes virtuais de baixa latencia.</p>
+ </div>
+ 
+ </div>
+ </div>
 
-  <!-- SEÇÃO 1: INSTALAÇÃO EM PRODUÇÃO -->
-  <div class="section-card" id="instalacao">
-    <div class="section-header">
-      <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
-      <span class="badge-tag">Tempo ~25 min (Instalacao Docker GPU ou Python 3.10)</span>
-    </div>
-    
-        <div class="step-box">
-          <div class="step-top">
-            <span class="step-num">Passo 1</span>
-            <span class="step-heading">Hardening de Seguranca & Firewall (UFW)</span>
-            <a href="#ref-F01" class="cite-badge">[F01]</a>
-          </div>
-          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Configurar acesso restrito ao servidor de inferencia de audio.</p>
-          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Blindar as portas de entrada do estudio de gravacao.</div>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
-            <pre><code>ufw default deny incoming
+ <!-- SEÇÃO 1: INSTALAÇÃO EM PRODUÇÃO -->
+ <div class="section-card" id="instalacao">
+ <div class="section-header">
+ <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
+ <span class="badge-tag">Tempo ~25 min (Instalacao Docker GPU ou Python 3.10)</span>
+ </div>
+ 
+ <div class="step-box">
+ <div class="step-top">
+ <span class="step-num">Passo 1</span>
+ <span class="step-heading">Hardening de Seguranca & Firewall (UFW)</span>
+ <a href="#ref-F01" class="cite-badge">[F01]</a>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Configurar acesso restrito ao servidor de inferencia de audio.</p>
+ <div class="analogia-box"> <strong>Entenda com uma analogia:</strong> Blindar as portas de entrada do estudio de gravacao.</div>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+ <pre><code>ufw default deny incoming
 ufw default allow outgoing
 ufw allow 22/tcp
 ufw allow 80/tcp
 ufw allow 443/tcp
 ufw --force enable</code></pre>
-          </div>
-          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Status do firewall ativo com portas 22, 80, 443 liberadas.</div>
-          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> ufw status retorna status: active.</div>
-        </div>
-        
-        <div class="step-box">
-          <div class="step-top">
-            <span class="step-num">Passo 2</span>
-            <span class="step-heading">Instalacao do Docker & NVIDIA Container Toolkit</span>
-            <a href="#ref-F02" class="cite-badge">[F02]</a>
-          </div>
-          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Habilitar aceleracao por GPU no ambiente de containers.</p>
-          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Engatar o motor turbo na maquina de processamento.</div>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
-            <pre><code>apt-get update && apt-get install -y docker.io docker-compose-v2 nvidia-container-toolkit
+ </div>
+ <div class="feedback-box"> <strong>O que você verá na tela:</strong> Status do firewall ativo com portas 22, 80, 443 liberadas.</div>
+ <div class="validacao-box"> <strong>Como saber se deu certo:</strong> ufw status retorna status: active.</div>
+ </div>
+ 
+ <div class="step-box">
+ <div class="step-top">
+ <span class="step-num">Passo 2</span>
+ <span class="step-heading">Instalacao do Docker & NVIDIA Container Toolkit</span>
+ <a href="#ref-F02" class="cite-badge">[F02]</a>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Habilitar aceleracao por GPU no ambiente de containers.</p>
+ <div class="analogia-box"> <strong>Entenda com uma analogia:</strong> Engatar o motor turbo na maquina de processamento.</div>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+ <pre><code>apt-get update && apt-get install -y docker.io docker-compose-v2 nvidia-container-toolkit
 systemctl restart docker</code></pre>
-          </div>
-          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> NVIDIA toolkit instalado e verificado via nvidia-smi.</div>
-          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> nvidia-smi exibe a GPU ativa sem erros de driver.</div>
-        </div>
-        
-        <div class="step-box">
-          <div class="step-top">
-            <span class="step-num">Passo 3</span>
-            <span class="step-heading">Deploy do Servidor XTTS-v2 em Docker</span>
-            <a href="#ref-F03" class="cite-badge">[F03]</a>
-          </div>
-          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Subir o container oficial com os modelos pre-treinados do XTTS-v2.</p>
-          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Ligar o mixer de audio profissional.</div>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
-            <pre><code>mkdir -p /opt/xtts/voices && cd /opt/xtts
+ </div>
+ <div class="feedback-box"> <strong>O que você verá na tela:</strong> NVIDIA toolkit instalado e verificado via nvidia-smi.</div>
+ <div class="validacao-box"> <strong>Como saber se deu certo:</strong> nvidia-smi exibe a GPU ativa sem erros de driver.</div>
+ </div>
+ 
+ <div class="step-box">
+ <div class="step-top">
+ <span class="step-num">Passo 3</span>
+ <span class="step-heading">Deploy do Servidor XTTS-v2 em Docker</span>
+ <a href="#ref-F03" class="cite-badge">[F03]</a>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Subir o container oficial com os modelos pre-treinados do XTTS-v2.</p>
+ <div class="analogia-box"> <strong>Entenda com uma analogia:</strong> Ligar o mixer de audio profissional.</div>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+ <pre><code>mkdir -p /opt/xtts/voices && cd /opt/xtts
 docker run -d --name xtts-server --gpus all -p 5002:5002 -v /opt/xtts/voices:/app/voices -v xtts_cache:/root/.local/share/tts --restart unless-stopped ghcr.io/coqui-ai/tts:latest --model_name tts_models/multilingual/multi-dataset/xtts_v2</code></pre>
-          </div>
-          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Download dos pesos do modelo XTTS-v2 (aprox. 1.8 GB) e inicializacao do servidor HTTP na porta 5002.</div>
-          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> curl http://localhost:5002/docs retorna a documentacao OpenAPI do FastAPI.</div>
-        </div>
-        
-        <div class="step-box">
-          <div class="step-top">
-            <span class="step-num">Passo 4</span>
-            <span class="step-heading">Configuracao de Reverse Proxy Nginx com SSL</span>
-            <a href="#ref-F04" class="cite-badge">[F04]</a>
-          </div>
-          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Criar terminacao segura HTTPS e streaming WebSocket.</p>
-          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Instalar o cabo de fibra otica isolado.</div>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
-            <pre><code>apt-get install -y nginx certbot python3-certbot-nginx
+ </div>
+ <div class="feedback-box"> <strong>O que você verá na tela:</strong> Download dos pesos do modelo XTTS-v2 (aprox. 1.8 GB) e inicializacao do servidor HTTP na porta 5002.</div>
+ <div class="validacao-box"> <strong>Como saber se deu certo:</strong> curl http://localhost:5002/docs retorna a documentacao OpenAPI do FastAPI.</div>
+ </div>
+ 
+ <div class="step-box">
+ <div class="step-top">
+ <span class="step-num">Passo 4</span>
+ <span class="step-heading">Configuracao de Reverse Proxy Nginx com SSL</span>
+ <a href="#ref-F04" class="cite-badge">[F04]</a>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Criar terminacao segura HTTPS e streaming WebSocket.</p>
+ <div class="analogia-box"> <strong>Entenda com uma analogia:</strong> Instalar o cabo de fibra otica isolado.</div>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+ <pre><code>apt-get install -y nginx certbot python3-certbot-nginx
 systemctl enable --now nginx</code></pre>
-          </div>
-          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Nginx configurado com proxy_pass para http://127.0.0.1:5002.</div>
-          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> certbot valida o dominio e ativa o certificado Let's Encrypt.</div>
-        </div>
-        
-  </div>
+ </div>
+ <div class="feedback-box"> <strong>O que você verá na tela:</strong> Nginx configurado com proxy_pass para http://127.0.0.1:5002.</div>
+ <div class="validacao-box"> <strong>Como saber se deu certo:</strong> certbot valida o dominio e ativa o certificado Let's Encrypt.</div>
+ </div>
+ 
+ </div>
 
-  <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
-  <div class="section-card" id="configuracao">
-    <div class="section-header">
-      <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
-    </div>
-    
-        <div style="margin-top: 16px;">
-          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/xtts/docker-compose.yml</strong>
-          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Docker compose com aceleracao de GPU NVIDIA e persistencia de vozes clonadas.</p>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
-            <pre><code>version: '3.8'
+ <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
+ <div class="section-card" id="configuracao">
+ <div class="section-header">
+ <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
+ </div>
+ 
+ <div style="margin-top: 16px;">
+ <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/opt/xtts/docker-compose.yml</strong>
+ <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Docker compose com aceleracao de GPU NVIDIA e persistencia de vozes clonadas.</p>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+ <pre><code>version: '3.8'
 services:
-  xtts:
-    image: ghcr.io/coqui-ai/tts:latest
-    container_name: xtts-server
-    restart: unless-stopped
-    ports:
-      - '5002:5002'
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=all
-      - COQUI_TOS_AGREED=1
-    volumes:
-      - ./voices:/app/voices
-      - xtts_models:/root/.local/share/tts
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+ xtts:
+ image: ghcr.io/coqui-ai/tts:latest
+ container_name: xtts-server
+ restart: unless-stopped
+ ports:
+ - '5002:5002'
+ environment:
+ - NVIDIA_VISIBLE_DEVICES=all
+ - COQUI_TOS_AGREED=1
+ volumes:
+ - ./voices:/app/voices
+ - xtts_models:/root/.local/share/tts
+ deploy:
+ resources:
+ reservations:
+ devices:
+ - driver: nvidia
+ count: all
+ capabilities: [gpu]
 volumes:
-  xtts_models:
-    driver: local</code></pre>
-          </div>
-        </div>
-        
-        <div style="margin-top: 16px;">
-          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/etc/nginx/sites-available/xtts.conf</strong>
-          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Reverse proxy para expor a API de sintese e WebSocket com timeout estendido.</p>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
-            <pre><code>server {
-  listen 80;
-  server_name voz.suaempresa.com;
-  location / {
-    proxy_pass http://127.0.0.1:5002;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection 'upgrade';
-    proxy_set_header Host $host;
-    proxy_read_timeout 300s;
-  }
+ xtts_models:
+ driver: local</code></pre>
+ </div>
+ </div>
+ 
+ <div style="margin-top: 16px;">
+ <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/etc/nginx/sites-available/xtts.conf</strong>
+ <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Reverse proxy para expor a API de sintese e WebSocket com timeout estendido.</p>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+ <pre><code>server {
+ listen 80;
+ server_name voz.suaempresa.com;
+ location / {
+ proxy_pass http://127.0.0.1:5002;
+ proxy_http_version 1.1;
+ proxy_set_header Upgrade $http_upgrade;
+ proxy_set_header Connection 'upgrade';
+ proxy_set_header Host $host;
+ proxy_read_timeout 300s;
+ }
 }</code></pre>
-          </div>
-        </div>
-        
-  </div>
+ </div>
+ </div>
+ 
+ </div>
 
-  <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
-  <div class="section-card" id="primeiro-voo">
-    <div class="section-header">
-      <h2 class="section-title">Parte II: Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)</h2>
-      <span class="badge-tag" style="background:var(--green-soft); color:var(--green-dark);">Prática Imediata</span>
-    </div>
-    <p style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
-      Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
-    </p>
-    
-        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
-          <strong style="color: var(--accent-dark);">Passo 1: Acessar Documentacao OpenAPI:</strong> Abra http://SEU-IP:5002/docs no navegador.
-          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Swagger UI com todos os endpoints de sintese, clonagem e streaming.</div>
-        </div>
-        
-        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
-          <strong style="color: var(--accent-dark);">Passo 2: Upload da Voz de Referencia:</strong> Envie um arquivo amostra.wav de 5 segundos via POST /api/speakers.
-          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> ID da voz gerado com sucesso e latents persistidos.</div>
-        </div>
-        
-        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
-          <strong style="color: var(--accent-dark);">Passo 3: Sintese de Teste em Portugues:</strong> Envie chamada cURL para sintetizar texto com a voz clonada.
-          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Arquivo audio_saida.wav gerado com a voz identica ao audio de amostra.</div>
-        </div>
-        
-  </div>
+ <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
+ <div class="section-card" id="primeiro-voo">
+ <div class="section-header">
+ <h2 class="section-title">Parte II: Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)</h2>
+ <span class="badge-tag" style="background:var(--green-soft); color:var(--green-dark);">Prática Imediata</span>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
+ Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
+ </p>
+ 
+ <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+ <strong style="color: var(--accent-dark);">Passo 1: Acessar Documentacao OpenAPI:</strong> Abra http://SEU-IP:5002/docs no navegador.
+ <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);"> <strong>Resultado Esperado:</strong> Swagger UI com todos os endpoints de sintese, clonagem e streaming.</div>
+ </div>
+ 
+ <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+ <strong style="color: var(--accent-dark);">Passo 2: Upload da Voz de Referencia:</strong> Envie um arquivo amostra.wav de 5 segundos via POST /api/speakers.
+ <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);"> <strong>Resultado Esperado:</strong> ID da voz gerado com sucesso e latents persistidos.</div>
+ </div>
+ 
+ <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+ <strong style="color: var(--accent-dark);">Passo 3: Sintese de Teste em Portugues:</strong> Envie chamada cURL para sintetizar texto com a voz clonada.
+ <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);"> <strong>Resultado Esperado:</strong> Arquivo audio_saida.wav gerado com a voz identica ao audio de amostra.</div>
+ </div>
+ 
+ </div>
 
-  <!-- SEÇÃO 4: MANUAL DE USO CLI -->
-  <div class="section-card" id="manual-cli">
-    <div class="section-header">
-      <h2 class="section-title">Dicionário Completo de Comandos (CLI)</h2>
-    </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Comando / Opção</th>
-          <th>O que faz (em português claro)</th>
-          <th>Exemplo de Execução</th>
-          <th>Fonte</th>
-        </tr>
-      </thead>
-      <tbody>
-        
-        <tr>
-          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose ps</code></td>
-          <td>Ver status do servidor XTTS.</td>
-          <td><code>docker compose ps</code></td>
-          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
-        </tr>
-        
-        <tr>
-          <td><code style="font-weight:700; color:var(--accent-dark);">docker compose logs -f xtts</code></td>
-          <td>Ver logs em tempo real do XTTS.</td>
-          <td><code>docker compose logs -f xtts --tail=50</code></td>
-          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
-        </tr>
-        
-        <tr>
-          <td><code style="font-weight:700; color:var(--accent-dark);">nvidia-smi</code></td>
-          <td>Monitorar uso de VRAM da GPU.</td>
-          <td><code>nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv</code></td>
-          <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
-        </tr>
-        
-      </tbody>
-    </table>
-  </div>
+ <!-- SEÇÃO 4: MANUAL DE USO CLI -->
+ <div class="section-card" id="manual-cli">
+ <div class="section-header">
+ <h2 class="section-title">Dicionário Completo de Comandos (CLI)</h2>
+ </div>
+ <table class="data-table">
+ <thead>
+ <tr>
+ <th>Comando / Opção</th>
+ <th>O que faz (em português claro)</th>
+ <th>Exemplo de Execução</th>
+ <th>Fonte</th>
+ </tr>
+ </thead>
+ <tbody>
+ 
+ <tr>
+ <td><code style="font-weight:700; color:var(--accent-dark);">docker compose ps</code></td>
+ <td>Ver status do servidor XTTS.</td>
+ <td><code>docker compose ps</code></td>
+ <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+ </tr>
+ 
+ <tr>
+ <td><code style="font-weight:700; color:var(--accent-dark);">docker compose logs -f xtts</code></td>
+ <td>Ver logs em tempo real do XTTS.</td>
+ <td><code>docker compose logs -f xtts --tail=50</code></td>
+ <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+ </tr>
+ 
+ <tr>
+ <td><code style="font-weight:700; color:var(--accent-dark);">nvidia-smi</code></td>
+ <td>Monitorar uso de VRAM da GPU.</td>
+ <td><code>nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv</code></td>
+ <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
+ </tr>
+ 
+ </tbody>
+ </table>
+ </div>
 
-  <!-- SEÇÃO 5: REFERÊNCIA DE API REST -->
-  <div class="section-card" id="manual-api">
-    <div class="section-header">
-      <h2 class="section-title">Endpoints de API REST &amp; Conexão com Agentes (MCP)</h2>
-    </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Método</th>
-          <th>Rota</th>
-          <th>Finalidade</th>
-          <th>Payload / Resposta</th>
-          <th>Fonte</th>
-        </tr>
-      </thead>
-      <tbody>
-        
-        <tr>
-          <td><span class="step-num" style="background:#059669;">POST</span></td>
-          <td><code>/api/tts</code></td>
-          <td>Sintetiza texto em audio com voz clonada.</td>
-          <td><pre style="font-size:11px; margin:0;">POST /api/tts -d '{"text": "Voz soberana", "language": "pt", "speaker_wav": "amostra.wav"}'</pre></td>
-          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
-        </tr>
-        
-        <tr>
-          <td><span class="step-num" style="background:#059669;">GET</span></td>
-          <td><code>/api/speakers</code></td>
-          <td>Lista vozes cadastradas no servidor.</td>
-          <td><pre style="font-size:11px; margin:0;">GET /api/speakers</pre></td>
-          <td><a href="#ref-F05" class="cite-badge">[F05]</a></td>
-        </tr>
-        
-        <tr>
-          <td><span class="step-num" style="background:#059669;">GET</span></td>
-          <td><code>/api/languages</code></td>
-          <td>Retorna os 17 idiomas suportados.</td>
-          <td><pre style="font-size:11px; margin:0;">GET /api/languages</pre></td>
-          <td><a href="#ref-F05" class="cite-badge">[F05]</a></td>
-        </tr>
-        
-      </tbody>
-    </table>
-  </div>
+ <!-- SEÇÃO 5: REFERÊNCIA DE API REST -->
+ <div class="section-card" id="manual-api">
+ <div class="section-header">
+ <h2 class="section-title">Endpoints de API REST &amp; Conexão com Agentes (MCP)</h2>
+ </div>
+ <table class="data-table">
+ <thead>
+ <tr>
+ <th>Método</th>
+ <th>Rota</th>
+ <th>Finalidade</th>
+ <th>Payload / Resposta</th>
+ <th>Fonte</th>
+ </tr>
+ </thead>
+ <tbody>
+ 
+ <tr>
+ <td><span class="step-num" style="background:#059669;">POST</span></td>
+ <td><code>/api/tts</code></td>
+ <td>Sintetiza texto em audio com voz clonada.</td>
+ <td><pre style="font-size:11px; margin:0;">POST /api/tts -d '{"text": "Voz soberana", "language": "pt", "speaker_wav": "amostra.wav"}'</pre></td>
+ <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+ </tr>
+ 
+ <tr>
+ <td><span class="step-num" style="background:#059669;">GET</span></td>
+ <td><code>/api/speakers</code></td>
+ <td>Lista vozes cadastradas no servidor.</td>
+ <td><pre style="font-size:11px; margin:0;">GET /api/speakers</pre></td>
+ <td><a href="#ref-F05" class="cite-badge">[F05]</a></td>
+ </tr>
+ 
+ <tr>
+ <td><span class="step-num" style="background:#059669;">GET</span></td>
+ <td><code>/api/languages</code></td>
+ <td>Retorna os 17 idiomas suportados.</td>
+ <td><pre style="font-size:11px; margin:0;">GET /api/languages</pre></td>
+ <td><a href="#ref-F05" class="cite-badge">[F05]</a></td>
+ </tr>
+ 
+ </tbody>
+ </table>
+ </div>
 
-  <!-- SEÇÃO 6: TROUBLESHOOTING -->
-  <div class="section-card" id="troubleshooting">
-    <div class="section-header">
-      <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
-    </div>
-    
-        <div class="trouble-card">
-          <div class="trouble-symptom">⚠️ Sintoma: CUDA out of memory (OOM)</div>
-          <div class="trouble-cause">Causa Provável: Lotes de texto excessivamente longos sintetizados simultaneamente.</div>
-          <div>Solução Prática: <code class="trouble-fix">Dividir o texto em sentencas de ate 250 caracteres antes de enviar ao endpoint de inferencia.</code></div>
-        </div>
-        
-        <div class="trouble-card">
-          <div class="trouble-symptom">⚠️ Sintoma: Voz clonada soando robotica ou com eco</div>
-          <div class="trouble-cause">Causa Provável: Audio de referencia com ruido de fundo, reverberacao ou musica.</div>
-          <div>Solução Prática: <code class="trouble-fix">Usar audio WAV limpo a 24kHz/44.1kHz sem ruidos e normalizado a -16 LUFS.</code></div>
-        </div>
-        
-  </div>
+ <!-- SEÇÃO 6: TROUBLESHOOTING -->
+ <div class="section-card" id="troubleshooting">
+ <div class="section-header">
+ <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
+ </div>
+ 
+ <div class="trouble-card">
+ <div class="trouble-symptom"> Sintoma: CUDA out of memory (OOM)</div>
+ <div class="trouble-cause">Causa Provável: Lotes de texto excessivamente longos sintetizados simultaneamente.</div>
+ <div>Solução Prática: <code class="trouble-fix">Dividir o texto em sentencas de ate 250 caracteres antes de enviar ao endpoint de inferencia.</code></div>
+ </div>
+ 
+ <div class="trouble-card">
+ <div class="trouble-symptom"> Sintoma: Voz clonada soando robotica ou com eco</div>
+ <div class="trouble-cause">Causa Provável: Audio de referencia com ruido de fundo, reverberacao ou musica.</div>
+ <div>Solução Prática: <code class="trouble-fix">Usar audio WAV limpo a 24kHz/44.1kHz sem ruidos e normalizado a -16 LUFS.</code></div>
+ </div>
+ 
+ </div>
 
-  <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
-  <div class="section-card" id="desinstalacao">
-    <div class="section-header">
-      <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
-      <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
-    </div>
-    
-        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
-          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
-          <p style="margin:0; font-size:13.5px; color:#1E293B;">A desinstalacao remove exclusivamente as chaves de API do ElevenLabs, scripts legados de download em nuvem e bibliotecas proprietarias, mantendo a VPS limpa e o servidor local XTTS totalmente isolado sem consumo residual de GPU.</p>
-        </div>
-        
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-num" style="background:#0284C7;">Passo 1</span>
-                <span class="step-title">Auditoria de Credenciais e Codigo ElevenLabs</span>
-              </div>
-              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Localizar todas as chamadas a api.elevenlabs.io e tokens nos arquivos .env.</p>
-              <div class="code-box">
-                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-                <pre><code>grep -r 'elevenlabs\|ELEVENLABS' . --include='*.py' --include='*.js' --include='*.env*'</code></pre>
-              </div>
-              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Apenas audite as ocorrencias antes de remover qualquer arquivo.</div>
-              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>Listar todos os arquivos com dependencias ativas de ElevenLabs</code></div>
-            </div>
-            
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-num" style="background:#0284C7;">Passo 2</span>
-                <span class="step-title">Backup de Amostras de Vozes em Disco Local</span>
-              </div>
-              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Exportar e salvar as amostras de audio WAV dos locutores da empresa na VPS.</p>
-              <div class="code-box">
-                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-                <pre><code>mkdir -p /opt/xtts/backups && cp /opt/xtts/voices/*.wav /opt/xtts/backups/</code></pre>
-              </div>
-              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Mantenha as amostras de audio originais guardadas em armazenamento seguro.</div>
-              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>Verificar se as amostras WAV estao preservadas em /opt/xtts/backups</code></div>
-            </div>
-            
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-num" style="background:#0284C7;">Passo 3</span>
-                <span class="step-title">Redirecionamento de Chamadas de TTS para a API Local</span>
-              </div>
-              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Apontar o endpoint de sintese da aplicacao para http://127.0.0.1:5002/api/tts.</p>
-              <div class="code-box">
-                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-                <pre><code># Substituir baseUrl no cliente HTTP: baseUrl = 'https://voz.suaempresa.com/api/tts'</code></pre>
-              </div>
-              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Valide a geracao de audio local antes de revogar o token da nuvem.</div>
-              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>cURL no endpoint local respondendo com status HTTP 200 e gerando o audio WAV</code></div>
-            </div>
-            
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-num" style="background:#0284C7;">Passo 4</span>
-                <span class="step-title">Remocao de Chaves de API do ElevenLabs do Ambiente</span>
-              </div>
-              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Deletar as variaveis ELEVENLABS_API_KEY do arquivo .env.</p>
-              <div class="code-box">
-                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-                <pre><code>unset ELEVENLABS_API_KEY && grep -v ELEVENLABS .env > .env.new && mv .env.new .env</code></pre>
-              </div>
-              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Garante que nenhuma requisicao sera enviada para os servidores da ElevenLabs.</div>
-              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>grep ELEVENLABS .env nao retorna nenhuma linha</code></div>
-            </div>
-            
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-num" style="background:#0284C7;">Passo 5</span>
-                <span class="step-title">Cancelamento de Assinatura & Shutdown de Faturamento</span>
-              </div>
-              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Cancelar o plano pago no dashboard do ElevenLabs para zerar custos de cartao.</p>
-              <div class="code-box">
-                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-                <pre><code># Acessar elevenlabs.io > Subscription > Cancel Subscription</code></pre>
-              </div>
-              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Confirme que todos os projetos em producao estao atendidos pelo XTTS local.</div>
-              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>Conta no ElevenLabs revertida para o plano Free sem cobrancas recorrentes</code></div>
-            </div>
-            
-        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
-          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
-          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
-            <li style='margin-bottom:6px;'><code>docker compose ps # Confirma que xtts-server esta 'Up'</code></li><li style='margin-bottom:6px;'><code>nvidia-smi # Verifica consumo de VRAM e temperatura da GPU dentro dos limites seguros</code></li><li style='margin-bottom:6px;'><code>curl -s http://localhost:5002/docs # Valida que a documentacao OpenAPI esta respondendo</code></li><li style='margin-bottom:6px;'><code>df -h /opt/xtts # Certifica que o disco SSD possui espaco livre para cache de audio</code></li><li style='margin-bottom:6px;'><code>ufw status # Garante que apenas as portas autorizadas estao abertas</code></li>
-          </ul>
-        </div>
-        
-  </div>
+ <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
+ <div class="section-card" id="desinstalacao">
+ <div class="section-header">
+ <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
+ <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
+ </div>
+ 
+ <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
+ <h4 style="margin:0 0 6px 0; color:#1A446C;"> Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
+ <p style="margin:0; font-size:13.5px; color:#1E293B;">A desinstalacao remove exclusivamente as chaves de API do ElevenLabs, scripts legados de download em nuvem e bibliotecas proprietarias, mantendo a VPS limpa e o servidor local XTTS totalmente isolado sem consumo residual de GPU.</p>
+ </div>
+ 
+ <div class="step-card">
+ <div class="step-header">
+ <span class="step-num" style="background:#0284C7;">Passo 1</span>
+ <span class="step-title">Auditoria de Credenciais e Codigo ElevenLabs</span>
+ </div>
+ <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Localizar todas as chamadas a api.elevenlabs.io e tokens nos arquivos .env.</p>
+ <div class="code-box">
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ <pre><code>grep -r 'elevenlabs\|ELEVENLABS' . --include='*.py' --include='*.js' --include='*.env*'</code></pre>
+ </div>
+ <div style="font-size:12px; margin-top:8px; color:#B45309;"> <strong>Alerta de Segurança:</strong> Apenas audite as ocorrencias antes de remover qualquer arquivo.</div>
+ <div style="font-size:12px; margin-top:4px; color:#047857;"> <strong>Como Validar:</strong> <code>Listar todos os arquivos com dependencias ativas de ElevenLabs</code></div>
+ </div>
+ 
+ <div class="step-card">
+ <div class="step-header">
+ <span class="step-num" style="background:#0284C7;">Passo 2</span>
+ <span class="step-title">Backup de Amostras de Vozes em Disco Local</span>
+ </div>
+ <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Exportar e salvar as amostras de audio WAV dos locutores da empresa na VPS.</p>
+ <div class="code-box">
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ <pre><code>mkdir -p /opt/xtts/backups && cp /opt/xtts/voices/*.wav /opt/xtts/backups/</code></pre>
+ </div>
+ <div style="font-size:12px; margin-top:8px; color:#B45309;"> <strong>Alerta de Segurança:</strong> Mantenha as amostras de audio originais guardadas em armazenamento seguro.</div>
+ <div style="font-size:12px; margin-top:4px; color:#047857;"> <strong>Como Validar:</strong> <code>Verificar se as amostras WAV estao preservadas em /opt/xtts/backups</code></div>
+ </div>
+ 
+ <div class="step-card">
+ <div class="step-header">
+ <span class="step-num" style="background:#0284C7;">Passo 3</span>
+ <span class="step-title">Redirecionamento de Chamadas de TTS para a API Local</span>
+ </div>
+ <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Apontar o endpoint de sintese da aplicacao para http://127.0.0.1:5002/api/tts.</p>
+ <div class="code-box">
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ <pre><code># Substituir baseUrl no cliente HTTP: baseUrl = 'https://voz.suaempresa.com/api/tts'</code></pre>
+ </div>
+ <div style="font-size:12px; margin-top:8px; color:#B45309;"> <strong>Alerta de Segurança:</strong> Valide a geracao de audio local antes de revogar o token da nuvem.</div>
+ <div style="font-size:12px; margin-top:4px; color:#047857;"> <strong>Como Validar:</strong> <code>cURL no endpoint local respondendo com status HTTP 200 e gerando o audio WAV</code></div>
+ </div>
+ 
+ <div class="step-card">
+ <div class="step-header">
+ <span class="step-num" style="background:#0284C7;">Passo 4</span>
+ <span class="step-title">Remocao de Chaves de API do ElevenLabs do Ambiente</span>
+ </div>
+ <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Deletar as variaveis ELEVENLABS_API_KEY do arquivo .env.</p>
+ <div class="code-box">
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ <pre><code>unset ELEVENLABS_API_KEY && grep -v ELEVENLABS .env > .env.new && mv .env.new .env</code></pre>
+ </div>
+ <div style="font-size:12px; margin-top:8px; color:#B45309;"> <strong>Alerta de Segurança:</strong> Garante que nenhuma requisicao sera enviada para os servidores da ElevenLabs.</div>
+ <div style="font-size:12px; margin-top:4px; color:#047857;"> <strong>Como Validar:</strong> <code>grep ELEVENLABS .env nao retorna nenhuma linha</code></div>
+ </div>
+ 
+ <div class="step-card">
+ <div class="step-header">
+ <span class="step-num" style="background:#0284C7;">Passo 5</span>
+ <span class="step-title">Cancelamento de Assinatura & Shutdown de Faturamento</span>
+ </div>
+ <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Cancelar o plano pago no dashboard do ElevenLabs para zerar custos de cartao.</p>
+ <div class="code-box">
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ <pre><code># Acessar elevenlabs.io > Subscription > Cancel Subscription</code></pre>
+ </div>
+ <div style="font-size:12px; margin-top:8px; color:#B45309;"> <strong>Alerta de Segurança:</strong> Confirme que todos os projetos em producao estao atendidos pelo XTTS local.</div>
+ <div style="font-size:12px; margin-top:4px; color:#047857;"> <strong>Como Validar:</strong> <code>Conta no ElevenLabs revertida para o plano Free sem cobrancas recorrentes</code></div>
+ </div>
+ 
+ <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
+ <h4 style="margin:0 0 8px 0; color:#065F46;"> Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
+ <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
+ <li style='margin-bottom:6px;'><code>docker compose ps # Confirma que xtts-server esta 'Up'</code></li><li style='margin-bottom:6px;'><code>nvidia-smi # Verifica consumo de VRAM e temperatura da GPU dentro dos limites seguros</code></li><li style='margin-bottom:6px;'><code>curl -s http://localhost:5002/docs # Valida que a documentacao OpenAPI esta respondendo</code></li><li style='margin-bottom:6px;'><code>df -h /opt/xtts # Certifica que o disco SSD possui espaco livre para cache de audio</code></li><li style='margin-bottom:6px;'><code>ufw status # Garante que apenas as portas autorizadas estao abertas</code></li>
+ </ul>
+ </div>
+ 
+ </div>
 
-  <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
-  <div class="section-card" id="bibliografia">
-    <div class="section-header">
-      <h2 class="section-title">Parte III: Fontes Citadas &amp; Referência Bibliográfica Auditada</h2>
-      <span class="badge-tag" style="background:var(--green-soft); color:var(--green);">100% Verificadas</span>
-    </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Categoria</th>
-          <th>Título da Obra / Documento</th>
-          <th>Autor / Mantenedor</th>
-          <th>Link Oficial</th>
-        </tr>
-      </thead>
-      <tbody>
-        
-        <tr id="ref-F01">
-          <td><strong style="color:var(--accent);">F01</strong></td>
-          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentacao Oficial</span></td>
-          <td><strong>Repositorio Oficial Coqui TTS no GitHub</strong></td>
-          <td>Coqui AI Core Team</td>
-          <td><a href="https://github.com/coqui-ai/TTS" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
-        </tr>
-        
-        <tr id="ref-F02">
-          <td><strong style="color:var(--accent);">F02</strong></td>
-          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentacao Oficial</span></td>
-          <td><strong>Documentacao da Hugging Face do Modelo XTTS-v2</strong></td>
-          <td>Hugging Face</td>
-          <td><a href="https://huggingface.co/coqui/XTTS-v2" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
-        </tr>
-        
-        <tr id="ref-F03">
-          <td><strong style="color:var(--accent);">F03</strong></td>
-          <td><span class="badge-tag" style="margin:0; font-size:10px;">Framework</span></td>
-          <td><strong>Guia Oficial de Instalacao Docker & NVIDIA Container Toolkit</strong></td>
-          <td>NVIDIA Corporation</td>
-          <td><a href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
-        </tr>
-        
-        <tr id="ref-F04">
-          <td><strong style="color:var(--accent);">F04</strong></td>
-          <td><span class="badge-tag" style="margin:0; font-size:10px;">Framework</span></td>
-          <td><strong>Especificacao de API de Inferencia XTTS FastAPI</strong></td>
-          <td>Coqui Community</td>
-          <td><a href="https://github.com/coqui-ai/TTS/wiki/FastAPI-Server" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
-        </tr>
-        
-        <tr id="ref-F05">
-          <td><strong style="color:var(--accent);">F05</strong></td>
-          <td><span class="badge-tag" style="margin:0; font-size:10px;">Artigo Cientifico</span></td>
-          <td><strong>XTTS: A Massively Multilingual Voice Cloning Model</strong></td>
-          <td>Eren Gölge et al.</td>
-          <td><a href="https://arxiv.org/abs/2406.04904" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
-        </tr>
-        
-      </tbody>
-    </table>
-  </div>
+ <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
+ <div class="section-card" id="bibliografia">
+ <div class="section-header">
+ <h2 class="section-title">Parte III: Fontes Citadas &amp; Referência Bibliográfica Auditada</h2>
+ <span class="badge-tag" style="background:var(--green-soft); color:var(--green);">100% Verificadas</span>
+ </div>
+ <table class="data-table">
+ <thead>
+ <tr>
+ <th>ID</th>
+ <th>Categoria</th>
+ <th>Título da Obra / Documento</th>
+ <th>Autor / Mantenedor</th>
+ <th>Link Oficial</th>
+ </tr>
+ </thead>
+ <tbody>
+ 
+ <tr id="ref-F01">
+ <td><strong style="color:var(--accent);">F01</strong></td>
+ <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentacao Oficial</span></td>
+ <td><strong>Repositorio Oficial Coqui TTS no GitHub</strong></td>
+ <td>Coqui AI Core Team</td>
+ <td><a href="https://github.com/coqui-ai/TTS" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+ </tr>
+ 
+ <tr id="ref-F02">
+ <td><strong style="color:var(--accent);">F02</strong></td>
+ <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentacao Oficial</span></td>
+ <td><strong>Documentacao da Hugging Face do Modelo XTTS-v2</strong></td>
+ <td>Hugging Face</td>
+ <td><a href="https://huggingface.co/coqui/XTTS-v2" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+ </tr>
+ 
+ <tr id="ref-F03">
+ <td><strong style="color:var(--accent);">F03</strong></td>
+ <td><span class="badge-tag" style="margin:0; font-size:10px;">Framework</span></td>
+ <td><strong>Guia Oficial de Instalacao Docker & NVIDIA Container Toolkit</strong></td>
+ <td>NVIDIA Corporation</td>
+ <td><a href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+ </tr>
+ 
+ <tr id="ref-F04">
+ <td><strong style="color:var(--accent);">F04</strong></td>
+ <td><span class="badge-tag" style="margin:0; font-size:10px;">Framework</span></td>
+ <td><strong>Especificacao de API de Inferencia XTTS FastAPI</strong></td>
+ <td>Coqui Community</td>
+ <td><a href="https://github.com/coqui-ai/TTS/wiki/FastAPI-Server" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+ </tr>
+ 
+ <tr id="ref-F05">
+ <td><strong style="color:var(--accent);">F05</strong></td>
+ <td><span class="badge-tag" style="margin:0; font-size:10px;">Artigo Cientifico</span></td>
+ <td><strong>XTTS: A Massively Multilingual Voice Cloning Model</strong></td>
+ <td>Eren Gölge et al.</td>
+ <td><a href="https://arxiv.org/abs/2406.04904" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+ </tr>
+ 
+ </tbody>
+ </table>
+ </div>
 
 </div>
 
 <script>
 function copyCode(btn) {
-  const pre = btn.parentElement.querySelector('pre');
-  if (!pre) return;
-  navigator.clipboard.writeText(pre.innerText).then(() => {
-    const original = btn.innerText;
-    btn.innerText = 'Copiado!';
-    setTimeout(() => { btn.innerText = original; }, 2000);
-  });
+ const pre = btn.parentElement.querySelector('pre');
+ if (!pre) return;
+ navigator.clipboard.writeText(pre.innerText).then(() => {
+ const original = btn.innerText;
+ btn.innerText = 'Copiado!';
+ setTimeout(() => { btn.innerText = original; }, 2000);
+ });
 }
 </script>
 

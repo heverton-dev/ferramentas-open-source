@@ -1,535 +1,535 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Trilha Cronológica de Aprendizado: WAHA (WhatsApp HTTP API Gateway)</title>
-  <style>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Trilha Cronológica de Aprendizado: WAHA (WhatsApp HTTP API Gateway)</title>
+ <style>
 
-  :root {
-    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
-    --paper: #F8FAFC;
-    --surface: #FFFFFF;
-    --ink: #0F172A;
-    --ink-2: #334155;
-    --muted: #64748B;
-    --rule: #CBD5E1;
-    --rule-soft: #E2E8F0;
-    --accent: #0284C7;
-    --accent-dark: #0369A1;
-    --accent-soft: #E0F2FE;
-    --green: #10B981;
-    --green-dark: #065F46;
-    --green-soft: #D1FAE5;
-    --gold: #F59E0B;
-    --gold-soft: #FEF3C7;
-  }
+ :root {
+ --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+ --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+ --paper: #F8FAFC;
+ --surface: #FFFFFF;
+ --ink: #0F172A;
+ --ink-2: #334155;
+ --muted: #64748B;
+ --rule: #CBD5E1;
+ --rule-soft: #E2E8F0;
+ --accent: #0284C7;
+ --accent-dark: #0369A1;
+ --accent-soft: #E0F2FE;
+ --green: #10B981;
+ --green-dark: #065F46;
+ --green-soft: #D1FAE5;
+ --gold: #F59E0B;
+ --gold-soft: #FEF3C7;
+ }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: var(--font-sans);
-    background: var(--paper);
-    color: var(--ink);
-    line-height: 1.6;
-    padding: 24px 16px 60px;
-  }
-  .container { max-width: 980px; margin: 0 auto; }
-  .header-card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 32px;
-    margin-bottom: 32px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
-  .badge-tag {
-    display: inline-block;
-    padding: 4px 10px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: 4px;
-    background: var(--accent-soft);
-    color: var(--accent-dark);
-    margin-bottom: 12px;
-  }
-  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
-  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+ * { box-sizing: border-box; margin: 0; padding: 0; }
+ body {
+ font-family: var(--font-sans);
+ background: var(--paper);
+ color: var(--ink);
+ line-height: 1.6;
+ padding: 24px 16px 60px;
+ }
+ .container { max-width: 980px; margin: 0 auto; }
+ .header-card {
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ border-radius: 8px;
+ padding: 32px;
+ margin-bottom: 32px;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+ }
+ .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+ .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+ .badge-tag {
+ display: inline-block;
+ padding: 4px 10px;
+ font-size: 12px;
+ font-weight: 700;
+ text-transform: uppercase;
+ letter-spacing: 0.05em;
+ border-radius: 4px;
+ background: var(--accent-soft);
+ color: var(--accent-dark);
+ margin-bottom: 12px;
+ }
+ h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+ .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
 
-  .hero-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    background: var(--paper);
-    padding: 16px;
-    border-radius: 6px;
-    border: 1px solid var(--rule-soft);
-  }
-  .stat-item { display: flex; flex-direction: column; }
-  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
-  .stat-val { font-size: 15px; font-weight: 800; color: var(--ink); }
+ .hero-stats {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+ gap: 12px;
+ background: var(--paper);
+ padding: 16px;
+ border-radius: 6px;
+ border: 1px solid var(--rule-soft);
+ }
+ .stat-item { display: flex; flex-direction: column; }
+ .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+ .stat-val { font-size: 15px; font-weight: 800; color: var(--ink); }
 
-  /* TIMELINE */
-  .timeline {
-    position: relative;
-    padding-left: 32px;
-  }
-  .timeline::before {
-    content: "";
-    position: absolute;
-    top: 10px;
-    bottom: 20px;
-    left: 11px;
-    width: 2px;
-    background: var(--rule);
-  }
-  .timeline-node {
-    position: relative;
-    margin-bottom: 36px;
-  }
-  .timeline-marker {
-    position: absolute;
-    left: -32px;
-    top: 0;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: #FFF;
-    font-size: 12px;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 0 4px var(--paper);
-  }
-  .phase-card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .phase-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 8px;
-    border-bottom: 1px solid var(--rule-soft);
-    padding-bottom: 8px;
-  }
-  .phase-title { font-size: 18px; font-weight: 800; color: var(--ink); }
-  .phase-time { font-size: 12px; font-weight: 700; color: var(--accent-dark); background: var(--accent-soft); padding: 2px 8px; border-radius: 4px; }
-  .phase-goal { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
+ /* TIMELINE */
+ .timeline {
+ position: relative;
+ padding-left: 32px;
+ }
+ .timeline::before {
+ content: "";
+ position: absolute;
+ top: 10px;
+ bottom: 20px;
+ left: 11px;
+ width: 2px;
+ background: var(--rule);
+ }
+ .timeline-node {
+ position: relative;
+ margin-bottom: 36px;
+ }
+ .timeline-marker {
+ position: absolute;
+ left: -32px;
+ top: 0;
+ width: 24px;
+ height: 24px;
+ border-radius: 50%;
+ background: var(--accent);
+ color: #FFF;
+ font-size: 12px;
+ font-weight: 800;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ box-shadow: 0 0 0 4px var(--paper);
+ }
+ .phase-card {
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ border-radius: 8px;
+ padding: 24px;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+ }
+ .phase-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: baseline;
+ margin-bottom: 8px;
+ border-bottom: 1px solid var(--rule-soft);
+ padding-bottom: 8px;
+ }
+ .phase-title { font-size: 18px; font-weight: 800; color: var(--ink); }
+ .phase-time { font-size: 12px; font-weight: 700; color: var(--accent-dark); background: var(--accent-soft); padding: 2px 8px; border-radius: 4px; }
+ .phase-goal { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
 
-  .resource-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 14px 16px;
-    background: var(--paper);
-    border: 1px solid var(--rule-soft);
-    border-radius: 6px;
-    margin-bottom: 12px;
-    transition: background 0.2s;
-  }
-  .resource-item:hover { background: #F1F5F9; }
-  .chk-item {
-    margin-top: 4px;
-    cursor: pointer;
-    width: 17px;
-    height: 17px;
-    accent-color: var(--green);
-  }
-  .resource-content { flex: 1; }
-  .resource-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--ink);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .resource-title a { color: var(--ink); text-decoration: none; }
-  .resource-title a:hover { color: var(--accent); }
-  .resource-badge {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 3px;
-    background: var(--rule-soft);
-    color: var(--ink-2);
-  }
-  .lang-badge-br { background: #DCFCE7; color: #166534; font-weight: 800; }
-  .lang-badge-en { background: #EFF6FF; color: #1E40AF; font-weight: 800; }
+ .resource-item {
+ display: flex;
+ align-items: flex-start;
+ gap: 12px;
+ padding: 14px 16px;
+ background: var(--paper);
+ border: 1px solid var(--rule-soft);
+ border-radius: 6px;
+ margin-bottom: 12px;
+ transition: background 0.2s;
+ }
+ .resource-item:hover { background: #F1F5F9; }
+ .chk-item {
+ margin-top: 4px;
+ cursor: pointer;
+ width: 17px;
+ height: 17px;
+ accent-color: var(--green);
+ }
+ .resource-content { flex: 1; }
+ .resource-title {
+ font-size: 14px;
+ font-weight: 700;
+ color: var(--ink);
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ flex-wrap: wrap;
+ }
+ .resource-title a { color: var(--ink); text-decoration: none; }
+ .resource-title a:hover { color: var(--accent); }
+ .resource-badge {
+ font-size: 10px;
+ font-weight: 700;
+ padding: 2px 6px;
+ border-radius: 3px;
+ background: var(--rule-soft);
+ color: var(--ink-2);
+ }
+ .lang-badge-br { background: #DCFCE7; color: #166534; font-weight: 800; }
+ .lang-badge-en { background: #EFF6FF; color: #1E40AF; font-weight: 800; }
 
-  .resource-takeaway {
-    font-size: 13px;
-    color: var(--ink-2);
-    margin-top: 5px;
-  }
-  .resource-dica-ptbr {
-    font-size: 12px;
-    color: #92400E;
-    background: #FEF3C7;
-    padding: 4px 8px;
-    border-radius: 4px;
-    margin-top: 6px;
-    display: inline-block;
-  }
-  .resource-meta {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 6px;
-    display: flex;
-    gap: 12px;
-  }
-  .btn-link {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--accent-dark);
-    text-decoration: none;
-  }
-  .btn-link:hover { text-decoration: underline; }
+ .resource-takeaway {
+ font-size: 13px;
+ color: var(--ink-2);
+ margin-top: 5px;
+ }
+ .resource-dica-ptbr {
+ font-size: 12px;
+ color: #92400E;
+ background: #FEF3C7;
+ padding: 4px 8px;
+ border-radius: 4px;
+ margin-top: 6px;
+ display: inline-block;
+ }
+ .resource-meta {
+ font-size: 12px;
+ color: var(--muted);
+ margin-top: 6px;
+ display: flex;
+ gap: 12px;
+ }
+ .btn-link {
+ font-size: 12px;
+ font-weight: 700;
+ color: var(--accent-dark);
+ text-decoration: none;
+ }
+ .btn-link:hover { text-decoration: underline; }
 
-  </style>
+ </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- CABEÇALHO -->
-  <div class="header-card">
-    <div class="breadcrumb">
-      <a href="../../listas-open-source/vert-twilio.html">← Voltar ao Dossiê Vertical Twilio</a>
-      &nbsp;·&nbsp;
-      <a href="../manuais/manual-waha-vps-e-uso.html">Ver Manual de Engenharia 📖</a>
-    </div>
-    <span class="badge-tag">Jornada Pedagógica Autoguiada · Brasil First</span>
-    <h1>Trilha de Aprendizado: WAHA (WhatsApp HTTP API Gateway)</h1>
-    <p class="deck">
-      Roteiro cronológico passo a passo para dominar a ferramenta a partir de fontes verificadas, priorizando materiais em língua portuguesa (PT-BR) e fornecendo orientações práticas de tradução assistida para conteúdos internacionais.
-    </p>
+ <!-- CABEÇALHO -->
+ <div class="header-card">
+ <div class="breadcrumb">
+ <a href="../../listas-open-source/vert-twilio.html">← Voltar ao Dossiê Vertical Twilio</a>
+ &nbsp;·&nbsp;
+ <a href="../manuais/manual-waha-vps-e-uso.html">Ver Manual de Engenharia </a>
+ </div>
+ <span class="badge-tag">Jornada Pedagógica Autoguiada · Brasil First</span>
+ <h1>Trilha de Aprendizado: WAHA (WhatsApp HTTP API Gateway)</h1>
+ <p class="deck">
+ Roteiro cronológico passo a passo para dominar a ferramenta a partir de fontes verificadas, priorizando materiais em língua portuguesa (PT-BR) e fornecendo orientações práticas de tradução assistida para conteúdos internacionais.
+ </p>
 
-    <!-- HERO STATS -->
-    <div class="hero-stats">
-      <div class="stat-item">
-        <span class="stat-lbl">Tempo Total Estimado</span>
-        <span class="stat-val" style="color:var(--accent-dark);">8 horas de imersão guiada</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Fases de Estudo</span>
-        <span class="stat-val">5 Módulos</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Recursos Auditados</span>
-        <span class="stat-val">10 Conteúdos</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Progresso do Operador</span>
-        <span class="stat-val" id="progresso-txt" style="color:var(--green);">0 de 10</span>
-      </div>
-    </div>
+ <!-- HERO STATS -->
+ <div class="hero-stats">
+ <div class="stat-item">
+ <span class="stat-lbl">Tempo Total Estimado</span>
+ <span class="stat-val" style="color:var(--accent-dark);">8 horas de imersão guiada</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Fases de Estudo</span>
+ <span class="stat-val">5 Módulos</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Recursos Auditados</span>
+ <span class="stat-val">10 Conteúdos</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Progresso do Operador</span>
+ <span class="stat-val" id="progresso-txt" style="color:var(--green);">0 de 10</span>
+ </div>
+ </div>
 
-    <!-- BARRA DE PROGRESSO -->
-    <div style="margin-top: 16px; background: var(--rule-soft); border-radius: 4px; height: 8px; overflow: hidden;">
-      <div id="progresso-bar" style="width: 0%; height: 100%; background: var(--green); transition: width 0.3s;"></div>
-    </div>
-  </div>
+ <!-- BARRA DE PROGRESSO -->
+ <div style="margin-top: 16px; background: var(--rule-soft); border-radius: 4px; height: 8px; overflow: hidden;">
+ <div id="progresso-bar" style="width: 0%; height: 100%; background: var(--green); transition: width 0.3s;"></div>
+ </div>
+ </div>
 
-  <!-- TIMELINE -->
-  <div class="timeline">
-    
-        <div class="timeline-node">
-          <div class="timeline-marker">1</div>
-          <div class="phase-card">
-            <div class="phase-header">
-              <h2 class="phase-title">Fase 1: Fundamentos de APIs REST & WebSockets no WhatsApp</h2>
-              <span class="phase-time">⏱️ ~1h 30min</span>
-            </div>
-            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Entender os princípios de comunicação cliente-servidor entre WhatsApp Web e WAHA, diferenças entre REST e WebSocket e por que WAHA supera Twilio em flexibilidade.</p>
-            <div class="resource-list">
-              
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://github.com/devlikeapro/waha" target="_blank" rel="noopener noreferrer">WAHA Official Architecture & API Documentation</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Documentação Oficial</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Endpoints REST (sendText, getMessage), Webhooks e autenticação stateless.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Use a tradução automática da página no navegador.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 45 min</span>
-                  <span>👤 DevLike ApPro (WAHA Core Team)</span>
-                  <a href="https://github.com/devlikeapro/waha" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://github.com/adiwajshing/Baileys" target="_blank" rel="noopener noreferrer">WhatsApp Web Protocol & Security</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Artigo Técnico</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Diferença entre WhatsApp Web (WAHA) vs. API Oficial (Twilio) em segurança e privacidade.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Consulte a seção 'Protocol Analysis' do GitHub Baileys.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 45 min</span>
-                  <span>👤 Adiwajshing (Baileys Creator)</span>
-                  <a href="https://github.com/adiwajshing/Baileys" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          </div>
-        </div>
-        
-        <div class="timeline-node">
-          <div class="timeline-marker">2</div>
-          <div class="phase-card">
-            <div class="phase-header">
-              <h2 class="phase-title">Fase 2: Instalação de WAHA em Localhost & Primeiro Deploy</h2>
-              <span class="phase-time">⏱️ ~2h 00min</span>
-            </div>
-            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Setup de ambiente de desenvolvimento local com Docker, pareamento da sessão e envio de primeiras mensagens.</p>
-            <div class="resource-list">
-              
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://docs.waha.dev/en/guide/deploy/docker.html" target="_blank" rel="noopener noreferrer">WAHA Quick Start Guide</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Tutorial Prático</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F03]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Docker pull, docker run, QR Code scanning e dashboard inicial.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Siga os comandos docker run no manual fornecido.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 30 min de video + 1h prática</span>
-                  <span>👤 WAHA Documentation</span>
-                  <a href="https://docs.waha.dev/en/guide/deploy/docker.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://docs.waha.dev/en/swagger/" target="_blank" rel="noopener noreferrer">REST API Playground (Postman/Swagger)</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Lab Interativo</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F04]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Disparar requisições POST /api/sendText e GET /api/me com curl/Postman.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Importe o arquivo OpenAPI WAHA no Postman.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 1h prática</span>
-                  <span>👤 WAHA Team</span>
-                  <a href="https://docs.waha.dev/en/swagger/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          </div>
-        </div>
-        
-        <div class="timeline-node">
-          <div class="timeline-marker">3</div>
-          <div class="phase-card">
-            <div class="phase-header">
-              <h2 class="phase-title">Fase 3: Webhooks, Callbacks & Estrutura de Eventos</h2>
-              <span class="phase-time">⏱️ ~2h 00min</span>
-            </div>
-            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Integrar backend para receber webhooks, processar eventos de entrega e construir lógica de resposta automática.</p>
-            <div class="resource-list">
-              
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://docs.waha.dev/en/guide/webhooks/" target="_blank" rel="noopener noreferrer">WAHA Webhooks & Events Deep Dive</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Documentação Oficial</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Tipos de webhook (message.created, message.updated, message.status), payloads JSON e retry policies.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Leia a seção 'Webhooks' no docs.waha.dev.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 1h</span>
-                  <span>👤 WAHA Docs</span>
-                  <a href="https://docs.waha.dev/en/guide/webhooks/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://github.com/devlikeapro/waha-examples" target="_blank" rel="noopener noreferrer">Building a Simple Bot with WAHA + Express.js</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Hands-on Lab</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F06]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Criar endpoint POST /webhook que recebe mensagens, processa e responde automaticamente.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Siga o tutorial e adapte para seu backend favorito (Django, FastAPI).</div>
-                <div class="resource-meta">
-                  <span>⏱️ 1h prática</span>
-                  <span>👤 WAHA Community</span>
-                  <a href="https://github.com/devlikeapro/waha-examples" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          </div>
-        </div>
-        
-        <div class="timeline-node">
-          <div class="timeline-marker">4</div>
-          <div class="phase-card">
-            <div class="phase-header">
-              <h2 class="phase-title">Fase 4: Segurança, Taxa & Escala em Produção</h2>
-              <span class="phase-time">⏱️ ~1h 30min</span>
-            </div>
-            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Implementar rate limiting, autenticação com API Keys, monitoramento e preparar a infraestrutura para escala.</p>
-            <div class="resource-list">
-              
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://github.com/devlikeapro/waha#security" target="_blank" rel="noopener noreferrer">Security Best Practices for WhatsApp APIs</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Guia de Segurança</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F07]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> API Key management, TLS/HTTPS, validação de webhooks com HMAC e proteção contra replay attacks.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Consulte a seção 'Security' do README.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 45 min</span>
-                  <span>👤 WAHA Team</span>
-                  <a href="https://github.com/devlikeapro/waha#security" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://docs.waha.dev/en/guide/deploy/kubernetes.html" target="_blank" rel="noopener noreferrer">Scaling WAHA with Kubernetes & Load Balancing</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Arquitetura Técnica</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F08]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Multiple WAHA instances com Redis shared sessions, Ingress controller e health checks.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Leia a seção de deployment escalável.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 45 min</span>
-                  <span>👤 WAHA DevOps</span>
-                  <a href="https://docs.waha.dev/en/guide/deploy/kubernetes.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          </div>
-        </div>
-        
-        <div class="timeline-node">
-          <div class="timeline-marker">5</div>
-          <div class="phase-card">
-            <div class="phase-header">
-              <h2 class="phase-title">Fase 5: Migração de Twilio para WAHA & Go-Live</h2>
-              <span class="phase-time">⏱️ ~1h 00min</span>
-            </div>
-            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Executar plano de migração zero-downtime, validar compatibilidade de APIs, desligar Twilio e monitorar.</p>
-            <div class="resource-list">
-              
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="file:///opt/waha/desinstalacao_cirurgica.md" target="_blank" rel="noopener noreferrer">Migração do Twilio para WAHA - Guia Prático</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Playbook de Migração</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F09]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Passos de blue-green deploy, validação de webhooks e monitoramento pós-migração.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Guia completo fornecido no manual de VPS.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 30 min leitura</span>
-                  <span>👤 AIDD - Arsenal Open Source</span>
-                  <a href="file:///opt/waha/desinstalacao_cirurgica.md" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://github.com/devlikeapro/waha/blob/main/docker-compose.monitoring.yml" target="_blank" rel="noopener noreferrer">Monitoramento & Alertas com Prometheus + Grafana</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Tutorial de Observabilidade</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F10]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Configurar dashboards Grafana para Taxa de Entrega, Latência de Webhooks e Uptime.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Siga os exemplos de docker-compose com Prometheus.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 30 min</span>
-                  <span>👤 WAHA Community</span>
-                  <a href="https://github.com/devlikeapro/waha/blob/main/docker-compose.monitoring.yml" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          </div>
-        </div>
-        
-  </div>
+ <!-- TIMELINE -->
+ <div class="timeline">
+ 
+ <div class="timeline-node">
+ <div class="timeline-marker">1</div>
+ <div class="phase-card">
+ <div class="phase-header">
+ <h2 class="phase-title">Fase 1: Fundamentos de APIs REST & WebSockets no WhatsApp</h2>
+ <span class="phase-time">⏱ ~1h 30min</span>
+ </div>
+ <p class="phase-goal"> <strong>Meta da Etapa:</strong> Entender os princípios de comunicação cliente-servidor entre WhatsApp Web e WAHA, diferenças entre REST e WebSocket e por que WAHA supera Twilio em flexibilidade.</p>
+ <div class="resource-list">
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://github.com/devlikeapro/waha" target="_blank" rel="noopener noreferrer">WAHA Official Architecture & API Documentation</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Documentação Oficial</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Endpoints REST (sendText, getMessage), Webhooks e autenticação stateless.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Use a tradução automática da página no navegador.</div>
+ <div class="resource-meta">
+ <span>⏱ 45 min</span>
+ <span> DevLike ApPro (WAHA Core Team)</span>
+ <a href="https://github.com/devlikeapro/waha" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://github.com/adiwajshing/Baileys" target="_blank" rel="noopener noreferrer">WhatsApp Web Protocol & Security</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Artigo Técnico</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Diferença entre WhatsApp Web (WAHA) vs. API Oficial (Twilio) em segurança e privacidade.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Consulte a seção 'Protocol Analysis' do GitHub Baileys.</div>
+ <div class="resource-meta">
+ <span>⏱ 45 min</span>
+ <span> Adiwajshing (Baileys Creator)</span>
+ <a href="https://github.com/adiwajshing/Baileys" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div class="timeline-node">
+ <div class="timeline-marker">2</div>
+ <div class="phase-card">
+ <div class="phase-header">
+ <h2 class="phase-title">Fase 2: Instalação de WAHA em Localhost & Primeiro Deploy</h2>
+ <span class="phase-time">⏱ ~2h 00min</span>
+ </div>
+ <p class="phase-goal"> <strong>Meta da Etapa:</strong> Setup de ambiente de desenvolvimento local com Docker, pareamento da sessão e envio de primeiras mensagens.</p>
+ <div class="resource-list">
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://docs.waha.dev/en/guide/deploy/docker.html" target="_blank" rel="noopener noreferrer">WAHA Quick Start Guide</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Tutorial Prático</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F03]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Docker pull, docker run, QR Code scanning e dashboard inicial.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Siga os comandos docker run no manual fornecido.</div>
+ <div class="resource-meta">
+ <span>⏱ 30 min de video + 1h prática</span>
+ <span> WAHA Documentation</span>
+ <a href="https://docs.waha.dev/en/guide/deploy/docker.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://docs.waha.dev/en/swagger/" target="_blank" rel="noopener noreferrer">REST API Playground (Postman/Swagger)</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Lab Interativo</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F04]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Disparar requisições POST /api/sendText e GET /api/me com curl/Postman.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Importe o arquivo OpenAPI WAHA no Postman.</div>
+ <div class="resource-meta">
+ <span>⏱ 1h prática</span>
+ <span> WAHA Team</span>
+ <a href="https://docs.waha.dev/en/swagger/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div class="timeline-node">
+ <div class="timeline-marker">3</div>
+ <div class="phase-card">
+ <div class="phase-header">
+ <h2 class="phase-title">Fase 3: Webhooks, Callbacks & Estrutura de Eventos</h2>
+ <span class="phase-time">⏱ ~2h 00min</span>
+ </div>
+ <p class="phase-goal"> <strong>Meta da Etapa:</strong> Integrar backend para receber webhooks, processar eventos de entrega e construir lógica de resposta automática.</p>
+ <div class="resource-list">
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://docs.waha.dev/en/guide/webhooks/" target="_blank" rel="noopener noreferrer">WAHA Webhooks & Events Deep Dive</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Documentação Oficial</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Tipos de webhook (message.created, message.updated, message.status), payloads JSON e retry policies.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Leia a seção 'Webhooks' no docs.waha.dev.</div>
+ <div class="resource-meta">
+ <span>⏱ 1h</span>
+ <span> WAHA Docs</span>
+ <a href="https://docs.waha.dev/en/guide/webhooks/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://github.com/devlikeapro/waha-examples" target="_blank" rel="noopener noreferrer">Building a Simple Bot with WAHA + Express.js</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Hands-on Lab</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F06]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Criar endpoint POST /webhook que recebe mensagens, processa e responde automaticamente.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Siga o tutorial e adapte para seu backend favorito (Django, FastAPI).</div>
+ <div class="resource-meta">
+ <span>⏱ 1h prática</span>
+ <span> WAHA Community</span>
+ <a href="https://github.com/devlikeapro/waha-examples" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div class="timeline-node">
+ <div class="timeline-marker">4</div>
+ <div class="phase-card">
+ <div class="phase-header">
+ <h2 class="phase-title">Fase 4: Segurança, Taxa & Escala em Produção</h2>
+ <span class="phase-time">⏱ ~1h 30min</span>
+ </div>
+ <p class="phase-goal"> <strong>Meta da Etapa:</strong> Implementar rate limiting, autenticação com API Keys, monitoramento e preparar a infraestrutura para escala.</p>
+ <div class="resource-list">
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://github.com/devlikeapro/waha#security" target="_blank" rel="noopener noreferrer">Security Best Practices for WhatsApp APIs</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Guia de Segurança</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F07]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> API Key management, TLS/HTTPS, validação de webhooks com HMAC e proteção contra replay attacks.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Consulte a seção 'Security' do README.</div>
+ <div class="resource-meta">
+ <span>⏱ 45 min</span>
+ <span> WAHA Team</span>
+ <a href="https://github.com/devlikeapro/waha#security" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://docs.waha.dev/en/guide/deploy/kubernetes.html" target="_blank" rel="noopener noreferrer">Scaling WAHA with Kubernetes & Load Balancing</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Arquitetura Técnica</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F08]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Multiple WAHA instances com Redis shared sessions, Ingress controller e health checks.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Leia a seção de deployment escalável.</div>
+ <div class="resource-meta">
+ <span>⏱ 45 min</span>
+ <span> WAHA DevOps</span>
+ <a href="https://docs.waha.dev/en/guide/deploy/kubernetes.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div class="timeline-node">
+ <div class="timeline-marker">5</div>
+ <div class="phase-card">
+ <div class="phase-header">
+ <h2 class="phase-title">Fase 5: Migração de Twilio para WAHA & Go-Live</h2>
+ <span class="phase-time">⏱ ~1h 00min</span>
+ </div>
+ <p class="phase-goal"> <strong>Meta da Etapa:</strong> Executar plano de migração zero-downtime, validar compatibilidade de APIs, desligar Twilio e monitorar.</p>
+ <div class="resource-list">
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="file:///opt/waha/desinstalacao_cirurgica.md" target="_blank" rel="noopener noreferrer">Migração do Twilio para WAHA - Guia Prático</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Playbook de Migração</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F09]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Passos de blue-green deploy, validação de webhooks e monitoramento pós-migração.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Guia completo fornecido no manual de VPS.</div>
+ <div class="resource-meta">
+ <span>⏱ 30 min leitura</span>
+ <span> AIDD - Arsenal Open Source</span>
+ <a href="file:///opt/waha/desinstalacao_cirurgica.md" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://github.com/devlikeapro/waha/blob/main/docker-compose.monitoring.yml" target="_blank" rel="noopener noreferrer">Monitoramento & Alertas com Prometheus + Grafana</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Tutorial de Observabilidade</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F10]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Configurar dashboards Grafana para Taxa de Entrega, Latência de Webhooks e Uptime.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Siga os exemplos de docker-compose com Prometheus.</div>
+ <div class="resource-meta">
+ <span>⏱ 30 min</span>
+ <span> WAHA Community</span>
+ <a href="https://github.com/devlikeapro/waha/blob/main/docker-compose.monitoring.yml" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ </div>
 
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const checkboxes = document.querySelectorAll('.chk-item');
-  checkboxes.forEach((chk, idx) => {
-    const key = 'trilha_chk_' + idx;
-    chk.checked = localStorage.getItem(key) === 'true';
-    chk.addEventListener('change', () => {
-      localStorage.setItem(key, chk.checked);
-      atualizarProgresso();
-    });
-  });
-  atualizarProgresso();
+ const checkboxes = document.querySelectorAll('.chk-item');
+ checkboxes.forEach((chk, idx) => {
+ const key = 'trilha_chk_' + idx;
+ chk.checked = localStorage.getItem(key) === 'true';
+ chk.addEventListener('change', () => {
+ localStorage.setItem(key, chk.checked);
+ atualizarProgresso();
+ });
+ });
+ atualizarProgresso();
 
-  function atualizarProgresso() {
-    const total = checkboxes.length;
-    const marcados = Array.from(checkboxes).filter(c => c.checked).length;
-    const pct = total ? Math.round((marcados / total) * 100) : 0;
-    const bar = document.getElementById('progresso-bar');
-    const txt = document.getElementById('progresso-txt');
-    if (bar) bar.style.width = pct + '%';
-    if (txt) txt.innerText = marcados + ' de ' + total + ' concluídos (' + pct + '%)';
-  }
+ function atualizarProgresso() {
+ const total = checkboxes.length;
+ const marcados = Array.from(checkboxes).filter(c => c.checked).length;
+ const pct = total ? Math.round((marcados / total) * 100) : 0;
+ const bar = document.getElementById('progresso-bar');
+ const txt = document.getElementById('progresso-txt');
+ if (bar) bar.style.width = pct + '%';
+ if (txt) txt.innerText = marcados + ' de ' + total + ' concluídos (' + pct + '%)';
+ }
 });
 </script>
 

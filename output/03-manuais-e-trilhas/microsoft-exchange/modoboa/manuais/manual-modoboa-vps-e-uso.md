@@ -1,27 +1,27 @@
 # Manual Operacional Completo: Modoboa
 
-> **Padrão Diamante · Guia de Engenharia & Adoção Descomplicada**  
-> **Licença:** ISC | **Versão:** 2.3.0 | **Setup Estimado:** 25 a 35 minutos  
-> **VPS Recomendada:** Hetzner Cloud CPX31 (ou UpCloud 4GB) (4 vCPU Dedicadas, 4 GB RAM (mínimo 3GB; 4GB+ para ClamAV), 40 GB SSD NVMe, Debian 12 / Ubuntu 22.04 LTS)  
+> **Padrão Diamante · Guia de Engenharia & Adoção Descomplicada** 
+> **Licença:** ISC | **Versão:** 2.3.0 | **Setup Estimado:** 25 a 35 minutos 
+> **VPS Recomendada:** Hetzner Cloud CPX31 (ou UpCloud 4GB) (4 vCPU Dedicadas, 4 GB RAM (mínimo 3GB; 4GB+ para ClamAV), 40 GB SSD NVMe, Debian 12 / Ubuntu 22.04 LTS) 
 > **Custo Mensal Estimado:** EUR 14,00 a EUR 16,00/mês (~R$ 84 a R$ 96)
 
 ---
 
 ## Módulo 0: Nivelamento Conceitual (Analogias do Dia a Dia)
 
-### 💡 Modoboa *(Analogia: Departamento Correios Inteligente)*
+### Modoboa *(Analogia: Departamento Correios Inteligente)*
 Gerenciador central de emails. Recebe (Postfix), guarda (Dovecot), controla (Django).
 
-### 💡 Postfix *(Analogia: Entregador Cartas)*
+### Postfix *(Analogia: Entregador Cartas)*
 Carteiro que sai pela porta com cartas endereçadas (porta 25 SMTP).
 
-### 💡 Dovecot *(Analogia: Gerente Gavetas Correspondência)*
+### Dovecot *(Analogia: Gerente Gavetas Correspondência)*
 Coloca carta certa com nome funcionário (portas 143 IMAP ou 110 POP3).
 
-### 💡 Django/Python *(Analogia: Painel Controle Centralizado)*
+### Django/Python *(Analogia: Painel Controle Centralizado)*
 Painel web onde admin clica criar usuários, domínios.
 
-### 💡 PostgreSQL *(Analogia: Arquivo Central Documentos)*
+### PostgreSQL *(Analogia: Arquivo Central Documentos)*
 Banco dados: usuários, domínios, permissões, filtros, histórico.
 
 ## Parte I: Instalação em Produção na VPS (Passo a Passo Rígido)
@@ -29,45 +29,45 @@ Banco dados: usuários, domínios, permissões, filtros, histórico.
 ### Passo 1: Provisionar VPS e SSH `[F01]`
 Hetzner Cloud, Debian 12, CPX31
 
-> 💡 **Entenda com uma analogia:** Alugar prédio
+> **Entenda com uma analogia:** Alugar prédio
 
 ```bash
 ssh root@SEU_IP_AQUI
 ```
 
-- 🖥️ **O que você verá na tela:** Terminal abre
-- ✅ **Como saber se deu certo:** Prompt root@mail
+- **O que você verá na tela:** Terminal abre
+- **Como saber se deu certo:** Prompt root@mail
 
 ### Passo 2: Atualizar Sistema `[F02]`
 Updates Debian + ferramentas essenciais
 
-> 💡 **Entenda com uma analogia:** Limpar prédio
+> **Entenda com uma analogia:** Limpar prédio
 
 ```bash
 apt-get update && apt-get upgrade -y
 apt-get install -y curl wget git build-essential python3-dev python3-pip postgresql postfix dovecot-core dovecot-imapd dovecot-pop3d nginx
 ```
 
-- 🖥️ **O que você verá na tela:** Progresso verde 2-3min
-- ✅ **Como saber se deu certo:** python3 3.11+
+- **O que você verá na tela:** Progresso verde 2-3min
+- **Como saber se deu certo:** python3 3.11+
 
 ### Passo 3: Clonar Repositório Modoboa `[F01]`
 Download código-fonte do GitHub
 
-> 💡 **Entenda com uma analogia:** Trazer plantas construção
+> **Entenda com uma analogia:** Trazer plantas construção
 
 ```bash
 cd /opt && git clone https://github.com/modoboa/modoboa.git
 cd modoboa && git checkout v2.3.0
 ```
 
-- 🖥️ **O que você verá na tela:** Git exibe Cloning into
-- ✅ **Como saber se deu certo:** /opt/modoboa existe
+- **O que você verá na tela:** Git exibe Cloning into
+- **Como saber se deu certo:** /opt/modoboa existe
 
 ### Passo 4: Instalador Automático `[F03]`
 Configura PostgreSQL, Postfix, Dovecot, Nginx, Django
 
-> 💡 **Entenda com uma analogia:** Apertar botão construir
+> **Entenda com uma analogia:** Apertar botão construir
 
 ```bash
 cd /opt/modoboa
@@ -76,13 +76,13 @@ python3 -m pip install -e .
 modoboa deploy /var/vmail/modoboa
 ```
 
-- 🖥️ **O que você verá na tela:** Perguntas hostname/domínio/senha
-- ✅ **Como saber se deu certo:** Installation complete!
+- **O que você verá na tela:** Perguntas hostname/domínio/senha
+- **Como saber se deu certo:** Installation complete!
 
 ### Passo 5: Configurar Firewall UFW `[F05]`
 Liberar portas 22,25,80,143,110,587,443
 
-> 💡 **Entenda com uma analogia:** Guarita porteiro
+> **Entenda com uma analogia:** Guarita porteiro
 
 ```bash
 ufw default deny incoming && ufw default allow outgoing
@@ -90,13 +90,13 @@ ufw allow 22/tcp && ufw allow 25/tcp && ufw allow 80/tcp && ufw allow 143/tcp &&
 ufw --force enable
 ```
 
-- 🖥️ **O que você verá na tela:** Rule added para cada porta
-- ✅ **Como saber se deu certo:** ufw status OK
+- **O que você verá na tela:** Rule added para cada porta
+- **Como saber se deu certo:** ufw status OK
 
 ### Passo 6: Ativar HTTPS Let's Encrypt `[F04]`
 Certificado SSL/TLS que renova automaticamente
 
-> 💡 **Entenda com uma analogia:** Lacre segurança
+> **Entenda com uma analogia:** Lacre segurança
 
 ```bash
 apt-get install -y certbot python3-certbot-nginx
@@ -104,8 +104,8 @@ certbot certonly --nginx -d seu-dominio.com
 sudo systemctl restart nginx
 ```
 
-- 🖥️ **O que você verá na tela:** Received certificate em 30s
-- ✅ **Como saber se deu certo:** Cadeado verde https://seu-ip
+- **O que você verá na tela:** Received certificate em 30s
+- **Como saber se deu certo:** Cadeado verde https://seu-ip
 
 ## Arquivos de Configuração de Produção
 
@@ -143,19 +143,19 @@ server { listen 80; server_name admin.seu-dominio.com; location / { proxy_pass h
 ### Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)
 
 1. **Passo 1: Admin:** Abra https://admin.seu-dominio.com com usuario admin
-   - 🎯 **Resultado Esperado:** Dashboard com estatísticas
+ - **Resultado Esperado:** Dashboard com estatísticas
 
 1. **Passo 2: Domínio:** Menu Domínios → +, digite empresa.com.br
-   - 🎯 **Resultado Esperado:** Domínio criado e ativo
+ - **Resultado Esperado:** Domínio criado e ativo
 
 1. **Passo 3: Email:** Domínio → Contas → +, username joao, quota 2GB
-   - 🎯 **Resultado Esperado:** joao@empresa.com.br criado
+ - **Resultado Esperado:** joao@empresa.com.br criado
 
 1. **Passo 4: Webmail:** https://mail.seu-dominio.com/webmail/ com joao@empresa.com.br
-   - 🎯 **Resultado Esperado:** Bandeja entrada com calendário
+ - **Resultado Esperado:** Bandeja entrada com calendário
 
 1. **Passo 5: Cliente:** Configure Outlook/Thunderbird IMAP mail.seu-dominio.com:143 TLS, SMTP :587
-   - 🎯 **Resultado Esperado:** Email chega em segundos
+ - **Resultado Esperado:** Email chega em segundos
 
 ### Dicionário Completo de Comandos (CLI)
 
@@ -179,19 +179,19 @@ server { listen 80; server_name admin.seu-dominio.com; location / { proxy_pass h
 
 ### Matriz de Resolução de Problemas (Troubleshooting)
 
-- **⚠️ Sintoma:** Emails chegam em spam
-  - **Causa:** SPF, DKIM ou DMARC não configurados
-- **⚠️ Sintoma:** Port 25 blocked - emails não saem
-  - **Causa:** ISP bloqueou porta 25 (comum em residencial)
-- **⚠️ Sintoma:** IMAP não conecta com erro
-  - **Causa:** Dovecot não está rodando ou permissões /var/vmail erradas
-- **⚠️ Sintoma:** Painel web fica lento ou travado
-  - **Causa:** PostgreSQL sob pressão ou muitos usuários simultâneos
-- **⚠️ Sintoma:** ClamAV/SpamAssassin consumindo 100% CPU
-  - **Causa:** Muitos emails grandes sendo processados simultaneamente
+- ** Sintoma:** Emails chegam em spam
+ - **Causa:** SPF, DKIM ou DMARC não configurados
+- ** Sintoma:** Port 25 blocked - emails não saem
+ - **Causa:** ISP bloqueou porta 25 (comum em residencial)
+- ** Sintoma:** IMAP não conecta com erro
+ - **Causa:** Dovecot não está rodando ou permissões /var/vmail erradas
+- ** Sintoma:** Painel web fica lento ou travado
+ - **Causa:** PostgreSQL sob pressão ou muitos usuários simultâneos
+- ** Sintoma:** ClamAV/SpamAssassin consumindo 100% CPU
+ - **Causa:** Muitos emails grandes sendo processados simultaneamente
 ## Parte III: Desinstalação Cirúrgica & Isolamento da VPS (Zero Efeito Colateral)
 
-> 🛡️ **Princípio de Isolamento:** Remove exclusivamente instância Modoboa (Django, dados email, bancos SQL). Preserva Postfix, Dovecot, certificados SSL e SO.
+> **Princípio de Isolamento:** Remove exclusivamente instância Modoboa (Django, dados email, bancos SQL). Preserva Postfix, Dovecot, certificados SSL e SO.
 
 ### Passo 1: Parada de Serviços Modoboa
 Para Django (Gunicorn) e Celery sem afetar Postfix/Dovecot/Nginx
@@ -203,8 +203,8 @@ sudo systemctl stop modoboa-celery
 sudo systemctl disable modoboa-celery
 ```
 
-- ⚠️ **Alerta de Segurança:** NÃO execute 'systemctl stop postfix' ou 'systemctl stop dovecot'
-- ✅ **Como Validar:** `sudo systemctl is-active modoboa # Retorna 'inactive'`
+- **Alerta de Segurança:** NÃO execute 'systemctl stop postfix' ou 'systemctl stop dovecot'
+- **Como Validar:** `sudo systemctl is-active modoboa # Retorna 'inactive'`
 
 ### Passo 2: Remoção do Banco PostgreSQL
 Deleta schema Modoboa, preservando outros bancos
@@ -214,8 +214,8 @@ sudo -u postgres psql -c "DROP DATABASE IF EXISTS modoboa;"
 sudo -u postgres psql -c "DROP USER IF EXISTS modoboa;"
 ```
 
-- ⚠️ **Alerta de Segurança:** JAMAIS execute 'DROP DATABASE postgres;'
-- ✅ **Como Validar:** `sudo -u postgres psql -l | grep modoboa # Não deve aparecer`
+- **Alerta de Segurança:** JAMAIS execute 'DROP DATABASE postgres;'
+- **Como Validar:** `sudo -u postgres psql -l | grep modoboa # Não deve aparecer`
 
 ### Passo 3: Remoção de Diretórios
 Remove /var/vmail/modoboa (dados) e /opt/modoboa (código)
@@ -227,8 +227,8 @@ sudo rm -f /etc/systemd/system/modoboa.service
 sudo rm -f /etc/systemd/system/modoboa-celery.service
 ```
 
-- ⚠️ **Alerta de Segurança:** Não execute 'rm -rf /' nem 'rm -rf /var/'
-- ✅ **Como Validar:** `ls -ld /var/vmail/modoboa 2>&1 | grep 'cannot access'`
+- **Alerta de Segurança:** Não execute 'rm -rf /' nem 'rm -rf /var/'
+- **Como Validar:** `ls -ld /var/vmail/modoboa 2>&1 | grep 'cannot access'`
 
 ### Passo 4: Limpeza Nginx
 Remove virtual host Modoboa do Nginx
@@ -240,8 +240,8 @@ sudo systemctl reload nginx
 sudo systemctl daemon-reload
 ```
 
-- ⚠️ **Alerta de Segurança:** Mantenha outros sites em /etc/nginx/sites-available/
-- ✅ **Como Validar:** `sudo nginx -t # Retorna 'configuration OK'`
+- **Alerta de Segurança:** Mantenha outros sites em /etc/nginx/sites-available/
+- **Como Validar:** `sudo nginx -t # Retorna 'configuration OK'`
 
 ### Checklist de Saúde da VPS (Outros Projetos)
 

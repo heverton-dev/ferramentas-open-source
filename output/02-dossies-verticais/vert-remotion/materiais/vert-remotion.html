@@ -6,245 +6,245 @@
 <title>Dossiê Vertical · Remotion (React-Based Video Engine Commercial) · Arsenal Open Source</title>
 <style>
 
-  :root {
-    --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
-    --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
-    --paper: #F6F4EF;
-    --surface: #FFFFFF;
-    --surface-2: #FBF9F4;
-    --surface-dark: #0A0F1D;
-    --ink: #1B1E23;
-    --ink-2: #383D45;
-    --muted: #666E7A;
-    --rule: #D8D2C4;
-    --rule-soft: #EAE5D9;
-    --accent: #00875A;
-    --accent-dark: #57D9A3;
-    --accent-soft: #E3FCEF;
-    --accent-soft-dark: #162B22;
-    --green: #00875A;
-    --green-soft: #E3FCEF;
-    --gold: #FFAB00;
-    --gold-soft: #FFF0B3;
-    --flag: #DE350B;
-    --flag-soft: #FFEBE6;
-    --shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
+ :root {
+ --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
+ --font-sans: "Liberation Sans", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+ --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+ --paper: #F6F4EF;
+ --surface: #FFFFFF;
+ --surface-2: #FBF9F4;
+ --surface-dark: #0A0F1D;
+ --ink: #1B1E23;
+ --ink-2: #383D45;
+ --muted: #666E7A;
+ --rule: #D8D2C4;
+ --rule-soft: #EAE5D9;
+ --accent: #00875A;
+ --accent-dark: #57D9A3;
+ --accent-soft: #E3FCEF;
+ --accent-soft-dark: #162B22;
+ --green: #00875A;
+ --green-soft: #E3FCEF;
+ --gold: #FFAB00;
+ --gold-soft: #FFF0B3;
+ --flag: #DE350B;
+ --flag-soft: #FFEBE6;
+ --shadow: 0 1px 3px rgba(0,0,0,0.04);
+ }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --paper: #0E121B;
-      --surface: #141924;
-      --surface-2: #1A2130;
-      --ink: #E6E8ED;
-      --ink-2: #B0B5C0;
-      --muted: #7E8695;
-      --rule: #262F40;
-      --rule-soft: #1E2533;
-      --accent: var(--accent-dark);
-      --accent-soft: var(--accent-soft-dark);
-      --green: #57D9A3;
-      --green-soft: #162B22;
-      --gold: #FFC400;
-      --gold-soft: #332600;
-      --flag: #FF7452;
-      --flag-soft: #361B15;
-      --shadow: 0 1px 3px rgba(0,0,0,0.25);
-    }
-  }
+ @media (prefers-color-scheme: dark) {
+ :root {
+ --paper: #0E121B;
+ --surface: #141924;
+ --surface-2: #1A2130;
+ --ink: #E6E8ED;
+ --ink-2: #B0B5C0;
+ --muted: #7E8695;
+ --rule: #262F40;
+ --rule-soft: #1E2533;
+ --accent: var(--accent-dark);
+ --accent-soft: var(--accent-soft-dark);
+ --green: #57D9A3;
+ --green-soft: #162B22;
+ --gold: #FFC400;
+ --gold-soft: #332600;
+ --flag: #FF7452;
+ --flag-soft: #361B15;
+ --shadow: 0 1px 3px rgba(0,0,0,0.25);
+ }
+ }
 
-  *, *::before, *::after { box-sizing: border-box; }
-  html { font-size: 16px; scroll-behavior: smooth; }
+ *, *::before, *::after { box-sizing: border-box; }
+ html { font-size: 16px; scroll-behavior: smooth; }
 
-  /* SCROLLBAR REFINADA (MAX 4PX & COR ACCENT) */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent) transparent;
-  }
-  ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--accent);
-    border-radius: 4px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--green);
-  }
+ /* SCROLLBAR REFINADA (MAX 4PX & COR ACCENT) */
+ * {
+ scrollbar-width: thin;
+ scrollbar-color: var(--accent) transparent;
+ }
+ ::-webkit-scrollbar {
+ width: 4px;
+ height: 4px;
+ }
+ ::-webkit-scrollbar-track {
+ background: transparent;
+ }
+ ::-webkit-scrollbar-thumb {
+ background: var(--accent);
+ border-radius: 4px;
+ }
+ ::-webkit-scrollbar-thumb:hover {
+ background: var(--green);
+ }
 
-  body {
-    margin: 0; padding: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--font-sans);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
+ body {
+ margin: 0; padding: 0;
+ background: var(--paper);
+ color: var(--ink);
+ font-family: var(--font-sans);
+ line-height: 1.6;
+ -webkit-font-smoothing: antialiased;
+ }
 
-  .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
+ .wrap { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; }
 
-  /* HEADER & HERO */
-  header { margin-bottom: 32px; }
-  .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
-  .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-  .back-link:hover { color: var(--accent); }
-  .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
+ /* HEADER & HERO */
+ header { margin-bottom: 32px; }
+ .header-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+ .back-link { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+ .back-link:hover { color: var(--accent); }
+ .camada-pill { font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent); }
 
-  .hero { margin: 20px 0 24px; }
-  h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 40px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
-  .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
+ .hero { margin: 20px 0 24px; }
+ h1 { font-family: var(--font-serif); font-size: clamp(28px, 4.5vw, 40px); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; color: var(--ink); text-align: left; }
+ .deck { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; max-width: 100%; text-align: justify; text-justify: inter-word; }
 
-  .hero-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px; margin: 24px 0 32px;
-  }
-  .stat-card {
-    background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
-    padding: 12px 16px; box-shadow: var(--shadow);
-  }
-  .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
-  .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+ .hero-stats {
+ display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+ gap: 12px; margin: 24px 0 32px;
+ }
+ .stat-card {
+ background: var(--surface); border: 1px solid var(--rule); border-radius: 3px;
+ padding: 12px 16px; box-shadow: var(--shadow);
+ }
+ .stat-card .num { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+ .stat-card .lbl { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
 
-  /* CAIXA DE ALVO SAAS */
-  .target-box { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--flag); border-radius: 3px; padding: 18px 20px; margin: 24px 0; }
-  .target-tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--flag); }
-  .target-box h4 { font-family: var(--font-serif); font-size: 21px; margin: 6px 0 8px; color: var(--ink); }
-  .target-box p { margin: 0 0 10px; font-size: 14px; color: var(--ink-2); }
-  .target-pills { display: flex; gap: 8px; flex-wrap: wrap; }
-  .target-pill { font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); font-weight: 600; }
+ /* CAIXA DE ALVO SAAS */
+ .target-box { background: var(--surface); border: 1px solid var(--rule); border-left: 4px solid var(--flag); border-radius: 3px; padding: 18px 20px; margin: 24px 0; }
+ .target-tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--flag); }
+ .target-box h4 { font-family: var(--font-serif); font-size: 21px; margin: 6px 0 8px; color: var(--ink); }
+ .target-box p { margin: 0 0 10px; font-size: 14px; color: var(--ink-2); }
+ .target-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+ .target-pill { font-family: var(--mono); font-size: 11px; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); font-weight: 600; }
 
-  /* PILARES */
-  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 24px 0; }
-  .route { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 20px; }
-  .route.red { border-left: 4px solid var(--flag); }
-  .route.green { border-left: 4px solid var(--green); }
-  .route .tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
-  .route.red .tag { color: var(--flag); }
-  .route.green .tag { color: var(--green); }
-  .route h4 { font-family: var(--font-serif); font-size: 19px; margin: 6px 0 8px; color: var(--ink); }
-  .route p { margin: 0; font-size: 14px; color: var(--ink-2); }
+ /* PILARES */
+ .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 24px 0; }
+ .route { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 20px; }
+ .route.red { border-left: 4px solid var(--flag); }
+ .route.green { border-left: 4px solid var(--green); }
+ .route .tag { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+ .route.red .tag { color: var(--flag); }
+ .route.green .tag { color: var(--green); }
+ .route h4 { font-family: var(--font-serif); font-size: 19px; margin: 6px 0 8px; color: var(--ink); }
+ .route p { margin: 0; font-size: 14px; color: var(--ink-2); }
 
-  /* SEÇÕES */
-  .sec-head { margin: 36px 0 16px; }
-  .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
-  h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
-  .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
+ /* SEÇÕES */
+ .sec-head { margin: 36px 0 16px; }
+ .sec-num { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; display: block; }
+ h2 { font-family: var(--font-serif); font-size: 26px; margin: 4px 0; color: var(--ink); }
+ .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
 
-  /* BUSCA */
-  .search-wrapper { position: relative; margin: 20px 0 24px; }
-  .search-input { width: 100%; padding: 12px 42px 12px 16px; font-family: var(--font-sans); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); outline: none; box-shadow: var(--shadow); }
-  .search-input:focus { border-color: var(--accent); }
-  .search-icon { position: absolute; right: 14px; top: 12px; width: 20px; height: 20px; fill: var(--muted); pointer-events: none; }
+ /* BUSCA */
+ .search-wrapper { position: relative; margin: 20px 0 24px; }
+ .search-input { width: 100%; padding: 12px 42px 12px 16px; font-family: var(--font-sans); font-size: 14.5px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; color: var(--ink); outline: none; box-shadow: var(--shadow); }
+ .search-input:focus { border-color: var(--accent); }
+ .search-icon { position: absolute; right: 14px; top: 12px; width: 20px; height: 20px; fill: var(--muted); pointer-events: none; }
 
-  /* TABELA */
-  .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
-  table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
-  th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
-  td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
-  tr:last-child td { border-bottom: none; }
-  td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
-  td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
-  td.tool a:hover { color: var(--accent); }
-  td.classificacao { font-family: var(--mono); font-weight: 700; color: var(--accent); }
-  td.saas { color: var(--flag); }
-  td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
-  td.lic { font-family: var(--mono); font-size: 11px; }
+ /* TABELA */
+ .tablewrap { width: 100%; overflow-x: auto; margin: 16px 0 32px; background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; }
+ table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+ th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+ td { padding: 10px 12px; border-bottom: 1px solid var(--rule-soft); color: var(--ink-2); }
+ tr:last-child td { border-bottom: none; }
+ td.rank { font-family: var(--mono); font-weight: 700; color: var(--accent); width: 40px; }
+ td.tool a { color: var(--ink); font-weight: 600; text-decoration: none; }
+ td.tool a:hover { color: var(--accent); }
+ td.classificacao { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+ td.saas { color: var(--flag); }
+ td.econ { font-family: var(--mono); color: var(--green); font-weight: 600; }
+ td.lic { font-family: var(--mono); font-size: 11px; }
 
-  /* CARDS NO FORMATO DOSSIÊ EXECUTIVO */
-  .ledger { display: flex; flex-direction: column; gap: 24px; }
-  .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
-  .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
-  .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
-  
-  .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+ /* CARDS NO FORMATO DOSSIÊ EXECUTIVO */
+ .ledger { display: flex; flex-direction: column; gap: 24px; }
+ .entry { background: var(--surface); border: 1px solid var(--rule); border-radius: 3px; box-shadow: var(--shadow); display: grid; grid-template-columns: 60px 1fr; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
+ .entry:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+ .entry-rank { font-family: var(--mono); font-size: 20px; font-variant-numeric: tabular-nums; color: var(--accent); background: var(--accent-soft); display: flex; align-items: flex-start; justify-content: center; padding: 18px 0; border-right: 1px solid var(--rule); border-radius: 2px 0 0 2px; }
+ 
+ .entry-body { padding: 18px 22px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 
-  .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
-  .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
+ .entry-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+ .entry-top h3 { width: 100%; margin: 0 0 4px 0; font-family: var(--font-serif); font-weight: 600; font-size: 24px; line-height: 1.15; letter-spacing: -.01em; color: var(--ink); }
 
-  .class-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent); color: #FFF; font-weight: 700; }
-  .senior-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
-  .senior-badge.green { background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
-  .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
-  .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
-  .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
-  .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
+ .class-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent); color: #FFF; font-weight: 700; }
+ .senior-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; font-weight: 700; }
+ .senior-badge.green { background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); }
+ .killer-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--flag-soft); color: var(--flag); border: 1px solid color-mix(in srgb, var(--flag) 35%, transparent); font-weight: 600; }
+ .econ-badge { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--green-soft); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 35%, transparent); font-weight: 600; }
+ .lic-badge { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); white-space: nowrap; }
+ .kind { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 3px 6px; border: 1px solid var(--rule-soft); border-radius: 2px; background: var(--surface-2); }
 
-  .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
-  .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
-  .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
-  .entry-section p strong { color: var(--ink); font-weight: 600; }
+ .entry-section { display: flex; flex-direction: column; gap: 6px; width: 100%; padding-top: 12px; border-top: 1px dashed var(--rule-soft); }
+ .entry-section .label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+ .entry-section p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+ .entry-section p strong { color: var(--ink); font-weight: 600; }
 
-  /* GRIDS CANÔNICAS */
-  .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
-  .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
-  .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
-  .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
-  .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
-  .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+ /* GRIDS CANÔNICAS */
+ .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 2px; }
+ .econ-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+ .econ-card.highlight { border-left: 3px solid var(--green); background: color-mix(in srgb, var(--green-soft) 25%, var(--surface)); }
+ .econ-card.killer { border-left: 3px solid var(--flag); background: color-mix(in srgb, var(--flag-soft) 25%, var(--surface)); }
+ .econ-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+ .econ-val { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
 
-  .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
-  .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
-  .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
-  @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
-  .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
-  .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
-  .infra-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+ .infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 2px; }
+ .infra-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+ .infra-card.verdict { border-left: 3px solid var(--gold); background: color-mix(in srgb, var(--gold-soft) 25%, var(--surface)); grid-column: span 2; }
+ @media (max-width: 760px) { .infra-card.verdict { grid-column: span 1; } }
+ .infra-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+ .infra-val { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--accent); line-height: 1.4; }
+ .infra-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
 
-  .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
-  pre { margin: 0; padding: 10px 48px 10px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; }
-  code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); line-height: 1.45; }
-  .copy-btn { position: absolute; top: 6px; right: 6px; background: var(--surface); border: 1px solid var(--rule); color: var(--muted); border-radius: 2px; padding: 3px 6px; font-family: var(--mono); font-size: 10px; cursor: pointer; transition: all .15s ease; }
-  .copy-btn:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+ .code-box { position: relative; display: flex; flex-direction: column; width: 100%; margin-top: 4px; }
+ pre { margin: 0; padding: 10px 48px 10px 12px; background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; overflow-x: auto; }
+ code { font-family: var(--mono); font-size: 12.5px; color: var(--ink); line-height: 1.45; }
+ .copy-btn { position: absolute; top: 6px; right: 6px; background: var(--surface); border: 1px solid var(--rule); color: var(--muted); border-radius: 2px; padding: 3px 6px; font-family: var(--mono); font-size: 10px; cursor: pointer; transition: all .15s ease; }
+ .copy-btn:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
 
-  .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
-  .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-  .repo-btn svg { width: 13px; height: 13px; fill: currentColor; }
+ .repo-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 2px; background: var(--surface); color: var(--ink); text-decoration: none; width: fit-content; transition: all .15s ease; }
+ .repo-btn:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+ .repo-btn svg { width: 13px; height: 13px; fill: currentColor; }
 
-  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 2px; }
-  .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; transition: transform .12s ease, border-color .12s ease; }
-  .step-card:hover { border-color: var(--accent); transform: translateY(-1px); }
-  .step-head { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; }
-  .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
-  .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
-  .step-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+ .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 2px; }
+ .step-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; transition: transform .12s ease, border-color .12s ease; }
+ .step-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+ .step-head { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; }
+ .step-badge { background: var(--accent); color: var(--paper); border-radius: 2px; padding: 1px 5px; font-size: 9.5px; font-weight: 700; }
+ .step-card p { margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+ .step-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
 
-  /* NOVA SEÇÃO 5: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES) */
-  .complement-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
-  .complement-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 3px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
-  .complement-card.mcp { border-left: 3px solid #7C3AED; }
-  .complement-card.skill { border-left: 3px solid #2563EB; }
-  .complement-card.plugin { border-left: 3px solid #059669; }
-  .complement-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
-  .comp-tag { font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; letter-spacing: .06em; }
-  .complement-card.mcp .comp-tag { background: #EDE9FE; color: #7C3AED; }
-  .complement-card.skill .comp-tag { background: #DBEAFE; color: #2563EB; }
-  .complement-card.plugin .comp-tag { background: #D1FAE5; color: #059669; }
-  .comp-title { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--ink); }
-  .comp-code { font-family: var(--mono); font-size: 11px; background: var(--surface); border: 1px solid var(--rule-soft); padding: 3px 6px; border-radius: 2px; color: var(--ink-2); word-break: break-all; margin-top: 2px; }
-  .complement-card p { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--ink-2); }
+ /* NOVA SEÇÃO 5: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES) */
+ .complement-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+ .complement-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 3px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+ .complement-card.mcp { border-left: 3px solid #7C3AED; }
+ .complement-card.skill { border-left: 3px solid #2563EB; }
+ .complement-card.plugin { border-left: 3px solid #059669; }
+ .complement-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 2px; }
+ .comp-tag { font-family: var(--mono); font-size: 9.5px; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 2px; letter-spacing: .06em; }
+ .complement-card.mcp .comp-tag { background: #EDE9FE; color: #7C3AED; }
+ .complement-card.skill .comp-tag { background: #DBEAFE; color: #2563EB; }
+ .complement-card.plugin .comp-tag { background: #D1FAE5; color: #059669; }
+ .comp-title { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--ink); }
+ .comp-code { font-family: var(--mono); font-size: 11px; background: var(--surface); border: 1px solid var(--rule-soft); padding: 3px 6px; border-radius: 2px; color: var(--ink-2); word-break: break-all; margin-top: 2px; }
+ .complement-card p { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--ink-2); }
 
-  /* SEÇÃO DESIGN SYSTEM & WHITE-LABEL */
-  .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
-  .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
-  .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
-  .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
-  .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
-  .ds-badge.esforco-alto { background: #FFEBE6; color: #DE350B; border: 1px solid #FFBDAD; }
-  .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
-  .ds-badge.wl-ready { background: #EAE6FF; color: #403294; border: 1px solid #C0B6F2; }
+ /* SEÇÃO DESIGN SYSTEM & WHITE-LABEL */
+ .ds-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+ .ds-badges { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+ .ds-badge { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; letter-spacing: .06em; }
+ .ds-badge.esforco-minimo { background: #E3FCEF; color: #00875A; border: 1px solid #ABF5D1; }
+ .ds-badge.esforco-headless { background: #DEEBFF; color: #0747A6; border: 1px solid #B3D4FF; }
+ .ds-badge.esforco-medio { background: #FFF0B3; color: #974F0C; border: 1px solid #FFE380; }
+ .ds-badge.esforco-alto { background: #FFEBE6; color: #DE350B; border: 1px solid #FFBDAD; }
+ .ds-badge.stack-ui { background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--rule-soft); }
+ .ds-badge.wl-ready { background: #EAE6FF; color: #403294; border: 1px solid #C0B6F2; }
 
-  .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
-  .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
-  .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
-  .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
-  .ds-card p strong { color: var(--ink); }
-  .ds-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
+ .ds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-top: 4px; }
+ .ds-card { background: var(--surface-2); border: 1px solid var(--rule-soft); border-radius: 2px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; }
+ .ds-lbl { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+ .ds-card p { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+ .ds-card p strong { color: var(--ink); }
+ .ds-card code { font-family: var(--mono); font-size: 11.5px; background: var(--surface); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--rule-soft); }
 
 </style>
 </head>
@@ -252,847 +252,847 @@
 
 <div class="wrap">
 
-  <header>
-    <div class="header-top">
-      <a class="back-link" href="index.html">← Voltar ao Hub Central</a>
-      <span class="camada-pill">Dossiê Vertical · SaaS em Foco</span>
-    </div>
+ <header>
+ <div class="header-top">
+ <a class="back-link" href="index.html">← Voltar ao Hub Central</a>
+ <span class="camada-pill">Dossiê Vertical · SaaS em Foco</span>
+ </div>
 
-    <div class="hero">
-      <h1>Dossiê Vertical: 5 Alternativas Open Source que Superam o Remotion</h1>
-      <p class="deck">Desmantelamento técnico do Remotion e plataformas comerciais de edição e animação de vídeo programática baseadas em código. Conheça o Quinteto Soberano Open Source: a ferramenta mais robusta, a mais completa, a mais moderna, a mais leve e a mais simples, cobrindo animações vetoriais em TypeScript com preview em tempo real (Motion Canvas), geração matemática (Manim), composição em Python (MoviePy) e automações agênticas via MCP.</p>
-    </div>
+ <div class="hero">
+ <h1>Dossiê Vertical: 5 Alternativas Open Source que Superam o Remotion</h1>
+ <p class="deck">Desmantelamento técnico do Remotion e plataformas comerciais de edição e animação de vídeo programática baseadas em código. Conheça o Quinteto Soberano Open Source: a ferramenta mais robusta, a mais completa, a mais moderna, a mais leve e a mais simples, cobrindo animações vetoriais em TypeScript com preview em tempo real (Motion Canvas), geração matemática (Manim), composição em Python (MoviePy) e automações agênticas via MCP.</p>
+ </div>
 
-    <!-- ALVO SAAS EM FOCO -->
-    <div class="target-box">
-      <span class="target-tag">SaaS em Foco sob Desmantelamento</span>
-      <h4>Remotion (React-Based Video Engine Commercial) (US$ 360 a US$ 1.800/ano por empresa (licença comercial paga obrigatória para empresas com receita e cobrança pesada no Remotion Cloud))</h4>
-      <p><strong>Principais Limitações:</strong> Licença comercial restritiva (não é 100% livre/OSI para empresas com receita), complexidade para gerenciar renderizações no Chromium e custo por minuto renderizado na nuvem oficial.</p>
-      <div class="target-pills">
-        <span class="target-pill">⚠️ Riscos de Privacidade: Projetos de marketing dinâmico e dados de clientes injetados em vídeos enviados para pipelines de terceiros.</span>
-        <span class="target-pill">💸 Modelo: Cobrança por Assento / Recorrente</span>
-        <span class="target-pill">🔒 Nuvem Fechada</span>
-      </div>
-    </div>
+ <!-- ALVO SAAS EM FOCO -->
+ <div class="target-box">
+ <span class="target-tag">SaaS em Foco sob Desmantelamento</span>
+ <h4>Remotion (React-Based Video Engine Commercial) (US$ 360 a US$ 1.800/ano por empresa (licença comercial paga obrigatória para empresas com receita e cobrança pesada no Remotion Cloud))</h4>
+ <p><strong>Principais Limitações:</strong> Licença comercial restritiva (não é 100% livre/OSI para empresas com receita), complexidade para gerenciar renderizações no Chromium e custo por minuto renderizado na nuvem oficial.</p>
+ <div class="target-pills">
+ <span class="target-pill"> Riscos de Privacidade: Projetos de marketing dinâmico e dados de clientes injetados em vídeos enviados para pipelines de terceiros.</span>
+ <span class="target-pill"> Modelo: Cobrança por Assento / Recorrente</span>
+ <span class="target-pill"> Nuvem Fechada</span>
+ </div>
+ </div>
 
-    <div class="hero-stats">
-      <div class="stat-card">
-        <div class="num">5 Motores</div>
-        <div class="lbl">Quinteto Soberano</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">Remotion Commercial</div>
-        <div class="lbl">SaaS Eliminado</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">R$ 18.000/ano (operação de vídeo dinâmico)</div>
-        <div class="lbl">Economia Estimada/Ano</div>
-      </div>
-      <div class="stat-card">
-        <div class="num">100% OSI</div>
-        <div class="lbl">Conformidade Aberta</div>
-      </div>
-    </div>
+ <div class="hero-stats">
+ <div class="stat-card">
+ <div class="num">5 Motores</div>
+ <div class="lbl">Quinteto Soberano</div>
+ </div>
+ <div class="stat-card">
+ <div class="num">Remotion Commercial</div>
+ <div class="lbl">SaaS Eliminado</div>
+ </div>
+ <div class="stat-card">
+ <div class="num">R$ 18.000/ano (operação de vídeo dinâmico)</div>
+ <div class="lbl">Economia Estimada/Ano</div>
+ </div>
+ <div class="stat-card">
+ <div class="num">100% OSI</div>
+ <div class="lbl">Conformidade Aberta</div>
+ </div>
+ </div>
 
-    <div class="grid2">
-      <div class="route red">
-        <span class="tag">Rota Frágil (Proprietária)</span>
-        <h4>Rota Frágil (Remotion Comercial & Nuvem)</h4>
-        <p>Custos em dólar para licenciar código React para vídeo, restrições contratuais sobre faturamento da empresa e dependência de serviços em nuvem caros.</p>
-      </div>
-      <div class="route green">
-        <span class="tag">Rota Soberana (Quinteto Open Source)</span>
-        <h4>Rota Soberana (Quinteto Open Source & Programmatic Video)</h4>
-        <p>Animações e renderizações de vídeo 100% baseadas em código sob licenças abertas permissivas (MIT/Apache), renderização em servidores próprios e geração infinita de vídeos a custo zero.</p>
-      </div>
-    </div>
-  </header>
+ <div class="grid2">
+ <div class="route red">
+ <span class="tag">Rota Frágil (Proprietária)</span>
+ <h4>Rota Frágil (Remotion Comercial & Nuvem)</h4>
+ <p>Custos em dólar para licenciar código React para vídeo, restrições contratuais sobre faturamento da empresa e dependência de serviços em nuvem caros.</p>
+ </div>
+ <div class="route green">
+ <span class="tag">Rota Soberana (Quinteto Open Source)</span>
+ <h4>Rota Soberana (Quinteto Open Source & Programmatic Video)</h4>
+ <p>Animações e renderizações de vídeo 100% baseadas em código sob licenças abertas permissivas (MIT/Apache), renderização em servidores próprios e geração infinita de vídeos a custo zero.</p>
+ </div>
+ </div>
+ </header>
 
-  <div class="sec-head">
-    <span class="sec-num">Parte 1</span>
-    <h2>Matriz Comparativa do Quinteto Soberano</h2>
-    <p class="sec-note">Classificação das 5 ferramentas que igualam ou superam o Remotion (React-Based Video Engine Commercial) sob 5 perspectivas de engenharia.</p>
-  </div>
+ <div class="sec-head">
+ <span class="sec-num">Parte 1</span>
+ <h2>Matriz Comparativa do Quinteto Soberano</h2>
+ <p class="sec-note">Classificação das 5 ferramentas que igualam ou superam o Remotion (React-Based Video Engine Commercial) sob 5 perspectivas de engenharia.</p>
+ </div>
 
-  <div class="tablewrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Classificação</th>
-          <th>Ferramenta Soberana</th>
-          <th>Substitui</th>
-          <th>Economia</th>
-          <th>Licença</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="rank">01</td>
-          <td class="classificacao">A Mais Robusta</td>
-          <td class="tool"><a href="#card-01"><strong>Motion Canvas (Animações Programáticas em TypeScript com Preview ao Vivo)</strong></a></td>
-          <td class="saas">Remotion Core + After Effects</td>
-          <td class="econ">R$ 14.400/ano</td>
-          <td class="lic"><span class="lic-badge">MIT</span></td>
-        </tr>
-        <tr>
-          <td class="rank">02</td>
-          <td class="classificacao">A Mais Completa</td>
-          <td class="tool"><a href="#card-02"><strong>Manim Community (O Motor Lendário de Animações Explicativas e Gráficos em Python)</strong></a></td>
-          <td class="saas">Remotion Educational Videos</td>
-          <td class="econ">R$ 18.000/ano</td>
-          <td class="lic"><span class="lic-badge">MIT</span></td>
-        </tr>
-        <tr>
-          <td class="rank">03</td>
-          <td class="classificacao">A Mais Moderna</td>
-          <td class="tool"><a href="#card-03"><strong>MoviePy (O Motor Universal de Edição e Composição de Vídeo em Python)</strong></a></td>
-          <td class="saas">Remotion Video Composition</td>
-          <td class="econ">R$ 12.000/ano</td>
-          <td class="lic"><span class="lic-badge">MIT</span></td>
-        </tr>
-        <tr>
-          <td class="rank">04</td>
-          <td class="classificacao">A Mais Leve</td>
-          <td class="tool"><a href="#card-04"><strong>Editly (Renderização Declarativa de Vídeos a Partir de Especificações JSON)</strong></a></td>
-          <td class="saas">Remotion JSON API</td>
-          <td class="econ">R$ 9.600/ano</td>
-          <td class="lic"><span class="lic-badge">MIT</span></td>
-        </tr>
-        <tr>
-          <td class="rank">05</td>
-          <td class="classificacao">A Mais Simples</td>
-          <td class="tool"><a href="#card-05"><strong>FFmpeg CLI (A Fundação Universal de Manipulação de Vídeo e Áudio do Planeta)</strong></a></td>
-          <td class="saas">Remotion Cloud Workers</td>
-          <td class="econ">R$ 7.200/ano</td>
-          <td class="lic"><span class="lic-badge">LGPL-2.1</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+ <div class="tablewrap">
+ <table>
+ <thead>
+ <tr>
+ <th>#</th>
+ <th>Classificação</th>
+ <th>Ferramenta Soberana</th>
+ <th>Substitui</th>
+ <th>Economia</th>
+ <th>Licença</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td class="rank">01</td>
+ <td class="classificacao">A Mais Robusta</td>
+ <td class="tool"><a href="#card-01"><strong>Motion Canvas (Animações Programáticas em TypeScript com Preview ao Vivo)</strong></a></td>
+ <td class="saas">Remotion Core + After Effects</td>
+ <td class="econ">R$ 14.400/ano</td>
+ <td class="lic"><span class="lic-badge">MIT</span></td>
+ </tr>
+ <tr>
+ <td class="rank">02</td>
+ <td class="classificacao">A Mais Completa</td>
+ <td class="tool"><a href="#card-02"><strong>Manim Community (O Motor Lendário de Animações Explicativas e Gráficos em Python)</strong></a></td>
+ <td class="saas">Remotion Educational Videos</td>
+ <td class="econ">R$ 18.000/ano</td>
+ <td class="lic"><span class="lic-badge">MIT</span></td>
+ </tr>
+ <tr>
+ <td class="rank">03</td>
+ <td class="classificacao">A Mais Moderna</td>
+ <td class="tool"><a href="#card-03"><strong>MoviePy (O Motor Universal de Edição e Composição de Vídeo em Python)</strong></a></td>
+ <td class="saas">Remotion Video Composition</td>
+ <td class="econ">R$ 12.000/ano</td>
+ <td class="lic"><span class="lic-badge">MIT</span></td>
+ </tr>
+ <tr>
+ <td class="rank">04</td>
+ <td class="classificacao">A Mais Leve</td>
+ <td class="tool"><a href="#card-04"><strong>Editly (Renderização Declarativa de Vídeos a Partir de Especificações JSON)</strong></a></td>
+ <td class="saas">Remotion JSON API</td>
+ <td class="econ">R$ 9.600/ano</td>
+ <td class="lic"><span class="lic-badge">MIT</span></td>
+ </tr>
+ <tr>
+ <td class="rank">05</td>
+ <td class="classificacao">A Mais Simples</td>
+ <td class="tool"><a href="#card-05"><strong>FFmpeg CLI (A Fundação Universal de Manipulação de Vídeo e Áudio do Planeta)</strong></a></td>
+ <td class="saas">Remotion Cloud Workers</td>
+ <td class="econ">R$ 7.200/ano</td>
+ <td class="lic"><span class="lic-badge">LGPL-2.1</span></td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
 
-  <div class="sec-head" id="fichas">
-    <span class="sec-num">Parte 2</span>
-    <h2>Fichas Técnicas &amp; Extensões Agênticas (MCPs / Skills)</h2>
-    <p class="sec-note">Detalhamento dos 5 pilares com comandos em Docker e ecossistema de Model Context Protocol (MCP) e Agent Skills.</p>
-  </div>
+ <div class="sec-head" id="fichas">
+ <span class="sec-num">Parte 2</span>
+ <h2>Fichas Técnicas &amp; Extensões Agênticas (MCPs / Skills)</h2>
+ <p class="sec-note">Detalhamento dos 5 pilares com comandos em Docker e ecossistema de Model Context Protocol (MCP) e Agent Skills.</p>
+ </div>
 
-  <div class="search-wrapper">
-    <input class="search-input" id="search-input" onkeyup="filterTools(this.value)" placeholder="Buscar por ferramenta, classificação, MCP server ou comando..." type="text"/>
-    <svg class="search-icon" viewbox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 14z"></path></svg>
-    <div id="search-count" style="margin-top: 6px; font-size: 12px; color: var(--muted); font-family: var(--mono);"></div >
-  </div>
+ <div class="search-wrapper">
+ <input class="search-input" id="search-input" onkeyup="filterTools(this.value)" placeholder="Buscar por ferramenta, classificação, MCP server ou comando..." type="text"/>
+ <svg class="search-icon" viewbox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 14z"></path></svg>
+ <div id="search-count" style="margin-top: 6px; font-size: 12px; color: var(--muted); font-family: var(--mono);"></div >
+ </div>
 
-  <div class="ledger">
-      <article class="entry" id="card-01">
-        <div class="entry-rank">01</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>Motion Canvas (Animações Programáticas em TypeScript com Preview ao Vivo)</h3>
-            <span class="class-badge">A Mais Robusta</span>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: Remotion Core + After Effects</span>
-            <span class="econ-badge">R$ 14.400/ano</span>
-            <span class="lic-badge">MIT</span>
-            <span class="kind">TypeScript-First Programmatic Animation Suite</span>
-          </div>
+ <div class="ledger">
+ <article class="entry" id="card-01">
+ <div class="entry-rank">01</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>Motion Canvas (Animações Programáticas em TypeScript com Preview ao Vivo)</h3>
+ <span class="class-badge">A Mais Robusta</span>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: Remotion Core + After Effects</span>
+ <span class="econ-badge">R$ 14.400/ano</span>
+ <span class="lic-badge">MIT</span>
+ <span class="kind">TypeScript-First Programmatic Animation Suite</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> Suíte aberta líder para criação de vídeos e animações de alta precisão através de código TypeScript puro: editor visual no navegador com linha do tempo interativa, visualização em tempo real (hot reload) e exportação em vídeo MP4 de 60 FPS.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em TypeScript com motor de animação baseado em geradores (generators/yield). Permite programar física de movimentos, transições vetoriais, tipografia dinâmica e código destacado com controle absoluto de tempo.</p>
-            <div class="code-box">
-              <pre><code>npm create @motion-canvas@latest meu-video && cd meu-video && npm install && npm start</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> Suíte aberta líder para criação de vídeos e animações de alta precisão através de código TypeScript puro: editor visual no navegador com linha do tempo interativa, visualização em tempo real (hot reload) e exportação em vídeo MP4 de 60 FPS.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em TypeScript com motor de animação baseado em geradores (generators/yield). Permite programar física de movimentos, transições vetoriais, tipografia dinâmica e código destacado com controle absoluto de tempo.</p>
+ <div class="code-box">
+ <pre><code>npm create @motion-canvas@latest meu-video && cd meu-video && npm install && npm start</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>Remotion Core + After Effects</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 14.400/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>Remotion Core + After Effects</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 14.400/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">2 GB RAM / 2 vCPU</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>O Motion Canvas é a resposta aberta perfeita ao Remotion: 100% livre sob licença MIT, muito mais rápido para pré-visualizar no navegador e com uma experiência de programação deliciosa.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://github.com/motion-canvas/motion-canvas" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (motion-canvas/motion-canvas)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">2 GB RAM / 2 vCPU</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>O Motion Canvas é a resposta aberta perfeita ao Remotion: 100% livre sob licença MIT, muito mais rápido para pré-visualizar no navegador e com uma experiência de programação deliciosa.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://github.com/motion-canvas/motion-canvas" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (motion-canvas/motion-canvas)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Inicialização do Projeto</div>
-                <p>Execute npm create @motion-canvas@latest para criar o projeto e abra o editor web na porta 9000.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Programação da Cena</div>
-                <p>Escreva a animação usando funções assíncronas simples (ex: all(circle().scale(2, 1), text().opacity(1, 1))).</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> Renderização do Vídeo</div>
-                <p>Clique no botão 'Render' no navegador ou execute a CLI para compilar o vídeo final em alta definição.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Inicialização do Projeto</div>
+ <p>Execute npm create @motion-canvas@latest para criar o projeto e abra o editor web na porta 9000.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Programação da Cena</div>
+ <p>Escreva a animação usando funções assíncronas simples (ex: all(circle().scale(2, 1), text().opacity(1, 1))).</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> Renderização do Vídeo</div>
+ <p>Clique no botão 'Render' no navegador ou execute a CLI para compilar o vídeo final em alta definição.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-minimo">⚡ Mínimo (Plug & Play)</span>
-                <span class="ds-badge stack-ui">TypeScript + WebGL / Canvas + Vite</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>Interface visual moderna e desacoplada com suporte completo a paletas de cores institucionais.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Código aberto sob licença MIT mantido ativamente com atualizações constantes de comunidade.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-minimo"> Mínimo (Plug & Play)</span>
+ <span class="ds-badge stack-ui">TypeScript + WebGL / Canvas + Vite</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>Interface visual moderna e desacoplada com suporte completo a paletas de cores institucionais.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Código aberto sob licença MIT mantido ativamente com atualizações constantes de comunidade.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
-          <div class="entry-section">
-            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
-            <div class="complement-grid">
-          <div class="complement-card mcp">
-            <div class="complement-head">
-              <span class="comp-tag">MCP Server</span>
-              <span class="comp-title">motion-canvas-mcp</span>
-            </div>
-            <p>Servidor MCP para permitir que agentes autônomos gerem vídeos explicativos com gráficos a partir de roteiros técnicos.</p>
-            <div class="comp-code"><code>npx -y @motion-canvas/mcp</code></div>
-          </div>
-          <div class="complement-card skill">
-            <div class="complement-head">
-              <span class="comp-tag">Agent Skill</span>
-              <span class="comp-title">skill-motion-canvas-animator</span>
-            </div>
-            <p>Skill para traduzir narrativas corporativas em código TypeScript do Motion Canvas.</p>
-            <div class="comp-code"><code>.claude/skills/motion-canvas-animator/SKILL.md</code></div>
-          </div>
-          <div class="complement-card plugin">
-            <div class="complement-head">
-              <span class="comp-tag">Code Highlighting</span>
-              <span class="comp-title">motion-canvas-code</span>
-            </div>
-            <p>Animação de transições de código-fonte entre diferentes commits de programação.</p>
-            <div class="comp-code"><code>Componente Code integrado</code></div>
-          </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="entry" id="card-02">
-        <div class="entry-rank">02</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>Manim Community (O Motor Lendário de Animações Explicativas e Gráficos em Python)</h3>
-            <span class="class-badge">A Mais Completa</span>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: Remotion Educational Videos</span>
-            <span class="econ-badge">R$ 18.000/ano</span>
-            <span class="lic-badge">MIT</span>
-            <span class="kind">Mathematical & Educational Animation Engine</span>
-          </div>
+ <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+ <div class="entry-section">
+ <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+ <div class="complement-grid">
+ <div class="complement-card mcp">
+ <div class="complement-head">
+ <span class="comp-tag">MCP Server</span>
+ <span class="comp-title">motion-canvas-mcp</span>
+ </div>
+ <p>Servidor MCP para permitir que agentes autônomos gerem vídeos explicativos com gráficos a partir de roteiros técnicos.</p>
+ <div class="comp-code"><code>npx -y @motion-canvas/mcp</code></div>
+ </div>
+ <div class="complement-card skill">
+ <div class="complement-head">
+ <span class="comp-tag">Agent Skill</span>
+ <span class="comp-title">skill-motion-canvas-animator</span>
+ </div>
+ <p>Skill para traduzir narrativas corporativas em código TypeScript do Motion Canvas.</p>
+ <div class="comp-code"><code>.claude/skills/motion-canvas-animator/SKILL.md</code></div>
+ </div>
+ <div class="complement-card plugin">
+ <div class="complement-head">
+ <span class="comp-tag">Code Highlighting</span>
+ <span class="comp-title">motion-canvas-code</span>
+ </div>
+ <p>Animação de transições de código-fonte entre diferentes commits de programação.</p>
+ <div class="comp-code"><code>Componente Code integrado</code></div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ <article class="entry" id="card-02">
+ <div class="entry-rank">02</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>Manim Community (O Motor Lendário de Animações Explicativas e Gráficos em Python)</h3>
+ <span class="class-badge">A Mais Completa</span>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: Remotion Educational Videos</span>
+ <span class="econ-badge">R$ 18.000/ano</span>
+ <span class="lic-badge">MIT</span>
+ <span class="kind">Mathematical & Educational Animation Engine</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> O motor de animação em código mais famoso do mundo, criado por Grant Sanderson (3Blue1Brown) e mantido pela comunidade aberta: cria vídeos explicativos deslumbrantes com equações, gráficos tridimensionais, geometrias dinâmicas e tipografia limpa.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Construído em Python com Cairo, OpenGL e LaTeX. Transforma classes Python simples (Scene) em sequências cinemáticas de altíssima precisão com interpolação vetorial perfeita.</p>
-            <div class="code-box">
-              <pre><code>pip install manim && manim -pql cena.py MinhaCena</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> O motor de animação em código mais famoso do mundo, criado por Grant Sanderson (3Blue1Brown) e mantido pela comunidade aberta: cria vídeos explicativos deslumbrantes com equações, gráficos tridimensionais, geometrias dinâmicas e tipografia limpa.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Construído em Python com Cairo, OpenGL e LaTeX. Transforma classes Python simples (Scene) em sequências cinemáticas de altíssima precisão com interpolação vetorial perfeita.</p>
+ <div class="code-box">
+ <pre><code>pip install manim && manim -pql cena.py MinhaCena</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>Remotion Educational Videos</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 18.000/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>Remotion Educational Videos</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 18.000/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">4 GB RAM / 2 vCPU</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>Para instituições de ensino, fintechs e empresas técnicas que precisam explicar conceitos complexos através de vídeos didáticos e elegantes, o Manim é insuperável.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://github.com/ManimCommunity/manim" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (ManimCommunity/manim)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">4 GB RAM / 2 vCPU</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>Para instituições de ensino, fintechs e empresas técnicas que precisam explicar conceitos complexos através de vídeos didáticos e elegantes, o Manim é insuperável.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://github.com/ManimCommunity/manim" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (ManimCommunity/manim)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Instalação do Pacote</div>
-                <p>Instale a versão comunitária via pip install manim em seu ambiente Python corporativo.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Escrita da Classe de Cena</div>
-                <p>Crie uma classe herdando de Scene e use self.play(Create(grafico), Write(titulo)) para animar os elementos.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> Renderização Acelerada</div>
-                <p>Execute o comando informando a qualidade desejada (-ql para rascunho rápido ou -qh para 4K de cinema).</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Instalação do Pacote</div>
+ <p>Instale a versão comunitária via pip install manim em seu ambiente Python corporativo.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Escrita da Classe de Cena</div>
+ <p>Crie uma classe herdando de Scene e use self.play(Create(grafico), Write(titulo)) para animar os elementos.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> Renderização Acelerada</div>
+ <p>Execute o comando informando a qualidade desejada (-ql para rascunho rápido ou -qh para 4K de cinema).</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-headless">⚡ Headless (API / CLI First)</span>
-                <span class="ds-badge stack-ui">Python + Cairo / OpenGL + FFmpeg</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>Totalmente sob medida: fontes corporativas, cores e geometrias customizáveis via código.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Projeto com comunidade internacional de milhares de colaboradores sob licença MIT.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-headless"> Headless (API / CLI First)</span>
+ <span class="ds-badge stack-ui">Python + Cairo / OpenGL + FFmpeg</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>Totalmente sob medida: fontes corporativas, cores e geometrias customizáveis via código.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Projeto com comunidade internacional de milhares de colaboradores sob licença MIT.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
-          <div class="entry-section">
-            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
-            <div class="complement-grid">
-          <div class="complement-card plugin">
-            <div class="complement-head">
-              <span class="comp-tag">OpenGL Live Mode</span>
-              <span class="comp-title">manim-interactive</span>
-            </div>
-            <p>Renderização interativa em tempo real com controle de câmera 3D pelo mouse.</p>
-            <div class="comp-code"><code>manim cena.py MinhaCena --renderer=opengl</code></div>
-          </div>
-          <div class="complement-card skill">
-            <div class="complement-head">
-              <span class="comp-tag">Agent Skill</span>
-              <span class="comp-title">skill-manim-explainer-coder</span>
-            </div>
-            <p>Skill para escrever scripts Manim a partir de artigos acadêmicos ou relatórios financeiros.</p>
-            <div class="comp-code"><code>.claude/skills/manim-explainer-coder/SKILL.md</code></div>
-          </div>
-          <div class="complement-card plugin">
-            <div class="complement-head">
-              <span class="comp-tag">Jupyter Integration</span>
-              <span class="comp-title">manim-jupyter</span>
-            </div>
-            <p>Geração de animações diretamente dentro de cadernos de análise de dados de data science.</p>
-            <div class="comp-code"><code>%%manim no Jupyter Notebook</code></div>
-          </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="entry" id="card-03">
-        <div class="entry-rank">03</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>MoviePy (O Motor Universal de Edição e Composição de Vídeo em Python)</h3>
-            <span class="class-badge">A Mais Moderna</span>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: Remotion Video Composition</span>
-            <span class="econ-badge">R$ 12.000/ano</span>
-            <span class="lic-badge">MIT</span>
-            <span class="kind">Pythonic Video Processing & Dynamic Composition Engine</span>
-          </div>
+ <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+ <div class="entry-section">
+ <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+ <div class="complement-grid">
+ <div class="complement-card plugin">
+ <div class="complement-head">
+ <span class="comp-tag">OpenGL Live Mode</span>
+ <span class="comp-title">manim-interactive</span>
+ </div>
+ <p>Renderização interativa em tempo real com controle de câmera 3D pelo mouse.</p>
+ <div class="comp-code"><code>manim cena.py MinhaCena --renderer=opengl</code></div>
+ </div>
+ <div class="complement-card skill">
+ <div class="complement-head">
+ <span class="comp-tag">Agent Skill</span>
+ <span class="comp-title">skill-manim-explainer-coder</span>
+ </div>
+ <p>Skill para escrever scripts Manim a partir de artigos acadêmicos ou relatórios financeiros.</p>
+ <div class="comp-code"><code>.claude/skills/manim-explainer-coder/SKILL.md</code></div>
+ </div>
+ <div class="complement-card plugin">
+ <div class="complement-head">
+ <span class="comp-tag">Jupyter Integration</span>
+ <span class="comp-title">manim-jupyter</span>
+ </div>
+ <p>Geração de animações diretamente dentro de cadernos de análise de dados de data science.</p>
+ <div class="comp-code"><code>%%manim no Jupyter Notebook</code></div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ <article class="entry" id="card-03">
+ <div class="entry-rank">03</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>MoviePy (O Motor Universal de Edição e Composição de Vídeo em Python)</h3>
+ <span class="class-badge">A Mais Moderna</span>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: Remotion Video Composition</span>
+ <span class="econ-badge">R$ 12.000/ano</span>
+ <span class="lic-badge">MIT</span>
+ <span class="kind">Pythonic Video Processing & Dynamic Composition Engine</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> Biblioteca em Python pura para edição de vídeo programática: cortar cenas, concatenar clipes, inserir textos e legendas dinâmicas, aplicar efeitos de cor, redimensionar para formatos verticais e mixar áudio.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em Python sobre NumPy e FFmpeg. Oferece uma sintaxe fluida e pythônica com classes Clip, CompositeVideoClip e TextClip, integrando-se nativamente com esteiras de processamento de dados e IA.</p>
-            <div class="code-box">
-              <pre><code>pip install moviepy && python -c "from moviepy import VideoFileClip; clip = VideoFileClip('video.mp4').subclipped(0, 10); clip.write_videofile('cortado.mp4');"</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> Biblioteca em Python pura para edição de vídeo programática: cortar cenas, concatenar clipes, inserir textos e legendas dinâmicas, aplicar efeitos de cor, redimensionar para formatos verticais e mixar áudio.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em Python sobre NumPy e FFmpeg. Oferece uma sintaxe fluida e pythônica com classes Clip, CompositeVideoClip e TextClip, integrando-se nativamente com esteiras de processamento de dados e IA.</p>
+ <div class="code-box">
+ <pre><code>pip install moviepy && python -c "from moviepy import VideoFileClip; clip = VideoFileClip('video.mp4').subclipped(0, 10); clip.write_videofile('cortado.mp4');"</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>Remotion Video Composition</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 12.000/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>Remotion Video Composition</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 12.000/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">2 GB RAM / 2 vCPU</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>O MoviePy é o cavalo de batalha do processamento de vídeo em Python. Permite que qualquer empresa construa geradores automáticos de vídeos de produtos para e-commerce em menos de 100 linhas de código.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://github.com/Zulko/moviepy" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (Zulko/moviepy)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">2 GB RAM / 2 vCPU</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>O MoviePy é o cavalo de batalha do processamento de vídeo em Python. Permite que qualquer empresa construa geradores automáticos de vídeos de produtos para e-commerce em menos de 100 linhas de código.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://github.com/Zulko/moviepy" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (Zulko/moviepy)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Instalação da Biblioteca</div>
-                <p>Instale a versão mais recente do MoviePy com pip install moviepy em seu ambiente virtual.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Composição de Faixas</div>
-                <p>Combine um vídeo gravado com uma moldura corporativa e um texto de preço dinâmico usando CompositeVideoClip.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> Geração em Lote</div>
-                <p>Execute um loop simples para processar 1.000 produtos diferentes gerando 1.000 vídeos verticais para Stories e Reels.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Instalação da Biblioteca</div>
+ <p>Instale a versão mais recente do MoviePy com pip install moviepy em seu ambiente virtual.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Composição de Faixas</div>
+ <p>Combine um vídeo gravado com uma moldura corporativa e um texto de preço dinâmico usando CompositeVideoClip.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> Geração em Lote</div>
+ <p>Execute um loop simples para processar 1.000 produtos diferentes gerando 1.000 vídeos verticais para Stories e Reels.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-headless">⚡ Headless (API / CLI First)</span>
-                <span class="ds-badge stack-ui">Python + NumPy + FFmpeg</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>Puramente headless, operando como infraestrutura invisível de geração de mídia.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Versão 2.x reescrita com alto padrão de qualidade e tipagem estrita sob licença MIT.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-headless"> Headless (API / CLI First)</span>
+ <span class="ds-badge stack-ui">Python + NumPy + FFmpeg</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>Puramente headless, operando como infraestrutura invisível de geração de mídia.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Versão 2.x reescrita com alto padrão de qualidade e tipagem estrita sob licença MIT.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
-          <div class="entry-section">
-            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
-            <div class="complement-grid">
-          <div class="complement-card plugin">
-            <div class="complement-head">
-              <span class="comp-tag">ImageMagick Integration</span>
-              <span class="comp-title">moviepy-imagemagick</span>
-            </div>
-            <p>Geração de legendas e títulos dinâmicos com contornos e sombras corporativas.</p>
-            <div class="comp-code"><code>Renderização de textos estilizados com fontes do sistema</code></div>
-          </div>
-          <div class="complement-card skill">
-            <div class="complement-head">
-              <span class="comp-tag">Agent Skill</span>
-              <span class="comp-title">skill-dynamic-reels-generator</span>
-            </div>
-            <p>Skill para compor vídeos verticais automatizados a partir de títulos e fotos de catálogo.</p>
-            <div class="comp-code"><code>.claude/skills/dynamic-reels-generator/SKILL.md</code></div>
-          </div>
-          <div class="complement-card plugin">
-            <div class="complement-head">
-              <span class="comp-tag">Audio Processing</span>
-              <span class="comp-title">moviepy-audio</span>
-            </div>
-            <p>Mixagem de áudio narrado por IA com trilha sonora de fundo em volume reduzido (audio ducking).</p>
-            <div class="comp-code"><code>clip.with_audio(audio_clip)</code></div>
-          </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="entry" id="card-04">
-        <div class="entry-rank">04</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>Editly (Renderização Declarativa de Vídeos a Partir de Especificações JSON)</h3>
-            <span class="class-badge">A Mais Leve</span>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: Remotion JSON API</span>
-            <span class="econ-badge">R$ 9.600/ano</span>
-            <span class="lic-badge">MIT</span>
-            <span class="kind">Declarative JSON-Driven Video Rendering Tool</span>
-          </div>
+ <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+ <div class="entry-section">
+ <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+ <div class="complement-grid">
+ <div class="complement-card plugin">
+ <div class="complement-head">
+ <span class="comp-tag">ImageMagick Integration</span>
+ <span class="comp-title">moviepy-imagemagick</span>
+ </div>
+ <p>Geração de legendas e títulos dinâmicos com contornos e sombras corporativas.</p>
+ <div class="comp-code"><code>Renderização de textos estilizados com fontes do sistema</code></div>
+ </div>
+ <div class="complement-card skill">
+ <div class="complement-head">
+ <span class="comp-tag">Agent Skill</span>
+ <span class="comp-title">skill-dynamic-reels-generator</span>
+ </div>
+ <p>Skill para compor vídeos verticais automatizados a partir de títulos e fotos de catálogo.</p>
+ <div class="comp-code"><code>.claude/skills/dynamic-reels-generator/SKILL.md</code></div>
+ </div>
+ <div class="complement-card plugin">
+ <div class="complement-head">
+ <span class="comp-tag">Audio Processing</span>
+ <span class="comp-title">moviepy-audio</span>
+ </div>
+ <p>Mixagem de áudio narrado por IA com trilha sonora de fundo em volume reduzido (audio ducking).</p>
+ <div class="comp-code"><code>clip.with_audio(audio_clip)</code></div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ <article class="entry" id="card-04">
+ <div class="entry-rank">04</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>Editly (Renderização Declarativa de Vídeos a Partir de Especificações JSON)</h3>
+ <span class="class-badge">A Mais Leve</span>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: Remotion JSON API</span>
+ <span class="econ-badge">R$ 9.600/ano</span>
+ <span class="lic-badge">MIT</span>
+ <span class="kind">Declarative JSON-Driven Video Rendering Tool</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> Utilitário e biblioteca em JavaScript/Node.js que permite criar vídeos complexos simplesmente escrevendo uma especificação em JSON: define clipes, durações, transições, textos sobrepostos e áudios de forma declarativa.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em Node.js com FFmpeg e shaders em OpenGL. Renderiza transições suaves (fade, slide, dissolve) entre fotos e vídeos sem exigir conhecimento aprofundado de comandos de linha de comando ou edição manual.</p>
-            <div class="code-box">
-              <pre><code>npm install -g editly && editly spec.json</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> Utilitário e biblioteca em JavaScript/Node.js que permite criar vídeos complexos simplesmente escrevendo uma especificação em JSON: define clipes, durações, transições, textos sobrepostos e áudios de forma declarativa.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Desenvolvido em Node.js com FFmpeg e shaders em OpenGL. Renderiza transições suaves (fade, slide, dissolve) entre fotos e vídeos sem exigir conhecimento aprofundado de comandos de linha de comando ou edição manual.</p>
+ <div class="code-box">
+ <pre><code>npm install -g editly && editly spec.json</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>Remotion JSON API</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 9.600/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>Remotion JSON API</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 9.600/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">1 GB RAM / 1 vCPU</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>A melhor ferramenta para integrações web simples: qualquer sistema pode gerar um JSON com 3 fotos, 2 textos e 1 música e o Editly compila o vídeo final comercial na hora.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://github.com/mifi/editly" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (mifi/editly)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">1 GB RAM / 1 vCPU</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>A melhor ferramenta para integrações web simples: qualquer sistema pode gerar um JSON com 3 fotos, 2 textos e 1 música e o Editly compila o vídeo final comercial na hora.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://github.com/mifi/editly" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (mifi/editly)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Criação do Arquivo de Configuração</div>
-                <p>Crie o arquivo spec.json definindo a lista de clipes, caminhos das fotos e textos a serem exibidos.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Definição de Transições</div>
-                <p>Escolha as transições entre cenas (ex: transition: { name: 'directional-wipe', duration: 0.5 }).</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> Renderização Imediata</div>
-                <p>Execute editly spec.json para receber o arquivo MP4 pronto para publicação.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Criação do Arquivo de Configuração</div>
+ <p>Crie o arquivo spec.json definindo a lista de clipes, caminhos das fotos e textos a serem exibidos.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Definição de Transições</div>
+ <p>Escolha as transições entre cenas (ex: transition: { name: 'directional-wipe', duration: 0.5 }).</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> Renderização Imediata</div>
+ <p>Execute editly spec.json para receber o arquivo MP4 pronto para publicação.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-headless">⚡ Headless (API / CLI First)</span>
-                <span class="ds-badge stack-ui">Node.js + OpenGL Shaders + FFmpeg</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>Totalmente desacoplado de interfaces fechadas com código aberto sob licença MIT.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Projeto mantido ativamente por Mikael Finstad com estabilidade comprovada.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-headless"> Headless (API / CLI First)</span>
+ <span class="ds-badge stack-ui">Node.js + OpenGL Shaders + FFmpeg</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>Totalmente desacoplado de interfaces fechadas com código aberto sob licença MIT.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Projeto mantido ativamente por Mikael Finstad com estabilidade comprovada.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
-          <div class="entry-section">
-            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
-            <div class="complement-grid">
-          <div class="complement-card plugin">
-            <div class="complement-head">
-              <span class="comp-tag">GL Transitions</span>
-              <span class="comp-title">editly-gl-transitions</span>
-            </div>
-            <p>Transições cinematográficas fluidas renderizadas por aceleração gráfica.</p>
-            <div class="comp-code"><code>Mais de 50 shaders de transição do gl-transitions.com</code></div>
-          </div>
-          <div class="complement-card skill">
-            <div class="complement-head">
-              <span class="comp-tag">Agent Skill</span>
-              <span class="comp-title">skill-editly-spec-builder</span>
-            </div>
-            <p>Skill para converter dados de imóveis ou veículos à venda em arquivos spec.json do Editly.</p>
-            <div class="comp-code"><code>.claude/skills/editly-spec-builder/SKILL.md</code></div>
-          </div>
-          <div class="complement-card plugin">
-            <div class="complement-head">
-              <span class="comp-tag">Docker Mode</span>
-              <span class="comp-title">editly-docker</span>
-            </div>
-            <p>Execução isolada em contêiner sem necessidade de instalar Node ou FFmpeg na máquina host.</p>
-            <div class="comp-code"><code>docker run -v $PWD:/data mifi/editly spec.json</code></div>
-          </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="entry" id="card-05">
-        <div class="entry-rank">05</div>
-        <div class="entry-body">
-          <div class="entry-top">
-            <h3>FFmpeg CLI (A Fundação Universal de Manipulação de Vídeo e Áudio do Planeta)</h3>
-            <span class="class-badge">A Mais Simples</span>
-            <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
-            <span class="killer-badge">SUBSTITUI: Remotion Cloud Workers</span>
-            <span class="econ-badge">R$ 7.200/ano</span>
-            <span class="lic-badge">LGPL-2.1</span>
-            <span class="kind">Universal Multimedia Processing & Encoding Engine</span>
-          </div>
+ <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+ <div class="entry-section">
+ <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+ <div class="complement-grid">
+ <div class="complement-card plugin">
+ <div class="complement-head">
+ <span class="comp-tag">GL Transitions</span>
+ <span class="comp-title">editly-gl-transitions</span>
+ </div>
+ <p>Transições cinematográficas fluidas renderizadas por aceleração gráfica.</p>
+ <div class="comp-code"><code>Mais de 50 shaders de transição do gl-transitions.com</code></div>
+ </div>
+ <div class="complement-card skill">
+ <div class="complement-head">
+ <span class="comp-tag">Agent Skill</span>
+ <span class="comp-title">skill-editly-spec-builder</span>
+ </div>
+ <p>Skill para converter dados de imóveis ou veículos à venda em arquivos spec.json do Editly.</p>
+ <div class="comp-code"><code>.claude/skills/editly-spec-builder/SKILL.md</code></div>
+ </div>
+ <div class="complement-card plugin">
+ <div class="complement-head">
+ <span class="comp-tag">Docker Mode</span>
+ <span class="comp-title">editly-docker</span>
+ </div>
+ <p>Execução isolada em contêiner sem necessidade de instalar Node ou FFmpeg na máquina host.</p>
+ <div class="comp-code"><code>docker run -v $PWD:/data mifi/editly spec.json</code></div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ <article class="entry" id="card-05">
+ <div class="entry-rank">05</div>
+ <div class="entry-body">
+ <div class="entry-top">
+ <h3>FFmpeg CLI (A Fundação Universal de Manipulação de Vídeo e Áudio do Planeta)</h3>
+ <span class="class-badge">A Mais Simples</span>
+ <span class="senior-badge green">OFICIAL &amp; TESTADO</span>
+ <span class="killer-badge">SUBSTITUI: Remotion Cloud Workers</span>
+ <span class="econ-badge">R$ 7.200/ano</span>
+ <span class="lic-badge">LGPL-2.1</span>
+ <span class="kind">Universal Multimedia Processing & Encoding Engine</span>
+ </div>
 
-          <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
-          <div class="entry-section">
-            <span class="label">1. O Que Faz &amp; Como Funciona</span>
-            <p><strong>Definição Operacional:</strong> A ferramenta mais importante da história da multimídia digital: converte, corta, escala, concatena, comprime, aplica filtros complexos e transmite qualquer formato de vídeo e áudio existente com velocidade inigualável.</p>
-            <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Arquitetura em C altamente otimizada com suporte a instruções vetoriais de CPU e aceleradores gráficos de hardware de todos os fabricantes mundiais (Nvidia NVENC, Intel QSV, AMD AMF, Apple VideoToolbox).</p>
-            <div class="code-box">
-              <pre><code>ffmpeg -i entrada.mp4 -vf "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2" -c:a copy saida_vertical.mp4</code></pre>
-              <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-            </div>
-          </div>
+ <!-- SEÇÃO 1: O QUE FAZ & COMO FUNCIONA -->
+ <div class="entry-section">
+ <span class="label">1. O Que Faz &amp; Como Funciona</span>
+ <p><strong>Definição Operacional:</strong> A ferramenta mais importante da história da multimídia digital: converte, corta, escala, concatena, comprime, aplica filtros complexos e transmite qualquer formato de vídeo e áudio existente com velocidade inigualável.</p>
+ <p><strong>Mecânica Interna &amp; Arquitetura:</strong> Arquitetura em C altamente otimizada com suporte a instruções vetoriais de CPU e aceleradores gráficos de hardware de todos os fabricantes mundiais (Nvidia NVENC, Intel QSV, AMD AMF, Apple VideoToolbox).</p>
+ <div class="code-box">
+ <pre><code>ffmpeg -i entrada.mp4 -vf "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2" -c:a copy saida_vertical.mp4</code></pre>
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
-          <div class="entry-section">
-            <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
-            <div class="econ-grid">
-              <div class="econ-card killer">
-                <span class="econ-lbl">SaaS Proprietário Substituído</span>
-                <span class="econ-val"><strong>Remotion Cloud Workers</strong></span>
-              </div>
-              <div class="econ-card highlight">
-                <span class="econ-lbl">Economia Declarada &amp; ROI</span>
-                <span class="econ-val"><strong>R$ 7.200/ano</strong></span>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 2: ANÁLISE ECONÔMICA -->
+ <div class="entry-section">
+ <span class="label">2. Análise Econômica &amp; Impacto Financeiro</span>
+ <div class="econ-grid">
+ <div class="econ-card killer">
+ <span class="econ-lbl">SaaS Proprietário Substituído</span>
+ <span class="econ-val"><strong>Remotion Cloud Workers</strong></span>
+ </div>
+ <div class="econ-card highlight">
+ <span class="econ-lbl">Economia Declarada &amp; ROI</span>
+ <span class="econ-val"><strong>R$ 7.200/ano</strong></span>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
-          <div class="entry-section">
-            <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
-            <div class="infra-grid">
-              <div class="infra-card">
-                <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
-                <span class="infra-val">128 MB RAM / 1 vCPU</span>
-              </div>
-              <div class="infra-card verdict">
-                <span class="infra-lbl">Por Que é Ouro / Veredito</span>
-                <p>O FFmpeg é a fundação sobre a qual quase todos os softwares de vídeo do mundo operam. Dominar 5 comandos essenciais do FFmpeg elimina a necessidade de pagar por dezenas de ferramentas comerciais.</p>
-              </div>
-            </div>
-            <div style="margin-top:4px;">
-              <a class="repo-btn" href="https://git.ffmpeg.org/ffmpeg.git" rel="noopener noreferrer" target="_blank">
-                <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-                Acessar Repositório Oficial no GitHub (git.ffmpeg.org/ffmpeg.git)
-              </a>
-            </div>
-          </div>
+ <!-- SEÇÃO 3: REQUISITOS DE INFRAESTRUTURA & VEREDITO -->
+ <div class="entry-section">
+ <span class="label">3. Requisitos de Infraestrutura &amp; Veredito Técnico</span>
+ <div class="infra-grid">
+ <div class="infra-card">
+ <span class="infra-lbl">Consumo de Recursos &amp; Hardware</span>
+ <span class="infra-val">128 MB RAM / 1 vCPU</span>
+ </div>
+ <div class="infra-card verdict">
+ <span class="infra-lbl">Por Que é Ouro / Veredito</span>
+ <p>O FFmpeg é a fundação sobre a qual quase todos os softwares de vídeo do mundo operam. Dominar 5 comandos essenciais do FFmpeg elimina a necessidade de pagar por dezenas de ferramentas comerciais.</p>
+ </div>
+ </div>
+ <div style="margin-top:4px;">
+ <a class="repo-btn" href="https://git.ffmpeg.org/ffmpeg.git" rel="noopener noreferrer" target="_blank">
+ <svg viewbox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+ Acessar Repositório Oficial no GitHub (git.ffmpeg.org/ffmpeg.git)
+ </a>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
-          <div class="entry-section">
-            <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
-            <div class="steps-grid">
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 01</span> Instalação do Binário</div>
-                <p>Instale o FFmpeg via winget install Gyan.FFmpeg no Windows ou através do gerenciador de pacotes da sua distribuição Linux.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 02</span> Conversão e Compressão</div>
-                <p>Execute ffmpeg -i video.mov -c:v libx264 -crf 23 saida.mp4 para reduzir o tamanho de um vídeo em 80% mantendo a qualidade visual.</p>
-              </div>
-              <div class="step-card">
-                <div class="step-head"><span class="step-badge">Passo 03</span> Inserção de Legenda Queimada</div>
-                <p>Execute ffmpeg -i video.mp4 -vf "subtitles=legendas.srt" legendado.mp4 para fixar legendas no vídeo com 1 comando.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 4: COMO USAR NO DIA A DIA -->
+ <div class="entry-section">
+ <span class="label">4. Como Usar no Dia a Dia (Guia Prático)</span>
+ <div class="steps-grid">
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 01</span> Instalação do Binário</div>
+ <p>Instale o FFmpeg via winget install Gyan.FFmpeg no Windows ou através do gerenciador de pacotes da sua distribuição Linux.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 02</span> Conversão e Compressão</div>
+ <p>Execute ffmpeg -i video.mov -c:v libx264 -crf 23 saida.mp4 para reduzir o tamanho de um vídeo em 80% mantendo a qualidade visual.</p>
+ </div>
+ <div class="step-card">
+ <div class="step-head"><span class="step-badge">Passo 03</span> Inserção de Legenda Queimada</div>
+ <p>Execute ffmpeg -i video.mp4 -vf "subtitles=legendas.srt" legendado.mp4 para fixar legendas no vídeo com 1 comando.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
-          <div class="entry-section">
-            <div class="ds-header">
-              <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
-              <div class="ds-badges">
-                <span class="ds-badge esforco-headless">⚡ Headless (API / CLI First)</span>
-                <span class="ds-badge stack-ui">C Puro + Assembly Otimizado + CLI</span>
-                <span class="ds-badge wl-ready">White-Label Nativo</span>
-              </div>
-            </div>
-            <div class="ds-grid">
-              <div class="ds-card">
-                <span class="ds-lbl">Mecânica de Customização</span>
-                <p>Totalmente invisível, operando como o motor de mídia padrão da indústria tecnológica.</p>
-              </div>
-              <div class="ds-card">
-                <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
-                <p>Projeto com governança de mais de 24 anos sob licenças permissivas LGPL/GPL.</p>
-              </div>
-            </div>
-          </div>
+ <!-- SEÇÃO 5: WHITE-LABEL & ADERÊNCIA AO DESIGN SYSTEM CORPORATIVO -->
+ <div class="entry-section">
+ <div class="ds-header">
+ <span class="label">5. White-Label &amp; Aderência ao Design System Corporativo</span>
+ <div class="ds-badges">
+ <span class="ds-badge esforco-headless"> Headless (API / CLI First)</span>
+ <span class="ds-badge stack-ui">C Puro + Assembly Otimizado + CLI</span>
+ <span class="ds-badge wl-ready">White-Label Nativo</span>
+ </div>
+ </div>
+ <div class="ds-grid">
+ <div class="ds-card">
+ <span class="ds-lbl">Mecânica de Customização</span>
+ <p>Totalmente invisível, operando como o motor de mídia padrão da indústria tecnológica.</p>
+ </div>
+ <div class="ds-card">
+ <span class="ds-lbl">Impacto em Upgrades &amp; Manutenibilidade</span>
+ <p>Projeto com governança de mais de 24 anos sob licenças permissivas LGPL/GPL.</p>
+ </div>
+ </div>
+ </div>
 
-          <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
-          <div class="entry-section">
-            <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
-            <div class="complement-grid">
-          <div class="complement-card plugin">
-            <div class="complement-head">
-              <span class="comp-tag">Hardware Acceleration</span>
-              <span class="comp-title">ffmpeg-nvenc</span>
-            </div>
-            <p>Renderização ultra-rápida utilizando o chip de codificação dedicado de placas Nvidia.</p>
-            <div class="comp-code"><code>ffmpeg -i in.mp4 -c:v h264_nvenc out.mp4</code></div>
-          </div>
-          <div class="complement-card skill">
-            <div class="complement-head">
-              <span class="comp-tag">Agent Skill</span>
-              <span class="comp-title">skill-ffmpeg-command-crafter</span>
-            </div>
-            <p>Skill para sintetizar comandos complexos de filtros de vídeo (filter_complex) do FFmpeg.</p>
-            <div class="comp-code"><code>.claude/skills/ffmpeg-command-crafter/SKILL.md</code></div>
-          </div>
-          <div class="complement-card plugin">
-            <div class="complement-head">
-              <span class="comp-tag">Audio Normalization</span>
-              <span class="comp-title">ffmpeg-loudnorm</span>
-            </div>
-            <p>Normalização de áudio para padrões internacionais de transmissão de rádio e TV.</p>
-            <div class="comp-code"><code>ffmpeg -i in.wav -af loudnorm out.wav</code></div>
-          </div>
-            </div>
-          </div>
-        </div>
-      </article>
-  </div>
+ <!-- SEÇÃO 6: USO COMPLEMENTAR (MCPS, SKILLS & EXTENSÕES AGÊNTICAS) -->
+ <div class="entry-section">
+ <span class="label">6. Uso Complementar &amp; Ecossistema Agêntico (MCPs, Skills &amp; Plugins)</span>
+ <div class="complement-grid">
+ <div class="complement-card plugin">
+ <div class="complement-head">
+ <span class="comp-tag">Hardware Acceleration</span>
+ <span class="comp-title">ffmpeg-nvenc</span>
+ </div>
+ <p>Renderização ultra-rápida utilizando o chip de codificação dedicado de placas Nvidia.</p>
+ <div class="comp-code"><code>ffmpeg -i in.mp4 -c:v h264_nvenc out.mp4</code></div>
+ </div>
+ <div class="complement-card skill">
+ <div class="complement-head">
+ <span class="comp-tag">Agent Skill</span>
+ <span class="comp-title">skill-ffmpeg-command-crafter</span>
+ </div>
+ <p>Skill para sintetizar comandos complexos de filtros de vídeo (filter_complex) do FFmpeg.</p>
+ <div class="comp-code"><code>.claude/skills/ffmpeg-command-crafter/SKILL.md</code></div>
+ </div>
+ <div class="complement-card plugin">
+ <div class="complement-head">
+ <span class="comp-tag">Audio Normalization</span>
+ <span class="comp-title">ffmpeg-loudnorm</span>
+ </div>
+ <p>Normalização de áudio para padrões internacionais de transmissão de rádio e TV.</p>
+ <div class="comp-code"><code>ffmpeg -i in.wav -af loudnorm out.wav</code></div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </article>
+ </div>
 
 </div>
 
 
 <script>
 function filterTools(query) {
-  const q = query.toLowerCase().trim();
-  const entries = document.querySelectorAll('.entry');
-  const rows = document.querySelectorAll('.tablewrap tbody tr');
-  let visibleCount = 0;
+ const q = query.toLowerCase().trim();
+ const entries = document.querySelectorAll('.entry');
+ const rows = document.querySelectorAll('.tablewrap tbody tr');
+ let visibleCount = 0;
 
-  entries.forEach(entry => {
-    const text = entry.innerText.toLowerCase();
-    if (!q || text.includes(q)) {
-      entry.style.display = 'grid';
-      visibleCount++;
-    } else {
-      entry.style.display = 'none';
-    }
-  });
+ entries.forEach(entry => {
+ const text = entry.innerText.toLowerCase();
+ if (!q || text.includes(q)) {
+ entry.style.display = 'grid';
+ visibleCount++;
+ } else {
+ entry.style.display = 'none';
+ }
+ });
 
-  rows.forEach(row => {
-    const text = row.innerText.toLowerCase();
-    if (!q || text.includes(q)) {
-      row.style.display = '';
-    } else {
-      row.style.display = 'none';
-    }
-  });
+ rows.forEach(row => {
+ const text = row.innerText.toLowerCase();
+ if (!q || text.includes(q)) {
+ row.style.display = '';
+ } else {
+ row.style.display = 'none';
+ }
+ });
 
-  const countEl = document.getElementById('search-count');
-  if (countEl) {
-    countEl.innerText = q ? `${visibleCount} ferramentas encontradas` : '';
-  }
+ const countEl = document.getElementById('search-count');
+ if (countEl) {
+ countEl.innerText = q ? `${visibleCount} ferramentas encontradas` : '';
+ }
 }
 
 function copyCode(btn) {
-  const code = btn.parentElement.querySelector('code').innerText;
-  navigator.clipboard.writeText(code).then(() => {
-    const orig = btn.innerText;
-    btn.innerText = 'Copiado!';
-    setTimeout(() => btn.innerText = orig, 1500);
-  });
+ const code = btn.parentElement.querySelector('code').innerText;
+ navigator.clipboard.writeText(code).then(() => {
+ const orig = btn.innerText;
+ btn.innerText = 'Copiado!';
+ setTimeout(() => btn.innerText = orig, 1500);
+ });
 }
 </script>
 

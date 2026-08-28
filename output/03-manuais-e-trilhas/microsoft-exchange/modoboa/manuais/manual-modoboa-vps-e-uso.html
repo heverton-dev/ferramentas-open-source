@@ -1,882 +1,882 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Manual Operacional: Modoboa · Deploy VPS &amp; Uso Exaustivo</title>
-  <style>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Manual Operacional: Modoboa · Deploy VPS &amp; Uso Exaustivo</title>
+ <style>
 
-  :root {
-    --font-serif: "Liberation Serif", "Times New Roman", Times, serif;
-    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
-    --paper: #F8FAFC;
-    --surface: #FFFFFF;
-    --ink: #0F172A;
-    --ink-2: #334155;
-    --muted: #64748B;
-    --rule: #CBD5E1;
-    --rule-soft: #E2E8F0;
-    --accent: #0284C7;
-    --accent-dark: #0369A1;
-    --accent-soft: #E0F2FE;
-    --green: #10B981;
-    --green-dark: #065F46;
-    --green-soft: #D1FAE5;
-    --gold: #F59E0B;
-    --gold-soft: #FEF3C7;
-    --purple: #8B5CF6;
-    --purple-soft: #EDE9FE;
-    --code-bg: #0F172A;
-  }
+ :root {
+ --font-serif: "Liberation Serif", "Times New Roman", Times, serif;
+ --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+ --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+ --paper: #F8FAFC;
+ --surface: #FFFFFF;
+ --ink: #0F172A;
+ --ink-2: #334155;
+ --muted: #64748B;
+ --rule: #CBD5E1;
+ --rule-soft: #E2E8F0;
+ --accent: #0284C7;
+ --accent-dark: #0369A1;
+ --accent-soft: #E0F2FE;
+ --green: #10B981;
+ --green-dark: #065F46;
+ --green-soft: #D1FAE5;
+ --gold: #F59E0B;
+ --gold-soft: #FEF3C7;
+ --purple: #8B5CF6;
+ --purple-soft: #EDE9FE;
+ --code-bg: #0F172A;
+ }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: var(--font-sans);
-    background: var(--paper);
-    color: var(--ink);
-    line-height: 1.6;
-    padding: 24px 16px 60px;
-  }
-  .container { max-width: 1060px; margin: 0 auto; }
-  
-  .header-card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 32px;
-    margin-bottom: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
-  .badge-tag {
-    display: inline-block;
-    padding: 4px 10px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: 4px;
-    background: var(--accent-soft);
-    color: var(--accent-dark);
-    margin-bottom: 12px;
-  }
-  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
-  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
-  
-  .hero-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    background: var(--paper);
-    padding: 16px;
-    border-radius: 6px;
-    border: 1px solid var(--rule-soft);
-  }
-  .stat-item { display: flex; flex-direction: column; }
-  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
-  .stat-val { font-size: 14.5px; font-weight: 800; color: var(--ink); }
+ * { box-sizing: border-box; margin: 0; padding: 0; }
+ body {
+ font-family: var(--font-sans);
+ background: var(--paper);
+ color: var(--ink);
+ line-height: 1.6;
+ padding: 24px 16px 60px;
+ }
+ .container { max-width: 1060px; margin: 0 auto; }
+ 
+ .header-card {
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ border-radius: 8px;
+ padding: 32px;
+ margin-bottom: 24px;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+ }
+ .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+ .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+ .badge-tag {
+ display: inline-block;
+ padding: 4px 10px;
+ font-size: 12px;
+ font-weight: 700;
+ text-transform: uppercase;
+ letter-spacing: 0.05em;
+ border-radius: 4px;
+ background: var(--accent-soft);
+ color: var(--accent-dark);
+ margin-bottom: 12px;
+ }
+ h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+ .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+ 
+ .hero-stats {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+ gap: 12px;
+ background: var(--paper);
+ padding: 16px;
+ border-radius: 6px;
+ border: 1px solid var(--rule-soft);
+ }
+ .stat-item { display: flex; flex-direction: column; }
+ .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+ .stat-val { font-size: 14.5px; font-weight: 800; color: var(--ink); }
 
-  .nav-anchors {
-    display: flex;
-    gap: 10px;
-    margin: 20px 0;
-    flex-wrap: wrap;
-  }
-  .nav-anchors a {
-    padding: 8px 14px;
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 6px;
-    color: var(--ink-2);
-    text-decoration: none;
-    font-size: 12.5px;
-    font-weight: 600;
-    transition: all 0.2s;
-  }
-  .nav-anchors a:hover {
-    border-color: var(--accent);
-    color: var(--accent-dark);
-    background: var(--accent-soft);
-  }
+ .nav-anchors {
+ display: flex;
+ gap: 10px;
+ margin: 20px 0;
+ flex-wrap: wrap;
+ }
+ .nav-anchors a {
+ padding: 8px 14px;
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ border-radius: 6px;
+ color: var(--ink-2);
+ text-decoration: none;
+ font-size: 12.5px;
+ font-weight: 600;
+ transition: all 0.2s;
+ }
+ .nav-anchors a:hover {
+ border-color: var(--accent);
+ color: var(--accent-dark);
+ background: var(--accent-soft);
+ }
 
-  .section-card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 28px 32px;
-    margin-bottom: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .section-header {
-    border-bottom: 2px solid var(--rule-soft);
-    padding-bottom: 12px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .section-title { font-size: 20px; font-weight: 800; color: var(--ink); }
+ .section-card {
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ border-radius: 8px;
+ padding: 28px 32px;
+ margin-bottom: 24px;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+ }
+ .section-header {
+ border-bottom: 2px solid var(--rule-soft);
+ padding-bottom: 12px;
+ margin-bottom: 20px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ }
+ .section-title { font-size: 20px; font-weight: 800; color: var(--ink); }
 
-  /* CARDS DE NIVELAMENTO */
-  .grid-conceitos {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-    margin: 16px 0;
-  }
-  .card-conceito {
-    background: var(--paper);
-    border: 1px solid var(--rule-soft);
-    border-radius: 6px;
-    padding: 16px;
-    border-left: 4px solid var(--purple);
-  }
-  .conceito-termo { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
-  .conceito-analogia { font-size: 12.5px; font-weight: 700; color: #6D28D9; background: var(--purple-soft); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
-  .conceito-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+ /* CARDS DE NIVELAMENTO */
+ .grid-conceitos {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+ gap: 16px;
+ margin: 16px 0;
+ }
+ .card-conceito {
+ background: var(--paper);
+ border: 1px solid var(--rule-soft);
+ border-radius: 6px;
+ padding: 16px;
+ border-left: 4px solid var(--purple);
+ }
+ .conceito-termo { font-size: 15px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+ .conceito-analogia { font-size: 12.5px; font-weight: 700; color: #6D28D9; background: var(--purple-soft); padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
+ .conceito-desc { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
 
-  /* PASSOS DE INSTALAÇÃO */
-  .step-box {
-    margin-bottom: 28px;
-    padding-bottom: 24px;
-    border-bottom: 1px dashed var(--rule);
-  }
-  .step-box:last-child { border-bottom: none; }
-  .step-top {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-  }
-  .step-num {
-    background: var(--accent);
-    color: #FFF;
-    font-size: 12px;
-    font-weight: 800;
-    padding: 2px 8px;
-    border-radius: 4px;
-  }
-  .step-heading { font-size: 17px; font-weight: 800; color: var(--ink); }
-  .analogia-box {
-    background: #F0FDF4;
-    border-left: 4px solid var(--green);
-    padding: 8px 12px;
-    border-radius: 0 4px 4px 0;
-    margin: 8px 0;
-    font-size: 13px;
-    color: var(--green-dark);
-  }
-  .feedback-box {
-    background: #FFFBEB;
-    border: 1px solid #FDE68A;
-    padding: 8px 12px;
-    border-radius: 4px;
-    margin: 8px 0;
-    font-size: 12.5px;
-    color: #92400E;
-  }
-  .validacao-box {
-    background: #EFF6FF;
-    border: 1px solid #BFDBFE;
-    padding: 8px 12px;
-    border-radius: 4px;
-    margin: 8px 0;
-    font-size: 12.5px;
-    color: #1E40AF;
-  }
+ /* PASSOS DE INSTALAÇÃO */
+ .step-box {
+ margin-bottom: 28px;
+ padding-bottom: 24px;
+ border-bottom: 1px dashed var(--rule);
+ }
+ .step-box:last-child { border-bottom: none; }
+ .step-top {
+ display: flex;
+ align-items: baseline;
+ gap: 8px;
+ margin-bottom: 8px;
+ flex-wrap: wrap;
+ }
+ .step-num {
+ background: var(--accent);
+ color: #FFF;
+ font-size: 12px;
+ font-weight: 800;
+ padding: 2px 8px;
+ border-radius: 4px;
+ }
+ .step-heading { font-size: 17px; font-weight: 800; color: var(--ink); }
+ .analogia-box {
+ background: #F0FDF4;
+ border-left: 4px solid var(--green);
+ padding: 8px 12px;
+ border-radius: 0 4px 4px 0;
+ margin: 8px 0;
+ font-size: 13px;
+ color: var(--green-dark);
+ }
+ .feedback-box {
+ background: #FFFBEB;
+ border: 1px solid #FDE68A;
+ padding: 8px 12px;
+ border-radius: 4px;
+ margin: 8px 0;
+ font-size: 12.5px;
+ color: #92400E;
+ }
+ .validacao-box {
+ background: #EFF6FF;
+ border: 1px solid #BFDBFE;
+ padding: 8px 12px;
+ border-radius: 4px;
+ margin: 8px 0;
+ font-size: 12.5px;
+ color: #1E40AF;
+ }
 
-  .code-box {
-    position: relative;
-    background: var(--code-bg);
-    border-radius: 6px;
-    margin: 10px 0;
-    overflow: hidden;
-  }
-  .code-box pre {
-    padding: 16px;
-    overflow-x: auto;
-    font-family: var(--mono);
-    font-size: 13px;
-    color: #F8FAFC;
-    line-height: 1.5;
-  }
-  .btn-copy {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    padding: 4px 10px;
-    font-size: 11px;
-    font-weight: 600;
-    background: rgba(255,255,255,0.15);
-    color: #FFF;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-copy:hover { background: rgba(255,255,255,0.3); }
+ .code-box {
+ position: relative;
+ background: var(--code-bg);
+ border-radius: 6px;
+ margin: 10px 0;
+ overflow: hidden;
+ }
+ .code-box pre {
+ padding: 16px;
+ overflow-x: auto;
+ font-family: var(--mono);
+ font-size: 13px;
+ color: #F8FAFC;
+ line-height: 1.5;
+ }
+ .btn-copy {
+ position: absolute;
+ top: 8px;
+ right: 8px;
+ padding: 4px 10px;
+ font-size: 11px;
+ font-weight: 600;
+ background: rgba(255,255,255,0.15);
+ color: #FFF;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ transition: background 0.2s;
+ }
+ .btn-copy:hover { background: rgba(255,255,255,0.3); }
 
-  .cite-badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 3px;
-    background: var(--gold-soft);
-    color: #B45309;
-    vertical-align: super;
-    margin-left: 4px;
-    text-decoration: none;
-  }
+ .cite-badge {
+ display: inline-block;
+ font-size: 10px;
+ font-weight: 700;
+ padding: 1px 6px;
+ border-radius: 3px;
+ background: var(--gold-soft);
+ color: #B45309;
+ vertical-align: super;
+ margin-left: 4px;
+ text-decoration: none;
+ }
 
-  table.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 16px 0;
-    font-size: 13px;
-  }
-  table.data-table th {
-    background: var(--paper);
-    padding: 10px 12px;
-    text-align: left;
-    font-weight: 700;
-    color: var(--ink-2);
-    border-bottom: 2px solid var(--rule);
-  }
-  table.data-table td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--rule-soft);
-    color: var(--ink-2);
-  }
-  table.data-table tr:hover td { background: rgba(2, 132, 199, 0.02); }
+ table.data-table {
+ width: 100%;
+ border-collapse: collapse;
+ margin: 16px 0;
+ font-size: 13px;
+ }
+ table.data-table th {
+ background: var(--paper);
+ padding: 10px 12px;
+ text-align: left;
+ font-weight: 700;
+ color: var(--ink-2);
+ border-bottom: 2px solid var(--rule);
+ }
+ table.data-table td {
+ padding: 10px 12px;
+ border-bottom: 1px solid var(--rule-soft);
+ color: var(--ink-2);
+ }
+ table.data-table tr:hover td { background: rgba(2, 132, 199, 0.02); }
 
-  .trouble-card {
-    background: #FFFBEB;
-    border-left: 4px solid var(--gold);
-    padding: 12px 16px;
-    margin-bottom: 12px;
-    border-radius: 0 4px 4px 0;
-  }
-  .trouble-symptom { font-weight: 700; color: #92400E; font-size: 13.5px; }
-  .trouble-cause { font-size: 13px; color: #78350F; margin: 4px 0; }
-  .trouble-fix { font-family: var(--mono); font-size: 12px; background: #FEF3C7; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+ .trouble-card {
+ background: #FFFBEB;
+ border-left: 4px solid var(--gold);
+ padding: 12px 16px;
+ margin-bottom: 12px;
+ border-radius: 0 4px 4px 0;
+ }
+ .trouble-symptom { font-weight: 700; color: #92400E; font-size: 13.5px; }
+ .trouble-cause { font-size: 13px; color: #78350F; margin: 4px 0; }
+ .trouble-fix { font-family: var(--mono); font-size: 12px; background: #FEF3C7; padding: 4px 8px; border-radius: 4px; display: inline-block; }
 
-  </style>
+ </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- CABEÇALHO -->
-  <div class="header-card">
-    <div class="breadcrumb">
-      <a href="../../listas-open-source/vert-microsoft-exchange.html">← Voltar ao Dossiê Vertical Microsoft-Exchange</a>
-      &nbsp;·&nbsp;
-      <a href="../trilhas/trilha-modoboa-aprendizado.html">Ver Trilha de Aprendizado 🗺️</a>
-    </div>
-    <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
-    <h1>Manual Operacional Completo: Modoboa</h1>
-    <p class="deck">
-      Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
-    </p>
+ <!-- CABEÇALHO -->
+ <div class="header-card">
+ <div class="breadcrumb">
+ <a href="../../listas-open-source/vert-microsoft-exchange.html">← Voltar ao Dossiê Vertical Microsoft-Exchange</a>
+ &nbsp;·&nbsp;
+ <a href="../trilhas/trilha-modoboa-aprendizado.html">Ver Trilha de Aprendizado </a>
+ </div>
+ <span class="badge-tag">Padrão Diamante · Guia de Engenharia em Produção</span>
+ <h1>Manual Operacional Completo: Modoboa</h1>
+ <p class="deck">
+ Guia técnico exaustivo e hiperdidático para colocar a ferramenta em produção na VPS recomendada e dominar 100% de suas funções, mesmo que você nunca tenha programado antes. Totalmente fundamentado em fontes oficiais auditadas.
+ </p>
 
-    <!-- HERO STATS DA VPS -->
-    <div class="hero-stats">
-      <div class="stat-item">
-        <span class="stat-lbl">VPS Recomendada</span>
-        <span class="stat-val">Hetzner Cloud CPX31 (ou UpCloud 4GB)</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Hardware Mínimo</span>
-        <span class="stat-val">4 vCPU Dedicadas · 4 GB RAM (mínimo 3GB; 4GB+ para ClamAV)</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Armazenamento &amp; SO</span>
-        <span class="stat-val">40 GB SSD NVMe · Debian 12 / Ubuntu 22.04 LTS</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Custo Mensal Estimado</span>
-        <span class="stat-val" style="color:var(--accent-dark);">EUR 14,00 a EUR 16,00/mês (~R$ 84 a R$ 96)</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Licença de Uso</span>
-        <span class="stat-val" style="color:var(--green);">ISC (Livre &amp; Comercial)</span>
-      </div>
-    </div>
+ <!-- HERO STATS DA VPS -->
+ <div class="hero-stats">
+ <div class="stat-item">
+ <span class="stat-lbl">VPS Recomendada</span>
+ <span class="stat-val">Hetzner Cloud CPX31 (ou UpCloud 4GB)</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Hardware Mínimo</span>
+ <span class="stat-val">4 vCPU Dedicadas · 4 GB RAM (mínimo 3GB; 4GB+ para ClamAV)</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Armazenamento &amp; SO</span>
+ <span class="stat-val">40 GB SSD NVMe · Debian 12 / Ubuntu 22.04 LTS</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Custo Mensal Estimado</span>
+ <span class="stat-val" style="color:var(--accent-dark);">EUR 14,00 a EUR 16,00/mês (~R$ 84 a R$ 96)</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Licença de Uso</span>
+ <span class="stat-val" style="color:var(--green);">ISC (Livre &amp; Comercial)</span>
+ </div>
+ </div>
 
-    <!-- NAVEGAÇÃO RÁPIDA -->
-    <div class="nav-anchors">
-      <a href="#nivelamento">💡 Módulo 0: Nivelamento para Iniciantes</a>
-      <a href="#instalacao">📦 Parte I: Instalação Passo a Passo</a>
-      <a href="#configuracao">⚙️ Arquivos de Configuração</a>
-      <a href="#primeiro-voo">✈️ Roteiro de Primeiro Voo</a>
-      <a href="#manual-cli">⌨️ Dicionário de Comandos</a>
-      <a href="#manual-api">🌐 Endpoints de API</a>
-      <a href="#troubleshooting">🛠️ Socorro! Não Funcionou</a>
-      <a href="#desinstalacao">🛡️ Desinstalação Cirúrgica VPS</a>
-      <a href="#bibliografia">📚 Referências Bibliográficas</a>
-    </div>
-  </div>
+ <!-- NAVEGAÇÃO RÁPIDA -->
+ <div class="nav-anchors">
+ <a href="#nivelamento"> Módulo 0: Nivelamento para Iniciantes</a>
+ <a href="#instalacao"> Parte I: Instalação Passo a Passo</a>
+ <a href="#configuracao"> Arquivos de Configuração</a>
+ <a href="#primeiro-voo"> Roteiro de Primeiro Voo</a>
+ <a href="#manual-cli">⌨ Dicionário de Comandos</a>
+ <a href="#manual-api"> Endpoints de API</a>
+ <a href="#troubleshooting"> Socorro! Não Funcionou</a>
+ <a href="#desinstalacao"> Desinstalação Cirúrgica VPS</a>
+ <a href="#bibliografia"> Referências Bibliográficas</a>
+ </div>
+ </div>
 
-  <!-- MÓDULO 0: NIVELAMENTO CONCEITUAL -->
-  <div class="section-card" id="nivelamento">
-    <div class="section-header">
-      <h2 class="section-title">Módulo 0: Nivelamento Conceitual (O que você precisa saber antes de começar)</h2>
-      <span class="badge-tag" style="background:var(--purple-soft); color:#6D28D9;">Zero Programação</span>
-    </div>
-    <p style="font-size:14px; color:var(--ink-2); margin-bottom:16px;">
-      Você não precisa ser engenheiro de software para entender como o sistema funciona. Abaixo explicamos os 5 conceitos-chave usando analogias do cotidiano:
-    </p>
-    <div class="grid-conceitos">
-      
-        <div class="card-conceito">
-          <div class="conceito-termo">💡 Modoboa</div>
-          <div class="conceito-analogia">Analogia: Departamento Correios Inteligente</div>
-          <p class="conceito-desc">Gerenciador central de emails. Recebe (Postfix), guarda (Dovecot), controla (Django).</p>
-        </div>
-        
-        <div class="card-conceito">
-          <div class="conceito-termo">💡 Postfix</div>
-          <div class="conceito-analogia">Analogia: Entregador Cartas</div>
-          <p class="conceito-desc">Carteiro que sai pela porta com cartas endereçadas (porta 25 SMTP).</p>
-        </div>
-        
-        <div class="card-conceito">
-          <div class="conceito-termo">💡 Dovecot</div>
-          <div class="conceito-analogia">Analogia: Gerente Gavetas Correspondência</div>
-          <p class="conceito-desc">Coloca carta certa com nome funcionário (portas 143 IMAP ou 110 POP3).</p>
-        </div>
-        
-        <div class="card-conceito">
-          <div class="conceito-termo">💡 Django/Python</div>
-          <div class="conceito-analogia">Analogia: Painel Controle Centralizado</div>
-          <p class="conceito-desc">Painel web onde admin clica criar usuários, domínios.</p>
-        </div>
-        
-        <div class="card-conceito">
-          <div class="conceito-termo">💡 PostgreSQL</div>
-          <div class="conceito-analogia">Analogia: Arquivo Central Documentos</div>
-          <p class="conceito-desc">Banco dados: usuários, domínios, permissões, filtros, histórico.</p>
-        </div>
-        
-    </div>
-  </div>
+ <!-- MÓDULO 0: NIVELAMENTO CONCEITUAL -->
+ <div class="section-card" id="nivelamento">
+ <div class="section-header">
+ <h2 class="section-title">Módulo 0: Nivelamento Conceitual (O que você precisa saber antes de começar)</h2>
+ <span class="badge-tag" style="background:var(--purple-soft); color:#6D28D9;">Zero Programação</span>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:16px;">
+ Você não precisa ser engenheiro de software para entender como o sistema funciona. Abaixo explicamos os 5 conceitos-chave usando analogias do cotidiano:
+ </p>
+ <div class="grid-conceitos">
+ 
+ <div class="card-conceito">
+ <div class="conceito-termo"> Modoboa</div>
+ <div class="conceito-analogia">Analogia: Departamento Correios Inteligente</div>
+ <p class="conceito-desc">Gerenciador central de emails. Recebe (Postfix), guarda (Dovecot), controla (Django).</p>
+ </div>
+ 
+ <div class="card-conceito">
+ <div class="conceito-termo"> Postfix</div>
+ <div class="conceito-analogia">Analogia: Entregador Cartas</div>
+ <p class="conceito-desc">Carteiro que sai pela porta com cartas endereçadas (porta 25 SMTP).</p>
+ </div>
+ 
+ <div class="card-conceito">
+ <div class="conceito-termo"> Dovecot</div>
+ <div class="conceito-analogia">Analogia: Gerente Gavetas Correspondência</div>
+ <p class="conceito-desc">Coloca carta certa com nome funcionário (portas 143 IMAP ou 110 POP3).</p>
+ </div>
+ 
+ <div class="card-conceito">
+ <div class="conceito-termo"> Django/Python</div>
+ <div class="conceito-analogia">Analogia: Painel Controle Centralizado</div>
+ <p class="conceito-desc">Painel web onde admin clica criar usuários, domínios.</p>
+ </div>
+ 
+ <div class="card-conceito">
+ <div class="conceito-termo"> PostgreSQL</div>
+ <div class="conceito-analogia">Analogia: Arquivo Central Documentos</div>
+ <p class="conceito-desc">Banco dados: usuários, domínios, permissões, filtros, histórico.</p>
+ </div>
+ 
+ </div>
+ </div>
 
-  <!-- SEÇÃO 1: INSTALAÇÃO EM PRODUÇÃO -->
-  <div class="section-card" id="instalacao">
-    <div class="section-header">
-      <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
-      <span class="badge-tag">Tempo ~25 a 35 minutos</span>
-    </div>
-    
-        <div class="step-box">
-          <div class="step-top">
-            <span class="step-num">Passo 1</span>
-            <span class="step-heading">Provisionar VPS e SSH</span>
-            <a href="#ref-F01" class="cite-badge">[F01]</a>
-          </div>
-          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Hetzner Cloud, Debian 12, CPX31</p>
-          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Alugar prédio</div>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
-            <pre><code>ssh root@SEU_IP_AQUI</code></pre>
-          </div>
-          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Terminal abre</div>
-          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Prompt root@mail</div>
-        </div>
-        
-        <div class="step-box">
-          <div class="step-top">
-            <span class="step-num">Passo 2</span>
-            <span class="step-heading">Atualizar Sistema</span>
-            <a href="#ref-F02" class="cite-badge">[F02]</a>
-          </div>
-          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Updates Debian + ferramentas essenciais</p>
-          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Limpar prédio</div>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
-            <pre><code>apt-get update && apt-get upgrade -y
+ <!-- SEÇÃO 1: INSTALAÇÃO EM PRODUÇÃO -->
+ <div class="section-card" id="instalacao">
+ <div class="section-header">
+ <h2 class="section-title">Parte I: Instalação em Produção na VPS (Passo a Passo Guiado à Prova de Erros)</h2>
+ <span class="badge-tag">Tempo ~25 a 35 minutos</span>
+ </div>
+ 
+ <div class="step-box">
+ <div class="step-top">
+ <span class="step-num">Passo 1</span>
+ <span class="step-heading">Provisionar VPS e SSH</span>
+ <a href="#ref-F01" class="cite-badge">[F01]</a>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Hetzner Cloud, Debian 12, CPX31</p>
+ <div class="analogia-box"> <strong>Entenda com uma analogia:</strong> Alugar prédio</div>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+ <pre><code>ssh root@SEU_IP_AQUI</code></pre>
+ </div>
+ <div class="feedback-box"> <strong>O que você verá na tela:</strong> Terminal abre</div>
+ <div class="validacao-box"> <strong>Como saber se deu certo:</strong> Prompt root@mail</div>
+ </div>
+ 
+ <div class="step-box">
+ <div class="step-top">
+ <span class="step-num">Passo 2</span>
+ <span class="step-heading">Atualizar Sistema</span>
+ <a href="#ref-F02" class="cite-badge">[F02]</a>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Updates Debian + ferramentas essenciais</p>
+ <div class="analogia-box"> <strong>Entenda com uma analogia:</strong> Limpar prédio</div>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+ <pre><code>apt-get update && apt-get upgrade -y
 apt-get install -y curl wget git build-essential python3-dev python3-pip postgresql postfix dovecot-core dovecot-imapd dovecot-pop3d nginx</code></pre>
-          </div>
-          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Progresso verde 2-3min</div>
-          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> python3 3.11+</div>
-        </div>
-        
-        <div class="step-box">
-          <div class="step-top">
-            <span class="step-num">Passo 3</span>
-            <span class="step-heading">Clonar Repositório Modoboa</span>
-            <a href="#ref-F01" class="cite-badge">[F01]</a>
-          </div>
-          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Download código-fonte do GitHub</p>
-          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Trazer plantas construção</div>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
-            <pre><code>cd /opt && git clone https://github.com/modoboa/modoboa.git
+ </div>
+ <div class="feedback-box"> <strong>O que você verá na tela:</strong> Progresso verde 2-3min</div>
+ <div class="validacao-box"> <strong>Como saber se deu certo:</strong> python3 3.11+</div>
+ </div>
+ 
+ <div class="step-box">
+ <div class="step-top">
+ <span class="step-num">Passo 3</span>
+ <span class="step-heading">Clonar Repositório Modoboa</span>
+ <a href="#ref-F01" class="cite-badge">[F01]</a>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Download código-fonte do GitHub</p>
+ <div class="analogia-box"> <strong>Entenda com uma analogia:</strong> Trazer plantas construção</div>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+ <pre><code>cd /opt && git clone https://github.com/modoboa/modoboa.git
 cd modoboa && git checkout v2.3.0</code></pre>
-          </div>
-          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Git exibe Cloning into</div>
-          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> /opt/modoboa existe</div>
-        </div>
-        
-        <div class="step-box">
-          <div class="step-top">
-            <span class="step-num">Passo 4</span>
-            <span class="step-heading">Instalador Automático</span>
-            <a href="#ref-F03" class="cite-badge">[F03]</a>
-          </div>
-          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Configura PostgreSQL, Postfix, Dovecot, Nginx, Django</p>
-          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Apertar botão construir</div>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
-            <pre><code>cd /opt/modoboa
+ </div>
+ <div class="feedback-box"> <strong>O que você verá na tela:</strong> Git exibe Cloning into</div>
+ <div class="validacao-box"> <strong>Como saber se deu certo:</strong> /opt/modoboa existe</div>
+ </div>
+ 
+ <div class="step-box">
+ <div class="step-top">
+ <span class="step-num">Passo 4</span>
+ <span class="step-heading">Instalador Automático</span>
+ <a href="#ref-F03" class="cite-badge">[F03]</a>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Configura PostgreSQL, Postfix, Dovecot, Nginx, Django</p>
+ <div class="analogia-box"> <strong>Entenda com uma analogia:</strong> Apertar botão construir</div>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+ <pre><code>cd /opt/modoboa
 python3 -m pip install -U pip setuptools wheel
 python3 -m pip install -e .
 modoboa deploy /var/vmail/modoboa</code></pre>
-          </div>
-          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Perguntas hostname/domínio/senha</div>
-          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Installation complete!</div>
-        </div>
-        
-        <div class="step-box">
-          <div class="step-top">
-            <span class="step-num">Passo 5</span>
-            <span class="step-heading">Configurar Firewall UFW</span>
-            <a href="#ref-F05" class="cite-badge">[F05]</a>
-          </div>
-          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Liberar portas 22,25,80,143,110,587,443</p>
-          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Guarita porteiro</div>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
-            <pre><code>ufw default deny incoming && ufw default allow outgoing
+ </div>
+ <div class="feedback-box"> <strong>O que você verá na tela:</strong> Perguntas hostname/domínio/senha</div>
+ <div class="validacao-box"> <strong>Como saber se deu certo:</strong> Installation complete!</div>
+ </div>
+ 
+ <div class="step-box">
+ <div class="step-top">
+ <span class="step-num">Passo 5</span>
+ <span class="step-heading">Configurar Firewall UFW</span>
+ <a href="#ref-F05" class="cite-badge">[F05]</a>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Liberar portas 22,25,80,143,110,587,443</p>
+ <div class="analogia-box"> <strong>Entenda com uma analogia:</strong> Guarita porteiro</div>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+ <pre><code>ufw default deny incoming && ufw default allow outgoing
 ufw allow 22/tcp && ufw allow 25/tcp && ufw allow 80/tcp && ufw allow 143/tcp && ufw allow 110/tcp && ufw allow 587/tcp && ufw allow 443/tcp
 ufw --force enable</code></pre>
-          </div>
-          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Rule added para cada porta</div>
-          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> ufw status OK</div>
-        </div>
-        
-        <div class="step-box">
-          <div class="step-top">
-            <span class="step-num">Passo 6</span>
-            <span class="step-heading">Ativar HTTPS Let's Encrypt</span>
-            <a href="#ref-F04" class="cite-badge">[F04]</a>
-          </div>
-          <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Certificado SSL/TLS que renova automaticamente</p>
-          <div class="analogia-box">💡 <strong>Entenda com uma analogia:</strong> Lacre segurança</div>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
-            <pre><code>apt-get install -y certbot python3-certbot-nginx
+ </div>
+ <div class="feedback-box"> <strong>O que você verá na tela:</strong> Rule added para cada porta</div>
+ <div class="validacao-box"> <strong>Como saber se deu certo:</strong> ufw status OK</div>
+ </div>
+ 
+ <div class="step-box">
+ <div class="step-top">
+ <span class="step-num">Passo 6</span>
+ <span class="step-heading">Ativar HTTPS Let's Encrypt</span>
+ <a href="#ref-F04" class="cite-badge">[F04]</a>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:8px;">Certificado SSL/TLS que renova automaticamente</p>
+ <div class="analogia-box"> <strong>Entenda com uma analogia:</strong> Lacre segurança</div>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Comando</button>
+ <pre><code>apt-get install -y certbot python3-certbot-nginx
 certbot certonly --nginx -d seu-dominio.com
 sudo systemctl restart nginx</code></pre>
-          </div>
-          <div class="feedback-box">🖥️ <strong>O que você verá na tela:</strong> Received certificate em 30s</div>
-          <div class="validacao-box">✅ <strong>Como saber se deu certo:</strong> Cadeado verde https://seu-ip</div>
-        </div>
-        
-  </div>
+ </div>
+ <div class="feedback-box"> <strong>O que você verá na tela:</strong> Received certificate em 30s</div>
+ <div class="validacao-box"> <strong>Como saber se deu certo:</strong> Cadeado verde https://seu-ip</div>
+ </div>
+ 
+ </div>
 
-  <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
-  <div class="section-card" id="configuracao">
-    <div class="section-header">
-      <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
-    </div>
-    
-        <div style="margin-top: 16px;">
-          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/etc/postfix/main.cf</strong>
-          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Integração Postfix com PostgreSQL</p>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
-            <pre><code>myhostname = mail.seu-dominio.com
+ <!-- SEÇÃO 2: ARQUIVOS DE CONFIGURAÇÃO -->
+ <div class="section-card" id="configuracao">
+ <div class="section-header">
+ <h2 class="section-title">Arquivos Canônicos de Configuração (Produção)</h2>
+ </div>
+ 
+ <div style="margin-top: 16px;">
+ <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/etc/postfix/main.cf</strong>
+ <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Integração Postfix com PostgreSQL</p>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+ <pre><code>myhostname = mail.seu-dominio.com
 mydomain = seu-dominio.com
 virtual_mailbox_base = /var/vmail
 virtual_uid_maps = static:901</code></pre>
-          </div>
-        </div>
-        
-        <div style="margin-top: 16px;">
-          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/etc/dovecot/conf.d/10-mail.conf</strong>
-          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Armazenamento maildir IMAP/POP3</p>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
-            <pre><code>mail_location = maildir:~/.maildir:LAYOUT=fs
+ </div>
+ </div>
+ 
+ <div style="margin-top: 16px;">
+ <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/etc/dovecot/conf.d/10-mail.conf</strong>
+ <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Armazenamento maildir IMAP/POP3</p>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+ <pre><code>mail_location = maildir:~/.maildir:LAYOUT=fs
 protocols = imap pop3
 listen = *, ::</code></pre>
-          </div>
-        </div>
-        
-        <div style="margin-top: 16px;">
-          <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/etc/nginx/sites-available/modoboa</strong>
-          <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Proxy reverso Nginx para Django</p>
-          <div class="code-box">
-            <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
-            <pre><code>upstream modoboa { server 127.0.0.1:8000; }
+ </div>
+ </div>
+ 
+ <div style="margin-top: 16px;">
+ <strong style="font-size: 13px; color: var(--ink); font-family: var(--mono);">/etc/nginx/sites-available/modoboa</strong>
+ <p style="font-size: 13px; color: var(--muted); margin-bottom: 6px;">Proxy reverso Nginx para Django</p>
+ <div class="code-box">
+ <button class="btn-copy" onclick="copyCode(this)">Copiar Arquivo</button>
+ <pre><code>upstream modoboa { server 127.0.0.1:8000; }
 server { listen 80; server_name admin.seu-dominio.com; location / { proxy_pass http://modoboa; } }</code></pre>
-          </div>
-        </div>
-        
-  </div>
+ </div>
+ </div>
+ 
+ </div>
 
-  <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
-  <div class="section-card" id="primeiro-voo">
-    <div class="section-header">
-      <h2 class="section-title">Parte II: Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)</h2>
-      <span class="badge-tag" style="background:var(--green-soft); color:var(--green-dark);">Prática Imediata</span>
-    </div>
-    <p style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
-      Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
-    </p>
-    
-        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
-          <strong style="color: var(--accent-dark);">Passo 1: Admin:</strong> Abra https://admin.seu-dominio.com com usuario admin
-          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Dashboard com estatísticas</div>
-        </div>
-        
-        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
-          <strong style="color: var(--accent-dark);">Passo 2: Domínio:</strong> Menu Domínios → +, digite empresa.com.br
-          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Domínio criado e ativo</div>
-        </div>
-        
-        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
-          <strong style="color: var(--accent-dark);">Passo 3: Email:</strong> Domínio → Contas → +, username joao, quota 2GB
-          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> joao@empresa.com.br criado</div>
-        </div>
-        
-        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
-          <strong style="color: var(--accent-dark);">Passo 4: Webmail:</strong> https://mail.seu-dominio.com/webmail/ com joao@empresa.com.br
-          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Bandeja entrada com calendário</div>
-        </div>
-        
-        <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
-          <strong style="color: var(--accent-dark);">Passo 5: Cliente:</strong> Configure Outlook/Thunderbird IMAP mail.seu-dominio.com:143 TLS, SMTP :587
-          <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);">🎯 <strong>Resultado Esperado:</strong> Email chega em segundos</div>
-        </div>
-        
-  </div>
+ <!-- SEÇÃO 3: ROTEIRO DE PRIMEIRO VOO -->
+ <div class="section-card" id="primeiro-voo">
+ <div class="section-header">
+ <h2 class="section-title">Parte II: Roteiro de Primeiro Voo (Sua Primeira Reunião em 3 Minutos)</h2>
+ <span class="badge-tag" style="background:var(--green-soft); color:var(--green-dark);">Prática Imediata</span>
+ </div>
+ <p style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
+ Após concluir a instalação, siga estes passos simples para testar a gravação e a busca semântica:
+ </p>
+ 
+ <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+ <strong style="color: var(--accent-dark);">Passo 1: Admin:</strong> Abra https://admin.seu-dominio.com com usuario admin
+ <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);"> <strong>Resultado Esperado:</strong> Dashboard com estatísticas</div>
+ </div>
+ 
+ <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+ <strong style="color: var(--accent-dark);">Passo 2: Domínio:</strong> Menu Domínios → +, digite empresa.com.br
+ <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);"> <strong>Resultado Esperado:</strong> Domínio criado e ativo</div>
+ </div>
+ 
+ <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+ <strong style="color: var(--accent-dark);">Passo 3: Email:</strong> Domínio → Contas → +, username joao, quota 2GB
+ <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);"> <strong>Resultado Esperado:</strong> joao@empresa.com.br criado</div>
+ </div>
+ 
+ <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+ <strong style="color: var(--accent-dark);">Passo 4: Webmail:</strong> https://mail.seu-dominio.com/webmail/ com joao@empresa.com.br
+ <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);"> <strong>Resultado Esperado:</strong> Bandeja entrada com calendário</div>
+ </div>
+ 
+ <div style="padding: 12px; background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 6px; margin-bottom: 10px;">
+ <strong style="color: var(--accent-dark);">Passo 5: Cliente:</strong> Configure Outlook/Thunderbird IMAP mail.seu-dominio.com:143 TLS, SMTP :587
+ <div style="margin-top: 4px; font-size: 12.5px; color: var(--green-dark);"> <strong>Resultado Esperado:</strong> Email chega em segundos</div>
+ </div>
+ 
+ </div>
 
-  <!-- SEÇÃO 4: MANUAL DE USO CLI -->
-  <div class="section-card" id="manual-cli">
-    <div class="section-header">
-      <h2 class="section-title">Dicionário Completo de Comandos (CLI)</h2>
-    </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Comando / Opção</th>
-          <th>O que faz (em português claro)</th>
-          <th>Exemplo de Execução</th>
-          <th>Fonte</th>
-        </tr>
-      </thead>
-      <tbody>
-        
-        <tr>
-          <td><code style="font-weight:700; color:var(--accent-dark);">modoboa deploy /var/vmail/modoboa</code></td>
-          <td>Inicializa instância de produção</td>
-          <td><code>modoboa deploy /var/vmail/modoboa</code></td>
-          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
-        </tr>
-        
-        <tr>
-          <td><code style="font-weight:700; color:var(--accent-dark);">modoboa migrate</code></td>
-          <td>Aplica migrações do banco de dados</td>
-          <td><code>modoboa migrate</code></td>
-          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
-        </tr>
-        
-        <tr>
-          <td><code style="font-weight:700; color:var(--accent-dark);">postqueue -p</code></td>
-          <td>Mostra emails na fila do Postfix</td>
-          <td><code>postqueue -p</code></td>
-          <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
-        </tr>
-        
-        <tr>
-          <td><code style="font-weight:700; color:var(--accent-dark);">postfix status</code></td>
-          <td>Verifica saúde do Postfix</td>
-          <td><code>postfix status</code></td>
-          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
-        </tr>
-        
-        <tr>
-          <td><code style="font-weight:700; color:var(--accent-dark);">systemctl restart dovecot</code></td>
-          <td>Reinicia serviço Dovecot</td>
-          <td><code>sudo systemctl restart dovecot</code></td>
-          <td><a href="#ref-F05" class="cite-badge">[F05]</a></td>
-        </tr>
-        
-        <tr>
-          <td><code style="font-weight:700; color:var(--accent-dark);">modoboa manage createsuperuser</code></td>
-          <td>Cria admin via linha de comando</td>
-          <td><code>modoboa manage createsuperuser</code></td>
-          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
-        </tr>
-        
-      </tbody>
-    </table>
-  </div>
+ <!-- SEÇÃO 4: MANUAL DE USO CLI -->
+ <div class="section-card" id="manual-cli">
+ <div class="section-header">
+ <h2 class="section-title">Dicionário Completo de Comandos (CLI)</h2>
+ </div>
+ <table class="data-table">
+ <thead>
+ <tr>
+ <th>Comando / Opção</th>
+ <th>O que faz (em português claro)</th>
+ <th>Exemplo de Execução</th>
+ <th>Fonte</th>
+ </tr>
+ </thead>
+ <tbody>
+ 
+ <tr>
+ <td><code style="font-weight:700; color:var(--accent-dark);">modoboa deploy /var/vmail/modoboa</code></td>
+ <td>Inicializa instância de produção</td>
+ <td><code>modoboa deploy /var/vmail/modoboa</code></td>
+ <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+ </tr>
+ 
+ <tr>
+ <td><code style="font-weight:700; color:var(--accent-dark);">modoboa migrate</code></td>
+ <td>Aplica migrações do banco de dados</td>
+ <td><code>modoboa migrate</code></td>
+ <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+ </tr>
+ 
+ <tr>
+ <td><code style="font-weight:700; color:var(--accent-dark);">postqueue -p</code></td>
+ <td>Mostra emails na fila do Postfix</td>
+ <td><code>postqueue -p</code></td>
+ <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
+ </tr>
+ 
+ <tr>
+ <td><code style="font-weight:700; color:var(--accent-dark);">postfix status</code></td>
+ <td>Verifica saúde do Postfix</td>
+ <td><code>postfix status</code></td>
+ <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+ </tr>
+ 
+ <tr>
+ <td><code style="font-weight:700; color:var(--accent-dark);">systemctl restart dovecot</code></td>
+ <td>Reinicia serviço Dovecot</td>
+ <td><code>sudo systemctl restart dovecot</code></td>
+ <td><a href="#ref-F05" class="cite-badge">[F05]</a></td>
+ </tr>
+ 
+ <tr>
+ <td><code style="font-weight:700; color:var(--accent-dark);">modoboa manage createsuperuser</code></td>
+ <td>Cria admin via linha de comando</td>
+ <td><code>modoboa manage createsuperuser</code></td>
+ <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+ </tr>
+ 
+ </tbody>
+ </table>
+ </div>
 
-  <!-- SEÇÃO 5: REFERÊNCIA DE API REST -->
-  <div class="section-card" id="manual-api">
-    <div class="section-header">
-      <h2 class="section-title">Endpoints de API REST &amp; Conexão com Agentes (MCP)</h2>
-    </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>Método</th>
-          <th>Rota</th>
-          <th>Finalidade</th>
-          <th>Payload / Resposta</th>
-          <th>Fonte</th>
-        </tr>
-      </thead>
-      <tbody>
-        
-        <tr>
-          <td><span class="step-num" style="background:#059669;">GET</span></td>
-          <td><code>/api/v1/domains/</code></td>
-          <td>Lista todos domínios</td>
-          <td><pre style="font-size:11px; margin:0;">GET /api/v1/domains/ → [{"name": "empresa.com.br", "active": true}]</pre></td>
-          <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
-        </tr>
-        
-        <tr>
-          <td><span class="step-num" style="background:#059669;">POST</span></td>
-          <td><code>/api/v1/domains/</code></td>
-          <td>Criar novo domínio</td>
-          <td><pre style="font-size:11px; margin:0;">POST {"name": "novo.com.br"}</pre></td>
-          <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
-        </tr>
-        
-        <tr>
-          <td><span class="step-num" style="background:#059669;">GET</span></td>
-          <td><code>/api/v1/statistics/</code></td>
-          <td>Estatísticas do servidor</td>
-          <td><pre style="font-size:11px; margin:0;">GET → {"total_received": 15234, "spam_detected": 2103}</pre></td>
-          <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
-        </tr>
-        
-        <tr>
-          <td><span class="step-num" style="background:#059669;">GET</span></td>
-          <td><code>/api/v1/domains/{id}/accounts/</code></td>
-          <td>Lista contas de um domínio</td>
-          <td><pre style="font-size:11px; margin:0;">GET /api/v1/domains/1/accounts/ → [{"username": "joao"}]</pre></td>
-          <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
-        </tr>
-        
-      </tbody>
-    </table>
-  </div>
+ <!-- SEÇÃO 5: REFERÊNCIA DE API REST -->
+ <div class="section-card" id="manual-api">
+ <div class="section-header">
+ <h2 class="section-title">Endpoints de API REST &amp; Conexão com Agentes (MCP)</h2>
+ </div>
+ <table class="data-table">
+ <thead>
+ <tr>
+ <th>Método</th>
+ <th>Rota</th>
+ <th>Finalidade</th>
+ <th>Payload / Resposta</th>
+ <th>Fonte</th>
+ </tr>
+ </thead>
+ <tbody>
+ 
+ <tr>
+ <td><span class="step-num" style="background:#059669;">GET</span></td>
+ <td><code>/api/v1/domains/</code></td>
+ <td>Lista todos domínios</td>
+ <td><pre style="font-size:11px; margin:0;">GET /api/v1/domains/ → [{"name": "empresa.com.br", "active": true}]</pre></td>
+ <td><a href="#ref-F01" class="cite-badge">[F01]</a></td>
+ </tr>
+ 
+ <tr>
+ <td><span class="step-num" style="background:#059669;">POST</span></td>
+ <td><code>/api/v1/domains/</code></td>
+ <td>Criar novo domínio</td>
+ <td><pre style="font-size:11px; margin:0;">POST {"name": "novo.com.br"}</pre></td>
+ <td><a href="#ref-F02" class="cite-badge">[F02]</a></td>
+ </tr>
+ 
+ <tr>
+ <td><span class="step-num" style="background:#059669;">GET</span></td>
+ <td><code>/api/v1/statistics/</code></td>
+ <td>Estatísticas do servidor</td>
+ <td><pre style="font-size:11px; margin:0;">GET → {"total_received": 15234, "spam_detected": 2103}</pre></td>
+ <td><a href="#ref-F03" class="cite-badge">[F03]</a></td>
+ </tr>
+ 
+ <tr>
+ <td><span class="step-num" style="background:#059669;">GET</span></td>
+ <td><code>/api/v1/domains/{id}/accounts/</code></td>
+ <td>Lista contas de um domínio</td>
+ <td><pre style="font-size:11px; margin:0;">GET /api/v1/domains/1/accounts/ → [{"username": "joao"}]</pre></td>
+ <td><a href="#ref-F04" class="cite-badge">[F04]</a></td>
+ </tr>
+ 
+ </tbody>
+ </table>
+ </div>
 
-  <!-- SEÇÃO 6: TROUBLESHOOTING -->
-  <div class="section-card" id="troubleshooting">
-    <div class="section-header">
-      <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
-    </div>
-    
-        <div class="trouble-card">
-          <div class="trouble-symptom">⚠️ Sintoma: Emails chegam em spam</div>
-          <div class="trouble-cause">Causa Provável: SPF, DKIM ou DMARC não configurados</div>
-          <div>Solução Prática: <code class="trouble-fix">Verificar registros SPF/DKIM no painel. Adicionar no DNS do registrador.</code></div>
-        </div>
-        
-        <div class="trouble-card">
-          <div class="trouble-symptom">⚠️ Sintoma: Port 25 blocked - emails não saem</div>
-          <div class="trouble-cause">Causa Provável: ISP bloqueou porta 25 (comum em residencial)</div>
-          <div>Solução Prática: <code class="trouble-fix">Configure relayhost para smarthost confiável via porta 587 em /etc/postfix/main.cf</code></div>
-        </div>
-        
-        <div class="trouble-card">
-          <div class="trouble-symptom">⚠️ Sintoma: IMAP não conecta com erro</div>
-          <div class="trouble-cause">Causa Provável: Dovecot não está rodando ou permissões /var/vmail erradas</div>
-          <div>Solução Prática: <code class="trouble-fix">sudo systemctl restart dovecot && sudo chown -R vmail:vmail /var/vmail</code></div>
-        </div>
-        
-        <div class="trouble-card">
-          <div class="trouble-symptom">⚠️ Sintoma: Painel web fica lento ou travado</div>
-          <div class="trouble-cause">Causa Provável: PostgreSQL sob pressão ou muitos usuários simultâneos</div>
-          <div>Solução Prática: <code class="trouble-fix">sudo systemctl restart modoboa && monitorar pool connections</code></div>
-        </div>
-        
-        <div class="trouble-card">
-          <div class="trouble-symptom">⚠️ Sintoma: ClamAV/SpamAssassin consumindo 100% CPU</div>
-          <div class="trouble-cause">Causa Provável: Muitos emails grandes sendo processados simultaneamente</div>
-          <div>Solução Prática: <code class="trouble-fix">Reduza MaxThreads em /etc/clamav/clamd.conf ou desative ClamAV</code></div>
-        </div>
-        
-  </div>
+ <!-- SEÇÃO 6: TROUBLESHOOTING -->
+ <div class="section-card" id="troubleshooting">
+ <div class="section-header">
+ <h2 class="section-title">Socorro! O que fazer se algo não funcionar (Troubleshooting para Leigos)</h2>
+ </div>
+ 
+ <div class="trouble-card">
+ <div class="trouble-symptom"> Sintoma: Emails chegam em spam</div>
+ <div class="trouble-cause">Causa Provável: SPF, DKIM ou DMARC não configurados</div>
+ <div>Solução Prática: <code class="trouble-fix">Verificar registros SPF/DKIM no painel. Adicionar no DNS do registrador.</code></div>
+ </div>
+ 
+ <div class="trouble-card">
+ <div class="trouble-symptom"> Sintoma: Port 25 blocked - emails não saem</div>
+ <div class="trouble-cause">Causa Provável: ISP bloqueou porta 25 (comum em residencial)</div>
+ <div>Solução Prática: <code class="trouble-fix">Configure relayhost para smarthost confiável via porta 587 em /etc/postfix/main.cf</code></div>
+ </div>
+ 
+ <div class="trouble-card">
+ <div class="trouble-symptom"> Sintoma: IMAP não conecta com erro</div>
+ <div class="trouble-cause">Causa Provável: Dovecot não está rodando ou permissões /var/vmail erradas</div>
+ <div>Solução Prática: <code class="trouble-fix">sudo systemctl restart dovecot && sudo chown -R vmail:vmail /var/vmail</code></div>
+ </div>
+ 
+ <div class="trouble-card">
+ <div class="trouble-symptom"> Sintoma: Painel web fica lento ou travado</div>
+ <div class="trouble-cause">Causa Provável: PostgreSQL sob pressão ou muitos usuários simultâneos</div>
+ <div>Solução Prática: <code class="trouble-fix">sudo systemctl restart modoboa && monitorar pool connections</code></div>
+ </div>
+ 
+ <div class="trouble-card">
+ <div class="trouble-symptom"> Sintoma: ClamAV/SpamAssassin consumindo 100% CPU</div>
+ <div class="trouble-cause">Causa Provável: Muitos emails grandes sendo processados simultaneamente</div>
+ <div>Solução Prática: <code class="trouble-fix">Reduza MaxThreads em /etc/clamav/clamd.conf ou desative ClamAV</code></div>
+ </div>
+ 
+ </div>
 
-  <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
-  <div class="section-card" id="desinstalacao">
-    <div class="section-header">
-      <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
-      <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
-    </div>
-    
-        <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
-          <h4 style="margin:0 0 6px 0; color:#1A446C;">🛡️ Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
-          <p style="margin:0; font-size:13.5px; color:#1E293B;">Remove exclusivamente instância Modoboa (Django, dados email, bancos SQL). Preserva Postfix, Dovecot, certificados SSL e SO.</p>
-        </div>
-        
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-num" style="background:#0284C7;">Passo 1</span>
-                <span class="step-title">Parada de Serviços Modoboa</span>
-              </div>
-              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Para Django (Gunicorn) e Celery sem afetar Postfix/Dovecot/Nginx</p>
-              <div class="code-box">
-                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-                <pre><code>sudo systemctl stop modoboa
+ <!-- SEÇÃO: DESINSTALAÇÃO CIRÚRGICA & ISOLAMENTO DA VPS -->
+ <div class="section-card" id="desinstalacao">
+ <div class="section-header">
+ <h2 class="section-title">Desinstalação Cirúrgica &amp; Limpeza da VPS (Sem Comprometer Outros Projetos)</h2>
+ <span class="badge-tag" style="background:#EFF6FF; color:#0284C7;">Isolamento Total</span>
+ </div>
+ 
+ <div class="tip-card" style="background:#EFF6FF; border-left:4px solid #0284C7; margin-bottom:20px;">
+ <h4 style="margin:0 0 6px 0; color:#1A446C;"> Princípio de Isolamento da VPS (Zero Efeito Colateral)</h4>
+ <p style="margin:0; font-size:13.5px; color:#1E293B;">Remove exclusivamente instância Modoboa (Django, dados email, bancos SQL). Preserva Postfix, Dovecot, certificados SSL e SO.</p>
+ </div>
+ 
+ <div class="step-card">
+ <div class="step-header">
+ <span class="step-num" style="background:#0284C7;">Passo 1</span>
+ <span class="step-title">Parada de Serviços Modoboa</span>
+ </div>
+ <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Para Django (Gunicorn) e Celery sem afetar Postfix/Dovecot/Nginx</p>
+ <div class="code-box">
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ <pre><code>sudo systemctl stop modoboa
 sudo systemctl disable modoboa
 sudo systemctl stop modoboa-celery
 sudo systemctl disable modoboa-celery</code></pre>
-              </div>
-              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> NÃO execute 'systemctl stop postfix' ou 'systemctl stop dovecot'</div>
-              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo systemctl is-active modoboa # Retorna 'inactive'</code></div>
-            </div>
-            
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-num" style="background:#0284C7;">Passo 2</span>
-                <span class="step-title">Remoção do Banco PostgreSQL</span>
-              </div>
-              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Deleta schema Modoboa, preservando outros bancos</p>
-              <div class="code-box">
-                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-                <pre><code>sudo -u postgres psql -c "DROP DATABASE IF EXISTS modoboa;"
+ </div>
+ <div style="font-size:12px; margin-top:8px; color:#B45309;"> <strong>Alerta de Segurança:</strong> NÃO execute 'systemctl stop postfix' ou 'systemctl stop dovecot'</div>
+ <div style="font-size:12px; margin-top:4px; color:#047857;"> <strong>Como Validar:</strong> <code>sudo systemctl is-active modoboa # Retorna 'inactive'</code></div>
+ </div>
+ 
+ <div class="step-card">
+ <div class="step-header">
+ <span class="step-num" style="background:#0284C7;">Passo 2</span>
+ <span class="step-title">Remoção do Banco PostgreSQL</span>
+ </div>
+ <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Deleta schema Modoboa, preservando outros bancos</p>
+ <div class="code-box">
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ <pre><code>sudo -u postgres psql -c "DROP DATABASE IF EXISTS modoboa;"
 sudo -u postgres psql -c "DROP USER IF EXISTS modoboa;"</code></pre>
-              </div>
-              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> JAMAIS execute 'DROP DATABASE postgres;'</div>
-              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo -u postgres psql -l | grep modoboa # Não deve aparecer</code></div>
-            </div>
-            
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-num" style="background:#0284C7;">Passo 3</span>
-                <span class="step-title">Remoção de Diretórios</span>
-              </div>
-              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove /var/vmail/modoboa (dados) e /opt/modoboa (código)</p>
-              <div class="code-box">
-                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-                <pre><code>sudo rm -rf /var/vmail/modoboa
+ </div>
+ <div style="font-size:12px; margin-top:8px; color:#B45309;"> <strong>Alerta de Segurança:</strong> JAMAIS execute 'DROP DATABASE postgres;'</div>
+ <div style="font-size:12px; margin-top:4px; color:#047857;"> <strong>Como Validar:</strong> <code>sudo -u postgres psql -l | grep modoboa # Não deve aparecer</code></div>
+ </div>
+ 
+ <div class="step-card">
+ <div class="step-header">
+ <span class="step-num" style="background:#0284C7;">Passo 3</span>
+ <span class="step-title">Remoção de Diretórios</span>
+ </div>
+ <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove /var/vmail/modoboa (dados) e /opt/modoboa (código)</p>
+ <div class="code-box">
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ <pre><code>sudo rm -rf /var/vmail/modoboa
 sudo rm -rf /opt/modoboa
 sudo rm -f /etc/systemd/system/modoboa.service
 sudo rm -f /etc/systemd/system/modoboa-celery.service</code></pre>
-              </div>
-              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Não execute 'rm -rf /' nem 'rm -rf /var/'</div>
-              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>ls -ld /var/vmail/modoboa 2>&1 | grep 'cannot access'</code></div>
-            </div>
-            
-            <div class="step-card">
-              <div class="step-header">
-                <span class="step-num" style="background:#0284C7;">Passo 4</span>
-                <span class="step-title">Limpeza Nginx</span>
-              </div>
-              <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove virtual host Modoboa do Nginx</p>
-              <div class="code-box">
-                <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
-                <pre><code>sudo rm -f /etc/nginx/sites-enabled/modoboa
+ </div>
+ <div style="font-size:12px; margin-top:8px; color:#B45309;"> <strong>Alerta de Segurança:</strong> Não execute 'rm -rf /' nem 'rm -rf /var/'</div>
+ <div style="font-size:12px; margin-top:4px; color:#047857;"> <strong>Como Validar:</strong> <code>ls -ld /var/vmail/modoboa 2>&1 | grep 'cannot access'</code></div>
+ </div>
+ 
+ <div class="step-card">
+ <div class="step-header">
+ <span class="step-num" style="background:#0284C7;">Passo 4</span>
+ <span class="step-title">Limpeza Nginx</span>
+ </div>
+ <p style="font-size:13.5px; color:var(--ink-2); margin-bottom:12px;">Remove virtual host Modoboa do Nginx</p>
+ <div class="code-box">
+ <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+ <pre><code>sudo rm -f /etc/nginx/sites-enabled/modoboa
 sudo rm -f /etc/nginx/sites-available/modoboa
 sudo systemctl reload nginx
 sudo systemctl daemon-reload</code></pre>
-              </div>
-              <div style="font-size:12px; margin-top:8px; color:#B45309;">⚠️ <strong>Alerta de Segurança:</strong> Mantenha outros sites em /etc/nginx/sites-available/</div>
-              <div style="font-size:12px; margin-top:4px; color:#047857;">✅ <strong>Como Validar:</strong> <code>sudo nginx -t # Retorna 'configuration OK'</code></div>
-            </div>
-            
-        <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
-          <h4 style="margin:0 0 8px 0; color:#065F46;">🩺 Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
-          <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
-            <li style='margin-bottom:6px;'><code>ps aux | grep -E '(gunicorn|celery|modoboa)' # Nenhum processo deve aparecer</code></li><li style='margin-bottom:6px;'><code>sudo -u postgres psql -l # Banco 'modoboa' não deve estar na lista</code></li><li style='margin-bottom:6px;'><code>sudo systemctl status postfix # Deve estar 'active'</code></li><li style='margin-bottom:6px;'><code>sudo systemctl status dovecot # Deve estar 'active'</code></li><li style='margin-bottom:6px;'><code>sudo systemctl status nginx # Deve estar 'active'</code></li><li style='margin-bottom:6px;'><code>free -h # RAM devolvida ao sistema</code></li>
-          </ul>
-        </div>
-        
-  </div>
+ </div>
+ <div style="font-size:12px; margin-top:8px; color:#B45309;"> <strong>Alerta de Segurança:</strong> Mantenha outros sites em /etc/nginx/sites-available/</div>
+ <div style="font-size:12px; margin-top:4px; color:#047857;"> <strong>Como Validar:</strong> <code>sudo nginx -t # Retorna 'configuration OK'</code></div>
+ </div>
+ 
+ <div class="tip-card" style="background:#F0FDF4; border-left:4px solid #10B981; margin-top:20px;">
+ <h4 style="margin:0 0 8px 0; color:#065F46;"> Checklist de Saúde da VPS (Confirmar que outros projetos continuam online)</h4>
+ <ul style="margin:0; padding-left:20px; font-size:13px; color:#1E293B;">
+ <li style='margin-bottom:6px;'><code>ps aux | grep -E '(gunicorn|celery|modoboa)' # Nenhum processo deve aparecer</code></li><li style='margin-bottom:6px;'><code>sudo -u postgres psql -l # Banco 'modoboa' não deve estar na lista</code></li><li style='margin-bottom:6px;'><code>sudo systemctl status postfix # Deve estar 'active'</code></li><li style='margin-bottom:6px;'><code>sudo systemctl status dovecot # Deve estar 'active'</code></li><li style='margin-bottom:6px;'><code>sudo systemctl status nginx # Deve estar 'active'</code></li><li style='margin-bottom:6px;'><code>free -h # RAM devolvida ao sistema</code></li>
+ </ul>
+ </div>
+ 
+ </div>
 
-  <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
-  <div class="section-card" id="bibliografia">
-    <div class="section-header">
-      <h2 class="section-title">Parte III: Fontes Citadas &amp; Referência Bibliográfica Auditada</h2>
-      <span class="badge-tag" style="background:var(--green-soft); color:var(--green);">100% Verificadas</span>
-    </div>
-    <table class="data-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Categoria</th>
-          <th>Título da Obra / Documento</th>
-          <th>Autor / Mantenedor</th>
-          <th>Link Oficial</th>
-        </tr>
-      </thead>
-      <tbody>
-        
-        <tr id="ref-F01">
-          <td><strong style="color:var(--accent);">F01</strong></td>
-          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
-          <td><strong>Modoboa Official Documentation - ReadTheDocs</strong></td>
-          <td>Modoboa Project Team</td>
-          <td><a href="https://modoboa.readthedocs.io" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
-        </tr>
-        
-        <tr id="ref-F02">
-          <td><strong style="color:var(--accent);">F02</strong></td>
-          <td><span class="badge-tag" style="margin:0; font-size:10px;">Repositório Oficial</span></td>
-          <td><strong>Modoboa GitHub Repository - Source Code</strong></td>
-          <td>Modoboa Open Source Developers</td>
-          <td><a href="https://github.com/modoboa/modoboa" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
-        </tr>
-        
-        <tr id="ref-F03">
-          <td><strong style="color:var(--accent);">F03</strong></td>
-          <td><span class="badge-tag" style="margin:0; font-size:10px;">Tutorial Prático</span></td>
-          <td><strong>How To Set Up Secure Private Email Server With Modoboa - UpCloud</strong></td>
-          <td>UpCloud Documentation Team</td>
-          <td><a href="https://upcloud.com/resources/tutorials/install-secure-private-email-server-modoboa/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
-        </tr>
-        
-        <tr id="ref-F04">
-          <td><strong style="color:var(--accent);">F04</strong></td>
-          <td><span class="badge-tag" style="margin:0; font-size:10px;">Guia de Setup</span></td>
-          <td><strong>How to Quickly Set Up a Mail Server on Ubuntu 20.04 with Modoboa</strong></td>
-          <td>LinuxBabe</td>
-          <td><a href="https://www.linuxbabe.com/mail-server/modoboa-email-server-ubuntu-20-04" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
-        </tr>
-        
-        <tr id="ref-F05">
-          <td><strong style="color:var(--accent);">F05</strong></td>
-          <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Técnica</span></td>
-          <td><strong>Modoboa API Documentation & REST Endpoints</strong></td>
-          <td>Modoboa Core Contributors</td>
-          <td><a href="https://modoboa.readthedocs.io/en/latest/integration/api.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
-        </tr>
-        
-        <tr id="ref-F06">
-          <td><strong style="color:var(--accent);">F06</strong></td>
-          <td><span class="badge-tag" style="margin:0; font-size:10px;">Discussão Comunitária</span></td>
-          <td><strong>Minimum Resources on VPS for Install Modoboa - GitHub Discussion</strong></td>
-          <td>Modoboa Community & Maintainers</td>
-          <td><a href="https://github.com/modoboa/modoboa/discussions/2139" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
-        </tr>
-        
-      </tbody>
-    </table>
-  </div>
+ <!-- SEÇÃO 7: REFERÊNCIAS BIBLIOGRÁFICAS -->
+ <div class="section-card" id="bibliografia">
+ <div class="section-header">
+ <h2 class="section-title">Parte III: Fontes Citadas &amp; Referência Bibliográfica Auditada</h2>
+ <span class="badge-tag" style="background:var(--green-soft); color:var(--green);">100% Verificadas</span>
+ </div>
+ <table class="data-table">
+ <thead>
+ <tr>
+ <th>ID</th>
+ <th>Categoria</th>
+ <th>Título da Obra / Documento</th>
+ <th>Autor / Mantenedor</th>
+ <th>Link Oficial</th>
+ </tr>
+ </thead>
+ <tbody>
+ 
+ <tr id="ref-F01">
+ <td><strong style="color:var(--accent);">F01</strong></td>
+ <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Oficial</span></td>
+ <td><strong>Modoboa Official Documentation - ReadTheDocs</strong></td>
+ <td>Modoboa Project Team</td>
+ <td><a href="https://modoboa.readthedocs.io" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+ </tr>
+ 
+ <tr id="ref-F02">
+ <td><strong style="color:var(--accent);">F02</strong></td>
+ <td><span class="badge-tag" style="margin:0; font-size:10px;">Repositório Oficial</span></td>
+ <td><strong>Modoboa GitHub Repository - Source Code</strong></td>
+ <td>Modoboa Open Source Developers</td>
+ <td><a href="https://github.com/modoboa/modoboa" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+ </tr>
+ 
+ <tr id="ref-F03">
+ <td><strong style="color:var(--accent);">F03</strong></td>
+ <td><span class="badge-tag" style="margin:0; font-size:10px;">Tutorial Prático</span></td>
+ <td><strong>How To Set Up Secure Private Email Server With Modoboa - UpCloud</strong></td>
+ <td>UpCloud Documentation Team</td>
+ <td><a href="https://upcloud.com/resources/tutorials/install-secure-private-email-server-modoboa/" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+ </tr>
+ 
+ <tr id="ref-F04">
+ <td><strong style="color:var(--accent);">F04</strong></td>
+ <td><span class="badge-tag" style="margin:0; font-size:10px;">Guia de Setup</span></td>
+ <td><strong>How to Quickly Set Up a Mail Server on Ubuntu 20.04 with Modoboa</strong></td>
+ <td>LinuxBabe</td>
+ <td><a href="https://www.linuxbabe.com/mail-server/modoboa-email-server-ubuntu-20-04" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+ </tr>
+ 
+ <tr id="ref-F05">
+ <td><strong style="color:var(--accent);">F05</strong></td>
+ <td><span class="badge-tag" style="margin:0; font-size:10px;">Documentação Técnica</span></td>
+ <td><strong>Modoboa API Documentation & REST Endpoints</strong></td>
+ <td>Modoboa Core Contributors</td>
+ <td><a href="https://modoboa.readthedocs.io/en/latest/integration/api.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+ </tr>
+ 
+ <tr id="ref-F06">
+ <td><strong style="color:var(--accent);">F06</strong></td>
+ <td><span class="badge-tag" style="margin:0; font-size:10px;">Discussão Comunitária</span></td>
+ <td><strong>Minimum Resources on VPS for Install Modoboa - GitHub Discussion</strong></td>
+ <td>Modoboa Community & Maintainers</td>
+ <td><a href="https://github.com/modoboa/modoboa/discussions/2139" target="_blank" rel="noopener noreferrer" style="color:var(--accent); text-decoration:none; font-weight:600;">Acessar Fonte Original ↗</a></td>
+ </tr>
+ 
+ </tbody>
+ </table>
+ </div>
 
 </div>
 
 <script>
 function copyCode(btn) {
-  const pre = btn.parentElement.querySelector('pre');
-  if (!pre) return;
-  navigator.clipboard.writeText(pre.innerText).then(() => {
-    const original = btn.innerText;
-    btn.innerText = 'Copiado!';
-    setTimeout(() => { btn.innerText = original; }, 2000);
-  });
+ const pre = btn.parentElement.querySelector('pre');
+ if (!pre) return;
+ navigator.clipboard.writeText(pre.innerText).then(() => {
+ const original = btn.innerText;
+ btn.innerText = 'Copiado!';
+ setTimeout(() => { btn.innerText = original; }, 2000);
+ });
 }
 </script>
 

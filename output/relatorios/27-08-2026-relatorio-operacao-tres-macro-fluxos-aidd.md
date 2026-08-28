@@ -1,8 +1,8 @@
 # Relatório Executivo: Arquitetura, Acionamento & Gates de Interação dos 3 Macro-Fluxos AIDD
 
-> **Documento Oficial de Engenharia Agêntica & Operação da Fábrica Universal**  
-> **Data de Emissão:** 27 de Agosto de 2026  
-> **Metodologia:** AI-Driven Development (AIDD) · Nota 10.0 / 10.0  
+> **Documento Oficial de Engenharia Agêntica & Operação da Fábrica Universal** 
+> **Data de Emissão:** 27 de Agosto de 2026 
+> **Metodologia:** AI-Driven Development (AIDD) · Nota 10.0 / 10.0 
 > **Harness:** Antigravity / Orca · LLM: Modelo Livre (Model Inherit)
 
 ---
@@ -59,39 +59,39 @@ O fluxo completo opera com três paradas deliberadas de decisão estratégica, o
 
 ```mermaid
 sequenceDiagram
-    autonumber
-    actor U as Usuário (Engenheiro Agêntico)
-    participant O as Orquestrador Universal
-    participant F1 as Fluxo 1 (Lista Horizontal)
-    participant F2 as Fluxo 2 (Dossiê Vertical)
-    participant F3 as Fluxo 3 (Manuais & Trilhas)
+ autonumber
+ actor U as Usuário (Engenheiro Agêntico)
+ participant O as Orquestrador Universal
+ participant F1 as Fluxo 1 (Lista Horizontal)
+ participant F2 as Fluxo 2 (Dossiê Vertical)
+ participant F3 as Fluxo 3 (Manuais & Trilhas)
 
-    Note over U,O: Início da Esteira Completa
-    O->>U: 🛑 GATE 0: Qual Camada Temática deseja mapear?
-    U->>O: Seleciona: "08 - Bancos de Dados & Estado"
-    O->>F1: Executa compilação tripartite da camada
-    F1-->>O: Gera output/01-listas-horizontais/ e exibe SaaS concorrentes
+ Note over U,O: Início da Esteira Completa
+ O->>U: GATE 0: Qual Camada Temática deseja mapear?
+ U->>O: Seleciona: "08 - Bancos de Dados & Estado"
+ O->>F1: Executa compilação tripartite da camada
+ F1-->>O: Gera output/01-listas-horizontais/ e exibe SaaS concorrentes
 
-    O->>U: 🛑 GATE 1: Das ferramentas/SaaS mapeados, qual é o SaaS em foco?
-    U->>O: Seleciona: "Granola" (ou "Oracle", "Notion")
-    O->>F2: Executa compilação do Quinteto Soberano
-    F2-->>O: Gera output/02-dossies-verticais/ e exibe as 5 ferramentas do Quinteto
+ O->>U: GATE 1: Das ferramentas/SaaS mapeados, qual é o SaaS em foco?
+ U->>O: Seleciona: "Granola" (ou "Oracle", "Notion")
+ O->>F2: Executa compilação do Quinteto Soberano
+ F2-->>O: Gera output/02-dossies-verticais/ e exibe as 5 ferramentas do Quinteto
 
-    O->>U: 🛑 GATE 2: Do Quinteto Soberano, qual ferramenta quer operacionalizar?
-    U->>O: Seleciona: "Screenpipe" (ou "Todas as 5 em lote")
-    O->>F3: Dispara esteira de manuais VPS, trilhas e telemetria
-    F3-->>O: Gera bundle de 9 arquivos em output/03-manuais-e-trilhas/
-    O->>U: 🏆 Entrega Final Concluída: 10/10 Registrado no SQLite!
+ O->>U: GATE 2: Do Quinteto Soberano, qual ferramenta quer operacionalizar?
+ U->>O: Seleciona: "Screenpipe" (ou "Todas as 5 em lote")
+ O->>F3: Dispara esteira de manuais VPS, trilhas e telemetria
+ F3-->>O: Gera bundle de 9 arquivos em output/03-manuais-e-trilhas/
+ O->>U: Entrega Final Concluída: 10/10 Registrado no SQLite!
 ```
 
 ### Detalhamento dos Gates:
 
-1. **🛑 GATE 0 · Seleção da Camada Temática (Entrada do Fluxo 1):**  
-   O sistema apresenta o menu das 49 Camadas. O usuário seleciona o tema. O Fluxo 1 roda, compila a lista horizontal tripartite e extrai os SaaS proprietários concorrentes.
-2. **🛑 GATE 1 · Seleção da Ferramenta/SaaS em Foco (Entrada do Fluxo 2):**  
-   O sistema lista os SaaS proprietários detectados na camada. O usuário escolhe o alvo a desmantelar. O Fluxo 2 gera o **Quinteto Soberano**, o mapeamento de White-Label e os MCPs/Skills.
-3. **🛑 GATE 2 · Seleção da Ferramenta Operacional (Entrada do Fluxo 3):**  
-   O sistema exibe as ferramentas do Quinteto. O usuário escolhe uma ferramenta específica (ou todas em lote). O Fluxo 3 gera o **Manual Duplo VPS + Primeiro Voo**, a **Trilha Autoguiada de Aulas** e o **Laudo Oficial de Telemetria**.
+1. ** GATE 0 · Seleção da Camada Temática (Entrada do Fluxo 1):** 
+ O sistema apresenta o menu das 49 Camadas. O usuário seleciona o tema. O Fluxo 1 roda, compila a lista horizontal tripartite e extrai os SaaS proprietários concorrentes.
+2. ** GATE 1 · Seleção da Ferramenta/SaaS em Foco (Entrada do Fluxo 2):** 
+ O sistema lista os SaaS proprietários detectados na camada. O usuário escolhe o alvo a desmantelar. O Fluxo 2 gera o **Quinteto Soberano**, o mapeamento de White-Label e os MCPs/Skills.
+3. ** GATE 2 · Seleção da Ferramenta Operacional (Entrada do Fluxo 3):** 
+ O sistema exibe as ferramentas do Quinteto. O usuário escolhe uma ferramenta específica (ou todas em lote). O Fluxo 3 gera o **Manual Duplo VPS + Primeiro Voo**, a **Trilha Autoguiada de Aulas** e o **Laudo Oficial de Telemetria**.
 
 ---
 

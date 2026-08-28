@@ -1,15 +1,15 @@
 # Manual Operacional Completo: Postfix + Dovecot
 
-> **Padrão Diamante · Guia de Engenharia & Adoção Descomplicada**  
-> **Licença:** EPL-2.0 | **Versão:** 3.7.0 | **Setup Estimado:** 45 a 60 minutos  
-> **VPS Recomendada:** Contabo (4, 8 GB, 160 GB, Ubuntu 24.04)  
+> **Padrão Diamante · Guia de Engenharia & Adoção Descomplicada** 
+> **Licença:** EPL-2.0 | **Versão:** 3.7.0 | **Setup Estimado:** 45 a 60 minutos 
+> **VPS Recomendada:** Contabo (4, 8 GB, 160 GB, Ubuntu 24.04) 
 > **Custo Mensal Estimado:** EUR 3.99
 
 ---
 
 ## Módulo 0: Nivelamento Conceitual (Analogias do Dia a Dia)
 
-### 💡 Postfix *(Analogia: Carteiro)*
+### Postfix *(Analogia: Carteiro)*
 Recebe emails
 
 ## Parte I: Instalação em Produção na VPS (Passo a Passo Rígido)
@@ -34,7 +34,7 @@ Recebe emails
 
 ## Parte III: Desinstalação Cirúrgica & Isolamento da VPS (Zero Efeito Colateral)
 
-> 🛡️ **Princípio de Isolamento:** Remove apenas Postfix e Dovecot
+> **Princípio de Isolamento:** Remove apenas Postfix e Dovecot
 
 ### Checklist de Saúde da VPS (Outros Projetos)
 

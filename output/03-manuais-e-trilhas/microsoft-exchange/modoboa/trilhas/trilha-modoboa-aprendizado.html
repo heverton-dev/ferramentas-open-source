@@ -1,744 +1,744 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Trilha Cronológica de Aprendizado: Modoboa</title>
-  <style>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Trilha Cronológica de Aprendizado: Modoboa</title>
+ <style>
 
-  :root {
-    --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    --mono: "JetBrains Mono", Menlo, Consolas, monospace;
-    --paper: #F8FAFC;
-    --surface: #FFFFFF;
-    --ink: #0F172A;
-    --ink-2: #334155;
-    --muted: #64748B;
-    --rule: #CBD5E1;
-    --rule-soft: #E2E8F0;
-    --accent: #0284C7;
-    --accent-dark: #0369A1;
-    --accent-soft: #E0F2FE;
-    --green: #10B981;
-    --green-dark: #065F46;
-    --green-soft: #D1FAE5;
-    --gold: #F59E0B;
-    --gold-soft: #FEF3C7;
-  }
+ :root {
+ --font-sans: "Liberation Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+ --mono: "JetBrains Mono", Menlo, Consolas, monospace;
+ --paper: #F8FAFC;
+ --surface: #FFFFFF;
+ --ink: #0F172A;
+ --ink-2: #334155;
+ --muted: #64748B;
+ --rule: #CBD5E1;
+ --rule-soft: #E2E8F0;
+ --accent: #0284C7;
+ --accent-dark: #0369A1;
+ --accent-soft: #E0F2FE;
+ --green: #10B981;
+ --green-dark: #065F46;
+ --green-soft: #D1FAE5;
+ --gold: #F59E0B;
+ --gold-soft: #FEF3C7;
+ }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: var(--font-sans);
-    background: var(--paper);
-    color: var(--ink);
-    line-height: 1.6;
-    padding: 24px 16px 60px;
-  }
-  .container { max-width: 980px; margin: 0 auto; }
-  .header-card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 32px;
-    margin-bottom: 32px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-  .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
-  .badge-tag {
-    display: inline-block;
-    padding: 4px 10px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: 4px;
-    background: var(--accent-soft);
-    color: var(--accent-dark);
-    margin-bottom: 12px;
-  }
-  h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
-  .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
+ * { box-sizing: border-box; margin: 0; padding: 0; }
+ body {
+ font-family: var(--font-sans);
+ background: var(--paper);
+ color: var(--ink);
+ line-height: 1.6;
+ padding: 24px 16px 60px;
+ }
+ .container { max-width: 980px; margin: 0 auto; }
+ .header-card {
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ border-radius: 8px;
+ padding: 32px;
+ margin-bottom: 32px;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+ }
+ .breadcrumb { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+ .breadcrumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+ .badge-tag {
+ display: inline-block;
+ padding: 4px 10px;
+ font-size: 12px;
+ font-weight: 700;
+ text-transform: uppercase;
+ letter-spacing: 0.05em;
+ border-radius: 4px;
+ background: var(--accent-soft);
+ color: var(--accent-dark);
+ margin-bottom: 12px;
+ }
+ h1 { font-size: 28px; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+ .deck { font-size: 15px; color: var(--ink-2); margin-bottom: 24px; text-align: justify; }
 
-  .hero-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    background: var(--paper);
-    padding: 16px;
-    border-radius: 6px;
-    border: 1px solid var(--rule-soft);
-  }
-  .stat-item { display: flex; flex-direction: column; }
-  .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
-  .stat-val { font-size: 15px; font-weight: 800; color: var(--ink); }
+ .hero-stats {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+ gap: 12px;
+ background: var(--paper);
+ padding: 16px;
+ border-radius: 6px;
+ border: 1px solid var(--rule-soft);
+ }
+ .stat-item { display: flex; flex-direction: column; }
+ .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+ .stat-val { font-size: 15px; font-weight: 800; color: var(--ink); }
 
-  /* TIMELINE */
-  .timeline {
-    position: relative;
-    padding-left: 32px;
-  }
-  .timeline::before {
-    content: "";
-    position: absolute;
-    top: 10px;
-    bottom: 20px;
-    left: 11px;
-    width: 2px;
-    background: var(--rule);
-  }
-  .timeline-node {
-    position: relative;
-    margin-bottom: 36px;
-  }
-  .timeline-marker {
-    position: absolute;
-    left: -32px;
-    top: 0;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: #FFF;
-    font-size: 12px;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 0 4px var(--paper);
-  }
-  .phase-card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-  .phase-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 8px;
-    border-bottom: 1px solid var(--rule-soft);
-    padding-bottom: 8px;
-  }
-  .phase-title { font-size: 18px; font-weight: 800; color: var(--ink); }
-  .phase-time { font-size: 12px; font-weight: 700; color: var(--accent-dark); background: var(--accent-soft); padding: 2px 8px; border-radius: 4px; }
-  .phase-goal { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
+ /* TIMELINE */
+ .timeline {
+ position: relative;
+ padding-left: 32px;
+ }
+ .timeline::before {
+ content: "";
+ position: absolute;
+ top: 10px;
+ bottom: 20px;
+ left: 11px;
+ width: 2px;
+ background: var(--rule);
+ }
+ .timeline-node {
+ position: relative;
+ margin-bottom: 36px;
+ }
+ .timeline-marker {
+ position: absolute;
+ left: -32px;
+ top: 0;
+ width: 24px;
+ height: 24px;
+ border-radius: 50%;
+ background: var(--accent);
+ color: #FFF;
+ font-size: 12px;
+ font-weight: 800;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ box-shadow: 0 0 0 4px var(--paper);
+ }
+ .phase-card {
+ background: var(--surface);
+ border: 1px solid var(--rule);
+ border-radius: 8px;
+ padding: 24px;
+ box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+ }
+ .phase-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: baseline;
+ margin-bottom: 8px;
+ border-bottom: 1px solid var(--rule-soft);
+ padding-bottom: 8px;
+ }
+ .phase-title { font-size: 18px; font-weight: 800; color: var(--ink); }
+ .phase-time { font-size: 12px; font-weight: 700; color: var(--accent-dark); background: var(--accent-soft); padding: 2px 8px; border-radius: 4px; }
+ .phase-goal { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
 
-  .resource-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 14px 16px;
-    background: var(--paper);
-    border: 1px solid var(--rule-soft);
-    border-radius: 6px;
-    margin-bottom: 12px;
-    transition: background 0.2s;
-  }
-  .resource-item:hover { background: #F1F5F9; }
-  .chk-item {
-    margin-top: 4px;
-    cursor: pointer;
-    width: 17px;
-    height: 17px;
-    accent-color: var(--green);
-  }
-  .resource-content { flex: 1; }
-  .resource-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--ink);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .resource-title a { color: var(--ink); text-decoration: none; }
-  .resource-title a:hover { color: var(--accent); }
-  .resource-badge {
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 3px;
-    background: var(--rule-soft);
-    color: var(--ink-2);
-  }
-  .lang-badge-br { background: #DCFCE7; color: #166534; font-weight: 800; }
-  .lang-badge-en { background: #EFF6FF; color: #1E40AF; font-weight: 800; }
+ .resource-item {
+ display: flex;
+ align-items: flex-start;
+ gap: 12px;
+ padding: 14px 16px;
+ background: var(--paper);
+ border: 1px solid var(--rule-soft);
+ border-radius: 6px;
+ margin-bottom: 12px;
+ transition: background 0.2s;
+ }
+ .resource-item:hover { background: #F1F5F9; }
+ .chk-item {
+ margin-top: 4px;
+ cursor: pointer;
+ width: 17px;
+ height: 17px;
+ accent-color: var(--green);
+ }
+ .resource-content { flex: 1; }
+ .resource-title {
+ font-size: 14px;
+ font-weight: 700;
+ color: var(--ink);
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ flex-wrap: wrap;
+ }
+ .resource-title a { color: var(--ink); text-decoration: none; }
+ .resource-title a:hover { color: var(--accent); }
+ .resource-badge {
+ font-size: 10px;
+ font-weight: 700;
+ padding: 2px 6px;
+ border-radius: 3px;
+ background: var(--rule-soft);
+ color: var(--ink-2);
+ }
+ .lang-badge-br { background: #DCFCE7; color: #166534; font-weight: 800; }
+ .lang-badge-en { background: #EFF6FF; color: #1E40AF; font-weight: 800; }
 
-  .resource-takeaway {
-    font-size: 13px;
-    color: var(--ink-2);
-    margin-top: 5px;
-  }
-  .resource-dica-ptbr {
-    font-size: 12px;
-    color: #92400E;
-    background: #FEF3C7;
-    padding: 4px 8px;
-    border-radius: 4px;
-    margin-top: 6px;
-    display: inline-block;
-  }
-  .resource-meta {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 6px;
-    display: flex;
-    gap: 12px;
-  }
-  .btn-link {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--accent-dark);
-    text-decoration: none;
-  }
-  .btn-link:hover { text-decoration: underline; }
+ .resource-takeaway {
+ font-size: 13px;
+ color: var(--ink-2);
+ margin-top: 5px;
+ }
+ .resource-dica-ptbr {
+ font-size: 12px;
+ color: #92400E;
+ background: #FEF3C7;
+ padding: 4px 8px;
+ border-radius: 4px;
+ margin-top: 6px;
+ display: inline-block;
+ }
+ .resource-meta {
+ font-size: 12px;
+ color: var(--muted);
+ margin-top: 6px;
+ display: flex;
+ gap: 12px;
+ }
+ .btn-link {
+ font-size: 12px;
+ font-weight: 700;
+ color: var(--accent-dark);
+ text-decoration: none;
+ }
+ .btn-link:hover { text-decoration: underline; }
 
-  </style>
+ </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- CABEÇALHO -->
-  <div class="header-card">
-    <div class="breadcrumb">
-      <a href="../../listas-open-source/vert-microsoft-exchange.html">← Voltar ao Dossiê Vertical Microsoft-Exchange</a>
-      &nbsp;·&nbsp;
-      <a href="../manuais/manual-modoboa-vps-e-uso.html">Ver Manual de Engenharia 📖</a>
-    </div>
-    <span class="badge-tag">Jornada Pedagógica Autoguiada · Brasil First</span>
-    <h1>Trilha de Aprendizado: Modoboa</h1>
-    <p class="deck">
-      Roteiro cronológico passo a passo para dominar a ferramenta a partir de fontes verificadas, priorizando materiais em língua portuguesa (PT-BR) e fornecendo orientações práticas de tradução assistida para conteúdos internacionais.
-    </p>
+ <!-- CABEÇALHO -->
+ <div class="header-card">
+ <div class="breadcrumb">
+ <a href="../../listas-open-source/vert-microsoft-exchange.html">← Voltar ao Dossiê Vertical Microsoft-Exchange</a>
+ &nbsp;·&nbsp;
+ <a href="../manuais/manual-modoboa-vps-e-uso.html">Ver Manual de Engenharia </a>
+ </div>
+ <span class="badge-tag">Jornada Pedagógica Autoguiada · Brasil First</span>
+ <h1>Trilha de Aprendizado: Modoboa</h1>
+ <p class="deck">
+ Roteiro cronológico passo a passo para dominar a ferramenta a partir de fontes verificadas, priorizando materiais em língua portuguesa (PT-BR) e fornecendo orientações práticas de tradução assistida para conteúdos internacionais.
+ </p>
 
-    <!-- HERO STATS -->
-    <div class="hero-stats">
-      <div class="stat-item">
-        <span class="stat-lbl">Tempo Total Estimado</span>
-        <span class="stat-val" style="color:var(--accent-dark);">520 minutos (~8-10 horas)</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Fases de Estudo</span>
-        <span class="stat-val">5 Módulos</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Recursos Auditados</span>
-        <span class="stat-val">21 Conteúdos</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-lbl">Progresso do Operador</span>
-        <span class="stat-val" id="progresso-txt" style="color:var(--green);">0 de 21</span>
-      </div>
-    </div>
+ <!-- HERO STATS -->
+ <div class="hero-stats">
+ <div class="stat-item">
+ <span class="stat-lbl">Tempo Total Estimado</span>
+ <span class="stat-val" style="color:var(--accent-dark);">520 minutos (~8-10 horas)</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Fases de Estudo</span>
+ <span class="stat-val">5 Módulos</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Recursos Auditados</span>
+ <span class="stat-val">21 Conteúdos</span>
+ </div>
+ <div class="stat-item">
+ <span class="stat-lbl">Progresso do Operador</span>
+ <span class="stat-val" id="progresso-txt" style="color:var(--green);">0 de 21</span>
+ </div>
+ </div>
 
-    <!-- BARRA DE PROGRESSO -->
-    <div style="margin-top: 16px; background: var(--rule-soft); border-radius: 4px; height: 8px; overflow: hidden;">
-      <div id="progresso-bar" style="width: 0%; height: 100%; background: var(--green); transition: width 0.3s;"></div>
-    </div>
-  </div>
+ <!-- BARRA DE PROGRESSO -->
+ <div style="margin-top: 16px; background: var(--rule-soft); border-radius: 4px; height: 8px; overflow: hidden;">
+ <div id="progresso-bar" style="width: 0%; height: 100%; background: var(--green); transition: width 0.3s;"></div>
+ </div>
+ </div>
 
-  <!-- TIMELINE -->
-  <div class="timeline">
-    
-        <div class="timeline-node">
-          <div class="timeline-marker">1</div>
-          <div class="phase-card">
-            <div class="phase-header">
-              <h2 class="phase-title">Fase 1: Fundamentos, Arquitetura de Email e Stack Modoboa</h2>
-              <span class="phase-time">⏱️ ~1h 30min</span>
-            </div>
-            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Entender o fluxo de email (SMTP → Postfix → Dovecot), conhecer os componentes técnicos do Modoboa e dominar protocolos de segurança (SPF, DKIM, DMARC) para garantir entregabilidade.</p>
-            <div class="resource-list">
-              
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer">Documentação Oficial: Conceitos e Arquitetura Modoboa</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Documentação Oficial</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Visão geral da arquitetura: Postfix (SMTP relay), Dovecot (IMAP/POP3), Django (admin web), PostgreSQL (dados), Nginx (proxy).</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Abra no Chrome/Edge, clique com botão direito e selecione 'Traduzir para português'.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 45 min de leitura</span>
-                  <span>👤 Modoboa Core Team</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://github.com/modoboa/modoboa/wiki/Cost-Analysis" target="_blank" rel="noopener noreferrer">Análise Econômica: Exchange vs Modoboa em Soberania de Dados</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Artigo Técnico</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Comparação de custos: 50 usuários em Exchange (USD 600-1000/mês) vs Modoboa em Hetzner (EUR 14-16/mês). Economia de 95% com total controle.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Conteúdo nativo em português do Brasil.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 30 min de leitura</span>
-                  <span>👤 Fábrica Universal Brasil</span>
-                  <a href="https://github.com/modoboa/modoboa/wiki/Cost-Analysis" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/admin/features.html#authentication-methods" target="_blank" rel="noopener noreferrer">Guia Técnico: Protocolos SMTP, IMAP, POP3 e Segurança (SPF, DKIM, DMARC)</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Guia Técnico</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F03]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Diferenças entre SMTP (envio), IMAP (sincronização), POP3 (download). Por que SPF, DKIM e DMARC são obrigatórios para evitar spam.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Use tradução automática ou consulte glossário SMTP/IMAP em português no Módulo 0 do manual.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 35 min de leitura</span>
-                  <span>👤 Internet Mail Consortium</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/admin/features.html#authentication-methods" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://mdubt.org/resources/" target="_blank" rel="noopener noreferrer">Registro de DNS e Validação de Autenticidade de Email</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Guia Prático</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Como gerar e configurar registros SPF, DKIM e DMARC no seu registrador de domínio (GoDaddy, NameCheap) para máxima entregabilidade.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Tutorial prático em português.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 25 min de prática</span>
-                  <span>👤 Comunidade DevOps Brasil</span>
-                  <a href="https://mdubt.org/resources/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          </div>
-        </div>
-        
-        <div class="timeline-node">
-          <div class="timeline-marker">2</div>
-          <div class="phase-card">
-            <div class="phase-header">
-              <h2 class="phase-title">Fase 2: Provisionamento VPS, Instalação Automática e Segurança</h2>
-              <span class="phase-time">⏱️ ~2h</span>
-            </div>
-            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Provisionar uma VPS em Hetzner Cloud, executar o instalador automático do Modoboa, configurar firewall (UFW) e ativar HTTPS com Let's Encrypt para produção.</p>
-            <div class="resource-list">
-              
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://www.hetzner.cloud" target="_blank" rel="noopener noreferrer">Como Provisionar VPS Debian/Ubuntu em Hetzner Cloud</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Guia Prático / Tutorial</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Passo a passo: criar conta, escolher Debian 12 + CPX31, copiar IP/senha, acessar via SSH no Windows (PowerShell) ou Mac (Terminal).</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Tutorial didático em português com screenshots.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 40 min de estudo + prática</span>
-                  <span>👤 Comunidade DevOps Brasil</span>
-                  <a href="https://www.hetzner.cloud" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://github.com/modoboa/modoboa/blob/master/docs/install.rst" target="_blank" rel="noopener noreferrer">Preparação do Sistema Operacional e Dependências</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Código & Playbook</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Atualizar Debian (apt-get update/upgrade), instalar PostgreSQL, Postfix, Dovecot, Nginx, Python3-dev. Verificar versões instaladas.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Comandos prontos para copiar-colar no terminal.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 30 min de prática</span>
-                  <span>👤 Modoboa DevOps Core</span>
-                  <a href="https://github.com/modoboa/modoboa/blob/master/docs/install.rst" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/deployment/" target="_blank" rel="noopener noreferrer">Instalador Automático Modoboa: Deploy de Produção</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Tutorial Prático</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Clone do repositório oficial, checkout v2.3.0, execução de 'modoboa deploy /var/vmail/modoboa'. Sistema pergunta hostname, domínio, senha admin.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Consulte Parte I do Manual em Português para comandos traduzidos.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 35 min de prática guiada</span>
-                  <span>👤 Modoboa Installation Team</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/deployment/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://letsencrypt.org/getting-started/" target="_blank" rel="noopener noreferrer">Firewall UFW, Portas de Email e HTTPS com Let's Encrypt</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Guia de Segurança</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F06]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> UFW ativar com portas 22 (SSH), 25 (SMTP), 80 (HTTP), 143 (IMAP), 110 (POP3), 587 (submission), 443 (HTTPS). Certbot + Let's Encrypt para renovação automática.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Instruções prontas para copiar-colar.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 35 min de prática</span>
-                  <span>👤 Certbot & Let's Encrypt</span>
-                  <a href="https://letsencrypt.org/getting-started/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          </div>
-        </div>
-        
-        <div class="timeline-node">
-          <div class="timeline-marker">3</div>
-          <div class="phase-card">
-            <div class="phase-header">
-              <h2 class="phase-title">Fase 3: Configuração de Domínios, Contas e Validação DNS</h2>
-              <span class="phase-time">⏱️ ~1h 40min</span>
-            </div>
-            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Criar domínios no painel admin, adicionar contas de usuários com quotas, configurar aliases e listas de email, validar registros DNS (SPF, DKIM, DMARC) para produção.</p>
-            <div class="resource-list">
-              
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/manage_domains/index.html" target="_blank" rel="noopener noreferrer">Painel Admin Web do Modoboa: Dashboard e Navegação</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Tutorial Prático</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Acessar https://seu-domínio/admin/, login com admin, explorar dashboard com métricas de emails recebidos/enviados, status de domínios e contas.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Guia visual com screenshots em português.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 25 min de prática</span>
-                  <span>👤 Comunidade Modoboa Brasil</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/manage_domains/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/manage_domains/index.html" target="_blank" rel="noopener noreferrer">Criação de Domínios com Quotas e Status de Registros</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Guia Prático</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Menu Domínios → +, criar 'empresa.com.br', quota (0=ilimitada), cópia dos registros SPF/DKIM gerados. Adicionar no DNS do registrador (GoDaddy, NameCheap).</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Passo a passo didático.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 35 min de prática</span>
-                  <span>👤 Modoboa Admin Team</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/manage_domains/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/manage_users/index.html" target="_blank" rel="noopener noreferrer">Criação de Contas de Usuário, Aliases e Listas de Email</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Tutorial Prático</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F03]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Criar contas (joao@empresa.com.br com quota 2GB), aliases (contato@empresa → joao@empresa), listas (vendas@ para múltiplos destinatários). Testar login no webmail.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Exemplos práticos em português.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 30 min de prática</span>
-                  <span>👤 Modoboa Admin Core</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/manage_users/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://mxtoolbox.com" target="_blank" rel="noopener noreferrer">Validação de Registros DNS e Entregabilidade de Email</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Guia Técnico</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F04]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Verificar SPF, DKIM, DMARC com MXToolbox. Validar que emails não vão para spam. Testar com Mailtrap ou semelhante.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Ferramentas online e verificação manual.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 20 min de verificação</span>
-                  <span>👤 MXToolbox & Fábrica Universal</span>
-                  <a href="https://mxtoolbox.com" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          </div>
-        </div>
-        
-        <div class="timeline-node">
-          <div class="timeline-marker">4</div>
-          <div class="phase-card">
-            <div class="phase-header">
-              <h2 class="phase-title">Fase 4: Webmail Integrado, Calendário (CalDAV) e Segurança Avançada</h2>
-              <span class="phase-time">⏱️ ~1h 50min</span>
-            </div>
-            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Dominar a interface webmail (composer, anexos, busca full-text), sincronizar calendário com Outlook/Google Calendar via CalDAV, configurar filtros Sieve automáticos, ativar 2FA e gerenciar backups.</p>
-            <div class="resource-list">
-              
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/webmail/index.html" target="_blank" rel="noopener noreferrer">Interface Webmail: Composer WYSIWYG, Arquivos e Busca Full-Text</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Tutorial Prático</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Acessar https://mail.seu-domínio.com/, redigir com WYSIWYG, drag-drop de arquivos, busca por palavras-chave, criar pastas, temas claro/escuro.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Demonstração prática com vídeo assistido.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 30 min de prática</span>
-                  <span>👤 Modoboa UX Team</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/webmail/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/webmail/index.html" target="_blank" rel="noopener noreferrer">Calendário e Contatos: Sincronização CalDAV/CardDAV</a>
-                  <span class="resource-badge lang-badge-en">🇺🇸 EN</span>
-                  <span class="resource-badge">Documentação Oficial</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Webmail inclui calendário integrado. Sincronizar com Outlook/Google Calendar/iPhone via CalDAV URL (caldav.seu-domínio.com). Contatos via CardDAV.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Use tradução automática ou consulte Seção II do manual em português.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 40 min de configuração</span>
-                  <span>👤 Modoboa & Comunidade CalDAV</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/webmail/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://www.dovecot.org/doc/sieve/" target="_blank" rel="noopener noreferrer">Filtros Sieve Automáticos: Regras de Processamento de Email</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Guia Técnico</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Criar regras: FROM 'marketing@' → pasta 'Marketing', SUBJECT 'URGENT' → marcado. Processamento no servidor, não no cliente.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Exemplos de regras Sieve em português.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 30 min de prática</span>
-                  <span>👤 Comunidade Sieve & Dovecot</span>
-                  <a href="https://www.dovecot.org/doc/sieve/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/admin/index.html" target="_blank" rel="noopener noreferrer">Backup, Retenção de Deletados, 2FA e Políticas de Segurança</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Guia de Segurança</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F06]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Fazer backup por domínio (ZIP). Configurar retenção de deletados (ex: 30 dias). Ativar 2FA para admin com Google Authenticator.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Boas práticas de segurança em português.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 30 min de configuração</span>
-                  <span>👤 Modoboa Security Team</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/admin/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          </div>
-        </div>
-        
-        <div class="timeline-node">
-          <div class="timeline-marker">5</div>
-          <div class="phase-card">
-            <div class="phase-header">
-              <h2 class="phase-title">Fase 5: Monitoramento, Troubleshooting e Otimização de Performance</h2>
-              <span class="phase-time">⏱️ ~1h 40min</span>
-            </div>
-            <p class="phase-goal">🎯 <strong>Meta da Etapa:</strong> Monitorar saúde do servidor (CPU, disco, fila), diagnosticar problemas comuns (IMAP down, emails em spam), otimizar performance (pooling, cache, quotas) e manter logs de auditoria.</p>
-            <div class="resource-list">
-              
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/admin/features.html" target="_blank" rel="noopener noreferrer">Dashboard de Monitoramento: Métricas e Alertas em Tempo Real</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Tutorial Prático</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Dashboard mostra: emails/hora, spam detectado, usuários ativos, tamanho de mailboxes. Alertas se disco >90% ou CPU >80%. Projeção de esgotamento.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Guia visual com screenshots.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 25 min de prática</span>
-                  <span>👤 Modoboa Monitoring Team</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/admin/features.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="http://www.postfix.org/qmgr.8.html" target="_blank" rel="noopener noreferrer">Fila de Emails e Queue Management (Postfix)</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Guia Técnico</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F03]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Comando 'postqueue -p' mostra fila. Se cresce (problema de conectividade), usar 'postfix flush' para reentrega ou 'postsuper -d ALL' para limpar.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Comandos prontos para terminal.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 30 min de prática</span>
-                  <span>👤 Postfix & Modoboa Core</span>
-                  <a href="http://www.postfix.org/qmgr.8.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/troubleshooting/index.html" target="_blank" rel="noopener noreferrer">Diagnóstico de Problemas Comuns: IMAP Down, SPF/DKIM, Blacklist</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Guia de Troubleshooting</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F04]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> IMAP: telnet mail.seu-dominio.com 143. SPF/DKIM: MXToolbox. Logs: tail -f /var/log/mail.log. PostgreSQL: psql -c 'SELECT count(*) FROM pg_stat_activity'. Reiniciar: systemctl restart dovecot.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Passo a passo de diagnóstico em português.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 35 min de diagnóstico</span>
-                  <span>👤 Fábrica Universal & Comunidade Modoboa</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/troubleshooting/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/admin/index.html" target="_blank" rel="noopener noreferrer">Otimização de Performance: Conexões PostgreSQL, Cache Redis e Escalabilidade</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Guia de Performance</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Aumentar max_connections PostgreSQL (100 → 200), configurar cache Redis para Django, desativar POP3 se só usar IMAP, limitar tamanho de anexo. Monitorar com top, iostat, vmstat.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Configurações práticas em português.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 30 min de otimização</span>
-                  <span>👤 Comunidade DevOps Brasil</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/admin/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            <div class="resource-item">
-              <input type="checkbox" class="chk-item">
-              <div class="resource-content">
-                <div class="resource-title">
-                  <a href="https://modoboa.readthedocs.io/en/latest/admin/index.html" target="_blank" rel="noopener noreferrer">Logs, Auditoria e Compliance: Histórico de Acessos e Operações</a>
-                  <span class="resource-badge lang-badge-br">🇧🇷 PT-BR</span>
-                  <span class="resource-badge">Documentação Oficial</span>
-                  <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F06]</span>
-                </div>
-                <div class="resource-takeaway">💡 <strong>O que você aprende:</strong> Admin → Relatórios → Logs: histórico login, operações (criar usuário, deletar domínio), erros. Exportar CSV. Arquivos: /var/log/auth.log, /var/log/mail.log.</div>
-                <div class="resource-dica-ptbr">🌐 <strong>Como acompanhar em PT-BR:</strong> Guia de compliance em português.</div>
-                <div class="resource-meta">
-                  <span>⏱️ 20 min de configuração</span>
-                  <span>👤 Modoboa Compliance Team</span>
-                  <a href="https://modoboa.readthedocs.io/en/latest/admin/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
-                </div>
-              </div>
-            </div>
-            
-            </div>
-          </div>
-        </div>
-        
-  </div>
+ <!-- TIMELINE -->
+ <div class="timeline">
+ 
+ <div class="timeline-node">
+ <div class="timeline-marker">1</div>
+ <div class="phase-card">
+ <div class="phase-header">
+ <h2 class="phase-title">Fase 1: Fundamentos, Arquitetura de Email e Stack Modoboa</h2>
+ <span class="phase-time">⏱ ~1h 30min</span>
+ </div>
+ <p class="phase-goal"> <strong>Meta da Etapa:</strong> Entender o fluxo de email (SMTP → Postfix → Dovecot), conhecer os componentes técnicos do Modoboa e dominar protocolos de segurança (SPF, DKIM, DMARC) para garantir entregabilidade.</p>
+ <div class="resource-list">
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer">Documentação Oficial: Conceitos e Arquitetura Modoboa</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Documentação Oficial</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Visão geral da arquitetura: Postfix (SMTP relay), Dovecot (IMAP/POP3), Django (admin web), PostgreSQL (dados), Nginx (proxy).</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Abra no Chrome/Edge, clique com botão direito e selecione 'Traduzir para português'.</div>
+ <div class="resource-meta">
+ <span>⏱ 45 min de leitura</span>
+ <span> Modoboa Core Team</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://github.com/modoboa/modoboa/wiki/Cost-Analysis" target="_blank" rel="noopener noreferrer">Análise Econômica: Exchange vs Modoboa em Soberania de Dados</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Artigo Técnico</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Comparação de custos: 50 usuários em Exchange (USD 600-1000/mês) vs Modoboa em Hetzner (EUR 14-16/mês). Economia de 95% com total controle.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Conteúdo nativo em português do Brasil.</div>
+ <div class="resource-meta">
+ <span>⏱ 30 min de leitura</span>
+ <span> Fábrica Universal Brasil</span>
+ <a href="https://github.com/modoboa/modoboa/wiki/Cost-Analysis" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/admin/features.html#authentication-methods" target="_blank" rel="noopener noreferrer">Guia Técnico: Protocolos SMTP, IMAP, POP3 e Segurança (SPF, DKIM, DMARC)</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Guia Técnico</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F03]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Diferenças entre SMTP (envio), IMAP (sincronização), POP3 (download). Por que SPF, DKIM e DMARC são obrigatórios para evitar spam.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Use tradução automática ou consulte glossário SMTP/IMAP em português no Módulo 0 do manual.</div>
+ <div class="resource-meta">
+ <span>⏱ 35 min de leitura</span>
+ <span> Internet Mail Consortium</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/admin/features.html#authentication-methods" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://mdubt.org/resources/" target="_blank" rel="noopener noreferrer">Registro de DNS e Validação de Autenticidade de Email</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Guia Prático</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Como gerar e configurar registros SPF, DKIM e DMARC no seu registrador de domínio (GoDaddy, NameCheap) para máxima entregabilidade.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Tutorial prático em português.</div>
+ <div class="resource-meta">
+ <span>⏱ 25 min de prática</span>
+ <span> Comunidade DevOps Brasil</span>
+ <a href="https://mdubt.org/resources/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div class="timeline-node">
+ <div class="timeline-marker">2</div>
+ <div class="phase-card">
+ <div class="phase-header">
+ <h2 class="phase-title">Fase 2: Provisionamento VPS, Instalação Automática e Segurança</h2>
+ <span class="phase-time">⏱ ~2h</span>
+ </div>
+ <p class="phase-goal"> <strong>Meta da Etapa:</strong> Provisionar uma VPS em Hetzner Cloud, executar o instalador automático do Modoboa, configurar firewall (UFW) e ativar HTTPS com Let's Encrypt para produção.</p>
+ <div class="resource-list">
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://www.hetzner.cloud" target="_blank" rel="noopener noreferrer">Como Provisionar VPS Debian/Ubuntu em Hetzner Cloud</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Guia Prático / Tutorial</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Passo a passo: criar conta, escolher Debian 12 + CPX31, copiar IP/senha, acessar via SSH no Windows (PowerShell) ou Mac (Terminal).</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Tutorial didático em português com screenshots.</div>
+ <div class="resource-meta">
+ <span>⏱ 40 min de estudo + prática</span>
+ <span> Comunidade DevOps Brasil</span>
+ <a href="https://www.hetzner.cloud" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://github.com/modoboa/modoboa/blob/master/docs/install.rst" target="_blank" rel="noopener noreferrer">Preparação do Sistema Operacional e Dependências</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Código & Playbook</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Atualizar Debian (apt-get update/upgrade), instalar PostgreSQL, Postfix, Dovecot, Nginx, Python3-dev. Verificar versões instaladas.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Comandos prontos para copiar-colar no terminal.</div>
+ <div class="resource-meta">
+ <span>⏱ 30 min de prática</span>
+ <span> Modoboa DevOps Core</span>
+ <a href="https://github.com/modoboa/modoboa/blob/master/docs/install.rst" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/deployment/" target="_blank" rel="noopener noreferrer">Instalador Automático Modoboa: Deploy de Produção</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Tutorial Prático</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Clone do repositório oficial, checkout v2.3.0, execução de 'modoboa deploy /var/vmail/modoboa'. Sistema pergunta hostname, domínio, senha admin.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Consulte Parte I do Manual em Português para comandos traduzidos.</div>
+ <div class="resource-meta">
+ <span>⏱ 35 min de prática guiada</span>
+ <span> Modoboa Installation Team</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/deployment/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://letsencrypt.org/getting-started/" target="_blank" rel="noopener noreferrer">Firewall UFW, Portas de Email e HTTPS com Let's Encrypt</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Guia de Segurança</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F06]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> UFW ativar com portas 22 (SSH), 25 (SMTP), 80 (HTTP), 143 (IMAP), 110 (POP3), 587 (submission), 443 (HTTPS). Certbot + Let's Encrypt para renovação automática.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Instruções prontas para copiar-colar.</div>
+ <div class="resource-meta">
+ <span>⏱ 35 min de prática</span>
+ <span> Certbot & Let's Encrypt</span>
+ <a href="https://letsencrypt.org/getting-started/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div class="timeline-node">
+ <div class="timeline-marker">3</div>
+ <div class="phase-card">
+ <div class="phase-header">
+ <h2 class="phase-title">Fase 3: Configuração de Domínios, Contas e Validação DNS</h2>
+ <span class="phase-time">⏱ ~1h 40min</span>
+ </div>
+ <p class="phase-goal"> <strong>Meta da Etapa:</strong> Criar domínios no painel admin, adicionar contas de usuários com quotas, configurar aliases e listas de email, validar registros DNS (SPF, DKIM, DMARC) para produção.</p>
+ <div class="resource-list">
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/manage_domains/index.html" target="_blank" rel="noopener noreferrer">Painel Admin Web do Modoboa: Dashboard e Navegação</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Tutorial Prático</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Acessar https://seu-domínio/admin/, login com admin, explorar dashboard com métricas de emails recebidos/enviados, status de domínios e contas.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Guia visual com screenshots em português.</div>
+ <div class="resource-meta">
+ <span>⏱ 25 min de prática</span>
+ <span> Comunidade Modoboa Brasil</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/manage_domains/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/manage_domains/index.html" target="_blank" rel="noopener noreferrer">Criação de Domínios com Quotas e Status de Registros</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Guia Prático</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Menu Domínios → +, criar 'empresa.com.br', quota (0=ilimitada), cópia dos registros SPF/DKIM gerados. Adicionar no DNS do registrador (GoDaddy, NameCheap).</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Passo a passo didático.</div>
+ <div class="resource-meta">
+ <span>⏱ 35 min de prática</span>
+ <span> Modoboa Admin Team</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/manage_domains/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/manage_users/index.html" target="_blank" rel="noopener noreferrer">Criação de Contas de Usuário, Aliases e Listas de Email</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Tutorial Prático</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F03]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Criar contas (joao@empresa.com.br com quota 2GB), aliases (contato@empresa → joao@empresa), listas (vendas@ para múltiplos destinatários). Testar login no webmail.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Exemplos práticos em português.</div>
+ <div class="resource-meta">
+ <span>⏱ 30 min de prática</span>
+ <span> Modoboa Admin Core</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/manage_users/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://mxtoolbox.com" target="_blank" rel="noopener noreferrer">Validação de Registros DNS e Entregabilidade de Email</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Guia Técnico</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F04]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Verificar SPF, DKIM, DMARC com MXToolbox. Validar que emails não vão para spam. Testar com Mailtrap ou semelhante.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Ferramentas online e verificação manual.</div>
+ <div class="resource-meta">
+ <span>⏱ 20 min de verificação</span>
+ <span> MXToolbox & Fábrica Universal</span>
+ <a href="https://mxtoolbox.com" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div class="timeline-node">
+ <div class="timeline-marker">4</div>
+ <div class="phase-card">
+ <div class="phase-header">
+ <h2 class="phase-title">Fase 4: Webmail Integrado, Calendário (CalDAV) e Segurança Avançada</h2>
+ <span class="phase-time">⏱ ~1h 50min</span>
+ </div>
+ <p class="phase-goal"> <strong>Meta da Etapa:</strong> Dominar a interface webmail (composer, anexos, busca full-text), sincronizar calendário com Outlook/Google Calendar via CalDAV, configurar filtros Sieve automáticos, ativar 2FA e gerenciar backups.</p>
+ <div class="resource-list">
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/webmail/index.html" target="_blank" rel="noopener noreferrer">Interface Webmail: Composer WYSIWYG, Arquivos e Busca Full-Text</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Tutorial Prático</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Acessar https://mail.seu-domínio.com/, redigir com WYSIWYG, drag-drop de arquivos, busca por palavras-chave, criar pastas, temas claro/escuro.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Demonstração prática com vídeo assistido.</div>
+ <div class="resource-meta">
+ <span>⏱ 30 min de prática</span>
+ <span> Modoboa UX Team</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/webmail/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/webmail/index.html" target="_blank" rel="noopener noreferrer">Calendário e Contatos: Sincronização CalDAV/CardDAV</a>
+ <span class="resource-badge lang-badge-en"> EN</span>
+ <span class="resource-badge">Documentação Oficial</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Webmail inclui calendário integrado. Sincronizar com Outlook/Google Calendar/iPhone via CalDAV URL (caldav.seu-domínio.com). Contatos via CardDAV.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Use tradução automática ou consulte Seção II do manual em português.</div>
+ <div class="resource-meta">
+ <span>⏱ 40 min de configuração</span>
+ <span> Modoboa & Comunidade CalDAV</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/webmail/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://www.dovecot.org/doc/sieve/" target="_blank" rel="noopener noreferrer">Filtros Sieve Automáticos: Regras de Processamento de Email</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Guia Técnico</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F05]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Criar regras: FROM 'marketing@' → pasta 'Marketing', SUBJECT 'URGENT' → marcado. Processamento no servidor, não no cliente.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Exemplos de regras Sieve em português.</div>
+ <div class="resource-meta">
+ <span>⏱ 30 min de prática</span>
+ <span> Comunidade Sieve & Dovecot</span>
+ <a href="https://www.dovecot.org/doc/sieve/" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/admin/index.html" target="_blank" rel="noopener noreferrer">Backup, Retenção de Deletados, 2FA e Políticas de Segurança</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Guia de Segurança</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F06]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Fazer backup por domínio (ZIP). Configurar retenção de deletados (ex: 30 dias). Ativar 2FA para admin com Google Authenticator.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Boas práticas de segurança em português.</div>
+ <div class="resource-meta">
+ <span>⏱ 30 min de configuração</span>
+ <span> Modoboa Security Team</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/admin/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div class="timeline-node">
+ <div class="timeline-marker">5</div>
+ <div class="phase-card">
+ <div class="phase-header">
+ <h2 class="phase-title">Fase 5: Monitoramento, Troubleshooting e Otimização de Performance</h2>
+ <span class="phase-time">⏱ ~1h 40min</span>
+ </div>
+ <p class="phase-goal"> <strong>Meta da Etapa:</strong> Monitorar saúde do servidor (CPU, disco, fila), diagnosticar problemas comuns (IMAP down, emails em spam), otimizar performance (pooling, cache, quotas) e manter logs de auditoria.</p>
+ <div class="resource-list">
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/admin/features.html" target="_blank" rel="noopener noreferrer">Dashboard de Monitoramento: Métricas e Alertas em Tempo Real</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Tutorial Prático</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F01]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Dashboard mostra: emails/hora, spam detectado, usuários ativos, tamanho de mailboxes. Alertas se disco >90% ou CPU >80%. Projeção de esgotamento.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Guia visual com screenshots.</div>
+ <div class="resource-meta">
+ <span>⏱ 25 min de prática</span>
+ <span> Modoboa Monitoring Team</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/admin/features.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="http://www.postfix.org/qmgr.8.html" target="_blank" rel="noopener noreferrer">Fila de Emails e Queue Management (Postfix)</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Guia Técnico</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F03]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Comando 'postqueue -p' mostra fila. Se cresce (problema de conectividade), usar 'postfix flush' para reentrega ou 'postsuper -d ALL' para limpar.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Comandos prontos para terminal.</div>
+ <div class="resource-meta">
+ <span>⏱ 30 min de prática</span>
+ <span> Postfix & Modoboa Core</span>
+ <a href="http://www.postfix.org/qmgr.8.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/troubleshooting/index.html" target="_blank" rel="noopener noreferrer">Diagnóstico de Problemas Comuns: IMAP Down, SPF/DKIM, Blacklist</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Guia de Troubleshooting</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F04]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> IMAP: telnet mail.seu-dominio.com 143. SPF/DKIM: MXToolbox. Logs: tail -f /var/log/mail.log. PostgreSQL: psql -c 'SELECT count(*) FROM pg_stat_activity'. Reiniciar: systemctl restart dovecot.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Passo a passo de diagnóstico em português.</div>
+ <div class="resource-meta">
+ <span>⏱ 35 min de diagnóstico</span>
+ <span> Fábrica Universal & Comunidade Modoboa</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/troubleshooting/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/admin/index.html" target="_blank" rel="noopener noreferrer">Otimização de Performance: Conexões PostgreSQL, Cache Redis e Escalabilidade</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Guia de Performance</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F02]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Aumentar max_connections PostgreSQL (100 → 200), configurar cache Redis para Django, desativar POP3 se só usar IMAP, limitar tamanho de anexo. Monitorar com top, iostat, vmstat.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Configurações práticas em português.</div>
+ <div class="resource-meta">
+ <span>⏱ 30 min de otimização</span>
+ <span> Comunidade DevOps Brasil</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/admin/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="resource-item">
+ <input type="checkbox" class="chk-item">
+ <div class="resource-content">
+ <div class="resource-title">
+ <a href="https://modoboa.readthedocs.io/en/latest/admin/index.html" target="_blank" rel="noopener noreferrer">Logs, Auditoria e Compliance: Histórico de Acessos e Operações</a>
+ <span class="resource-badge lang-badge-br"> PT-BR</span>
+ <span class="resource-badge">Documentação Oficial</span>
+ <span class="resource-badge" style="background:var(--gold-soft); color:#B45309;">[F06]</span>
+ </div>
+ <div class="resource-takeaway"> <strong>O que você aprende:</strong> Admin → Relatórios → Logs: histórico login, operações (criar usuário, deletar domínio), erros. Exportar CSV. Arquivos: /var/log/auth.log, /var/log/mail.log.</div>
+ <div class="resource-dica-ptbr"> <strong>Como acompanhar em PT-BR:</strong> Guia de compliance em português.</div>
+ <div class="resource-meta">
+ <span>⏱ 20 min de configuração</span>
+ <span> Modoboa Compliance Team</span>
+ <a href="https://modoboa.readthedocs.io/en/latest/admin/index.html" target="_blank" rel="noopener noreferrer" class="btn-link">Acessar Fonte Original ↗</a>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ </div>
 
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const checkboxes = document.querySelectorAll('.chk-item');
-  checkboxes.forEach((chk, idx) => {
-    const key = 'trilha_chk_' + idx;
-    chk.checked = localStorage.getItem(key) === 'true';
-    chk.addEventListener('change', () => {
-      localStorage.setItem(key, chk.checked);
-      atualizarProgresso();
-    });
-  });
-  atualizarProgresso();
+ const checkboxes = document.querySelectorAll('.chk-item');
+ checkboxes.forEach((chk, idx) => {
+ const key = 'trilha_chk_' + idx;
+ chk.checked = localStorage.getItem(key) === 'true';
+ chk.addEventListener('change', () => {
+ localStorage.setItem(key, chk.checked);
+ atualizarProgresso();
+ });
+ });
+ atualizarProgresso();
 
-  function atualizarProgresso() {
-    const total = checkboxes.length;
-    const marcados = Array.from(checkboxes).filter(c => c.checked).length;
-    const pct = total ? Math.round((marcados / total) * 100) : 0;
-    const bar = document.getElementById('progresso-bar');
-    const txt = document.getElementById('progresso-txt');
-    if (bar) bar.style.width = pct + '%';
-    if (txt) txt.innerText = marcados + ' de ' + total + ' concluídos (' + pct + '%)';
-  }
+ function atualizarProgresso() {
+ const total = checkboxes.length;
+ const marcados = Array.from(checkboxes).filter(c => c.checked).length;
+ const pct = total ? Math.round((marcados / total) * 100) : 0;
+ const bar = document.getElementById('progresso-bar');
+ const txt = document.getElementById('progresso-txt');
+ if (bar) bar.style.width = pct + '%';
+ if (txt) txt.innerText = marcados + ' de ' + total + ' concluídos (' + pct + '%)';
+ }
 });
 </script>
 
