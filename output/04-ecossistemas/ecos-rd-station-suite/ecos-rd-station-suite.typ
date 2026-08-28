@@ -15,7 +15,7 @@
   ]
 )
 #set text(font: "Liberation Sans", size: 9.5pt, lang: "pt")
-#set par(justify: true, leading: 0.65em)
+#set par(justify: true, leading: 1.5em)
 
 // CAPA EDITORIAL EXECUTIVA
 #align(center + horizon)[
