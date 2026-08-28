@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 CLI RUNNER UNIVERSAL · FLUXO 2: DOSSIÊS VERTICAIS & QUINTETO SOBERANO AIDD
 Aciona a geração determinística tripartite do desmantelamento de SaaS (HTML, MD, PDF)
@@ -72,6 +72,10 @@ def executar_fluxo2(saas: str = None) -> bool:
             print("   ✅ Portal INDICE-MESTRE.html sincronizado com sucesso!")
         except Exception as e:
             print(f"   ⚠️ Aviso na sincronização do Índice Mestre: {e}")
+
+        # Sincronização Git Automatizada (Regra R16)
+        from git_sync import executar_commit_e_push
+        executar_commit_e_push(f"feat(fluxo2): compilar dossie vertical vert-{saas_limpo}")
 
         print("="*70 + "\n")
         return True

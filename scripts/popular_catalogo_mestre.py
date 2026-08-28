@@ -294,6 +294,67 @@ def ingerir_manuais_e_trilhas():
 
     print(f"   ✓ {cont_m} pacotes de manuais/trilhas ingeridos.")
 
+def ingerir_ecossistemas():
+    print("\n🌐 Ingerindo Macro-Ecossistemas (Fluxo 4)...")
+    base_f4 = BASE_DIR / "output" / "04-ecossistemas"
+    if not base_f4.exists():
+        return
+    pastas_eco = sorted([d for d in base_f4.glob("ecos-*") if d.is_dir()])
+    cont_e = 0
+
+    for pe in pastas_eco:
+        eco_slug = pe.name.replace("ecos-", "")
+        json_p = BASE_DIR / "scripts" / "data" / f"ecos-{eco_slug}.json"
+        
+        if not json_p.exists():
+            continue
+
+        with open(json_p, "r", encoding="utf-8-sig") as f:
+            dados = json.load(f)
+
+        nome_eco = dados.get("nome_ecossistema", eco_slug.title())
+        html_p = pe / "materiais" / f"ecos-{eco_slug}.html"
+        md_p = pe / "materiais" / f"ecos-{eco_slug}.md"
+        pdf_p = pe / "materiais" / f"ecos-{eco_slug}.pdf"
+
+        for pilar in dados.get("pilares", []):
+            nome_pilar = pilar.get("nome_pilar", "Pilar")
+            for f_item in pilar.get("ferramentas", []):
+                slug_f = f_item.get("slug") or normalizar_slug(f_item["nome"])
+                nome_f = f_item.get("nome")
+                lic_f = f_item.get("licenca_osi", "OSI")
+                repo_f = f_item.get("repositorio_github", "")
+                papel_f = f_item.get("papel_no_pilar", "")
+                desc_f = f_item.get("o_que_faz", "")
+
+                # 1. Registra no catálogo
+                registrar_ferramenta_catalogo({
+                    "slug": slug_f,
+                    "nome": nome_f,
+                    "licenca_osi": lic_f,
+                    "categoria_primaria": f"Ecossistema: {nome_eco}",
+                    "repo_url": repo_f,
+                    "stack_tecnologica": "Open Source",
+                    "descricao_canonica": desc_f,
+                    "saas_substituidos": nome_eco,
+                    "possui_manual_vps": False
+                })
+
+                # 2. Rastreabilidade
+                registrar_rastreabilidade_material({
+                    "ferramenta_slug": slug_f,
+                    "tipo_material": "ecossistema",
+                    "origem_slug": eco_slug,
+                    "titulo_material": f"Macro-Ecossistema: {nome_eco}",
+                    "posicao_ou_rank": f"{nome_pilar} ({papel_f})",
+                    "caminho_html": str(html_p.relative_to(BASE_DIR)).replace("\\", "/") if html_p.exists() else "",
+                    "caminho_md": str(md_p.relative_to(BASE_DIR)).replace("\\", "/") if md_p.exists() else "",
+                    "caminho_pdf": str(pdf_p.relative_to(BASE_DIR)).replace("\\", "/") if pdf_p.exists() else ""
+                })
+                cont_e += 1
+
+    print(f"   ✓ {len(pastas_eco)} ecossistemas processados ({cont_e} vínculos criados).")
+
 def executar_ingestao_completa():
     print("=" * 80)
     print(" 🚀 INGESTÃO & CONSTRUÇÃO DO CATÁLOGO MESTRE CANÔNICO (SQLITE R11)")
@@ -301,6 +362,7 @@ def executar_ingestao_completa():
     inicializar_banco()
     ingerir_listas_horizontais()
     ingerir_dossies_verticais()
+    ingerir_ecossistemas()
     ingerir_manuais_e_trilhas()
 
     stats = obter_estatisticas_catalogo()

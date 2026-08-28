@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SchemaDossieEcossistema",
+  "description": "Schema canônico para validação de dossiês de macro-ecossistemas SaaS (Fluxo 4 AIDD)",
+  "type": "object",
+  "required": [
+    "slug",
+    "nome_ecossistema",
+    "titulo",
+    "subtitulo",
+    "deck",
+    "saas_substituido",
+    "stats",
+    "pilares",
+    "camada_integracao",
+    "deploy_consolidado",
+    "analise_economica_global"
+  ],
+  "properties": {
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "nome_ecossistema": { "type": "string", "minLength": 3 },
+    "titulo": { "type": "string", "minLength": 5 },
+    "subtitulo": { "type": "string", "minLength": 5 },
+    "deck": { "type": "string", "minLength": 20 },
+    "saas_substituido": { "type": "string" },
+    "stats": {
+      "type": "object",
+      "required": ["total_pilares", "total_ferramentas", "licencas_osi", "economia_media", "autonomia"],
+      "properties": {
+        "total_pilares": { "type": "integer", "minimum": 2 },
+        "total_ferramentas": { "type": "integer", "minimum": 4 },
+        "licencas_osi": { "type": "string" },
+        "economia_media": { "type": "string" },
+        "autonomia": { "type": "string" }
+      }
+    },
+    "pilares": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["pilar_id", "nome_pilar", "modulo_saas_alvo", "descricao_pilar", "ferramentas"],
+        "properties": {
+          "pilar_id": { "type": "string" },
+          "nome_pilar": { "type": "string" },
+          "modulo_saas_alvo": { "type": "string" },
+          "descricao_pilar": { "type": "string" },
+          "ferramentas": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": [
+                "rank",
+                "slug",
+                "nome",
+                "subtitulo",
+                "papel_no_pilar",
+                "licenca_osi",
+                "repositorio_github",
+                "o_que_faz",
+                "como_funciona",
+                "comando_rapido",
+                "requisitos_infra"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "camada_integracao": {
+      "type": "object",
+      "required": [
+        "autenticacao_sso",
+        "barramento_eventos",
+        "gateway_reverse_proxy",
+        "fluxo_integracao_descricao"
+      ],
+      "properties": {
+        "autenticacao_sso": { "type": "string" },
+        "barramento_eventos": { "type": "string" },
+        "gateway_reverse_proxy": { "type": "string" },
+        "fluxo_integracao_descricao": { "type": "string" },
+        "diagrama_arquitetura": { "type": "string" }
+      }
+    },
+    "deploy_consolidado": {
+      "type": "object",
+      "required": [
+        "docker_compose_exemplo",
+        "requisitos_hardware_totais",
+        "passos_deploy"
+      ],
+      "properties": {
+        "docker_compose_exemplo": { "type": "string" },
+        "requisitos_hardware_totais": {
+          "type": "object",
+          "required": ["ram_total_recomendada", "cpu_total_recomendada", "armazenamento_minimo"]
+        },
+        "passos_deploy": { "type": "array", "minItems": 3 }
+      }
+    },
+    "analise_economica_global": {
+      "type": "object",
+      "required": ["custo_saas_anual", "custo_vps_anual", "economia_anual_liquida", "roi_meses"]
+    }
+  }
+}

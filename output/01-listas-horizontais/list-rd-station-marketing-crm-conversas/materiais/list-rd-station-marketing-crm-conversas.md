@@ -1,7 +1,7 @@
 # RD Station Marketing, CRM & Conversas
 
 > **Compêndio Temático Open Source · Camada 51 · Padrão Diamante R5**  
-> Compêndio soberano de ferramentas open-source para substituir a suíte completa RD Station (Marketing, CRM e Conversas/WhatsApp), garantindo nutrição de leads, automação de funis, gestão de pipeline de vendas e atendimento multicanal sem mensalidades por contato ou atendente.
+> Compêndio soberano de 20 ferramentas open-source para substituir integralmente a suíte RD Station (Marketing, CRM, Conversas/WhatsApp, Formulários e Automações), garantindo nutrição de leads, funis de vendas, agendamento de reuniões, assinatura de propostas e atendimento multicanal sem mensalidades por contato ou atendente.
 
 ---
 
@@ -12,13 +12,23 @@
 | 01 | **Mautic** | Automação de Marketing | `GPL-3.0` | RD Station Marketing / HubSpot Marketing Hub / ActiveCampaign | R$ 42.000/ano |
 | 02 | **Twenty** | CRM de Vendas | `AGPL-3.0` | RD Station CRM / Pipedrive / Salesforce Sales Cloud | R$ 28.800/ano |
 | 03 | **Chatwoot** | Atendimento Omnicanal | `MIT` | RD Station Conversas / Zendesk / Intercom | R$ 36.000/ano |
-| 04 | **WAHA (WhatsApp HTTP API)** | Infraestrutura WhatsApp | `Apache-2.0` | RD Station Conversas (Módulo WhatsApp) / Z-API / Gupshup | R$ 18.000/ano |
-| 05 | **Typebot** | Qualificação & Formulários | `AGPL-3.0` | RD Station Forms / Typeform / Landbot | R$ 14.400/ano |
-| 06 | **Listmonk** | E-mail Marketing | `AGPL-3.0` | RD Station Email / Mailchimp / SendGrid Marketing Campaigns | R$ 21.600/ano |
-| 07 | **EspoCRM** | CRM Corporativo | `GPL-3.0` | RD Station CRM / Zoho CRM / SugarCRM | R$ 32.400/ano |
-| 08 | **n8n** | Automação & Integração | `Fair-Code (Sustainable Use / Apache-2.0 core)` | RD Station Automações Avançadas / Zapier / Make (Integromat) | R$ 24.000/ano |
-| 09 | **Formbricks** | Pesquisa & Experiência | `AGPL-3.0` | RD Station Pesquisas / SurveyMonkey / Qualtrics | R$ 16.800/ano |
-| 10 | **Novu** | Infraestrutura de Mensageria | `MIT` | RD Station Notificações / Courier / OneSignal | R$ 19.200/ano |
+| 04 | **Evolution API** | Infraestrutura WhatsApp | `Apache-2.0` | RD Station Conversas WhatsApp / Z-API / Gupshup | R$ 18.000/ano |
+| 05 | **WAHA (WhatsApp HTTP API)** | Infraestrutura WhatsApp | `Apache-2.0` | RD Conversas WhatsApp / Twilio WhatsApp API / Z-API | R$ 18.000/ano |
+| 06 | **Typebot** | Qualificação & Formulários | `AGPL-3.0` | RD Station Forms / Typeform / Landbot | R$ 14.400/ano |
+| 07 | **Listmonk** | E-mail Marketing | `AGPL-3.0` | RD Station Email / Mailchimp / SendGrid Marketing Campaigns | R$ 21.600/ano |
+| 08 | **EspoCRM** | CRM Corporativo | `GPL-3.0` | RD Station CRM / Zoho CRM / SugarCRM | R$ 32.400/ano |
+| 09 | **n8n** | Automação & Integração | `Fair-Code (Sustainable Use / Apache-2.0 core)` | RD Station Automações Avançadas / Zapier / Make (Integromat) | R$ 24.000/ano |
+| 10 | **Activepieces** | Automação No-Code | `MIT` | Zapier / Make / RD Automações | R$ 18.000/ano |
+| 11 | **SuiteCRM** | CRM Enterprise | `AGPL-3.0` | Salesforce Sales Cloud / RD CRM Pro / SugarCRM | R$ 48.000/ano |
+| 12 | **Odoo CRM (Community)** | CRM Integrado ao ERP | `LGPL-3.0` | RD Station CRM / HubSpot CRM / Pipedrive | R$ 30.000/ano |
+| 13 | **Formbricks** | Pesquisa & Experiência | `AGPL-3.0` | RD Station Pesquisas / SurveyMonkey / Qualtrics | R$ 16.800/ano |
+| 14 | **Cal.com** | Agendamento Comercial | `AGPL-3.0` | Calendly / HubSpot Meetings / Chili Piper | R$ 12.000/ano |
+| 15 | **Documenso** | Assinatura de Documentos | `AGPL-3.0` | DocuSign / Clicksign / Adobe Sign | R$ 18.000/ano |
+| 16 | **Sendportal** | E-mail Marketing | `MIT` | RD Station Marketing (E-mail) / Mailchimp / Campaign Monitor | R$ 15.000/ano |
+| 17 | **Novu** | Infraestrutura de Mensageria | `MIT` | RD Station Notificações / Courier / OneSignal | R$ 19.200/ano |
+| 18 | **Plausible Analytics** | Web Analytics & Métricas | `AGPL-3.0` | Google Analytics 4 / Hotjar Analytics / RD Analytics | R$ 9.600/ano |
+| 19 | **Shlink** | Rastreamento de Links | `MIT` | Bitly / Rebrandly / RD Link Shortener | R$ 7.200/ano |
+| 20 | **Directus** | Headless CMS & Dados | `GPL-3.0` | RD Station Landing Pages / Contentful / Strapi | R$ 24.000/ano |
 
 ---
 
@@ -132,11 +142,47 @@ git clone https://github.com/chatwoot/chatwoot && cd chatwoot && docker compose 
 
 ---
 
-### #04 · WAHA (WhatsApp HTTP API) — *Gateway de WhatsApp Web & API de Mensagens*
+### #04 · Evolution API — *Gateway de WhatsApp Avançado com Integração Nativa ao Chatwoot*
 
 - **Categoria:** Infraestrutura WhatsApp | **Senioridade:** `Iniciante`
 - **Licença OSI:** `Apache-2.0`
-- **SaaS Proprietário Substituído:** RD Station Conversas (Módulo WhatsApp) / Z-API / Gupshup
+- **SaaS Proprietário Substituído:** RD Station Conversas WhatsApp / Z-API / Gupshup
+- **Economia Estimada no TCO:** R$ 18.000/ano
+
+#### 1. O Que Faz & Como Funciona
+API HTTP completa em Node.js para WhatsApp com suporte a múltiplas instâncias, webhooks em tempo real, envio de mídia, áudios convertidos nativamente e integração direta de 1 clique com o Chatwoot.
+
+*Baseada na biblioteca Baileys com gerenciamento assíncrono via Redis e Postgres. Expõe interface Swagger para controle de sessões, grupos, status e disparo em lote.*
+
+```bash
+docker run -d -p 8080:8080 --name evolution-api atendai/evolution-api:v2.1.0
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** APIs comerciais de WhatsApp cobram R$ 150 a R$ 250 mensais por número conectado.
+- **Custo Open Source:** VPS 2 vCPU / 2 GB RAM (R$ 70/mês) suportando dezenas de instâncias.
+- **Retorno do Investimento (ROI):** Payback imediato no primeiro número conectado.
+- **Requisitos de Infra:** 2 GB RAM RAM, 1 vCPU CPU (Banco: PostgreSQL / Redis)
+- **Veredito do Arquiteto:** O gateway brasileiro de WhatsApp mais maduro e adotado pela comunidade open source corporativa.
+- **Repositório Oficial:** [https://github.com/EvolutionAPI/evolution-api](https://github.com/EvolutionAPI/evolution-api)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Headless / Painel Web Manager` (TypeScript / Express / React Manager)
+- **Mecânica de Customização:** Totalmente headless para integração transparente sob a marca corporativa.
+- **Impacto em Upgrades:** Persistência de credenciais em PostgreSQL garante updates de contêiner sem perda de conexão com WhatsApp.
+
+---
+
+### #05 · WAHA (WhatsApp HTTP API) — *Gateway Headless de WhatsApp Web & Motor de Webhooks*
+
+- **Categoria:** Infraestrutura WhatsApp | **Senioridade:** `Iniciante`
+- **Licença OSI:** `Apache-2.0`
+- **SaaS Proprietário Substituído:** RD Conversas WhatsApp / Twilio WhatsApp API / Z-API
 - **Economia Estimada no TCO:** R$ 18.000/ano
 
 #### 1. O Que Faz & Como Funciona
@@ -149,7 +195,7 @@ docker run -d -p 3000:3000 --name waha devlikeapro/waha
 ```
 
 #### 2. Análise Econômica & Infraestrutura
-- **Custo Proprietário:** APIs proprietárias de WhatsApp cobram mensalidades por instância conectada (R$ 150/mês por número) + taxa por mensagem.
+- **Custo Proprietário:** APIs proprietárias de WhatsApp cobram mensalidades por instância conectada + taxa por mensagem.
 - **Custo Open Source:** VPS 1 vCPU / 2 GB RAM (R$ 60/mês) suportando múltiplas sessões.
 - **Retorno do Investimento (ROI):** Economia imediata desde o primeiro dia de conexão.
 - **Requisitos de Infra:** 2 GB RAM RAM, 1 vCPU CPU (Banco: SQLite / MongoDB / Local)
@@ -168,7 +214,7 @@ docker run -d -p 3000:3000 --name waha devlikeapro/waha
 
 ---
 
-### #05 · Typebot — *Construtor Visual de Formulários & Chatbots de Qualificação*
+### #06 · Typebot — *Construtor Visual de Formulários & Chatbots de Qualificação*
 
 - **Categoria:** Qualificação & Formulários | **Senioridade:** `Iniciante`
 - **Licença OSI:** `AGPL-3.0`
@@ -204,7 +250,7 @@ docker run -d -p 3001:3000 --name typebot baptistearno/typebot-builder:latest
 
 ---
 
-### #06 · Listmonk — *Disparo de E-mails & Newsletters de Alta Performance*
+### #07 · Listmonk — *Disparo de E-mails & Newsletters de Alta Performance*
 
 - **Categoria:** E-mail Marketing | **Senioridade:** `Iniciante`
 - **Licença OSI:** `AGPL-3.0`
@@ -240,7 +286,7 @@ docker run -d -p 9000:9000 --name listmonk listmonk/listmonk:latest
 
 ---
 
-### #07 · EspoCRM — *CRM Corporativo Robusto & Automação de Processos*
+### #08 · EspoCRM — *CRM Corporativo Robusto & Automação de Processos*
 
 - **Categoria:** CRM Corporativo | **Senioridade:** `Pleno`
 - **Licença OSI:** `GPL-3.0`
@@ -276,7 +322,7 @@ docker run -d -p 8081:80 --name espocrm espocrm/espocrm
 
 ---
 
-### #08 · n8n — *Orquestrador de Integrações & Automação de Workflows*
+### #09 · n8n — *Orquestrador de Integrações & Automação de Workflows*
 
 - **Categoria:** Automação & Integração | **Senioridade:** `Pleno`
 - **Licença OSI:** `Fair-Code (Sustainable Use / Apache-2.0 core)`
@@ -312,7 +358,115 @@ docker run -d -p 5678:5678 --name n8n n8nio/n8n:latest
 
 ---
 
-### #09 · Formbricks — *Pesquisas In-App, NPS & Feedback Contínuo do Cliente*
+### #10 · Activepieces — *Automação de Workflows No-Code Aberta & Leve*
+
+- **Categoria:** Automação No-Code | **Senioridade:** `Iniciante`
+- **Licença OSI:** `MIT`
+- **SaaS Proprietário Substituído:** Zapier / Make / RD Automações
+- **Economia Estimada no TCO:** R$ 18.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Plataforma no-code moderna e intuitiva para conectar ferramentas corporativas, desenhar fluxos condicionais e automatizar repasses de leads entre marketing e vendas.
+
+*Desenvolvido em TypeScript e Node.js com arquitetura de peças (pieces) modulares e isolamento de execução em ambiente seguro.*
+
+```bash
+git clone https://github.com/activepieces/activepieces && cd activepieces && docker compose up -d
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Make e Zapier cobram por volume de operações executadas.
+- **Custo Open Source:** VPS 2 vCPU / 2 GB RAM (R$ 70/mês).
+- **Retorno do Investimento (ROI):** Payback instantâneo.
+- **Requisitos de Infra:** 2 GB RAM RAM, 1 vCPU CPU (Banco: PostgreSQL + Redis)
+- **Veredito do Arquiteto:** A alternativa mais fácil de usar para times não-técnicos automatizarem processos comerciais.
+- **Repositório Oficial:** [https://github.com/activepieces/activepieces](https://github.com/activepieces/activepieces)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Esforço Mínimo` (Angular / Tailwind CSS)
+- **Mecânica de Customização:** Interface limpa e estilizável com suporte a identidade corporativa.
+- **Impacto em Upgrades:** Peças modulares versionadas via npm de forma isolada do core.
+
+---
+
+### #11 · SuiteCRM — *CRM Enterprise Maduro & Gestão de Contratos e Cotações*
+
+- **Categoria:** CRM Enterprise | **Senioridade:** `Avançado`
+- **Licença OSI:** `AGPL-3.0`
+- **SaaS Proprietário Substituído:** Salesforce Sales Cloud / RD CRM Pro / SugarCRM
+- **Economia Estimada no TCO:** R$ 48.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Suíte CRM completa de nível enterprise com gestão de leads, contas, cotações em PDF, faturas, contratos, campanhas de e-mail e portal de autoatendimento.
+
+*Backend em PHP/Symfony e arquitetura orientada a serviços com frontend moderno em Angular no SuiteCRM 8.*
+
+```bash
+docker run -d -p 8082:80 --name suitecrm bitnami/suitecrm:latest
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Salesforce Enterprise para 20 usuários custa mais de R$ 8.000/mês.
+- **Custo Open Source:** VPS 4 vCPU / 8 GB RAM (R$ 200/mês).
+- **Retorno do Investimento (ROI):** Payback no primeiro mês de operação.
+- **Requisitos de Infra:** 4 GB RAM RAM, 2 vCPU CPU (Banco: MariaDB / MySQL)
+- **Veredito do Arquiteto:** O CRM de código aberto mais completo para grandes corporações que necessitam de processos de cotação e contratos integrados.
+- **Repositório Oficial:** [https://github.com/salesagility/SuiteCRM](https://github.com/salesagility/SuiteCRM)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Esforço Mínimo` (Angular / Bootstrap / Symfony)
+- **Mecânica de Customização:** Módulo Studio integrado permite customizar telas, logos e formulários sem programar.
+- **Impacto em Upgrades:** Atualizações suportadas via gerenciador de upgrades do próprio painel.
+
+---
+
+### #12 · Odoo CRM (Community) — *Pipeline Comercial Visual & Gestão Integrada de Oportunidades*
+
+- **Categoria:** CRM Integrado ao ERP | **Senioridade:** `Pleno`
+- **Licença OSI:** `LGPL-3.0`
+- **SaaS Proprietário Substituído:** RD Station CRM / HubSpot CRM / Pipedrive
+- **Economia Estimada no TCO:** R$ 30.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Gerencia o funil de vendas com kanban interativo, previsão de faturamento, agendamento de chamadas e integração total com módulos de vendas e faturamento.
+
+*Backend em Python e PostgreSQL com frontend reativo em JavaScript (OWL Framework). Suporta extensões modulares ilimitadas.*
+
+```bash
+docker run -d -p 8069:8069 --name odoo odoo:17
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** SaaS de CRM por usuário costuma encarecer com o crescimento do time comercial.
+- **Custo Open Source:** VPS 2 vCPU / 4 GB RAM (R$ 110/mês).
+- **Retorno do Investimento (ROI):** Payback instantâneo.
+- **Requisitos de Infra:** 4 GB RAM RAM, 2 vCPU CPU (Banco: PostgreSQL 14+)
+- **Veredito do Arquiteto:** Perfeito para empresas que desejam que o CRM comercial se conecte nativamente com estoque, financeiro e emissão de notas.
+- **Repositório Oficial:** [https://github.com/odoo/odoo](https://github.com/odoo/odoo)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Esforço Mínimo` (OWL Framework / Bootstrap / QWeb)
+- **Mecânica de Customização:** Suporte a módulos de de-branding para substituição completa de logos e textos institucionais.
+- **Impacto em Upgrades:** Módulos customizados isolados em diretório `/addons` próprio.
+
+---
+
+### #13 · Formbricks — *Pesquisas In-App, NPS & Feedback Contínuo do Cliente*
 
 - **Categoria:** Pesquisa & Experiência | **Senioridade:** `Iniciante`
 - **Licença OSI:** `AGPL-3.0`
@@ -329,7 +483,7 @@ git clone https://github.com/formbricks/formbricks && cd formbricks && docker co
 ```
 
 #### 2. Análise Econômica & Infraestrutura
-- **Custo Proprietário:** SurveyMonkey Enterprise ou Hotjar Feedback custa em média US$ 250/mês (R$ 16.800/ano).
+- **Custo Proprietário:** SurveyMonkey Enterprise custa em média US$ 250/mês (R$ 16.800/ano).
 - **Custo Open Source:** VPS 2 vCPU / 4 GB RAM (R$ 90/mês).
 - **Retorno do Investimento (ROI):** Payback no primeiro ciclo de pesquisa com clientes.
 - **Requisitos de Infra:** 2 GB RAM RAM, 2 vCPU CPU (Banco: PostgreSQL)
@@ -348,7 +502,115 @@ git clone https://github.com/formbricks/formbricks && cd formbricks && docker co
 
 ---
 
-### #10 · Novu — *Infraestrutura Unificada de Notificações Multicanal*
+### #14 · Cal.com — *Agendamento de Reuniões Comerciais & Roteamento de Leads*
+
+- **Categoria:** Agendamento Comercial | **Senioridade:** `Iniciante`
+- **Licença OSI:** `AGPL-3.0`
+- **SaaS Proprietário Substituído:** Calendly / HubSpot Meetings / Chili Piper
+- **Economia Estimada no TCO:** R$ 12.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Infraestrutura completa de agendamento de reuniões com sincronização de calendários (Google, Outlook, CalDAV), distribuição round-robin de leads para vendedores e confirmações automáticas por WhatsApp/E-mail.
+
+*Desenvolvido em Next.js, React, Prisma e PostgreSQL com suporte a webhooks e incorporação via iframe/popup responsivo.*
+
+```bash
+git clone https://github.com/calcom/cal.com && cd cal.com && docker compose up -d
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Calendly para equipe de 10 vendedores custa US$ 160/mês (R$ 12.000/ano).
+- **Custo Open Source:** VPS 2 vCPU / 2 GB RAM (R$ 70/mês).
+- **Retorno do Investimento (ROI):** Payback no primeiro mês.
+- **Requisitos de Infra:** 2 GB RAM RAM, 2 vCPU CPU (Banco: PostgreSQL)
+- **Veredito do Arquiteto:** Elimina a perda de tempo na marcação de reuniões de demonstração e qualificação com clientes.
+- **Repositório Oficial:** [https://github.com/calcom/cal.com](https://github.com/calcom/cal.com)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Esforço Mínimo` (Next.js / Tailwind CSS)
+- **Mecânica de Customização:** Páginas de agendamento 100% white-label com domínio próprio, cores da marca e logotipo institucional.
+- **Impacto em Upgrades:** Imagens Docker oficiais e migrations automatizadas via Prisma.
+
+---
+
+### #15 · Documenso — *Assinatura Eletrônica de Contratos & Propostas Comerciais*
+
+- **Categoria:** Assinatura de Documentos | **Senioridade:** `Iniciante`
+- **Licença OSI:** `AGPL-3.0`
+- **SaaS Proprietário Substituído:** DocuSign / Clicksign / Adobe Sign
+- **Economia Estimada no TCO:** R$ 18.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Plataforma moderna de assinatura digital e eletrônica de documentos PDF com validade jurídica, trilha de auditoria completa (audit trail) e campos arrastáveis de assinatura.
+
+*Construído em TypeScript, Next.js, Prisma e PostgreSQL com suporte a certificados digitais e carimbo do tempo criptográfico.*
+
+```bash
+git clone https://github.com/documenso/documenso && cd documenso && docker compose up -d
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Clicksign ou DocuSign cobram pacotes de até R$ 1.500/mês para alto volume de contratos assinados.
+- **Custo Open Source:** VPS 2 vCPU / 2 GB RAM (R$ 70/mês) com assinaturas ilimitadas.
+- **Retorno do Investimento (ROI):** Payback instantâneo.
+- **Requisitos de Infra:** 2 GB RAM RAM, 1 vCPU CPU (Banco: PostgreSQL)
+- **Veredito do Arquiteto:** Fecha o ciclo comercial permitindo que o cliente assine a proposta e o contrato de vendas sem custo por documento assinado.
+- **Repositório Oficial:** [https://github.com/documenso/documenso](https://github.com/documenso/documenso)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Esforço Mínimo` (Next.js / Tailwind / Shadcn UI)
+- **Mecânica de Customização:** Interface limpa com possibilidade de inserção da identidade corporativa e e-mails transacionais personalizados.
+- **Impacto em Upgrades:** Stack moderna e modular com atualizações contínuas via Docker.
+
+---
+
+### #16 · Sendportal — *Motor Aberto de Campanhas de E-mail Marketing em Laravel*
+
+- **Categoria:** E-mail Marketing | **Senioridade:** `Iniciante`
+- **Licença OSI:** `MIT`
+- **SaaS Proprietário Substituído:** RD Station Marketing (E-mail) / Mailchimp / Campaign Monitor
+- **Economia Estimada no TCO:** R$ 15.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Gerencia listas de assinantes, campanhas de newsletters, segmentações e relatórios de entrega utilizando provedores de envio baratos como Amazon SES, SendGrid ou Postmark.
+
+*Desenvolvido em PHP e framework Laravel com filas assíncronas (Redis/Horizon) e banco de dados relacional MySQL.*
+
+```bash
+docker run -d -p 8000:8000 --name sendportal sendportal/sendportal:latest
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Ferramentas de envio cobram valores exorbitantes conforme a base cresce.
+- **Custo Open Source:** VPS 1 vCPU / 2 GB RAM (R$ 50/mês).
+- **Retorno do Investimento (ROI):** Payback no primeiro envio para base acima de 10.000 contatos.
+- **Requisitos de Infra:** 2 GB RAM RAM, 1 vCPU CPU (Banco: MySQL / PostgreSQL)
+- **Veredito do Arquiteto:** Uma interface extremamente amigável para times que gostam do ecossistema Laravel e buscam disparos confiáveis.
+- **Repositório Oficial:** [https://github.com/mettle/sendportal](https://github.com/mettle/sendportal)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Esforço Mínimo` (Laravel / Blade / Tailwind CSS)
+- **Mecânica de Customização:** Totalmente customizável através dos arquivos de visualização Blade e folhas de estilo.
+- **Impacto em Upgrades:** Padrão canônico Laravel com migrações de banco declarativas.
+
+---
+
+### #17 · Novu — *Infraestrutura Unificada de Notificações Multicanal*
 
 - **Categoria:** Infraestrutura de Mensageria | **Senioridade:** `Pleno`
 - **Licença OSI:** `MIT`
@@ -381,6 +643,114 @@ git clone https://github.com/novuhq/novu && cd novu && docker compose up -d
 - **Esforço de Customização:** `Headless / React Component` (React / Tailwind / NestJS)
 - **Mecânica de Customização:** Componente de Inbox Web totalmente estilizável com CSS corporativo e temas personalizados.
 - **Impacto em Upgrades:** Arquitetura baseada em microsserviços Docker com dados persistidos em MongoDB.
+
+---
+
+### #18 · Plausible Analytics — *Web Analytics Leve, Focado em Privacidade & Metas de Conversão*
+
+- **Categoria:** Web Analytics & Métricas | **Senioridade:** `Iniciante`
+- **Licença OSI:** `AGPL-3.0`
+- **SaaS Proprietário Substituído:** Google Analytics 4 / Hotjar Analytics / RD Analytics
+- **Economia Estimada no TCO:** R$ 9.600/ano
+
+#### 1. O Que Faz & Como Funciona
+Rastreia visitas em landing pages, fontes de tráfego (UTMs de campanhas do RD), taxas de rejeição e metas de conversão de leads sem cookies e em total conformidade com LGPD/GDPR.
+
+*Backend ultrarrápido em Elixir/Erlang e ClickHouse para armazenamento colunar de eventos, com script cliente menor que 1 KB.*
+
+```bash
+git clone https://github.com/plausible/community-edition && cd community-edition && docker compose up -d
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Versão hosted custa US$ 19 a US$ 99/mês conforme tráfego.
+- **Custo Open Source:** VPS 2 vCPU / 2 GB RAM (R$ 70/mês).
+- **Retorno do Investimento (ROI):** Payback imediato.
+- **Requisitos de Infra:** 2 GB RAM RAM, 1 vCPU CPU (Banco: PostgreSQL + ClickHouse)
+- **Veredito do Arquiteto:** O dashboard de tráfego e conversão de campanhas mais limpo, leve e rápido do mercado.
+- **Repositório Oficial:** [https://github.com/plausible/community-edition](https://github.com/plausible/community-edition)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Esforço Mínimo` (Elixir / Tailwind CSS)
+- **Mecânica de Customização:** Possibilidade de compartilhar painéis públicos e incorporar gráficos sob domínio customizado.
+- **Impacto em Upgrades:** Atualizações seguras via imagens oficiais mantidas pela comunidade.
+
+---
+
+### #19 · Shlink — *Encurtador de Links & Rastreamento de Cliques de Campanhas*
+
+- **Categoria:** Rastreamento de Links | **Senioridade:** `Iniciante`
+- **Licença OSI:** `MIT`
+- **SaaS Proprietário Substituído:** Bitly / Rebrandly / RD Link Shortener
+- **Economia Estimada no TCO:** R$ 7.200/ano
+
+#### 1. O Que Faz & Como Funciona
+Cria links curtos com domínio próprio corporativo, rastreia cliques, dispositivos, geolocalização e adiciona tags UTM automaticamente para campanhas de SMS, WhatsApp e E-mail.
+
+*Backend em PHP/Swoole de altíssima concorrência com suporte a múltiplos bancos SQL e painel web administrativo responsivo (Shlink Web Client).*
+
+```bash
+docker run -d -p 8080:8080 --name shlink -e DEFAULT_DOMAIN=link.suaempresa.com.br shlinkio/shlink:stable
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Bitly Enterprise cobra a partir de US$ 199/mês para domínios próprios e links ilimitados.
+- **Custo Open Source:** VPS 1 vCPU / 512 MB RAM (R$ 30/mês).
+- **Retorno do Investimento (ROI):** Payback instantâneo.
+- **Requisitos de Infra:** 512 MB RAM RAM, 1 vCPU CPU (Banco: PostgreSQL / MySQL / SQLite)
+- **Veredito do Arquiteto:** Essencial para medir o engajamento real de links enviados em mensagens de WhatsApp e redes sociais.
+- **Repositório Oficial:** [https://github.com/shlinkio/shlink](https://github.com/shlinkio/shlink)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Esforço Mínimo` (React / Bootstrap / PHP Swoole)
+- **Mecânica de Customização:** Totalmente white-label com domínio próprio e suporte a temas personalizados no Web Client.
+- **Impacto em Upgrades:** Contêiner autônomo com auto-migração de schema de banco de dados.
+
+---
+
+### #20 · Directus — *Headless CMS & Backend Instantâneo para Landing Pages e Portais*
+
+- **Categoria:** Headless CMS & Dados | **Senioridade:** `Pleno`
+- **Licença OSI:** `GPL-3.0`
+- **SaaS Proprietário Substituído:** RD Station Landing Pages / Contentful / Strapi
+- **Economia Estimada no TCO:** R$ 24.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Transforma qualquer banco SQL em uma API REST/GraphQL instantânea com painel administrativo no-code para gestão de conteúdos de landing pages, portais de leads e formulários dinâmicos.
+
+*Construído em Node.js e Vue.js, conecta-se diretamente ao seu banco existente sem impor schemas proprietários, com controle granular de permissões e automações internas.*
+
+```bash
+docker run -d -p 8055:8055 --name directus directus/directus
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Contentful ou Prismic cobram até US$ 300/mês para múltiplos ambientes corporativos.
+- **Custo Open Source:** VPS 2 vCPU / 2 GB RAM (R$ 80/mês).
+- **Retorno do Investimento (ROI):** Payback no primeiro portal publicado.
+- **Requisitos de Infra:** 2 GB RAM RAM, 1 vCPU CPU (Banco: PostgreSQL / MySQL / MariaDB)
+- **Veredito do Arquiteto:** A melhor plataforma para alimentar o conteúdo de todas as landing pages e sites corporativos da empresa com total autonomia do time de marketing.
+- **Repositório Oficial:** [https://github.com/directus/directus](https://github.com/directus/directus)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Esforço Mínimo` (Vue.js / Node.js / Tailwind CSS)
+- **Mecânica de Customização:** Customização total de logo, cores de fundo, temas e permissões por perfil de usuário.
+- **Impacto em Upgrades:** Não altera o schema nativo do banco de dados relacional subjacente.
 
 ---
 

@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 CLI RUNNER UNIVERSAL · FLUXO 3: ESTEIRA DE MANUAIS VPS & TRILHAS DE AULAS AIDD
 Aciona a geração determinística tripartite de manuais com desinstalação cirúrgica e trilhas autoguiadas
@@ -90,6 +90,10 @@ def executar_fluxo3(ferramenta: str = None, saas: str = "granola") -> bool:
             print("   ✅ Portal INDICE-MESTRE.html sincronizado com sucesso!")
         except Exception as e:
             print(f"   ⚠️ Aviso na sincronização do Índice Mestre: {e}")
+
+        # Sincronização Git Automatizada (Regra R16)
+        from git_sync import executar_commit_e_push
+        executar_commit_e_push(f"feat(fluxo3): compilar manual vps e trilha {ferramenta_limpa} ({saas_limpo})")
 
         print("="*70 + "\n")
         return True

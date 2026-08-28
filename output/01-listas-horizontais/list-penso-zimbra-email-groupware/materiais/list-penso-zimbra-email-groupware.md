@@ -1,7 +1,7 @@
 # Penso E-mail & Zimbra Groupware
 
 > **Compêndio Temático Open Source · Camada 52 · Padrão Diamante R5**  
-> Compêndio soberano de ferramentas open-source para substituir provedores corporativos de e-mail e suítes groupware como Penso Tecnologia, Zimbra Collaboration Suite, Microsoft Exchange e Google Workspace, garantindo soberania total de caixas postais, calendários sincronizados e filtragem antispam sem pagar por usuário/mês.
+> Compêndio soberano de 20 ferramentas open-source para substituir provedores corporativos de e-mail e suítes groupware como Penso Tecnologia, Zimbra Collaboration Suite, Microsoft Exchange e Google Workspace, cobrindo servidores MTA/IMAP, calendários CalDAV, contatos CardDAV, ActiveSync móvel, webmails modernos, motores antispam e rotinas de backup.
 
 ---
 
@@ -18,7 +18,17 @@
 | 07 | **Roundcube Webmail** | Cliente Webmail | `GPL-3.0` | Zimbra Webmail / Horde / SquirrelMail / Roundcube Comercial | R$ 18.000/ano |
 | 08 | **SnappyMail** | Cliente Webmail de Alta Velocidade | `AGPL-3.0` | RainLoop Webmail / Webmails Proprietários | R$ 14.400/ano |
 | 09 | **Rspamd** | Segurança & Filtragem Antispam | `Apache-2.0` | Penso Antispam / Cisco IronPort / Proofpoint / SpamTitan | R$ 36.000/ano |
-| 10 | **Mail-in-a-Box** | Servidor de E-mail Turnkey | `CC0-1.0 (Public Domain)` | Penso E-mail / Hospedagens de E-mail Tradicionais | R$ 21.600/ano |
+| 10 | **Nextcloud Hub (Mail & Groupware)** | Groupware & Nuvem Corporativa | `AGPL-3.0` | Zimbra Drive & Docs / Google Workspace / Microsoft 365 | R$ 36.000/ano |
+| 11 | **Kopano Core** | Groupware Enterprise | `AGPL-3.0` | Microsoft Exchange Server / Zimbra Network Edition / Penso Exchange | R$ 48.000/ano |
+| 12 | **Z-Push** | Sincronização Móvel ActiveSync | `AGPL-3.0` | Licenciamento Microsoft EAS / Zimbra Mobile Sync | R$ 18.000/ano |
+| 13 | **Stack Postfix + Dovecot** | Infraestrutura Base MTA & IMAP | `IPL-1.0 / MIT / LGPL` | Penso E-mail / Servidores Proprietários MTA/IMAP | R$ 30.000/ano |
+| 14 | **Haraka** | Gateway & Relaying SMTP | `MIT` | Penso Gateway SMTP / SendGrid Relay / Amazon SES MTA | R$ 24.000/ano |
+| 15 | **Apache James** | Servidor Enterprise Modular | `Apache-2.0` | Zimbra Collaboration Enterprise / Apache James Commercial Stacks | R$ 36.000/ano |
+| 16 | **Cuttlefish** | E-mail Transacional | `MIT` | Penso SMTP Transacional / Mailgun / Postmark / SendGrid | R$ 15.000/ano |
+| 17 | **ClamAV** | Segurança de Anexos & Antivírus | `GPL-2.0` | Penso Antivírus de E-mail / Sophos Mail Security / Trend Micro | R$ 18.000/ano |
+| 18 | **BorgBackup (Borg)** | Backup & Disaster Recovery | `BSD-3-Clause` | Penso Backup Corporativo / Veeam Backup for O365 | R$ 21.600/ano |
+| 19 | **Suíte OpenDKIM & OpenDMARC** | Autenticação Criptográfica & Reputação | `BSD-3-Clause` | Valimail / dmarcian / Serviços Proprietários de Reputação | R$ 14.400/ano |
+| 20 | **Mail-in-a-Box** | Servidor de E-mail Turnkey | `CC0-1.0 (Public Domain)` | Penso E-mail / Hospedagens de E-mail Tradicionais | R$ 21.600/ano |
 
 ---
 
@@ -348,7 +358,367 @@ docker run -d -p 11334:11334 --name rspamd rspamd/rspamd
 
 ---
 
-### #10 · Mail-in-a-Box — *Servidor de E-mail Turnkey Autônomo com DNS & Nextcloud*
+### #10 · Nextcloud Hub (Mail & Groupware) — *Suíte Completa de Produtividade, Mail, Calendários & Arquivos*
+
+- **Categoria:** Groupware & Nuvem Corporativa | **Senioridade:** `Pleno`
+- **Licença OSI:** `AGPL-3.0`
+- **SaaS Proprietário Substituído:** Zimbra Drive & Docs / Google Workspace / Microsoft 365
+- **Economia Estimada no TCO:** R$ 36.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Ecossistema completo de colaboração soberana com cliente de e-mail integrado, calendários, catálogo de contatos, chat (Nextcloud Talk), edição colaborativa de documentos e armazenamento de arquivos em nuvem.
+
+*Arquitetura em PHP, PostgreSQL/MariaDB e Redis com sincronização universal via WebDAV, CalDAV e CardDAV em aplicativos para Windows, Mac, Linux, iOS e Android.*
+
+```bash
+docker run -d -p 8080:80 --name nextcloud nextcloud:latest
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Google Workspace ou Microsoft 365 Business custa R$ 70 a R$ 140/usuário/mês.
+- **Custo Open Source:** VPS 4 vCPU / 8 GB RAM (R$ 200/mês).
+- **Retorno do Investimento (ROI):** Payback no primeiro mês para times acima de 10 colaboradores.
+- **Requisitos de Infra:** 4 GB RAM RAM, 2 vCPU CPU (Banco: PostgreSQL / MariaDB + Redis)
+- **Veredito do Arquiteto:** A suíte de escritório e groupware mais completa do mundo open source, ideal para substituir 100% o ecossistema Zimbra e Google Drive.
+- **Repositório Oficial:** [https://github.com/nextcloud/server](https://github.com/nextcloud/server)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Esforço Mínimo` (Vue.js / PHP / CSS3)
+- **Mecânica de Customização:** Módulo 'Theming' nativo permite alterar logotipo, nome da empresa, cores de cabeçalho e imagem de fundo da tela de login.
+- **Impacto em Upgrades:** Updater integrado com checagem rigorosa de compatibilidade de extensões.
+
+---
+
+### #11 · Kopano Core — *Groupware Enterprise Aberto com Sincronização Z-Push ActiveSync*
+
+- **Categoria:** Groupware Enterprise | **Senioridade:** `Avançado`
+- **Licença OSI:** `AGPL-3.0`
+- **SaaS Proprietário Substituído:** Microsoft Exchange Server / Zimbra Network Edition / Penso Exchange
+- **Economia Estimada no TCO:** R$ 48.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Solução groupware corporativa avançada para grandes ambientes, com suporte a caixas de e-mail compartilhadas, permissões de delegação de calendário e integração ActiveSync.
+
+*Backend em C++ e PHP integrado a MySQL e LDAP/Active Directory, com interface de webmail moderna (Kopano WebApp) e motor de sincronização Z-Push.*
+
+```bash
+docker run -d -p 8080:80 --name kopano kopano/kopano-core
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Exchange on-premises custa milhares de reais em licenças de servidor e CALs de usuário.
+- **Custo Open Source:** Servidor Dedicado 4 vCPU / 8 GB RAM (R$ 250/mês).
+- **Retorno do Investimento (ROI):** Payback no primeiro mês.
+- **Requisitos de Infra:** 4 GB RAM RAM, 2 vCPU CPU (Banco: MariaDB / MySQL)
+- **Veredito do Arquiteto:** Altamente recomendado para corporações que necessitam de delegações complexas de secretárias e caixas departamentais compartilhadas.
+- **Repositório Oficial:** [https://github.com/Kopano-dev/kopano-core](https://github.com/Kopano-dev/kopano-core)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Esforço Mínimo` (ExtJS / PHP / C++)
+- **Mecânica de Customização:** Customização de logotipo, tema e layout no Kopano WebApp através de plugins de tema.
+- **Impacto em Upgrades:** Pacotes Linux oficiais para Debian, Ubuntu e RHEL.
+
+---
+
+### #12 · Z-Push — *Implementação Aberta do Protocolo Exchange ActiveSync (EAS)*
+
+- **Categoria:** Sincronização Móvel ActiveSync | **Senioridade:** `Pleno`
+- **Licença OSI:** `AGPL-3.0`
+- **SaaS Proprietário Substituído:** Licenciamento Microsoft EAS / Zimbra Mobile Sync
+- **Economia Estimada no TCO:** R$ 18.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Permite que celulares (iPhone Mail/Calendar e Android Gmail/Samsung Mail) sincronizem e-mails, contatos e calendários em tempo real via protocolo Microsoft Exchange ActiveSync sem pagar royalties.
+
+*Backend em PHP que atua como ponte inteligente entre o protocolo EAS dos smartphones e servidores IMAP, CalDAV, CardDAV ou Kopano.*
+
+```bash
+docker run -d -p 80:80 --name z-push zhub/z-push
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** A Microsoft e o Zimbra cobram licenças adicionais por usuário para habilitar ActiveSync móvel.
+- **Custo Open Source:** VPS 1 vCPU / 1 GB RAM (R$ 40/mês).
+- **Retorno do Investimento (ROI):** Payback instantâneo.
+- **Requisitos de Infra:** 1 GB RAM RAM, 1 vCPU CPU (Banco: PostgreSQL / MySQL / IPC Local)
+- **Veredito do Arquiteto:** O segredo para transformar qualquer servidor IMAP comum em uma experiência Exchange corporativa fluida em smartphones.
+- **Repositório Oficial:** [https://github.com/Z-Hub/Z-Push](https://github.com/Z-Hub/Z-Push)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Headless / Protocol Service` (PHP / Protocol Engine)
+- **Mecânica de Customização:** Totalmente invisível para o usuário final; opera nativamente nos aplicativos do sistema operacional do smartphone.
+- **Impacto em Upgrades:** Motor maduro e estável com manutenção contínua pela comunidade Z-Hub.
+
+---
+
+### #13 · Stack Postfix + Dovecot — *A Fundação Canônica & Ultra-Resiliente de MTA e IMAP*
+
+- **Categoria:** Infraestrutura Base MTA & IMAP | **Senioridade:** `Avançado`
+- **Licença OSI:** `IPL-1.0 / MIT / LGPL`
+- **SaaS Proprietário Substituído:** Penso E-mail / Servidores Proprietários MTA/IMAP
+- **Economia Estimada no TCO:** R$ 30.000/ano
+
+#### 1. O Que Faz & Como Funciona
+A dupla de ouro que sustenta mais de 70% dos servidores de e-mail da internet mundial: Postfix entrega o roteamento SMTP ultra-seguro e Dovecot oferece o servidor IMAP/POP3 mais rápido e seguro existente.
+
+*Arquitetura modular em C com privilégios mínimos de segurança (least-privilege). Dovecot inclui indexação de busca FTS (Full-Text Search) e filtros Sieve server-side.*
+
+```bash
+apt-get install -y postfix dovecot-core dovecot-imapd dovecot-lmtpd
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Elimina totalmente qualquer pedágio sobre envio e armazenamento de e-mails.
+- **Custo Open Source:** VPS 2 vCPU / 2 GB RAM (R$ 70/mês).
+- **Retorno do Investimento (ROI):** Payback imediato com estabilidade de anos sem reboot.
+- **Requisitos de Infra:** 1 GB RAM RAM, 1 vCPU CPU (Banco: PostgreSQL / MySQL / Arquivos Maildir)
+- **Veredito do Arquiteto:** A base mais sólida e inquebrável que existe para construir infraestruturas de e-mail corporativo sob medida.
+- **Repositório Oficial:** [https://github.com/vdukhovni/postfix](https://github.com/vdukhovni/postfix)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Headless / Daemon de Sistema` (C Puro / Configuração Declarativa)
+- **Mecânica de Customização:** Totalmente desacoplado de UI; responde aos padrões abertos RFC.
+- **Impacto em Upgrades:** Retrocompatibilidade lendária mantida por Wietse Venema e Timo Sirainen.
+
+---
+
+### #14 · Haraka — *Servidor SMTP de Ultra-Alta Performance Baseado em Eventos (Node.js)*
+
+- **Categoria:** Gateway & Relaying SMTP | **Senioridade:** `Pleno`
+- **Licença OSI:** `MIT`
+- **SaaS Proprietário Substituído:** Penso Gateway SMTP / SendGrid Relay / Amazon SES MTA
+- **Economia Estimada no TCO:** R$ 24.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Servidor SMTP de altíssima velocidade projetado para processar milhares de mensagens por segundo, ideal para atuar como gateway de entrada/saída, filtragem de reputação e relay corporativo.
+
+*Arquitetura assíncrona orientada a eventos em Node.js com sistema extensível de plugins em JavaScript para cada fase da conversa SMTP (CONNECT, EHLO, MAIL, RCPT, DATA).*
+
+```bash
+npm install -g Haraka && haraka -i /etc/haraka && haraka -c /etc/haraka
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Serviços de relay corporativo proprietários cobram por volume de mensagens enviadas.
+- **Custo Open Source:** VPS 2 vCPU / 2 GB RAM (R$ 70/mês).
+- **Retorno do Investimento (ROI):** Payback instantâneo.
+- **Requisitos de Infra:** 1 GB RAM RAM, 1 vCPU CPU (Banco: Redis / Memcached)
+- **Veredito do Arquiteto:** Perfeito para empresas de tecnologia que desejam criar regras de roteamento e filtragem de e-mail customizadas em JavaScript puro.
+- **Repositório Oficial:** [https://github.com/haraka/Haraka](https://github.com/haraka/Haraka)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Headless / Plugin Architecture` (Node.js / JavaScript)
+- **Mecânica de Customização:** Customização total de banners SMTP e mensagens de rejeição em código JavaScript simples.
+- **Impacto em Upgrades:** Gestão padronizada via `npm` com testes unitários em todas as rotinas.
+
+---
+
+### #15 · Apache James — *Servidor Corporativo Modular de E-mail Enterprise em Java com JMAP*
+
+- **Categoria:** Servidor Enterprise Modular | **Senioridade:** `Avançado`
+- **Licença OSI:** `Apache-2.0`
+- **SaaS Proprietário Substituído:** Zimbra Collaboration Enterprise / Apache James Commercial Stacks
+- **Economia Estimada no TCO:** R$ 36.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Plataforma de e-mail enterprise completa desenvolvida pela Apache Foundation, com suporte nativo aos protocolos SMTP, IMAP4, POP3 e JMAP, com armazenamento em Cassandra, ElasticSearch e S3 para escala ilimitada.
+
+*Arquitetura de 'Mailets' modulares em Java que permite interceptar e transformar e-mails em pipelines de processamento corporativo de dados.*
+
+```bash
+docker run -d -p 80:80 -p 25:25 -p 993:993 --name james apache/james:latest
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Soluções de e-mail corporativo com escala petabyte custam centenas de milhares de reais anuais.
+- **Custo Open Source:** Cluster de VPS / Dedicado (R$ 400/mês).
+- **Retorno do Investimento (ROI):** Payback imediato para empresas de telecomunicações e grandes corporações.
+- **Requisitos de Infra:** 4 GB RAM RAM, 2 vCPU CPU (Banco: PostgreSQL / Apache Cassandra + OpenSearch)
+- **Veredito do Arquiteto:** O servidor de e-mail mais extensível e modular para ambientes corporativos que exigem conformidade bancária e armazenamento em nuvem de objetos (S3).
+- **Repositório Oficial:** [https://github.com/apache/james-project](https://github.com/apache/james-project)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Headless / CLI Management` (Java / Spring / Guice)
+- **Mecânica de Customização:** Totalmente desacoplado de interface visual; governado por APIs REST de administração.
+- **Impacto em Upgrades:** Governança estrita da Apache Software Foundation com garantia de longevidade.
+
+---
+
+### #16 · Cuttlefish — *Servidor de E-mail Transacional Leve com Painel & Rastreamento*
+
+- **Categoria:** E-mail Transacional | **Senioridade:** `Iniciante`
+- **Licença OSI:** `MIT`
+- **SaaS Proprietário Substituído:** Penso SMTP Transacional / Mailgun / Postmark / SendGrid
+- **Economia Estimada no TCO:** R$ 15.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Servidor de e-mail transacional self-hosted projetado para enviar mensagens automáticas de sistemas, alertas e faturas, com painel web para rastrear entregas, aberturas e erros.
+
+*Desenvolvido em Ruby on Rails e Postfix, atua como servidor SMTP local que intercepta envios, registra métricas e encaminha mensagens com alta entregabilidade.*
+
+```bash
+git clone https://github.com/mlandauer/cuttlefish && cd cuttlefish && docker compose up -d
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Postmark ou Mailgun cobram até US$ 100/mês para volumes médios de e-mails de sistemas.
+- **Custo Open Source:** VPS 1 vCPU / 1 GB RAM (R$ 40/mês).
+- **Retorno do Investimento (ROI):** Payback no 1º mês.
+- **Requisitos de Infra:** 1 GB RAM RAM, 1 vCPU CPU (Banco: PostgreSQL / SQLite)
+- **Veredito do Arquiteto:** A solução mais simples para empresas que desejam monitorar todos os e-mails transacionais enviados por seus sistemas sem pagar serviços externos.
+- **Repositório Oficial:** [https://github.com/mlandauer/cuttlefish](https://github.com/mlandauer/cuttlefish)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Esforço Mínimo` (Ruby on Rails / Bootstrap)
+- **Mecânica de Customização:** Painel limpo e direto com visual corporativo minimalista.
+- **Impacto em Upgrades:** Arquitetura simples e estável sem dependências pesadas.
+
+---
+
+### #17 · ClamAV — *Motor Antivírus Open Source para Varredura de Anexos de E-mail*
+
+- **Categoria:** Segurança de Anexos & Antivírus | **Senioridade:** `Pleno`
+- **Licença OSI:** `GPL-2.0`
+- **SaaS Proprietário Substituído:** Penso Antivírus de E-mail / Sophos Mail Security / Trend Micro
+- **Economia Estimada no TCO:** R$ 18.000/ano
+
+#### 1. O Que Faz & Como Funciona
+Mecanismo padrão da indústria para detecção de malwares, vírus, trojans e macros maliciosas em anexos de e-mail (PDFs, ZIPs, executáveis, documentos do Office).
+
+*Daemon em C (`clamd`) com atualização diária automática de assinaturas de ameaças globais fornecidas pela Cisco Talos (`freshclam`), comunicando-se diretamente com o Rspamd ou Postfix.*
+
+```bash
+docker run -d -p 3310:3310 --name clamav clamav/clamav:latest
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Módulos proprietários de antivírus corporativo cobram taxa anual por caixa postal protegida.
+- **Custo Open Source:** Integrado na VPS existente (consome aprox. 1.5 GB RAM).
+- **Retorno do Investimento (ROI):** Payback instantâneo ao evitar infecções de ransomware na rede corporativa.
+- **Requisitos de Infra:** 2 GB RAM RAM, 1 vCPU CPU (Banco: Memória RAM (Base de Assinaturas))
+- **Veredito do Arquiteto:** O guardião indispensável para impedir que arquivos maliciosos alcancem as caixas de entrada dos funcionários.
+- **Repositório Oficial:** [https://github.com/Cisco-Talos/clamav](https://github.com/Cisco-Talos/clamav)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Headless / Daemon de Segurança` (C Puro / Socket Daemon)
+- **Mecânica de Customização:** Totalmente headless e transparente para os usuários finais.
+- **Impacto em Upgrades:** Base de vacinas e assinaturas mantida e atualizada em tempo real pela Cisco Talos.
+
+---
+
+### #18 · BorgBackup (Borg) — *Backup Deduplicado, Autenticado & Criptografado de Caixas Postais*
+
+- **Categoria:** Backup & Disaster Recovery | **Senioridade:** `Pleno`
+- **Licença OSI:** `BSD-3-Clause`
+- **SaaS Proprietário Substituído:** Penso Backup Corporativo / Veeam Backup for O365
+- **Economia Estimada no TCO:** R$ 21.600/ano
+
+#### 1. O Que Faz & Como Funciona
+Realiza backups diários incrementais e deduplicados de todas as caixas de e-mail (Maildir), bancos de dados e configurações, garantindo restauração cirúrgica em caso de desastres.
+
+*Deduplica dados em nível de bloco com compressão LZ4/ZSTD e criptografia AES-256 no lado do cliente antes de enviar os dados por SSH para qualquer servidor de armazenamento secundário.*
+
+```bash
+apt-get install -y borgbackup && borg init --encryption=repokey /backup/mail-repo
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Serviços de backup de caixas postais corporativas cobram de R$ 10 a R$ 20 por usuário/mês.
+- **Custo Open Source:** Storage VPS de baixo custo (R$ 50/mês para 1 TB).
+- **Retorno do Investimento (ROI):** Payback no primeiro mês com economia de até 85% de espaço em disco graças à deduplicação.
+- **Requisitos de Infra:** 1 GB RAM RAM, 1 vCPU CPU (Banco: Sistema de Arquivos / Repositório Criptografado)
+- **Veredito do Arquiteto:** A melhor ferramenta de backup do planeta para servidores de e-mail, reduzindo terabytes de mensagens históricas a uma fração minúscula de armazenamento.
+- **Repositório Oficial:** [https://github.com/borgbackup/borg](https://github.com/borgbackup/borg)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Headless / CLI Automatizado` (Python / C / Cython)
+- **Mecânica de Customização:** Totalmente invisível e operado por rotinas de infraestrutura.
+- **Impacto em Upgrades:** Formato de repositório estável com garantias rigorosas de integridade criptográfica.
+
+---
+
+### #19 · Suíte OpenDKIM & OpenDMARC — *Implementação Canônica de Assinatura Criptográfica e Relatórios DMARC*
+
+- **Categoria:** Autenticação Criptográfica & Reputação | **Senioridade:** `Pleno`
+- **Licença OSI:** `BSD-3-Clause`
+- **SaaS Proprietário Substituído:** Valimail / dmarcian / Serviços Proprietários de Reputação
+- **Economia Estimada no TCO:** R$ 14.400/ano
+
+#### 1. O Que Faz & Como Funciona
+Assina digitalmente todas as mensagens de saída com chaves RSA/Ed25519 e valida relatórios de conformidade DMARC para garantir 100% de entregabilidade na caixa de entrada sem cair em spam.
+
+*Daemons milter em C conectados ao Postfix que injetam cabeçalhos criptográficos `DKIM-Signature` e processam relatórios agregados XML enviados por Google, Microsoft e Yahoo.*
+
+```bash
+apt-get install -y opendkim opendkim-tools opendmarc
+```
+
+#### 2. Análise Econômica & Infraestrutura
+- **Custo Proprietário:** Plataformas de análise de DMARC (dmarcian/Valimail) cobram a partir de US$ 199/mês.
+- **Custo Open Source:** Zero custo adicional (executa nos mesmos recursos do servidor de e-mail).
+- **Retorno do Investimento (ROI):** Payback instantâneo protegendo a marca contra spoofing e clonagem de domínio.
+- **Requisitos de Infra:** 512 MB RAM RAM, 1 vCPU CPU (Banco: Arquivos de Chaves / MySQL para Relatórios)
+- **Veredito do Arquiteto:** O alicerce obrigatório para construir uma reputação de e-mail impecável e impedir fraudes e clonagem do seu domínio corporativo.
+- **Repositório Oficial:** [https://github.com/trusteddomainproject/OpenDKIM](https://github.com/trusteddomainproject/OpenDKIM)
+
+#### 3. Como Usar no Dia a Dia
+1. **Passo 1:** 
+2. **Passo 2:** 
+3. **Passo 3:** 
+
+#### 4. White-Label & Aderência ao Design System Corporativo
+- **Esforço de Customização:** `Headless / Milter Daemon` (C Puro / Milter Protocol)
+- **Mecânica de Customização:** Totalmente desacoplado de interface gráfica; opera no nível de cabeçalhos de mensagens RFC.
+- **Impacto em Upgrades:** Padrão de referência mantido pelo Trusted Domain Project.
+
+---
+
+### #20 · Mail-in-a-Box — *Servidor de E-mail Turnkey Autônomo com DNS & Nextcloud*
 
 - **Categoria:** Servidor de E-mail Turnkey | **Senioridade:** `Iniciante`
 - **Licença OSI:** `CC0-1.0 (Public Domain)`

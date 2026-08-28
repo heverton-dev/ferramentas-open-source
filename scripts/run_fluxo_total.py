@@ -121,6 +121,10 @@ def executar_fluxo_total(camada: str = None, saas: str = None, ferramenta: str =
     except Exception as e:
         print(f"   ⚠️ Aviso: Falha ao atualizar Índice Mestre: {e}")
 
+    # Sincronização Git Automatizada (Regra R16)
+    from git_sync import executar_commit_e_push
+    executar_commit_e_push(f"feat(pipeline-total): execucao completa AIDD ({camada} -> {saas} -> {ferramenta})")
+
     print("="*75 + "\n")
     return True
 

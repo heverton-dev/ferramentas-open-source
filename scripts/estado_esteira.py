@@ -162,6 +162,65 @@ def inicializar_banco():
                 atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
+
+        # Tabela de Macro-Ecossistemas & Suítes SaaS (Fluxo 4)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS esteira_ecossistemas (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                slug TEXT NOT NULL UNIQUE,
+                nome_ecossistema TEXT NOT NULL,
+                titulo TEXT NOT NULL,
+                saas_substituido TEXT,
+                total_pilares INTEGER NOT NULL,
+                total_ferramentas INTEGER NOT NULL,
+                economia_anual_liquida TEXT,
+                gate_r5e TEXT DEFAULT 'APROVADO',
+                gate_r18 TEXT DEFAULT 'APROVADO',
+                caminho_html TEXT,
+                caminho_md TEXT,
+                caminho_pdf TEXT,
+                atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        conn.commit()
+
+def registrar_ecossistema(dados: dict):
+    """Registra ou atualiza um Macro-Ecossistema do Fluxo 4 no SQLite."""
+    inicializar_banco()
+    with obter_conexao() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO esteira_ecossistemas (
+                slug, nome_ecossistema, titulo, saas_substituido, total_pilares, total_ferramentas,
+                economia_anual_liquida, gate_r5e, gate_r18, caminho_html, caminho_md, caminho_pdf
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(slug) DO UPDATE SET
+                nome_ecossistema = excluded.nome_ecossistema,
+                titulo = excluded.titulo,
+                saas_substituido = excluded.saas_substituido,
+                total_pilares = excluded.total_pilares,
+                total_ferramentas = excluded.total_ferramentas,
+                economia_anual_liquida = excluded.economia_anual_liquida,
+                gate_r5e = excluded.gate_r5e,
+                gate_r18 = excluded.gate_r18,
+                caminho_html = excluded.caminho_html,
+                caminho_md = excluded.caminho_md,
+                caminho_pdf = excluded.caminho_pdf,
+                atualizado_em = CURRENT_TIMESTAMP
+        """, (
+            dados["slug"],
+            dados.get("nome_ecossistema", dados["slug"].replace("-", " ").title()),
+            dados.get("titulo", dados["slug"].replace("-", " ").title()),
+            dados.get("saas_substituido", "Macro-SaaS"),
+            dados.get("total_pilares", 0),
+            dados.get("total_ferramentas", 0),
+            dados.get("economia_anual_liquida", "N/A"),
+            dados.get("gate_r5e", "APROVADO"),
+            dados.get("gate_r18", "APROVADO"),
+            dados.get("caminho_html", f"output/04-ecossistemas/ecos-{dados['slug']}/materiais/ecos-{dados['slug']}.html"),
+            dados.get("caminho_md", f"output/04-ecossistemas/ecos-{dados['slug']}/materiais/ecos-{dados['slug']}.md"),
+            dados.get("caminho_pdf", f"output/04-ecossistemas/ecos-{dados['slug']}/materiais/ecos-{dados['slug']}.pdf")
+        ))
         conn.commit()
 
 def registrar_lista_horizontal(dados: dict):

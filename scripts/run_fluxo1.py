@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 CLI RUNNER UNIVERSAL · FLUXO 1: LISTAS HORIZONTAIS AIDD
 Aciona a geração determinística tripartite de compêndios temáticos (HTML, MD, PDF)
@@ -76,6 +76,10 @@ def executar_fluxo1(slug: str = None) -> bool:
             print("   ✅ Portal INDICE-MESTRE.html sincronizado com sucesso!")
         except Exception as e:
             print(f"   ⚠️ Aviso na sincronização do Índice Mestre: {e}")
+
+        # Sincronização Git Automatizada (Regra R16)
+        from git_sync import executar_commit_e_push
+        executar_commit_e_push(f"feat(fluxo1): compilar lista horizontal list-{slug_sanitizado}")
 
         print("="*70 + "\n")
         return True

@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 VALIDADOR MECÂNICO DE SCHEMAS E LINTER DE QUALIDADE (REGRA R9 & PADRÃO DIAMANTE)
 Valida a integridade e densidade técnica dos dados estruturados antes da renderização.
@@ -151,6 +151,49 @@ def validar_trilha_aprendizado(dados: Dict[str, Any]) -> Tuple[bool, List[str]]:
 
     return len(erros) == 0, erros
 
+def validar_ecossistema(dados: Dict[str, Any]) -> Tuple[bool, List[str]]:
+    erros = []
+    campos_raiz = [
+        "slug", "nome_ecossistema", "titulo", "subtitulo", "deck",
+        "saas_substituido", "stats", "pilares", "camada_integracao",
+        "deploy_consolidado", "analise_economica_global"
+    ]
+    for c in campos_raiz:
+        if c not in dados or not dados[c]:
+            erros.append(f"Ecossistema: Campo obrigatório '{c}' ausente ou vazio.")
+
+    pilares = dados.get("pilares", [])
+    if len(pilares) < 2:
+        erros.append(f"O Dossiê de Ecossistema deve conter no mínimo 2 pilares funcionais (encontrados: {len(pilares)}).")
+
+    total_ferramentas = 0
+    for idx, pilar in enumerate(pilares, 1):
+        prefixo_p = f"Pilar #{idx} ({pilar.get('nome_pilar', 'Sem Nome')}):"
+        if not pilar.get("nome_pilar") or not pilar.get("modulo_saas_alvo"):
+            erros.append(f"{prefixo_p} Deve conter 'nome_pilar' e 'modulo_saas_alvo'.")
+        
+        ferrs = pilar.get("ferramentas", [])
+        if len(ferrs) < 2:
+            erros.append(f"{prefixo_p} Deve conter no mínimo 2 ferramentas recomendadas (encontradas: {len(ferrs)}).")
+        total_ferramentas += len(ferrs)
+
+        for f_idx, f in enumerate(ferrs, 1):
+            prefixo_f = f"{prefixo_p} Ferramenta #{f_idx} ({f.get('nome', 'Sem Nome')}):"
+            for campo in ["slug", "nome", "papel_no_pilar", "licenca_osi", "o_que_faz", "como_funciona", "comando_rapido"]:
+                if campo not in f or not f[campo]:
+                    erros.append(f"{prefixo_f} Campo obrigatório '{campo}' ausente ou vazio.")
+
+    integracao = dados.get("camada_integracao", {})
+    for ci in ["autenticacao_sso", "barramento_eventos", "gateway_reverse_proxy", "fluxo_integracao_descricao"]:
+        if ci not in integracao or not integracao[ci]:
+            erros.append(f"Camada de Integração: Campo obrigatório '{ci}' ausente ou vazio.")
+
+    deploy = dados.get("deploy_consolidado", {})
+    if not deploy.get("docker_compose_exemplo") or not deploy.get("passos_deploy"):
+        erros.append("Deploy Consolidado: 'docker_compose_exemplo' e 'passos_deploy' são obrigatórios.")
+
+    return len(erros) == 0, erros
+
 def auditar_e_bloquear(tipo_fluxo: str, caminho_json: Path) -> bool:
     print(f"\n🔍 [Gate de Qualidade R9] Auditando schema e densidade técnica: {caminho_json.name}...")
     try:
@@ -163,6 +206,8 @@ def auditar_e_bloquear(tipo_fluxo: str, caminho_json: Path) -> bool:
         valido, erros = validar_lista_horizontal(dados)
     elif tipo_fluxo == "fluxo2":
         valido, erros = validar_dossie_vertical(dados)
+    elif tipo_fluxo in ("fluxo4", "ecossistema"):
+        valido, erros = validar_ecossistema(dados)
     elif tipo_fluxo == "manual_vps":
         valido, erros = validar_manual_operacional(dados)
     elif tipo_fluxo == "trilha":

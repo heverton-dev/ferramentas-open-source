@@ -42,5 +42,14 @@ TIPOS = {
         "schema_saida": None,
         "produtor": "scripts/auditar_higiene_repo.py",
         "gates": []
+    },
+    "dossie_ecossistema_html": {
+        "descricao": "Dossiê completo de substituição de macro-ecossistema SaaS com pilares, cola/SSO e deploy unificado.",
+        "natureza": "geracao_editorial_complexa",
+        "custo_llm": "medio",
+        "tier_recomendado": "tier_2_codigo",
+        "schema_saida": "scripts/schemas/schema_ecossistema.json",
+        "produtor": "scripts/compilar_ecossistema_tripartite.py",
+        "gates": ["scripts/validar_schemas_fluxos.py"]
     }
 }
