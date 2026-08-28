@@ -489,25 +489,32 @@ document.addEventListener('DOMContentLoaded', () => {
   updateTcoCalculator();
  }
 
- // Injeção automática do botão de cópia em todos os blocos de código e comandos
- const codeBlocks = document.querySelectorAll('pre, .code-box');
- codeBlocks.forEach((block) => {
+ // Injeção automática de botão ÚNICO de cópia em cada bloco de código ou prompt
+ const targets = [];
+ document.querySelectorAll('.code-box').forEach(box => targets.push(box));
+ document.querySelectorAll('pre').forEach(pre => {
+  if (!pre.closest('.code-box')) {
+   targets.push(pre);
+  }
+ });
+
+ targets.forEach((block) => {
   if (block.querySelector('.copy-btn')) return;
   const btn = document.createElement('button');
   btn.className = 'copy-btn';
   btn.type = 'button';
   btn.innerText = 'Copiar';
-  btn.setAttribute('aria-label', 'Copiar código');
+  btn.setAttribute('aria-label', 'Copiar código ou prompt');
   
   btn.addEventListener('click', async (e) => {
    e.stopPropagation();
-   const codeElem = block.querySelector('code') || block;
-   // Pega o texto limpo sem o próprio botão
-   const textToCopy = Array.from(codeElem.childNodes)
-     .filter(node => !node.classList || !node.classList.contains('copy-btn'))
-     .map(node => node.textContent)
-     .join('')
-     .trim();
+   let textToCopy = '';
+   const codeElem = block.querySelector('pre') || block.querySelector('code');
+   if (codeElem) {
+    textToCopy = codeElem.innerText.replace(/Copiar/g, '').trim();
+   } else {
+    textToCopy = block.innerText.replace(/Copiar/g, '').trim();
+   }
 
    try {
     await navigator.clipboard.writeText(textToCopy);
