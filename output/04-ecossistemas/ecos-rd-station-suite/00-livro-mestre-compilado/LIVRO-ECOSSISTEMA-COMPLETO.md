@@ -760,7 +760,7 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 
 ---
 
-## CAPÍTULO 4 · CAMADA DE COLA, SSO FEDERADO & BLUEPRINTS N8N
+## CAPÍTULO 5 · CAMADA DE COLA, SSO FEDERADO & BLUEPRINTS N8N
 
 ### Arquitetura de Interconexão sem Silos de Dados
 - ** Autenticação Única Federada (SSO):** Keycloak / Authentik (OpenID Connect / SAML) unificando o login dos colaboradores no Twenty CRM, Chatwoot, Directus, Mautic e SuiteCRM.
@@ -843,7 +843,7 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 
 ---
 
-## CAPÍTULO 5 · MANUAL DE ENGENHARIA DE INFRAESTRUTURA & DEPLOY ALL-IN-ONE
+## CAPÍTULO 6 · MANUAL DE ENGENHARIA DE INFRAESTRUTURA & DEPLOY ALL-IN-ONE
 
 ### Entendendo os 4 Pilares da Infraestrutura (Sem Jargões)
 - **1. O que é VPS?** A VPS é o seu 'apartamento alugado na nuvem'. Em vez de manter um computador físico ligado no escritório gastando luz, você aluga um servidor ultra-rápido que fica ligado 24 horas por dia, 7 dias por semana, com gerador e internet de fibra ótica.
@@ -1026,7 +1026,7 @@ volumes:
 
 ---
 
-## CAPÍTULO 6 · PROTOCOLOS DE MODULARIDADE & HOT-SWAP (PRINCÍPIO DO LEGO)
+## CAPÍTULO 7 · PROTOCOLOS DE MODULARIDADE & HOT-SWAP (PRINCÍPIO DO LEGO)
 
 > **O Princípio das Tomadas Independentes:** 
 > A arquitetura opera sob o princípio de 'Tomadas e Aparelhos Independentes'. Nenhuma ferramenta fica grudada ou dependente da outra com código travado. Imagine uma régua de tomadas na sua sala: a sua TV (Twenty CRM) e a sua Caixa de Som (Chatwoot) funcionam perfeitamente mesmo se você desligar o Abajur (Mautic). Se você quiser trocar o abajur por uma luminária moderna, basta tirar da tomada e plugar a nova. Nada na sua sala quebra.
@@ -1068,7 +1068,7 @@ volumes:
 
 ---
 
-## CAPÍTULO 7 · ROTEIRO PRÁTICO DE MIGRAÇÃO DE DADOS HISTÓRICOS
+## CAPÍTULO 8 · ROTEIRO PRÁTICO DE MIGRAÇÃO DE DADOS HISTÓRICOS
 
 ### 1. Migração do RD Station Marketing Mautic
 - **O que migrar:** Base total de contatos (Leads), campos personalizados, histórico de tags, segmentos e listas de descadastro (opt-out).
@@ -1099,7 +1099,7 @@ volumes:
 
 ---
 
-## CAPÍTULO 8 · GOVERNANÇA CORPORATIVA, BACKUP 3-2-1 & CONFORMIDADE LGPD
+## CAPÍTULO 9 · GOVERNANÇA CORPORATIVA, BACKUP 3-2-1 & CONFORMIDADE LGPD
 
 > **Arquitetura de Proteção de Dados 3-2-1:** A política de proteção de dados opera na regra de ouro 3-2-1: (3) cópias de dados em (2) tipos de mídias diferentes, com (1) cópia externa criptografada em nuvem fria (Wasabi / AWS S3 / Google Drive).
 
@@ -1137,7 +1137,7 @@ echo " Backup soberano concluído e sincronizado na nuvem fria!"
 
 ---
 
-## CAPÍTULO 9 · CRONOGRAMA DE IMPLANTAÇÃO EM 30 DIAS & MONITORAMENTO
+## CAPÍTULO 10 · CRONOGRAMA DE IMPLANTAÇÃO EM 30 DIAS & MONITORAMENTO
 
 ### Cronograma Executivo de Virada de Chave (4 Semanas)
 

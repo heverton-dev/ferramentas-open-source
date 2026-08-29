@@ -43,6 +43,32 @@ class VPSDecisionEngine:
                 {"name": "n8n", "ram_gb": 1.5, "role": "Orquestrador de Workflows (Ja Ativo na VPS)"}
             ]
         },
+        "ecos-anthropic-stack": {
+            "name": "Ecossistema Anthropic Stack Soberano (Ollama + Gitea + Prometheus/Grafana)",
+            "req_cpu": 6,
+            "req_ram_gb": 12.0,
+            "host_ports": [],
+            "subdomains": ["ai", "git", "grafana"],
+            "recommended_db": "postgres",
+            "components": [
+                {"name": "Ollama", "ram_gb": 6.0, "role": "Orquestracao de Agentes e Modelos LLM Locais"},
+                {"name": "Gitea + Woodpecker CI", "ram_gb": 3.0, "role": "Versionamento e CI/CD"},
+                {"name": "Prometheus + Grafana + Loki", "ram_gb": 3.0, "role": "Observabilidade e Monitoramento"}
+            ]
+        },
+        "ecos-penso-suite": {
+            "name": "Penso Mail & Collaboration Suite (Mailcow + Nextcloud + Mattermost)",
+            "req_cpu": 4,
+            "req_ram_gb": 6.0,
+            "host_ports": [25, 110, 143, 465, 587, 993, 995],
+            "subdomains": ["mail", "drive", "chat"],
+            "recommended_db": "postgres",
+            "components": [
+                {"name": "Mailcow", "ram_gb": 2.5, "role": "E-mail Corporativo, Groupware e Gateway Antispam"},
+                {"name": "Nextcloud Hub", "ram_gb": 2.0, "role": "Armazenamento em Nuvem e Documentos"},
+                {"name": "Mattermost", "ram_gb": 1.5, "role": "Comunicacao Unificada e Chat Corporativo"}
+            ]
+        },
         "ecos-rd-station-suite": {
             "name": "Ecossistema RD Station Suite (Mautic + Twenty + Chatwoot + Evolution + Listmonk)",
             "req_cpu": 4,
@@ -172,6 +198,118 @@ class VPSDecisionEngine:
             "host_ports": [],
             "subdomains": ["buzz"],
             "role": "Workspace de Mensageria Descentralizada Nostr com Agentes IA Nativos (Alternativa Slack/Teams)"
+        },
+        "cuttlefish": {
+            "name": "Postal (Cuttlefish) Transactional Email",
+            "req_cpu": 4.0,
+            "req_ram_gb": 8.0,
+            "host_ports": [],
+            "subdomains": ["cuttlefish"],
+            "role": "Servidor de E-mail Transacional via API/SMTP para Envio em Massa"
+        },
+        "faster-whisper-cli": {
+            "name": "Faster-Whisper CLI",
+            "req_cpu": 2.0,
+            "req_ram_gb": 2.0,
+            "host_ports": [],
+            "subdomains": ["transcribe"],
+            "role": "CLI de Transcricao de Audio Acelerada (CTranslate2)"
+        },
+        "haraka": {
+            "name": "Haraka SMTP Server",
+            "req_cpu": 2.0,
+            "req_ram_gb": 4.0,
+            "host_ports": [25, 465, 587],
+            "subdomains": ["mail"],
+            "role": "Servidor SMTP Programavel em Node.js (Recepcao e Roteamento de E-mail)"
+        },
+        "mailcow": {
+            "name": "Mailcow Dockerized",
+            "req_cpu": 2.0,
+            "req_ram_gb": 4.0,
+            "host_ports": [25, 110, 143, 465, 587, 993, 995],
+            "subdomains": ["mail"],
+            "role": "Suite Completa de E-mail (SMTP/IMAP/POP3) com Painel Web"
+        },
+        "mail-in-a-box": {
+            "name": "Mail-in-a-Box",
+            "req_cpu": 1.0,
+            "req_ram_gb": 2.0,
+            "host_ports": [25, 53, 143],
+            "subdomains": ["mail"],
+            "role": "Servidor de E-mail Completo All-in-One (SMTP/IMAP/Webmail/DNS)"
+        },
+        "mautic": {
+            "name": "Mautic Marketing Automation",
+            "req_cpu": 2.0,
+            "req_ram_gb": 4.0,
+            "host_ports": [],
+            "subdomains": ["mautic"],
+            "role": "Automacao de Marketing e CRM de Leads (Alternativa ActiveCampaign)"
+        },
+        "modoboa": {
+            "name": "Modoboa Mail Manager",
+            "req_cpu": 4.0,
+            "req_ram_gb": 4.0,
+            "host_ports": [25, 110, 143, 587],
+            "subdomains": ["mail"],
+            "role": "Gerenciador Central de E-mail (Postfix + Dovecot + Django) com Painel Admin"
+        },
+        "open-notebooklm": {
+            "name": "Open-NotebookLM",
+            "req_cpu": 4.0,
+            "req_ram_gb": 8.0,
+            "host_ports": [],
+            "subdomains": ["notebooklm"],
+            "role": "Sintese de Documentos em Audio/Podcast via IA (Alternativa NotebookLM)"
+        },
+        "postfix-dovecot": {
+            "name": "Postfix + Dovecot",
+            "req_cpu": 2.0,
+            "req_ram_gb": 4.0,
+            "host_ports": [25, 110, 143, 587, 993, 995],
+            "subdomains": ["mail"],
+            "role": "Stack Classica de E-mail MTA/MDA (Postfix + Dovecot)"
+        },
+        "screenpipe": {
+            "name": "Screenpipe",
+            "req_cpu": 4.0,
+            "req_ram_gb": 8.0,
+            "host_ports": [],
+            "subdomains": ["screenpipe"],
+            "role": "Gravacao e Indexacao Continua de Tela/Audio (Caixa-Preta Pessoal com IA)"
+        },
+        "waha": {
+            "name": "WAHA WhatsApp HTTP API",
+            "req_cpu": 2.0,
+            "req_ram_gb": 4.0,
+            "host_ports": [],
+            "subdomains": ["waha"],
+            "role": "Gateway HTTP API para WhatsApp (Alternativa Twilio)"
+        },
+        "whisper-cpp": {
+            "name": "Whisper.cpp",
+            "req_cpu": 2.0,
+            "req_ram_gb": 2.0,
+            "host_ports": [],
+            "subdomains": ["whisper"],
+            "role": "Transcricao de Audio Leve em C/C++ (Baixissimo Consumo de Recursos)"
+        },
+        "whisperx": {
+            "name": "WhisperX + PyAnnote",
+            "req_cpu": 4.0,
+            "req_ram_gb": 8.0,
+            "host_ports": [],
+            "subdomains": ["whisperx"],
+            "role": "Transcricao com Diarizacao de Multiplos Falantes (WhisperX + PyAnnote)"
+        },
+        "xtts-v2": {
+            "name": "Coqui XTTS-v2",
+            "req_cpu": 4.0,
+            "req_ram_gb": 16.0,
+            "host_ports": [],
+            "subdomains": ["xtts"],
+            "role": "Clonagem de Voz Neural Multilingue TTS (Requer GPU com 6GB+ VRAM)"
         }
     }
 

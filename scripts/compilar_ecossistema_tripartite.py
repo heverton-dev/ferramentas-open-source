@@ -668,7 +668,7 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
   linhas.extend([
     f"---",
     f"",
-    f"## CAPÍTULO 4 · CAMADA DE COLA, SSO FEDERADO & BLUEPRINTS N8N",
+    f"## CAPÍTULO 5 · CAMADA DE COLA, SSO FEDERADO & BLUEPRINTS N8N",
     f"",
     f"### Arquitetura de Interconexão sem Silos de Dados",
     f"- ** Autenticação Única Federada (SSO):** {integracao.get('autenticacao_sso')}",
@@ -696,7 +696,7 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
   linhas.extend([
     f"---",
     f"",
-    f"## CAPÍTULO 5 · MANUAL DE ENGENHARIA DE INFRAESTRUTURA & DEPLOY ALL-IN-ONE",
+    f"## CAPÍTULO 6 · MANUAL DE ENGENHARIA DE INFRAESTRUTURA & DEPLOY ALL-IN-ONE",
     f"",
     f"### Entendendo os 4 Pilares da Infraestrutura (Sem Jargões)",
     f"- **1. O que é VPS?** {deploy.get('analogia_didatica_stack', {}).get('o_que_e_vps', '')}",
@@ -761,7 +761,7 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
     f"",
     f"---",
     f"",
-    f"## CAPÍTULO 6 · PROTOCOLOS DE MODULARIDADE & HOT-SWAP (PRINCÍPIO DO LEGO)",
+    f"## CAPÍTULO 7 · PROTOCOLOS DE MODULARIDADE & HOT-SWAP (PRINCÍPIO DO LEGO)",
     f"",
     f"> **O Princípio das Tomadas Independentes:** ",
     f"> {guia.get('filosofia_modular', '')}",
@@ -795,7 +795,7 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
   linhas.extend([
     f"---",
     f"",
-    f"## CAPÍTULO 7 · ROTEIRO PRÁTICO DE MIGRAÇÃO DE DADOS HISTÓRICOS",
+    f"## CAPÍTULO 8 · ROTEIRO PRÁTICO DE MIGRAÇÃO DE DADOS HISTÓRICOS",
     f""
   ])
 
@@ -816,7 +816,7 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
   linhas.extend([
     f"---",
     f"",
-    f"## CAPÍTULO 8 · GOVERNANÇA CORPORATIVA, BACKUP 3-2-1 & CONFORMIDADE LGPD",
+    f"## CAPÍTULO 9 · GOVERNANÇA CORPORATIVA, BACKUP 3-2-1 & CONFORMIDADE LGPD",
     f"",
     f"> **Arquitetura de Proteção de Dados 3-2-1:** {seg.get('arquitetura_backup_321')}",
     f"",
@@ -836,7 +836,7 @@ def gerar_markdown_ecossistema(dados: dict) -> str:
     f"",
     f"---",
     f"",
-    f"## CAPÍTULO 9 · CRONOGRAMA DE IMPLANTAÇÃO EM 30 DIAS & MONITORAMENTO",
+    f"## CAPÍTULO 10 · CRONOGRAMA DE IMPLANTAÇÃO EM 30 DIAS & MONITORAMENTO",
     f"",
     f"### Cronograma Executivo de Virada de Chave (4 Semanas)",
     f""
@@ -1517,7 +1517,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
  <!-- SEÇÃO 04: INTEGRAÇÃO & BLUEPRINTS -->
  <div class="sec-head" id="cap-04">
   <div class="sec-info">
-   <span class="sec-num">Capítulo 06 · Camada de Cola &amp; Orquestração</span>
+   <span class="sec-num">Capítulo 07 · Camada de Cola &amp; Orquestração</span>
    <h2>SSO Federado, Barramento &amp; Blueprints n8n</h2>
    <p class="sec-note">Como os módulos dialogam de forma transparente com fluxos automatizados prontos para uso.</p>
   </div>
@@ -1550,7 +1550,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
  <!-- SEÇÃO 05: DEPLOY ALL-IN-ONE -->
  <div class="sec-head" id="cap-05">
   <div class="sec-info">
-   <span class="sec-num">Capítulo 07 · Manual de Engenharia de Infraestrutura</span>
+   <span class="sec-num">Capítulo 08 · Manual de Engenharia de Infraestrutura</span>
    <h2>Deploy All-in-One em Docker Compose</h2>
    <p class="sec-note">Conceitos explicados sem jargões para gestores de marketing, vendas e diretores ({deploy.get('requisitos_hardware_totais', {}).get('cpu_total_recomendada')} / {deploy.get('requisitos_hardware_totais', {}).get('ram_total_recomendada')}).</p>
   </div>
@@ -1600,7 +1600,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
  <!-- SEÇÃO 06: MODULARIDADE & HOT-SWAP -->
  <div class="sec-head" id="cap-06" style="margin-top: 48px;">
   <div class="sec-info">
-   <span class="sec-num">Capítulo 08 · Protocolos de Modularidade &amp; Hot-Swap</span>
+   <span class="sec-num">Capítulo 09 · Protocolos de Modularidade &amp; Hot-Swap</span>
    <h2>Adição, Substituição &amp; Remoção de Ferramentas (Princípio do Lego)</h2>
    <p class="sec-note">Como personalizar o ecossistema e trocar ferramentas sem quebrar o cluster nem interromper a operação comercial.</p>
   </div>
@@ -1641,7 +1641,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
  <!-- SEÇÃO 07: MIGRAÇÃO DE DADOS -->
  <div class="sec-head" id="cap-07" style="margin-top: 48px;">
   <div class="sec-info">
-   <span class="sec-num">Capítulo 09 · Roteiro Prático de Migração de Dados</span>
+   <span class="sec-num">Capítulo 10 · Roteiro Prático de Migração de Dados</span>
    <h2>De-SaaS para Soberano (Transição Segura sem Perdas)</h2>
    <p class="sec-note">Roteiro passo a passo para exportar dados do RD Station e importar no Mautic, Twenty e Chatwoot.</p>
   </div>
@@ -1651,7 +1651,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
  <!-- SEÇÃO 08: SEGURANÇA & LGPD -->
  <div class="sec-head" id="cap-08" style="margin-top: 48px;">
   <div class="sec-info">
-   <span class="sec-num">Capítulo 10 · Governança Corporativa, Backup 3-2-1 &amp; LGPD</span>
+   <span class="sec-num">Capítulo 11 · Governança Corporativa, Backup 3-2-1 &amp; LGPD</span>
    <h2>Soberania de Dados &amp; Proteção de Ativos Digitais</h2>
    <p class="sec-note">Conformidade jurídica estrita com a LGPD e política de backup com criptografia AES-256 em nuvem fria.</p>
   </div>
@@ -1672,7 +1672,7 @@ def gerar_html_ecossistema_diamante(dados: dict) -> str:
  <!-- SEÇÃO 09: CRONOGRAMA 30 DIAS & MONITORAMENTO -->
  <div class="sec-head" id="cap-09" style="margin-top: 48px;">
   <div class="sec-info">
-   <span class="sec-num">Capítulo 11 · Cronograma de Implantação em 30 Dias &amp; Monitoramento</span>
+   <span class="sec-num">Capítulo 12 · Cronograma de Implantação em 30 Dias &amp; Monitoramento</span>
    <h2>Plano Executivo de Virada de Chave &amp; Health Check</h2>
    <p class="sec-note">Planejamento semana a semana e comandos em 1 clique para inspecionar memória e bancos.</p>
   </div>
@@ -1718,7 +1718,7 @@ def gerar_typst_ecossistema(dados: dict) -> str:
   for p_idx, p in enumerate(pilares, 1):
     capitulos_pilares_typ += f"""
 #pagebreak()
-= Capítulo {p_idx + 2}: Pilar 0{p_idx} · {sanitizar_typ(p.get('nome_pilar'))}
+= Capítulo {p_idx + 3}: Pilar 0{p_idx} · {sanitizar_typ(p.get('nome_pilar'))}
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: {sanitizar_typ(p.get('modulo_saas_alvo'))}] \\
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: {sanitizar_typ(p.get('subtotal_economia_anual'))}] \\
@@ -1958,7 +1958,7 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 {capitulos_pilares_typ}
 
 #pagebreak()
-= Capítulo 6: Camada de Cola, SSO Federado & Blueprints n8n
+= Capítulo 7: Camada de Cola, SSO Federado & Blueprints n8n
 
 == Arquitetura de Interconexão sem Silos de Dados
 - *Autenticação Única:* {sanitizar_typ(integracao.get('autenticacao_sso', ''))}
@@ -1969,7 +1969,7 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 {sanitizar_typ(integracao.get('fluxo_integracao_descricao', ''))}
 
 #pagebreak()
-= Capítulo 7: Manual de Engenharia de Infraestrutura & Deploy All-in-One
+= Capítulo 8: Manual de Engenharia de Infraestrutura & Deploy All-in-One
 
 - *Segurança de Rede:* {sanitizar_typ(deploy.get('arquitetura_rede_seguranca', ''))}
 - *Perfil de VPS Recomendado:* `{sanitizar_typ(vps_spec.get('perfil_recomendado', '8 vCPU / 16 GB RAM'))}`
@@ -1995,7 +1995,7 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 ```
 
 #pagebreak()
-= Capítulo 8: Protocolos de Modularidade & Hot-Swap (Princípio do Lego)
+= Capítulo 9: Protocolos de Modularidade & Hot-Swap (Princípio do Lego)
 
 - *Filosofia Desacoplada:* {sanitizar_typ(guia.get('filosofia_modular', ''))}
 
@@ -2003,12 +2003,12 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 {sanitizar_typ(guia.get('passo_a_passo_substituir_hotswap', ''))}
 
 #pagebreak()
-= Capítulo 9: Roteiro Prático de Migração de Dados Históricos
+= Capítulo 10: Roteiro Prático de Migração de Dados Históricos
 
 { "".join([f"== {sanitizar_typ(m.get('modulo'))}\n- *O que migrar:* {sanitizar_typ(m.get('o_que_migrar'))}\n- *Cuidados:* {sanitizar_typ(m.get('cuidados'))}\n\n" for m in dados.get("guia_migracao_dados", [])]) }
 
 #pagebreak()
-= Capítulo 10: Governança Corporativa, Backup 3-2-1 & LGPD
+= Capítulo 11: Governança Corporativa, Backup 3-2-1 & LGPD
 
 - *Política 3-2-1:* {sanitizar_typ(seg.get('arquitetura_backup_321', ''))}
 
@@ -2018,7 +2018,7 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 ```
 
 #pagebreak()
-= Capítulo 11: Cronograma de Implantação em 30 Dias & Monitoramento
+= Capítulo 12: Cronograma de Implantação em 30 Dias & Monitoramento
 
 { "".join([f"== {sanitizar_typ(c.get('semana'))} · {sanitizar_typ(c.get('fase'))}\n- *Atividades:* {sanitizar_typ(c.get('atividades'))}\n- *Marco de Entrega:* {sanitizar_typ(c.get('marco_entrega'))}\n\n" for c in dados.get("cronograma_implantacao_30_dias", [])]) }
 """
@@ -2907,10 +2907,6 @@ Você não precisa contratar consultorias de TI nem aprender a programar. Com o 
   with open(dir_agentic / "LIVRO-TEXTO-ENGENHEIRO-AGENTICO.html", "w", encoding="utf-8") as f_pl:
     f_pl.write(html_playbook)
   with open(dir_agentic / "LIVRO-TEXTO-ENGENHEIRO-AGENTICO.md", "w", encoding="utf-8") as f_pl:
-    f_pl.write(md_playbook)
-  with open(dir_agentic / "PLAYBOOK-ENGENHEIRO-AGENTICO.html", "w", encoding="utf-8") as f_pl:
-    f_pl.write(html_playbook)
-  with open(dir_agentic / "PLAYBOOK-ENGENHEIRO-AGENTICO.md", "w", encoding="utf-8") as f_pl:
     f_pl.write(md_playbook)
 
   # Compilação do Livro-Texto Agêntico em PDF Typst Hiper-Detalhado

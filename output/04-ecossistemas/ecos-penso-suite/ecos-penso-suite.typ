@@ -215,7 +215,7 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 
 
 #pagebreak()
-= Capítulo 3: Pilar 01 · Pilar 01: E-mail Corporativo, Groupware & Gateway Antispam
+= Capítulo 4: Pilar 01 · Pilar 01: E-mail Corporativo, Groupware & Gateway Antispam
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: Penso Mail / Zimbra Collaboration / Penso Antispam] \
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: R\$ 24.000/ano] \
@@ -369,7 +369,7 @@ Empacotado em uma única imagem Docker, inclui Webmail Roundcube, antispam Rspam
 #v(10pt)
 
 #pagebreak()
-= Capítulo 4: Pilar 02 · Pilar 02: Armazenamento em Nuvem, Drive Corporativo & Documentos
+= Capítulo 5: Pilar 02 · Pilar 02: Armazenamento em Nuvem, Drive Corporativo & Documentos
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: Penso Drive / Google Drive / OneDrive] \
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: R\$ 18.000/ano] \
@@ -523,7 +523,7 @@ Consome menos de 30 MB de RAM, suporta múltiplos usuários com permissões espe
 #v(10pt)
 
 #pagebreak()
-= Capítulo 5: Pilar 03 · Pilar 03: Comunicação Unificada, Chat Corporativo & Videoconferência
+= Capítulo 6: Pilar 03 · Pilar 03: Comunicação Unificada, Chat Corporativo & Videoconferência
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: Penso Chat / Microsoft Teams / Slack / Zoom] \
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: R\$ 12.000/ano] \
@@ -678,7 +678,7 @@ Zero instalação para convidados (funciona direto no navegador WebRTC), sem lim
 
 
 #pagebreak()
-= Capítulo 6: Camada de Cola, SSO Federado & Blueprints n8n
+= Capítulo 7: Camada de Cola, SSO Federado & Blueprints n8n
 
 == Arquitetura de Interconexão sem Silos de Dados
 - *Autenticação Única:* Keycloak / Authentik OIDC unificado para login único no Webmail (Mailcow/SOGo), Nuvem (Nextcloud Hub) e Chat (Mattermost)
@@ -689,7 +689,7 @@ Zero instalação para convidados (funciona direto no navegador WebRTC), sem lim
 O colaborador faz login único via OIDC no Keycloak e tem acesso imediato à sua caixa postal corporativa, ao seu drive na nuvem com documentos OnlyOffice e aos seus canais de chat no Mattermost. Novos funcionários cadastrados no RH são provisionados automaticamente em todos os sistemas via fluxo n8n.
 
 #pagebreak()
-= Capítulo 7: Manual de Engenharia de Infraestrutura & Deploy All-in-One
+= Capítulo 8: Manual de Engenharia de Infraestrutura & Deploy All-in-One
 
 - *Segurança de Rede:* Cluster conteinerizado em rede Docker interna isolada (penso\_sovereign\_net), exposto publicamente apenas pelas portas 80/443 (HTTPS Traefik) e portas padrão de e-mail (25, 465, 587, 993) com firewall UFW ativo e Fail2ban protegendo contra força bruta.
 - *Perfil de VPS Recomendado:* `8 vCPU / 16 GB RAM`
@@ -807,7 +807,7 @@ services:
 ```
 
 #pagebreak()
-= Capítulo 8: Protocolos de Modularidade & Hot-Swap (Princípio do Lego)
+= Capítulo 9: Protocolos de Modularidade & Hot-Swap (Princípio do Lego)
 
 - *Filosofia Desacoplada:* Princípio do Lego: cada serviço (Mailcow, Nextcloud, Mattermost, Jitsi) roda em seu próprio contêiner desacoplado com volumes persistentes. Se a empresa decidir trocar o Mattermost pelo Zulip ou o Nextcloud pelo Seafile, a substituição é realizada sem interromper o serviço de e-mail ou o proxy central.
 
@@ -819,7 +819,7 @@ services:
 5. Desligue o contêiner legado após 48 horas de validação.
 
 #pagebreak()
-= Capítulo 9: Roteiro Prático de Migração de Dados Históricos
+= Capítulo 10: Roteiro Prático de Migração de Dados Históricos
 
 == E-mail Corporativo (Zimbra / Penso Mail -> Mailcow)
 - *O que migrar:* Todas as caixas postais, histórico de mensagens, pastas personalizadas, regras de encaminhamento e contatos.
@@ -832,7 +832,7 @@ services:
 
 
 #pagebreak()
-= Capítulo 10: Governança Corporativa, Backup 3-2-1 & LGPD
+= Capítulo 11: Governança Corporativa, Backup 3-2-1 & LGPD
 
 - *Política 3-2-1:* Regra 3-2-1 estrita: 3 cópias dos dados (produção local, backup criptografado em disco secundário e snapshot offsite em storage S3 externo como Wasabi ou Backblaze B2).
 
@@ -862,7 +862,7 @@ echo 'Backup 3-2-1 executado e criptografado com sucesso!'
 ```
 
 #pagebreak()
-= Capítulo 11: Cronograma de Implantação em 30 Dias & Monitoramento
+= Capítulo 12: Cronograma de Implantação em 30 Dias & Monitoramento
 
 == Semana 01 · Provisionamento de VPS & Identidade Unificada (Keycloak SSO)
 - *Atividades:* Contratação da VPS dedicada, endurecimento do sistema operacional (SSH seguro, UFW, Fail2ban), deploy do Traefik com TLS e configuração do Keycloak com os usuários corporativos.

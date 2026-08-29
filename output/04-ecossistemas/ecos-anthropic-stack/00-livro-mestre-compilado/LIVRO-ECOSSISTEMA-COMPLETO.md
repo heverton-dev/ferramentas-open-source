@@ -748,7 +748,7 @@ Padrão CNCF agnóstico de backend, permitindo enviar dados para Prometheus, Lok
 
 ---
 
-## CAPÍTULO 4 · CAMADA DE COLA, SSO FEDERADO & BLUEPRINTS N8N
+## CAPÍTULO 5 · CAMADA DE COLA, SSO FEDERADO & BLUEPRINTS N8N
 
 ### Arquitetura de Interconexão sem Silos de Dados
 - ** Autenticação Única Federada (SSO):** Keycloak / Authentik (OpenID Connect / SAML) unificando o login de engenheiros e agentes de IA no Gitea, Woodpecker, Grafana, Ollama Web UI e Flowise.
@@ -782,7 +782,7 @@ None
 
 ---
 
-## CAPÍTULO 5 · MANUAL DE ENGENHARIA DE INFRAESTRUTURA & DEPLOY ALL-IN-ONE
+## CAPÍTULO 6 · MANUAL DE ENGENHARIA DE INFRAESTRUTURA & DEPLOY ALL-IN-ONE
 
 ### Entendendo os 4 Pilares da Infraestrutura (Sem Jargões)
 - **1. O que é VPS?** 
@@ -920,7 +920,7 @@ volumes:
 
 ---
 
-## CAPÍTULO 6 · PROTOCOLOS DE MODULARIDADE & HOT-SWAP (PRINCÍPIO DO LEGO)
+## CAPÍTULO 7 · PROTOCOLOS DE MODULARIDADE & HOT-SWAP (PRINCÍPIO DO LEGO)
 
 > **O Princípio das Tomadas Independentes:** 
 > A arquitetura opera sob o princípio de 'Tomadas e Aparelhos Independentes'. Nenhuma ferramenta fica grudada ou dependente da outra com código travado. Imagine uma régua de tomadas: Ollama (LLM) e LangChain (Framework) funcionam perfeitamente mesmo se você desligar Flowise (Builder). Se quiser trocar Ollama por outro LLM, basta desconectar e plugar o novo. Nada quebra.
@@ -953,7 +953,7 @@ volumes:
 
 ---
 
-## CAPÍTULO 7 · ROTEIRO PRÁTICO DE MIGRAÇÃO DE DADOS HISTÓRICOS
+## CAPÍTULO 8 · ROTEIRO PRÁTICO DE MIGRAÇÃO DE DADOS HISTÓRICOS
 
 ### 1. Migração de Agentes de Claude Code para Stack Aberto
 - **O que migrar:** Configurações de agentes, prompts base, MCP servers registrados, histórico de conversas e modelos treinados.
@@ -984,7 +984,7 @@ volumes:
 
 ---
 
-## CAPÍTULO 8 · GOVERNANÇA CORPORATIVA, BACKUP 3-2-1 & CONFORMIDADE LGPD
+## CAPÍTULO 9 · GOVERNANÇA CORPORATIVA, BACKUP 3-2-1 & CONFORMIDADE LGPD
 
 > **Arquitetura de Proteção de Dados 3-2-1:** A política de proteção de dados opera na regra de ouro 3-2-1: (3) cópias de dados em (2) tipos de mídias diferentes, com (1) cópia externa criptografada em nuvem fria (Wasabi / AWS S3).
 
@@ -1022,7 +1022,7 @@ echo "Backup soberano concluído!"
 
 ---
 
-## CAPÍTULO 9 · CRONOGRAMA DE IMPLANTAÇÃO EM 30 DIAS & MONITORAMENTO
+## CAPÍTULO 10 · CRONOGRAMA DE IMPLANTAÇÃO EM 30 DIAS & MONITORAMENTO
 
 ### Cronograma Executivo de Virada de Chave (4 Semanas)
 

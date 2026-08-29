@@ -728,7 +728,7 @@ Zero instalação para convidados (funciona direto no navegador WebRTC), sem lim
 
 ---
 
-## CAPÍTULO 4 · CAMADA DE COLA, SSO FEDERADO & BLUEPRINTS N8N
+## CAPÍTULO 5 · CAMADA DE COLA, SSO FEDERADO & BLUEPRINTS N8N
 
 ### Arquitetura de Interconexão sem Silos de Dados
 - ** Autenticação Única Federada (SSO):** Keycloak / Authentik OIDC unificado para login único no Webmail (Mailcow/SOGo), Nuvem (Nextcloud Hub) e Chat (Mattermost)
@@ -774,7 +774,7 @@ O colaborador faz login único via OIDC no Keycloak e tem acesso imediato à sua
 
 ---
 
-## CAPÍTULO 5 · MANUAL DE ENGENHARIA DE INFRAESTRUTURA & DEPLOY ALL-IN-ONE
+## CAPÍTULO 6 · MANUAL DE ENGENHARIA DE INFRAESTRUTURA & DEPLOY ALL-IN-ONE
 
 ### Entendendo os 4 Pilares da Infraestrutura (Sem Jargões)
 - **1. O que é VPS?** 
@@ -918,7 +918,7 @@ services:
 
 ---
 
-## CAPÍTULO 6 · PROTOCOLOS DE MODULARIDADE & HOT-SWAP (PRINCÍPIO DO LEGO)
+## CAPÍTULO 7 · PROTOCOLOS DE MODULARIDADE & HOT-SWAP (PRINCÍPIO DO LEGO)
 
 > **O Princípio das Tomadas Independentes:** 
 > Princípio do Lego: cada serviço (Mailcow, Nextcloud, Mattermost, Jitsi) roda em seu próprio contêiner desacoplado com volumes persistentes. Se a empresa decidir trocar o Mattermost pelo Zulip ou o Nextcloud pelo Seafile, a substituição é realizada sem interromper o serviço de e-mail ou o proxy central.
@@ -961,7 +961,7 @@ services:
 
 ---
 
-## CAPÍTULO 7 · ROTEIRO PRÁTICO DE MIGRAÇÃO DE DADOS HISTÓRICOS
+## CAPÍTULO 8 · ROTEIRO PRÁTICO DE MIGRAÇÃO DE DADOS HISTÓRICOS
 
 ### E-mail Corporativo (Zimbra / Penso Mail -> Mailcow)
 - **O que migrar:** Todas as caixas postais, histórico de mensagens, pastas personalizadas, regras de encaminhamento e contatos.
@@ -984,7 +984,7 @@ services:
 
 ---
 
-## CAPÍTULO 8 · GOVERNANÇA CORPORATIVA, BACKUP 3-2-1 & CONFORMIDADE LGPD
+## CAPÍTULO 9 · GOVERNANÇA CORPORATIVA, BACKUP 3-2-1 & CONFORMIDADE LGPD
 
 > **Arquitetura de Proteção de Dados 3-2-1:** Regra 3-2-1 estrita: 3 cópias dos dados (produção local, backup criptografado em disco secundário e snapshot offsite em storage S3 externo como Wasabi ou Backblaze B2).
 
@@ -1022,7 +1022,7 @@ echo 'Backup 3-2-1 executado e criptografado com sucesso!'
 
 ---
 
-## CAPÍTULO 9 · CRONOGRAMA DE IMPLANTAÇÃO EM 30 DIAS & MONITORAMENTO
+## CAPÍTULO 10 · CRONOGRAMA DE IMPLANTAÇÃO EM 30 DIAS & MONITORAMENTO
 
 ### Cronograma Executivo de Virada de Chave (4 Semanas)
 

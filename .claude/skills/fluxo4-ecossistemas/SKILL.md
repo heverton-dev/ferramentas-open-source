@@ -1,3 +1,9 @@
+---
+name: fluxo4-ecossistemas
+description: Especialista no acionamento e orquestração do Fluxo 4 (Macro-Ecossistemas & Suítes Soberanas Integradas AIDD). Gera dossiês de ecossistemas completos com pilares funcionais, SSO, barramento e playbook agêntico.
+alwaysApply: false
+---
+
 # Skill Especialista · Fluxo 4: Macro-Ecossistemas & Suítes Integradas AIDD
 
 Esta skill governa a geração determinística de **Dossiês de Macro-Ecossistemas SaaS** cobrindo suítes multimodais completas (ex: *RD Station Suite, Google Workspace, Zoho One, Atlassian Suite, Microsoft 365, Adobe Creative Cloud*).
@@ -34,7 +40,7 @@ Os artefatos são gerados na pasta soberana única `output/04-ecossistemas/ecos-
 - `03-guias-de-integracao-e-operacao/` (Blueprints n8n, Migração de Dados De-SaaS e Segurança/LGPD);
 - `04-arsenal-dos-pilares/` (Fichas técnicas individuais por pilar funcional);
 - `05-manuais-e-trilhas-individuais/` (Manuais de VPS com Desinstalação Cirúrgica e Trilhas em 5 Aulas para cada ferramenta da suíte);
-- `06-playbook-engenharia-agentica/` (`PLAYBOOK-ENGENHEIRO-AGENTICO.html`, `.md`, 4 Prompts Mestres de orquestração por IA e configurações de Servidores MCP).
+- `06-playbook-engenharia-agentica/` (`LIVRO-TEXTO-ENGENHEIRO-AGENTICO.html`, `.md`, `.pdf`, 4 Prompts Mestres de orquestração por IA e configurações de Servidores MCP).
 
 ### 4. Diretriz de Design & Governança (Regra R20):
 - **Visual Corporativo Estrito:** Proibição absoluta do uso de emojis ou pictogramas em qualquer formato de material (HTML, Markdown, PDF Typst, relatórios ou scripts). O design deve ser puramente corporativo, técnico e elegante, baseado em tipografia sóbria, hierarquia de espaçamentos, badges formais e tabelas estruturadas.

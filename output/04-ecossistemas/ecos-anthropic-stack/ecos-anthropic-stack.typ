@@ -208,7 +208,7 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 
 
 #pagebreak()
-= Capítulo 3: Pilar 01 · Grupo 1: Orchestração de Agentes & Modelos LLM
+= Capítulo 4: Pilar 01 · Grupo 1: Orchestração de Agentes & Modelos LLM
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: Anthropic Claude API + Claude Code + Managed Agents] \
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: R\$ 156.000/ano] \
@@ -362,7 +362,7 @@ Single-binary Go que encapsula Ollama, vector store, chunking e UI de chat em um
 #v(10pt)
 
 #pagebreak()
-= Capítulo 4: Pilar 02 · Grupo 2: Infraestrutura de Desenvolvimento, CI/CD & Versionamento
+= Capítulo 5: Pilar 02 · Grupo 2: Infraestrutura de Desenvolvimento, CI/CD & Versionamento
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: GitHub / GitLab / Claude Code (IDE Integration) / GitHub Actions] \
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: R\$ 60.000/ano] \
@@ -516,7 +516,7 @@ Runtime TypeScript nativo com URLs imutáveis, sem arquivo package.json e permis
 #v(10pt)
 
 #pagebreak()
-= Capítulo 5: Pilar 03 · Grupo 3: Observabilidade, Monitoramento & Suporte
+= Capítulo 6: Pilar 03 · Grupo 3: Observabilidade, Monitoramento & Suporte
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: DataDog / New Relic / Sentry (Error Tracking) / PagerDuty] \
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: R\$ 48.000/ano] \
@@ -671,7 +671,7 @@ Padrão CNCF agnóstico de backend, permitindo enviar dados para Prometheus, Lok
 
 
 #pagebreak()
-= Capítulo 6: Camada de Cola, SSO Federado & Blueprints n8n
+= Capítulo 7: Camada de Cola, SSO Federado & Blueprints n8n
 
 == Arquitetura de Interconexão sem Silos de Dados
 - *Autenticação Única:* Keycloak / Authentik (OpenID Connect / SAML) unificando o login de engenheiros e agentes de IA no Gitea, Woodpecker, Grafana, Ollama Web UI e Flowise.
@@ -688,7 +688,7 @@ Padrão CNCF agnóstico de backend, permitindo enviar dados para Prometheus, Lok
 7. Feedback Loop: Agentes consultam Grafana para decidir se retrainam ou escalam.
 
 #pagebreak()
-= Capítulo 7: Manual de Engenharia de Infraestrutura & Deploy All-in-One
+= Capítulo 8: Manual de Engenharia de Infraestrutura & Deploy All-in-One
 
 - *Segurança de Rede:* A infraestrutura opera sobre uma rede bridge isolada do Docker (`ai\_ecosystem\_net`). Apenas o reverse proxy Traefik expõe as portas públicas 80 (HTTP com redirect) e 443 (HTTPS TLS automático via ACME/Let's Encrypt). Todas as ferramentas (Ollama, LangChain, Flowise, Gitea, Woodpecker, Prometheus, Grafana, Loki e Keycloak) comunicam-se exclusivamente pela rede interna através de seus nomes DNS de serviço, eliminando vetores de ataque externos.
 - *Perfil de VPS Recomendado:* `8 vCPU / 16 GB RAM`
@@ -809,7 +809,7 @@ volumes:
 ```
 
 #pagebreak()
-= Capítulo 8: Protocolos de Modularidade & Hot-Swap (Princípio do Lego)
+= Capítulo 9: Protocolos de Modularidade & Hot-Swap (Princípio do Lego)
 
 - *Filosofia Desacoplada:* A arquitetura opera sob o princípio de 'Tomadas e Aparelhos Independentes'. Nenhuma ferramenta fica grudada ou dependente da outra com código travado. Imagine uma régua de tomadas: Ollama (LLM) e LangChain (Framework) funcionam perfeitamente mesmo se você desligar Flowise (Builder). Se quiser trocar Ollama por outro LLM, basta desconectar e plugar o novo. Nada quebra.
 
@@ -821,7 +821,7 @@ volumes:
 5. Desligue a Antiga com Segurança: Pare o serviço antigo digitando `docker compose stop <servico\_antigo>`. Os seus agentes nem notarão a troca!
 
 #pagebreak()
-= Capítulo 9: Roteiro Prático de Migração de Dados Históricos
+= Capítulo 10: Roteiro Prático de Migração de Dados Históricos
 
 == 1. Migração de Agentes de Claude Code para Stack Aberto
 - *O que migrar:* Configurações de agentes, prompts base, MCP servers registrados, histórico de conversas e modelos treinados.
@@ -838,7 +838,7 @@ volumes:
 
 
 #pagebreak()
-= Capítulo 10: Governança Corporativa, Backup 3-2-1 & LGPD
+= Capítulo 11: Governança Corporativa, Backup 3-2-1 & LGPD
 
 - *Política 3-2-1:* A política de proteção de dados opera na regra de ouro 3-2-1: (3) cópias de dados em (2) tipos de mídias diferentes, com (1) cópia externa criptografada em nuvem fria (Wasabi / AWS S3).
 
@@ -868,7 +868,7 @@ echo "Backup soberano concluído!"
 ```
 
 #pagebreak()
-= Capítulo 11: Cronograma de Implantação em 30 Dias & Monitoramento
+= Capítulo 12: Cronograma de Implantação em 30 Dias & Monitoramento
 
 == Semana 1 (Dias 1 a 7) · Infraestrutura & Instalação do Stack
 - *Atividades:* Contratação da VPS, configuração de DNS wildcard, execução do docker-compose.yml e ativação de certificados SSL automáticos via Traefik.

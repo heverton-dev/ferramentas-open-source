@@ -759,7 +759,7 @@ Painel amigável para não-técnicos, suporte a OIDC/SAML/OAuth/LDAP e gestão d
 
 ---
 
-## CAPÍTULO 4 · CAMADA DE COLA, SSO FEDERADO & BLUEPRINTS N8N
+## CAPÍTULO 5 · CAMADA DE COLA, SSO FEDERADO & BLUEPRINTS N8N
 
 ### Arquitetura de Interconexão sem Silos de Dados
 - ** Autenticação Única Federada (SSO):** Keycloak / Authentik (OpenID Connect / SAML) unificando o login dos colaboradores no Nextcloud Hub, CryptPad, ONLYOFFICE, Seafile, Zimbra e HedgeDoc, eliminando senhas isoladas por aplicação.
@@ -842,7 +842,7 @@ Painel amigável para não-técnicos, suporte a OIDC/SAML/OAuth/LDAP e gestão d
 
 ---
 
-## CAPÍTULO 5 · MANUAL DE ENGENHARIA DE INFRAESTRUTURA & DEPLOY ALL-IN-ONE
+## CAPÍTULO 6 · MANUAL DE ENGENHARIA DE INFRAESTRUTURA & DEPLOY ALL-IN-ONE
 
 ### Entendendo os 4 Pilares da Infraestrutura (Sem Jargões)
 - **1. O que é VPS?** A VPS é o seu 'apartamento alugado na nuvem'. Em vez de manter um computador físico ligado no escritório gastando luz, você aluga um servidor ultra-rápido que fica ligado 24 horas por dia, 7 dias por semana, com gerador e internet de fibra ótica.
@@ -1063,7 +1063,7 @@ services:
 
 ---
 
-## CAPÍTULO 6 · PROTOCOLOS DE MODULARIDADE & HOT-SWAP (PRINCÍPIO DO LEGO)
+## CAPÍTULO 7 · PROTOCOLOS DE MODULARIDADE & HOT-SWAP (PRINCÍPIO DO LEGO)
 
 > **O Princípio das Tomadas Independentes:** 
 > A arquitetura opera sob o princípio de 'Tomadas e Aparelhos Independentes'. Nenhuma ferramenta fica grudada ou dependente da outra com código travado. Imagine uma régua de tomadas na sua sala: a sua TV (Nextcloud) e o seu Arquivo (Seafile) funcionam perfeitamente mesmo se você desligar o Abajur (CryptPad). Se você quiser trocar o abajur por uma luminária moderna, basta tirar da tomada e plugar a nova. Nada na sua sala quebra.
@@ -1105,7 +1105,7 @@ services:
 
 ---
 
-## CAPÍTULO 7 · ROTEIRO PRÁTICO DE MIGRAÇÃO DE DADOS HISTÓRICOS
+## CAPÍTULO 8 · ROTEIRO PRÁTICO DE MIGRAÇÃO DE DADOS HISTÓRICOS
 
 ### 1. Migração do Gmail para Nextcloud Mail / Stalwart
 - **O que migrar:** Caixas de e-mail completas (pastas, mensagens, anexos), contatos e calendários dos 50 usuários.
@@ -1136,7 +1136,7 @@ services:
 
 ---
 
-## CAPÍTULO 8 · GOVERNANÇA CORPORATIVA, BACKUP 3-2-1 & CONFORMIDADE LGPD
+## CAPÍTULO 9 · GOVERNANÇA CORPORATIVA, BACKUP 3-2-1 & CONFORMIDADE LGPD
 
 > **Arquitetura de Proteção de Dados 3-2-1:** A política de proteção de dados opera na regra de ouro 3-2-1: (3) cópias de dados em (2) tipos de mídias diferentes, com (1) cópia externa criptografada em nuvem fria (Wasabi / AWS S3 / armazenamento próprio).
 
@@ -1173,7 +1173,7 @@ find /opt/backups -type d -mtime +30 -exec rm -rf {} +
 
 ---
 
-## CAPÍTULO 9 · CRONOGRAMA DE IMPLANTAÇÃO EM 30 DIAS & MONITORAMENTO
+## CAPÍTULO 10 · CRONOGRAMA DE IMPLANTAÇÃO EM 30 DIAS & MONITORAMENTO
 
 ### Cronograma Executivo de Virada de Chave (4 Semanas)
 

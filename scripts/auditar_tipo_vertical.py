@@ -24,9 +24,7 @@ def console_utf8():
 console_utf8()
 
 def auditar_dossies_verticais():
-    arquivos_out = sorted(glob.glob("output/listas-open-source/vert-*.html"))
-    arquivos_doc = sorted(glob.glob("docs/listas/vert-*.html"))
-    todos = sorted(list(set(arquivos_out + arquivos_doc)))
+    todos = sorted(glob.glob("output/02-dossies-verticais/vert-*/materiais/vert-*.html"))
 
     print("=" * 80)
     print(" 🔍 AUDITORIA DE CONFORMIDADE COM A REGRA R5-V (DOSSIÊ VERTICAL SAAS)")
@@ -66,7 +64,7 @@ def auditar_dossies_verticais():
         else:
             erros = []
             if not has_target: erros.append("Sem Caixa de Alvo SaaS")
-            if not has_sec5: erros.append("Sem Seção 5 de Uso Complementar")
+            if not has_sec_comp: erros.append("Sem Seção 5 de Uso Complementar")
             if not has_mcp: erros.append("Sem menção a MCP Server ou Agent Skill")
             if not has_repo: erros.append("Sem botão SVG do GitHub")
             if not has_scroll: erros.append("Sem scrollbar 4px accent")

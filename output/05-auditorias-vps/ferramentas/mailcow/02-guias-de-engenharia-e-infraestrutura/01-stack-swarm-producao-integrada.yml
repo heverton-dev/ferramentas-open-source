@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  mailcow_app:
+    image: mailcow:latest
+    networks:
+      - network_conexao
+    volumes:
+      - mailcow_data:/data
+    ports:
+        - target: 25
+          published: 25
+          protocol: tcp
+          mode: host
+        - target: 110
+          published: 110
+          protocol: tcp
+          mode: host
+        - target: 143
+          published: 143
+          protocol: tcp
+          mode: host
+        - target: 465
+          published: 465
+          protocol: tcp
+          mode: host
+        - target: 587
+          published: 587
+          protocol: tcp
+          mode: host
+        - target: 993
+          published: 993
+          protocol: tcp
+          mode: host
+        - target: 995
+          published: 995
+          protocol: tcp
+          mode: host
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=network_conexao"
+        - "traefik.http.routers.mailcow.rule=Host(`mail.vpsconexao.org`)"
+        - "traefik.http.routers.mailcow.entrypoints=websecure"
+        - "traefik.http.routers.mailcow.tls=true"
+        - "traefik.http.routers.mailcow.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.mailcow.loadbalancer.server.port=80"
+        - "traefik.http.services.mailcow.loadbalancer.passHostHeader=true"
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4096M
+
+networks:
+  network_conexao:
+    external: true
+
+volumes:
+  mailcow_data:

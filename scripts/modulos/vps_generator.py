@@ -894,6 +894,11 @@ volumes:
         else:
             sub = prof.get('subdomains', ['app'])[0]
             port = 8080 if 'stalwart' in slug_clean else (3000 if 'cryptpad' in slug_clean or 'chatwoot' in slug_clean or 'nocodb' in slug_clean or 'anything' in slug_clean or 'buzz' in slug_clean else 80)
+            host_ports = prof.get("host_ports", [])
+            portas_raw_yml = ""
+            if host_ports:
+                linhas_portas = "\n".join([f'        - target: {p}\n          published: {p}\n          protocol: tcp\n          mode: host' for p in host_ports])
+                portas_raw_yml = f"\n    ports:\n{linhas_portas}"
             return f"""version: '3.8'
 
 services:
@@ -902,7 +907,7 @@ services:
     networks:
       - {net}
     volumes:
-      - {slug_clean}_data:/data
+      - {slug_clean}_data:/data{portas_raw_yml}
     deploy:
       mode: replicated
       replicas: 1

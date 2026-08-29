@@ -220,7 +220,7 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 
 
 #pagebreak()
-= Capítulo 3: Pilar 01 · Grupo 1: Marketing, Nutrição & Landing Pages
+= Capítulo 4: Pilar 01 · Grupo 1: Marketing, Nutrição & Landing Pages
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: RD Station Marketing (Planos Pro / Enterprise)] \
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: R\$ 42.000/ano] \
@@ -374,7 +374,7 @@ Setup de 2 minutos com interface minimalista focada exclusivamente em disparos b
 #v(10pt)
 
 #pagebreak()
-= Capítulo 4: Pilar 02 · Grupo 2: Pipeline Comercial, CRM & Contratos
+= Capítulo 5: Pilar 02 · Grupo 2: Pipeline Comercial, CRM & Contratos
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: RD Station CRM (Plano Avançado para Equipes de Vendas)] \
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: R\$ 36.000/ano] \
@@ -528,7 +528,7 @@ Suporte a distribuição round-robin entre múltiplos corretores/vendedores, int
 #v(10pt)
 
 #pagebreak()
-= Capítulo 5: Pilar 03 · Grupo 3: Atendimento Omnichannel & WhatsApp
+= Capítulo 6: Pilar 03 · Grupo 3: Atendimento Omnichannel & WhatsApp
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: RD Station Conversas (Antigo Tallos / Módulos de Mensageria)] \
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: R\$ 36.000/ano] \
@@ -683,7 +683,7 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 
 
 #pagebreak()
-= Capítulo 6: Camada de Cola, SSO Federado & Blueprints n8n
+= Capítulo 7: Camada de Cola, SSO Federado & Blueprints n8n
 
 == Arquitetura de Interconexão sem Silos de Dados
 - *Autenticação Única:* Keycloak / Authentik (OpenID Connect / SAML) unificando o login dos colaboradores no Twenty CRM, Chatwoot, Directus, Mautic e SuiteCRM.
@@ -699,7 +699,7 @@ Widget de chat leve em React com painel simples e sem dependências pesadas, ide
 6. Sincronização Final: A assinatura do contrato atualiza o status de 'Ganho' no Twenty CRM e notifica o time no WhatsApp via Evolution API.
 
 #pagebreak()
-= Capítulo 7: Manual de Engenharia de Infraestrutura & Deploy All-in-One
+= Capítulo 8: Manual de Engenharia de Infraestrutura & Deploy All-in-One
 
 - *Segurança de Rede:* A infraestrutura opera sobre uma rede bridge isolada do Docker (`ecosystem\_net`). Apenas o reverse proxy Traefik expõe as portas públicas 80 (HTTP com redirect) e 443 (HTTPS TLS automático via ACME/Let's Encrypt). Todas as ferramentas (Mautic, Twenty, Chatwoot, Evolution, n8n, Keycloak e PostgreSQL) comunicam-se exclusivamente pela rede interna através de seus nomes DNS de serviço (ex: `http://chatwoot:3000`, `postgres:5432`), eliminando vetores de ataque externos e exposição de portas desnecessárias.
 - *Perfil de VPS Recomendado:* `8 vCPU Dedicated Cloud / 16 GB RAM ECC / 160-240 GB NVMe SSD / Link 1 Gbps / Ubuntu 24.04 LTS x86\_64`
@@ -850,7 +850,7 @@ volumes:
 ```
 
 #pagebreak()
-= Capítulo 8: Protocolos de Modularidade & Hot-Swap (Princípio do Lego)
+= Capítulo 9: Protocolos de Modularidade & Hot-Swap (Princípio do Lego)
 
 - *Filosofia Desacoplada:* A arquitetura opera sob o princípio de 'Tomadas e Aparelhos Independentes'. Nenhuma ferramenta fica grudada ou dependente da outra com código travado. Imagine uma régua de tomadas na sua sala: a sua TV (Twenty CRM) e a sua Caixa de Som (Chatwoot) funcionam perfeitamente mesmo se você desligar o Abajur (Mautic). Se você quiser trocar o abajur por uma luminária moderna, basta tirar da tomada e plugar a nova. Nada na sua sala quebra.
 
@@ -862,7 +862,7 @@ volumes:
 5. Desligue a Antiga com Segurança: Pare o serviço antigo digitando `docker compose stop <servico\_antigo>`. Seus vendedores e clientes nem notarão a troca!
 
 #pagebreak()
-= Capítulo 9: Roteiro Prático de Migração de Dados Históricos
+= Capítulo 10: Roteiro Prático de Migração de Dados Históricos
 
 == 1. Migração do RD Station Marketing Mautic
 - *O que migrar:* Base total de contatos (Leads), campos personalizados, histórico de tags, segmentos e listas de descadastro (opt-out).
@@ -879,7 +879,7 @@ volumes:
 
 
 #pagebreak()
-= Capítulo 10: Governança Corporativa, Backup 3-2-1 & LGPD
+= Capítulo 11: Governança Corporativa, Backup 3-2-1 & LGPD
 
 - *Política 3-2-1:* A política de proteção de dados opera na regra de ouro 3-2-1: (3) cópias de dados em (2) tipos de mídias diferentes, com (1) cópia externa criptografada em nuvem fria (Wasabi / AWS S3 / Google Drive).
 
@@ -909,7 +909,7 @@ echo " Backup soberano concluído e sincronizado na nuvem fria!"
 ```
 
 #pagebreak()
-= Capítulo 11: Cronograma de Implantação em 30 Dias & Monitoramento
+= Capítulo 12: Cronograma de Implantação em 30 Dias & Monitoramento
 
 == Semana 1 (Dias 1 a 7) · Infraestrutura & Instalação do Cluster
 - *Atividades:* Contratação da VPS, configuração de DNS wildcard (wildcard.empresa.com.br), execução do docker-compose.yml e ativação dos certificados SSL automáticos via Traefik.

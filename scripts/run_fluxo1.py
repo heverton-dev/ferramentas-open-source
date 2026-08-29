@@ -64,9 +64,10 @@ def executar_fluxo1(slug: str = None) -> bool:
         print("\n" + "="*70)
         print(f"🏆 FLUXO 1 CONCLUÍDO COM SUCESSO PARA '{slug_sanitizado}'!")
         print("📁 Artefatos Tripartites Gerados em:")
-        print(f"   - HTML Interativo: output/01-listas-horizontais/list-{slug_sanitizado}/list-{slug_sanitizado}.html")
-        print(f"   - Markdown Limpo:  output/01-listas-horizontais/list-{slug_sanitizado}/list-{slug_sanitizado}.md")
-        print(f"   - PDF Typst:       output/01-listas-horizontais/list-{slug_sanitizado}/list-{slug_sanitizado}.pdf")
+        print(f"   - HTML Interativo: output/01-listas-horizontais/list-{slug_sanitizado}/materiais/list-{slug_sanitizado}.html")
+        print(f"   - Markdown Limpo:  output/01-listas-horizontais/list-{slug_sanitizado}/materiais/list-{slug_sanitizado}.md")
+        print(f"   - PDF Typst:       output/01-listas-horizontais/list-{slug_sanitizado}/materiais/list-{slug_sanitizado}.pdf")
+        print(f"   - Relatório Tripartite: output/01-listas-horizontais/list-{slug_sanitizado}/relatorios/")
         
         # Auto-Sincronização do Índice Mestre
         print("\n🔄 [Auto-Sincronização R11] Atualizando Catálogo Mestre e Portal Interativo...")

@@ -219,7 +219,7 @@ A migração de suítes de software proprietário fechado para ecossistemas open
 
 
 #pagebreak()
-= Capítulo 3: Pilar 01 · Grupo 1: Comunicação Unificada (E-mail, Chat, Vídeo, Agenda & Contatos)
+= Capítulo 4: Pilar 01 · Grupo 1: Comunicação Unificada (E-mail, Chat, Vídeo, Agenda & Contatos)
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: Google Workspace (Gmail + Google Chat + Google Meet + Google Calendar + Google Contacts)] \
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: R\$ 43.200/ano] \
@@ -373,7 +373,7 @@ Um único script configura e-mail, DNS, calendário, contatos e webmail seguros 
 #v(10pt)
 
 #pagebreak()
-= Capítulo 4: Pilar 02 · Grupo 2: Produtividade & Gestão de Documentos (Drive, Docs, Sheets, Slides, Forms, Keep, Sites)
+= Capítulo 5: Pilar 02 · Grupo 2: Produtividade & Gestão de Documentos (Drive, Docs, Sheets, Slides, Forms, Keep, Sites)
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: Google Workspace (Drive + Docs + Sheets + Slides + Forms + Keep + Sites)] \
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: R\$ 28.800/ano] \
@@ -527,7 +527,7 @@ Editor colaborativo em tempo real baseado em Markdown, com curadoria de links, h
 #v(10pt)
 
 #pagebreak()
-= Capítulo 5: Pilar 03 · Grupo 3: Identidade, Segurança & Governança (Admin, SSO, Vault & Endpoint)
+= Capítulo 6: Pilar 03 · Grupo 3: Identidade, Segurança & Governança (Admin, SSO, Vault & Endpoint)
 
 #text(size: 9pt, fill: rgb("#0284c7"), weight: "bold")[Alvo SaaS Substituído: Google Workspace (Admin Console + Cloud Identity + Google Vault + Endpoint Management)] \
 #text(size: 9pt, fill: rgb("#00875A"), weight: "bold")[Subtotal de Economia do Grupo: R\$ 14.400/ano] \
@@ -682,7 +682,7 @@ Painel amigável para não-técnicos, suporte a OIDC/SAML/OAuth/LDAP e gestão d
 
 
 #pagebreak()
-= Capítulo 6: Camada de Cola, SSO Federado & Blueprints n8n
+= Capítulo 7: Camada de Cola, SSO Federado & Blueprints n8n
 
 == Arquitetura de Interconexão sem Silos de Dados
 - *Autenticação Única:* Keycloak / Authentik (OpenID Connect / SAML) unificando o login dos colaboradores no Nextcloud Hub, CryptPad, ONLYOFFICE, Seafile, Zimbra e HedgeDoc, eliminando senhas isoladas por aplicação.
@@ -698,7 +698,7 @@ Painel amigável para não-técnicos, suporte a OIDC/SAML/OAuth/LDAP e gestão d
 6. Governança & Backup: O n8n dispara o backup diário e o Uptime Kuma monitora a saúde de todos os serviços com alerta no chat corporativo.
 
 #pagebreak()
-= Capítulo 7: Manual de Engenharia de Infraestrutura & Deploy All-in-One
+= Capítulo 8: Manual de Engenharia de Infraestrutura & Deploy All-in-One
 
 - *Segurança de Rede:* A infraestrutura opera sobre uma rede bridge isolada do Docker (`ecosystem\_net`). Apenas o reverse proxy Traefik expõe as portas públicas 80 (HTTP com redirect) e 443 (HTTPS TLS automático via ACME/Let's Encrypt). Todas as ferramentas (Nextcloud, CryptPad, ONLYOFFICE, Seafile, Keycloak, n8n, Stalwart e PostgreSQL) comunicam-se exclusivamente pela rede interna através de seus nomes DNS de serviço (ex: `http://nextcloud:80`, `postgres:5432`), eliminando vetores de ataque externos e exposição de portas desnecessárias.
 - *Perfil de VPS Recomendado:* `8 vCPU Dedicated Cloud / 16 GB RAM ECC / 200-300 GB NVMe SSD / Link 1 Gbps / Ubuntu 24.04 LTS x86\_64`
@@ -885,7 +885,7 @@ services:
 ```
 
 #pagebreak()
-= Capítulo 8: Protocolos de Modularidade & Hot-Swap (Princípio do Lego)
+= Capítulo 9: Protocolos de Modularidade & Hot-Swap (Princípio do Lego)
 
 - *Filosofia Desacoplada:* A arquitetura opera sob o princípio de 'Tomadas e Aparelhos Independentes'. Nenhuma ferramenta fica grudada ou dependente da outra com código travado. Imagine uma régua de tomadas na sua sala: a sua TV (Nextcloud) e o seu Arquivo (Seafile) funcionam perfeitamente mesmo se você desligar o Abajur (CryptPad). Se você quiser trocar o abajur por uma luminária moderna, basta tirar da tomada e plugar a nova. Nada na sua sala quebra.
 
@@ -897,7 +897,7 @@ services:
 5. Desligue a Antiga com Segurança: Pare o serviço antigo digitando `docker compose stop <servico\_antigo>`. Seus colaboradores nem notarão a troca!
 
 #pagebreak()
-= Capítulo 9: Roteiro Prático de Migração de Dados Históricos
+= Capítulo 10: Roteiro Prático de Migração de Dados Históricos
 
 == 1. Migração do Gmail para Nextcloud Mail / Stalwart
 - *O que migrar:* Caixas de e-mail completas (pastas, mensagens, anexos), contatos e calendários dos 50 usuários.
@@ -914,7 +914,7 @@ services:
 
 
 #pagebreak()
-= Capítulo 10: Governança Corporativa, Backup 3-2-1 & LGPD
+= Capítulo 11: Governança Corporativa, Backup 3-2-1 & LGPD
 
 - *Política 3-2-1:* A política de proteção de dados opera na regra de ouro 3-2-1: (3) cópias de dados em (2) tipos de mídias diferentes, com (1) cópia externa criptografada em nuvem fria (Wasabi / AWS S3 / armazenamento próprio).
 
@@ -943,7 +943,7 @@ find /opt/backups -type d -mtime +30 -exec rm -rf {} +
 ```
 
 #pagebreak()
-= Capítulo 11: Cronograma de Implantação em 30 Dias & Monitoramento
+= Capítulo 12: Cronograma de Implantação em 30 Dias & Monitoramento
 
 == Semana 1 (Dias 1 a 7) · Infraestrutura & Instalação do Cluster
 - *Atividades:* Contratação da VPS, configuração de DNS wildcard (wildcard.empresa.com.br), execução do docker-compose.yml e ativação dos certificados SSL automáticos via Traefik.

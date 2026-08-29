@@ -65,8 +65,15 @@ def executar_fluxo3(ferramenta: str = None, saas: str = "granola") -> bool:
     print(f"\n🔍 [Gate G0/G1] Auditando fontes oficiais para '{ferramenta_limpa}'...")
     json_fontes = BASE_DIR / "scripts" / "data" / f"sumario-fontes-{ferramenta_limpa}.json"
     if json_fontes.exists():
-        auditar_qualidade_sumario(json_fontes)
-        auditar_fontes_veridicas(json_fontes)
+        if not auditar_qualidade_sumario(json_fontes):
+            return False
+        if not auditar_fontes_veridicas(json_fontes):
+            return False
+    else:
+        print(f"   ⚠️ [Gate G0/G1 NÃO EXECUTADO] Nenhum 'sumario-fontes-{ferramenta_limpa}.json' cadastrado.")
+        print(f"      As URLs em 'referencias_bibliograficas' do manual NÃO foram verificadas por HTTP.")
+        print(f"      Para habilitar o gate completo, crie 'scripts/data/sumario-fontes-{ferramenta_limpa}.json'")
+        print(f"      com tópicos e trechos técnicos reais por fonte (Padrão Diamante G0).")
 
     print(f"\n⚙️ 1/2 Compilando Manual Operacional VPS (com Desinstalação Cirúrgica)...")
     ok_manual = compilar_manual(ferramenta_limpa)
