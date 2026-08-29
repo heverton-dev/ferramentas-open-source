@@ -70,9 +70,13 @@ sudo apt-get install -y mariadb-server
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
 sudo mysql -u root -e "CREATE DATABASE mautic_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-sudo mysql -u root -e "CREATE USER 'mautic_user'@'localhost' IDENTIFIED BY 'SenhaSegura123!MauticVPS';"
+sudo mysql -u root -e "CREATE USER 'mautic_user'@'localhost' IDENTIFIED BY '<COLE-AQUI-A-SUA-SENHA-DO-BANCO>';"
 sudo mysql -u root -e "GRANT ALL PRIVILEGES ON mautic_db.* TO 'mautic_user'@'localhost';"
 sudo mysql -u root -e "FLUSH PRIVILEGES;"
+
+# ATENCAO: onde aparecer <COLE-AQUI-...> acima, troque pela SUA propria senha.
+# O passo "Crie a SUA senha" deste manual mostra como gerar e onde anotar.
+# Nunca reaproveite senha de manual: ela e publica e igual para todos os leitores.
 ```
 
 - 🖥️ **O que você verá na tela:** Será pedida uma senha para o administrador do MariaDB. Digite algo seguro.
@@ -194,18 +198,18 @@ sudo crontab -e
 ```
 
 ### `/var/www/mautic/.env.local`
-*Configurações críticas do Mautic: ambiente de produção, banco de dados e email. O APP_SECRET deve ser gerado com: openssl rand -hex 32. Substitua os valores SMTP com seus dados reais de email.*
+*Configurações críticas do Mautic: ambiente de produção, banco de dados e email. O APP_SECRET deve ser gerado com: openssl rand -hex 32. Substitua os valores SMTP com seus dados reais de email. IMPORTANTE: 2 campos deste arquivo estao marcados como <COLE-AQUI-...> e precisam da SUA propria senha. Siga o passo "Crie a SUA senha" logo abaixo do arquivo: ele mostra o comando que gera a senha, onde colar e onde anotar. Nao reaproveite senha de manual: ela e publica e igual para todos os leitores.*
 
 ```ini
 APP_ENV=prod
 APP_DEBUG=0
-APP_SECRET=SenhaSeguraAleatoria123456789
+APP_SECRET=<COLE-AQUI-O-SEU-APP-SECRET>
 DB_DRIVER=pdo_mysql
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=mautic_db
 DB_USER=mautic_user
-DB_PASSWORD=SenhaSegura123!MauticVPS
+DB_PASSWORD=<COLE-AQUI-A-SUA-SENHA-DO-BANCO>
 DB_TABLE_PREFIX=mt_
 SMTP_HOST=smtp.seuservidor.com.br
 SMTP_PORT=587
@@ -213,10 +217,55 @@ SMTP_USER=seu-email@seuservidor.com.br
 SMTP_PASSWORD=senhadoemail
 SMTP_ENCRYPTION=tls
 SMTP_AUTH_MODE=login
+
+PASSO IMPORTANTE - Crie a SUA senha (nao pule)
+
+Repare que no arquivo acima existem campos escritos assim: <COLE-AQUI-...>.
+Eles nao sao senhas de verdade. Sao lugares vazios esperando pela SUA senha.
+
+Por que isso importa: a senha que vem escrita num manual e como a chave que
+vem na caixa de uma fechadura nova. Se todo mundo que comprou usar a chave que
+veio na caixa, a fechadura nao tranca ninguem. Voce vai fazer a sua chave.
+
+Faca uma vez para cada campo da lista abaixo:
+
+1) Campo APP_SECRET  (serve para: assina as sessoes de quem entra no sistema)
+
+   a. Copie a linha abaixo, cole no terminal e aperte Enter:
+
+      openssl rand -hex 32
+
+   b. Vai aparecer uma sequencia embaralhada de letras e numeros.
+      Essa sequencia e sua e sera diferente da de qualquer outra pessoa.
+
+   c. Selecione a sequencia, copie, e cole no arquivo no lugar de
+      <COLE-AQUI-O-SEU-APP-SECRET> - apague o marcador inteiro, inclusive os sinais < e >.
+
+   d. Anote essa sequencia em lugar seguro (gerenciador de senhas, cofre,
+      ou papel guardado). Se precisar reinstalar, voce vai querer a mesma.
+
+2) Campo DB_PASSWORD  (serve para: protege o banco de dados)
+
+   a. Copie a linha abaixo, cole no terminal e aperte Enter:
+
+      openssl rand -base64 24
+
+   b. Vai aparecer uma sequencia embaralhada de letras e numeros.
+      Essa sequencia e sua e sera diferente da de qualquer outra pessoa.
+
+   c. Selecione a sequencia, copie, e cole no arquivo no lugar de
+      <COLE-AQUI-A-SUA-SENHA-DO-BANCO> - apague o marcador inteiro, inclusive os sinais < e >.
+
+   d. Anote essa sequencia em lugar seguro (gerenciador de senhas, cofre,
+      ou papel guardado). Se precisar reinstalar, voce vai querer a mesma.
+
+Conferencia final: releia o arquivo e garanta que nao sobrou nenhum
+<COLE-AQUI-...>. Se sobrou, o sistema nao vai iniciar corretamente.
+
 ```
 
 ### `/usr/local/bin/backup-mautic.sh`
-*Script que automatiza backup diário do banco de dados (SQL comprimido) e arquivos do Mautic. Exclui pastas temporárias e de cache. Deleta backups com mais de 30 dias para economizar espaço.*
+*Script que automatiza backup diário do banco de dados (SQL comprimido) e arquivos do Mautic. Exclui pastas temporárias e de cache. Deleta backups com mais de 30 dias para economizar espaço. IMPORTANTE: 1 campo deste arquivo estao marcados como <COLE-AQUI-...> e precisam da SUA propria senha. Siga o passo "Crie a SUA senha" logo abaixo do arquivo: ele mostra o comando que gera a senha, onde colar e onde anotar. Nao reaproveite senha de manual: ela e publica e igual para todos os leitores.*
 
 ```bash
 #!/bin/bash
@@ -224,7 +273,7 @@ BACKUP_DIR="/backups"
 DATE=$(date +%Y%m%d_%H%M%S)
 DB_NAME="mautic_db"
 DB_USER="mautic_user"
-DB_PASSWORD="SenhaSegura123!MauticVPS"
+DB_PASSWORD=<COLE-AQUI-A-SUA-SENHA-DO-BANCO>
 FILES_DIR="/var/www/mautic"
 
 echo "[$(date)] Iniciando backup de Mautic..." >> /var/log/mautic-backup.log
@@ -236,6 +285,36 @@ tar --exclude='cache' --exclude='logs' --exclude='tmp' -czf $BACKUP_DIR/mautic_f
 find $BACKUP_DIR -name 'mautic_*' -mtime +30 -delete
 
 echo "[$(date)] Backup concluído com sucesso." >> /var/log/mautic-backup.log
+
+PASSO IMPORTANTE - Crie a SUA senha (nao pule)
+
+Repare que no arquivo acima existem campos escritos assim: <COLE-AQUI-...>.
+Eles nao sao senhas de verdade. Sao lugares vazios esperando pela SUA senha.
+
+Por que isso importa: a senha que vem escrita num manual e como a chave que
+vem na caixa de uma fechadura nova. Se todo mundo que comprou usar a chave que
+veio na caixa, a fechadura nao tranca ninguem. Voce vai fazer a sua chave.
+
+Faca uma vez para cada campo da lista abaixo:
+
+1) Campo DB_PASSWORD  (serve para: protege o banco de dados)
+
+   a. Copie a linha abaixo, cole no terminal e aperte Enter:
+
+      openssl rand -base64 24
+
+   b. Vai aparecer uma sequencia embaralhada de letras e numeros.
+      Essa sequencia e sua e sera diferente da de qualquer outra pessoa.
+
+   c. Selecione a sequencia, copie, e cole no arquivo no lugar de
+      <COLE-AQUI-A-SUA-SENHA-DO-BANCO> - apague o marcador inteiro, inclusive os sinais < e >.
+
+   d. Anote essa sequencia em lugar seguro (gerenciador de senhas, cofre,
+      ou papel guardado). Se precisar reinstalar, voce vai querer a mesma.
+
+Conferencia final: releia o arquivo e garanta que nao sobrou nenhum
+<COLE-AQUI-...>. Se sobrou, o sistema nao vai iniciar corretamente.
+
 ```
 
 ## Parte II: Manual de Uso Exaustivo

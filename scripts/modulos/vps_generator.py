@@ -3,6 +3,18 @@ import os
 import re
 import datetime
 
+def _esc(txt) -> str:
+    """
+    Escapa texto vindo dos JSONs de manual antes de entrar no HTML.
+
+    Aplicado ANTES do markdown inline de proposito: html.escape nao altera '*' nem
+    crase, entao **negrito** e `codigo` seguem funcionando. Fazer o inverso escaparia
+    as proprias tags <strong> e <code> recem geradas.
+    """
+    import html as _html
+    return _html.escape(str(txt if txt is not None else ""), quote=True)
+
+
 ENTERPRISE_CSS = """
  :root {
  --font-serif: "Liberation Serif", "Linux Libertine O", "Times New Roman", Times, serif;
@@ -723,7 +735,7 @@ services:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: workspace_user
-      POSTGRES_PASSWORD: WorkspaceDBSecret_2026!
+      POSTGRES_PASSWORD: <COLE-AQUI-A-SUA-SENHA-DO-BANCO>
       POSTGRES_DB: workspace_nextcloud
     volumes:
       - workspace_db_data:/var/lib/postgresql/data
@@ -762,7 +774,7 @@ services:
       POSTGRES_HOST: workspace_db
       POSTGRES_DB: workspace_nextcloud
       POSTGRES_USER: workspace_user
-      POSTGRES_PASSWORD: WorkspaceDBSecret_2026!
+      POSTGRES_PASSWORD: <COLE-AQUI-A-SUA-SENHA-DO-BANCO>
       REDIS_HOST: workspace_redis
       OVERWRITEPROTOCOL: https
       OVERWRITECLIURL: https://drive.{self.base_domain}
@@ -795,7 +807,7 @@ services:
     image: onlyoffice/documentserver:latest
     environment:
       JWT_ENABLED: 'true'
-      JWT_SECRET: OnlyOfficeSecretKey2026_SecureToken!
+      JWT_SECRET: <COLE-AQUI-O-SEU-JWT-SECRET>
       USE_UNAUTHORIZED_STORAGE: 'true'
     volumes:
       - workspace_onlyoffice_data:/var/www/onlyoffice/Data
@@ -997,7 +1009,7 @@ Aguarde 60 a 90 segundos para a emissão automática do certificado TLS Let's En
    - Acesse o Nextcloud com usuário administrador, vá em **Aplicativos** e ative o app **ONLYOFFICE**.
    - Em **Configurações de Administração** > **ONLYOFFICE**, defina:
      - Endereço do Servidor: `https://office.{self.base_domain}`
-     - Chave Secreta (JWT): `OnlyOfficeSecretKey2026_SecureToken!`
+     - Chave Secreta (JWT): gere a SUA com `openssl rand -hex 32` e cole no lugar de `<COLE-AQUI-O-SEU-JWT-SECRET>` no arquivo de stack. Anote-a: sera necessaria para reinstalar. Nunca reaproveite a chave de um manual - ela e publica.
      - Endereço interno do Nextcloud: `http://workspace_nextcloud:80`
    - Clique em **Salvar**. A edição colaborativa de documentos estará 100% operacional.
 
@@ -1127,12 +1139,12 @@ docker volume ls --filter name={slug_clean} -q | xargs -r docker volume rm
                     t_html = "<div class='tablewrap'><table>\n<thead>\n<tr>"
                     if table_rows:
                         for th in table_rows[0]:
-                            t_html += f"<th>{th}</th>"
+                            t_html += f"<th>{_esc(th)}</th>"
                         t_html += "</tr>\n</thead>\n<tbody>\n"
                         for row in table_rows[1:]:
                             t_html += "<tr>"
                             for td in row:
-                                t_html += f"<td>{td}</td>"
+                                t_html += f"<td>{_esc(td)}</td>"
                             t_html += "</tr>\n"
                     t_html += "</tbody>\n</table></div>\n"
                     out_blocks.append(t_html)
@@ -1144,22 +1156,22 @@ docker volume ls --filter name={slug_clean} -q | xargs -r docker volume rm
                 continue
             elif line.startswith('## '):
                 h2_text = line[3:].strip()
-                out_blocks.append(f"<h2>{h2_text}</h2>")
+                out_blocks.append(f"<h2>{_esc(h2_text)}</h2>")
                 continue
             elif line.startswith('### '):
                 h3_text = line[4:].strip()
-                out_blocks.append(f"<h3>{h3_text}</h3>")
+                out_blocks.append(f"<h3>{_esc(h3_text)}</h3>")
                 continue
             elif line.startswith('> '):
                 quote_text = line[2:].strip()
-                out_blocks.append(f"<div class='racional-box'>{quote_text}</div>")
+                out_blocks.append(f"<div class='racional-box'>{_esc(quote_text)}</div>")
                 continue
             elif line.strip() == '---':
                 continue
 
             # Normal paragraphs / inline styles
             if line.strip():
-                p_text = line.strip()
+                p_text = _esc(line.strip())
                 p_text = re.sub(r'\*\*(.*?)\*\*', r"<strong>\1</strong>", p_text)
                 p_text = re.sub(r'`([^`]+)`', r"<code>\1</code>", p_text)
                 if not hero_deck and not hero_rendered:
@@ -1174,12 +1186,12 @@ docker volume ls --filter name={slug_clean} -q | xargs -r docker volume rm
         if in_table and table_rows:
             t_html = "<div class='tablewrap'><table>\n<thead>\n<tr>"
             for th in table_rows[0]:
-                t_html += f"<th>{th}</th>"
+                t_html += f"<th>{_esc(th)}</th>"
             t_html += "</tr>\n</thead>\n<tbody>\n"
             for row in table_rows[1:]:
                 t_html += "<tr>"
                 for td in row:
-                    t_html += f"<td>{td}</td>"
+                    t_html += f"<td>{_esc(td)}</td>"
                 t_html += "</tr>\n"
             t_html += "</tbody>\n</table></div>\n"
             out_blocks.append(t_html)

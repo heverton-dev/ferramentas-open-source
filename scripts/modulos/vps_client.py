@@ -1,10 +1,22 @@
 # -*- coding: utf-8 -*-
 import os
 import re
-import urllib3
 import requests
 
-urllib3.disable_warnings()
+# Validacao de certificado LIGADA por padrao: a senha de administrador e o JWT do
+# Portainer trafegam nestas chamadas. Sem verificacao, um intermediario na rota se
+# passa pelo painel e captura a credencial.
+#
+# Valvula de escape para VPS com certificado autoassinado: exporte
+# PORTAINER_TLS_INSECURE=1. A excecao continua possivel, mas deixa de ser silenciosa.
+VERIFICAR_TLS = os.environ.get("PORTAINER_TLS_INSECURE", "").strip() not in ("1", "true", "True")
+
+if not VERIFICAR_TLS:
+    import urllib3
+    urllib3.disable_warnings()
+    import sys as _sys
+    print("[AVISO] PORTAINER_TLS_INSECURE=1: certificado NAO sera validado. "
+          "A senha do Portainer trafega sem garantia de destino.", file=_sys.stderr)
 
 class PortainerClient:
     def __init__(self, env_path=None):
@@ -47,6 +59,25 @@ class PortainerClient:
                 elif 'PORTAINER_PASSWORD' in line.upper() or 'PORTEINER_PASSWORD' in line.upper():
                     self.password = self._clean_val(line.split('=', 1)[1])
 
+        # Gate de credenciais (scripts/validar_env.py): recusa variavel ausente, vazia
+        # ou ainda com valor de exemplo, e lista TODOS os problemas de uma vez — corrigir
+        # um por execucao transforma configuracao em tentativa e erro.
+        try:
+            import sys as _sys
+            _scripts = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            if _scripts not in _sys.path:
+                _sys.path.insert(0, _scripts)
+            from validar_env import exigir as _exigir
+            _exigir('PORTAINER_URL', 'PORTAINER_USERNAME', 'PORTAINER_PASSWORD',
+                    env={'PORTAINER_URL': self.url or '',
+                         'PORTAINER_USERNAME': self.username or '',
+                         'PORTAINER_PASSWORD': self.password or ''})
+        except ImportError:
+            # validar_env ausente: cai na checagem basica abaixo em vez de travar.
+            pass
+        except RuntimeError as e:
+            raise ValueError(str(e))
+
         if not self.url or not self.username or not self.password:
             raise ValueError('Credenciais de Portainer incompletas no arquivo .env (PORTEINER_URL, USERNAME, PASSWORD).')
 
@@ -54,7 +85,7 @@ class PortainerClient:
         auth_url = f"{self.url}/api/auth"
         payload = {'Username': self.username, 'Password': self.password}
         try:
-            res = requests.post(auth_url, json=payload, verify=False, timeout=15)
+            res = requests.post(auth_url, json=payload, verify=VERIFICAR_TLS, timeout=15)
             if res.status_code == 200:
                 self.jwt = res.json().get('jwt')
                 return True
@@ -70,25 +101,25 @@ class PortainerClient:
 
     def get_endpoints(self):
         url = f"{self.url}/api/endpoints"
-        res = requests.get(url, headers=self._headers(), verify=False, timeout=15)
+        res = requests.get(url, headers=self._headers(), verify=VERIFICAR_TLS, timeout=15)
         res.raise_for_status()
         return res.json()
 
     def get_stacks(self):
         url = f"{self.url}/api/stacks"
-        res = requests.get(url, headers=self._headers(), verify=False, timeout=15)
+        res = requests.get(url, headers=self._headers(), verify=VERIFICAR_TLS, timeout=15)
         res.raise_for_status()
         return res.json()
 
     def get_containers(self, endpoint_id=1):
         url = f"{self.url}/api/endpoints/{endpoint_id}/docker/containers/json?all=1"
-        res = requests.get(url, headers=self._headers(), verify=False, timeout=15)
+        res = requests.get(url, headers=self._headers(), verify=VERIFICAR_TLS, timeout=15)
         res.raise_for_status()
         return res.json()
 
     def get_services(self, endpoint_id=1):
         url = f"{self.url}/api/endpoints/{endpoint_id}/docker/services"
-        res = requests.get(url, headers=self._headers(), verify=False, timeout=15)
+        res = requests.get(url, headers=self._headers(), verify=VERIFICAR_TLS, timeout=15)
         if res.status_code == 404:
             return []
         res.raise_for_status()
@@ -96,13 +127,13 @@ class PortainerClient:
 
     def get_networks(self, endpoint_id=1):
         url = f"{self.url}/api/endpoints/{endpoint_id}/docker/networks"
-        res = requests.get(url, headers=self._headers(), verify=False, timeout=15)
+        res = requests.get(url, headers=self._headers(), verify=VERIFICAR_TLS, timeout=15)
         res.raise_for_status()
         return res.json()
 
     def get_volumes(self, endpoint_id=1):
         url = f"{self.url}/api/endpoints/{endpoint_id}/docker/volumes"
-        res = requests.get(url, headers=self._headers(), verify=False, timeout=15)
+        res = requests.get(url, headers=self._headers(), verify=VERIFICAR_TLS, timeout=15)
         res.raise_for_status()
         return res.json()
 

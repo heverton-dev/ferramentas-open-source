@@ -9,6 +9,7 @@ Cruza todos os repositórios da organização com os 32 compêndios de soberania
 import os
 import sys
 import glob
+import html
 import re
 import json
 import subprocess
@@ -62,17 +63,26 @@ def gerar_portal_html(repos, meta_mapa):
         origem_badge = origens[0]["titulo"] if origens else "Arsenal de Soberania"
         origem_badge_clean = re.sub(r'<.*?>', '', origem_badge)[:38]
 
+        # Escape obrigatorio: name, desc e parent_slug vem da API do GitHub e sao
+        # controlaveis por terceiros com escrita nos repositorios listados.
+        # quote=True e necessario porque estes valores entram tambem em atributos.
+        e_name = html.escape(name, quote=True)
+        e_desc = html.escape(desc, quote=True)
+        e_url = html.escape(url, quote=True)
+        e_parent = html.escape(parent_slug, quote=True)
+        e_badge = html.escape(origem_badge_clean, quote=True)
+
         card = f"""
-        <div class="repo-card" data-name="{name.lower()}" data-desc="{desc.lower()}" data-cat="{origem_badge_clean.lower()}">
+        <div class="repo-card" data-name="{e_name.lower()}" data-desc="{e_desc.lower()}" data-cat="{e_badge.lower()}">
           <div class="card-head">
-            <span class="card-badge">{origem_badge_clean}</span>
-            <a href="{url}" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
+            <span class="card-badge">{e_badge}</span>
+            <a href="{e_url}" target="_blank" rel="noopener" class="fork-link">Ver Fork ↗</a>
           </div>
-          <h3 class="repo-title">{name}</h3>
-          <p class="repo-desc">{desc}</p>
+          <h3 class="repo-title">{e_name}</h3>
+          <p class="repo-desc">{e_desc}</p>
           <div class="card-foot">
-            <span class="upstream">Origem: <b>{parent_slug}</b></span>
-            <a href="https://github.com/{parent_slug}" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
+            <span class="upstream">Origem: <b>{e_parent}</b></span>
+            <a href="https://github.com/{e_parent}" target="_blank" rel="noopener" class="upstream-link">Upstream</a>
           </div>
         </div>
         """
@@ -193,7 +203,14 @@ function filtrarRepos() {{
     }}
   }});
 
-  document.getElementById('statsCount').innerHTML = `Exibindo <b>${{visibleCount}}</b> de <b>${{cards.length}}</b> projetos`;
+  // textContent, nao innerHTML: ver nota em aplicar_padrao_diamante_49.py
+  const elStats = document.getElementById('statsCount');
+  elStats.textContent = '';
+  elStats.append('Exibindo ');
+  const bVis = document.createElement('b'); bVis.textContent = String(visibleCount);
+  elStats.append(bVis, ' de ');
+  const bTot = document.createElement('b'); bTot.textContent = String(cards.length);
+  elStats.append(bTot, ' projetos');
 }}
 </script>
 

@@ -498,7 +498,7 @@ items_37 = [
         "economia": "-$ 40.000 a $ 120.000 / ano", "licenca": "Apache-2.0", "kind": "IAM / SSO",
         "o_que_faz": "Servidor completo de autenticação centralizada, Single Sign-On (SSO), federação de identidades (Active Directory/LDAP) e controle RBAC fino.",
         "como_funciona": "Implementa protocolos padrão como OpenID Connect, OAuth 2.0 e SAML 2.0 com suporte a MFA, Passkeys e gestão de múltiplos domínios (realms).",
-        "quickstart": "docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:latest start-dev",
+        "quickstart": "docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=<COLE-AQUI-A-SUA-SENHA-DE-ADMIN>\n# Antes de rodar, gere a senha de administrador com: openssl rand -base64 24\n# Troque o marcador acima pelo valor gerado e anote-o. quay.io/keycloak/keycloak:latest start-dev",
         "specs": "Zero cobrança por MAU · Suporta milhões de usuários",
         "veredito": "O padrão industrial indiscutível para libertar empresas das mensalidades por usuário do Okta.",
         "github": "https://github.com/keycloak/keycloak"

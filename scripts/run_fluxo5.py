@@ -42,15 +42,15 @@ def save_db(tipo_alvo, slug_alvo, veredito, score, caminho_saida, db_path="estad
     conn.close()
 
 def main():
-    parser = argparse.ArgumentParser(description="Fluxo 5 ? Auditoria, Incorpora??o e Desinstala??o Cir?rgica em VPS (Multi-Alvo)")
-    parser.add_argument("--ecossistema", help="Slug de um ecossistema ?nico (ex: ecos-google-workspace)")
-    parser.add_argument("--ferramenta", help="Slug de uma ferramenta ?nica (ex: stalwart)")
-    parser.add_argument("--ecossistemas", help="Lista de ecossistemas separados por v?rgula")
-    parser.add_argument("--ferramentas", help="Lista de ferramentas separadas por v?rgula")
+    parser = argparse.ArgumentParser(description="Fluxo 5 — Auditoria, Incorporação e Desinstalação Cirúrgica em VPS (Multi-Alvo)")
+    parser.add_argument("--ecossistema", help="Slug de um ecossistema único (ex: ecos-google-workspace)")
+    parser.add_argument("--ferramenta", help="Slug de uma ferramenta única (ex: stalwart)")
+    parser.add_argument("--ecossistemas", help="Lista de ecossistemas separados por vírgula")
+    parser.add_argument("--ferramentas", help="Lista de ferramentas separadas por vírgula")
     parser.add_argument("--todos-ecossistemas", action="store_true", help="Auditar todos os ecossistemas cadastrados")
     parser.add_argument("--todas-ferramentas", action="store_true", help="Auditar todas as ferramentas cadastradas")
     parser.add_argument("--todos", action="store_true", help="Auditar todos os ecossistemas e ferramentas")
-    parser.add_argument("--base-domain", default="vpsconexao.org", help="Dom?nio base da VPS (default: vpsconexao.org)")
+    parser.add_argument("--base-domain", default="vpsconexao.org", help="Domínio base da VPS (default: vpsconexao.org)")
 
     args = parser.parse_args()
 

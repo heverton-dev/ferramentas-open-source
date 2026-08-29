@@ -50,7 +50,14 @@ function filtrarFichasLocais() {
 
   const counter = document.getElementById('contadorFichas');
   if (counter) {
-    counter.innerHTML = `Exibindo <b>${count}</b> de <b>${entries.length}</b> fichas`;
+    // textContent, nao innerHTML: os valores sao numericos hoje, mas o padrao
+    // com innerHTML e o que vira XSS quando alguem interpolar dado de usuario aqui.
+    counter.textContent = '';
+    counter.append('Exibindo ');
+    const bVis = document.createElement('b'); bVis.textContent = String(count);
+    counter.append(bVis, ' de ');
+    const bTot = document.createElement('b'); bTot.textContent = String(entries.length);
+    counter.append(bTot, ' fichas');
   }
 }
 </script>

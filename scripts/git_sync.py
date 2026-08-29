@@ -20,6 +20,28 @@ console_utf8()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+def sanitizar_mensagem(msg: str) -> str:
+    """
+    Valida a mensagem antes de passa-la a `git commit -m`.
+
+    Nao ha risco de injecao de shell (subprocess.run recebe lista), mas mensagem
+    iniciada por hifen e interpretada pelo git como flag.
+    """
+    if not isinstance(msg, str):
+        raise ValueError("Mensagem de commit deve ser texto.")
+    msg = msg.strip()
+    if not msg:
+        raise ValueError("Mensagem de commit vazia.")
+    if msg.startswith("-"):
+        raise ValueError(
+            f"Mensagem nao pode comecar com hifen (o git a leria como flag): {msg!r}")
+    if any(ord(c) < 32 and c not in "\n\t" for c in msg):
+        raise ValueError("Mensagem contem caractere de controle.")
+    if len(msg) > 500:
+        raise ValueError(f"Mensagem longa demais ({len(msg)} chars, maximo 500).")
+    return msg
+
+
 def executar_commit_e_push(mensagem_curta: str, diretorio_base: Path = BASE_DIR) -> bool:
     """
     Executa git add, commit e push garantindo integridade e feedback limpo.
@@ -47,9 +69,17 @@ def executar_commit_e_push(mensagem_curta: str, diretorio_base: Path = BASE_DIR)
         # 4. Commit
         res_commit = subprocess.run(["git", "commit", "-m", mensagem_curta], cwd=str(diretorio_base), capture_output=True, text=True)
         if res_commit.returncode != 0:
-            print(f"   ⚠️ Aviso no commit: {res_commit.stderr.strip()}")
-        else:
-            print(f"   ✅ Commit realizado com sucesso: \"{mensagem_curta}\"")
+            # Commit barrado (hook de segredo, gate R18, erro real) ABORTA o push.
+            # Seguir para o push aqui publicaria os commits anteriores mesmo com a
+            # barreira acionada — hook que bloqueia o commit e nao impede a publicacao
+            # nao e barreira, e aviso.
+            detalhe = (res_commit.stderr.strip() or res_commit.stdout.strip()
+                       or "sem detalhe do git")
+            print("   ❌ Commit BLOQUEADO. Push cancelado para nao publicar sem revisao.")
+            print(f"   Motivo: {detalhe}")
+            print("-"*70 + "\n")
+            return False
+        print(f"   ✅ Commit realizado com sucesso: \"{mensagem_curta}\"")
 
         # 5. Push
         print("   🚀 Enviando alterações para o repositório remoto (git push)...")
@@ -68,5 +98,10 @@ def executar_commit_e_push(mensagem_curta: str, diretorio_base: Path = BASE_DIR)
         return False
 
 if __name__ == "__main__":
-    msg = sys.argv[1] if len(sys.argv) > 1 else "feat(esteira): atualizacao automatica de artefatos open source"
+    bruto = sys.argv[1] if len(sys.argv) > 1 else "feat(esteira): atualizacao automatica de artefatos open source"
+    try:
+        msg = sanitizar_mensagem(bruto)
+    except ValueError as e:
+        print(f"   [erro] Mensagem de commit invalida: {e}")
+        sys.exit(2)
     executar_commit_e_push(msg)
