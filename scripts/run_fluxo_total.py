@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-CLI RUNNER UNIVERSAL · PIPELINE TOTAL AIDD (FLUXO 1 + 2 + 3)
-Orquestra o pipeline completo em cascata com os 3 Gates de Interação Humano-no-Loop.
+CLI RUNNER UNIVERSAL · PIPELINE CORE AIDD (FLUXO 1 -> 2 -> 3)
+Orquestra o Pipeline Core em cascata com os 3 Gates de Interação Humano-no-Loop.
+Ao final, oferece continuação opcional e acionável para os Fluxos 4 (Macro-Ecossistemas)
+e 5 (Auditoria VPS), que permanecem independentes e podem também ser disparados
+separadamente via `run_fluxo4.py` / `run_fluxo5.py` ou `/fluxo4` / `/fluxo5`.
 """
 import sys
+import subprocess
 import argparse
 from pathlib import Path
 
@@ -27,8 +31,9 @@ from gerar_relatorio_operacao_fluxos import compilar_relatorio
 
 def executar_fluxo_total(camada: str = None, saas: str = None, ferramenta: str = None, interativo: bool = True) -> bool:
     print("\n" + "#"*75)
-    print("🌐 PIPELINE INTEGRADO AIDD · FÁBRICA UNIVERSAL OPEN SOURCE")
-    print("   Execução encadeada dos 3 Macro-Fluxos com Gates de Interação")
+    print("🌐 PIPELINE CORE AIDD · FÁBRICA UNIVERSAL OPEN SOURCE")
+    print("   Execução encadeada dos Fluxos 1 -> 2 -> 3 com Gates de Interação")
+    print("   (Fluxos 4 e 5 são independentes; oferecidos como continuação opcional ao final)")
     print("#"*75 + "\n")
 
     # =========================================================================
@@ -103,14 +108,14 @@ def executar_fluxo_total(camada: str = None, saas: str = None, ferramenta: str =
 
     # 🛑 GATE 3 DE APROVAÇÃO FINAL & RELATÓRIO
     print("\n" + "="*75)
-    print("🏆 PIPELINE COMPLETO EXECUTADO COM 100% DE SUCESSO!")
+    print("🏆 PIPELINE CORE (FLUXOS 1 -> 2 -> 3) EXECUTADO COM 100% DE SUCESSO!")
     print("="*75)
     print("📊 Resumo de Entregas da Fábrica Universal:")
     print(f"   1. [Fluxo 1] output/01-listas-horizontais/list-{camada}/")
     print(f"   2. [Fluxo 2] output/02-dossies-verticais/vert-{saas}/")
     print(f"   3. [Fluxo 3] output/03-manuais-e-trilhas/{saas}/{ferramenta}/")
     print(f"   4. [Relatório] output/relatorios/ (Tripartite consolidado)")
-    
+
     # Atualizar Catálogo Mestre & Portal Interativo
     try:
         from popular_catalogo_mestre import executar_ingestao_completa
@@ -126,10 +131,51 @@ def executar_fluxo_total(camada: str = None, saas: str = None, ferramenta: str =
     executar_commit_e_push(f"feat(pipeline-total): execucao completa AIDD ({camada} -> {saas} -> {ferramenta})")
 
     print("="*75 + "\n")
+
+    # =========================================================================
+    # CONTINUAÇÃO OPCIONAL E ACIONÁVEL · FLUXOS 4 (MACRO-ECOSSISTEMAS) E 5 (AUDITORIA VPS)
+    # =========================================================================
+    print("-"*75)
+    print("➡️  CONTINUAÇÃO OPCIONAL: Fluxos 4 e 5 são independentes do Pipeline Core.")
+    print("    Podem ser acionados agora mesmo, ou depois via '/fluxo4' e '/fluxo5'.")
+    print("-"*75)
+
+    if interativo:
+        try:
+            rodar_f4 = input("   👉 Deseja acionar o Fluxo 4 (Macro-Ecossistemas) agora? [s/N]: ").strip().lower()
+        except (KeyboardInterrupt, EOFError):
+            rodar_f4 = "n"
+        if rodar_f4 == "s":
+            try:
+                slug_ecos = input("      Slug do macro-ecossistema (ex: rd-station-suite): ").strip()
+            except (KeyboardInterrupt, EOFError):
+                slug_ecos = None
+            if slug_ecos:
+                from run_fluxo4 import executar_fluxo4
+                executar_fluxo4(slug_ecos)
+
+        try:
+            rodar_f5 = input("   👉 Deseja acionar o Fluxo 5 (Auditoria VPS) agora? [s/N]: ").strip().lower()
+        except (KeyboardInterrupt, EOFError):
+            rodar_f5 = "n"
+        if rodar_f5 == "s":
+            try:
+                alvo_vps = input("      Slug da ferramenta ou ecossistema a auditar (ex: stalwart, ecos-google-workspace): ").strip()
+            except (KeyboardInterrupt, EOFError):
+                alvo_vps = None
+            if alvo_vps:
+                flag = "--ecossistema" if alvo_vps.startswith("ecos-") else "--ferramenta"
+                subprocess.run([sys.executable, str(BASE_DIR / "scripts" / "run_fluxo5.py"), flag, alvo_vps])
+    else:
+        print("   ℹ️ Modo não-interativo: Fluxos 4 e 5 não foram acionados automaticamente.")
+        print("      Execute manualmente: python scripts/run_fluxo4.py --ecossistema <slug>")
+        print("      Execute manualmente: python scripts/run_fluxo5.py --ferramenta <slug>")
+
+    print("="*75 + "\n")
     return True
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="CLI Runner · Pipeline Total AIDD (Fluxos 1 + 2 + 3)")
+    parser = argparse.ArgumentParser(description="CLI Runner · Pipeline Core AIDD (Fluxos 1 -> 2 -> 3, com continuação opcional para os Fluxos 4 e 5)")
     parser.add_argument("--camada", "-c", type=str, default=None, help="Slug da camada temática inicial")
     parser.add_argument("--saas", "-s", type=str, default=None, help="Slug do SaaS proprietário")
     parser.add_argument("--ferramenta", "-f", type=str, default=None, help="Slug da ferramenta do Quinteto")

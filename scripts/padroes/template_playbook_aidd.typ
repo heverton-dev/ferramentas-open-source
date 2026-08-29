@@ -2,7 +2,7 @@
 // Elimina 100% de sobreposições em tabelas e blocos de código
 #set page(
   paper: "a4",
-  margin: (x: 1.6cm, y: 1.8cm),
+  margin: (x: 1.6cm, y: 2.3cm),
   header: context [
     #if counter(page).get().first() > 1 [
       #grid(
@@ -33,7 +33,7 @@
   hyphenate: true
 )
 
-#set par(justify: true, leading: 0.58em, spacing: 0.95em)
+#set par(justify: true, leading: 0.78em, spacing: 1.15em)
 
 // Macros auxiliares do Pandoc
 #let horizontalrule = line(length: 100%, stroke: 0.5pt + rgb("#CBD5E1"))
@@ -57,18 +57,18 @@
 
 // Configuração Rígida de Tabelas Anti-Sobreposição (Padrão Diamante R5)
 #show table.cell: it => {
-  set text(size: 6.8pt, hyphenate: true)
-  set par(justify: false, leading: 0.4em)
+  set text(size: 7.8pt, hyphenate: true)
+  set par(justify: false, leading: 0.62em)
   it
 }
 
 #set table(
   stroke: 0.4pt + rgb("#CBD5E1"),
   fill: (x, y) => if y == 0 { rgb("#1A446C") } else if calc.even(y) { rgb("#F8FAFC") } else { none },
-  inset: (x: 4pt, y: 3.5pt)
+  inset: (x: 5.5pt, y: 5pt)
 )
 
-#show table.cell.where(y: 0): set text(fill: white, weight: "bold", size: 7pt)
+#show table.cell.where(y: 0): set text(fill: white, weight: "bold", size: 8pt)
 
 // Blocos de Código
 #show raw.where(block: true): it => block(
